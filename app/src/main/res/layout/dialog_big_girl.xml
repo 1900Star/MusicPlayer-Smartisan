@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true"
+    android:fitsSystemWindows="true"
+    tools:context=".mvp.main.MainActivity">
+
+    <com.yibao.music.view.ProgressBtn
+        android:id="@+id/pb_toppic"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_gravity="bottom" />
+    <LinearLayout
+        android:id="@+id/top_big_pic_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="2dp"
+        android:alpha="0.3"
+        android:text="@string/save_pic"
+        android:textSize="18sp" />
+
+
+</FrameLayout>

@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">BigGirl</string>
+
+    <string name="about_name">1900</string>
+    <string name="about_github">https://github.com/1900Star</string>
+    <string name="about_sign">O ever youthful, O ever weeping.</string>
+    <string name="about_project_introduce">
+        BigGirl妹子Gank.io客户端，整体架构参照Google官方的RxMvpDemo示例，写这个项目主要是为公司项目重构做准备。
+        MVP-Rxjava-Dagger2最目前非常流行且比较成熟的架构模式,Dagger2的引入进一步降低Presenter层和View层的耦合。
+        \n\tRxJava\n\tRxBus\n\tOkhttp\n\tRetrofit\n\tButterknife\n\tDagger2\n\tGreenDao3.0\n\tGlide\n\tLeakcanary
+        \n\nBigGirl：https://github.com/1900Star/BigGirl\n\nApi接口提供：http://gank.io/api\n\n感谢开源社区，特别感谢：干货集中营
+    </string>
+    <string name="preject_introduce">关于项目</string>
+
+    //*********音乐
+    <string name="music">音乐</string>
+    <string name="short_line">-</string>
+    <string name="clearAllFavorite">清空</string>
+    <string name="playAll">播放全部</string>
+    <string name="save_pic">保存</string>
+
+    <string name="under_line">_</string>
+    <string name="childe_view_not">SwipeItemLayout的子视图不符合规定</string>
+
+    <string name="action_search">搜索</string>
+    <string name="musicAddTime">添加时间</string>
+    <string name="musicPlayFrequency">播放次数</string>
+    <string name="musicScore">评分</string>
+    <string name="songName">歌曲名</string>
+    <string name="notMore">------------ 我 是 有 底 线 的 ------------</string>
+
+</resources>

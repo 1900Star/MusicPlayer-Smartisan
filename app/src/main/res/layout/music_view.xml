@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.yibao.music.music.musiclist.MusicListActivity">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/listBg" />
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:background="@color/colorWhite"
+            android:paddingBottom="8dp"
+            android:paddingLeft="26dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:textColor="@color/aboutSign"
+            android:textSize="40sp"
+            android:visibility="gone" />
+
+        <include layout="@layout/music_sticky_header_view" />
+
+        <com.yibao.music.view.music.MusicSlidBar
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right" />
+    </FrameLayout>
+</RelativeLayout>

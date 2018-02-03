@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#607d8b</color>
+    <color name="colorPrimaryDark">#78909c</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="textName">#939396</color>
+    <color name="textDes">#4d4d4d</color>
+    <color name="listBg">#e9e7e7</color>
+    <color name="colorGreen">#5ab43f</color>
+
+    //about
+    <color name="aboutTitle">#ff000000</color>
+    <color name="aboutSign">#5b5b5b</color>
+    <color name="lyricsNormal">#5b5b5b</color>
+    <color name="lyricsSelected">#325ab1</color>
+    <color name="aboutContent">#ff414141</color>
+    <color name="about">#f7f1f1</color>
+
+
+    <color name="rvBg">#ccffffff</color>
+    <!--BottomSheetDialogList-->
+    <!--SeekBar-->
+    <color name="seekBarP">#8e8e8f</color>
+    <color name="seekBarN">#ccdcdbdb</color>
+
+    <!-- 透明 -->
+
+</resources>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/iv_music_category_paly"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/btn_playing_all_selector" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:layout_marginRight="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_music_category_songname"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/btn_category_songname_down_selector"
+            android:gravity="center"
+            android:text="@string/songName"
+            android:textColor="@color/colorWhite" />
+
+
+        <TextView
+            android:id="@+id/tv_music_category_score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/btn_category_score_selector"
+            android:gravity="center"
+            android:text="@string/musicScore"
+            android:textColor="@color/textDes" />
+
+
+        <View
+            android:visibility="gone"
+            android:layout_width="0.5dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/seekBarN" />
+
+
+        <TextView
+            android:id="@+id/tv_music_category_frequency"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/btn_category_score_selector"
+            android:gravity="center"
+            android:text="@string/musicPlayFrequency"
+            android:textColor="@color/textDes" />
+
+
+        <View
+            android:visibility="gone"
+            android:layout_width="0.5dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:background="@color/seekBarN" />
+
+
+        <TextView
+            android:id="@+id/tv_music_category_addtime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/btn_category_views_selector"
+            android:gravity="center"
+            android:text="@string/musicAddTime"
+            android:textColor="@color/textDes" />
+
+    </LinearLayout>
+</LinearLayout>
