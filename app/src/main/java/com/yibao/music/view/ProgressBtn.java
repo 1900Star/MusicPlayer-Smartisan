@@ -2,31 +2,33 @@ package com.yibao.music.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.Button;
 
+import com.yibao.music.util.ColorUtil;
+
 /**
  * Author：Sid
  * Des：${TODO}
  * Time:2017/8/12 21:32
+ *
+ * @author Stran
  */
 public class ProgressBtn
-        extends Button
-{
+        extends Button {
     private boolean isProgressEnable = true;
-    private int     max              = 0;
-    private int      progress;
+    private int max = 0;
+    private int progress;
     private Drawable mDrawable;
-    private int color = Color.GRAY;
+    private int color = ColorUtil.musicbarTvDown;
 
-    public int getColor() {
+    public int getPainColor() {
         return color;
     }
 
-    public void setColor(int color) {
+    public void setPainColor(int color) {
         this.color = color;
     }
 
@@ -68,15 +70,13 @@ public class ProgressBtn
     @Override
     protected void onDraw(Canvas canvas) {
 
-        //之前
-        //        canvas.drawText("haha",20,20,getPaint());
         if (isProgressEnable) {
             if (mDrawable == null) {
                 mDrawable = new ColorDrawable(color);
             }
-            int left   = 0;
-            int top    = 0;
-            int right  = (int) (progress * 1.0f / max * getMeasuredWidth() + .5f);
+            int left = 0;
+            int top = 0;
+            int right = (int) (progress * 1.0f / max * getMeasuredWidth() + .5f);
             int bottom = getBottom();
             mDrawable.setBounds(left, top, right, bottom);
 

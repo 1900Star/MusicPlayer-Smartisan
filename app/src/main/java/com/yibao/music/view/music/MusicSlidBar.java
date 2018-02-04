@@ -12,8 +12,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.yibao.biggirl.R;
-import com.yibao.music.music.musiclist.MusicListAdapter;
+import com.yibao.music.R;
+import com.yibao.music.artisanlist.MusicListAdapter;
 import com.yibao.music.util.LogUtil;
 
 

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
-import com.yibao.music.model.music.MusicBean;
+import com.yibao.music.model.MusicBean;
 
 import java.util.ArrayList;
 

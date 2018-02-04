@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.yibao.biggirl.R;
+import com.yibao.music.R;
 
 
 /**

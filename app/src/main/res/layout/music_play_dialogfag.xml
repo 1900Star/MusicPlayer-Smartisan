@@ -6,7 +6,7 @@
     android:background="@color/colorWhite"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.yibao.music.music.musiclist.MusicListActivity">
+    tools:context="com.yibao.music.artisanlist.MusicListActivity">
 
 
     <RelativeLayout

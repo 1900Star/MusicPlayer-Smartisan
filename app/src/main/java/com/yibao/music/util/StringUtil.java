@@ -3,7 +3,7 @@ package com.yibao.music.util;
 import android.content.ContentUris;
 import android.net.Uri;
 
-import com.yibao.biggirl.R;
+import com.yibao.music.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

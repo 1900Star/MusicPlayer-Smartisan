@@ -9,15 +9,11 @@ import com.yibao.music.model.greendao.DaoSession;
 import com.yibao.music.util.CrashHandler;
 import com.yibao.music.util.RxBus;
 
-import java.util.concurrent.TimeUnit;
-
-import cn.bingoogolapple.swipebacklayout.BGASwipeBackHelper;
-import okhttp3.OkHttpClient;
-
 /**
  * 作者：Stran on 2017/3/23 15:12
  * 描述：${TODO}
  * 邮箱：strangermy@outlook.com
+ * @author Stran
  */
 public class MyApplication
         extends Application {
@@ -49,7 +45,6 @@ public class MyApplication
                 .init(this);
         setUpDataBase();
         mRxBus = new RxBus();
-        BGASwipeBackHelper.init(this, null);
 
     }
 
@@ -58,7 +53,6 @@ public class MyApplication
         SQLiteDatabase db = mHelper.getWritableDatabase();
         DaoMaster mMaster = new DaoMaster(db);
         mDaoSession = mMaster.newSession();
-
 
     }
 
@@ -71,14 +65,5 @@ public class MyApplication
         return mRxBus;
     }
 
-
-
-    public static OkHttpClient defaultOkHttpClient() {
-        return new OkHttpClient.Builder()
-                .connectTimeout(3, TimeUnit.SECONDS)
-                .writeTimeout(3, TimeUnit.SECONDS)
-                .readTimeout(3, TimeUnit.SECONDS)
-                .build();
-    }
 
 }

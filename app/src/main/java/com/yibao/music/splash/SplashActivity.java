@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
-import com.yibao.biggirl.R;
-import com.yibao.music.music.musiclist.MusicListActivity;
-import com.yibao.music.util.NetworkUtil;
-import com.yibao.music.util.SnakbarUtil;
+import com.yibao.music.R;
+import com.yibao.music.artisanlist.MusicListActivity;
 import com.yibao.music.util.SystemUiVisibilityUtil;
 
 import java.util.concurrent.TimeUnit;
@@ -41,19 +39,14 @@ public class SplashActivity
         setContentView(R.layout.activity_splash);
         mBind = ButterKnife.bind(this);
         SystemUiVisibilityUtil.hideStatusBar(getWindow(), true);
-        if (NetworkUtil.isNetworkConnected(this)) {
-            Observable.timer(2, TimeUnit.SECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(aLong -> {
-                        SplashActivity.this.startActivity(new Intent(SplashActivity.this,
-                                MusicListActivity.class));
-                        finish();
-                    });
-
-        } else {
-            SnakbarUtil.netErrorsLong(mIvSplash);
-        }
+        Observable.timer(2, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+                    SplashActivity.this.startActivity(new Intent(SplashActivity.this,
+                            MusicListActivity.class));
+                    finish();
+                });
 
     }
 

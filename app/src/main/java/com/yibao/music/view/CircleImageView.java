@@ -16,7 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import com.yibao.biggirl.R;
+import com.yibao.music.R;
 
 
 /**

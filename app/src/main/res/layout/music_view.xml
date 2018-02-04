@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.yibao.music.music.musiclist.MusicListActivity">
+    tools:context="com.yibao.music.artisanlist.MusicListActivity">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

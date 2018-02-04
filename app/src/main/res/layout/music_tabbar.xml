@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="55dp"
+    android:layout_marginBottom="3dp"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    tools:ignore="UseCompoundDrawables">
+
+    <LinearLayout
+        android:id="@+id/music_bar_playlist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/tabbar_bg_down"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/music_bar_playlist_iv"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/tabbar_playlist_selector"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/music_bar_playlist_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/play_list"
+            android:textColor="@color/tabbarDownTv"
+            android:textSize="@dimen/music_tabbar" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/music_bar_artisanlist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/music_bar_artisanlist_iv"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/tabbar_artisanlist_down_selector"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/music_bar_artisanlist_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/music_artisan"
+            android:textColor="@color/tabbarTv"
+            android:textSize="@dimen/music_tabbar" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/music_bar_songlist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/music_bar_songlist_iv"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/tabbar_songlist_down_selector"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/music_bar_songlist_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/music_song"
+            android:textColor="@color/tabbarTv"
+            android:textSize="@dimen/music_tabbar" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/music_bar_albumlist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/music_bar_albumlist_iv"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/tabbar_albumlist_down_selector"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/music_bar_albumlist_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/music_album"
+            android:textColor="@color/tabbarTv"
+            android:textSize="@dimen/music_tabbar" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/music_bar_stylelist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/music_bar_stylelist_iv"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/tabbar_stylelist_down_selector"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/music_bar_stylelist_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/music_style"
+            android:textColor="@color/tabbarTv"
+            android:textSize="@dimen/music_tabbar" />
+
+    </LinearLayout>
+
+</LinearLayout>

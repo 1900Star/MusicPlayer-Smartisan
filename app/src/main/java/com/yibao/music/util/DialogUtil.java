@@ -8,7 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
-import com.yibao.biggirl.R;
+import com.yibao.music.R;
+
 
 /**
  * Author：Sid

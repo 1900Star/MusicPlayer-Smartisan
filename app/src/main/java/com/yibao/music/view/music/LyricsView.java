@@ -8,8 +8,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import com.yibao.biggirl.R;
-import com.yibao.music.model.music.MusicLyrBean;
+import com.yibao.music.R;
+import com.yibao.music.model.MusicLyrBean;
 import com.yibao.music.util.LyricsUtil;
 
 import java.util.ArrayList;

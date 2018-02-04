@@ -2,7 +2,7 @@ package com.yibao.music.util;
 
 import android.os.Environment;
 
-import com.yibao.music.model.music.MusicLyrBean;
+import com.yibao.music.model.MusicLyrBean;
 
 import java.io.BufferedReader;
 import java.io.File;

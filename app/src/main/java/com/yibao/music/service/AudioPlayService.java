@@ -14,10 +14,10 @@ import android.os.IBinder;
 import android.widget.RemoteViews;
 
 import com.yibao.music.MyApplication;
-import com.yibao.biggirl.R;
-import com.yibao.music.model.music.MusicBean;
-import com.yibao.music.model.music.MusicStatusBean;
-import com.yibao.music.music.musiclist.MusicNoification;
+import com.yibao.music.R;
+import com.yibao.music.artisanlist.MusicNoification;
+import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 

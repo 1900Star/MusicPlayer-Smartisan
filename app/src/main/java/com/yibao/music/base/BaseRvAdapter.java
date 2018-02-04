@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-import com.yibao.biggirl.R;
+import com.yibao.music.R;
 import com.yibao.music.util.Constants;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public abstract class BaseRvAdapter<T>
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_FOOTER = 1;
     private static int mLoadMoreStatus = 0;
-    private static final int mMinNum = 10;
+    private static final int Min_Num = 10;
 
     public BaseRvAdapter(List<T> list) {
         mList = list;
@@ -106,7 +106,7 @@ public abstract class BaseRvAdapter<T>
 
     @Override
     public int getItemViewType(int position) {
-        if (mList.size()>=mMinNum&&position == getItemCount() - 1) {
+        if (mList.size()>= Min_Num &&position == getItemCount() - 1) {
             return TYPE_FOOTER;
         }
         return TYPE_ITEM;

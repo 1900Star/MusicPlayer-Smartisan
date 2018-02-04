@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BigGirl</string>
+    <string name="app_name">ArtisanMusic</string>
 
     <string name="about_name">1900</string>
     <string name="about_github">https://github.com/1900Star</string>
@@ -28,5 +28,10 @@
     <string name="musicScore">评分</string>
     <string name="songName">歌曲名</string>
     <string name="notMore">------------ 我 是 有 底 线 的 ------------</string>
+    <string name="play_list">播放列表</string>
+    <string name="music_artisan">艺术家</string>
+    <string name="music_song">歌曲</string>
+    <string name="music_album">专辑</string>
+    <string name="music_style">风格</string>
 
 </resources>

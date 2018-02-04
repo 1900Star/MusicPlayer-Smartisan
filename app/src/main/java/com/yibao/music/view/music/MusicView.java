@@ -8,8 +8,8 @@ import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.yibao.biggirl.R;
-import com.yibao.music.music.musiclist.MusicListAdapter;
+import com.yibao.music.R;
+import com.yibao.music.artisanlist.MusicListAdapter;
 
 /**
  * Author：Sid

@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
-import com.yibao.biggirl.R;
+import com.yibao.music.R;
 import com.yibao.music.factory.RecyclerFactory;
 import com.yibao.music.util.LogUtil;
 

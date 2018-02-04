@@ -1,6 +1,6 @@
 package com.yibao.music.util;
 
-import com.yibao.music.model.music.MusicBean;
+import com.yibao.music.model.MusicBean;
 
 import java.util.ArrayList;
 import java.util.Random;

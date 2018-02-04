@@ -15,7 +15,8 @@ import android.view.ViewParent;
 import android.view.animation.Interpolator;
 import android.widget.Scroller;
 
-import com.yibao.biggirl.R;
+import com.yibao.music.R;
+
 
 /**
  * Author：Sid

@@ -6,7 +6,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.yibao.biggirl.R;
+import com.yibao.music.R;
 import com.yibao.music.view.ZoomImageView;
 
 /**
