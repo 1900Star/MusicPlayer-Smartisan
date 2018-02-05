@@ -22,8 +22,7 @@ ArtisanMusic
   * [butterknife](https://github.com/JakeWharton/butterknife)
   * [RxBinding](https://github.com/JakeWharton/RxBinding)
   
-
-[BigGirl](https://github.com/1900Star/BigGirl) 我的另一个Gank客户端,感兴趣的可以看一下。
+  * [BigGirl](https://github.com/1900Star/BigGirl) 我的写的Gank客户端,感兴趣的可以看一下。
 
 
 # 提示
