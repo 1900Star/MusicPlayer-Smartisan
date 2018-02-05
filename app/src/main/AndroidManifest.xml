@@ -37,7 +37,7 @@
         <service android:name="com.yibao.music.service.MusicService" />
 
         <activity
-            android:name="com.yibao.music.artisanlist.MusicListActivity"
+            android:name="com.yibao.music.artisanlist.MusicActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
     </application>

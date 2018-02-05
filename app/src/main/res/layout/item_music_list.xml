@@ -1,23 +1,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
     <TextView
         android:id="@+id/item_sticky_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="20dp"
         android:layout_alignParentTop="true"
         android:background="@color/listBg"
         android:layout_marginLeft="10dp"
         android:textColor="@color/aboutSign"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/ll_music_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/item_sticky_view"
-        android:layout_marginTop="0.2dp"
+        android:layout_marginTop="1dp"
         android:background="@color/rvBg"
         android:gravity="center_vertical"
         android:orientation="horizontal">

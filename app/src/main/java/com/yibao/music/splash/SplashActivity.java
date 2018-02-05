@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.yibao.music.R;
-import com.yibao.music.artisanlist.MusicListActivity;
+import com.yibao.music.artisanlist.MusicActivity;
 import com.yibao.music.util.SystemUiVisibilityUtil;
 
 import java.util.concurrent.TimeUnit;
@@ -44,7 +44,7 @@ public class SplashActivity
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
                     SplashActivity.this.startActivity(new Intent(SplashActivity.this,
-                            MusicListActivity.class));
+                            MusicActivity.class));
                     finish();
                 });
 

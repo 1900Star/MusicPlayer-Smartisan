@@ -24,7 +24,7 @@ import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
-import com.yibao.music.artisanlist.MusicListActivity;
+import com.yibao.music.artisanlist.MusicActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.SeekBarChangeListtener;
 import com.yibao.music.dialogfrag.TopBigPicDialogFragment;
@@ -106,7 +106,7 @@ public class MusicPlayDialogFag
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        audioBinder = MusicListActivity.getAudioBinder();
+        audioBinder = MusicActivity.getAudioBinder();
         mBus = MyApplication.getIntstance()
                 .bus();
         disposables = new CompositeDisposable();
@@ -232,7 +232,11 @@ public class MusicPlayDialogFag
     }
 
 
-    //接收service中的数据,更新UI。
+
+
+    /**
+     * //接收service中的数据,更新UI。
+     */
     private void initRxBusData() {
         disposables.add(mBus.toObserverable(MusicBean.class)
                 .subscribeOn(Schedulers.io())
@@ -269,7 +273,12 @@ public class MusicPlayDialogFag
         }
     }
 
-    //设置歌曲名和歌手名
+
+
+    /**
+     *  //设置歌曲名和歌手名
+     * @param info
+     */
     private void perpareMusic(MusicBean info) {
         mCurrenMusicInfo = info;
         checkCurrentIsFavorite();
@@ -439,7 +448,6 @@ public class MusicPlayDialogFag
     private void showLyrics() {
 
         if (isShowLyrics) {
-//            mDisposableLyrics.dispose();
             mIvLyrSwitch.setBackgroundResource(R.drawable.music_lrc_close);
             AnimationDrawable animation = (AnimationDrawable) mIvLyrSwitch.getBackground();
             animation.start();
@@ -598,7 +606,8 @@ public class MusicPlayDialogFag
                     //更新音乐进度数值
                     updataMusicProgress(progress);
                     break;
-                case R.id.sb_volume:    //更新音乐  SeekBar
+                //更新音乐  SeekBar
+                case R.id.sb_volume:
                     updateMusicVolume(progress);
                     break;
                 default:
@@ -620,10 +629,12 @@ public class MusicPlayDialogFag
         @Override
         public void onReceive(Context context, Intent intent) {
             //如果系统音量发生变化就更新Seekbar
-            if (intent.getAction()
-                    .equals("android.media.VOLUME_CHANGED_ACTION")) {
+            String volumeAction = "android.media.VOLUME_CHANGED_ACTION";
+            if (volumeAction.equals(intent.getAction())) {
+
                 AudioManager mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-                int currVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);// 当前的媒体音量
+                // 当前的媒体音量
+                int currVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                 mSbVolume.setProgress(currVolume);
             }
         }

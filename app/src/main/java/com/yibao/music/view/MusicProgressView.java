@@ -94,12 +94,12 @@ public class MusicProgressView
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
-        super.dispatchDraw(canvas);//绘制图标和文字
+        //绘制图标和文字
+        super.dispatchDraw(canvas);
         int bottom = mIvIcon.getBottom();
         int top    = mIvIcon.getTop();
         int left   = mIvIcon.getLeft();
         int right  = mIvIcon.getRight();
-        //        LogUtil.d("BOTTOM===============BOTTOM  ",left+"========"+top+   "  =="+right+"    =="+bottom);
         if (isProgressEnable) {
             if (mOval == null) {
 

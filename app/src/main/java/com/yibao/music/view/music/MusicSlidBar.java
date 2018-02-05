@@ -82,6 +82,7 @@ public class MusicSlidBar
         mTvPaint.setTextAlign(Paint.Align.CENTER);
         mTvPaint.setTextSize(30);
         mTvPaint.setAntiAlias(true);
+        mTvPaint.setFakeBoldText(true);
         mTvPaint.setStyle(Paint.Style.FILL);
 
 
@@ -107,10 +108,11 @@ public class MusicSlidBar
             if (i == 0) {
                 mTvPaint.setColor(Color.GRAY);
             } else if (i == mIndex) {
-                mTvPaint.setColor(Color.parseColor("#FF4081"));
+                mTvPaint.setColor(Color.parseColor("#E64040"));
+
                 canvas.drawCircle(viewW / 2,
                         i * singleHeight + singleHeight / 2 - dip2px(1),
-                        dip2px(12),
+                        dip2px(8),
                         mCirclePaint);
             } else {
                 mTvPaint.setColor(Color.GRAY);
@@ -135,11 +137,11 @@ public class MusicSlidBar
             case MotionEvent.ACTION_DOWN:
                 //改变背景颜色
                 setBackgroundResource(R.drawable.shape_slibar);
-                mCirclePaint.setColor(Color.parseColor("#6e6e6e"));
+                mCirclePaint.setColor(Color.parseColor("#FF939396"));
                 performTouch(event);
                 break;
             case MotionEvent.ACTION_MOVE:
-                mCirclePaint.setColor(Color.parseColor("#6e6e6e"));
+                mCirclePaint.setColor(Color.parseColor("#FF939396"));
                 performTouch(event);
                 break;
             case MotionEvent.ACTION_UP:

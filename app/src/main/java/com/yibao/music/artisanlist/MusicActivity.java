@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -39,7 +40,6 @@ import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
-import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
@@ -47,7 +47,6 @@ import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.MusicProgressView;
 import com.yibao.music.view.ProgressBtn;
-import com.yibao.music.view.music.MusicView;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -67,21 +66,10 @@ import io.reactivex.schedulers.Schedulers;
  *         Des：${音乐列表界面}
  *         Time:2017/5/30 13:27
  */
-public class MusicListActivity
+public class MusicActivity
         extends AppCompatActivity
         implements OnMusicListItemClickListener {
 
-
-    @BindView(R.id.iv_music_category_paly)
-    ImageView mMusicCategoryPlay;
-    @BindView(R.id.tv_music_category_songname)
-    TextView mMusicCategorySongName;
-    @BindView(R.id.tv_music_category_score)
-    TextView mMusicCategoryScore;
-    @BindView(R.id.tv_music_category_frequency)
-    TextView mMusicCategoryFrequency;
-    @BindView(R.id.tv_music_category_addtime)
-    TextView mMusicCategoryAddtime;
     @BindView(R.id.tv_music_toolbar_title)
     TextView mTvMusicToolbarTitle;
     @BindView(R.id.music_float_song_name)
@@ -106,12 +94,12 @@ public class MusicListActivity
     CircleImageView mMusicFloatBlockAlbulm;
     @BindView(R.id.music_float_pb)
     ProgressBtn mPb;
+    @BindView(R.id.music_viewpager)
+    ViewPager mMusicViewPager;
     @BindView(R.id.music_floating_vp)
     ViewPager mMusicSlideViewPager;
 
 
-    @BindView(R.id.musci_view)
-    MusicView mMusciView;
     @BindView(R.id.music_bar_playlist_iv)
     ImageView mMusicBarPlaylistIv;
     @BindView(R.id.music_bar_playlist_tv)
@@ -142,6 +130,7 @@ public class MusicListActivity
     TextView mMusicBarStylelistTv;
     @BindView(R.id.music_bar_stylelist)
     LinearLayout mMusicBarStylelist;
+
     private CompositeDisposable disposables;
     private ArrayList<MusicBean> mMusicItems;
     private Unbinder mBind;
@@ -156,6 +145,7 @@ public class MusicListActivity
     private boolean mMusicConfig;
     private boolean isChangeFloatingBlock;
     private int mPlayState;
+    private int mNormalTabbarColor;
 
 
     @Override
@@ -168,10 +158,9 @@ public class MusicListActivity
         disposables = new CompositeDisposable();
         initView();
         initData();
-        initMusicConfig();
         initRxBusData();
+        initMusicConfig();
         initListener();
-        switchListCategory(2);
     }
 
     private void initView() {
@@ -180,14 +169,13 @@ public class MusicListActivity
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(v -> finish());
-        mPb.setPainColor(ColorUtil.errorColor);
+        mNormalTabbarColor = Color.parseColor("#939396");
     }
 
     private void initData() {
         mMusicItems = MusicListUtil.getMusicList(this);
-        MusicListAdapter adapter = new MusicListAdapter(this, mMusicItems);
-        mMusciView.setAdapter(this, adapter);
-        adapter.notifyDataSetChanged();
+        MusicPagerAdapter musicPagerAdapter = new MusicPagerAdapter(getSupportFragmentManager());
+        mMusicViewPager.setAdapter(musicPagerAdapter);
 
     }
 
@@ -202,14 +190,15 @@ public class MusicListActivity
                 // 读取用户的播放记录，设置UI显示，做好播放的准备。(暂停和播放两种状态)
                 MusicBean musicInfo = mMusicItems.get(mCurrentPosition);
                 perpareItem(musicInfo);
+                mMusicConfig = false;
             } else if (mPlayState == 2) {
                 executStartServiceAndInitAnimation();
             }
         } else {
             LogUtil.d("用户 ++++  nothing ");
         }
-        MusicPagerAdapter musicPagerAdapter = new MusicPagerAdapter(this, mMusicItems, mCurrentPosition);
-        mMusicSlideViewPager.setAdapter(musicPagerAdapter);
+        MusicControPagerAdapter musicControPagerAdapter = new MusicControPagerAdapter(this, mMusicItems, mCurrentPosition);
+        mMusicSlideViewPager.setAdapter(musicControPagerAdapter);
 
     }
 
@@ -250,9 +239,9 @@ public class MusicListActivity
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribe(o -> {
                     if (mMusicConfig) {
-                        MusicListActivity.this.readyMusic();
+                        MusicActivity.this.readyMusic();
                     } else {
-                        ToastUtil.showNoMusic(MusicListActivity.this);
+                        ToastUtil.showNoMusic(MusicActivity.this);
                     }
                 });
     }
@@ -272,7 +261,7 @@ public class MusicListActivity
                     // 将MusicConfig设置为ture
                     SharePrefrencesUtil.setMusicConfig(this);
                     mMusicConfig = true;
-                    MusicListActivity.this.perpareItem(musicItem);
+                    MusicActivity.this.perpareItem(musicItem);
                     //更新播放状态按钮
                     updatePlayBtnStatus();
                     //初始化动画
@@ -292,7 +281,7 @@ public class MusicListActivity
         disposables.add(mBus.toObserverable(MusicStatusBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(MusicListActivity.this::refreshBtnAndNotify));
+                .subscribe(MusicActivity.this::refreshBtnAndNotify));
 
     }
 
@@ -309,7 +298,7 @@ public class MusicListActivity
                 updatePlayBtnStatus();
                 break;
             case 1:
-                startActivity(new Intent(this, MusicListActivity.class));
+                startActivity(new Intent(this, MusicActivity.class));
                 break;
             case 2:
                 finish();
@@ -367,6 +356,8 @@ public class MusicListActivity
      */
     @Override
     public void startMusicService(int position) {
+
+
         mCurrentPosition = position;
         //获取音乐列表
         Intent intent = new Intent();
@@ -403,10 +394,6 @@ public class MusicListActivity
 //        MusicNoification.updatePlayBtn(audioBinder.isPlaying());
     }
 
-//****************************************************************************
-//****************************************************************************
-//****************************************************************************
-//****************************************************************************
 
     /**
      * 切换当前播放状态
@@ -448,34 +435,16 @@ public class MusicListActivity
     }
 
 
-    @OnClick({R.id.iv_music_category_paly,
-            R.id.tv_music_category_songname,
-            R.id.tv_music_category_score,
-            R.id.tv_music_category_frequency,
-            R.id.tv_music_category_addtime,
-            R.id.music_floating_pre,
+    @OnClick({R.id.music_floating_pre,
             R.id.music_floating_play,
             R.id.music_floating_next,
             R.id.music_floating_pager_play,
-            R.id.music_floating_pager_next, R.id.music_bar_playlist, R.id.music_bar_artisanlist, R.id.music_bar_songlist, R.id.music_bar_albumlist, R.id.music_bar_stylelist})
+            R.id.music_floating_pager_next,
+            R.id.music_bar_playlist,
+            R.id.music_bar_artisanlist, R.id.music_bar_songlist, R.id.music_bar_albumlist, R.id.music_bar_stylelist})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.iv_music_category_paly:
-                int position = RandomUtil.getRandomPostion(mMusicItems);
-                startMusicService(position);
-                break;
-            case R.id.tv_music_category_songname:
-                switchListCategory(1);
-                break;
-            case R.id.tv_music_category_score:
-                switchListCategory(2);
-                break;
-            case R.id.tv_music_category_frequency:
-                switchListCategory(3);
-                break;
-            case R.id.tv_music_category_addtime:
-                switchListCategory(4);
-                break;
+
             case R.id.music_bar_playlist:
                 switchMusicTabbar(1);
                 break;
@@ -524,31 +493,33 @@ public class MusicListActivity
     private void switchMusicTabbar(int flag) {
         switch (flag) {
             case 1:
+                mMusicViewPager.setCurrentItem(0, false);
                 mMusicBarPlaylist.setBackgroundResource(R.drawable.tabbar_bg_down);
                 mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_selector);
                 mMusicBarPlaylistTv.setTextColor(ColorUtil.musicbarTvDown);
 
                 mMusicBarArtisanlist.setBackgroundColor(ColorUtil.wihtle);
-                mMusicBarAlbumlistIv.setBackgroundResource(R.drawable.tabbar_artisanlist_down_selector);
-                mMusicBarArtisanlistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarArtisanlistIv.setBackgroundResource(R.drawable.tabbar_artisanlist_down_selector);
+                mMusicBarArtisanlistTv.setTextColor(mNormalTabbarColor);
 
                 mMusicBarSonglist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarSonglistIv.setBackgroundResource(R.drawable.tabbar_songlist_down_selector);
-                mMusicBarSonglistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarSonglistTv.setTextColor(mNormalTabbarColor);
 
                 mMusicBarAlbumlist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarAlbumlistIv.setBackgroundResource(R.drawable.tabbar_albumlist_down_selector);
-                mMusicBarAlbumlistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarAlbumlistTv.setTextColor(mNormalTabbarColor);
 
                 mMusicBarStylelist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarStylelistIv.setBackgroundResource(R.drawable.tabbar_stylelist_down_selector);
-                mMusicBarStylelistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarStylelistTv.setTextColor(mNormalTabbarColor);
 
                 break;
             case 2:
+                mMusicViewPager.setCurrentItem(1, false);
                 mMusicBarPlaylist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_down_selector);
-                mMusicBarPlaylistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarPlaylistTv.setTextColor(mNormalTabbarColor);
 
                 mMusicBarArtisanlist.setBackgroundResource(R.drawable.tabbar_bg_down);
                 mMusicBarArtisanlistIv.setBackgroundResource(R.drawable.tabbar_artisanlist_selector);
@@ -556,26 +527,27 @@ public class MusicListActivity
 
                 mMusicBarSonglist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarSonglistIv.setBackgroundResource(R.drawable.tabbar_songlist_down_selector);
-                mMusicBarSonglistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarSonglistTv.setTextColor(mNormalTabbarColor);
 
                 mMusicBarAlbumlist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarAlbumlistIv.setBackgroundResource(R.drawable.tabbar_albumlist_down_selector);
-                mMusicBarAlbumlistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarAlbumlistTv.setTextColor(mNormalTabbarColor);
 
                 mMusicBarStylelist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarStylelistIv.setBackgroundResource(R.drawable.tabbar_stylelist_down_selector);
-                mMusicBarStylelistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarStylelistTv.setTextColor(mNormalTabbarColor);
 
 
                 break;
             case 3:
+                mMusicViewPager.setCurrentItem(0, false);
                 mMusicBarPlaylist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_down_selector);
-                mMusicBarPlaylistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarPlaylistTv.setTextColor(mNormalTabbarColor);
 
                 mMusicBarArtisanlist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarArtisanlistIv.setBackgroundResource(R.drawable.tabbar_artisanlist_down_selector);
-                mMusicBarArtisanlistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarArtisanlistTv.setTextColor(mNormalTabbarColor);
 
 
                 mMusicBarSonglist.setBackgroundResource(R.drawable.tabbar_bg_down);
@@ -585,26 +557,27 @@ public class MusicListActivity
 
                 mMusicBarAlbumlist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarAlbumlistIv.setBackgroundResource(R.drawable.tabbar_albumlist_down_selector);
-                mMusicBarAlbumlistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarAlbumlistTv.setTextColor(mNormalTabbarColor);
 
                 mMusicBarStylelist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarStylelistIv.setBackgroundResource(R.drawable.tabbar_stylelist_down_selector);
-                mMusicBarStylelistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarStylelistTv.setTextColor(mNormalTabbarColor);
 
                 break;
             case 4:
+                mMusicViewPager.setCurrentItem(1, false);
                 mMusicBarPlaylist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_down_selector);
-                mMusicBarPlaylistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarPlaylistTv.setTextColor(mNormalTabbarColor);
 
                 mMusicBarArtisanlist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarArtisanlistIv.setBackgroundResource(R.drawable.tabbar_artisanlist_down_selector);
-                mMusicBarArtisanlistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarArtisanlistTv.setTextColor(mNormalTabbarColor);
 
 
                 mMusicBarSonglist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarSonglistIv.setBackgroundResource(R.drawable.tabbar_songlist_down_selector);
-                mMusicBarSonglistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarSonglistTv.setTextColor(mNormalTabbarColor);
 
                 mMusicBarAlbumlist.setBackgroundResource(R.drawable.tabbar_bg_down);
                 mMusicBarAlbumlistIv.setBackgroundResource(R.drawable.tabbar_albumlist_selector);
@@ -613,27 +586,26 @@ public class MusicListActivity
 
                 mMusicBarStylelist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarStylelistIv.setBackgroundResource(R.drawable.tabbar_stylelist_down_selector);
-                mMusicBarStylelistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarStylelistTv.setTextColor(mNormalTabbarColor);
                 break;
             case 5:
+                mMusicViewPager.setCurrentItem(1, false);
                 mMusicBarPlaylist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_down_selector);
-                mMusicBarPlaylistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarPlaylistTv.setTextColor(mNormalTabbarColor);
 
                 mMusicBarArtisanlist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarArtisanlistIv.setBackgroundResource(R.drawable.tabbar_artisanlist_down_selector);
-                mMusicBarArtisanlistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarArtisanlistTv.setTextColor(mNormalTabbarColor);
 
 
                 mMusicBarSonglist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarSonglistIv.setBackgroundResource(R.drawable.tabbar_songlist_down_selector);
-                mMusicBarSonglistTv.setTextColor(ColorUtil.musicbarTv);
+                mMusicBarSonglistTv.setTextColor(mNormalTabbarColor);
 
                 mMusicBarAlbumlist.setBackgroundColor(ColorUtil.wihtle);
-
                 mMusicBarAlbumlistIv.setBackgroundResource(R.drawable.tabbar_albumlist_down_selector);
-                mMusicBarAlbumlistTv.setTextColor(ColorUtil.musicbarTv);
-
+                mMusicBarAlbumlistTv.setTextColor(mNormalTabbarColor);
 
                 mMusicBarStylelist.setBackgroundResource(R.drawable.tabbar_bg_down);
                 mMusicBarStylelistIv.setBackgroundResource(R.drawable.tabbar_stylelist_selector);
@@ -647,57 +619,6 @@ public class MusicListActivity
 
     }
 
-    private void switchListCategory(int flag) {
-        switch (flag) {
-            case 1:
-                mMusicCategorySongName.setTextColor(ColorUtil.wihtle);
-                mMusicCategorySongName.setBackgroundResource(R.drawable.btn_category_songname_down_selector);
-                mMusicCategoryScore.setTextColor(ColorUtil.textName);
-                mMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_selector);
-                mMusicCategoryFrequency.setTextColor(ColorUtil.textName);
-                mMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_selector);
-                mMusicCategoryAddtime.setTextColor(ColorUtil.textName);
-                mMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_selector);
-                break;
-            case 2:
-                mMusicCategoryScore.setTextColor(ColorUtil.wihtle);
-                mMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_down_selector);
-                mMusicCategorySongName.setTextColor(ColorUtil.textName);
-                mMusicCategorySongName.setBackgroundResource(R.drawable.btn_category_songname_selector);
-                mMusicCategoryFrequency.setTextColor(ColorUtil.textName);
-                mMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_selector);
-                mMusicCategoryAddtime.setTextColor(ColorUtil.textName);
-                mMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_selector);
-
-                break;
-            case 3:
-                mMusicCategoryFrequency.setTextColor(ColorUtil.wihtle);
-                mMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_down_selector);
-                mMusicCategorySongName.setTextColor(ColorUtil.textName);
-                mMusicCategorySongName.setBackgroundResource(R.drawable.btn_category_songname_selector);
-                mMusicCategoryScore.setTextColor(ColorUtil.textName);
-                mMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_selector);
-                mMusicCategoryAddtime.setTextColor(ColorUtil.textName);
-                mMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_selector);
-
-                break;
-            case 4:
-                mMusicCategoryAddtime.setTextColor(ColorUtil.wihtle);
-                mMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_down_selector);
-                mMusicCategorySongName.setTextColor(ColorUtil.textName);
-                mMusicCategorySongName.setBackgroundResource(R.drawable.btn_category_songname_selector);
-                mMusicCategoryScore.setTextColor(ColorUtil.textName);
-                mMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_selector);
-                mMusicCategoryFrequency.setTextColor(ColorUtil.textName);
-                mMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_selector);
-
-                break;
-            default:
-                break;
-        }
-
-
-    }
 
     private void switchControlBlock() {
         if (isChangeFloatingBlock) {

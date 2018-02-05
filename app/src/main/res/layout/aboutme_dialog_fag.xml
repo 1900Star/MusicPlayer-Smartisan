@@ -8,7 +8,7 @@
     android:background="@color/about"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".artisanlist.MusicListActivity">
+    tools:context=".artisanlist.MusicActivity">
 
 
     <android.support.v4.widget.NestedScrollView

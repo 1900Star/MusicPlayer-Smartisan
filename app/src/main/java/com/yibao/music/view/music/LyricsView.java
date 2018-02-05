@@ -18,6 +18,7 @@ import java.util.ArrayList;
  * Author：Sid
  * Des：${自定义歌词View
  * Time:2017/9/14 01:16
+ * @author Stran
  */
 public class LyricsView
         extends TextView {
@@ -176,8 +177,15 @@ public class LyricsView
         invalidate();
     }
 
-    //        根据歌曲名和歌手名设置歌词
+
+    /**
+     *
+     *    根据歌曲名和歌手名查找歌词，并将歌词解析到List里。
+     * @param songName
+     * @param artist
+     */
     public void setLrcFile(String songName, String artist) {
+
         mList = LyricsUtil.getLyricList(songName, artist);
         //默认剧中行=0
         centerLine = 0;
