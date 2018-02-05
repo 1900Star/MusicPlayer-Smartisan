@@ -12,7 +12,6 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.yibao.music.R;
-import com.yibao.music.util.Constants;
 
 import java.util.List;
 
@@ -58,24 +57,8 @@ public abstract class BaseRvAdapter<T>
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        // 处理加载更多时的各种状态
-        if (holder instanceof LoadMoreHolder) {
-            LoadMoreHolder loadMoreHolder = (LoadMoreHolder) holder;
-            if (mLoadMoreStatus == Constants.LOADING_MORE_RV) {
-                loadMoreHolder.mPbLoad.setVisibility(View.VISIBLE);
-                loadMoreHolder.mTvLoadMoreStatus.setVisibility(View.INVISIBLE);
-            } else if (mLoadMoreStatus == Constants.NOT_MORE_DATA_RV) {
-                loadMoreHolder.mPbLoad.setVisibility(View.INVISIBLE);
-                loadMoreHolder.mTvLoadMoreStatus.setVisibility(View.VISIBLE);
-            } else if (mLoadMoreStatus == Constants.NOTHING_MORE_RV) {
-                loadMoreHolder.mPbLoad.setVisibility(View.INVISIBLE);
-                loadMoreHolder.mTvLoadMoreStatus.setVisibility(View.INVISIBLE);
 
-            }
-        } else {
-
-            bindView(holder, mList.get(position));
-        }
+        bindView(holder, mList.get(position));
     }
 
     /**
@@ -106,7 +89,7 @@ public abstract class BaseRvAdapter<T>
 
     @Override
     public int getItemViewType(int position) {
-        if (mList.size()>= Min_Num &&position == getItemCount() - 1) {
+        if (mList.size() >= Min_Num && position == getItemCount() - 1) {
             return TYPE_FOOTER;
         }
         return TYPE_ITEM;
@@ -130,14 +113,10 @@ public abstract class BaseRvAdapter<T>
     }
 
     public void addFooter(List<T> list) {
-        if (list == null || list.size() == 0) {
-            changeLoadMoreStatus(Constants.NOT_MORE_DATA_RV);
-        } else {
-            changeLoadMoreStatus(Constants.LOADING_MORE_RV);
-            for (T t : list) {
-                if (!mList.contains(t)) {
-                    mList.add(t);
-                }
+
+        for (T t : list) {
+            if (!mList.contains(t)) {
+                mList.add(t);
             }
         }
         notifyDataSetChanged();

@@ -38,6 +38,7 @@ import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
+import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RxBus;
@@ -186,12 +187,12 @@ public class MusicActivity
             mCurrentPosition = SharePrefrencesUtil.getMusicPosition(this);
             mPlayState = SharePrefrencesUtil.getMusicPlayState(this);
             LogUtil.d("======= mPlayStae  " + mPlayState);
-            if (mPlayState == 1) {
+            if (mPlayState == Constants.NUMBER_ONE) {
                 // 读取用户的播放记录，设置UI显示，做好播放的准备。(暂停和播放两种状态)
                 MusicBean musicInfo = mMusicItems.get(mCurrentPosition);
                 perpareItem(musicInfo);
-                mMusicConfig = false;
-            } else if (mPlayState == 2) {
+//                mMusicConfig = false;
+            } else if (mPlayState == Constants.NUMBER_TWO) {
                 executStartServiceAndInitAnimation();
             }
         } else {
@@ -207,7 +208,7 @@ public class MusicActivity
         initAnimation();
         mMusicFloatingPlay.setImageResource(R.drawable.btn_playing_pause_selector);
         mMusicPagerPlay.setIcon(R.mipmap.notifycation_pause);
-        mPlayState = 3;
+        mPlayState = Constants.NUMBER_THRRE;
     }
 
     private void initListener() {
@@ -406,11 +407,11 @@ public class MusicActivity
      * 下次打开播放器的界面时，继续自动播放当前的歌曲。
      */
     private void switchPlayState() {
-        if (mPlayState == 1) {
+        if (mPlayState == Constants.NUMBER_ONE) {
             LogUtil.d(" PlayState == 1 ==================");
             executStartServiceAndInitAnimation();
-        } else if (mPlayState == 2) {
-            mPlayState = 3;
+        } else if (mPlayState == Constants.NUMBER_TWO) {
+            mPlayState = Constants.NUMBER_THRRE;
         } else {
             if (audioBinder == null) {
                 ToastUtil.showNoMusic(this);
@@ -740,7 +741,7 @@ public class MusicActivity
         }
         unregisterReceiver(headsetReciver);
         if (audioBinder != null) {
-            mPlayState = audioBinder.isPlaying() ? 2 : 1;
+            mPlayState = audioBinder.isPlaying() ? Constants.NUMBER_TWO : Constants.NUMBER_ONE;
             SharePrefrencesUtil.setMusicPlayState(this, mPlayState);
 
         }
