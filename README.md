@@ -2,12 +2,8 @@
 ![image](https://github.com/1900Star/OkStar/blob/master/Screenshot/main.jpg)
 
 
-![image](https://github.com/1900Star/OkStar/blob/master/Screenshot/music.jpg)
+![image]()
 
-
-![image](https://github.com/1900Star/OkStar/blob/master/Screenshot/biggirls.gif)
-
-![image](https://github.com/1900Star/BigGril/blob/master/Screenshot_png/b.png)
 
 
 
@@ -15,34 +11,27 @@ BigGirl
 
 #项目介绍：
 
-「BigGirl-Gank.io」用[干货集中营]提供的Api开发一的个综合资讯客户端，每天提更新一张妹子纸图片，一个视频，还有若干精选的Android，ios，web等相关的技术干货。
+「ArtisanMusic」(https://github.com/1900Star/ArtisanMusic) 仿照锤子音乐播放器写的一个本地音乐播放器，会尽可能的实现锤子音乐播放器已有的功能。
+                也会去除一些功能，比如去除:云音乐，联网搜索，因为主要还是播放本地音乐为主。
+                同时也会增加一些个人觉得有趣的交互，比如增加了类似QQ音乐的左右滑动切换上/下一曲的交互。用GreenDao实现了收藏功能，也使用了Rxjava的一些
+                操作符：timer、interval和Rxbus。目前实现的功能：播放功能、播放列表、收藏、通知栏、歌词滚动、屏幕常亮。
+
 
 
 ## 第三方库
-    *Rxjava
-    *Rxandroid
-    *Dagger2
-    *buttbutterknife
-    *retrofit
-    *fresco
-    *glide
-    *eventbus
-    *kotlin
+  * [Rxjava](https://github.com/ReactiveX/RxJava)
+  * [Glide](https://github.com/bumptech/glide)
+  * [GreenDao](https://github.com/greenrobot/greenDAO)
+  * [butterknife](https://github.com/JakeWharton/butterknife)
+  * [RxBinding](https://github.com/JakeWharton/RxBinding)
+
+
+## 素材据源
+应用中的所有素材来源于互联网
 
 # 提示
-本项目还没写完，只要有空闲的就会更新代码
+本项目还没写完，没写完! 没写完! 只要有空闲时间就会更新代码。
 
-## 干货数据源
-应用中的部分数据来自干货集中营 [http://gank.io/api]
-
-#### 项目介绍：
-「BigGirl-Gank.io」用[干货集中营]提供的Api开发一的个综合资讯客户端，每天提更新一张妹子纸图片，一个视频，还有若干精选的Android，ios，web等相关的技术干货。
-
-项目完全代码开源，由@丨900完成，写这个项目主要是学习RxJava2，Retrofit2，fresco等开源框架,整个项目参照了谷歌官方RxMVP设计模式，
-
-整个过程中有收获很多，熟悉了RxJava2的一些操作符，用Rxbus替代了曾经常用的Eventbus，对MVP+RxJava+Retrofit这个黄金组合有了近一步的认识。
-
-在这个信息时代非常感谢各种开源社区。由于本人水平有限，项目中难免有所纰漏，如果有问题请与我联系 www.strangermy98@gmail.com
-
+# 由于本人水平有限，项目中难免有所纰漏，如果有问题请与我联系 www.strangermy98@gmail.com
 
 
