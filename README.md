@@ -1,13 +1,8 @@
 ﻿
-![image](https://github.com/1900Star/OkStar/blob/master/Screenshot/main.jpg)
-
 
 ![image](https://github.com/1900Star/ArtisanMusic/blob/master/app/screenshot/a.jpg)
 ![image](https://github.com/1900Star/ArtisanMusic/blob/master/app/screenshot/b.jpg)
 ![image](https://github.com/1900Star/ArtisanMusic/blob/master/app/screenshot/artisanMusic.gif)
-
-
-
 
 ArtisanMusic
 
