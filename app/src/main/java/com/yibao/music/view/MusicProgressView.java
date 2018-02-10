@@ -18,16 +18,17 @@ import com.yibao.music.R;
  * 作者：Stran on 2017/3/27 16:55
  * 描述：${自定义ProgressBar}
  * 邮箱：strangermy@outlook.com
+ *
+ * @author Stran
  */
 public class MusicProgressView
-        extends LinearLayout
-{
+        extends LinearLayout {
     private ImageView mIvIcon;
-    private TextView             mTvNote;
+    private TextView mTvNote;
 
     private boolean isProgressEnable = true;
-    private int     mMax             = 100;
-    private int   mProgress;
+    private int mMax = 100;
+    private int mProgress;
     private RectF mOval;
     private Paint mPaint;
 
@@ -89,7 +90,7 @@ public class MusicProgressView
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);//绘制背景(透明)
+        super.onDraw(canvas);
     }
 
     @Override
@@ -97,9 +98,9 @@ public class MusicProgressView
         //绘制图标和文字
         super.dispatchDraw(canvas);
         int bottom = mIvIcon.getBottom();
-        int top    = mIvIcon.getTop();
-        int left   = mIvIcon.getLeft();
-        int right  = mIvIcon.getRight();
+        int top = mIvIcon.getTop();
+        int left = mIvIcon.getLeft();
+        int right = mIvIcon.getRight();
         if (isProgressEnable) {
             if (mOval == null) {
 
@@ -113,9 +114,9 @@ public class MusicProgressView
             if (mPaint == null) {
                 mPaint = new Paint();
                 mPaint.setStyle(Paint.Style.STROKE);
-                mPaint.setStrokeWidth(10);
+                mPaint.setStrokeWidth(9);
                 mPaint.setAntiAlias(true);
-                mPaint.setColor(Color.argb(255, 97, 97, 97));
+                mPaint.setColor(Color.parseColor("#E64040"));
             }
             canvas.drawArc(mOval, startAngle, sweepAngle, useCenter, mPaint);
         }

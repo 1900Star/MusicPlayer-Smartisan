@@ -37,6 +37,7 @@ public class RecyclerFactory {
             recyclerView.setLayoutParams(params);
 
         } else {
+
             StaggeredGridLayoutManager.LayoutParams params = new StaggeredGridLayoutManager.LayoutParams(
                     RecyclerView.LayoutParams.MATCH_PARENT,
                     RecyclerView.LayoutParams.MATCH_PARENT);

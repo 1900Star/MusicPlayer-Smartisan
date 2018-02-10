@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/play_list_frag_content"
+    android:background="@color/listBg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_add_new_play_list"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/tabbar_bg"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/btn_add_selector" />
+
+        <TextView
+            android:enabled="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="@string/add_new_play_list"
+            android:textColor="@drawable/text_add_lit_selector"
+            android:textSize="@dimen/about_sign" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:background="@color/listBg" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_play_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+
+</LinearLayout>

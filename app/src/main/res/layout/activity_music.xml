@@ -16,7 +16,7 @@
             android:id="@+id/toolbar_music"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:background="@drawable/titlebar_playing_bg"
+            android:background="@drawable/tabbar_bg"
             android:minHeight="?attr/actionBarSize"
             app:navigationIcon="@drawable/music_titlebar_back_selector">
 
@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/music"
+                android:text="@string/music_song"
                 android:textColor="@color/textDes"
                 android:textSize="@dimen/big_tv" />
         </android.support.v7.widget.Toolbar>

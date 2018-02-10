@@ -1,7 +1,6 @@
 package com.yibao.music.artisanlist;
 
 import android.animation.ObjectAnimator;
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -29,13 +28,16 @@ import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
+import com.yibao.music.album.MainActivity;
 import com.yibao.music.artisan.MusicPlayDialogFag;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.OnMusicListItemClickListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicDialogInfo;
 import com.yibao.music.model.MusicStatusBean;
+import com.yibao.music.model.TestBean;
 import com.yibao.music.service.AudioPlayService;
+import com.yibao.music.service.MusicService;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
@@ -99,8 +101,6 @@ public class MusicActivity
     ViewPager mMusicViewPager;
     @BindView(R.id.music_floating_vp)
     ViewPager mMusicSlideViewPager;
-
-
     @BindView(R.id.music_bar_playlist_iv)
     ImageView mMusicBarPlaylistIv;
     @BindView(R.id.music_bar_playlist_tv)
@@ -152,7 +152,7 @@ public class MusicActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_music_list);
+        setContentView(R.layout.activity_music);
         ButterKnife.bind(this);
         mBind = ButterKnife.bind(this);
         mBus = MyApplication.getIntstance().bus();
@@ -164,6 +164,7 @@ public class MusicActivity
         initListener();
     }
 
+
     private void initView() {
         Toolbar toolbar = findViewById(R.id.toolbar_music);
         setSupportActionBar(toolbar);
@@ -171,11 +172,13 @@ public class MusicActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(v -> finish());
         mNormalTabbarColor = Color.parseColor("#939396");
+
     }
 
     private void initData() {
-        mMusicItems = MusicListUtil.getMusicList(this);
-        MusicPagerAdapter musicPagerAdapter = new MusicPagerAdapter(getSupportFragmentManager());
+        mMusicItems = MusicListUtil.getMusicDataList(this);
+
+        MusicPagerAdapter musicPagerAdapter = new MusicPagerAdapter(getFragmentManager());
         mMusicViewPager.setAdapter(musicPagerAdapter);
 
     }
@@ -213,7 +216,7 @@ public class MusicActivity
 
     private void initListener() {
         openMusicPlayDialogFag();
-        mTvMusicToolbarTitle.setOnClickListener(view -> switchControlBlock());
+        mTvMusicToolbarTitle.setOnClickListener(view -> switchMusicControlBar());
         mMusicSlideViewPager.addOnPageChangeListener(new MusicPagerListener() {
             @Override
             public void onPageSelected(int position) {
@@ -232,6 +235,12 @@ public class MusicActivity
         } else {
             ToastUtil.showNoMusic(this);
         }
+
+    }
+
+    @Override
+    public void onOpenAlbumDetailsFragment(String s) {
+        MyApplication.getIntstance().bus().post(new TestBean("在Activity中测试"));
 
     }
 
@@ -260,15 +269,15 @@ public class MusicActivity
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(musicItem -> {
                     // 将MusicConfig设置为ture
-                    SharePrefrencesUtil.setMusicConfig(this);
+                    SharePrefrencesUtil.setMusicConfig(MusicActivity.this);
                     mMusicConfig = true;
                     MusicActivity.this.perpareItem(musicItem);
                     //更新播放状态按钮
-                    updatePlayBtnStatus();
+                    MusicActivity.this.updatePlayBtnStatus();
                     //初始化动画
-                    initAnimation();
+                    MusicActivity.this.initAnimation();
                     //更新歌曲的进度
-                    updataProgress();
+                    MusicActivity.this.updataProgress();
 
                 }));
         /*
@@ -319,7 +328,7 @@ public class MusicActivity
         mMusicSlideViewPager.setCurrentItem(musicItem.getCureetPosition(), false);
         mItem = musicItem;
         //更新音乐标题
-        String songName = StringUtil.getSongName(musicItem.getTitle());
+        String songName = musicItem.getTitle();
         mMusicFloatSongName.setText(songName);
         //更新歌手名称
         String artistName = musicItem.getArtist();
@@ -357,17 +366,21 @@ public class MusicActivity
      */
     @Override
     public void startMusicService(int position) {
-
-
         mCurrentPosition = position;
+
+
         //获取音乐列表
-        Intent intent = new Intent();
-        intent.setClass(this, AudioPlayService.class);
-        intent.putParcelableArrayListExtra("musicItem", mMusicItems);
-        intent.putExtra("position", mCurrentPosition);
-        mConnection = new AudioServiceConnection();
-        bindService(intent, mConnection, Service.BIND_AUTO_CREATE);
+        Intent intent = new Intent(this,MusicService.class);
+//        intent.putExtra("position", mCurrentPosition);
         startService(intent);
+//        //获取音乐列表
+//        Intent intent = new Intent();
+//        intent.setClass(this, AudioPlayService.class);
+//        intent.putParcelableArrayListExtra("musicItem", mMusicItems);
+//        intent.putExtra("position", mCurrentPosition);
+//        mConnection = new AudioServiceConnection();
+//        bindService(intent, mConnection, Service.BIND_AUTO_CREATE);
+//        startService(intent);
 
     }
 
@@ -447,19 +460,19 @@ public class MusicActivity
         switch (view.getId()) {
 
             case R.id.music_bar_playlist:
-                switchMusicTabbar(1);
+                switchMusicTabbar(0);
                 break;
             case R.id.music_bar_artisanlist:
-                switchMusicTabbar(2);
+                switchMusicTabbar(1);
                 break;
             case R.id.music_bar_songlist:
-                switchMusicTabbar(3);
+                switchMusicTabbar(2);
                 break;
             case R.id.music_bar_albumlist:
-                switchMusicTabbar(4);
+                switchMusicTabbar(3);
                 break;
             case R.id.music_bar_stylelist:
-                switchMusicTabbar(5);
+                switchMusicTabbar(4);
                 break;
             default:
                 if (mMusicConfig) {
@@ -493,8 +506,9 @@ public class MusicActivity
 
     private void switchMusicTabbar(int flag) {
         switch (flag) {
-            case 1:
-                mMusicViewPager.setCurrentItem(0, false);
+            case 0:
+                mTvMusicToolbarTitle.setText(R.string.play_list);
+                mMusicViewPager.setCurrentItem(flag, false);
                 mMusicBarPlaylist.setBackgroundResource(R.drawable.tabbar_bg_down);
                 mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_selector);
                 mMusicBarPlaylistTv.setTextColor(ColorUtil.musicbarTvDown);
@@ -516,8 +530,9 @@ public class MusicActivity
                 mMusicBarStylelistTv.setTextColor(mNormalTabbarColor);
 
                 break;
-            case 2:
-                mMusicViewPager.setCurrentItem(1, false);
+            case 1:
+                mTvMusicToolbarTitle.setText(R.string.music_artisan);
+                mMusicViewPager.setCurrentItem(flag, false);
                 mMusicBarPlaylist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_down_selector);
                 mMusicBarPlaylistTv.setTextColor(mNormalTabbarColor);
@@ -540,8 +555,9 @@ public class MusicActivity
 
 
                 break;
-            case 3:
-                mMusicViewPager.setCurrentItem(0, false);
+            case 2:
+                mTvMusicToolbarTitle.setText(R.string.music_song);
+                mMusicViewPager.setCurrentItem(flag, false);
                 mMusicBarPlaylist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_down_selector);
                 mMusicBarPlaylistTv.setTextColor(mNormalTabbarColor);
@@ -565,8 +581,9 @@ public class MusicActivity
                 mMusicBarStylelistTv.setTextColor(mNormalTabbarColor);
 
                 break;
-            case 4:
-                mMusicViewPager.setCurrentItem(1, false);
+            case 3:
+                mTvMusicToolbarTitle.setText(R.string.music_album);
+                mMusicViewPager.setCurrentItem(flag, false);
                 mMusicBarPlaylist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_down_selector);
                 mMusicBarPlaylistTv.setTextColor(mNormalTabbarColor);
@@ -589,8 +606,9 @@ public class MusicActivity
                 mMusicBarStylelistIv.setBackgroundResource(R.drawable.tabbar_stylelist_down_selector);
                 mMusicBarStylelistTv.setTextColor(mNormalTabbarColor);
                 break;
-            case 5:
-                mMusicViewPager.setCurrentItem(1, false);
+            case 4:
+                mTvMusicToolbarTitle.setText(R.string.music_folder);
+                mMusicViewPager.setCurrentItem(flag, false);
                 mMusicBarPlaylist.setBackgroundColor(ColorUtil.wihtle);
                 mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_down_selector);
                 mMusicBarPlaylistTv.setTextColor(mNormalTabbarColor);
@@ -621,7 +639,7 @@ public class MusicActivity
     }
 
 
-    private void switchControlBlock() {
+    private void switchMusicControlBar() {
         if (isChangeFloatingBlock) {
             mMusicPagerBlock.setVisibility(View.INVISIBLE);
             mMusicFloatBlock.setVisibility(View.VISIBLE);
@@ -643,6 +661,13 @@ public class MusicActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_titlebar_search:
+                LogUtil.d("==================search");
+                Intent intent = new Intent();
+                intent.setClass(this,MainActivity.class);
+                intent.putExtra("position", 8);
+                startActivity(intent);
+
+//
 
                 break;
             default:
@@ -671,6 +696,7 @@ public class MusicActivity
 
         }
     }
+
 
     @Override
     protected void onPause() {

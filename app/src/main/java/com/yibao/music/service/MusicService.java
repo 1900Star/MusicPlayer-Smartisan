@@ -18,6 +18,7 @@ import com.yibao.music.artisanlist.MusicNoification;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 
 import java.util.ArrayList;
@@ -81,15 +82,12 @@ public class MusicService
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
-
-
             LogUtil.d(getClass().getSimpleName() + "    first  onStartCommand");
-            mMusicItem = intent.getParcelableArrayListExtra("musicItem");
+            mMusicItem = MusicListUtil.getMusicDataList(this);
             int enterPosition = intent.getIntExtra("position", -1);
             if (enterPosition != position && enterPosition != -1) {
                 position = enterPosition;
                 //执行播放
-//            mAudioBinder.play();
                 play();
 //            LogUtil.d("onStartCommand   ");
             } else if (enterPosition != -1 && enterPosition == position) {

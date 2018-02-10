@@ -1,0 +1,81 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/listBg">
+
+    <TextView
+        android:id="@+id/tv_album_item_sticky_view"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="18dp"
+        android:background="@color/listBg"
+        android:textColor="@color/aboutSign"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/ll_album_list_item"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:layout_below="@id/tv_album_item_sticky_view"
+        android:layout_marginTop="0.5dp"
+        android:background="@color/rvBg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_item_album_list"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/mask_albumcover_list"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/xuan" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_album_list_song_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLength="18"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/music_loating_title" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_album_list_song_artist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLength="18"
+                    android:maxLines="1"
+                    android:textColor="@color/tabbarTv"
+                    android:textSize="@dimen/music_loating_name" />
+
+                <TextView
+                    android:id="@+id/tv_album_list_song_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:maxLength="6"
+                    android:maxLines="1"
+                    android:textColor="@color/tabbarTv"
+                    android:textSize="@dimen/music_loating_name" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

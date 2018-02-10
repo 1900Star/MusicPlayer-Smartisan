@@ -8,4 +8,5 @@ package com.yibao.music.base.listener;
 public interface OnMusicListItemClickListener {
     void startMusicService(int position);
     void onOpenMusicPlayDialogFag();
+    void onOpenAlbumDetailsFragment(String s);
 }

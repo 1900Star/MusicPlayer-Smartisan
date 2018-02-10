@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context="com.yibao.music.artisanlist.MusicActivity">
 
-    <include layout="@layout/music_category" />
+    <include layout="@layout/song_fragment_category" />
 
     <View
         android:layout_width="match_parent"

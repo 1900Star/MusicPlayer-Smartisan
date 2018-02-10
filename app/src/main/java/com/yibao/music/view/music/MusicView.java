@@ -1,22 +1,24 @@
 package com.yibao.music.view.music;
 
 import android.content.Context;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.yibao.music.R;
-import com.yibao.music.artisanlist.MusicListAdapter;
+import com.yibao.music.util.ColorUtil;
+import com.yibao.music.util.Constants;
 
 /**
  * Author：Sid
- * Des：${TODO}
+ * Des：${将音乐列表(RecyclerView) ,StickyView, SlideBar导航栏 封装到一个Viwe里面，方便多个页面使用}
  * Time:2017/9/10 00:43
+ *
+ * @author Stran
  */
-
 
 public class MusicView
         extends RelativeLayout {
@@ -24,6 +26,7 @@ public class MusicView
     private RecyclerView mRecyclerView;
     private int defultHeight;
     private int mCurrentPosition = 0;
+    private MusicSlidBar mSlidebar;
 
     public MusicView(Context context) {
         super(context);
@@ -42,61 +45,50 @@ public class MusicView
 
 
     private void initView() {
-        //第三个参数设置为true  直接解析之后添加到当前view中
+        //自定义组合控件将第三个参数设置为true  解析之后直接添加到当前view中
         LayoutInflater.from(getContext())
                 .inflate(R.layout.music_view, this, true);
         mRecyclerView = findViewById(R.id.rv);
-        TextView stickyheader = findViewById(R.id.music_rv_sticky_view);
+        mSlidebar = findViewById(R.id.music_slidbar);
 
 
     }
-
 
 
     /**
-     *  //设置列表的适配器
+     * //设置列表的适配器
+     *
      * @param context
+     * @param adapterType 1 : SongListAdapter  、 2  ：ArtistAdapter  、
+     *                    3  ： AlbumAdapter  普通视图  、 4  ： AlbumAdapter  平铺视图 GridView 3列
      * @param adapter
      */
-    public void setAdapter(Context context, MusicListAdapter adapter) {
-        LinearLayoutManager manager = new LinearLayoutManager(context);
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
+    public void setAdapter(Context context, int adapterType, RecyclerView.Adapter adapter) {
+        mSlidebar.setAdapterType(adapterType);
+        if (adapterType == Constants.NUMBER_FOUR) {
+            mRecyclerView.setBackgroundColor(ColorUtil.wihtle);
+            mSlidebar.setBarVisibility(Constants.NUMBER_FOUR);
+            GridLayoutManager manager = new GridLayoutManager(context, Constants.NUMBER_THRRE);
+            manager.setOrientation(GridLayoutManager.VERTICAL);
+            mRecyclerView.setLayoutManager(manager);
+            mRecyclerView.setLayoutManager(manager);
+        } else {
+            mRecyclerView.setBackgroundColor(ColorUtil.rvBg);
+            mSlidebar.setBarVisibility(Constants.NUMBER_ZOER);
+            LinearLayoutManager manager = new LinearLayoutManager(context);
+            manager.setOrientation(LinearLayoutManager.VERTICAL);
+            mRecyclerView.setLayoutManager(manager);
+        }
 
-        mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(adapter);
-        //        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-        //            @Override
-        //            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        //                super.onScrollStateChanged(recyclerView, newState);
-        //                //拿到悬浮条的高度
-        //                defultHeight = mStickyheader.getHeight();
-        //            }
-        //
-        //            @Override
-        //            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        //                super.onScrolled(recyclerView, dx, dy);
-        //                View view = manager.findViewByPosition(mCurrentPosition + 1);
-        //                if (view != null) {
-        //                    if (view.getTop() <= defultHeight) {
-        //                        mStickyheader.setY(-(defultHeight - view.getTop()));
-        //                    } else {
-        //                        mStickyheader.setY(0);
-        //                    }
-        //                }
-        //
-        //                if (mCurrentPosition != manager.findFirstVisibleItemPosition()) {
-        //                    mCurrentPosition = manager.findFirstVisibleItemPosition();
-        //                    mStickyheader.setY(0);
-        //
-        //                    //                    updateSuspensionBar(mCurrentPosition);
-        //                }
-        //            }
-        //        });
+        adapter.notifyDataSetChanged();
 
     }
 
-
+    public void setSlideBarVisibility(int visibilityType) {
+        mSlidebar.setBarVisibility(visibilityType);
+    }
 }
 
 

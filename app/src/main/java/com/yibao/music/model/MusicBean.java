@@ -2,31 +2,38 @@ package com.yibao.music.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Transient;
-import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Author：Sid
  * Des：${音乐实体类,收藏 删除等}
  * Time:2017/9/3 14:31
+ *
+ * @author Stran
  */
 @Entity
 public class MusicBean
-        implements Parcelable {
+        implements Parcelable, Comparable<MusicBean> {
     @Id(autoincrement = true)
     private Long id;
     private String title;
     private String artist;
     private String album;
     private long albumId;
+    private long addTime;
+    private long duration;
     private String time;
     private String songUrl;
+    private String firstChar;
     private int playStatus;
     @Transient
     private int cureetPosition;
+
 
     public MusicBean() {
     }
@@ -47,18 +54,23 @@ public class MusicBean
         cureetPosition = in.readInt();
     }
 
-    @Generated(hash = 890077692)
+    @Generated(hash = 2071019748)
     public MusicBean(Long id, String title, String artist, String album,
-            long albumId, String time, String songUrl, int playStatus) {
+            long albumId, long addTime, long duration, String time, String songUrl,
+            String firstChar, int playStatus) {
         this.id = id;
         this.title = title;
         this.artist = artist;
         this.album = album;
         this.albumId = albumId;
+        this.addTime = addTime;
+        this.duration = duration;
         this.time = time;
         this.songUrl = songUrl;
+        this.firstChar = firstChar;
         this.playStatus = playStatus;
     }
+
 
     public static final Creator<MusicBean> CREATOR = new Creator<MusicBean>() {
         @Override
@@ -71,10 +83,6 @@ public class MusicBean
             return new MusicBean[size];
         }
     };
-
-    public MusicBean(MusicBean musicBean, int position) {
-
-    }
 
     public Long getId() {
         return id;
@@ -148,6 +156,47 @@ public class MusicBean
         this.cureetPosition = cureetPosition;
     }
 
+
+    @Override
+    public int compareTo(@NonNull MusicBean musicBean) {
+        String str = "#";
+        if (str.equals(musicBean.getFirstChar())) {
+
+            return -1;
+        }
+        if (str.equals(firstChar)) {
+
+            return 1;
+        }
+        return firstChar.compareTo(musicBean.getFirstChar());
+    }
+
+
+    public String getFirstChar() {
+        return this.firstChar;
+    }
+
+    public void setFirstChar(String firstChar) {
+        this.firstChar = firstChar;
+    }
+
+    public long getAddTime() {
+        return this.addTime;
+    }
+
+    public void setAddTime(long addTime) {
+        this.addTime = addTime;
+    }
+
+    public long getDuration() {
+        return this.duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -165,8 +214,11 @@ public class MusicBean
         parcel.writeString(artist);
         parcel.writeString(album);
         parcel.writeLong(albumId);
+        parcel.writeLong(addTime);
+        parcel.writeLong(duration);
         parcel.writeString(time);
         parcel.writeString(songUrl);
+        parcel.writeString(firstChar);
         parcel.writeInt(playStatus);
         parcel.writeInt(cureetPosition);
     }

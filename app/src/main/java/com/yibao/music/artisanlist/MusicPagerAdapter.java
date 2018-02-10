@@ -1,11 +1,11 @@
 package com.yibao.music.artisanlist;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.yibao.music.album.BaseMusicStatePagerAdapter;
 import com.yibao.music.factory.FragmentFactory;
 
 /**
@@ -16,10 +16,11 @@ import com.yibao.music.factory.FragmentFactory;
  * @author Stran
  */
 public class MusicPagerAdapter
-        extends FragmentStatePagerAdapter {
+        extends BaseMusicStatePagerAdapter {
 
     public MusicPagerAdapter(FragmentManager fm) {
         super(fm);
+
 
     }
 
@@ -28,10 +29,12 @@ public class MusicPagerAdapter
         return FragmentFactory.createFragment(position);
     }
 
+
     @Override
     public int getCount() {
-        return 2;
+        return 5;
     }
+
 
     @Override
     public boolean isViewFromObject(View view, Object object) {

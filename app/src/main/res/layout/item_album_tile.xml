@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_album_tile_album"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_margin="8dp"
+            android:clickable="true"
+            android:background="@drawable/mask_albumcover_list"
+            android:scaleType="centerCrop"
+            android:focusable="true" />
+
+        <ImageView
+            android:id="@+id/album_cover_shadow_mask"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_margin="8dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/album_cover_shadow_mask"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_album_tile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLength="8"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/about_sign" />
+
+</LinearLayout>

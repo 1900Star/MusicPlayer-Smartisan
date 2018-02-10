@@ -16,7 +16,7 @@
     <string name="music">音乐</string>
     <string name="short_line">-</string>
     <string name="clearAllFavorite">清空</string>
-    <string name="playAll">播放全部</string>
+    <string name="play_all">播放全部</string>
     <string name="save_pic">保存</string>
 
     <string name="under_line">_</string>
@@ -33,5 +33,10 @@
     <string name="music_song">歌曲</string>
     <string name="music_album">专辑</string>
     <string name="music_style">风格</string>
+    <string name="music_folder">文件夹</string>
+    <string name="album_tile">平铺</string>
+    <string name="album_list">列表</string>
+    <string name="random_play">随机播放</string>
+    <string name="add_new_play_list">新建播放列表</string>
 
 </resources>

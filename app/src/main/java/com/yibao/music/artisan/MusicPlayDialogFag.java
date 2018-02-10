@@ -52,8 +52,6 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.yibao.music.util.StringUtil.getSongName;
-
 /**
  * Des：${音乐播放界面}
  * Time:2017/5/30 13:27
@@ -146,9 +144,9 @@ public class MusicPlayDialogFag
     private void initSongInfo() {
         MusicDialogInfo info = getArguments().getParcelable("info");
         mCurrenMusicInfo = info.getInfo();
-        mSongName.setText(StringUtil.getSongName(mCurrenMusicInfo.getTitle()));
+        mSongName.setText(mCurrenMusicInfo.getTitle());
         mArtistName.setText(mCurrenMusicInfo.getArtist());
-
+        mLyricsView.setLrcFile(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
         String url = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId())
                 .toString();
         setAlbulm(url);
@@ -283,7 +281,7 @@ public class MusicPlayDialogFag
         mCurrenMusicInfo = info;
         checkCurrentIsFavorite();
         initAnimation();
-        mSongName.setText(getSongName(info.getTitle()));
+        mSongName.setText(info.getTitle());
         mArtistName.setText(info.getArtist());
         mAlbumUrl = StringUtil.getAlbulm(info.getAlbumId())
                 .toString();

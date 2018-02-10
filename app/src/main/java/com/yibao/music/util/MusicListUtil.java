@@ -4,14 +4,23 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
+import com.yibao.music.MyApplication;
+import com.yibao.music.model.AlbumInfo;
+import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Author：Sid
  * Des：${ 音乐列表 }
  * Time:2017/9/3 14:38
+ *
+ * @author Stran
  */
 public class MusicListUtil {
 
@@ -21,8 +30,9 @@ public class MusicListUtil {
      *
      * @return
      */
-    public static ArrayList<MusicBean> getMusicList(Context context) {
-        Cursor cursor = context.getContentResolver()
+    public static ArrayList<MusicBean> getMusicDataList(Context context) {
+        ArrayList<MusicBean> musicInfos = new ArrayList<>();
+        Cursor cursor = MyApplication.getIntstance().getApplicationContext().getContentResolver()
                 .query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         null,
                         null,
@@ -36,32 +46,156 @@ public class MusicListUtil {
         int mDuration = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION);
         int mSize = cursor.getColumnIndex(MediaStore.Audio.Media.SIZE);
         int mUrl = cursor.getColumnIndex(MediaStore.Audio.Media.DATA);
-
-        //        int mIsMusic  = cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC);
-        ArrayList<MusicBean> musicInfos = new ArrayList<>();
+        int addDed = cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED);
+        int musicType = cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE);
+        int issueYear = cursor.getColumnIndex(MediaStore.Audio.Media.YEAR);
         for (int i = 0, p = cursor.getCount(); i < p; i++) {
             cursor.moveToNext();
             MusicBean info = new MusicBean();
-            long id = cursor.getLong(mId); // 音乐id
-            String title = cursor.getString(mTitle); // 音乐标题
-            String artist = cursor.getString(mArtist); // 艺术家
-            String album = cursor.getString(mAlbum); // 专辑
+            // 音乐id
+            long id = cursor.getLong(mId);
+            // 音乐标题
+            String title = cursor.getString(mTitle);
+            // 艺术家
+            String artist = cursor.getString(mArtist);
+            // 专辑
+            String album = cursor.getString(mAlbum);
             long albumId = cursor.getInt(mAlbumID);
-            long duration = cursor.getLong(mDuration); // 时长
-            long size = cursor.getLong(mSize); // 文件大小
-            String url = cursor.getString(mUrl); // 文件路径
-            //过滤掉小于2分钟的音乐
+            // 时长
+            long duration = cursor.getInt(mDuration);
+            // 添加时间
+            int addTime = (int) cursor.getLong(addDed);
+            // 文件大小
+            long size = cursor.getLong(mSize);
+            // 文件路径
+            String url = cursor.getString(mUrl);
+            //过滤掉小于2分钟的音乐,后续可以通过SharePreference让用户在UI界面自行选择。
             if (size > 21600) {
+                info.setFirstChar(HanziToPinyins.stringToPinyinSpecial(title) + "");
                 info.setTitle(title);
                 info.setArtist(artist);
                 info.setAlbum(album);
                 info.setAlbumId(albumId);
-//                info.setTime(size);
+                info.setDuration(duration);
+                info.setAddTime(addTime);
                 info.setSongUrl(url);
                 musicInfos.add(info);
             }
         }
         cursor.close();
+        Collections.sort(musicInfos);
         return musicInfos;
     }
+
+    /**
+     * 按添加时间排序
+     *
+     * @param musicList
+     */
+    public static void sortMusicAddtime(ArrayList<MusicBean> musicList) {
+        Collections.sort(musicList, (m1, m2) -> {
+            if (m1 == m2) {
+                return 0;
+            }
+            if (m1 == null) {
+                return -1;
+            }
+            if (m2 == null) {
+                return 1;
+            }
+            if (m1.equals(m2)) {
+                return 0;
+            }
+
+            int value = Float.compare(m2.getAddTime(), m1.getAddTime());
+            if (value != 0) {
+                return value;
+            }
+            // https://stackoverflow.com/questions/28004269/java-collections-sort-comparison-method-violates-its-general-contract#
+            // Warning, this line is not fool proof as unequal objects can have identical hash codes.
+            return m1.hashCode() - m2.hashCode();
+        });
+
+    }
+
+    /**
+     * 按ABCD 首字母排序
+     *
+     * @param musicList
+     */
+    public static void sortMusicAbc(ArrayList<MusicBean> musicList) {
+        String str = "#";
+        Collections.sort(musicList, (m1, m2) -> {
+            if (str.equals(m2.getFirstChar())) {
+                return -1;
+            }
+            if (str.equals(m1.getFirstChar())) {
+                return 1;
+            }
+            return m1.getFirstChar().compareTo(m2.getFirstChar());
+        });
+
+    }
+
+
+    //按艺术家分类
+    public static ArrayList<ArtistInfo> getArtistList(ArrayList<MusicBean> list) {
+        Map<String, List<MusicBean>> musicMap = new HashMap<>(16);
+        ArrayList<ArtistInfo> singerInfoList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            MusicBean musicInfo = list.get(i);
+            if (musicMap.containsKey(musicInfo.getArtist())) {
+                ArrayList<MusicBean> singerList = (ArrayList<MusicBean>) musicMap.get(musicInfo.getArtist());
+                singerList.add(musicInfo);
+            } else {
+                ArrayList<MusicBean> tempList = new ArrayList<>();
+                tempList.add(musicInfo);
+                musicMap.put(musicInfo.getArtist(), tempList);
+
+            }
+        }
+
+        for (Map.Entry<String, List<MusicBean>> entry : musicMap.entrySet()) {
+
+            ArtistInfo singerInfo = new ArtistInfo();
+            singerInfo.setFirstChar(HanziToPinyins.stringToPinyinSpecial(entry.getKey()) + "");
+            singerInfo.setName(entry.getKey());
+            singerInfo.setSongCount(entry.getValue().size());
+            singerInfoList.add(singerInfo);
+        }
+        Collections.sort(singerInfoList);
+        return singerInfoList;
+    }
+
+    //    //按专辑分组
+    public static ArrayList<AlbumInfo> getAlbumList(ArrayList<MusicBean> list) {
+        Map<String, List<MusicBean>> musicMap = new HashMap<>(16);
+        ArrayList<AlbumInfo> albumInfoList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            MusicBean musicInfo = list.get(i);
+            if (musicMap.containsKey(musicInfo.getAlbum())) {
+                ArrayList<MusicBean> albumList = (ArrayList<MusicBean>) musicMap.get(musicInfo.getAlbum());
+                albumList.add(musicInfo);
+            } else {
+                ArrayList<MusicBean> tempList = new ArrayList<>();
+                tempList.add(musicInfo);
+                musicMap.put(musicInfo.getAlbum(), tempList);
+            }
+        }
+
+        for (Map.Entry<String, List<MusicBean>> entry : musicMap.entrySet()) {
+            AlbumInfo albumInfo = new AlbumInfo();
+
+            albumInfo.setAlbumName(entry.getKey());
+            albumInfo.setSingerName(entry.getValue().get(0).getArtist());
+            albumInfo.setAlbumId(entry.getValue().get(0).getAlbumId());
+            albumInfo.setSongName(entry.getValue().get(0).getTitle());
+            albumInfo.setFirstChar(HanziToPinyins.stringToPinyinSpecial(entry.getKey()) + "");
+            albumInfo.setSongCount(entry.getValue().size());
+            albumInfoList.add(albumInfo);
+        }
+        Collections.sort(albumInfoList);
+        return albumInfoList;
+    }
+
 }

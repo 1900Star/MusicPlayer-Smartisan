@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name="com.yibao.music.MyApplication"
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:fullBackupContent="@null"
         android:icon="@mipmap/artisan_launcher"
@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.yibao.music.splash.SplashActivity"
+            android:name=".splash.SplashActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.Splash.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden">
@@ -31,15 +31,14 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.yibao.music.service.AudioPlayService" />
-
-        <service android:name="com.yibao.music.service.BigServices" />
-        <service android:name="com.yibao.music.service.MusicService" />
+        <service android:name=".service.AudioPlayService" />
+        <service android:name=".service.BigServices" />
+        <service android:name=".service.MusicService" />
 
         <activity
-            android:name="com.yibao.music.artisanlist.MusicActivity"
+            android:name=".artisanlist.MusicActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity android:name=".album.MainActivity"></activity>
     </application>
 
 </manifest>

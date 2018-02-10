@@ -8,6 +8,7 @@ import android.os.IBinder;
  * Author：Sid
  * Des：${TODO}
  * Time:2017/11/23 23:16
+ * @author Stran
  */
 public class AudioServiceConnection
         implements ServiceConnection

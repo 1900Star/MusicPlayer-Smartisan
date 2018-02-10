@@ -18,6 +18,7 @@ public class ColorUtil {
     public static int musicbarTv = Color.argb(255, 215, 215, 215);
     public static int musicbarTvDown = Color.argb(255, 230, 64, 64);
     public static int wihtle = Color.argb(255, 255, 255, 255);
+    public static int rvBg = Color.argb(255, 237, 237, 237);
 
 
 }

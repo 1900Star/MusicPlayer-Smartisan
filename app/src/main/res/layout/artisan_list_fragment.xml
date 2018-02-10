@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:gravity="center"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/listBg"
+    android:gravity="center">
 
-    <ImageView
+    <com.yibao.music.view.music.MusicView
+        android:id="@+id/artist_music_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@mipmap/xuan" />
+        android:layout_height="match_parent" />
+
 
 </LinearLayout>

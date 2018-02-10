@@ -13,8 +13,10 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.yibao.music.R;
-import com.yibao.music.artisanlist.MusicListAdapter;
-import com.yibao.music.util.LogUtil;
+import com.yibao.music.album.AlbumAdapter;
+import com.yibao.music.artisanlist.SongAdapter;
+import com.yibao.music.artist.ArtistAdapter;
+import com.yibao.music.util.Constants;
 
 
 /**
@@ -23,6 +25,7 @@ import com.yibao.music.util.LogUtil;
  */
 public class MusicSlidBar
         extends View {
+
     private String[] names = new String[]{"A",
             "B",
             "C",
@@ -53,12 +56,12 @@ public class MusicSlidBar
     private Paint mTvPaint;
     private int viewW;
     private int singleHeight;
-    private TextView mContactToast;
     private RecyclerView mRecyclerView;
     private int mIndex;
     private Paint mCirclePaint;
     private Context mContext;
     private TextView mStickyViwe;
+    private int adapterType;
 
     public MusicSlidBar(Context context) {
         super(context);
@@ -97,9 +100,11 @@ public class MusicSlidBar
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+
         viewW = w;
         singleHeight = h / (names.length + 1);
     }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -132,16 +137,16 @@ public class MusicSlidBar
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean dispatchTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 //改变背景颜色
                 setBackgroundResource(R.drawable.shape_slibar);
-                mCirclePaint.setColor(Color.parseColor("#FF939396"));
+                mCirclePaint.setColor(Color.parseColor("#8e8e8f"));
                 performTouch(event);
                 break;
             case MotionEvent.ACTION_MOVE:
-                mCirclePaint.setColor(Color.parseColor("#FF939396"));
+                mCirclePaint.setColor(Color.parseColor("#8e8e8f"));
                 performTouch(event);
                 break;
             case MotionEvent.ACTION_UP:
@@ -149,20 +154,18 @@ public class MusicSlidBar
                 mCirclePaint.setColor(Color.TRANSPARENT);
                 setBackgroundColor(Color.TRANSPARENT);
                 mTvPaint.setColor(Color.GRAY);
-                //隐藏toast
-//                if (mContactToast != null) {
-//                    mContactToast.setVisibility(GONE);
-//                }
                 break;
             default:
                 break;
         }
+
+
         return true;
     }
 
 
     /**
-     * 处理触摸事件
+     * 处理SlideBar触摸事件
      *
      * @param event
      */
@@ -181,35 +184,23 @@ public class MusicSlidBar
         String name = names[mIndex];
         //显示toast字母
         initView();
-//        mContactToast.setText(name);
-        //设置导航字母
-        mStickyViwe.setText(name);
-        LogUtil.d("设置导航字母 *******   " + name);
-        //显示toast
-//        mContactToast.setVisibility(VISIBLE);
-        //处理列表section位置
-        //        rvListener();
-        // 获取listview的适配器
-        MusicListAdapter adapter = (MusicListAdapter) mRecyclerView.getAdapter();
-        //获取sections的集合
-        String[] sections = adapter.getSections();
-
-        //当前是否要处理section
-        int sectionIndex = -1;
-        for (int i = 0; i < sections.length; i++) {
-            if (name.equals(sections[i])) {
-                sectionIndex = i;
-            }
+        //设置导航字母    “mStickyViwe.setText(name);”
+        int sectionForPosition = 1;
+        // 根据adapterType得到指定页面的Adapter
+        if (adapterType == Constants.NUMBER_ONE) {
+            SongAdapter songListAdapter = (SongAdapter) mRecyclerView.getAdapter();
+            sectionForPosition = songListAdapter.getPositionForSection(name.charAt(0));
+        } else if (adapterType == Constants.NUMBER_TWO) {
+            ArtistAdapter artistAdapter = (ArtistAdapter) mRecyclerView.getAdapter();
+            sectionForPosition = artistAdapter.getPositionForSection(name.charAt(0));
+        } else if (adapterType == Constants.NUMBER_THRRE || adapterType == Constants.NUMBER_FOUR) {
+            AlbumAdapter albumAdapter = (AlbumAdapter) mRecyclerView.getAdapter();
+            sectionForPosition = albumAdapter.getPositionForSection(name.charAt(0));
         }
-        if (sectionIndex == -1) {
-            return;
+        if (sectionForPosition != -1) {
+            LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+            manager.scrollToPositionWithOffset(sectionForPosition, 0);
         }
-
-
-        //        //确定当前section首联系人的position
-        int positionForSection = adapter.getPositionForSection(sectionIndex);
-        LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-        manager.scrollToPositionWithOffset(positionForSection, 0);
 
 
     }
@@ -220,15 +211,25 @@ public class MusicSlidBar
         if (mStickyViwe == null) {
             mStickyViwe = parent.findViewById(R.id.music_rv_sticky_view);
         }
-//        if (mContactToast == null) {
-//            mContactToast = parent.findViewById(R.id.contac_toast);
-//        }
         //初始化listview
         if (mRecyclerView == null) {
             mRecyclerView = parent.findViewById(R.id.rv);
         }
     }
 
+    /**
+     * 设置Adapter的类型 1 : SongListAdapter  、 2  ：ArtistAdapter  、
+     * 3  ： AlbumAdapter  普通视图  、 4  ： AlbumAdapter  平铺视图 GridView3列
+     *
+     * @param type
+     */
+    public void setAdapterType(int type) {
+        this.adapterType = type;
+    }
+
+    public void setBarVisibility(int visibilityType) {
+        setVisibility(visibilityType);
+    }
 
     public int dip2px(float dpValue) {
         final float scale = mContext.getResources()

@@ -1,31 +1,34 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/listBg">
+
     <TextView
         android:id="@+id/item_sticky_view"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_alignParentTop="true"
+        android:layout_marginLeft="18dp"
         android:background="@color/listBg"
-        android:layout_marginLeft="10dp"
         android:textColor="@color/aboutSign"
         android:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/ll_music_item"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="62dp"
         android:layout_below="@id/item_sticky_view"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="0.5dp"
         android:background="@color/rvBg"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/song_album"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_margin="2dp"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/mask_albumcover_list"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
             android:src="@mipmap/xuan" />
@@ -33,14 +36,13 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/song_name"
@@ -50,28 +52,69 @@
                     android:maxLength="18"
                     android:maxLines="1"
                     android:singleLine="true"
+                    android:text="AAA"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/music_loating_title" />
 
-                <TextView
-                    android:id="@+id/song_artist_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:maxLength="30"
-                    android:maxLines="1"
-                    android:textColor="@color/aboutSign"
-                    android:textSize="@dimen/music_loating_name" />
+                <ImageView
+                    android:id="@+id/song_item_play_flag"
+                    android:layout_width="38dp"
+                    android:visibility="gone"
+                    android:layout_height="18dp"
+                    android:src="@drawable/playing_blueplay2" />
 
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/music_play_flag"
-                android:layout_width="40dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="5dp" />
+            <TextView
+                android:id="@+id/song_artist_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:maxLength="18"
+                android:maxLines="1"
+                android:text="CCC"
+                android:textColor="@color/tabbarTv"
+                android:textSize="@dimen/music_loating_name" />
+
+
         </LinearLayout>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="25dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_song_score"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/btn_add_selector"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_paly_frequency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="13dp"
+            android:textColor="@color/tabbarTv"
+            android:textSize="@dimen/music_loating_name"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv_song_item_menu"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/album_more_selector" />
 
     </LinearLayout>
+
 </RelativeLayout>

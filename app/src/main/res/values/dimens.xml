@@ -6,7 +6,7 @@
     <dimen name="about_sign">14sp</dimen>
     <dimen name="about_content">13sp</dimen>
     <dimen name="music_tabbar">10sp</dimen>
-    <dimen name="music_loating_title">16sp</dimen>
+    <dimen name="music_loating_title">15sp</dimen>
     <dimen name="music_loating_name">12sp</dimen>
     <dimen name="big_tv">20sp</dimen>
     <dimen name="bigLyrics">16sp</dimen>
