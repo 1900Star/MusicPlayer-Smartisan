@@ -68,4 +68,5 @@ public class ArtistanListFragment extends BaseFragment {
         super.onDestroyView();
         unbinder.unbind();
     }
+
 }

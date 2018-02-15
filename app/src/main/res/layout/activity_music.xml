@@ -42,23 +42,8 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/about" />
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical">
 
-        <include layout="@layout/muisc_tabbar_qq" />
-
-        <include layout="@layout/music_tabbar_smartisan" />
-
-
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/about" />
-
-    <include layout="@layout/music_tabbar" />
-
+    <include
+        android:id="@+id/music_controlbar"
+        layout="@layout/empty_framelayout" />
 </LinearLayout>

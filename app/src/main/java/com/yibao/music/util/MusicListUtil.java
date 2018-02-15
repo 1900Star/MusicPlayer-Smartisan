@@ -92,7 +92,7 @@ public class MusicListUtil {
      *
      * @param musicList
      */
-    public static void sortMusicAddtime(ArrayList<MusicBean> musicList) {
+    public static ArrayList<MusicBean> sortMusicAddtime(ArrayList<MusicBean> musicList) {
         Collections.sort(musicList, (m1, m2) -> {
             if (m1 == m2) {
                 return 0;
@@ -115,7 +115,7 @@ public class MusicListUtil {
             // Warning, this line is not fool proof as unequal objects can have identical hash codes.
             return m1.hashCode() - m2.hashCode();
         });
-
+        return musicList;
     }
 
     /**
@@ -123,7 +123,7 @@ public class MusicListUtil {
      *
      * @param musicList
      */
-    public static void sortMusicAbc(ArrayList<MusicBean> musicList) {
+    public static ArrayList<MusicBean> sortMusicAbc(ArrayList<MusicBean> musicList) {
         String str = "#";
         Collections.sort(musicList, (m1, m2) -> {
             if (str.equals(m2.getFirstChar())) {
@@ -134,7 +134,7 @@ public class MusicListUtil {
             }
             return m1.getFirstChar().compareTo(m2.getFirstChar());
         });
-
+        return musicList;
     }
 
 

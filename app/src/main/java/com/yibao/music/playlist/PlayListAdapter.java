@@ -38,6 +38,8 @@ public class PlayListAdapter extends BaseRvAdapter<ArtistInfo> {
             String count = artistInfo.getSongCount() + " 首歌曲";
             playViewHolder.mTvPlayListCount.setText(count);
             playViewHolder.mTvPlayListName.setText(artistInfo.getName());
+
+            playViewHolder.itemView.setOnClickListener(view -> openActivity());
         }
 
     }
@@ -66,4 +68,5 @@ public class PlayListAdapter extends BaseRvAdapter<ArtistInfo> {
             ButterKnife.bind(this, view);
         }
     }
+
 }

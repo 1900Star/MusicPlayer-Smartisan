@@ -18,7 +18,9 @@ import com.yibao.music.R;
 import com.yibao.music.artisanlist.MusicNoification;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
+import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 
 import java.util.ArrayList;
@@ -46,7 +48,7 @@ public class AudioPlayService
     public static final String ACTION_MUSIC = "MUSIC";
 
     private int position = -2;
-    private ArrayList<MusicBean> mMusicItem;
+    private ArrayList<MusicBean> mMusicDataList;
     private MusicBroacastReceiver mReceiver;
     private NotificationManager manager;
     private RemoteViews mRemoteViews;
@@ -61,10 +63,16 @@ public class AudioPlayService
         super.onCreate();
         mAudioBinder = new AudioBinder();
         mRemoteViews = new RemoteViews(getPackageName(), R.layout.music_notify);
+        if (mMusicDataList == null) {
+            mMusicDataList = MusicListUtil.getMusicDataList(this);
+        }
+
         initBroadcast();
         //初始化播放模式
         PLAY_MODE = SharePrefrencesUtil.getMusicMode(this);
     }
+
+
 
 
     private void initBroadcast() {
@@ -78,10 +86,16 @@ public class AudioPlayService
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mMusicItem = intent.getParcelableArrayListExtra("musicItem");
-        if (mMusicItem != null) {
+        int sortListFlag = intent.getIntExtra("sortFlag", 0);
 
         int enterPosition = intent.getIntExtra("position", 0);
+        LogUtil.d("Service MusicList size==== sortListFlag   " + mMusicDataList.size(), "====  " + sortListFlag);
+        if (sortListFlag == Constants.NUMBER_ZOER) {
+            mMusicDataList = MusicListUtil.sortMusicAbc(this.mMusicDataList);
+        } else if (sortListFlag == Constants.NUMBER_THRRE) {
+            mMusicDataList = MusicListUtil.sortMusicAddtime(mMusicDataList);
+            LogUtil.d(mMusicDataList.size() + "");
+        }
         if (enterPosition != position && enterPosition != -1) {
             position = enterPosition;
             //执行播放
@@ -91,7 +105,6 @@ public class AudioPlayService
             LogUtil.d("Service position  " + position);
             sendCureentMusicInfo();
         }
-        }
         return START_NOT_STICKY;
     }
 
@@ -99,7 +112,7 @@ public class AudioPlayService
      * 通知播放界面更新
      */
     private void sendCureentMusicInfo() {
-        MusicBean musicBean = mMusicItem.get(position);
+        MusicBean musicBean = mMusicDataList.get(position);
         musicBean.setCureetPosition(position);
         MyApplication.getIntstance()
                 .bus()
@@ -119,7 +132,7 @@ public class AudioPlayService
                 mediaPlayer.release();
                 mediaPlayer = null;
             }
-            mMusicInfo = mMusicItem.get(position);
+            mMusicInfo = mMusicDataList.get(position);
             mediaPlayer = MediaPlayer.create(AudioPlayService.this,
                     Uri.parse(mMusicInfo.getSongUrl()));
 
@@ -172,13 +185,13 @@ public class AudioPlayService
         private void autoPlayNext() {
             switch (PLAY_MODE) {
                 case PLAY_MODE_ALL:
-                    position = (position + 1) % mMusicItem.size();
+                    position = (position + 1) % mMusicDataList.size();
                     break;
                 case PLAY_MODE_SINGLE:
 
                     break;
                 case PLAY_MODE_RANDOM:
-                    position = new Random().nextInt(mMusicItem.size());
+                    position = new Random().nextInt(mMusicDataList.size());
                     break;
                 default:
                     break;
@@ -203,11 +216,11 @@ public class AudioPlayService
         public void playPre() {
             switch (PLAY_MODE) {
                 case PLAY_MODE_RANDOM:
-                    position = new Random().nextInt(mMusicItem.size());
+                    position = new Random().nextInt(mMusicDataList.size());
                     break;
                 default:
                     if (position == 0) {
-                        position = mMusicItem.size() - 1;
+                        position = mMusicDataList.size() - 1;
                     } else {
                         position--;
                     }
@@ -220,10 +233,10 @@ public class AudioPlayService
         public void playNext() {
             switch (PLAY_MODE) {
                 case PLAY_MODE_RANDOM:
-                    position = new Random().nextInt(mMusicItem.size());
+                    position = new Random().nextInt(mMusicDataList.size());
                     break;
                 default:
-                    position = (position + 1) % mMusicItem.size();
+                    position = (position + 1) % mMusicDataList.size();
                     break;
             }
             play();

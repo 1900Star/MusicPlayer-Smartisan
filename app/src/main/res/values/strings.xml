@@ -13,13 +13,11 @@
     <string name="preject_introduce">关于项目</string>
 
     //*********音乐
-    <string name="music">音乐</string>
     <string name="short_line">-</string>
     <string name="clearAllFavorite">清空</string>
     <string name="play_all">播放全部</string>
     <string name="save_pic">保存</string>
 
-    <string name="under_line">_</string>
     <string name="childe_view_not">SwipeItemLayout的子视图不符合规定</string>
 
     <string name="action_search">搜索</string>

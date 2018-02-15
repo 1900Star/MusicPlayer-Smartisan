@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/play_list_frag_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/play_list_frag_content"
     android:background="@color/listBg"
     android:orientation="vertical">
 
@@ -19,12 +19,13 @@
             android:background="@drawable/btn_add_selector" />
 
         <TextView
-            android:enabled="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
+            android:enabled="true"
+            android:focusable="true"
             android:text="@string/add_new_play_list"
-            android:textColor="@drawable/text_add_lit_selector"
+            android:textColor="@color/text_add_list_selector"
             android:textSize="@dimen/about_sign" />
 
     </LinearLayout>

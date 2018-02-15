@@ -1,6 +1,5 @@
 package com.yibao.music.artisanlist;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -9,14 +8,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.yibao.music.MyApplication;
 import com.yibao.music.R;
 import com.yibao.music.base.BaseFragment;
-import com.yibao.music.service.AudioPlayService;
+import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
-import com.yibao.music.util.RandomUtil;
 import com.yibao.music.view.music.MusicView;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,14 +50,20 @@ public class SongFragment extends BaseFragment {
     @BindView(R.id.musci_view)
     MusicView mMusciView;
     private Unbinder unbinder;
-    private int mCurrentPosition;
+    /**
+     * 对歌曲列表进行排序的标识
+     * 0 : 默认排序 (首字母) 、1 : 按评分  、2 : 按播放次数 、 3 : 按添加时间
+     */
+    private int sortListFlag = 0;
+    private ArrayList<MusicBean> mList;
+    private SongAdapter mSongAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.song_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
-        initData(false, Constants.NUMBER_ZOER);
+        initData(true, Constants.NUMBER_ZOER);
         return view;
     }
 
@@ -66,16 +75,20 @@ public class SongFragment extends BaseFragment {
      */
     private void initData(boolean isSortList, int isShowStickyView) {
 
-        if (isSortList) {
-            if (isShowStickyView == Constants.NUMBER_ZOER) {
-                MusicListUtil.sortMusicAbc(mMusicDataList);
-            } else {
-                MusicListUtil.sortMusicAddtime(mMusicDataList);
-            }
+        if (isShowStickyView == Constants.NUMBER_ZOER) {
+            mSongAdapter = new SongAdapter(mActivity, mSongList, isShowStickyView, sortListFlag);
+            mMusciView.setSlideBarVisibility(Constants.NUMBER_ZOER);
+        } else if (isShowStickyView == Constants.NUMBER_ONE) {
 
+            mList = MusicListUtil.sortMusicAddtime(musicBeans);
+            mSongAdapter = new SongAdapter(mActivity, mList, isShowStickyView, sortListFlag);
+            mMusciView.setSlideBarVisibility(Constants.NUMBER_FOUR);
+            MyApplication.getIntstance().bus().post(new MusicStatusBean(88, false));
+            LogUtil.d("8888888888888888888888888888888888888888888888888");
         }
-        SongAdapter adapter = new SongAdapter(mActivity, mMusicDataList, isShowStickyView);
-        mMusciView.setAdapter(mActivity, Constants.NUMBER_ONE, adapter);
+//        if (isSortList) {
+//        }
+        mMusciView.setAdapter(mActivity, Constants.NUMBER_ONE, mSongAdapter);
     }
 
     @OnClick({R.id.iv_music_category_paly,
@@ -83,8 +96,7 @@ public class SongFragment extends BaseFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_music_category_paly:
-                int position = RandomUtil.getRandomPostion(mMusicDataList);
-                startMusicService(position);
+//                int position = RandomUtil.getRandomPostion(musicBeans);
                 break;
             case R.id.tv_music_category_songname:
                 switchListCategory(1);
@@ -105,15 +117,6 @@ public class SongFragment extends BaseFragment {
         }
     }
 
-    public void startMusicService(int position) {
-        //获取音乐列表
-        Intent intent = new Intent();
-        intent.setClass(getActivity(), AudioPlayService.class);
-        intent.putParcelableArrayListExtra("musicItem", mMusicDataList);
-        intent.putExtra("position", position);
-        getActivity().startService(intent);
-
-    }
 
     private void switchListCategory(int flag) {
         switch (flag) {
@@ -141,8 +144,10 @@ public class SongFragment extends BaseFragment {
     }
 
     private void categorySongName() {
+        sortListFlag = Constants.NUMBER_ZOER;
         mMusicCategorySongName.setTextColor(ColorUtil.wihtle);
         mMusciView.setSlideBarVisibility(Constants.NUMBER_ZOER);
+
         mMusicCategorySongName.setBackgroundResource(R.drawable.btn_category_songname_down_selector);
         mMusicCategoryScore.setTextColor(ColorUtil.textName);
         mMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_selector);
@@ -177,6 +182,7 @@ public class SongFragment extends BaseFragment {
     }
 
     private void categoryAddtime() {
+        sortListFlag = Constants.NUMBER_THRRE;
         mMusciView.setSlideBarVisibility(Constants.NUMBER_FOUR);
         mMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_down_selector);
         mMusicCategorySongName.setTextColor(ColorUtil.textName);

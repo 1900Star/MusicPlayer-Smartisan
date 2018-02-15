@@ -1,7 +1,6 @@
 package com.yibao.music.playlist;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,7 +12,7 @@ import android.widget.LinearLayout;
 
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
-import com.yibao.music.album.AlbumListDetailsFragment;
+import com.yibao.music.activity.DetailsActivity;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.util.LogUtil;
@@ -42,20 +41,21 @@ public class PlayListFragment extends BaseFragment {
     @BindView(R.id.recycler_view_play_list)
     RecyclerView mRecyclerViewPlayList;
     private Unbinder unbinder;
+    private PlayListAdapter mAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.play_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
-        initListener();
         initData();
+        initListener();
 
         return view;
     }
 
     private void initListener() {
-
+        mAdapter.setItemListener(() -> startActivity(new Intent(getActivity(), DetailsActivity.class)));
     }
 
     private void initData() {
@@ -67,13 +67,13 @@ public class PlayListFragment extends BaseFragment {
             list.add(artistInfo);
         }
 
-        PlayListAdapter playListAdapter = new PlayListAdapter(list);
+        mAdapter = new PlayListAdapter(list);
         LinearLayoutManager manager = new LinearLayoutManager(MyApplication.getIntstance());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerViewPlayList.setLayoutManager(manager);
         mRecyclerViewPlayList.setHasFixedSize(true);
-        mRecyclerViewPlayList.setAdapter(playListAdapter);
-        playListAdapter.notifyDataSetChanged();
+        mRecyclerViewPlayList.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
     }
 
     @OnClick(R.id.ll_add_new_play_list)
@@ -82,16 +82,6 @@ public class PlayListFragment extends BaseFragment {
             // 打开新建播放列表的Dialog
             case R.id.ll_add_new_play_list:
                 LogUtil.d("================新建播放列表=============");
-                AlbumListDetailsFragment fragment = (AlbumListDetailsFragment) getChildFragmentManager().findFragmentById(R.id.details_frag_content);
-                if (fragment == null) {
-                    mLlAddNewPlayList.setVisibility(View.GONE);
-                    fragment = AlbumListDetailsFragment.newInstance();
-                    FragmentManager manager = getChildFragmentManager();
-                    FragmentTransaction ft = manager.beginTransaction();
-                    ft.add(R.id.play_list_frag_content, fragment);
-                    ft.addToBackStack(null);
-                    ft.commit();
-                }
 
                 break;
             default:
@@ -103,9 +93,11 @@ public class PlayListFragment extends BaseFragment {
         return new PlayListFragment();
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
+
 }

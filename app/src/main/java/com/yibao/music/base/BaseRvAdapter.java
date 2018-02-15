@@ -29,11 +29,12 @@ public abstract class BaseRvAdapter<T>
         extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements SectionIndexer
 
 {
-    protected  List<T> mList = null;
+    protected List<T> mList = null;
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_FOOTER = 1;
     private static final int MIN_NUM = 10;
     protected String tag = getClass().getSimpleName() + "  ==========";
+    protected OnItemListener mListener;
 
     public BaseRvAdapter(List<T> list) {
         mList = list;
@@ -89,9 +90,9 @@ public abstract class BaseRvAdapter<T>
 
     @Override
     public int getItemViewType(int position) {
-        if (mList.size() >= MIN_NUM && position == getItemCount() - 1) {
-            return TYPE_FOOTER;
-        }
+//        if (mList.size() >= MIN_NUM && position == getItemCount() - 1) {
+//            return TYPE_FOOTER;
+//        }
         return TYPE_ITEM;
     }
 
@@ -134,7 +135,6 @@ public abstract class BaseRvAdapter<T>
         this.mList.addAll(position, data);
         this.notifyItemRangeInserted(position, data.size());
     }
-
 
 
     @Override
@@ -203,5 +203,17 @@ public abstract class BaseRvAdapter<T>
         }
     }
 
+    protected void openActivity() {
+        if (mListener != null) {
+            mListener.openDetails();
+        }
+    }
 
+    public void setItemListener(OnItemListener listener) {
+        this.mListener = listener;
+    }
+
+    public interface OnItemListener {
+        void openDetails();
+    }
 }

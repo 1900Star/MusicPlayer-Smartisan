@@ -33,7 +33,7 @@ public class SharePrefrencesUtil {
     }
 
     /**
-     * 用于存储和获取音乐播放的位置
+     * 用于存储程序退出或关闭音乐界面时，音乐播放的位置。
      *
      * @param context
      * @param value
@@ -51,7 +51,7 @@ public class SharePrefrencesUtil {
     }
 
     /**
-     * 用于存储关闭音乐时，音乐的播放状态 。 1：表示暂停时关闭 ， 2：表示播放时关闭
+     * 用于存储退出程序或关闭音乐界面时，音乐的播放状态 。 1：表示暂停时关闭 ， 2：表示播放时关闭
      *
      * @param context
      * @param value

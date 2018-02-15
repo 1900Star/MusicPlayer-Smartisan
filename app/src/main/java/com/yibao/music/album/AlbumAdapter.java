@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
-import com.yibao.music.base.listener.OnMusicListItemClickListener;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
@@ -41,7 +40,6 @@ public class AlbumAdapter
 {
     private Context mContext;
     private int mIsShowStickyView;
-    private static OnAlbumListDetailsItemListener mListener;
 
     /**
      * @param context
@@ -61,14 +59,14 @@ public class AlbumAdapter
         if (mIsShowStickyView == Constants.NUMBER_ZOER) {
             if (holder instanceof AlbumlistHolder) {
                 AlbumlistHolder albumlistHolder = (AlbumlistHolder) holder;
-                setAlbumLIstData(mContext, info, albumlistHolder);
+                setDataAlbumList(albumlistHolder, info);
             }
 
             //显示 隐藏StickyView  并且列表平呈平铺视图显示
         } else if (mIsShowStickyView == Constants.NUMBER_ONE) {
             if (holder instanceof AlbumTileHolder) {
                 AlbumTileHolder albumTileHolder = (AlbumTileHolder) holder;
-                albumTileHolder.setAlbumTileData(mContext, info);
+                setDataAlbumTile(albumTileHolder, info);
             }
 
         }
@@ -76,7 +74,7 @@ public class AlbumAdapter
 
     }
 
-    private void setAlbumLIstData(Context context, AlbumInfo info, AlbumlistHolder albumlistHolder) {
+    private void setDataAlbumList(AlbumlistHolder albumlistHolder, AlbumInfo info) {
         int position = albumlistHolder.getAdapterPosition();
 
         albumlistHolder.mTvAlbumListSongArtist.setText(info.getSingerName());
@@ -100,15 +98,35 @@ public class AlbumAdapter
         }
 
         //            Item点击监听
-        albumlistHolder.mLlAlbumListItem.setOnClickListener(view -> {
+        albumlistHolder.itemView.setOnClickListener(view -> {
+            LogUtil.d("======mIvAlbumTileAlbum===   ", "列表显示");
+            openActivity();
 
-//            if (mListener != null) {
-//                mListener.openAlbumListDetailsActivity(8);
-//            }
-//            LogUtil.d("");
         });
     }
 
+    private void setDataAlbumTile(AlbumTileHolder holder, AlbumInfo albumInfo) {
+
+        Glide.with(holder.mIvAlbumTileAlbum.getContext())
+                .load(StringUtil.getAlbulm(albumInfo.getAlbumId()))
+                .placeholder(R.drawable.noalbumcover_220)
+                .into(holder.mIvAlbumTileAlbum);
+        holder.mTvAlbumTileName.setText(albumInfo.getSongName());
+
+        holder.itemView.setOnClickListener(view1 -> {
+
+            LogUtil.d("======mIvAlbumTileAlbum===   ", "平铺显示");
+            openActivity();
+//            holder.mAlbumCoverShadowMask.setVisibility(View.VISIBLE);
+        });
+//
+//
+//            mIvAlbumTileAlbum.setOnLongClickListener(view -> {
+//                mAlbumCoverShadowMask.setVisibility(View.VISIBLE);
+//                LogUtil.d("======mIvAlbumTileAlbum===   ", "平铺显示");
+//                return false;
+//            });
+    }
 
     static class AlbumTileHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.iv_album_tile_album)
@@ -124,29 +142,7 @@ public class AlbumAdapter
 
         }
 
-        private void setAlbumTileData(Context context, AlbumInfo albumInfo) {
 
-            Glide.with(mIvAlbumTileAlbum.getContext())
-                    .load(StringUtil.getAlbulm(albumInfo.getAlbumId()))
-                    .placeholder(R.drawable.noalbumcover_220)
-                    .into(mIvAlbumTileAlbum);
-            mTvAlbumTileName.setText(albumInfo.getSongName());
-
-            mIvAlbumTileAlbum.setOnClickListener(view1 -> {
-                mAlbumCoverShadowMask.setVisibility(View.VISIBLE);
-                if (context instanceof OnMusicListItemClickListener) {
-                    ((OnMusicListItemClickListener) context).onOpenAlbumDetailsFragment("========我要打开=");
-                    LogUtil.d("");
-                }
-            });
-//
-//
-//            mIvAlbumTileAlbum.setOnLongClickListener(view -> {
-//                mAlbumCoverShadowMask.setVisibility(View.VISIBLE);
-//                LogUtil.d("======mIvAlbumTileAlbum===   ", "平铺显示");
-//                return false;
-//            });
-        }
     }
 
     static class AlbumlistHolder extends RecyclerView.ViewHolder {
@@ -167,15 +163,7 @@ public class AlbumAdapter
             super(view);
             ButterKnife.bind(this, view);
 
-            mLlAlbumListItem.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View view) {
-//                    if (mListener != null) {
-//                        mListener.openAlbumListDetailsActivity(8);
-//                    }
-                }
-            });
         }
     }
 
@@ -214,11 +202,4 @@ public class AlbumAdapter
     }
 
 
-    interface OnAlbumListDetailsItemListener {
-        void openAlbumListDetailsActivity(int flag);
-    }
-
-    public void setOnAlbumItemListener(OnAlbumListDetailsItemListener listener) {
-        mListener = listener;
-    }
 }

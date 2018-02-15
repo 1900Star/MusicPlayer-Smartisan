@@ -23,8 +23,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:ellipsize="end"
                 android:maxLength="20"
-                android:textColor="@color/textDes"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/colorBlack"
                 android:textSize="16sp" />
 
             <TextView
@@ -32,6 +35,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
+                android:ellipsize="end"
+                android:maxLength="18"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:textColor="@color/aboutSign"
                 android:textSize="14sp" />
 

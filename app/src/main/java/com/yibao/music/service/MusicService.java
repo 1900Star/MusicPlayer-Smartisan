@@ -18,7 +18,6 @@ import com.yibao.music.artisanlist.MusicNoification;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public class MusicService
     private int position = -2;
     private ArrayList<MusicBean> mMusicItem;
     private MusicBroacastReceiver mReceiver;
-    private NotificationManager manager;
+    private NotificationManager mNotificationManager;
     private RemoteViews mRemoteViews;
     private MusicBean mMusicInfo;
 
@@ -62,6 +61,7 @@ public class MusicService
     @Override
     public void onCreate() {
         super.onCreate();
+        LogUtil.d("=============Service  onCreate");
         mediaPlayer = new MediaPlayer();
         mRemoteViews = new RemoteViews(getPackageName(), R.layout.music_notify);
         initBroadcast();
@@ -74,7 +74,6 @@ public class MusicService
         mReceiver = new MusicBroacastReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_MUSIC);
-
         registerReceiver(mReceiver, filter);
 
     }
@@ -83,17 +82,19 @@ public class MusicService
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             LogUtil.d(getClass().getSimpleName() + "    first  onStartCommand");
-            mMusicItem = MusicListUtil.getMusicDataList(this);
-            int enterPosition = intent.getIntExtra("position", -1);
+//            mMusicItem = MusicListUtil.getMusicDataList(this);
+            mMusicItem = intent.getParcelableArrayListExtra("musicItem");
+            int enterPosition = intent.getIntExtra("position", 0);
+            LogUtil.d("onStartCommand  position ====    " + enterPosition);
+            LogUtil.d("onStartCommand  MusicItem Size ====    " + mMusicItem.size());
             if (enterPosition != position && enterPosition != -1) {
                 position = enterPosition;
                 //执行播放
                 play();
-//            LogUtil.d("onStartCommand   ");
             } else if (enterPosition != -1 && enterPosition == position) {
                 //通知播放界面更新
                 LogUtil.d("Service position  " + position);
-                sendCureentMusicInfo();
+//                sendCureentMusicInfo();
             }
         }
         return super.onStartCommand(intent, flags, startId);
@@ -133,7 +134,7 @@ public class MusicService
         //开启播放
         mediaPlayer.start();
         //通知播放界面更新
-        sendCureentMusicInfo();
+//        sendCureentMusicInfo();
         LogUtil.d("********     onPrepared");
         //显示音乐通知栏
         showNotification();
@@ -142,9 +143,9 @@ public class MusicService
     private void showNotification() {
         Notification notification = MusicNoification.getNotification(getApplicationContext(), mRemoteViews,
                 mMusicInfo);
-        manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        manager.notify(0, notification);
+        mNotificationManager.notify(0, notification);
     }
 
     //获取当前播放进度
@@ -283,8 +284,8 @@ public class MusicService
     }
 
     public void closeNotificaction() {
-        if (manager != null) {
-            manager.cancelAll();
+        if (mNotificationManager != null) {
+            mNotificationManager.cancelAll();
         }
     }
 
@@ -308,7 +309,7 @@ public class MusicService
                     case CLOSE:
                         LogUtil.d("CLOSE");
                         playStatus(0);
-                        manager.cancel(0);
+                        mNotificationManager.cancel(0);
                         break;
                     case PREV:
                         playPre();

@@ -1,42 +1,38 @@
-package com.yibao.music.album;
+package com.yibao.music.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
-import com.yibao.music.base.BaseFragment;
+import com.yibao.music.base.BaseActivity;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.playlist.PlayListAdapter;
-import com.yibao.music.util.LogUtil;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 
 /**
  * @项目名： ArtisanMusic
- * @包名： com.yibao.music.album
- * @文件名: AlbumListDetailsFragment
+ * @包名： com.yibao.music.activity
+ * @文件名: DetailsActivity
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
- * @创建时间: 2018/2/9 15:36
+ * @创建时间: 2018/2/14 15:24
  * @描述： {TODO}
  */
 
-public class AlbumListDetailsFragment extends BaseFragment {
+public class DetailsListActivity extends BaseActivity {
 
 
     @BindView(R.id.iv_artist_albumm_details)
@@ -56,17 +52,14 @@ public class AlbumListDetailsFragment extends BaseFragment {
     @BindView(R.id.ll_album_details_random_play)
     LinearLayout mLlAlbumDetailsRandomPlay;
     @BindView(R.id.rv_artist_album_details)
-    RecyclerView mRecyclerView;
-    private Unbinder unbinder;
+    RecyclerView mRecyclerVeiw;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.details_activity, container, false);
-        unbinder = ButterKnife.bind(this, view);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.details_list_activity);
+        ButterKnife.bind(this);
         initData();
-
-        return view;
     }
 
     private void initData() {
@@ -81,26 +74,15 @@ public class AlbumListDetailsFragment extends BaseFragment {
         PlayListAdapter playListAdapter = new PlayListAdapter(list);
         LinearLayoutManager manager = new LinearLayoutManager(MyApplication.getIntstance());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(playListAdapter);
+        mRecyclerVeiw.setLayoutManager(manager);
+        mRecyclerVeiw.setHasFixedSize(true);
+        mRecyclerVeiw.setAdapter(playListAdapter);
         playListAdapter.notifyDataSetChanged();
     }
 
 
-    public static AlbumListDetailsFragment newInstance() {
-        return new AlbumListDetailsFragment();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     @OnClick({R.id.iv_details_add_to_list,
-            R.id.iv_details_add_to_play_list,
-            R.id.ll_album_details_playall,
-            R.id.ll_album_details_random_play})
+            R.id.iv_details_add_to_play_list, R.id.ll_album_details_playall, R.id.ll_album_details_random_play})
     public void onClick(View v) {
         switch (v.getId()) {
             default:
@@ -110,20 +92,10 @@ public class AlbumListDetailsFragment extends BaseFragment {
             case R.id.iv_details_add_to_play_list:
                 break;
             case R.id.ll_album_details_playall:
-                LogUtil.d("==================详情点击测试");
+
                 break;
             case R.id.ll_album_details_random_play:
-                LogUtil.d("==================详情点击测试");
                 break;
         }
-    }
-
-
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 }

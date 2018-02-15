@@ -35,10 +35,22 @@
         <service android:name=".service.BigServices" />
         <service android:name=".service.MusicService" />
 
+        <activity android:name=".base.BaseActivity" />
         <activity
             android:name=".artisanlist.MusicActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".album.MainActivity"></activity>
+        <activity
+            android:name=".album.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".base.MusicControlBarActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.DetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.DetailsListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

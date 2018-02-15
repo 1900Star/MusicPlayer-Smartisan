@@ -14,8 +14,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
-import com.yibao.music.base.listener.OnMusicListItemClickListener;
+import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
 
@@ -43,6 +44,7 @@ public class SongAdapter
     private String TAG = "SongAdapter";
     private Context mContext;
     private int mIsShowStickyView;
+    private int mSortListFlag;
 
     /**
      * @param context
@@ -50,12 +52,12 @@ public class SongAdapter
      * @param isShowStickyView 控制列表的StickyView是否显示，0 显示 ，1 ：不显示
      *                         parm isArtistList     用来控制音乐列表和艺术家列表的显示
      */
-    public SongAdapter(Context context, List<MusicBean> list, int isShowStickyView) {
+    public SongAdapter(Context context, List<MusicBean> list, int isShowStickyView, int sortListFlag) {
         super(list);
         this.mContext = context;
         this.mIsShowStickyView = isShowStickyView;
+        this.mSortListFlag = sortListFlag;
     }
-//        this.mIsArtistList = isArtistList;
 
 
     @Override
@@ -79,7 +81,8 @@ public class SongAdapter
                     .into(songListViewHolder.mSongAlbum);
 
             songListViewHolder.mSongName.setText(info.getTitle());
-            if (mIsShowStickyView == 0) {
+
+            if (mIsShowStickyView == Constants.NUMBER_ZOER) {
                 String firstTv = info.getFirstChar();
                 songListViewHolder.mTvStickyView.setText(firstTv);
                 if (position == 0) {
@@ -97,14 +100,16 @@ public class SongAdapter
             }
 
             songListViewHolder.mIvSongItemMenu.setOnClickListener(view -> {
-                LogUtil.d("");
+                LogUtil.d("========mIvSongItemMenu=========更多选项========");
                 LogUtil.d("========mIvSongItemMenu=========更多选项========");
             });
 
             //            Item点击监听
             songListViewHolder.mLlMusicItem.setOnClickListener(view -> {
-                if (mContext instanceof OnMusicListItemClickListener) {
-                    ((OnMusicListItemClickListener) mContext).startMusicService(position);
+
+
+                if (mContext instanceof OnMusicItemClickListener) {
+                    ((OnMusicItemClickListener) mContext).startMusicService(position,mSortListFlag);
                 }
             });
 

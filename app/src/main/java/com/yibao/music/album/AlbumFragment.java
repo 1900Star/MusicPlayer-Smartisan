@@ -1,7 +1,6 @@
 package com.yibao.music.album;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yibao.music.R;
+import com.yibao.music.activity.DetailsActivity;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
@@ -56,6 +56,7 @@ public class AlbumFragment extends BaseFragment {
 
 
     private Unbinder unbinder;
+    private AlbumAdapter mAdapter;
 
 
     @Nullable
@@ -69,22 +70,9 @@ public class AlbumFragment extends BaseFragment {
     }
 
     private void initListener() {
-
-
+        mAdapter.setItemListener(() -> startActivity(new Intent(getActivity(), DetailsActivity.class)));
     }
 
-    private void openDetailsFragment() {
-        AlbumListDetailsFragment fragment = (AlbumListDetailsFragment) getChildFragmentManager().findFragmentById(R.id.details_frag_content);
-        if (fragment == null) {
-            fragment = AlbumListDetailsFragment.newInstance();
-            FragmentManager manager = getChildFragmentManager();
-            FragmentTransaction ft = manager.beginTransaction();
-            ft.add(R.id.album_frag_content, fragment);
-            ft.addToBackStack(null);
-            ft.commit();
-        }
-
-    }
 
     /**
      * 加载列表
@@ -94,8 +82,8 @@ public class AlbumFragment extends BaseFragment {
      *                              4 == GridLayoutManager
      */
     private void initData(int adapterShowType, int adapterAndManagerType) {
-        AlbumAdapter albumAdapter = new AlbumAdapter(mActivity, mAlbumList, adapterShowType);
-        mAlbumMusicView.setAdapter(mActivity, adapterAndManagerType, albumAdapter);
+        mAdapter = new AlbumAdapter(mActivity, mAlbumList, adapterShowType);
+        mAlbumMusicView.setAdapter(mActivity, adapterAndManagerType, mAdapter);
     }
 
 
@@ -104,11 +92,10 @@ public class AlbumFragment extends BaseFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_album_category_random_paly:
-                openDetailsFragment();
+
                 LogUtil.d("=================randomplay");
                 break;
             case R.id.iv_album_category_paly:
-                openDetailsFragment();
                 break;
             case R.id.album_category_list_ll:
                 switchCategory(Constants.NUMBER_ZOER);
@@ -160,7 +147,6 @@ public class AlbumFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        LogUtil.d("=========AlbumFragment destroyView =============");
         unbinder.unbind();
 
     }

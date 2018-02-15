@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
-import com.yibao.music.base.listener.OnMusicListItemClickListener;
+import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.StringUtil;
 
@@ -22,19 +22,24 @@ import java.util.concurrent.TimeUnit;
  * 作者：Stran on 2017/3/23 03:31
  * 描述：${TODO}
  * 邮箱：strangermy@outlook.com
+ * @author Stran
  */
-public class MusicControPagerAdapter
+public class QqBarPagerAdapter
         extends android.support.v4.view.PagerAdapter {
     private Context mContext;
     private ArrayList<MusicBean> mList;
     private int mcurrentPostition;
 
-    MusicControPagerAdapter(Context context, ArrayList<MusicBean> list, int currentPosition) {
+    public QqBarPagerAdapter(Context context, ArrayList<MusicBean> list, int currentPosition) {
         this.mContext = context;
         this.mList = list;
         this.mcurrentPostition = currentPosition;
     }
 
+    public void setData(ArrayList<MusicBean> list) {
+        mList = list;
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getCount() {
@@ -70,8 +75,8 @@ public class MusicControPagerAdapter
         RxView.clicks(view)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribe(o -> {
-                    if (mContext instanceof OnMusicListItemClickListener) {
-                        ((OnMusicListItemClickListener) mContext).onOpenMusicPlayDialogFag();
+                    if (mContext instanceof OnMusicItemClickListener) {
+                        ((OnMusicItemClickListener) mContext).onOpenMusicPlayDialogFag();
                     }
                 });
     }

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/music_floating_block"
+    android:id="@+id/smartisan_music_bar"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="58dp"
     android:background="@android:color/transparent"
     android:visibility="visible">
 
     <com.yibao.music.view.CircleImageView
         android:id="@+id/music_float_block_albulm"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentLeft="true"
 
         android:layout_margin="4dp"
@@ -94,5 +94,5 @@
         android:layout_width="match_parent"
         android:layout_height="1.5dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorWhite" />
+        android:background="@android:color/transparent" />
 </RelativeLayout>

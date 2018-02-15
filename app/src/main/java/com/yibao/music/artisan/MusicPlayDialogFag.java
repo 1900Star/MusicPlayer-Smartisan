@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
+import android.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -230,8 +230,6 @@ public class MusicPlayDialogFag
     }
 
 
-
-
     /**
      * //接收service中的数据,更新UI。
      */
@@ -272,9 +270,9 @@ public class MusicPlayDialogFag
     }
 
 
-
     /**
-     *  //设置歌曲名和歌手名
+     * //设置歌曲名和歌手名
+     *
      * @param info
      */
     private void perpareMusic(MusicBean info) {
@@ -586,6 +584,7 @@ public class MusicPlayDialogFag
             mDisposableLyrics.dispose();
         }
         getActivity().unregisterReceiver(mVolumeReceiver);
+        dismiss();
     }
 
     private class SeekBarListener
