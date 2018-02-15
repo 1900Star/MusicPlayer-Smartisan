@@ -102,9 +102,14 @@ public class MusicPlayDialogFag
     private PowerManager.WakeLock mWakeLock;
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        audioBinder = MusicActivity.getAudioBinder();
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        audioBinder = MusicActivity.getAudioBinder();
         mBus = MyApplication.getIntstance()
                 .bus();
         disposables = new CompositeDisposable();
@@ -160,11 +165,16 @@ public class MusicPlayDialogFag
         root = inflater.inflate(R.layout.music_play_dialogfag, null);
         initView();
         initRxBusData();
-        initData();
-        initListener();
         return DialogUtil.getDialogFag(getActivity(), root);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        initData();
+        initListener();
+
+    }
 
     private void initData() {
         if (audioBinder.isPlaying()) {
@@ -230,8 +240,6 @@ public class MusicPlayDialogFag
     }
 
 
-
-
     /**
      * //接收service中的数据,更新UI。
      */
@@ -272,9 +280,9 @@ public class MusicPlayDialogFag
     }
 
 
-
     /**
-     *  //设置歌曲名和歌手名
+     * //设置歌曲名和歌手名
+     *
      * @param info
      */
     private void perpareMusic(MusicBean info) {

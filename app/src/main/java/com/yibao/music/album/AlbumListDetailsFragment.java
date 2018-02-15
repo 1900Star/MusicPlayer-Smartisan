@@ -60,7 +60,7 @@ public class AlbumListDetailsFragment extends BaseFragment {
     @BindView(R.id.details_frag_content)
     LinearLayout mDetailsContent;
     private Unbinder unbinder;
-
+    public static String albumTag = "AlbumListDetailsFragment";
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

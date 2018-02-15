@@ -62,7 +62,7 @@ public class PlayListFragment extends BaseFragment {
         ArrayList<ArtistInfo> list = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             ArtistInfo artistInfo = new ArtistInfo();
-            artistInfo.setName(i + "爱");
+            artistInfo.setName(i + " Smartisan");
             artistInfo.setSongCount(i);
             list.add(artistInfo);
         }
@@ -88,8 +88,8 @@ public class PlayListFragment extends BaseFragment {
                     fragment = AlbumListDetailsFragment.newInstance();
                     FragmentManager manager = getChildFragmentManager();
                     FragmentTransaction ft = manager.beginTransaction();
-                    ft.add(R.id.play_list_frag_content, fragment);
-                    ft.addToBackStack(null);
+                    ft.replace(R.id.play_list_frag_content, fragment, null);
+                    ft.addToBackStack(AlbumListDetailsFragment.albumTag);
                     ft.commit();
                 }
 

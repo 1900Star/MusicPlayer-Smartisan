@@ -1,6 +1,7 @@
 package com.yibao.music.artisanlist;
 
 import android.animation.ObjectAnimator;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -37,7 +38,6 @@ import com.yibao.music.model.MusicDialogInfo;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.TestBean;
 import com.yibao.music.service.AudioPlayService;
-import com.yibao.music.service.MusicService;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
@@ -367,20 +367,13 @@ public class MusicActivity
     @Override
     public void startMusicService(int position) {
         mCurrentPosition = position;
-
-
         //获取音乐列表
-        Intent intent = new Intent(this,MusicService.class);
-//        intent.putExtra("position", mCurrentPosition);
+        Intent intent = new Intent();
+        intent.setClass(MusicActivity.this, AudioPlayService.class);
+        intent.putExtra("position", mCurrentPosition);
+        mConnection = new AudioServiceConnection();
+        bindService(intent, mConnection, Service.BIND_AUTO_CREATE);
         startService(intent);
-//        //获取音乐列表
-//        Intent intent = new Intent();
-//        intent.setClass(this, AudioPlayService.class);
-//        intent.putParcelableArrayListExtra("musicItem", mMusicItems);
-//        intent.putExtra("position", mCurrentPosition);
-//        mConnection = new AudioServiceConnection();
-//        bindService(intent, mConnection, Service.BIND_AUTO_CREATE);
-//        startService(intent);
 
     }
 
@@ -663,7 +656,7 @@ public class MusicActivity
             case R.id.action_titlebar_search:
                 LogUtil.d("==================search");
                 Intent intent = new Intent();
-                intent.setClass(this,MainActivity.class);
+                intent.setClass(this, MainActivity.class);
                 intent.putExtra("position", 8);
                 startActivity(intent);
 

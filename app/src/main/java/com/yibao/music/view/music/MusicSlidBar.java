@@ -221,11 +221,12 @@ public class MusicSlidBar
      * 设置Adapter的类型 1 : SongListAdapter  、 2  ：ArtistAdapter  、
      * 3  ： AlbumAdapter  普通视图  、 4  ： AlbumAdapter  平铺视图 GridView3列
      *
-     * @param type
+     * @param type Adapter的类型
      */
     public void setAdapterType(int type) {
         this.adapterType = type;
     }
+
 
     public void setBarVisibility(int visibilityType) {
         setVisibility(visibilityType);
