@@ -4,7 +4,9 @@
     android:id="@+id/rl_details_item"
     android:layout_width="match_parent"
     android:layout_height="55dp"
-    android:background="@color/colorWhite"
+    android:focusable="true"
+    android:clickable="true"
+    android:background="@drawable/list_item_bg"
     android:gravity="center_vertical">
 
     <LinearLayout
@@ -20,8 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="aaaaa"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/text_song_name_selector"
             android:textSize="@dimen/about_sign" />
 
         <ImageView
@@ -43,8 +44,7 @@
             android:id="@+id/tv_song_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="bbbbb"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/text_singer_selector"
             android:textSize="@dimen/music_loating_name" />
 
         <ImageView

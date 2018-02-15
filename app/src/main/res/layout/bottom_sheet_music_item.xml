@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="0.2dp"
-    android:background="@color/colorWhite"
+    android:focusable="true"
+    android:clickable="true"
+    android:background="@drawable/list_item_bg"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -27,7 +29,7 @@
                 android:maxLength="20"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textColor="@color/colorBlack"
+                android:textColor="@color/text_song_name_selector"
                 android:textSize="16sp" />
 
             <TextView
@@ -39,7 +41,7 @@
                 android:maxLength="18"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textColor="@color/aboutSign"
+                android:textColor="@color/text_singer_selector"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -52,7 +54,7 @@
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="8dp"
-            android:textColor="@color/seekBarP"
+            android:textColor="@color/text_song_time_selector"
             android:textSize="12sp" />
 
         <ImageView

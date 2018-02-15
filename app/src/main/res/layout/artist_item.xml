@@ -19,7 +19,9 @@
         android:layout_height="62dp"
         android:layout_below="@id/artist_item_sticky_view"
         android:layout_marginTop="0.5dp"
-        android:background="@color/rvBg"
+        android:focusable="true"
+        android:clickable="true"
+        android:background="@drawable/list_item_bg"
         android:gravity="center_vertical"
         android:orientation="vertical">
 
@@ -32,7 +34,7 @@
             android:maxLength="18"
             android:maxLines="1"
             android:singleLine="true"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/text_song_name_selector"
             android:textSize="@dimen/music_loating_title" />
 
         <LinearLayout
@@ -46,7 +48,7 @@
                 android:id="@+id/artist_item_album_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/tabbarTv"
+                android:textColor="@color/text_singer_selector"
                 android:textSize="@dimen/about_content" />
 
             <TextView
@@ -56,7 +58,7 @@
                 android:layout_marginLeft="8dp"
                 android:maxLength="18"
                 android:maxLines="1"
-                android:textColor="@color/tabbarTv"
+                android:textColor="@color/text_singer_selector"
                 android:textSize="@dimen/music_loating_name" />
         </LinearLayout>
     </LinearLayout>

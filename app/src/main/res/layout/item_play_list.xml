@@ -3,9 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rl_play_list_item"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="62dp"
     android:layout_marginTop="0.5dp"
-    android:background="@color/colorWhite"
+    android:focusable="true"
+    android:clickable="true"
+    android:background="@drawable/list_item_selector"
     android:gravity="center_vertical">
 
     <LinearLayout
@@ -22,7 +24,7 @@
             android:id="@+id/tv_play_list_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/text_song_name_selector"
             android:textSize="@dimen/music_loating_title" />
 
         <TextView
@@ -32,8 +34,7 @@
             android:layout_marginTop="6dp"
             android:maxLength="18"
             android:maxLines="1"
-            android:text="hhhh"
-            android:textColor="@color/tabbarTv"
+            android:textColor="@color/text_song_time_selector"
             android:textSize="@dimen/music_loating_name" />
 
 
