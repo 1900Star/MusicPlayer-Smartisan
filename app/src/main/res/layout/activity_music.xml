@@ -40,10 +40,27 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/about" />
+        android:layout_height="0.2dp"
+        android:background="@color/listBg" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp">
 
-    <include
-        android:id="@+id/music_controlbar"
-        layout="@layout/empty_framelayout" />
+        <include layout="@layout/music_tabbar_smartisan" />
+
+        <include
+            layout="@layout/muisc_tabbar_qq"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:background="@color/listBg" />
+
+
+    <include layout="@layout/music_tabbar" />
+
+
 </LinearLayout>

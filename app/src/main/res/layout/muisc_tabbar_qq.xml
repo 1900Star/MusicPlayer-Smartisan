@@ -9,7 +9,7 @@
     android:orientation="horizontal"
     android:visibility="invisible">
     <android.support.v4.view.ViewPager
-        android:id="@+id/music_floating_vp"
+        android:id="@+id/qq_music_vp"
         android:layout_width="0dp"
         android:layout_height="58dp"
         android:layout_weight="1" />

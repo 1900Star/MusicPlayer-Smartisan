@@ -24,7 +24,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
 import com.yibao.music.artisan.MusicPlayDialogFag;
-import com.yibao.music.artisanlist.MusicActivitybac;
+import com.yibao.music.artisanlist.MusicActivity;
 import com.yibao.music.artisanlist.MusicPagerAdapter;
 import com.yibao.music.artisanlist.MusicPagerListener;
 import com.yibao.music.artisanlist.QqBarPagerAdapter;
@@ -103,7 +103,7 @@ public class ControlBarFragment extends Fragment implements OnMusicItemClickList
     /**
      * qq
      */
-    @BindView(R.id.music_floating_vp)
+    @BindView(R.id.qq_music_vp)
     ViewPager mMusicFloatingVp;
     @BindView(R.id.music_floating_pager_play)
     MusicProgressView mMusicFloatingPagerPlay;
@@ -330,7 +330,7 @@ public class ControlBarFragment extends Fragment implements OnMusicItemClickList
                 updatePlayBtnStatus();
                 break;
             case 1:
-                startActivity(new Intent(getActivity(), MusicActivitybac.class));
+                startActivity(new Intent(getActivity(), MusicActivity.class));
                 break;
             case 2:
                 getActivity().finish();
