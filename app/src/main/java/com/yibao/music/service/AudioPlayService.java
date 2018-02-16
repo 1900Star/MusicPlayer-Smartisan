@@ -91,7 +91,7 @@ public class AudioPlayService
         int enterPosition = intent.getIntExtra("position", 0);
         LogUtil.d("Service MusicList size==== sortListFlag   " + mMusicDataList.size(), "====  " + sortListFlag);
         if (sortListFlag == Constants.NUMBER_ZOER) {
-            mMusicDataList = MusicListUtil.sortMusicAbc(this.mMusicDataList);
+            mMusicDataList = MusicListUtil.getMusicDataList(this);
         } else if (sortListFlag == Constants.NUMBER_THRRE) {
             mMusicDataList = MusicListUtil.sortMusicAddtime(mMusicDataList);
             LogUtil.d(mMusicDataList.size() + "");

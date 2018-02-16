@@ -127,7 +127,7 @@ public class MusicBottomSheetDialog
     private void clearFavoriteMusic() {
         MyApplication.getIntstance()
                 .getDaoSession()
-                .getMusicInfoDao()
+                .getMusicBeanDao()
                 .deleteAll();
         mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }

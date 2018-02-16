@@ -79,6 +79,7 @@ public class MusicListUtil {
                 info.setDuration(duration);
                 info.setAddTime(addTime);
                 info.setSongUrl(url);
+//                MyApplication.getIntstance().getDaoSession().getMusicBeanDao().insert(info);
                 musicInfos.add(info);
             }
         }

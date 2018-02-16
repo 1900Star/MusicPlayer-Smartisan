@@ -43,9 +43,6 @@
             android:name=".album.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".base.MusicControlBarActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".activity.DetailsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

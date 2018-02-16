@@ -81,13 +81,11 @@ public class SongFragment extends BaseFragment {
         } else if (isShowStickyView == Constants.NUMBER_ONE) {
 
             mList = MusicListUtil.sortMusicAddtime(musicBeans);
-            mSongAdapter = new SongAdapter(mActivity, mList, isShowStickyView, sortListFlag);
             mMusciView.setSlideBarVisibility(Constants.NUMBER_FOUR);
+            mSongAdapter = new SongAdapter(mActivity, mList, isShowStickyView, sortListFlag);
             MyApplication.getIntstance().bus().post(new MusicStatusBean(88, false));
             LogUtil.d("8888888888888888888888888888888888888888888888888");
         }
-//        if (isSortList) {
-//        }
         mMusciView.setAdapter(mActivity, Constants.NUMBER_ONE, mSongAdapter);
     }
 

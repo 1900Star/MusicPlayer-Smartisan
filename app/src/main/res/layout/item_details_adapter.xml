@@ -6,7 +6,7 @@
     android:layout_height="55dp"
     android:focusable="true"
     android:clickable="true"
-    android:background="@drawable/list_item_bg"
+    android:background="@drawable/list_item_selector"
     android:gravity="center_vertical">
 
     <LinearLayout
