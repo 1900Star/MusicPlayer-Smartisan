@@ -4,14 +4,10 @@ import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.squareup.leakcanary.LeakCanary;
-import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.DaoMaster;
 import com.yibao.music.model.greendao.DaoSession;
 import com.yibao.music.util.CrashHandler;
-import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RxBus;
-
-import java.util.ArrayList;
 
 /**
  * 作者：Stran on 2017/3/23 15:12
@@ -28,8 +24,6 @@ public class MyApplication
     private RxBus mRxBus;
 
     private DaoSession mDaoSession;
-    public static ArrayList<MusicBean> mMusicDataList;
-    public static ArrayList<MusicBean> mSongDataList;
 
     public static MyApplication getIntstance() {
         if (appContext == null) {
@@ -52,15 +46,6 @@ public class MyApplication
                 .init(this);
         setUpDataBase();
         mRxBus = new RxBus();
-        if (mMusicDataList == null) {
-            mMusicDataList = MusicListUtil.getMusicDataList(this);
-
-        }
-        if (mSongDataList == null) {
-            mSongDataList = MusicListUtil.getMusicDataList(this);
-
-        }
-
     }
 
     private void setUpDataBase() {
@@ -72,6 +57,7 @@ public class MyApplication
     }
 
     public DaoSession getDaoSession() {
+
         return mDaoSession;
     }
 

@@ -2,6 +2,7 @@ package com.yibao.music.artisan;
 
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +13,6 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -43,7 +43,6 @@ import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.LyricsView;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -81,7 +80,6 @@ public class MusicPlayDialogFag
     private CompositeDisposable disposables;
     private ObjectAnimator mAnimator;
     private MyAnimatorUpdateListener mAnimatorListener;
-    private boolean isFavorite;
     private int mProgress = 0;
     private Disposable mSubscribe;
     private SeekBar mSbProgress;
@@ -126,18 +124,13 @@ public class MusicPlayDialogFag
 
     }
 
-    private void checkCurrentIsFavorite() {
-        List<MusicBean> list = mInfoDao.queryBuilder()
-                .where(MusicBeanDao.Properties.Title.eq(mCurrenMusicInfo.getTitle()))
-                .build()
-                .list();
-        if (list.size() == 0) {
-            mIvMusicFavorite.setImageResource(R.drawable.music_favorite_selector);
-            isFavorite = false;
-        } else {
+    public void checkCurrentIsFavorite() {
 
+        if (mCurrenMusicInfo.isFavorite()) {
             mIvMusicFavorite.setImageResource(R.mipmap.favorite_yes);
-            isFavorite = true;
+        } else {
+            mIvMusicFavorite.setImageResource(R.drawable.music_favorite_selector);
+
         }
     }
 
@@ -421,7 +414,7 @@ public class MusicPlayDialogFag
 
     /**
      * 打开歌词时，可以保持屏幕常亮
-     * 屏幕常亮设置为30分钟
+     * 屏幕常亮默认设置为30分钟
      */
     private void screenAlwaysOnSwitch() {
         if (isScreenAlwaysOn) {
@@ -463,6 +456,9 @@ public class MusicPlayDialogFag
 
     }
 
+    /**
+     * 根据进度滚动歌词
+     */
     private void startPlayLyrics() {
         if (mDisposableLyrics == null) {
 
@@ -475,17 +471,19 @@ public class MusicPlayDialogFag
     }
 
     private void favoritMusic() {
-        if (isFavorite) {
-            mInfoDao.delete(mCurrenMusicInfo);
+        if (mCurrenMusicInfo.isFavorite()) {
+            mCurrenMusicInfo.setIsFavorite(false);
+            mInfoDao.update(mCurrenMusicInfo);
+
             mIvMusicFavorite.setImageResource(R.drawable.music_favorite_selector);
-            isFavorite = false;
 
         } else {
             String time = StringUtil.getCurrentTime();
             mCurrenMusicInfo.setTime(time);
-            mInfoDao.insert(mCurrenMusicInfo);
+            mCurrenMusicInfo.setIsFavorite(true);
+            mInfoDao.update(mCurrenMusicInfo);
+
             mIvMusicFavorite.setImageResource(R.mipmap.favorite_yes);
-            isFavorite = true;
 
         }
     }
@@ -530,11 +528,12 @@ public class MusicPlayDialogFag
         RxView.clicks(mTitlebarPlayList)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribe(o -> {
-                    List<MusicBean> list = mInfoDao.queryBuilder()
-                            .build()
-                            .list();
+//                    List<MusicBean> list = mInfoDao.queryBuilder()
+//                            .build()
+//                            .list();
+
                     MusicBottomSheetDialog.newInstance()
-                            .getBottomDialog(getActivity(), list);
+                            .getBottomDialog(getActivity());
 
                 });
 
@@ -586,6 +585,7 @@ public class MusicPlayDialogFag
         getActivity().unregisterReceiver(mVolumeReceiver);
         dismiss();
     }
+
 
     private class SeekBarListener
             extends SeekBarChangeListtener {

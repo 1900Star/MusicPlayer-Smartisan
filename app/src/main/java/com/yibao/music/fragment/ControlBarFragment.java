@@ -247,11 +247,11 @@ public class ControlBarFragment extends Fragment implements OnMusicItemClickList
         }
 
     }
-
-    @Override
-    public void switchViewPagerItem(int page,int titleId) {
-
-    }
+//
+//    @Override
+//    public void switchViewPagerItem(int page,int titleId) {
+//
+//    }
 
 
     private void openMusicPlayDialogFag() {
@@ -519,7 +519,7 @@ public class ControlBarFragment extends Fragment implements OnMusicItemClickList
 
     private void switchPagerItem(int flag, int resourcesId) {
         if (getActivity() instanceof OnMusicItemClickListener) {
-        ((OnMusicItemClickListener) getActivity()).switchViewPagerItem(flag,resourcesId);
+//        ((OnMusicItemClickListener) getActivity()).switchViewPagerItem(flag,resourcesId);
 
         }
     }

@@ -32,7 +32,7 @@
         </activity>
 
         <service android:name=".service.AudioPlayService" />
-        <service android:name=".service.BigServices" />
+        <service android:name=".service.LoadMusicDataServices" />
         <service android:name=".service.MusicService" />
 
         <activity android:name=".base.BaseActivity" />

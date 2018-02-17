@@ -20,6 +20,7 @@ import com.yibao.music.R;
 import com.yibao.music.factory.RecyclerFactory;
 import com.yibao.music.model.BottomSheetStatus;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.StringUtil;
@@ -47,7 +48,7 @@ public class MusicBottomSheetDialog
     private List<MusicBean> mList;
     private RecyclerView mRecyclerView;
     private BottomSheetBehavior<View> mBehavior;
-
+    private OnCheckFavoriteListener mListener;
     private CompositeDisposable
             mDisposable = new CompositeDisposable();
     private RxBus
@@ -58,10 +59,10 @@ public class MusicBottomSheetDialog
         return new MusicBottomSheetDialog();
     }
 
-    public void getBottomDialog(Context context, List<MusicBean> list) {
+    public void getBottomDialog(Context context) {
         this.mContext = context;
 
-        this.mList = list;
+        this.mList = MyApplication.getIntstance().getDaoSession().getMusicBeanDao().queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
         BottomSheetDialog dialog = new BottomSheetDialog(context);
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.bottom_sheet_list_dialog, null);
@@ -125,11 +126,18 @@ public class MusicBottomSheetDialog
     }
 
     private void clearFavoriteMusic() {
-        MyApplication.getIntstance()
-                .getDaoSession()
-                .getMusicBeanDao()
-                .deleteAll();
+        for (MusicBean musicBean : mList) {
+            musicBean.setIsFavorite(false);
+            MyApplication.getIntstance()
+                    .getDaoSession()
+                    .getMusicBeanDao()
+                    .update(musicBean);
+        }
+
         mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        if (mListener != null) {
+            mListener.checkFavorite();
+        }
     }
 
     private void backTop() {
@@ -156,6 +164,14 @@ public class MusicBottomSheetDialog
         mBottomListTitleSize = view.findViewById(R.id.bottom_list_title_size);
     }
 
+    public void setOnCheckFavoriteListener(OnCheckFavoriteListener listener) {
+        this.mListener = listener;
+    }
+
+    public interface OnCheckFavoriteListener {
+        void checkFavorite();
+
+    }
 }
 
 

@@ -24,6 +24,7 @@ import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -48,7 +49,7 @@ public class AudioPlayService
     public static final String ACTION_MUSIC = "MUSIC";
 
     private int position = -2;
-    private ArrayList<MusicBean> mMusicDataList;
+    private List<MusicBean> mMusicDataList;
     private MusicBroacastReceiver mReceiver;
     private NotificationManager manager;
     private RemoteViews mRemoteViews;
@@ -64,7 +65,7 @@ public class AudioPlayService
         mAudioBinder = new AudioBinder();
         mRemoteViews = new RemoteViews(getPackageName(), R.layout.music_notify);
         if (mMusicDataList == null) {
-            mMusicDataList = MusicListUtil.getMusicDataList(this);
+            mMusicDataList = MyApplication.getIntstance().getDaoSession().getMusicBeanDao().queryBuilder().list();
         }
 
         initBroadcast();
@@ -91,9 +92,9 @@ public class AudioPlayService
         int enterPosition = intent.getIntExtra("position", 0);
         LogUtil.d("Service MusicList size==== sortListFlag   " + mMusicDataList.size(), "====  " + sortListFlag);
         if (sortListFlag == Constants.NUMBER_ZOER) {
-            mMusicDataList = MusicListUtil.getMusicDataList(this);
+            mMusicDataList = MyApplication.getIntstance().getDaoSession().getMusicBeanDao().queryBuilder().list();
         } else if (sortListFlag == Constants.NUMBER_THRRE) {
-            mMusicDataList = MusicListUtil.sortMusicAddtime(mMusicDataList);
+            mMusicDataList = MusicListUtil.sortMusicAddtime((ArrayList<MusicBean>) mMusicDataList);
             LogUtil.d(mMusicDataList.size() + "");
         }
         if (enterPosition != position && enterPosition != -1) {

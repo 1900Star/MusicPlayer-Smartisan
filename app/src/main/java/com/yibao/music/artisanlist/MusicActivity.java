@@ -248,10 +248,6 @@ public class MusicActivity
 
     }
 
-    @Override
-    public void switchViewPagerItem(int page, int titleId) {
-
-    }
 
 
     private void openMusicPlayDialogFag() {

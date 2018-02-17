@@ -85,6 +85,7 @@ public class MusicListUtil {
         }
         cursor.close();
         Collections.sort(musicInfos);
+        LogUtil.d("musicUtil ========== " + musicInfos.size());
         return musicInfos;
     }
 

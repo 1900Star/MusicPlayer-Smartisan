@@ -10,11 +10,11 @@ import com.yibao.music.MyApplication;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RxBus;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -36,40 +36,44 @@ public abstract class BaseFragment extends Fragment {
     protected static CompositeDisposable disposables;
     public ArrayList<MusicBean> mSongList;
     private boolean mHandledPress = false;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (mSongList == null) {
-            mSongList = MyApplication.mSongDataList;
-            Collections.sort(mSongList);
-
-        }
-        if (musicBeans == null) {
-            musicBeans = MyApplication.mMusicDataList;
-        }
-        if (mAlbumList == null) {
-            mAlbumList = MusicListUtil.getAlbumList(MyApplication.mMusicDataList);
-        }
-        if (mArtistList == null) {
-            mArtistList = MusicListUtil.getArtistList(MyApplication.mMusicDataList);
-
-        }
-
-    }
-
+    private MusicBeanDao mMusicBeanDao;
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         tag = this.getClass().getSimpleName();
+        mMusicBeanDao = MyApplication.getIntstance().getDaoSession().getMusicBeanDao();
         mActivity = getActivity();
         disposables = new CompositeDisposable();
         mBus = MyApplication.getIntstance().bus();
 
 
     }
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (mSongList == null) {
+            mSongList = (ArrayList<MusicBean>) mMusicBeanDao.queryBuilder().list();
+//            Collections.sort(mSongList);
+
+        }
+        if (musicBeans == null) {
+            musicBeans = (ArrayList<MusicBean>) mMusicBeanDao.queryBuilder().list();
+        }
+        if (mAlbumList == null) {
+            mAlbumList = MusicListUtil.getAlbumList((ArrayList<MusicBean>) mMusicBeanDao.queryBuilder().list());
+        }
+        if (mArtistList == null) {
+            mArtistList = MusicListUtil.getArtistList((ArrayList<MusicBean>) mMusicBeanDao.queryBuilder().list());
+
+        }
+
+    }
+
+
 
 
 }

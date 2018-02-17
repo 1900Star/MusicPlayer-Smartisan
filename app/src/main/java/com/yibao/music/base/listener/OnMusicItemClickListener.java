@@ -10,6 +10,5 @@ public interface OnMusicItemClickListener {
 
     void onOpenMusicPlayDialogFag();
 
-    void switchViewPagerItem(int page, int titleResourcesId);
 
 }
