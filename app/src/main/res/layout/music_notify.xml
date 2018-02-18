@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/notice"
+<LinearLayout android:id="@+id/music_notify_root"
               xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="100dp"
+              android:layout_height="wrap_content"
               android:background="#fff"
               android:orientation="horizontal">
 
@@ -11,9 +11,9 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
+        android:layout_margin="4dp"
         android:contentDescription="@null"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/me"/>
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,28 +26,29 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp">
             <TextView
-                android:id="@+id/widget_title"
+                android:id="@+id/notify_song_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:lines="1"
                 android:maxLength="20"
+                android:textStyle="bold"
                 android:textColor="#37383D"
                 android:textSize="14sp"/>
 
             <TextView
-                android:id="@+id/widget_artist"
+                android:id="@+id/notify_song_artist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/widget_title"
+                android:layout_below="@id/notify_song_name"
                 android:layout_marginTop="3dp"
                 android:ellipsize="end"
                 android:lines="1"
                 android:maxLength="15"
-                android:textColor="#A0A0A0"
+                android:textColor="@color/tabbarTv"
                 android:textSize="12sp"/>
             <ImageView
-                android:id="@+id/widget_close"
+                android:id="@+id/notify_close"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentRight="true"
@@ -60,7 +61,11 @@
 
         </RelativeLayout>
 
-
+        <View
+            android:layout_width="200dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/listBg"
+            android:layout_height="2dp" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,7 +74,7 @@
         >
 
             <ImageView
-                android:id="@+id/widget_prev"
+                android:id="@+id/notify_prev"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:layout_weight="1"
@@ -78,7 +83,7 @@
             />
 
             <ImageView
-                android:id="@+id/widget_play"
+                android:id="@+id/notify_play"
                 android:layout_width="0dp"
                 android:layout_height="38dp"
                 android:layout_weight="1"
@@ -86,7 +91,7 @@
                 android:src="@mipmap/notifycation_play"/>
 
             <ImageView
-                android:id="@+id/widget_next"
+                android:id="@+id/notify_next"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:layout_weight="1"

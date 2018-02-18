@@ -6,12 +6,12 @@
     android:background="@color/colorWhite"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.yibao.music.artisanlist.MusicActivity">
+    tools:context=".activity.PlayActivity">
 
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="48dp"
         android:background="@drawable/titlebar_playing_bg">
 
         <ImageView

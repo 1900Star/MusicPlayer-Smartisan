@@ -14,6 +14,10 @@ public class MusicDialogInfo implements Parcelable {
     private ArrayList<MusicBean> mList;
     private MusicBean mInfo;
 
+    public MusicDialogInfo(MusicBean info) {
+        mInfo = info;
+    }
+
     public MusicDialogInfo(ArrayList<MusicBean> list, MusicBean info) {
         mList = list;
         mInfo = info;

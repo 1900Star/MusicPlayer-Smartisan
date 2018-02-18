@@ -21,9 +21,7 @@ public class MusicDao
     private final MusicBeanDao dao;
 
     public MusicDao() {
-        dao = MyApplication.getIntstance()
-                           .getDaoSession()
-                           .getMusicBeanDao();
+        dao = MyApplication.getIntstance().getMusicDao();
     }
 
     @Override

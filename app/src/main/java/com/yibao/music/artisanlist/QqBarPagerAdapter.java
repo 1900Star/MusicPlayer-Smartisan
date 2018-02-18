@@ -15,35 +15,36 @@ import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.StringUtil;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
  * 作者：Stran on 2017/3/23 03:31
  * 描述：${TODO}
  * 邮箱：strangermy@outlook.com
+ *
  * @author Stran
  */
 public class QqBarPagerAdapter
         extends android.support.v4.view.PagerAdapter {
     private Context mContext;
-    private ArrayList<MusicBean> mList;
-    private int mcurrentPostition;
+    private List<MusicBean> mList;
 
-    public QqBarPagerAdapter(Context context, ArrayList<MusicBean> list, int currentPosition) {
+    public QqBarPagerAdapter(Context context, List<MusicBean> list) {
         this.mContext = context;
         this.mList = list;
-        this.mcurrentPostition = currentPosition;
     }
 
-    public void setData(ArrayList<MusicBean> list) {
+    public void setData(List<MusicBean> list) {
+        if (mList != null ) {
+            mList.clear();
+        }
         mList = list;
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-
         return mList != null ? mList.size() : 0;
 
     }

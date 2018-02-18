@@ -44,7 +44,6 @@ public class SongAdapter
     private String TAG = "SongAdapter";
     private Context mContext;
     private int mIsShowStickyView;
-    private int mSortListFlag;
 
     /**
      * @param context
@@ -52,11 +51,10 @@ public class SongAdapter
      * @param isShowStickyView 控制列表的StickyView是否显示，0 显示 ，1 ：不显示
      *                         parm isArtistList     用来控制音乐列表和艺术家列表的显示
      */
-    public SongAdapter(Context context, List<MusicBean> list, int isShowStickyView, int sortListFlag) {
+    public SongAdapter(Context context, List<MusicBean> list, int isShowStickyView) {
         super(list);
         this.mContext = context;
         this.mIsShowStickyView = isShowStickyView;
-        this.mSortListFlag = sortListFlag;
     }
 
 
@@ -106,10 +104,8 @@ public class SongAdapter
 
             //            Item点击监听
             songListViewHolder.mLlMusicItem.setOnClickListener(view -> {
-
-
                 if (mContext instanceof OnMusicItemClickListener) {
-                    ((OnMusicItemClickListener) mContext).startMusicService(position,mSortListFlag);
+                    ((OnMusicItemClickListener) mContext).startMusicService(position);
                 }
             });
 

@@ -8,15 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.yibao.music.MyApplication;
 import com.yibao.music.R;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
+import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.view.music.MusicView;
 
 import java.util.ArrayList;
@@ -63,30 +62,26 @@ public class SongFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.song_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
-        initData(true, Constants.NUMBER_ZOER);
+        initData(true, Constants.NUMBER_ONE);
         return view;
     }
 
     /**
      * 是否对歌曲列表按时间排序，按时间排序时，StickyView不显示
      *
-     * @param isSortList
+     * @param isShowSlidebar
      * @param isShowStickyView 控制列表的StickyView是否显示，0 显示 ，1 ：不显示
      */
-    private void initData(boolean isSortList, int isShowStickyView) {
+    private void initData(boolean isShowSlidebar, int isShowStickyView) {
 
-        if (isShowStickyView == Constants.NUMBER_ZOER) {
-            mSongAdapter = new SongAdapter(mActivity, mSongList, isShowStickyView, sortListFlag);
-            mMusciView.setSlideBarVisibility(Constants.NUMBER_ZOER);
-        } else if (isShowStickyView == Constants.NUMBER_ONE) {
+        if (isShowStickyView == Constants.NUMBER_ONE) {
+            mSongAdapter = new SongAdapter(mActivity, mSongList, isShowStickyView);
+        } else if (isShowStickyView == Constants.NUMBER_FOUR) {
 
             mList = MusicListUtil.sortMusicAddtime(musicBeans);
-            mMusciView.setSlideBarVisibility(Constants.NUMBER_FOUR);
-            mSongAdapter = new SongAdapter(mActivity, mList, isShowStickyView, sortListFlag);
-            MyApplication.getIntstance().bus().post(new MusicStatusBean(88, false));
-            LogUtil.d("8888888888888888888888888888888888888888888888888");
+            mSongAdapter = new SongAdapter(mActivity, mList, isShowStickyView);
         }
-        mMusciView.setAdapter(mActivity, Constants.NUMBER_ONE, mSongAdapter);
+        mMusciView.setAdapter(mActivity, Constants.NUMBER_ONE, isShowSlidebar, mSongAdapter);
     }
 
     @OnClick({R.id.iv_music_category_paly,
@@ -120,19 +115,22 @@ public class SongFragment extends BaseFragment {
         switch (flag) {
             case 1:
                 categorySongName();
-                initData(true, Constants.NUMBER_ZOER);
+                initData(true, Constants.NUMBER_ONE);
+                setPlayListFlag(Constants.NUMBER_ONE);
                 break;
             case 2:
+                LogUtil.d(" 122  songfragment mFlag " + SharePrefrencesUtil.getMusicDataListFlag(getActivity()));
                 categoryScore();
-
+//                setPlayListFlag(Constants.NUMBER_TWO);
                 break;
             case 3:
                 categoryFrequency();
-
+//                setPlayListFlag(Constants.NUMBER_THRRE);
                 break;
             case 4:
                 categoryAddtime();
-                initData(true, Constants.NUMBER_ONE);
+                initData(false, Constants.NUMBER_FOUR);
+                setPlayListFlag(Constants.NUMBER_FOUR);
                 break;
             default:
                 break;
@@ -141,11 +139,13 @@ public class SongFragment extends BaseFragment {
 
     }
 
+    private void setPlayListFlag(int playListFlag) {
+        SharePrefrencesUtil.setMusicDataListFlag(getActivity(), playListFlag);
+    }
+
     private void categorySongName() {
         sortListFlag = Constants.NUMBER_ZOER;
         mMusicCategorySongName.setTextColor(ColorUtil.wihtle);
-        mMusciView.setSlideBarVisibility(Constants.NUMBER_ZOER);
-
         mMusicCategorySongName.setBackgroundResource(R.drawable.btn_category_songname_down_selector);
         mMusicCategoryScore.setTextColor(ColorUtil.textName);
         mMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_selector);
@@ -156,7 +156,6 @@ public class SongFragment extends BaseFragment {
     }
 
     private void categoryScore() {
-        mMusciView.setSlideBarVisibility(Constants.NUMBER_FOUR);
         mMusicCategoryScore.setTextColor(ColorUtil.wihtle);
         mMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_down_selector);
         mMusicCategorySongName.setTextColor(ColorUtil.textName);
@@ -168,7 +167,6 @@ public class SongFragment extends BaseFragment {
     }
 
     private void categoryFrequency() {
-        mMusciView.setSlideBarVisibility(Constants.NUMBER_FOUR);
         mMusicCategoryFrequency.setTextColor(ColorUtil.wihtle);
         mMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_down_selector);
         mMusicCategorySongName.setTextColor(ColorUtil.textName);
@@ -181,7 +179,6 @@ public class SongFragment extends BaseFragment {
 
     private void categoryAddtime() {
         sortListFlag = Constants.NUMBER_THRRE;
-        mMusciView.setSlideBarVisibility(Constants.NUMBER_FOUR);
         mMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_down_selector);
         mMusicCategorySongName.setTextColor(ColorUtil.textName);
         mMusicCategoryAddtime.setTextColor(ColorUtil.wihtle);

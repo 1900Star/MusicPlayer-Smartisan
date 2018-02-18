@@ -2,20 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="58dp"
+    android:gravity="center"
     android:orientation="horizontal">
+
 
     <com.yibao.music.view.CircleImageView
         android:id="@+id/iv_pager_albulm"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="5dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="4dp"
         android:contentDescription="@null" />
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="55dp"
-        android:layout_marginLeft="12dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:gravity="center_vertical"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -23,10 +25,10 @@
             android:id="@+id/tv_pager_song_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="2dp"
             android:ellipsize="marquee"
-            android:maxLength="18"
             android:marqueeRepeatLimit="marquee_forever"
+            android:maxLength="18"
             android:singleLine="true"
             android:textColor="@color/textDes"
             android:textSize="@dimen/music_loating_title" />
@@ -35,7 +37,11 @@
             android:id="@+id/tv_pager_art_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="4dp"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:maxLength="18"
+            android:singleLine="true"
             android:textColor="@color/textName"
             android:textSize="@dimen/music_loating_name" />
     </LinearLayout>

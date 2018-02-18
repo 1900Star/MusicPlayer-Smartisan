@@ -333,7 +333,7 @@ public class MusicService
     //通知栏的播放按钮监听
     private void updatePlayBtn() {
         int viewResource = mediaPlayer.isPlaying() ? R.mipmap.notifycation_play : R.mipmap.notifycation_pause;
-        mRemoteViews.setImageViewResource(R.id.widget_play, viewResource);
+        mRemoteViews.setImageViewResource(R.id.notify_play, viewResource);
     }
 
     @Override

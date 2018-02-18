@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
+import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.factory.RecyclerFactory;
 import com.yibao.music.model.BottomSheetStatus;
 import com.yibao.music.model.MusicBean;
@@ -48,7 +49,6 @@ public class MusicBottomSheetDialog
     private List<MusicBean> mList;
     private RecyclerView mRecyclerView;
     private BottomSheetBehavior<View> mBehavior;
-    private OnCheckFavoriteListener mListener;
     private CompositeDisposable
             mDisposable = new CompositeDisposable();
     private RxBus
@@ -62,7 +62,7 @@ public class MusicBottomSheetDialog
     public void getBottomDialog(Context context) {
         this.mContext = context;
 
-        this.mList = MyApplication.getIntstance().getDaoSession().getMusicBeanDao().queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
+        this.mList = MyApplication.getIntstance().getMusicDao().queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
         BottomSheetDialog dialog = new BottomSheetDialog(context);
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.bottom_sheet_list_dialog, null);
@@ -128,15 +128,13 @@ public class MusicBottomSheetDialog
     private void clearFavoriteMusic() {
         for (MusicBean musicBean : mList) {
             musicBean.setIsFavorite(false);
-            MyApplication.getIntstance()
-                    .getDaoSession()
-                    .getMusicBeanDao()
+            MyApplication.getIntstance().getMusicDao()
                     .update(musicBean);
         }
 
         mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        if (mListener != null) {
-            mListener.checkFavorite();
+        if (mContext instanceof OnCheckFavoriteListener) {
+            ((OnCheckFavoriteListener) mContext).updataFavoriteStatus();
         }
     }
 
@@ -164,14 +162,7 @@ public class MusicBottomSheetDialog
         mBottomListTitleSize = view.findViewById(R.id.bottom_list_title_size);
     }
 
-    public void setOnCheckFavoriteListener(OnCheckFavoriteListener listener) {
-        this.mListener = listener;
-    }
 
-    public interface OnCheckFavoriteListener {
-        void checkFavorite();
-
-    }
 }
 
 

@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yibao.music.R;
-import com.yibao.music.activity.DetailsActivity;
+import com.yibao.music.activity.DetailsControlBarActivity;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
@@ -64,13 +64,13 @@ public class AlbumFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.album_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
-        initData(Constants.NUMBER_ZOER, Constants.NUMBER_THRRE);
+        initData(Constants.NUMBER_ZOER, true, Constants.NUMBER_THRRE);
         initListener();
         return view;
     }
 
     private void initListener() {
-        mAdapter.setItemListener(() -> startActivity(new Intent(getActivity(), DetailsActivity.class)));
+        mAdapter.setItemListener(() -> startActivity(new Intent(getActivity(), DetailsControlBarActivity.class)));
     }
 
 
@@ -78,12 +78,13 @@ public class AlbumFragment extends BaseFragment {
      * 加载列表
      *
      * @param adapterShowType       普通视图显示  和 GridView视图显示  ( 3 列 )
+     * @param isShowSlideBar        是否显示SlideBar
      * @param adapterAndManagerType RecyclerView的Manager ，3 == LinearLayoutManager
      *                              4 == GridLayoutManager
      */
-    private void initData(int adapterShowType, int adapterAndManagerType) {
+    private void initData(int adapterShowType, boolean isShowSlideBar, int adapterAndManagerType) {
         mAdapter = new AlbumAdapter(mActivity, mAlbumList, adapterShowType);
-        mAlbumMusicView.setAdapter(mActivity, adapterAndManagerType, mAdapter);
+        mAlbumMusicView.setAdapter(mActivity, adapterAndManagerType, isShowSlideBar, mAdapter);
     }
 
 
@@ -99,11 +100,11 @@ public class AlbumFragment extends BaseFragment {
                 break;
             case R.id.album_category_list_ll:
                 switchCategory(Constants.NUMBER_ZOER);
-                initData(Constants.NUMBER_ZOER, Constants.NUMBER_THRRE);
+                initData(Constants.NUMBER_ZOER, true, Constants.NUMBER_THRRE);
                 break;
             case R.id.album_category_tile_ll:
                 switchCategory(Constants.NUMBER_ONE);
-                initData(Constants.NUMBER_ONE, Constants.NUMBER_FOUR);
+                initData(Constants.NUMBER_ONE, false, Constants.NUMBER_FOUR);
                 break;
             default:
                 break;

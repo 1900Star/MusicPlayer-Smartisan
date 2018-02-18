@@ -6,7 +6,8 @@ package com.yibao.music.base.listener;
  * Time:2017/5/14 09:49
  */
 public interface OnMusicItemClickListener {
-    void startMusicService(int position, int sortListFlag);
+
+    void startMusicService(int position);
 
     void onOpenMusicPlayDialogFag();
 

@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
-import com.yibao.music.activity.DetailsActivity;
+import com.yibao.music.activity.DetailsControlBarActivity;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.util.LogUtil;
@@ -55,7 +55,7 @@ public class PlayListFragment extends BaseFragment {
     }
 
     private void initListener() {
-        mAdapter.setItemListener(() -> startActivity(new Intent(getActivity(), DetailsActivity.class)));
+        mAdapter.setItemListener(() -> startActivity(new Intent(getActivity(), DetailsControlBarActivity.class)));
     }
 
     private void initData() {

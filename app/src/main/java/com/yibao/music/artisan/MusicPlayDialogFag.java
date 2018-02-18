@@ -29,7 +29,6 @@ import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.SeekBarChangeListtener;
 import com.yibao.music.dialogfrag.TopBigPicDialogFragment;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicDialogInfo;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.service.AudioPlayService;
@@ -80,17 +79,17 @@ public class MusicPlayDialogFag
     private CompositeDisposable disposables;
     private ObjectAnimator mAnimator;
     private MyAnimatorUpdateListener mAnimatorListener;
-    private int mProgress = 0;
-    private Disposable mSubscribe;
     private SeekBar mSbProgress;
     private SeekBar mSbVolume;
+    private ImageView mIvLyrSwitch;
+    private int mProgress = 0;
+    private Disposable mSubscribe;
     private AudioManager mAudioManager;
     private int mDuration;
     private RxBus mBus;
     private String mAlbumUrl;
     private MusicBean mCurrenMusicInfo;
     private MusicBeanDao mInfoDao;
-    private ImageView mIvLyrSwitch;
     boolean isShowLyrics = false;
     private LyricsView mLyricsView;
     private Disposable mDisposableLyrics;
@@ -106,9 +105,7 @@ public class MusicPlayDialogFag
         mBus = MyApplication.getIntstance()
                 .bus();
         disposables = new CompositeDisposable();
-        mInfoDao = MyApplication.getIntstance()
-                .getDaoSession()
-                .getMusicBeanDao();
+        mInfoDao = MyApplication.getIntstance().getMusicDao();
         //注册音量监听广播
         registerVolumeReceiver();
     }
@@ -135,8 +132,7 @@ public class MusicPlayDialogFag
     }
 
     private void initSongInfo() {
-        MusicDialogInfo info = getArguments().getParcelable("info");
-        mCurrenMusicInfo = info.getInfo();
+        mCurrenMusicInfo = getArguments().getParcelable("info");
         mSongName.setText(mCurrenMusicInfo.getTitle());
         mArtistName.setText(mCurrenMusicInfo.getArtist());
         mLyricsView.setLrcFile(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
@@ -527,15 +523,8 @@ public class MusicPlayDialogFag
 
         RxView.clicks(mTitlebarPlayList)
                 .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> {
-//                    List<MusicBean> list = mInfoDao.queryBuilder()
-//                            .build()
-//                            .list();
-
-                    MusicBottomSheetDialog.newInstance()
-                            .getBottomDialog(getActivity());
-
-                });
+                .subscribe(o -> MusicBottomSheetDialog.newInstance()
+                        .getBottomDialog(getActivity()));
 
 
     }
@@ -562,7 +551,7 @@ public class MusicPlayDialogFag
     }
 
 
-    public static MusicPlayDialogFag newInstance(MusicDialogInfo info) {
+    public static MusicPlayDialogFag newInstance(MusicBean info) {
         MusicPlayDialogFag fragment = new MusicPlayDialogFag();
         Bundle bundle = new Bundle();
         bundle.putParcelable("info", info);

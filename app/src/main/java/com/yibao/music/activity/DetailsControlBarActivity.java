@@ -1,5 +1,6 @@
 package com.yibao.music.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,7 +12,7 @@ import android.widget.TextView;
 
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
-import com.yibao.music.base.BaseActivity;
+import com.yibao.music.base.BaseControlBarActivity;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.playlist.PlayListAdapter;
 
@@ -25,14 +26,14 @@ import butterknife.OnClick;
 /**
  * @项目名： ArtisanMusic
  * @包名： com.yibao.music.activity
- * @文件名: DetailsActivity
+ * @文件名: DetailsControlBarActivity
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/14 15:24
  * @描述： {TODO}
  */
 
-public class DetailsListActivity extends BaseActivity {
+public class DetailsControlBarActivity extends BaseControlBarActivity {
 
 
     @BindView(R.id.iv_artist_albumm_details)
@@ -57,7 +58,7 @@ public class DetailsListActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.details_list_activity);
+        setContentView(R.layout.details_activity);
         ButterKnife.bind(this);
         initData();
     }
@@ -92,7 +93,7 @@ public class DetailsListActivity extends BaseActivity {
             case R.id.iv_details_add_to_play_list:
                 break;
             case R.id.ll_album_details_playall:
-
+                startActivity(new Intent(this,DetailsListControlBarActivity.class));
                 break;
             case R.id.ll_album_details_random_play:
                 break;

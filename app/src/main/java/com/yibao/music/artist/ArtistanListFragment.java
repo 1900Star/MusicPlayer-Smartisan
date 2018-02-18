@@ -53,7 +53,7 @@ public class ArtistanListFragment extends BaseFragment {
 
     private void initData() {
         ArtistAdapter adapter = new ArtistAdapter(getActivity(), mArtistList);
-        mMusicView.setAdapter(getActivity(), Constants.NUMBER_TWO, adapter);
+        mMusicView.setAdapter(getActivity(), Constants.NUMBER_TWO,true, adapter);
 
 
     }

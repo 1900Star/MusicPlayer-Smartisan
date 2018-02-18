@@ -51,6 +51,24 @@ public class SharePrefrencesUtil {
     }
 
     /**
+     * 用于存储程序退出或关闭音乐界面时，音乐列表的分类标记，。
+     *
+     * @param context
+     * @param value
+     */
+    public static void setMusicDataListFlag(Context context, int value) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_DATA_FLAG, Constants.MODE_KEY);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(Constants.MUSIC_DATA_LIST_FLAG, value);
+        editor.commit();
+    }
+
+    public static int getMusicDataListFlag(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_DATA_FLAG, Constants.MODE_KEY);
+        return sp.getInt(Constants.MUSIC_DATA_LIST_FLAG, Constants.MODE_KEY);
+    }
+
+    /**
      * 用于存储退出程序或关闭音乐界面时，音乐的播放状态 。 1：表示暂停时关闭 ， 2：表示播放时关闭
      *
      * @param context

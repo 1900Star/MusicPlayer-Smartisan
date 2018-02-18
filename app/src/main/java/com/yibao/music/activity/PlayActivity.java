@@ -1,0 +1,459 @@
+package com.yibao.music.activity;
+
+import android.animation.ObjectAnimator;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.AudioManager;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.jakewharton.rxbinding2.view.RxView;
+import com.yibao.music.MyApplication;
+import com.yibao.music.R;
+import com.yibao.music.artisan.MusicBottomSheetDialog;
+import com.yibao.music.base.BaseActivity;
+import com.yibao.music.base.listener.MyAnimatorUpdateListener;
+import com.yibao.music.base.listener.OnCheckFavoriteListener;
+import com.yibao.music.dialogfrag.TopBigPicDialogFragment;
+import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.MusicStatusBean;
+import com.yibao.music.util.AnimationUtil;
+import com.yibao.music.util.ColorUtil;
+import com.yibao.music.util.SharePrefrencesUtil;
+import com.yibao.music.util.StringUtil;
+import com.yibao.music.view.CircleImageView;
+import com.yibao.music.view.music.LyricsView;
+
+import java.util.concurrent.TimeUnit;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
+
+/**
+ * @项目名： ArtisanMusic
+ * @包名： com.yibao.music.activity
+ * @文件名: PlayActivity
+ * @author: Stran
+ * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
+ * @创建时间: 2018/2/17 20:39
+ * @描述： {TODO}
+ */
+
+public class PlayActivity extends BaseActivity implements OnCheckFavoriteListener {
+    @BindView(R.id.titlebar_down)
+    ImageView mTitlebarDown;
+    @BindView(R.id.play_song_name)
+    TextView mPlaySongName;
+    @BindView(R.id.play_artist_name)
+    TextView mPlayArtistName;
+    @BindView(R.id.titlebar_play_list)
+    ImageView mTitlebarPlayList;
+    @BindView(R.id.start_time)
+    TextView mStartTime;
+    @BindView(R.id.sb_progress)
+    SeekBar mSbProgress;
+    @BindView(R.id.end_time)
+    TextView mEndTime;
+    @BindView(R.id.playing_song_album)
+    CircleImageView mPlayingSongAlbum;
+    @BindView(R.id.rotate_rl)
+    RelativeLayout mRotateRl;
+    @BindView(R.id.tv_lyrics)
+    LyricsView mTvLyrics;
+    @BindView(R.id.iv_lyrics_switch)
+    ImageView mIvLyricsSwitch;
+    @BindView(R.id.iv_secreen_sun_switch)
+    ImageView mIvSecreenSunSwitch;
+    @BindView(R.id.music_player_mode)
+    ImageView mMusicPlayerMode;
+    @BindView(R.id.music_player_pre)
+    ImageView mMusicPlayerPre;
+    @BindView(R.id.music_play)
+    ImageView mMusicPlay;
+    @BindView(R.id.music_player_next)
+    ImageView mMusicPlayerNext;
+    @BindView(R.id.iv_favorite_music)
+    ImageView mIvFavoriteMusic;
+    @BindView(R.id.sb_volume)
+    SeekBar mSbVolume;
+
+    private int mProgress = 0;
+    private Disposable mSubscribe;
+    private int mDuration;
+    private String mAlbumUrl;
+    private MusicBean mCurrenMusicInfo;
+    boolean isShowLyrics = false;
+    private Disposable mDisposableLyrics;
+    private Unbinder mBind;
+    private ObjectAnimator mAnimator;
+    private MyAnimatorUpdateListener mAnimatorListener;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.play_activity);
+        mBind = ButterKnife.bind(this);
+        registerVolumeReceiver();
+
+        initRxBusData();
+        initSongInfo();
+        checkCurrentIsFavorite();
+        initData();
+        initListener();
+    }
+
+
+    private void initListener() {
+        mSbProgress.setOnSeekBarChangeListener(new SeekBarListener());
+        mSbVolume.setOnSeekBarChangeListener(new SeekBarListener());
+        rxViewClick();
+        mPlayingSongAlbum.setOnLongClickListener(view -> {
+            TopBigPicDialogFragment.newInstance(mAlbumUrl)
+                    .show(getFragmentManager(), "album");
+            return true;
+        });
+
+    }
+
+
+    private void initSongInfo() {
+        Bundle bundle = getIntent().getBundleExtra("bundle");
+        mCurrenMusicInfo = bundle.getParcelable("info");
+
+        mPlaySongName.setText(mCurrenMusicInfo.getTitle());
+        mPlayArtistName.setText(mCurrenMusicInfo.getArtist());
+        mTvLyrics.setLrcFile(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
+        String url = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId())
+                .toString();
+        setAlbulm(url);
+    }
+
+    public void checkCurrentIsFavorite() {
+
+        if (mCurrenMusicInfo.isFavorite()) {
+            mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
+        } else {
+            mIvFavoriteMusic.setImageResource(R.drawable.music_favorite_selector);
+
+        }
+    }
+
+    private void initData() {
+        if (audioBinder.isPlaying()) {
+            initAnimation();
+            updatePlayBtnStatus();
+            startUpdateProgress();
+        }
+        startUpdateProgress();
+        //设置播放模式图片
+        int mode = SharePrefrencesUtil.getMusicMode(this);
+        updatePlayModeImage(mode, mMusicPlayerMode);
+        //音乐设置
+
+        mSbVolume.setMax(mMaxVolume);
+        updataVolumeProgresse(mCurrentVolume);
+    }
+
+    /**
+     * Rxbus接收歌曲时时的进度 和 时间，并更新UI
+     */
+    private void startUpdateProgress() {
+        setSongDuration();
+        if (mSubscribe == null) {
+            mSubscribe = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(aLong -> {
+                        mProgress = audioBinder.getProgress();
+                        updataMusicProgress(mProgress);
+                    });
+        }
+
+    }
+
+
+    private void setSongDuration() {
+        //获取并记录总时长
+        mDuration = audioBinder.getDuration();
+        //设置进度条的总进度
+        mSbProgress.setMax(mDuration);
+        //  设置歌曲总时长
+        mEndTime.setText(StringUtil.parseDuration(mDuration));
+    }
+
+
+    /**
+     * //接收service中的数据,更新UI。
+     */
+    private void initRxBusData() {
+        disposables.add(mBus.toObserverable(MusicBean.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::perpareMusic));
+        //   position 用来判断触发消息的源头，0 表示从 MusicPlayDialogFag发出，
+        // 1 表示从通知栏的音乐控制面板发出(Services中的广播)。
+        disposables.add(mBus.toObserverable(MusicStatusBean.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::refreshBtnAndAnim));
+
+
+    }
+
+    private void refreshBtnAndAnim(MusicStatusBean bean) {
+
+        switch (bean.getType()) {
+            case 0:
+                if (bean.isPlay()) {
+                    audioBinder.pause();
+                    mAnimator.pause();
+                } else {
+                    audioBinder.start();
+                    mAnimator.resume();
+                }
+                updatePlayBtnStatus();
+                break;
+            case 2:
+                finish();
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    /**
+     * //设置歌曲名和歌手名
+     *
+     * @param info
+     */
+    private void perpareMusic(MusicBean info) {
+        mCurrenMusicInfo = info;
+        checkCurrentIsFavorite();
+        initAnimation();
+        mPlaySongName.setText(info.getTitle());
+        mPlayArtistName.setText(info.getArtist());
+        mAlbumUrl = StringUtil.getAlbulm(info.getAlbumId())
+                .toString();
+        setAlbulm(mAlbumUrl);
+        setSongDuration();
+        updatePlayBtnStatus();
+//        初始化歌词
+        mTvLyrics.setLrcFile(info.getTitle(), info.getArtist());
+
+    }
+
+    private void setAlbulm(String url) {
+        Glide.with(this)
+                .load(url)
+                .asBitmap()
+                .into(mPlayingSongAlbum);
+    }
+
+    private void switchPlayState() {
+
+        if (audioBinder.isPlaying()) {
+            //当前播放  暂停
+            audioBinder.pause();
+            mAnimator.pause();
+            MyApplication.getIntstance()
+                    .bus()
+                    .post(new MusicStatusBean(0, true));
+        } else {
+            //当前暂停  播放
+            audioBinder.start();
+            initAnimation();
+            MyApplication.getIntstance()
+                    .bus()
+                    .post(new MusicStatusBean(0, false));
+        }
+
+
+        //更新播放状态按钮
+        updatePlayBtnStatus();
+
+
+    }
+
+    //根据当前播放状态设置图片
+
+    private void updatePlayBtnStatus() {
+        if (audioBinder.isPlaying()) {
+            //正在播放    设置为暂停
+            mMusicPlay.setImageResource(R.drawable.btn_playing_pause_selector);
+        } else {
+            mMusicPlay.setImageResource(R.drawable.btn_playing_play_selector);
+        }
+    }
+
+
+    private void initAnimation() {
+        mRotateRl.setBackgroundColor(ColorUtil.transparentColor);
+        if (mAnimator == null || mAnimatorListener == null) {
+            mAnimator = AnimationUtil.getRotation(mRotateRl);
+            mAnimatorListener = new MyAnimatorUpdateListener(mAnimator);
+            mAnimator.start();
+            mMusicPlay.setImageResource(R.drawable.btn_playing_pause);
+        }
+        mAnimator.resume();
+
+    }
+
+    @OnClick({R.id.titlebar_down,
+            R.id.playing_song_album, R.id.rotate_rl, R.id.tv_lyrics, R.id.iv_lyrics_switch, R.id.iv_secreen_sun_switch, R.id.music_player_mode, R.id.music_player_pre, R.id.music_play, R.id.music_player_next, R.id.iv_favorite_music})
+    public void onClick(View v) {
+        switch (v.getId()) {
+
+            case R.id.titlebar_down:
+                finish();
+                break;
+            case R.id.playing_song_album:
+                showLyrics();
+                break;
+            case R.id.rotate_rl:
+                break;
+            case R.id.tv_lyrics:
+                showLyrics();
+                break;
+            case R.id.iv_lyrics_switch:
+                showLyrics();
+                break;
+            case R.id.iv_secreen_sun_switch:
+                screenAlwaysOnSwitch(mIvSecreenSunSwitch);
+                break;
+            case R.id.music_player_mode:
+                switchPlayMode(mMusicPlayerMode);
+                break;
+            case R.id.music_player_pre:
+                audioBinder.playPre();
+                break;
+            case R.id.music_play:
+                switchPlayState();
+                break;
+            case R.id.music_player_next:
+                audioBinder.playNext();
+                break;
+            case R.id.iv_favorite_music:
+                favoritMusic();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void favoritMusic() {
+        if (mCurrenMusicInfo.isFavorite()) {
+            mCurrenMusicInfo.setIsFavorite(false);
+            mMusicDao.update(mCurrenMusicInfo);
+
+            mIvFavoriteMusic.setImageResource(R.drawable.music_favorite_selector);
+
+        } else {
+            String time = StringUtil.getCurrentTime();
+            mCurrenMusicInfo.setTime(time);
+            mCurrenMusicInfo.setIsFavorite(true);
+            mMusicDao.update(mCurrenMusicInfo);
+
+            mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
+
+        }
+    }
+
+
+    //    显示歌词
+    private void showLyrics() {
+
+        if (isShowLyrics) {
+            mIvLyricsSwitch.setBackgroundResource(R.drawable.music_lrc_close);
+            AnimationDrawable animation = (AnimationDrawable) mIvLyricsSwitch.getBackground();
+            animation.start();
+            mIvSecreenSunSwitch.setVisibility(View.INVISIBLE);
+            mTvLyrics.setVisibility(View.INVISIBLE);
+            isShowLyrics = false;
+        } else {
+            mIvLyricsSwitch.setBackgroundResource(R.drawable.music_lrc_open);
+            AnimationDrawable animation = (AnimationDrawable) mIvLyricsSwitch.getBackground();
+            animation.start();
+            mIvSecreenSunSwitch.setVisibility(View.VISIBLE);
+            // 开始滚动歌词
+            startRollPlayLyrics();
+            mTvLyrics.setVisibility(View.VISIBLE);
+            isShowLyrics = true;
+        }
+
+    }
+
+    /**
+     * 根据进度滚动歌词
+     */
+    private void startRollPlayLyrics() {
+        if (mDisposableLyrics == null) {
+
+            mDisposableLyrics = Observable.interval(100, TimeUnit.MILLISECONDS)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(aLong -> mTvLyrics.rollText(audioBinder.getProgress(), audioBinder.getDuration()));
+        }
+
+    }
+
+    private void rxViewClick() {
+        RxView.clicks(mTitlebarPlayList)
+                .throttleFirst(1, TimeUnit.SECONDS)
+                .subscribe(o -> MusicBottomSheetDialog.newInstance()
+                        .getBottomDialog(this));
+    }
+
+    @Override
+    public void updataVolumeProgresse(int currVolume) {
+        mSbVolume.setProgress(currVolume);
+        //更新音量值  flag 0 默认不显示系统控制栏  1 显示系统音量控制,在父类控制无效
+        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currVolume, 0);
+    }
+
+    @Override
+    public void updataFavoriteStatus() {
+        checkCurrentIsFavorite();
+
+    }
+
+
+    @Override
+    protected void updataMusicProgress(int progress) {
+//        // 时间进度
+//        mStartTime.setText(StringUtil.parseDuration(progress));
+//        // 时时播放进度
+//        mSbProgress.setProgress(progress);
+//        // 歌曲总时长递减
+//        mEndTime.setText(StringUtil.parseDuration(mDuration - progress));
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        boolean allSwitch = mAnimator != null && mAnimatorListener != null && mDisposableLyrics != null && disposables != null && mSubscribe != null;
+//        if (allSwitch) {
+//            mAnimatorListener.pause();
+//            mAnimator.cancel();
+//            mSubscribe.dispose();
+//            disposables.clear();
+//            mDisposableLyrics.dispose();
+//        }
+
+        mBind.unbind();
+
+    }
+}

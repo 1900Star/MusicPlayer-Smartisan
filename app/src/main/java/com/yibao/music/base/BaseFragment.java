@@ -43,7 +43,7 @@ public abstract class BaseFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         tag = this.getClass().getSimpleName();
-        mMusicBeanDao = MyApplication.getIntstance().getDaoSession().getMusicBeanDao();
+        mMusicBeanDao = MyApplication.getIntstance().getMusicDao();
         mActivity = getActivity();
         disposables = new CompositeDisposable();
         mBus = MyApplication.getIntstance().bus();
@@ -57,7 +57,7 @@ public abstract class BaseFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (mSongList == null) {
             mSongList = (ArrayList<MusicBean>) mMusicBeanDao.queryBuilder().list();
-//            Collections.sort(mSongList);
+
 
         }
         if (musicBeans == null) {

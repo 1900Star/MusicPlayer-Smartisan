@@ -30,9 +30,9 @@ public class LoadMusicDataServices extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        ArrayList<MusicBean> dataList = MusicListUtil.getMusicDataList(this);
+        ArrayList<MusicBean> dataList = MusicListUtil.getMusicDataList();
         for (MusicBean info : dataList) {
-            MyApplication.getIntstance().getDaoSession().getMusicBeanDao().insert(info);
+            MyApplication.getIntstance().getMusicDao().insert(info);
         }
 //        MyApplication.getIntstance()
 //                .getDaoSession().getMusicBeanDao().deleteAll();

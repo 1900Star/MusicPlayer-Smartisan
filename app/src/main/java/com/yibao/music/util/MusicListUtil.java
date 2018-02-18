@@ -1,6 +1,5 @@
 package com.yibao.music.util;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
@@ -30,7 +29,7 @@ public class MusicListUtil {
      *
      * @return
      */
-    public static ArrayList<MusicBean> getMusicDataList(Context context) {
+    public static ArrayList<MusicBean> getMusicDataList() {
         ArrayList<MusicBean> musicInfos = new ArrayList<>();
         Cursor cursor = MyApplication.getIntstance().getApplicationContext().getContentResolver()
                 .query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,

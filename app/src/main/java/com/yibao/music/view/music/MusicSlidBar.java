@@ -105,7 +105,7 @@ public class MusicSlidBar
         //最后加2是为了取一个合适的绘制高度导，使航栏能够完整显示 ，
         // 防止出现高度不够或者最后一个字符与底部距离过大
         // 比如最下面的(Z 和 #)，不同尺寸的设备可能会有不同，根据情况调整。
-        singleHeight = h / (names.length + 1) +2;
+        singleHeight = h / (names.length + 1) + 2;
     }
 
 
@@ -150,9 +150,9 @@ public class MusicSlidBar
     }
 
     public void setBarVisibility(int visibilityType) {
-        if (visibilityType == 0) {
+        if (visibilityType == Constants.NUMBER_ZOER) {
             setVisibility(View.VISIBLE);
-        } else if (visibilityType == 4) {
+        } else if (visibilityType == Constants.NUMBER_FOUR) {
             setVisibility(View.INVISIBLE);
         }
     }
