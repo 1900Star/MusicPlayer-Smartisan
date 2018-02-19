@@ -39,10 +39,7 @@ public class SplashActivity
         setContentView(R.layout.activity_splash);
         mBind = ButterKnife.bind(this);
         SystemUiVisibilityUtil.hideStatusBar(getWindow(), true);
-//        boolean isScanMusic = SharePrefrencesUtil.getMusicConfig(this, false);
-//        if (!isScanMusic) {
 //        startService(new Intent(this, LoadMusicDataServices.class));
-//        }
 
 
         Observable.timer(400, TimeUnit.MILLISECONDS)

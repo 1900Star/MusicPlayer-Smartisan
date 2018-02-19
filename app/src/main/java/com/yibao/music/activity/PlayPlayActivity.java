@@ -1,6 +1,7 @@
 package com.yibao.music.activity;
 
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -16,7 +17,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
 import com.yibao.music.artisan.MusicBottomSheetDialog;
-import com.yibao.music.base.BaseActivity;
+import com.yibao.music.base.BasePlayActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.dialogfrag.TopBigPicDialogFragment;
@@ -44,14 +45,14 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * @项目名： ArtisanMusic
  * @包名： com.yibao.music.activity
- * @文件名: PlayActivity
+ * @文件名: PlayPlayActivity
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/17 20:39
  * @描述： {TODO}
  */
 
-public class PlayActivity extends BaseActivity implements OnCheckFavoriteListener {
+public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavoriteListener {
     @BindView(R.id.titlebar_down)
     ImageView mTitlebarDown;
     @BindView(R.id.play_song_name)
@@ -105,13 +106,43 @@ public class PlayActivity extends BaseActivity implements OnCheckFavoriteListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.play_activity);
         mBind = ButterKnife.bind(this);
-        registerVolumeReceiver();
-
         initRxBusData();
         initSongInfo();
         checkCurrentIsFavorite();
         initData();
         initListener();
+    }
+
+
+    /**
+     * 广播监听系统音量，同时更新VolumeSeekBar
+     *
+     * @param currVolume
+     */
+    @Override
+    public void updataVolumeProgresse(int currVolume) {
+        mSbVolume.setProgress(currVolume);
+    }
+
+    @Override
+    protected void updataMusicBarAndVolumeBar(SeekBar seekBar, int progress, boolean b) {
+        switch (seekBar.getId()) {
+            case R.id.sb_progress:
+                if (!b) {
+                    return;
+                }
+                //拖动音乐进度条播放
+                audioBinder.seekTo(progress);
+                //更新音乐进度数值
+                updataMusicProgress(progress);
+                break;
+            //更新音量  SeekBar
+            case R.id.sb_volume:
+                updateMusicVolume(progress);
+                break;
+            default:
+                break;
+        }
     }
 
 
@@ -154,23 +185,38 @@ public class PlayActivity extends BaseActivity implements OnCheckFavoriteListene
         if (audioBinder.isPlaying()) {
             initAnimation();
             updatePlayBtnStatus();
-            startUpdateProgress();
+            setSongDuration();
+
         }
-        startUpdateProgress();
+        setSongDuration();
         //设置播放模式图片
         int mode = SharePrefrencesUtil.getMusicMode(this);
         updatePlayModeImage(mode, mMusicPlayerMode);
         //音乐设置
-
-        mSbVolume.setMax(mMaxVolume);
-        updataVolumeProgresse(mCurrentVolume);
+        //音乐设置
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        mSbVolume.setMax(maxVolume);
+        int volume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        updateMusicVolume(volume);
     }
+
+    private void updateMusicVolume(int volume) {
+        mSbVolume.setProgress(volume);
+        //更新音量值  flag 0 默认不显示系统控制栏  1 显示系统音量控制
+        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
+
+
+    }
+
 
     /**
      * Rxbus接收歌曲时时的进度 和 时间，并更新UI
      */
-    private void startUpdateProgress() {
-        setSongDuration();
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         if (mSubscribe == null) {
             mSubscribe = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
                     .subscribeOn(Schedulers.io())
@@ -183,6 +229,28 @@ public class PlayActivity extends BaseActivity implements OnCheckFavoriteListene
 
     }
 
+    /**
+     * 停止更新
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mSubscribe != null) {
+            mSubscribe.dispose();
+        }
+        if (mDisposableLyrics != null) {
+            mDisposableLyrics.dispose();
+        }
+    }
+
+    protected void updataMusicProgress(int progress) {
+//        // 时间进度
+        mStartTime.setText(StringUtil.parseDuration(progress));
+        // 时时播放进度
+        mSbProgress.setProgress(progress);
+        // 歌曲总时长递减
+        mEndTime.setText(StringUtil.parseDuration(mDuration - progress));
+    }
 
     private void setSongDuration() {
         //获取并记录总时长
@@ -373,6 +441,7 @@ public class PlayActivity extends BaseActivity implements OnCheckFavoriteListene
 
 
     //    显示歌词
+
     private void showLyrics() {
 
         if (isShowLyrics) {
@@ -381,7 +450,7 @@ public class PlayActivity extends BaseActivity implements OnCheckFavoriteListene
             animation.start();
             mIvSecreenSunSwitch.setVisibility(View.INVISIBLE);
             mTvLyrics.setVisibility(View.INVISIBLE);
-            isShowLyrics = false;
+            mDisposableLyrics.dispose();
         } else {
             mIvLyricsSwitch.setBackgroundResource(R.drawable.music_lrc_open);
             AnimationDrawable animation = (AnimationDrawable) mIvLyricsSwitch.getBackground();
@@ -390,22 +459,20 @@ public class PlayActivity extends BaseActivity implements OnCheckFavoriteListene
             // 开始滚动歌词
             startRollPlayLyrics();
             mTvLyrics.setVisibility(View.VISIBLE);
-            isShowLyrics = true;
         }
-
+        isShowLyrics = !isShowLyrics;
     }
 
     /**
      * 根据进度滚动歌词
      */
     private void startRollPlayLyrics() {
-        if (mDisposableLyrics == null) {
-
-            mDisposableLyrics = Observable.interval(100, TimeUnit.MILLISECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(aLong -> mTvLyrics.rollText(audioBinder.getProgress(), audioBinder.getDuration()));
-        }
+//        if (mDisposableLyrics == null) {
+//        }
+        mDisposableLyrics = Observable.interval(100, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> mTvLyrics.rollText(audioBinder.getProgress(), audioBinder.getDuration()));
 
     }
 
@@ -416,12 +483,6 @@ public class PlayActivity extends BaseActivity implements OnCheckFavoriteListene
                         .getBottomDialog(this));
     }
 
-    @Override
-    public void updataVolumeProgresse(int currVolume) {
-        mSbVolume.setProgress(currVolume);
-        //更新音量值  flag 0 默认不显示系统控制栏  1 显示系统音量控制,在父类控制无效
-        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currVolume, 0);
-    }
 
     @Override
     public void updataFavoriteStatus() {
@@ -431,28 +492,15 @@ public class PlayActivity extends BaseActivity implements OnCheckFavoriteListene
 
 
     @Override
-    protected void updataMusicProgress(int progress) {
-//        // 时间进度
-//        mStartTime.setText(StringUtil.parseDuration(progress));
-//        // 时时播放进度
-//        mSbProgress.setProgress(progress);
-//        // 歌曲总时长递减
-//        mEndTime.setText(StringUtil.parseDuration(mDuration - progress));
-    }
-
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
-        boolean allSwitch = mAnimator != null && mAnimatorListener != null && mDisposableLyrics != null && disposables != null && mSubscribe != null;
-//        if (allSwitch) {
-//            mAnimatorListener.pause();
-//            mAnimator.cancel();
-//            mSubscribe.dispose();
-//            disposables.clear();
-//            mDisposableLyrics.dispose();
-//        }
-
+        boolean allSwitch = mAnimator != null && mAnimatorListener != null && disposables != null && mSubscribe != null;
+        if (allSwitch) {
+            mAnimatorListener.pause();
+            mAnimator.cancel();
+            mSubscribe.dispose();
+            disposables.clear();
+        }
         mBind.unbind();
 
     }

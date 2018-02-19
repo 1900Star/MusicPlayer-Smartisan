@@ -1,7 +1,9 @@
 package com.yibao.music.artisanlist;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +13,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
+import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.StringUtil;
 
 import java.util.List;
@@ -26,7 +30,7 @@ import java.util.concurrent.TimeUnit;
  * @author Stran
  */
 public class QqBarPagerAdapter
-        extends android.support.v4.view.PagerAdapter {
+        extends PagerAdapter {
     private Context mContext;
     private List<MusicBean> mList;
 
@@ -36,7 +40,7 @@ public class QqBarPagerAdapter
     }
 
     public void setData(List<MusicBean> list) {
-        if (mList != null ) {
+        if (mList != null) {
             mList.clear();
         }
         mList = list;
@@ -84,7 +88,7 @@ public class QqBarPagerAdapter
 
 
     private void initView(MusicBean musicInfo, View view) {
-        ImageView albulm = view.findViewById(R.id.iv_pager_albulm);
+       ImageView mAlbulm = view.findViewById(R.id.iv_pager_albulm);
         TextView songName = view.findViewById(R.id.tv_pager_song_name);
         TextView artName = view.findViewById(R.id.tv_pager_art_name);
         Uri albumUri = StringUtil.getAlbulm(musicInfo.getAlbumId());
@@ -92,11 +96,16 @@ public class QqBarPagerAdapter
                 .load(albumUri.toString())
                 .asBitmap()
                 .error(R.drawable.sidebar_cover)
-                .into(albulm);
+                .into(mAlbulm);
         songName.setText(musicInfo.getTitle());
         artName.setText(musicInfo.getArtist());
+        ObjectAnimator objectAnimator = AnimationUtil.getRotation(mAlbulm);
+        MyAnimatorUpdateListener updateListener = new MyAnimatorUpdateListener(objectAnimator);
+        objectAnimator.start();
+        updateListener.play();
 
     }
+
 
 
 }

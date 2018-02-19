@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/music_song"
-                android:textColor="@color/textDes"
+                android:textColor="@color/music_activity_title_selector"
                 android:textSize="@dimen/big_tv" />
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
@@ -42,6 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.2dp"
         android:background="@color/listBg" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="58dp">

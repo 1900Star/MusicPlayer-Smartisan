@@ -8,6 +8,7 @@ import com.yibao.music.MyApplication;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
+import com.yibao.music.util.ToastUtil;
 
 import java.util.ArrayList;
 
@@ -36,6 +37,7 @@ public class LoadMusicDataServices extends IntentService {
         }
 //        MyApplication.getIntstance()
 //                .getDaoSession().getMusicBeanDao().deleteAll();
+        ToastUtil.showNoMusic(this);
         LogUtil.d("LoadMusicDataServices===== 加载数据完成");
 
     }

@@ -18,7 +18,6 @@ import com.yibao.music.artisanlist.MusicActivity;
 import com.yibao.music.base.listener.SeekBarChangeListtener;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.service.AudioPlayService;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.ToastUtil;
 
@@ -28,30 +27,29 @@ import io.reactivex.disposables.CompositeDisposable;
 /**
  * @项目名： ArtisanMusic
  * @包名： com.yibao.music.base
- * @文件名: BaseActivity
+ * @文件名: BasePlayActivity
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/18 11:09
- * @描述： {TODO}
+ * @描述： {仅仅针对 PlayActivity抽出的基类}
  */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BasePlayActivity extends AppCompatActivity {
 
-    private VolumeReceiver mVolumeReceiver;
     protected AudioManager mAudioManager;
     protected int mMaxVolume;
-    protected int mCurrentVolume;
     protected RxBus mBus;
     protected AudioPlayService.AudioBinder audioBinder;
     protected CompositeDisposable disposables;
     protected MusicBeanDao mMusicDao;
     private PowerManager.WakeLock mWakeLock;
     private boolean isScreenAlwaysOn;
+    private VolumeReceiver mVolumeReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        registerVolumeReceiver();
         init();
     }
 
@@ -137,63 +135,68 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public void registerVolumeReceiver() {
+    // 注册音量监听广播
+    protected void registerVolumeReceiver() {
         mVolumeReceiver = new VolumeReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.media.VOLUME_CHANGED_ACTION");
         registerReceiver(mVolumeReceiver, filter);
     }
+    // 音量监听广播
 
-    //音量监听广播
-
-    private class VolumeReceiver
+    public class VolumeReceiver
             extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //如果系统音量发生变化就更新Seekbar
             String volumeAction = "android.media.VOLUME_CHANGED_ACTION";
             if (volumeAction.equals(intent.getAction())) {
-                mCurrentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                updataVolumeProgresse(mCurrentVolume);
-
+                AudioManager mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+                // 当前的媒体音量
+                int currVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                // 如果系统音量发生变化就更新Seekbar
+                updataVolumeProgresse(currVolume);
             }
         }
     }
 
     /**
-     *  更新音量的Seekbar
+     * 更新音量的Seekbar
+     *
      * @param currVolume
      */
     public abstract void updataVolumeProgresse(int currVolume);
 
+    /**
+     * 音乐进度条和音量条的监听器
+     */
     public class SeekBarListener
             extends SeekBarChangeListtener {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
             super.onProgressChanged(seekBar, progress, b);
 
-            switch (seekBar.getId()) {
-                case R.id.sb_progress:
-                    if (!b) {
-                        return;
-                    }
-                    // 更新音乐播放进度
-                    audioBinder.seekTo(progress);
-                    // 更新音乐进度数值
-                    updataMusicProgress(progress);
-                    break;
-                // 更新音乐  SeekBar
-                case R.id.sb_volume:
-                    LogUtil.d("==============音乐控制 =========="+progress);
-                    updataVolumeProgresse(progress);
-                    break;
-                default:
-                    break;
-            }
+            updataMusicBarAndVolumeBar(seekBar, progress, b);
         }
     }
 
-    protected abstract void updataMusicProgress(int progress);
+    /**
+     * 更新音乐进度条和音量条，子类去具体操作。
+     *
+     * @param seekBar
+     * @param progress
+     * @param b
+     */
+    protected abstract void updataMusicBarAndVolumeBar(SeekBar seekBar, int progress, boolean b);
+//
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (disposables != null) {
+            disposables.clear();
+        }
+    }
 
     @Override
     public void finish() {

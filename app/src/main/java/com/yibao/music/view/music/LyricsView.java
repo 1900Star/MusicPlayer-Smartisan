@@ -18,6 +18,7 @@ import java.util.ArrayList;
  * Author：Sid
  * Des：${自定义歌词View
  * Time:2017/9/14 01:16
+ *
  * @author Stran
  */
 public class LyricsView
@@ -179,8 +180,8 @@ public class LyricsView
 
 
     /**
+     * 根据歌曲名和歌手名查找歌词，并将歌词解析到List里。
      *
-     *    根据歌曲名和歌手名查找歌词，并将歌词解析到List里。
      * @param songName
      * @param artist
      */

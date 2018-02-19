@@ -29,7 +29,7 @@ import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
-import com.yibao.music.activity.PlayActivity;
+import com.yibao.music.activity.PlayPlayActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
@@ -249,6 +249,9 @@ public class MusicActivity
         });
     }
 
+    /**
+     * 切换音乐控制面板的样式
+     */
     private void switchMusicControlBar() {
         if (isChangeFloatingBlock) {
             mQqMusicBar.setVisibility(View.INVISIBLE);
@@ -314,7 +317,7 @@ public class MusicActivity
     }
 
     private void readyMusic() {
-        Intent intent = new Intent(this, PlayActivity.class);
+        Intent intent = new Intent(this, PlayPlayActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable("info", mItem);
         intent.putExtra("bundle", bundle);
@@ -694,10 +697,11 @@ public class MusicActivity
         switch (item.getItemId()) {
             case R.id.action_titlebar_search:
                 LogUtil.d("==================search");
-//                Intent intent = new Intent();
-//                intent.setClass(this, PlayActivity.class);
-//                intent.putExtra("position", 8);
-//                startActivity(intent);
+                Intent intent = new Intent();
+                intent.setClass(this, PlayPlayActivity.class);
+                intent.putExtra("position", 8);
+                startActivity(intent);
+
                 startService(new Intent(this, LoadMusicDataServices.class));
                 break;
             default:
@@ -718,7 +722,6 @@ public class MusicActivity
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             audioBinder = (AudioPlayService.AudioBinder) service;
-
         }
 
         @Override
@@ -778,6 +781,12 @@ public class MusicActivity
         return true;
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unbindService(mConnection);
+        mConnection = null;
+    }
 
     @Override
     protected void onDestroy() {
@@ -795,10 +804,8 @@ public class MusicActivity
         if (audioBinder != null) {
             mPlayState = audioBinder.isPlaying() ? Constants.NUMBER_TWO : Constants.NUMBER_ONE;
             SharePrefrencesUtil.setMusicPlayState(this, mPlayState);
-//            SharePrefrencesUtil.setMusicDataListFlag(this, Constants.NUMBER_TWO);
         }
-        unbindService(mConnection);
-        mConnection = null;
+
         disposables.clear();
         unregisterReceiver(headsetReciver);
         mBind.unbind();

@@ -21,14 +21,12 @@ import com.yibao.music.util.StringUtil;
  */
 public class MusicNoification {
 
-    private static boolean p;
-
     public static Notification getNotification(Context context, RemoteViews remoteView, MusicBean info) {
         initRemotViews(context, remoteView, info);
 
 
         Notification.Builder builder = new Notification.Builder(context);
-        Notification notification = builder.setSmallIcon(R.mipmap.gaki)
+        Notification notification = builder.setSmallIcon(R.mipmap.me)
                 .setOngoing(true)
                 .setAutoCancel(true)
                 .setContent(remoteView)
@@ -44,30 +42,25 @@ public class MusicNoification {
         remoteView.setTextViewText(R.id.notify_song_name, info.getTitle());
         remoteView.setTextViewText(R.id.notify_song_artist, info.getArtist());
         //通知栏的专辑图片
-        remoteView.setImageViewUri(R.id.widget_album, StringUtil.getAlbulm(info.getAlbumId()));
+        remoteView.setImageViewUri(R.id.notify_album, StringUtil.getAlbulm(info.getAlbumId()));
+        LogUtil.d("NotifyCation  ========= " + StringUtil.getAlbulm(info.getAlbumId()));
         remoteView.setImageViewResource(R.id.notify_close, R.mipmap.notifycation_close);
         remoteView.setImageViewResource(R.id.notify_prev, R.mipmap.notifycation_prev);
         remoteView.setImageViewResource(R.id.notify_next, R.mipmap.notifycation_next);
-//        remoteView.setImageViewResource
-// (R.id.widget_play, R.mipmap.notifycation_pause);
-        remoteViewListenr(context, remoteView);
-
-    }
-
-    //通知栏的播放按钮监听
-    public static void updatePlayBtn(RemoteViews remoteView, boolean plays) {
-        if (plays) {
+        if (MusicActivity.getAudioBinder().isPlaying()) {
             remoteView.setImageViewResource(R.id.notify_play, R.mipmap.notifycation_play);
-            p = false;
             LogUtil.d("===  play =");
         } else {
             LogUtil.d("===  pause =");
             remoteView.setImageViewResource(R.id.notify_play, R.mipmap.notifycation_pause);
-            p = true;
+
         }
+        remoteViewClickListenr(context, remoteView);
+
     }
 
-    private static void remoteViewListenr(Context context, RemoteViews remoteViews) {
+
+    private static void remoteViewClickListenr(Context context, RemoteViews remoteViews) {
         Intent intent = new Intent(AudioPlayService.ACTION_MUSIC);
 
         //Root

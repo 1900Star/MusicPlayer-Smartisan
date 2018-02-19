@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
@@ -57,6 +58,12 @@ public class AudioPlayService
     @Override
     public IBinder onBind(Intent intent) {
         return mAudioBinder;
+    }
+
+    @Override
+    public void unbindService(ServiceConnection conn) {
+        super.unbindService(conn);
+
     }
 
     @Override
@@ -155,11 +162,12 @@ public class AudioPlayService
         }
 
         private void showNotification() {
-            Notification notification = MusicNoification.getNotification(getApplicationContext(), mRemoteViews,
+            Notification notification = MusicNoification.getNotification(MyApplication.getIntstance(), mRemoteViews,
                     mMusicInfo);
             manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
             manager.notify(0, notification);
+            LogUtil.d("============打开通知栏========");
         }
 
         //获取当前播放进度
