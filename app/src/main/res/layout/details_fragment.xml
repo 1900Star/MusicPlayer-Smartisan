@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/album_details_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -163,10 +164,5 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/colorAccent" />
-
-
-    <include
-        android:id="@+id/music_controlbar"
-        layout="@layout/empty_framelayout" />
 
 </LinearLayout>

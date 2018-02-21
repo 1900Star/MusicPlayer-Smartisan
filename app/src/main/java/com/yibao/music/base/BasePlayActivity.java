@@ -8,17 +8,13 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
-import com.yibao.music.MyApplication;
 import com.yibao.music.R;
 import com.yibao.music.artisanlist.MusicActivity;
 import com.yibao.music.base.listener.SeekBarChangeListtener;
-import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.service.AudioPlayService;
-import com.yibao.music.util.RxBus;
 import com.yibao.music.util.ToastUtil;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -34,14 +30,12 @@ import io.reactivex.disposables.CompositeDisposable;
  * @描述： {仅仅针对 PlayActivity抽出的基类}
  */
 
-public abstract class BasePlayActivity extends AppCompatActivity {
+public abstract class BasePlayActivity extends BaseActivity {
 
     protected AudioManager mAudioManager;
     protected int mMaxVolume;
-    protected RxBus mBus;
     protected AudioPlayService.AudioBinder audioBinder;
     protected CompositeDisposable disposables;
-    protected MusicBeanDao mMusicDao;
     private PowerManager.WakeLock mWakeLock;
     private boolean isScreenAlwaysOn;
     private VolumeReceiver mVolumeReceiver;
@@ -51,7 +45,10 @@ public abstract class BasePlayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         registerVolumeReceiver();
         init();
+
+
     }
+
 
     private void init() {
 
@@ -61,10 +58,8 @@ public abstract class BasePlayActivity extends AppCompatActivity {
         mMaxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
         audioBinder = MusicActivity.getAudioBinder();
-        mBus = MyApplication.getIntstance()
-                .bus();
+
         disposables = new CompositeDisposable();
-        mMusicDao = MyApplication.getIntstance().getMusicDao();
     }
 
 
@@ -136,6 +131,7 @@ public abstract class BasePlayActivity extends AppCompatActivity {
     }
 
     // 注册音量监听广播
+
     protected void registerVolumeReceiver() {
         mVolumeReceiver = new VolumeReceiver();
         IntentFilter filter = new IntentFilter();
@@ -160,7 +156,7 @@ public abstract class BasePlayActivity extends AppCompatActivity {
     }
 
     /**
-     * 更新音量的Seekbar
+     * 系统音量发生变化时更新音量的Seekbar
      *
      * @param currVolume
      */

@@ -33,6 +33,8 @@ public class QqBarPagerAdapter
         extends PagerAdapter {
     private Context mContext;
     private List<MusicBean> mList;
+    private ObjectAnimator mAnimator;
+    private MyAnimatorUpdateListener mAnimationListener;
 
     public QqBarPagerAdapter(Context context, List<MusicBean> list) {
         this.mContext = context;
@@ -60,6 +62,10 @@ public class QqBarPagerAdapter
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
+        if (mAnimator != null || mAnimationListener != null) {
+            mAnimator.cancel();
+            mAnimationListener.pause();
+        }
         container.removeView((View) object);
 
     }
@@ -75,6 +81,7 @@ public class QqBarPagerAdapter
         container.addView(view);
         return view;
     }
+    // 可以通过接口把view传过去，在Activity里面进行动画的控制
 
     private void initListener(View view) {
         RxView.clicks(view)
@@ -88,7 +95,7 @@ public class QqBarPagerAdapter
 
 
     private void initView(MusicBean musicInfo, View view) {
-       ImageView mAlbulm = view.findViewById(R.id.iv_pager_albulm);
+        ImageView mAlbulm = view.findViewById(R.id.iv_pager_albulm);
         TextView songName = view.findViewById(R.id.tv_pager_song_name);
         TextView artName = view.findViewById(R.id.tv_pager_art_name);
         Uri albumUri = StringUtil.getAlbulm(musicInfo.getAlbumId());
@@ -99,13 +106,16 @@ public class QqBarPagerAdapter
                 .into(mAlbulm);
         songName.setText(musicInfo.getTitle());
         artName.setText(musicInfo.getArtist());
-        ObjectAnimator objectAnimator = AnimationUtil.getRotation(mAlbulm);
-        MyAnimatorUpdateListener updateListener = new MyAnimatorUpdateListener(objectAnimator);
-        objectAnimator.start();
-        updateListener.play();
+        if (mAnimator == null || mAnimationListener == null) {
+            mAnimator = AnimationUtil.getRotation(mAlbulm);
+            mAnimationListener = new MyAnimatorUpdateListener(mAnimator);
+            mAnimator.start();
+            mAnimationListener.play();
+        } else {
+            mAnimator.resume();
+        }
 
     }
-
 
 
 }

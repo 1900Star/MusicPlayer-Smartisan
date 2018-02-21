@@ -43,7 +43,7 @@ public class SongAdapter
 {
     private String TAG = "SongAdapter";
     private Context mContext;
-    private int mIsShowStickyView;
+    private int mIsShowStickyView = 0;
 
     /**
      * @param context

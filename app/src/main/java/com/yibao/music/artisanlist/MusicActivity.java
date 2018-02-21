@@ -1,6 +1,7 @@
 package com.yibao.music.artisanlist;
 
 import android.animation.ObjectAnimator;
+import android.app.Fragment;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -14,7 +15,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -30,10 +30,15 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayPlayActivity;
+import com.yibao.music.album.MainActivity;
+import com.yibao.music.base.BaseActivity;
+import com.yibao.music.base.BaseFragment;
+import com.yibao.music.base.listener.FragBackPressedListener;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
+import com.yibao.music.model.song.MusicFavoriteBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.LoadMusicDataServices;
 import com.yibao.music.util.AnimationUtil;
@@ -41,7 +46,6 @@ import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
-import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.ToastUtil;
@@ -59,7 +63,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -69,8 +72,8 @@ import io.reactivex.schedulers.Schedulers;
  *         Time:2017/5/30 13:27
  */
 public class MusicActivity
-        extends AppCompatActivity
-        implements OnMusicItemClickListener {
+        extends BaseActivity
+        implements OnMusicItemClickListener, FragBackPressedListener {
 
     @BindView(R.id.tv_music_toolbar_title)
     TextView mTvMusicToolbarTitle;
@@ -99,7 +102,7 @@ public class MusicActivity
     LinearLayout mQqMusicBar;
     @BindView(R.id.music_floating_pager_play)
     MusicProgressView mMusicPagerPlay;
-    @BindView(R.id.music_floating_pager_next)
+    @BindView(R.id.music_floating_pager_favorite)
     ImageView mMusicFloatingPagerPlayNext;
     @BindView(R.id.music_float_pb)
     ProgressBtn mPb;
@@ -142,7 +145,6 @@ public class MusicActivity
     @BindView(R.id.music_bar_stylelist)
     LinearLayout mMusicBarStylelist;
 
-    private CompositeDisposable disposables;
     private List<MusicBean> mMusicItems;
     private Unbinder mBind;
     private ObjectAnimator mAnimator;
@@ -150,7 +152,6 @@ public class MusicActivity
     private MyAnimatorUpdateListener mAnimatorListener;
     private AudioServiceConnection mConnection;
     private Disposable mDisposable;
-    private RxBus mBus;
     private MusicBean mItem;
     private int mCurrentPosition;
     private boolean mMusicConfig;
@@ -158,15 +159,15 @@ public class MusicActivity
     private int mPlayState;
     private int mNormalTabbarColor;
     private QqBarPagerAdapter mQqBarPagerAdapter;
-
+    private BaseFragment mBaseFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
         mBind = ButterKnife.bind(this);
-        mBus = MyApplication.getIntstance().bus();
-        disposables = new CompositeDisposable();
+
+
         initView();
         initData();
         initRxBusData();
@@ -185,6 +186,16 @@ public class MusicActivity
 
     }
 
+    public void checkCurrentIsFavorite() {
+
+        if (mItem.isFavorite()) {
+            mMusicFloatingPagerPlayNext.setImageResource(R.mipmap.favorite_yes);
+        } else {
+            mMusicFloatingPagerPlayNext.setImageResource(R.drawable.music_favorite_selector);
+
+        }
+    }
+
     private void initData() {
         mMusicItems = initMusicData();
         // 初始化 MusicPagerAdapter 主页面
@@ -194,16 +205,21 @@ public class MusicActivity
         // 初始化 QqBarPagerAdapter
         mQqBarPagerAdapter = new QqBarPagerAdapter(this, null);
         mMusicSlideViewPager.setAdapter(mQqBarPagerAdapter);
-
     }
 
+    /**
+     * getSpMusicFlag()先获取上次播放列表的标记，根据标记初始化对应的列表数据 。
+     * 1 歌曲名   2  评分   3  播放次数        4  添加时间
+     *
+     * @return
+     */
     private List<MusicBean> initMusicData() {
         int spMusicFlag = getSpMusicFlag();
         LogUtil.d(" 200 MusicActivity ==    " + spMusicFlag);
         if (spMusicFlag == Constants.NUMBER_FOUR) {
-            return MusicListUtil.sortMusicAddtime((ArrayList<MusicBean>) MyApplication.getIntstance().getMusicDao().queryBuilder().list());
+            return MusicListUtil.sortMusicAddtime((ArrayList<MusicBean>) mMusicDao.queryBuilder().list());
         } else if (spMusicFlag == Constants.NUMBER_ONE) {
-            return mMusicItems = MyApplication.getIntstance().getMusicDao().queryBuilder().list();
+            return mMusicItems = mMusicDao.queryBuilder().list();
         }
         return null;
     }
@@ -217,8 +233,8 @@ public class MusicActivity
             LogUtil.d("======= mPlayStae  " + mPlayState);
             if (mPlayState == Constants.NUMBER_ONE) {
                 // 读取用户的播放记录，设置UI显示，做好播放的准备。(暂停和播放两种状态)
-                MusicBean musicInfo = mMusicItems.get(mCurrentPosition);
-                perpareItem(musicInfo);
+                MusicBean musicBean = mMusicItems.get(mCurrentPosition);
+                perpareItem(musicBean);
 //                mMusicConfig = false;
             } else if (mPlayState == Constants.NUMBER_TWO) {
                 executStartServiceAndInitAnimation();
@@ -267,7 +283,7 @@ public class MusicActivity
 
 
     /**
-     * 开启服务，播放音乐并且将数据传送过去
+     * 开启服务，播放音乐并且将数据标记传送过去
      *
      * @param position 当前点击的曲目
      */
@@ -328,7 +344,7 @@ public class MusicActivity
 
     private void initRxBusData() {
         //接收service发出的数据，时时更新播放歌曲 进度 歌名 歌手信息
-        disposables.add(mBus.toObserverable(MusicBean.class)
+        mCompositeDisposable.add(mBus.toObserverable(MusicBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(musicItem -> {
@@ -355,12 +371,14 @@ public class MusicActivity
          < 3 > 切换列表数据
          < 4 >
          */
-        disposables.add(mBus.toObserverable(MusicStatusBean.class)
+        mCompositeDisposable.add(mBus.toObserverable(MusicStatusBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(MusicActivity.this::refreshBtnAndNotify));
 
-
+        mCompositeDisposable.add(mBus.toObserverable(MusicFavoriteBean.class).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(musicFavoriteBean -> MusicActivity.this.checkCurrentIsFavorite()));
     }
 
     private void refreshBtnAndNotify(MusicStatusBean bean) {
@@ -394,10 +412,10 @@ public class MusicActivity
      * @param musicItem
      */
     private void perpareItem(MusicBean musicItem) {
-
+        mItem = musicItem;
+        checkCurrentIsFavorite();
         mQqBarPagerAdapter.setData(initMusicData());
         mMusicSlideViewPager.setCurrentItem(musicItem.getCureetPosition(), false);
-        mItem = musicItem;
         //更新音乐标题
         String songName = musicItem.getTitle();
         mMusicFloatSongName.setText(songName);
@@ -500,7 +518,7 @@ public class MusicActivity
             R.id.music_floating_play,
             R.id.music_floating_next,
             R.id.music_floating_pager_play,
-            R.id.music_floating_pager_next,
+            R.id.music_floating_pager_favorite,
             R.id.music_bar_playlist,
             R.id.music_bar_artisanlist, R.id.music_bar_songlist, R.id.music_bar_albumlist, R.id.music_bar_stylelist})
     public void onViewClicked(View view) {
@@ -527,8 +545,8 @@ public class MusicActivity
                         case R.id.music_floating_pre:
                             audioBinder.playPre();
                             break;
-                        case R.id.music_floating_pager_next:
-                            audioBinder.playNext();
+                        case R.id.music_floating_pager_favorite:
+                            favoritMusic();
                             break;
                         case R.id.music_floating_pager_play:
                             switchPlayState();
@@ -549,6 +567,24 @@ public class MusicActivity
         }
 
 
+    }
+
+    private void favoritMusic() {
+        if (mItem.isFavorite()) {
+            mItem.setIsFavorite(false);
+            mMusicDao.update(mItem);
+
+            mMusicFloatingPagerPlayNext.setImageResource(R.drawable.music_favorite_selector);
+
+        } else {
+            String time = StringUtil.getCurrentTime();
+            mItem.setTime(time);
+            mItem.setIsFavorite(true);
+            mMusicDao.update(mItem);
+
+            mMusicFloatingPagerPlayNext.setImageResource(R.mipmap.favorite_yes);
+
+        }
     }
 
     private void switchMusicTabbar(int flag) {
@@ -698,7 +734,7 @@ public class MusicActivity
             case R.id.action_titlebar_search:
                 LogUtil.d("==================search");
                 Intent intent = new Intent();
-                intent.setClass(this, PlayPlayActivity.class);
+                intent.setClass(this, MainActivity.class);
                 intent.putExtra("position", 8);
                 startActivity(intent);
 
@@ -714,6 +750,12 @@ public class MusicActivity
 
     public static AudioPlayService.AudioBinder getAudioBinder() {
         return audioBinder;
+    }
+
+
+    @Override
+    public void putFragment(Fragment fragment) {
+        this.mBaseFragment = (BaseFragment) fragment;
     }
 
 
@@ -743,7 +785,7 @@ public class MusicActivity
     protected void onResume() {
         super.onResume();
         registerHeadsetReceiver();
-        if (mAnimator != null) {
+        if (mAnimator != null && audioBinder.isPlaying()) {
             mAnimator.resume();
         }
     }
@@ -765,6 +807,21 @@ public class MusicActivity
         }
     };
 
+    @Override
+    public void onBackPressed() {
+        System.out.println("============Ok=============");
+        if (mBaseFragment == null || !mBaseFragment.onBackPressed()) {
+            if (getFragmentManager().getBackStackEntryCount() == 0) {
+                System.out.println("==============BBBBBBBBBBBBBBBBBBBBBB================");
+                super.onBackPressed();
+            } else {
+                System.out.println("==============AAAAAAAAAAAAAAAAAAAAAX================");
+                getFragmentManager().popBackStack();
+
+            }
+        }
+    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -784,8 +841,7 @@ public class MusicActivity
     @Override
     protected void onStop() {
         super.onStop();
-        unbindService(mConnection);
-        mConnection = null;
+
     }
 
     @Override
@@ -806,8 +862,9 @@ public class MusicActivity
             SharePrefrencesUtil.setMusicPlayState(this, mPlayState);
         }
 
-        disposables.clear();
+        mCompositeDisposable.clear();
         unregisterReceiver(headsetReciver);
+        unbindService(mConnection);
         mBind.unbind();
 
     }

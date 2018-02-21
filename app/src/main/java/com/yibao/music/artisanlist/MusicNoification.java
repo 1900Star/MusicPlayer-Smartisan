@@ -47,8 +47,8 @@ public class MusicNoification {
         remoteView.setImageViewResource(R.id.notify_close, R.mipmap.notifycation_close);
         remoteView.setImageViewResource(R.id.notify_prev, R.mipmap.notifycation_prev);
         remoteView.setImageViewResource(R.id.notify_next, R.mipmap.notifycation_next);
-        if (MusicActivity.getAudioBinder().isPlaying()) {
             remoteView.setImageViewResource(R.id.notify_play, R.mipmap.notifycation_play);
+        if (MusicActivity.getAudioBinder().isPlaying()) {
             LogUtil.d("===  play =");
         } else {
             LogUtil.d("===  pause =");

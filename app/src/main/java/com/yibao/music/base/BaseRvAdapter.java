@@ -34,7 +34,7 @@ public abstract class BaseRvAdapter<T>
     private static final int TYPE_FOOTER = 1;
     private static final int MIN_NUM = 10;
     protected String tag = getClass().getSimpleName() + "  ==========";
-    protected OnItemListener mListener;
+    private OnItemListener mListener;
 
     public BaseRvAdapter(List<T> list) {
         mList = list;
@@ -203,9 +203,12 @@ public abstract class BaseRvAdapter<T>
         }
     }
 
-    protected void openActivity() {
+    /**
+     * Item的点击事件
+     */
+    protected void openDetails() {
         if (mListener != null) {
-            mListener.openDetails();
+            mListener.showDetailsView();
         }
     }
 
@@ -214,6 +217,9 @@ public abstract class BaseRvAdapter<T>
     }
 
     public interface OnItemListener {
-        void openDetails();
+        /**
+         * 打开列表详情
+         */
+        void showDetailsView();
     }
 }

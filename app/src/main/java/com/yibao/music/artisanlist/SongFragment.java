@@ -15,6 +15,7 @@ import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
+import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.view.music.MusicView;
 
@@ -62,21 +63,22 @@ public class SongFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.song_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
-        initData(true, Constants.NUMBER_ONE);
+        initData(true, Constants.NUMBER_ZOER);
         return view;
     }
 
     /**
      * 是否对歌曲列表按时间排序，按时间排序时，StickyView不显示
      *
-     * @param isShowSlidebar
+     * @param isShowSlidebar   只有按歌曲名排列时，Slidebar才显示 。
+     *
      * @param isShowStickyView 控制列表的StickyView是否显示，0 显示 ，1 ：不显示
      */
     private void initData(boolean isShowSlidebar, int isShowStickyView) {
 
-        if (isShowStickyView == Constants.NUMBER_ONE) {
+        if (isShowStickyView == Constants.NUMBER_ZOER) {
             mSongAdapter = new SongAdapter(mActivity, mSongList, isShowStickyView);
-        } else if (isShowStickyView == Constants.NUMBER_FOUR) {
+        } else if (isShowStickyView == Constants.NUMBER_ONE) {
 
             mList = MusicListUtil.sortMusicAddtime(musicBeans);
             mSongAdapter = new SongAdapter(mActivity, mList, isShowStickyView);
@@ -89,7 +91,8 @@ public class SongFragment extends BaseFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_music_category_paly:
-//                int position = RandomUtil.getRandomPostion(musicBeans);
+                int position = RandomUtil.getRandomPostion(musicBeans);
+
                 break;
             case R.id.tv_music_category_songname:
                 switchListCategory(1);
@@ -115,7 +118,7 @@ public class SongFragment extends BaseFragment {
         switch (flag) {
             case 1:
                 categorySongName();
-                initData(true, Constants.NUMBER_ONE);
+                initData(true, Constants.NUMBER_ZOER);
                 setPlayListFlag(Constants.NUMBER_ONE);
                 break;
             case 2:
@@ -129,7 +132,7 @@ public class SongFragment extends BaseFragment {
                 break;
             case 4:
                 categoryAddtime();
-                initData(false, Constants.NUMBER_FOUR);
+                initData(false, Constants.NUMBER_ONE);
                 setPlayListFlag(Constants.NUMBER_FOUR);
                 break;
             default:

@@ -5,8 +5,10 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
 import com.yibao.music.MyApplication;
+import com.yibao.music.base.listener.FragBackPressedListener;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
@@ -36,6 +38,7 @@ public abstract class BaseFragment extends Fragment {
     protected static CompositeDisposable disposables;
     public ArrayList<MusicBean> mSongList;
     private boolean mHandledPress = false;
+    private FragBackPressedListener mBackPressedListener;
     private MusicBeanDao mMusicBeanDao;
 
 
@@ -47,7 +50,12 @@ public abstract class BaseFragment extends Fragment {
         mActivity = getActivity();
         disposables = new CompositeDisposable();
         mBus = MyApplication.getIntstance().bus();
+        if (!(context instanceof FragBackPressedListener)) {
+            throw new ClassCastException("Hosting Activity must implement BackPressedListener");
+        } else {
 
+            this.mBackPressedListener = (FragBackPressedListener) getActivity();
+        }
 
     }
 
@@ -73,4 +81,21 @@ public abstract class BaseFragment extends Fragment {
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mBackPressedListener.putFragment(this);
+    }
+
+    public boolean onBackPressed() {
+
+        if (!mHandledPress) {
+            Toast.makeText(getActivity(), "捕捉到了回退事件哦！", Toast.LENGTH_LONG).show();
+            getFragmentManager().beginTransaction().hide(this).commit();
+            mHandledPress = true;
+            return true;
+
+        }
+        return false;
+    }
 }

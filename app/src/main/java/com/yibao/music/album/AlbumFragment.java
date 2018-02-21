@@ -1,6 +1,5 @@
 package com.yibao.music.album;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yibao.music.R;
-import com.yibao.music.activity.DetailsControlBarActivity;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
@@ -65,13 +63,10 @@ public class AlbumFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.album_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         initData(Constants.NUMBER_ZOER, true, Constants.NUMBER_THRRE);
-        initListener();
         return view;
     }
 
-    private void initListener() {
-        mAdapter.setItemListener(() -> startActivity(new Intent(getActivity(), DetailsControlBarActivity.class)));
-    }
+
 
 
     /**

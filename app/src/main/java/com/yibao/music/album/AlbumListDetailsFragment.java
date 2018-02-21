@@ -62,7 +62,7 @@ public class AlbumListDetailsFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.details_activity, container, false);
+        View view = inflater.inflate(R.layout.details_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         initData();
 
@@ -117,8 +117,6 @@ public class AlbumListDetailsFragment extends BaseFragment {
                 break;
         }
     }
-
-
 
 
     @Override

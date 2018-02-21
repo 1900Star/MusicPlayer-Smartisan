@@ -22,6 +22,7 @@ import com.yibao.music.factory.RecyclerFactory;
 import com.yibao.music.model.BottomSheetStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
+import com.yibao.music.model.song.MusicFavoriteBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.StringUtil;
@@ -90,6 +91,7 @@ public class MusicBottomSheetDialog
     }
 
     //    接收BottomSheetAdapter发过来的当前点击Item的Position
+
     private void rxData() {
         mDisposable.add(mBus.toObserverable(BottomSheetStatus.class)
                 .subscribeOn(Schedulers.io())
@@ -133,6 +135,8 @@ public class MusicBottomSheetDialog
         }
 
         mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        MyApplication.getIntstance().bus().post(new MusicFavoriteBean());
+
         if (mContext instanceof OnCheckFavoriteListener) {
             ((OnCheckFavoriteListener) mContext).updataFavoriteStatus();
         }

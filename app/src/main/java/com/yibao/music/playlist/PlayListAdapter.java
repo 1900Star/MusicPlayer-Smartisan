@@ -39,7 +39,7 @@ public class PlayListAdapter extends BaseRvAdapter<ArtistInfo> {
             playViewHolder.mTvPlayListCount.setText(count);
             playViewHolder.mTvPlayListName.setText(artistInfo.getName());
 
-            playViewHolder.itemView.setOnClickListener(view -> openActivity());
+            playViewHolder.itemView.setOnClickListener(view -> PlayListAdapter.this.openDetails());
         }
 
     }

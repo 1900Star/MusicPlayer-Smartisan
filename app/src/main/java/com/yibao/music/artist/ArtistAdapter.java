@@ -11,7 +11,6 @@ import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.util.HanziToPinyins;
-import com.yibao.music.util.LogUtil;
 
 import java.util.List;
 
@@ -60,9 +59,7 @@ public class ArtistAdapter extends BaseRvAdapter<ArtistInfo> implements SectionI
             }
 
 
-            artisHolder.mArtistItemContent.setOnClickListener(view ->
-
-                    LogUtil.d("=======  打开艺术家详情  ==============         " + firstChar));
+            artisHolder.mArtistItemContent.setOnClickListener(view -> openDetails());
 
         }
 

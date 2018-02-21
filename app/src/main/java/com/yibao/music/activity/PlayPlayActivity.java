@@ -23,6 +23,7 @@ import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.dialogfrag.TopBigPicDialogFragment;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
+import com.yibao.music.model.song.MusicFavoriteBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
@@ -172,7 +173,6 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
     }
 
     public void checkCurrentIsFavorite() {
-
         if (mCurrenMusicInfo.isFavorite()) {
             mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
         } else {
@@ -217,15 +217,15 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
     @Override
     protected void onResume() {
         super.onResume();
-        if (mSubscribe == null) {
-            mSubscribe = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(aLong -> {
-                        mProgress = audioBinder.getProgress();
-                        updataMusicProgress(mProgress);
-                    });
-        }
+
+        mSubscribe = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+                    mProgress = audioBinder.getProgress();
+                    updataMusicProgress(mProgress);
+                });
+//        startRollPlayLyrics();
 
     }
 
@@ -276,8 +276,6 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::refreshBtnAndAnim));
-
-
     }
 
     private void refreshBtnAndAnim(MusicStatusBean bean) {
@@ -425,16 +423,16 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
         if (mCurrenMusicInfo.isFavorite()) {
             mCurrenMusicInfo.setIsFavorite(false);
             mMusicDao.update(mCurrenMusicInfo);
-
             mIvFavoriteMusic.setImageResource(R.drawable.music_favorite_selector);
+            mBus.post(new MusicFavoriteBean());
 
         } else {
             String time = StringUtil.getCurrentTime();
             mCurrenMusicInfo.setTime(time);
             mCurrenMusicInfo.setIsFavorite(true);
             mMusicDao.update(mCurrenMusicInfo);
-
             mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
+            mBus.post(new MusicFavoriteBean());
 
         }
     }
@@ -467,8 +465,6 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
      * 根据进度滚动歌词
      */
     private void startRollPlayLyrics() {
-//        if (mDisposableLyrics == null) {
-//        }
         mDisposableLyrics = Observable.interval(100, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

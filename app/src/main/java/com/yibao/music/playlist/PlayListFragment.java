@@ -1,6 +1,8 @@
 package com.yibao.music.playlist;
 
-import android.content.Intent;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,7 +14,7 @@ import android.widget.LinearLayout;
 
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
-import com.yibao.music.activity.DetailsControlBarActivity;
+import com.yibao.music.album.AlbumListDetailsFragment;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.util.LogUtil;
@@ -55,12 +57,29 @@ public class PlayListFragment extends BaseFragment {
     }
 
     private void initListener() {
-        mAdapter.setItemListener(() -> startActivity(new Intent(getActivity(), DetailsControlBarActivity.class)));
+        mAdapter.setItemListener(() -> {
+            LogUtil.d("=========playlist==========");
+            AlbumListDetailsFragment detailsFragment = (AlbumListDetailsFragment) getChildFragmentManager().findFragmentById(R.id.album_details_content);
+            if (detailsFragment == null) {
+                detailsFragment = new AlbumListDetailsFragment();
+            }
+            PlayListFragment.this.addFragment(detailsFragment);
+
+        });
+    }
+
+    private void addFragment(Fragment fragment) {
+        FragmentManager manager = getChildFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.add(R.id.play_list_frag_content, fragment, "A");
+        transaction.addToBackStack("a");
+        transaction.commit();
     }
 
     private void initData() {
         ArrayList<ArtistInfo> list = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        int number = 20;
+        for (int i = 0; i < number; i++) {
             ArtistInfo artistInfo = new ArtistInfo();
             artistInfo.setName(i + "爱");
             artistInfo.setSongCount(i);

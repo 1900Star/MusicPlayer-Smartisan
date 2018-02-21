@@ -52,6 +52,7 @@ public class SharePrefrencesUtil {
 
     /**
      * 用于存储程序退出或关闭音乐界面时，音乐列表的分类标记，。
+     * 1 歌曲名   2  评分   3  播放次数        4  添加时间
      *
      * @param context
      * @param value

@@ -33,25 +33,23 @@
 
         <service android:name=".service.AudioPlayService" />
         <service android:name=".service.LoadMusicDataServices" />
-        <service android:name=".service.MusicService" />
 
-        <activity android:name=".base.BasePlayActivity" />
-        <activity android:name=".base.BaseControlBarActivity" />
+        <activity android:name=".base.BaseActivity" />
+
+
         <activity
             android:name=".artisanlist.MusicActivity"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".activity.PlayPlayActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".album.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activity.DetailsControlBarActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activity.DetailsListControlBarActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+
+
     </application>
 
 </manifest>

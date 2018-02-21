@@ -2,6 +2,7 @@ package com.yibao.music.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,7 +12,6 @@ import android.widget.TextView;
 
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
-import com.yibao.music.base.BaseControlBarActivity;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.playlist.PlayListAdapter;
 
@@ -32,7 +32,7 @@ import butterknife.OnClick;
  * @描述： {TODO}
  */
 
-public class DetailsListControlBarActivity extends BaseControlBarActivity {
+public class DetailsListControlBarActivity extends AppCompatActivity {
 
 
     @BindView(R.id.iv_artist_albumm_details)
