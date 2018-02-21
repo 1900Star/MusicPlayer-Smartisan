@@ -3,14 +3,10 @@ package com.yibao.music.artisanlist;
 import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Color;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -63,7 +59,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -151,7 +146,6 @@ public class MusicActivity
     private static AudioPlayService.AudioBinder audioBinder;
     private MyAnimatorUpdateListener mAnimatorListener;
     private AudioServiceConnection mConnection;
-    private Disposable mDisposable;
     private MusicBean mItem;
     private int mCurrentPosition;
     private boolean mMusicConfig;
@@ -573,7 +567,6 @@ public class MusicActivity
         if (mItem.isFavorite()) {
             mItem.setIsFavorite(false);
             mMusicDao.update(mItem);
-
             mMusicFloatingPagerPlayNext.setImageResource(R.drawable.music_favorite_selector);
 
         } else {
@@ -784,28 +777,18 @@ public class MusicActivity
     @Override
     protected void onResume() {
         super.onResume();
-        registerHeadsetReceiver();
         if (mAnimator != null && audioBinder.isPlaying()) {
             mAnimator.resume();
         }
     }
 
-    /**
-     * 耳机插入和拔出监听
-     */
-    private void registerHeadsetReceiver() {
-        IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-        registerReceiver(headsetReciver, intentFilter);
-    }
-
-    BroadcastReceiver headsetReciver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (audioBinder != null && audioBinder.isPlaying()) {
-                switchPlayState();
-            }
+    @Override
+    protected void headsetPullOut() {
+        super.headsetPullOut();
+        if (audioBinder != null && audioBinder.isPlaying()) {
+            switchPlayState();
         }
-    };
+    }
 
     @Override
     public void onBackPressed() {
@@ -826,9 +809,9 @@ public class MusicActivity
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
-            case KeyEvent.KEYCODE_HEADSETHOOK:
-                switchPlayState();
-                break;
+//            case KeyEvent.KEYCODE_HEADSETHOOK:
+//                switchPlayState();
+//                break;
             case KeyEvent.KEYCODE_BACK:
                 finish();
                 break;
@@ -863,7 +846,7 @@ public class MusicActivity
         }
 
         mCompositeDisposable.clear();
-        unregisterReceiver(headsetReciver);
+//        unregisterReceiver(headsetReciver);
         unbindService(mConnection);
         mBind.unbind();
 

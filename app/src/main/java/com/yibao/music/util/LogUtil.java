@@ -2,23 +2,26 @@ package com.yibao.music.util;
 
 import android.util.Log;
 
-import com.yibao.music.MyApplication;
+import com.yibao.music.BuildConfig;
 
 /**
  * Log统一管理类
+ *
+ * @author Stran
  */
 public class LogUtil {
 
-    private LogUtil() { 
-        /* cannot be instantiated */
+    private LogUtil() {
         throw new UnsupportedOperationException("cannot be instantiated");
     }
 
-    // 是否需要打印log，可以在application的onCreate函数里面初始化
-    private static       boolean isDebug = MyApplication.isShowLog;
-    private static final String  TAG     = "LogUtil";
 
-    // 下面四个是默认tag的函数 
+    private static boolean isDebug = BuildConfig.SHOW_LOG;
+
+    private static final String TAG = "LogUtil";
+
+    // 下面四个是默认tag的函数
+
     public static void i(String msg) {
         if (isDebug) {
             Log.i(TAG, msg);
@@ -43,7 +46,8 @@ public class LogUtil {
         }
     }
 
-    // 下面是传入自定义tag的函数 
+    // 下面是传入自定义tag的函数
+
     public static void i(String tag, String msg) {
         if (isDebug) {
             Log.i(tag, msg);

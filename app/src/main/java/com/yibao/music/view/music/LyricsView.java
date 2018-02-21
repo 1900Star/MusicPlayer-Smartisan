@@ -10,13 +10,14 @@ import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.model.MusicLyrBean;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 
 import java.util.ArrayList;
 
 /**
  * Author：Sid
- * Des：${自定义歌词View
+ * Des：${自定义歌词View}
  * Time:2017/9/14 01:16
  *
  * @author Stran
@@ -91,7 +92,7 @@ public class LyricsView
     }
 
     /**
-     * 核心代码逻辑，绘制多行歌词。
+     * 绘制多行歌词。
      *
      * @param canvas
      */
@@ -100,7 +101,7 @@ public class LyricsView
         int lineTime;
         //        最后一行居中
         if (centerLine == mList.size() - 1) {
-            //            行可用时间 = 总进度 - 行开始时间
+            //     行可用时间 = 总进度 - 行开始时间
             lineTime = duration - mList.get(centerLine)
                     .getStartTime();
         } else {
@@ -148,12 +149,13 @@ public class LyricsView
     }
 
     /**
-     * 根据播放时间，将已经播放的歌词滚动出屏幕。
+     * 根据播放时间滚动歌词，将已经播放的歌词滚动出屏幕。
      *
      * @param progress
      * @param duration
      */
     public void rollText(int progress, int duration) {
+        LogUtil.d("==================正在滚动歌词");
         if (mList == null || mList.size() == 0) {
             return;
         }

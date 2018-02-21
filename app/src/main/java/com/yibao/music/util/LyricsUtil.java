@@ -86,7 +86,7 @@ public class LyricsUtil {
     private static int parseTime(String s) {
         boolean containsChinese = isContainsEnglishAndChinese(s);
         if (containsChinese) {
-            LogUtil.d("============== 歌词解析异常！================");
+            LogUtil.d("============== 歌词时间解析异常！================");
             return 0;
         } else {
             String[] arr = s.split(":");

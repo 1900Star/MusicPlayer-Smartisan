@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
@@ -32,7 +31,6 @@ public abstract class BaseRvAdapter<T>
     protected List<T> mList = null;
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_FOOTER = 1;
-    private static final int MIN_NUM = 10;
     protected String tag = getClass().getSimpleName() + "  ==========";
     private OnItemListener mListener;
 
@@ -90,9 +88,9 @@ public abstract class BaseRvAdapter<T>
 
     @Override
     public int getItemViewType(int position) {
-//        if (mList.size() >= MIN_NUM && position == getItemCount() - 1) {
-//            return TYPE_FOOTER;
-//        }
+        if (position == getItemCount() - 1) {
+            return TYPE_FOOTER;
+        }
         return TYPE_ITEM;
     }
 
@@ -160,10 +158,8 @@ public abstract class BaseRvAdapter<T>
 
     static class LoadMoreHolder
             extends RecyclerView.ViewHolder {
-        @BindView(R.id.pbLoad)
-        ProgressBar mPbLoad;
-        @BindView(R.id.tvLoadText)
-        TextView mTvLoadMoreStatus;
+        @BindView(R.id.tv_song_count)
+        TextView mSongCount;
         @BindView(R.id.loadLayout)
         LinearLayout mLoadLayout;
 
@@ -172,6 +168,10 @@ public abstract class BaseRvAdapter<T>
             ButterKnife.bind(this, view);
         }
 
+        public void setSongCount(int size) {
+            String count = size + R.string.songCount+"";
+            mSongCount.setText(count);
+        }
 
     }
 

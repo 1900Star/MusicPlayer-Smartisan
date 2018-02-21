@@ -1,5 +1,10 @@
 package com.yibao.music.base;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +14,7 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.RxBus;
 
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 
 /**
@@ -26,6 +32,7 @@ public class BaseActivity extends AppCompatActivity {
     public RxBus mBus;
     public MusicBeanDao mMusicDao;
     public CompositeDisposable mCompositeDisposable;
+    public Disposable mDisposable;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +41,30 @@ public class BaseActivity extends AppCompatActivity {
                 .bus();
         mMusicDao = MyApplication.getIntstance().getMusicDao();
         mCompositeDisposable = new CompositeDisposable();
+        registerHeadsetReceiver();
+    }
 
+    /**
+     * 耳机插入和拔出监听
+     */
+    private void registerHeadsetReceiver() {
+        IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        registerReceiver(headsetReciver, intentFilter);
+    }
+
+    BroadcastReceiver headsetReciver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            headsetPullOut();
+        }
+    };
+
+    protected void headsetPullOut() {
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(headsetReciver);
     }
 }

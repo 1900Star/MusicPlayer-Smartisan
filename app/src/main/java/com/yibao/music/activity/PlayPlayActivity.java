@@ -39,7 +39,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -92,12 +91,11 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
     SeekBar mSbVolume;
 
     private int mProgress = 0;
-    private Disposable mSubscribe;
+
     private int mDuration;
     private String mAlbumUrl;
     private MusicBean mCurrenMusicInfo;
     boolean isShowLyrics = false;
-    private Disposable mDisposableLyrics;
     private Unbinder mBind;
     private ObjectAnimator mAnimator;
     private MyAnimatorUpdateListener mAnimatorListener;
@@ -112,38 +110,6 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
         checkCurrentIsFavorite();
         initData();
         initListener();
-    }
-
-
-    /**
-     * 广播监听系统音量，同时更新VolumeSeekBar
-     *
-     * @param currVolume
-     */
-    @Override
-    public void updataVolumeProgresse(int currVolume) {
-        mSbVolume.setProgress(currVolume);
-    }
-
-    @Override
-    protected void updataMusicBarAndVolumeBar(SeekBar seekBar, int progress, boolean b) {
-        switch (seekBar.getId()) {
-            case R.id.sb_progress:
-                if (!b) {
-                    return;
-                }
-                //拖动音乐进度条播放
-                audioBinder.seekTo(progress);
-                //更新音乐进度数值
-                updataMusicProgress(progress);
-                break;
-            //更新音量  SeekBar
-            case R.id.sb_volume:
-                updateMusicVolume(progress);
-                break;
-            default:
-                break;
-        }
     }
 
 
@@ -218,7 +184,7 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
     protected void onResume() {
         super.onResume();
 
-        mSubscribe = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
+        mDisposablePlayTime = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
@@ -229,15 +195,10 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
 
     }
 
-    /**
-     * 停止更新
-     */
     @Override
     protected void onPause() {
         super.onPause();
-        if (mSubscribe != null) {
-            mSubscribe.dispose();
-        }
+        showLyrics();
         if (mDisposableLyrics != null) {
             mDisposableLyrics.dispose();
         }
@@ -266,13 +227,13 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
      * //接收service中的数据,更新UI。
      */
     private void initRxBusData() {
-        disposables.add(mBus.toObserverable(MusicBean.class)
+        mCompositeDisposable.add(mBus.toObserverable(MusicBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::perpareMusic));
-        //   position 用来判断触发消息的源头，0 表示从 MusicPlayDialogFag发出，
+        //   type 用来判断触发消息的源头，0 表示从 MusicPlayDialogFag发出，
         // 1 表示从通知栏的音乐控制面板发出(Services中的广播)。
-        disposables.add(mBus.toObserverable(MusicStatusBean.class)
+        mCompositeDisposable.add(mBus.toObserverable(MusicStatusBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::refreshBtnAndAnim));
@@ -438,7 +399,7 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
     }
 
 
-    //    显示歌词
+    //    显示歌词 和 屏幕常亮图标显示
 
     private void showLyrics() {
 
@@ -465,7 +426,7 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
      * 根据进度滚动歌词
      */
     private void startRollPlayLyrics() {
-        mDisposableLyrics = Observable.interval(100, TimeUnit.MILLISECONDS)
+        mDisposableLyrics = Observable.interval(50, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> mTvLyrics.rollText(audioBinder.getProgress(), audioBinder.getDuration()));
@@ -479,6 +440,37 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
                         .getBottomDialog(this));
     }
 
+    @Override
+    protected void updataMusicBarAndVolumeBar(SeekBar seekBar, int progress, boolean b) {
+        switch (seekBar.getId()) {
+            case R.id.sb_progress:
+                if (!b) {
+                    return;
+                }
+                //拖动音乐进度条播放
+                audioBinder.seekTo(progress);
+                //更新音乐进度数值
+                updataMusicProgress(progress);
+                break;
+            //更新音量  SeekBar
+            case R.id.sb_volume:
+                updateMusicVolume(progress);
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    /**
+     * 广播监听系统音量，同时更新VolumeSeekBar
+     *
+     * @param currVolume
+     */
+    @Override
+    public void updataVolumeProgresse(int currVolume) {
+        mSbVolume.setProgress(currVolume);
+    }
 
     @Override
     public void updataFavoriteStatus() {
@@ -490,12 +482,10 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        boolean allSwitch = mAnimator != null && mAnimatorListener != null && disposables != null && mSubscribe != null;
+        boolean allSwitch = mAnimator != null && mAnimatorListener != null;
         if (allSwitch) {
             mAnimatorListener.pause();
             mAnimator.cancel();
-            mSubscribe.dispose();
-            disposables.clear();
         }
         mBind.unbind();
 

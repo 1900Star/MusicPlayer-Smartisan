@@ -18,6 +18,7 @@ import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.ToastUtil;
 
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 
 /**
@@ -35,31 +36,53 @@ public abstract class BasePlayActivity extends BaseActivity {
     protected AudioManager mAudioManager;
     protected int mMaxVolume;
     protected AudioPlayService.AudioBinder audioBinder;
-    protected CompositeDisposable disposables;
+    protected CompositeDisposable mCompositeDisposable;
     private PowerManager.WakeLock mWakeLock;
     private boolean isScreenAlwaysOn;
     private VolumeReceiver mVolumeReceiver;
+    protected Disposable mDisposablePlayTime;
+    protected Disposable mDisposableLyrics;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        registerVolumeReceiver();
         init();
+        registerVolumeReceiver();
 
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        audioBinder = MusicActivity.getAudioBinder();
+
+    }
+
+    /**
+     * 停止更新
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mDisposablePlayTime != null) {
+            mDisposablePlayTime.dispose();
+        }
+
+        if (mCompositeDisposable != null) {
+            mCompositeDisposable.clear();
+        }
+    }
 
     private void init() {
-
+        audioBinder = MusicActivity.getAudioBinder();
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Music Lock");
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mMaxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
-        audioBinder = MusicActivity.getAudioBinder();
 
-        disposables = new CompositeDisposable();
+        mCompositeDisposable = new CompositeDisposable();
     }
 
 
@@ -187,14 +210,6 @@ public abstract class BasePlayActivity extends BaseActivity {
 
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        if (disposables != null) {
-            disposables.clear();
-        }
-    }
-
-    @Override
     public void finish() {
         super.finish();
         overridePendingTransition(0, R.anim.dialog_push_out);
@@ -203,6 +218,14 @@ public abstract class BasePlayActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mDisposableLyrics != null && mCompositeDisposable != null) {
+            mDisposablePlayTime.dispose();
+            mCompositeDisposable.clear();
+
+        }
+        if (mDisposableLyrics != null) {
+            mDisposableLyrics.dispose();
+        }
         unregisterReceiver(mVolumeReceiver);
     }
 }

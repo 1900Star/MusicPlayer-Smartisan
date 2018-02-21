@@ -2,38 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/loadLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/colorWhite"
+    android:layout_height="62dp"
+    android:background="@color/listBg"
     android:gravity="center"
     android:orientation="vertical">
 
-    <RelativeLayout
+
+    <TextView
+        android:id="@+id/tv_song_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center">
-
-        <ProgressBar
-            android:id="@+id/pbLoad"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:visibility="visible"
-            android:theme="@style/AppTheme" />
-
-        <!--style="?android:attr/progressBarStyleSmall"-->
-        <TextView
-            android:id="@+id/tvLoadText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/notMore"
-            android:alpha="0.6"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/about_sign"
-            android:visibility="gone" />
-    </RelativeLayout>
+        android:alpha="0.6"
+        android:gravity="center"
+        android:textColor="@color/tabbarTv"
+        android:textSize="@dimen/about_sign" />
 
 </LinearLayout>
