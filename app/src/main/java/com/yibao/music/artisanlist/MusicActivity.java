@@ -215,7 +215,7 @@ public class MusicActivity
         } else if (spMusicFlag == Constants.NUMBER_ONE) {
             return mMusicItems = mMusicDao.queryBuilder().list();
         }
-        return null;
+        return mMusicItems = mMusicDao.queryBuilder().list();
     }
 
 
@@ -846,7 +846,6 @@ public class MusicActivity
         }
 
         mCompositeDisposable.clear();
-//        unregisterReceiver(headsetReciver);
         unbindService(mConnection);
         mBind.unbind();
 
