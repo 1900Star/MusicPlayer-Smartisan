@@ -57,14 +57,12 @@ public class AlbumListDetailsFragment extends BaseFragment {
     LinearLayout mLlAlbumDetailsRandomPlay;
     @BindView(R.id.rv_artist_album_details)
     RecyclerView mRecyclerView;
-    @BindView(R.id.details_frag_content)
-    LinearLayout mDetailsContent;
     private Unbinder unbinder;
     public static String albumTag = "AlbumListDetailsFragment";
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.artist_album_details, container, false);
+        View view = inflater.inflate(R.layout.details_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         initData();
 

@@ -17,9 +17,12 @@ import android.widget.TextView;
 
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
+import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.factory.RecyclerFactory;
 import com.yibao.music.model.BottomSheetStatus;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
+import com.yibao.music.model.song.MusicFavoriteBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.StringUtil;
@@ -47,7 +50,6 @@ public class MusicBottomSheetDialog
     private List<MusicBean> mList;
     private RecyclerView mRecyclerView;
     private BottomSheetBehavior<View> mBehavior;
-
     private CompositeDisposable
             mDisposable = new CompositeDisposable();
     private RxBus
@@ -58,10 +60,10 @@ public class MusicBottomSheetDialog
         return new MusicBottomSheetDialog();
     }
 
-    public void getBottomDialog(Context context, List<MusicBean> list) {
+    public void getBottomDialog(Context context) {
         this.mContext = context;
 
-        this.mList = list;
+        this.mList = MyApplication.getIntstance().getMusicDao().queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
         BottomSheetDialog dialog = new BottomSheetDialog(context);
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.bottom_sheet_list_dialog, null);
@@ -89,6 +91,7 @@ public class MusicBottomSheetDialog
     }
 
     //    接收BottomSheetAdapter发过来的当前点击Item的Position
+
     private void rxData() {
         mDisposable.add(mBus.toObserverable(BottomSheetStatus.class)
                 .subscribeOn(Schedulers.io())
@@ -125,11 +128,18 @@ public class MusicBottomSheetDialog
     }
 
     private void clearFavoriteMusic() {
-        MyApplication.getIntstance()
-                .getDaoSession()
-                .getMusicInfoDao()
-                .deleteAll();
+        for (MusicBean musicBean : mList) {
+            musicBean.setIsFavorite(false);
+            MyApplication.getIntstance().getMusicDao()
+                    .update(musicBean);
+        }
+
         mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        MyApplication.getIntstance().bus().post(new MusicFavoriteBean());
+
+        if (mContext instanceof OnCheckFavoriteListener) {
+            ((OnCheckFavoriteListener) mContext).updataFavoriteStatus();
+        }
     }
 
     private void backTop() {
@@ -155,6 +165,7 @@ public class MusicBottomSheetDialog
         mBottomListClear = view.findViewById(R.id.bottom_sheet_bar_clear);
         mBottomListTitleSize = view.findViewById(R.id.bottom_list_title_size);
     }
+
 
 }
 

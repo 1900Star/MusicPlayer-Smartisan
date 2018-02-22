@@ -22,6 +22,9 @@ public class Constants {
     static final String MUSIC_MODE = "music_mode";
     static final String PLAY_MODE_KEY = "play_mode";
 
+    static final String MUSIC_DATA_FLAG = "music_data_flag";
+    static final String MUSIC_DATA_LIST_FLAG = "music_data_list_flag";
+
     static final String MUSIC_POSITION = "music_position";
     static final String MUSIC_ITEM_POSITION = "music_item_position";
 

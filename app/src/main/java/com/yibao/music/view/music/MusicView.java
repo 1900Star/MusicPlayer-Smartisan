@@ -63,18 +63,16 @@ public class MusicView
      *                    3  ： AlbumAdapter  普通视图  、 4  ： AlbumAdapter  平铺视图 GridView 3列
      * @param adapter
      */
-    public void setAdapter(Context context, int adapterType, RecyclerView.Adapter adapter) {
+    public void setAdapter(Context context, int adapterType, boolean isShowSlideBar, RecyclerView.Adapter adapter) {
         mSlidebar.setAdapterType(adapterType);
         if (adapterType == Constants.NUMBER_FOUR) {
             mRecyclerView.setBackgroundColor(ColorUtil.wihtle);
-            mSlidebar.setBarVisibility(Constants.NUMBER_FOUR);
             GridLayoutManager manager = new GridLayoutManager(context, Constants.NUMBER_THRRE);
             manager.setOrientation(GridLayoutManager.VERTICAL);
             mRecyclerView.setLayoutManager(manager);
             mRecyclerView.setLayoutManager(manager);
         } else {
             mRecyclerView.setBackgroundColor(ColorUtil.rvBg);
-            mSlidebar.setBarVisibility(Constants.NUMBER_ZOER);
             LinearLayoutManager manager = new LinearLayoutManager(context);
             manager.setOrientation(LinearLayoutManager.VERTICAL);
             mRecyclerView.setLayoutManager(manager);
@@ -83,12 +81,15 @@ public class MusicView
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        if (isShowSlideBar) {
+            mSlidebar.setBarVisibility(Constants.NUMBER_ZOER);
+        } else {
+            mSlidebar.setBarVisibility(Constants.NUMBER_FOUR);
 
+        }
     }
 
-    public void setSlideBarVisibility(int visibilityType) {
-        mSlidebar.setBarVisibility(visibilityType);
-    }
+
 }
 
 

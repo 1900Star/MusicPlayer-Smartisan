@@ -32,13 +32,24 @@
         </activity>
 
         <service android:name=".service.AudioPlayService" />
-        <service android:name=".service.BigServices" />
-        <service android:name=".service.MusicService" />
+        <service android:name=".service.LoadMusicDataServices" />
+
+        <activity android:name=".base.BaseActivity" />
+
 
         <activity
             android:name=".artisanlist.MusicActivity"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".album.MainActivity"></activity>
+
+        <activity
+            android:name=".activity.PlayActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".album.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
     </application>
 
 </manifest>

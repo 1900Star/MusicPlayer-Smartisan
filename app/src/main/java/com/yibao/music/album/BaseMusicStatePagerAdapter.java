@@ -41,14 +41,14 @@ public abstract class BaseMusicStatePagerAdapter extends PagerAdapter {
      * Return the Fragment associated with a specified position.
      */
     public abstract Fragment getItem(int position);
-
+    @Override
     public void startUpdate(ViewGroup container) {
         if (container.getId() == View.NO_ID) {
             throw new IllegalStateException("ViewPager with adapter " + this
                     + " requires a view id");
         }
     }
-
+    @Override
     public Object instantiateItem(ViewGroup container, int position) {
         // If we already have this item instantiated, there is nothing
         // to do.  This can happen when we are restoring the entire pager
@@ -87,6 +87,7 @@ public abstract class BaseMusicStatePagerAdapter extends PagerAdapter {
         return fragment;
     }
 
+    @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         Fragment fragment = (Fragment) object;
 
@@ -108,6 +109,7 @@ public abstract class BaseMusicStatePagerAdapter extends PagerAdapter {
         mCurTransaction.remove(fragment);
     }
 
+    @Override
     @SuppressWarnings("ReferenceEquality")
     public void setPrimaryItem(ViewGroup container, int position, Object object) {
         Fragment fragment = (Fragment) object;
@@ -124,17 +126,18 @@ public abstract class BaseMusicStatePagerAdapter extends PagerAdapter {
         }
     }
 
+    @Override
     public void finishUpdate(ViewGroup container) {
         if (mCurTransaction != null) {
             mCurTransaction.commitNowAllowingStateLoss();
             mCurTransaction = null;
         }
     }
-
+    @Override
     public boolean isViewFromObject(View view, Object object) {
         return ((Fragment) object).getView() == view;
     }
-
+    @Override
     public Parcelable saveState() {
         Bundle state = null;
         if (mSavedState.size() > 0) {
@@ -155,7 +158,7 @@ public abstract class BaseMusicStatePagerAdapter extends PagerAdapter {
         }
         return state;
     }
-
+    @Override
     public void restoreState(Parcelable state, ClassLoader loader) {
         if (state != null) {
             Bundle bundle = (Bundle) state;

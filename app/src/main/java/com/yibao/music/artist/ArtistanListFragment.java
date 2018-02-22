@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.yibao.music.R;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.view.music.MusicView;
 
 import butterknife.BindView;
@@ -31,7 +32,8 @@ public class ArtistanListFragment extends BaseFragment {
     @BindView(R.id.artist_music_view)
     MusicView mMusicView;
     private Unbinder unbinder;
-//    private ArrayList<ArtistInfo> mArtistList;
+    private ArtistAdapter mAdapter;
+    //    private ArrayList<ArtistInfo> mArtistList;
 
 
     @Nullable
@@ -48,12 +50,12 @@ public class ArtistanListFragment extends BaseFragment {
 
 
     private void initListener() {
-//
+        mAdapter.setItemListener(() -> LogUtil.d("=================ArtistanLIstFragment===item============="));
     }
 
     private void initData() {
-        ArtistAdapter adapter = new ArtistAdapter(getActivity(), mArtistList);
-        mMusicView.setAdapter(getActivity(), Constants.NUMBER_TWO, adapter);
+        mAdapter = new ArtistAdapter(getActivity(), mArtistList);
+        mMusicView.setAdapter(getActivity(), Constants.NUMBER_TWO, true, mAdapter);
 
 
     }
@@ -68,4 +70,5 @@ public class ArtistanListFragment extends BaseFragment {
         super.onDestroyView();
         unbinder.unbind();
     }
+
 }

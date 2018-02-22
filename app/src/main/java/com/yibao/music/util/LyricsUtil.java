@@ -87,13 +87,12 @@ public class LyricsUtil {
         boolean containsChinese = isContainsEnglishAndChinese(s);
         String braces = "[";
         if (containsChinese) {
-            LogUtil.d("============== 歌词时间解析异常！ 有中英文 ================");
+            LogUtil.d("============== 歌词时间解析异常！================");
             return 0;
         } else {
             String[] arr = s.split(":");
             String min = arr[0].substring(1);
             if (min.contains(braces)) {
-                LogUtil.d("============== 歌词时间解析异常！ 有 “[”================");
                 min = "00";
             }
             String sec = arr[1];

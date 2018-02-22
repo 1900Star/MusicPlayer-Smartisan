@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.squareup.leakcanary.LeakCanary;
 import com.yibao.music.model.greendao.DaoMaster;
 import com.yibao.music.model.greendao.DaoSession;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.CrashHandler;
 import com.yibao.music.util.RxBus;
 
@@ -13,6 +14,7 @@ import com.yibao.music.util.RxBus;
  * 作者：Stran on 2017/3/23 15:12
  * 描述：${TODO}
  * 邮箱：strangermy@outlook.com
+ *
  * @author Stran
  */
 public class MyApplication
@@ -45,19 +47,20 @@ public class MyApplication
                 .init(this);
         setUpDataBase();
         mRxBus = new RxBus();
-
     }
 
     private void setUpDataBase() {
         DaoMaster.DevOpenHelper mHelper = new DaoMaster.DevOpenHelper(this, "favorite-db", null);
         SQLiteDatabase db = mHelper.getWritableDatabase();
-        DaoMaster mMaster = new DaoMaster(db);
-        mDaoSession = mMaster.newSession();
+        DaoMaster daoMaster = new DaoMaster(db);
+        mDaoSession = daoMaster.newSession();
 
     }
 
-    public DaoSession getDaoSession() {
-        return mDaoSession;
+    public MusicBeanDao getMusicDao() {
+
+        return mDaoSession.getMusicBeanDao();
+
     }
 
 

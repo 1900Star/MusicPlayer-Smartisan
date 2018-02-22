@@ -11,7 +11,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="52dp"
         android:background="@drawable/titlebar_playing_bg">
 
         <ImageView
@@ -38,21 +38,23 @@
                 android:id="@+id/play_song_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="marquee"
+                android:ellipsize="end"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:maxLength="18"
+                android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/colorBlack"
-                android:textSize="16sp" />
+                android:textSize="@dimen/bigLyrics" />
 
             <TextView
                 android:id="@+id/play_artist_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
+                android:ellipsize="end"
                 android:maxLength="18"
+                android:maxLines="1"
                 android:singleLine="true"
+                android:textSize="@dimen/about_sign"
                 android:textColor="@color/aboutSign" />
         </LinearLayout>
 

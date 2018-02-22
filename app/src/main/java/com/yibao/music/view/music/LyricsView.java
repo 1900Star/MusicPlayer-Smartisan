@@ -10,14 +10,16 @@ import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.model.MusicLyrBean;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 
 import java.util.ArrayList;
 
 /**
  * Author：Sid
- * Des：${自定义歌词View
+ * Des：${自定义歌词View}
  * Time:2017/9/14 01:16
+ *
  * @author Stran
  */
 public class LyricsView
@@ -36,7 +38,6 @@ public class LyricsView
     private int lineHeight;
     private int duration;
     private int progress;
-    private float mFirstDown;
 
     public LyricsView(Context context) {
         super(context);
@@ -78,10 +79,12 @@ public class LyricsView
         mViewH = h;
     }
 
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (mList == null || mList.size() == 1 || mList.size() == 0) {
+
             drawSingLine(canvas);
         } else {
             drawMunitLine(canvas);
@@ -90,7 +93,7 @@ public class LyricsView
     }
 
     /**
-     * 核心代码逻辑，绘制多行歌词。
+     * 绘制多行歌词。
      *
      * @param canvas
      */
@@ -99,7 +102,7 @@ public class LyricsView
         int lineTime;
         //        最后一行居中
         if (centerLine == mList.size() - 1) {
-            //            行可用时间 = 总进度 - 行开始时间
+            //     行可用时间 = 总进度 - 行开始时间
             lineTime = duration - mList.get(centerLine)
                     .getStartTime();
         } else {
@@ -147,7 +150,7 @@ public class LyricsView
     }
 
     /**
-     * 根据播放时间，将已经播放的歌词滚动出屏幕。
+     * 根据播放时间滚动歌词，将已经播放的歌词滚动出屏幕。
      *
      * @param progress
      * @param duration
@@ -156,6 +159,7 @@ public class LyricsView
         if (mList == null || mList.size() == 0) {
             return;
         }
+        LogUtil.d("==================正在滚动歌词");
         this.progress = progress;
         this.duration = duration;
         int startTime = mList.get(mList.size() - 1)
@@ -177,10 +181,9 @@ public class LyricsView
         invalidate();
     }
 
-
     /**
+     * 根据歌曲名和歌手名查找歌词，并将歌词解析到List里。
      *
-     *    根据歌曲名和歌手名查找歌词，并将歌词解析到List里。
      * @param songName
      * @param artist
      */
@@ -201,4 +204,7 @@ public class LyricsView
         float y = mViewH / 2 + bounds.height() / 2;
         canvas.drawText(mCurrentLrc, 0, mCurrentLrc.length(), x, y, mPaint);
     }
+
+
+
 }

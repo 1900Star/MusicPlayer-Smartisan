@@ -1,7 +1,5 @@
 package com.yibao.music.album;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -56,6 +54,7 @@ public class AlbumFragment extends BaseFragment {
 
 
     private Unbinder unbinder;
+    private AlbumAdapter mAdapter;
 
 
     @Nullable
@@ -63,39 +62,24 @@ public class AlbumFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.album_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
-        initData(Constants.NUMBER_ZOER, Constants.NUMBER_THRRE);
-        initListener();
+        initData(Constants.NUMBER_ZOER, true, Constants.NUMBER_THRRE);
         return view;
     }
 
-    private void initListener() {
 
 
-    }
-
-    private void openDetailsFragment() {
-        AlbumListDetailsFragment fragment = (AlbumListDetailsFragment) getChildFragmentManager().findFragmentById(R.id.details_frag_content);
-        if (fragment == null) {
-            fragment = AlbumListDetailsFragment.newInstance();
-            FragmentManager manager = getChildFragmentManager();
-            FragmentTransaction ft = manager.beginTransaction();
-            ft.add(R.id.album_frag_content, fragment);
-            ft.addToBackStack(null);
-            ft.commit();
-        }
-
-    }
 
     /**
      * 加载列表
      *
      * @param adapterShowType       普通视图显示  和 GridView视图显示  ( 3 列 )
+     * @param isShowSlideBar        是否显示SlideBar
      * @param adapterAndManagerType RecyclerView的Manager ，3 == LinearLayoutManager
      *                              4 == GridLayoutManager
      */
-    private void initData(int adapterShowType, int adapterAndManagerType) {
-        AlbumAdapter albumAdapter = new AlbumAdapter(mActivity, mAlbumList, adapterShowType);
-        mAlbumMusicView.setAdapter(mActivity, adapterAndManagerType, albumAdapter);
+    private void initData(int adapterShowType, boolean isShowSlideBar, int adapterAndManagerType) {
+        mAdapter = new AlbumAdapter(mActivity, mAlbumList, adapterShowType);
+        mAlbumMusicView.setAdapter(mActivity, adapterAndManagerType, isShowSlideBar, mAdapter);
     }
 
 
@@ -104,19 +88,18 @@ public class AlbumFragment extends BaseFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_album_category_random_paly:
-                openDetailsFragment();
+
                 LogUtil.d("=================randomplay");
                 break;
             case R.id.iv_album_category_paly:
-                openDetailsFragment();
                 break;
             case R.id.album_category_list_ll:
                 switchCategory(Constants.NUMBER_ZOER);
-                initData(Constants.NUMBER_ZOER, Constants.NUMBER_THRRE);
+                initData(Constants.NUMBER_ZOER, true, Constants.NUMBER_THRRE);
                 break;
             case R.id.album_category_tile_ll:
                 switchCategory(Constants.NUMBER_ONE);
-                initData(Constants.NUMBER_ONE, Constants.NUMBER_FOUR);
+                initData(Constants.NUMBER_ONE, false, Constants.NUMBER_FOUR);
                 break;
             default:
                 break;
@@ -160,7 +143,6 @@ public class AlbumFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        LogUtil.d("=========AlbumFragment destroyView =============");
         unbinder.unbind();
 
     }

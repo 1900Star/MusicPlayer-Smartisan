@@ -1,6 +1,5 @@
 package com.yibao.music.util;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
@@ -30,7 +29,7 @@ public class MusicListUtil {
      *
      * @return
      */
-    public static ArrayList<MusicBean> getMusicDataList(Context context) {
+    public static ArrayList<MusicBean> getMusicDataList() {
         ArrayList<MusicBean> musicInfos = new ArrayList<>();
         Cursor cursor = MyApplication.getIntstance().getApplicationContext().getContentResolver()
                 .query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -79,11 +78,13 @@ public class MusicListUtil {
                 info.setDuration(duration);
                 info.setAddTime(addTime);
                 info.setSongUrl(url);
+//                MyApplication.getIntstance().getDaoSession().getMusicBeanDao().insert(info);
                 musicInfos.add(info);
             }
         }
         cursor.close();
         Collections.sort(musicInfos);
+        LogUtil.d("musicUtil ========== " + musicInfos.size());
         return musicInfos;
     }
 
@@ -92,7 +93,7 @@ public class MusicListUtil {
      *
      * @param musicList
      */
-    public static void sortMusicAddtime(ArrayList<MusicBean> musicList) {
+    public static ArrayList<MusicBean> sortMusicAddtime(ArrayList<MusicBean> musicList) {
         Collections.sort(musicList, (m1, m2) -> {
             if (m1 == m2) {
                 return 0;
@@ -115,7 +116,7 @@ public class MusicListUtil {
             // Warning, this line is not fool proof as unequal objects can have identical hash codes.
             return m1.hashCode() - m2.hashCode();
         });
-
+        return musicList;
     }
 
     /**
@@ -123,7 +124,7 @@ public class MusicListUtil {
      *
      * @param musicList
      */
-    public static void sortMusicAbc(ArrayList<MusicBean> musicList) {
+    public static ArrayList<MusicBean> sortMusicAbc(ArrayList<MusicBean> musicList) {
         String str = "#";
         Collections.sort(musicList, (m1, m2) -> {
             if (str.equals(m2.getFirstChar())) {
@@ -134,7 +135,7 @@ public class MusicListUtil {
             }
             return m1.getFirstChar().compareTo(m2.getFirstChar());
         });
-
+        return musicList;
     }
 
 

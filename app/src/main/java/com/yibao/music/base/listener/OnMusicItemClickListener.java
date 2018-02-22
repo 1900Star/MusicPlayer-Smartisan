@@ -5,8 +5,11 @@ package com.yibao.music.base.listener;
  * Des：${TODO}
  * Time:2017/5/14 09:49
  */
-public interface OnMusicListItemClickListener {
+public interface OnMusicItemClickListener {
+
     void startMusicService(int position);
+
     void onOpenMusicPlayDialogFag();
-    void onOpenAlbumDetailsFragment(String s);
+
+
 }

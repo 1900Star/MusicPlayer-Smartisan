@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/seekBarN"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/seekBarN"
+    android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@drawable/titlebar_playing_bg"
-            android:layout_gravity="center"
-           >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:background="@drawable/titlebar_playing_bg">
 
-            <TextView
-                android:id="@+id/bottom_sheet_bar_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:text="@string/play_all"
-                android:textColor="@color/textDes"
-                android:textSize="14sp"
-            />
-            <TextView
-                android:id="@+id/bottom_list_title_size"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_centerVertical="true"
-                android:textColor="@color/textDes"
-                android:textSize="16sp"
-            />
-            <TextView
-                android:id="@+id/bottom_sheet_bar_clear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/bottom_sheet_bar_play"
-                android:layout_alignBottom="@+id/bottom_sheet_bar_play"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginEnd="12dp"
-                android:layout_marginRight="12dp"
-                android:text="@string/clearAllFavorite"
-                android:textColor="@color/textDes"
-                android:textSize="14sp"/>
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/bottom_sheet_bar_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:text="@string/play_all"
+            android:textColor="@color/text_bottom_dialog_selector"
+            android:textSize="@dimen/bigLyrics" />
+
+        <TextView
+            android:id="@+id/bottom_list_title_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/text_bottom_dialog_selector"
+            android:textSize="@dimen/bigLyrics" />
+
+        <TextView
+            android:id="@+id/bottom_sheet_bar_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/bottom_sheet_bar_play"
+            android:layout_alignBottom="@+id/bottom_sheet_bar_play"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="12dp"
+            android:layout_marginRight="12dp"
+            android:text="@string/clearAllFavorite"
+            android:textColor="@color/text_bottom_dialog_selector"
+            android:textSize="@dimen/bigLyrics" />
+    </RelativeLayout>
+
     <LinearLayout
-        android:layout_marginTop="0.2dp"
         android:id="@+id/bottom_list_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="0.2dp"
         android:layout_weight="1"
         android:orientation="vertical">
 

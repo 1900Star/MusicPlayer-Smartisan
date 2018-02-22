@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/music_song"
-                android:textColor="@color/textDes"
+                android:textColor="@color/music_activity_title_selector"
                 android:textSize="@dimen/big_tv" />
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
@@ -41,26 +41,28 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/about" />
+        android:layout_height="0.2dp"
+        android:background="@color/listBg" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical">
-
-        <include layout="@layout/muisc_tabbar_qq" />
+        android:layout_height="58dp">
 
         <include layout="@layout/music_tabbar_smartisan" />
 
+        <include
+            layout="@layout/muisc_tabbar_qq"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/about" />
+        android:layout_height="0.2dp"
+        android:background="@color/listBg" />
+
 
     <include layout="@layout/music_tabbar" />
+
 
 </LinearLayout>

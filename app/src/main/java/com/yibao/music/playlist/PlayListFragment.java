@@ -1,5 +1,6 @@
 package com.yibao.music.playlist;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -42,38 +43,59 @@ public class PlayListFragment extends BaseFragment {
     @BindView(R.id.recycler_view_play_list)
     RecyclerView mRecyclerViewPlayList;
     private Unbinder unbinder;
+    private PlayListAdapter mAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.play_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
-        initListener();
         initData();
+        initListener();
 
         return view;
     }
 
     private void initListener() {
+        mAdapter.setItemListener(() -> {
+            LogUtil.d("=========playlist==========");
 
+            AlbumListDetailsFragment detailsFragment = (AlbumListDetailsFragment) getFragmentManager().findFragmentById(R.id.album_details_content);
+            if (detailsFragment == null) {
+                detailsFragment = new AlbumListDetailsFragment();
+            }
+            PlayListFragment.this.addFragment(new AlbumListDetailsFragment());
+
+        });
+    }
+
+
+
+    private void addFragment(Fragment fragment) {
+        FragmentManager manager = getActivity().getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.add(R.id.play_list_frag_content, fragment, "A");
+        transaction.addToBackStack("a");
+        transaction.commit();
     }
 
     private void initData() {
         ArrayList<ArtistInfo> list = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        int number = 20;
+        for (int i = 1; i < number; i++) {
             ArtistInfo artistInfo = new ArtistInfo();
             artistInfo.setName(i + " Smartisan");
             artistInfo.setSongCount(i);
             list.add(artistInfo);
         }
 
-        PlayListAdapter playListAdapter = new PlayListAdapter(list);
+        mAdapter = new PlayListAdapter(list);
         LinearLayoutManager manager = new LinearLayoutManager(MyApplication.getIntstance());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerViewPlayList.setLayoutManager(manager);
         mRecyclerViewPlayList.setHasFixedSize(true);
-        mRecyclerViewPlayList.setAdapter(playListAdapter);
-        playListAdapter.notifyDataSetChanged();
+        mRecyclerViewPlayList.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
     }
 
     @OnClick(R.id.ll_add_new_play_list)
@@ -82,16 +104,7 @@ public class PlayListFragment extends BaseFragment {
             // 打开新建播放列表的Dialog
             case R.id.ll_add_new_play_list:
                 LogUtil.d("================新建播放列表=============");
-                AlbumListDetailsFragment fragment = (AlbumListDetailsFragment) getChildFragmentManager().findFragmentById(R.id.details_frag_content);
-                if (fragment == null) {
-                    mLlAddNewPlayList.setVisibility(View.GONE);
-                    fragment = AlbumListDetailsFragment.newInstance();
-                    FragmentManager manager = getChildFragmentManager();
-                    FragmentTransaction ft = manager.beginTransaction();
-                    ft.replace(R.id.play_list_frag_content, fragment, null);
-                    ft.addToBackStack(AlbumListDetailsFragment.albumTag);
-                    ft.commit();
-                }
+
 
                 break;
             default:
@@ -103,9 +116,11 @@ public class PlayListFragment extends BaseFragment {
         return new PlayListFragment();
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
+
 }

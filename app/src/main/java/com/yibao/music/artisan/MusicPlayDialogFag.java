@@ -2,6 +2,7 @@ package com.yibao.music.artisan;
 
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +13,6 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -29,7 +29,6 @@ import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.SeekBarChangeListtener;
 import com.yibao.music.dialogfrag.TopBigPicDialogFragment;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicDialogInfo;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.service.AudioPlayService;
@@ -43,7 +42,6 @@ import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.LyricsView;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -81,18 +79,17 @@ public class MusicPlayDialogFag
     private CompositeDisposable disposables;
     private ObjectAnimator mAnimator;
     private MyAnimatorUpdateListener mAnimatorListener;
-    private boolean isFavorite;
-    private int mProgress = 0;
-    private Disposable mSubscribe;
     private SeekBar mSbProgress;
     private SeekBar mSbVolume;
+    private ImageView mIvLyrSwitch;
+    private int mProgress = 0;
+    private Disposable mSubscribe;
     private AudioManager mAudioManager;
     private int mDuration;
     private RxBus mBus;
     private String mAlbumUrl;
     private MusicBean mCurrenMusicInfo;
     private MusicBeanDao mInfoDao;
-    private ImageView mIvLyrSwitch;
     boolean isShowLyrics = false;
     private LyricsView mLyricsView;
     private Disposable mDisposableLyrics;
@@ -113,9 +110,7 @@ public class MusicPlayDialogFag
         mBus = MyApplication.getIntstance()
                 .bus();
         disposables = new CompositeDisposable();
-        mInfoDao = MyApplication.getIntstance()
-                .getDaoSession()
-                .getMusicBeanDao();
+        mInfoDao = MyApplication.getIntstance().getMusicDao();
         //注册音量监听广播
         registerVolumeReceiver();
     }
@@ -131,24 +126,18 @@ public class MusicPlayDialogFag
 
     }
 
-    private void checkCurrentIsFavorite() {
-        List<MusicBean> list = mInfoDao.queryBuilder()
-                .where(MusicBeanDao.Properties.Title.eq(mCurrenMusicInfo.getTitle()))
-                .build()
-                .list();
-        if (list.size() == 0) {
-            mIvMusicFavorite.setImageResource(R.drawable.music_favorite_selector);
-            isFavorite = false;
-        } else {
+    public void checkCurrentIsFavorite() {
 
+        if (mCurrenMusicInfo.isFavorite()) {
             mIvMusicFavorite.setImageResource(R.mipmap.favorite_yes);
-            isFavorite = true;
+        } else {
+            mIvMusicFavorite.setImageResource(R.drawable.music_favorite_selector);
+
         }
     }
 
     private void initSongInfo() {
-        MusicDialogInfo info = getArguments().getParcelable("info");
-        mCurrenMusicInfo = info.getInfo();
+        mCurrenMusicInfo = getArguments().getParcelable("info");
         mSongName.setText(mCurrenMusicInfo.getTitle());
         mArtistName.setText(mCurrenMusicInfo.getArtist());
         mLyricsView.setLrcFile(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
@@ -431,7 +420,7 @@ public class MusicPlayDialogFag
 
     /**
      * 打开歌词时，可以保持屏幕常亮
-     * 屏幕常亮设置为30分钟
+     * 屏幕常亮默认设置为30分钟
      */
     private void screenAlwaysOnSwitch() {
         if (isScreenAlwaysOn) {
@@ -473,6 +462,9 @@ public class MusicPlayDialogFag
 
     }
 
+    /**
+     * 根据进度滚动歌词
+     */
     private void startPlayLyrics() {
         if (mDisposableLyrics == null) {
 
@@ -485,17 +477,19 @@ public class MusicPlayDialogFag
     }
 
     private void favoritMusic() {
-        if (isFavorite) {
-            mInfoDao.delete(mCurrenMusicInfo);
+        if (mCurrenMusicInfo.isFavorite()) {
+            mCurrenMusicInfo.setIsFavorite(false);
+            mInfoDao.update(mCurrenMusicInfo);
+
             mIvMusicFavorite.setImageResource(R.drawable.music_favorite_selector);
-            isFavorite = false;
 
         } else {
             String time = StringUtil.getCurrentTime();
             mCurrenMusicInfo.setTime(time);
-            mInfoDao.insert(mCurrenMusicInfo);
+            mCurrenMusicInfo.setIsFavorite(true);
+            mInfoDao.update(mCurrenMusicInfo);
+
             mIvMusicFavorite.setImageResource(R.mipmap.favorite_yes);
-            isFavorite = true;
 
         }
     }
@@ -539,14 +533,8 @@ public class MusicPlayDialogFag
 
         RxView.clicks(mTitlebarPlayList)
                 .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> {
-                    List<MusicBean> list = mInfoDao.queryBuilder()
-                            .build()
-                            .list();
-                    MusicBottomSheetDialog.newInstance()
-                            .getBottomDialog(getActivity(), list);
-
-                });
+                .subscribe(o -> MusicBottomSheetDialog.newInstance()
+                        .getBottomDialog(getActivity()));
 
 
     }
@@ -573,7 +561,7 @@ public class MusicPlayDialogFag
     }
 
 
-    public static MusicPlayDialogFag newInstance(MusicDialogInfo info) {
+    public static MusicPlayDialogFag newInstance(MusicBean info) {
         MusicPlayDialogFag fragment = new MusicPlayDialogFag();
         Bundle bundle = new Bundle();
         bundle.putParcelable("info", info);
@@ -594,7 +582,9 @@ public class MusicPlayDialogFag
             mDisposableLyrics.dispose();
         }
         getActivity().unregisterReceiver(mVolumeReceiver);
+        dismiss();
     }
+
 
     private class SeekBarListener
             extends SeekBarChangeListtener {

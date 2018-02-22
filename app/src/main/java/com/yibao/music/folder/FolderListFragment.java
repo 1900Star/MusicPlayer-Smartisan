@@ -59,4 +59,5 @@ public class FolderListFragment extends BaseFragment {
         super.onDestroyView();
         unbinder.unbind();
     }
+
 }

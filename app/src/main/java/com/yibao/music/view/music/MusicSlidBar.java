@@ -88,7 +88,7 @@ public class MusicSlidBar
         mTvPaint.setFakeBoldText(true);
         mTvPaint.setStyle(Paint.Style.FILL);
 
-
+        // 画选中时的圆形背景
         mCirclePaint = new Paint();
         mCirclePaint.setAntiAlias(true);
         mCirclePaint.setColor(Color.TRANSPARENT);
@@ -102,7 +102,10 @@ public class MusicSlidBar
         super.onSizeChanged(w, h, oldw, oldh);
 
         viewW = w;
-        singleHeight = h / (names.length + 1);
+        //最后加2是为了取一个合适的绘制高度导，使航栏能够完整显示 ，
+        // 防止出现高度不够或者最后一个字符与底部距离过大
+        // 比如最下面的(Z 和 #)，不同尺寸的设备可能会有不同，根据情况调整。
+        singleHeight = h / (names.length + 1) + 2;
     }
 
 
@@ -113,6 +116,7 @@ public class MusicSlidBar
             if (i == 0) {
                 mTvPaint.setColor(Color.GRAY);
             } else if (i == mIndex) {
+//                mTvPaint.setColor(Color.WHITE);
                 mTvPaint.setColor(Color.parseColor("#E64040"));
 
                 canvas.drawCircle(viewW / 2,
@@ -125,14 +129,31 @@ public class MusicSlidBar
             }
             Paint.FontMetrics metrics = mTvPaint.getFontMetrics();
 
-            //singleHeight * (i + 1) 加1是为了导航栏能够完整显示 ，
-            // 比如最下面的(Z 和 #)，不同尺寸的设备可能会有不同，可能 会加2 或者加3，根据情况调整
+
             canvas.drawText(names[i],
                     viewW / 2,
                     i * singleHeight + singleHeight / 2 + metrics.bottom,
                     mTvPaint);
-            //                canvas.drawText(names[i], viewW / 2, singleHeight * (i + 1), mTvPaint);
 
+        }
+    }
+
+
+    /**
+     * 设置Adapter的类型 1 : SongListAdapter  、 2  ：ArtistAdapter  、
+     * 3  ： AlbumAdapter  普通视图  、 4  ： AlbumAdapter  平铺视图 GridView3列
+     *
+     * @param type
+     */
+    public void setAdapterType(int type) {
+        this.adapterType = type;
+    }
+
+    public void setBarVisibility(int visibilityType) {
+        if (visibilityType == Constants.NUMBER_ZOER) {
+            setVisibility(View.VISIBLE);
+        } else if (visibilityType == Constants.NUMBER_FOUR) {
+            setVisibility(View.INVISIBLE);
         }
     }
 
@@ -205,6 +226,7 @@ public class MusicSlidBar
 
     }
 
+
     private void initView() {
         // 获取父容器
         FrameLayout parent = (FrameLayout) getParent();
@@ -217,20 +239,6 @@ public class MusicSlidBar
         }
     }
 
-    /**
-     * 设置Adapter的类型 1 : SongListAdapter  、 2  ：ArtistAdapter  、
-     * 3  ： AlbumAdapter  普通视图  、 4  ： AlbumAdapter  平铺视图 GridView3列
-     *
-     * @param type Adapter的类型
-     */
-    public void setAdapterType(int type) {
-        this.adapterType = type;
-    }
-
-
-    public void setBarVisibility(int visibilityType) {
-        setVisibility(visibilityType);
-    }
 
     public int dip2px(float dpValue) {
         final float scale = mContext.getResources()

@@ -6,6 +6,7 @@ import java.util.List;
  * Author：Sid
  * Des：${TODO}
  * Time:2017/9/8 00:24
+ * @author Stran
  */
 public interface MusicDataSource {
 

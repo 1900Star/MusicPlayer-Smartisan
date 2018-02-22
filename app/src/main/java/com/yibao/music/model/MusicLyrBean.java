@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
  * Author：Sid
  * Des：${TODO}
  * Time:2017/9/14 00:58
+ * @author Stran
  */
 public class MusicLyrBean
         implements Comparable<MusicLyrBean> {

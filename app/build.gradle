@@ -47,12 +47,14 @@ android {
             shrinkResources true
             zipAlignEnabled true
             debuggable false
+            buildConfigField "boolean", "SHOW_LOG", "Boolean.parseBoolean(\"false\")"
         }
 
         debug {
             zipAlignEnabled false
             minifyEnabled false
             debuggable true
+            buildConfigField "boolean", "SHOW_LOG", "Boolean.parseBoolean(\"true\")"
         }
     }
 

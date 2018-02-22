@@ -39,6 +39,9 @@ public class SplashActivity
         setContentView(R.layout.activity_splash);
         mBind = ButterKnife.bind(this);
         SystemUiVisibilityUtil.hideStatusBar(getWindow(), true);
+//        startService(new Intent(this, LoadMusicDataServices.class));
+
+
         Observable.timer(400, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -47,7 +50,7 @@ public class SplashActivity
                             MusicActivity.class));
                     finish();
                 });
-
+//
     }
 
 

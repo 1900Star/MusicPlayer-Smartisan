@@ -23,8 +23,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:enabled="true"
+            android:focusable="true"
             android:text="@string/add_new_play_list"
-            android:textColor="@color/text_add_lit_selector"
+            android:textColor="@color/text_add_list_selector"
             android:textSize="@dimen/about_sign" />
 
     </LinearLayout>
@@ -37,8 +38,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_play_list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="match_parent" />
 
 
 </LinearLayout>

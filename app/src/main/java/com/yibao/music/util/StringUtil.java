@@ -38,7 +38,12 @@ public class StringUtil {
         }
     }
 
-
+    /**
+     * 返回专辑图片地址
+     *
+     * @param albulmId
+     * @return
+     */
     public static Uri getAlbulm(Long albulmId) {
 
         return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"),

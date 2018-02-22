@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
@@ -29,11 +28,10 @@ public abstract class BaseRvAdapter<T>
         extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements SectionIndexer
 
 {
-    protected  List<T> mList = null;
+    protected List<T> mList = null;
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_FOOTER = 1;
-    private static final int MIN_NUM = 10;
-    protected String tag = getClass().getSimpleName() + "  ==========";
+    private OnItemListener mListener;
 
     public BaseRvAdapter(List<T> list) {
         mList = list;
@@ -42,7 +40,6 @@ public abstract class BaseRvAdapter<T>
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
-
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(getLayoutId(), parent, false);
             return getViewHolder(view);
@@ -57,9 +54,21 @@ public abstract class BaseRvAdapter<T>
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
         bindView(holder, mList.get(position));
+        if (holder instanceof LoadMoreHolder) {
+            LoadMoreHolder moreHolder = (LoadMoreHolder) holder;
+            String count = (mList.size() - 1) + getLastItemDes();
+            moreHolder.mSongCount.setText(count);
+        }
     }
+
+    /**
+     * 获取列表的类型，根据类型设置最后一个item的文字内容。
+     *
+     * @return
+     */
+
+    protected abstract String getLastItemDes();
 
     /**
      * 具体的视图数据绑定交给子类去做
@@ -70,7 +79,7 @@ public abstract class BaseRvAdapter<T>
     protected abstract void bindView(RecyclerView.ViewHolder holder, T t);
 
     /**
-     * 根据子类提供的布局ID得到一个RecyclerView的Item视图，并将视图交给子类得到一个ViewHolder
+     * 根据子类提供的布局ID得到一个RecyclerView的Item视图，并将视图交给子类的ViewHolder
      *
      * @param view 当前RecyclerView的Item视图
      * @return
@@ -89,7 +98,7 @@ public abstract class BaseRvAdapter<T>
 
     @Override
     public int getItemViewType(int position) {
-        if (mList.size() >= MIN_NUM && position == getItemCount() - 1) {
+        if (position == getItemCount() - 1) {
             return TYPE_FOOTER;
         }
         return TYPE_ITEM;
@@ -136,7 +145,6 @@ public abstract class BaseRvAdapter<T>
     }
 
 
-
     @Override
     public Object[] getSections() {
         return new Object[0];
@@ -160,10 +168,8 @@ public abstract class BaseRvAdapter<T>
 
     static class LoadMoreHolder
             extends RecyclerView.ViewHolder {
-        @BindView(R.id.pbLoad)
-        ProgressBar mPbLoad;
-        @BindView(R.id.tvLoadText)
-        TextView mTvLoadMoreStatus;
+        @BindView(R.id.tv_song_count)
+        TextView mSongCount;
         @BindView(R.id.loadLayout)
         LinearLayout mLoadLayout;
 
@@ -203,5 +209,23 @@ public abstract class BaseRvAdapter<T>
         }
     }
 
+    /**
+     * Item的点击事件
+     */
+    protected void openDetails() {
+        if (mListener != null) {
+            mListener.showDetailsView();
+        }
+    }
 
+    public void setItemListener(OnItemListener listener) {
+        this.mListener = listener;
+    }
+
+    public interface OnItemListener {
+        /**
+         * 打开列表详情
+         */
+        void showDetailsView();
+    }
 }

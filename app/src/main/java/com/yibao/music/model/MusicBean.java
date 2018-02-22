@@ -5,9 +5,9 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Transient;
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Author：Sid
@@ -30,6 +30,9 @@ public class MusicBean
     private String time;
     private String songUrl;
     private String firstChar;
+    private boolean isFavorite;
+    private int playFrequency;
+    private int songScore;
     private int playStatus;
     @Transient
     private int cureetPosition;
@@ -48,16 +51,23 @@ public class MusicBean
         artist = in.readString();
         album = in.readString();
         albumId = in.readLong();
+        addTime = in.readLong();
+        duration = in.readLong();
         time = in.readString();
         songUrl = in.readString();
+        firstChar = in.readString();
+        isFavorite = in.readByte() != 0;
+        playFrequency = in.readInt();
+        songScore = in.readInt();
         playStatus = in.readInt();
         cureetPosition = in.readInt();
     }
 
-    @Generated(hash = 2071019748)
+    @Generated(hash = 1382698824)
     public MusicBean(Long id, String title, String artist, String album,
             long albumId, long addTime, long duration, String time, String songUrl,
-            String firstChar, int playStatus) {
+            String firstChar, boolean isFavorite, int playFrequency, int songScore,
+            int playStatus) {
         this.id = id;
         this.title = title;
         this.artist = artist;
@@ -68,9 +78,11 @@ public class MusicBean
         this.time = time;
         this.songUrl = songUrl;
         this.firstChar = firstChar;
+        this.isFavorite = isFavorite;
+        this.playFrequency = playFrequency;
+        this.songScore = songScore;
         this.playStatus = playStatus;
     }
-
 
     public static final Creator<MusicBean> CREATOR = new Creator<MusicBean>() {
         @Override
@@ -124,6 +136,22 @@ public class MusicBean
         this.albumId = albumId;
     }
 
+    public long getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(long addTime) {
+        this.addTime = addTime;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
     public String getTime() {
         return time;
     }
@@ -138,6 +166,38 @@ public class MusicBean
 
     public void setSongUrl(String songUrl) {
         this.songUrl = songUrl;
+    }
+
+    public String getFirstChar() {
+        return firstChar;
+    }
+
+    public void setFirstChar(String firstChar) {
+        this.firstChar = firstChar;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
+    public int getPlayFrequency() {
+        return playFrequency;
+    }
+
+    public void setPlayFrequency(int playFrequency) {
+        this.playFrequency = playFrequency;
+    }
+
+    public int getSongScore() {
+        return songScore;
+    }
+
+    public void setSongScore(int songScore) {
+        this.songScore = songScore;
     }
 
     public int getPlayStatus() {
@@ -157,6 +217,7 @@ public class MusicBean
     }
 
 
+
     @Override
     public int compareTo(@NonNull MusicBean musicBean) {
         String str = "#";
@@ -169,31 +230,6 @@ public class MusicBean
             return 1;
         }
         return firstChar.compareTo(musicBean.getFirstChar());
-    }
-
-
-    public String getFirstChar() {
-        return this.firstChar;
-    }
-
-    public void setFirstChar(String firstChar) {
-        this.firstChar = firstChar;
-    }
-
-    public long getAddTime() {
-        return this.addTime;
-    }
-
-    public void setAddTime(long addTime) {
-        this.addTime = addTime;
-    }
-
-    public long getDuration() {
-        return this.duration;
-    }
-
-    public void setDuration(long duration) {
-        this.duration = duration;
     }
 
 
@@ -219,7 +255,18 @@ public class MusicBean
         parcel.writeString(time);
         parcel.writeString(songUrl);
         parcel.writeString(firstChar);
+        parcel.writeByte((byte) (isFavorite ? 1 : 0));
+        parcel.writeInt(playFrequency);
+        parcel.writeInt(songScore);
         parcel.writeInt(playStatus);
         parcel.writeInt(cureetPosition);
+    }
+
+    public boolean getIsFavorite() {
+        return this.isFavorite;
+    }
+
+    public void setIsFavorite(boolean isFavorite) {
+        this.isFavorite = isFavorite;
     }
 }

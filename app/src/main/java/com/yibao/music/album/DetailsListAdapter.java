@@ -32,6 +32,11 @@ public class DetailsListAdapter extends BaseRvAdapter<ArtistInfo> {
     }
 
     @Override
+    protected String getLastItemDes() {
+        return " 首歌";
+    }
+
+    @Override
     protected void bindView(RecyclerView.ViewHolder holder, ArtistInfo artistInfo) {
 
 

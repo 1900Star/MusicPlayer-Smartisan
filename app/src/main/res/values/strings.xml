@@ -13,13 +13,11 @@
     <string name="preject_introduce">关于项目</string>
 
     //*********音乐
-    <string name="music">音乐</string>
     <string name="short_line">-</string>
     <string name="clearAllFavorite">清空</string>
     <string name="play_all">播放全部</string>
     <string name="save_pic">保存</string>
 
-    <string name="under_line">_</string>
     <string name="childe_view_not">SwipeItemLayout的子视图不符合规定</string>
 
     <string name="action_search">搜索</string>
@@ -27,7 +25,7 @@
     <string name="musicPlayFrequency">播放次数</string>
     <string name="musicScore">评分</string>
     <string name="songName">歌曲名</string>
-    <string name="notMore">------------ 我 是 有 底 线 的 ------------</string>
+    <string name="songCount"> 首歌曲</string>
     <string name="play_list">播放列表</string>
     <string name="music_artisan">艺术家</string>
     <string name="music_song">歌曲</string>

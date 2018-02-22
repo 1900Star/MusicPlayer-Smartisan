@@ -34,7 +34,10 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
         public final static Property Time = new Property(7, String.class, "time", false, "TIME");
         public final static Property SongUrl = new Property(8, String.class, "songUrl", false, "SONG_URL");
         public final static Property FirstChar = new Property(9, String.class, "firstChar", false, "FIRST_CHAR");
-        public final static Property PlayStatus = new Property(10, int.class, "playStatus", false, "PLAY_STATUS");
+        public final static Property IsFavorite = new Property(10, boolean.class, "isFavorite", false, "IS_FAVORITE");
+        public final static Property PlayFrequency = new Property(11, int.class, "playFrequency", false, "PLAY_FREQUENCY");
+        public final static Property SongScore = new Property(12, int.class, "songScore", false, "SONG_SCORE");
+        public final static Property PlayStatus = new Property(13, int.class, "playStatus", false, "PLAY_STATUS");
     }
 
 
@@ -60,7 +63,10 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
                 "\"TIME\" TEXT," + // 7: time
                 "\"SONG_URL\" TEXT," + // 8: songUrl
                 "\"FIRST_CHAR\" TEXT," + // 9: firstChar
-                "\"PLAY_STATUS\" INTEGER NOT NULL );"); // 10: playStatus
+                "\"IS_FAVORITE\" INTEGER NOT NULL ," + // 10: isFavorite
+                "\"PLAY_FREQUENCY\" INTEGER NOT NULL ," + // 11: playFrequency
+                "\"SONG_SCORE\" INTEGER NOT NULL ," + // 12: songScore
+                "\"PLAY_STATUS\" INTEGER NOT NULL );"); // 13: playStatus
     }
 
     /** Drops the underlying database table. */
@@ -110,7 +116,10 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
         if (firstChar != null) {
             stmt.bindString(10, firstChar);
         }
-        stmt.bindLong(11, entity.getPlayStatus());
+        stmt.bindLong(11, entity.getIsFavorite() ? 1L: 0L);
+        stmt.bindLong(12, entity.getPlayFrequency());
+        stmt.bindLong(13, entity.getSongScore());
+        stmt.bindLong(14, entity.getPlayStatus());
     }
 
     @Override
@@ -154,7 +163,10 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
         if (firstChar != null) {
             stmt.bindString(10, firstChar);
         }
-        stmt.bindLong(11, entity.getPlayStatus());
+        stmt.bindLong(11, entity.getIsFavorite() ? 1L: 0L);
+        stmt.bindLong(12, entity.getPlayFrequency());
+        stmt.bindLong(13, entity.getSongScore());
+        stmt.bindLong(14, entity.getPlayStatus());
     }
 
     @Override
@@ -175,7 +187,10 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // time
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // songUrl
             cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // firstChar
-            cursor.getInt(offset + 10) // playStatus
+            cursor.getShort(offset + 10) != 0, // isFavorite
+            cursor.getInt(offset + 11), // playFrequency
+            cursor.getInt(offset + 12), // songScore
+            cursor.getInt(offset + 13) // playStatus
         );
         return entity;
     }
@@ -192,7 +207,10 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
         entity.setTime(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
         entity.setSongUrl(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
         entity.setFirstChar(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
-        entity.setPlayStatus(cursor.getInt(offset + 10));
+        entity.setIsFavorite(cursor.getShort(offset + 10) != 0);
+        entity.setPlayFrequency(cursor.getInt(offset + 11));
+        entity.setSongScore(cursor.getInt(offset + 12));
+        entity.setPlayStatus(cursor.getInt(offset + 13));
      }
     
     @Override
