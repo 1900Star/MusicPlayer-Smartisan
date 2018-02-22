@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.yibao.music.MyApplication;
@@ -26,7 +25,7 @@ import butterknife.ButterKnife;
  */
 public class BottomSheetAdapter
         extends BaseRvAdapter<MusicBean>
-        implements SectionIndexer {
+         {
 
 
     public BottomSheetAdapter(List<MusicBean> list) {
@@ -34,7 +33,12 @@ public class BottomSheetAdapter
 
     }
 
-    @Override
+             @Override
+             protected String getLastItemDes() {
+                 return " 首歌";
+             }
+
+             @Override
     protected void bindView(RecyclerView.ViewHolder holder, MusicBean musicItem) {
         if (holder instanceof MusicHolder) {
             MusicHolder musicHolder = (MusicHolder) holder;

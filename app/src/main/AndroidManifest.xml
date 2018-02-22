@@ -43,7 +43,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".activity.PlayPlayActivity"
+            android:name=".activity.PlayActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".album.MainActivity"

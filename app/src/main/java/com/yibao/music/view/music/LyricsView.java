@@ -38,7 +38,6 @@ public class LyricsView
     private int lineHeight;
     private int duration;
     private int progress;
-    private float mFirstDown;
 
     public LyricsView(Context context) {
         super(context);
@@ -80,10 +79,12 @@ public class LyricsView
         mViewH = h;
     }
 
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (mList == null || mList.size() == 1 || mList.size() == 0) {
+
             drawSingLine(canvas);
         } else {
             drawMunitLine(canvas);
@@ -155,10 +156,10 @@ public class LyricsView
      * @param duration
      */
     public void rollText(int progress, int duration) {
-        LogUtil.d("==================正在滚动歌词");
         if (mList == null || mList.size() == 0) {
             return;
         }
+        LogUtil.d("==================正在滚动歌词");
         this.progress = progress;
         this.duration = duration;
         int startTime = mList.get(mList.size() - 1)
@@ -179,7 +180,6 @@ public class LyricsView
 //        触发重新绘制
         invalidate();
     }
-
 
     /**
      * 根据歌曲名和歌手名查找歌词，并将歌词解析到List里。
@@ -204,4 +204,7 @@ public class LyricsView
         float y = mViewH / 2 + bounds.height() / 2;
         canvas.drawText(mCurrentLrc, 0, mCurrentLrc.length(), x, y, mPaint);
     }
+
+
+
 }

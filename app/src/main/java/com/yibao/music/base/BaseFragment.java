@@ -50,7 +50,7 @@ public abstract class BaseFragment extends Fragment {
         mActivity = getActivity();
         disposables = new CompositeDisposable();
         mBus = MyApplication.getIntstance().bus();
-        if (!(context instanceof FragBackPressedListener)) {
+        if (!(getActivity() instanceof FragBackPressedListener)) {
             throw new ClassCastException("Hosting Activity must implement BackPressedListener");
         } else {
 

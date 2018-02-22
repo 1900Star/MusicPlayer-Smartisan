@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yibao.music.R;
+import com.yibao.music.artisan.MusicBottomSheetDialog;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.ColorUtil;
@@ -50,13 +51,8 @@ public class SongFragment extends BaseFragment {
     @BindView(R.id.musci_view)
     MusicView mMusciView;
     private Unbinder unbinder;
-    /**
-     * 对歌曲列表进行排序的标识
-     * 0 : 默认排序 (首字母) 、1 : 按评分  、2 : 按播放次数 、 3 : 按添加时间
-     */
-    private int sortListFlag = 0;
-    private ArrayList<MusicBean> mList;
     private SongAdapter mSongAdapter;
+    private int sortListFlag = 0;
 
     @Nullable
     @Override
@@ -64,14 +60,19 @@ public class SongFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.song_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         initData(true, Constants.NUMBER_ZOER);
+        initListener();
         return view;
+    }
+
+    private void initListener() {
+        mSongAdapter.setOnItemMenuListener(() -> MusicBottomSheetDialog.newInstance().getBottomDialog(getActivity()));
+
     }
 
     /**
      * 是否对歌曲列表按时间排序，按时间排序时，StickyView不显示
      *
      * @param isShowSlidebar   只有按歌曲名排列时，Slidebar才显示 。
-     *
      * @param isShowStickyView 控制列表的StickyView是否显示，0 显示 ，1 ：不显示
      */
     private void initData(boolean isShowSlidebar, int isShowStickyView) {
@@ -80,8 +81,12 @@ public class SongFragment extends BaseFragment {
             mSongAdapter = new SongAdapter(mActivity, mSongList, isShowStickyView);
         } else if (isShowStickyView == Constants.NUMBER_ONE) {
 
-            mList = MusicListUtil.sortMusicAddtime(musicBeans);
-            mSongAdapter = new SongAdapter(mActivity, mList, isShowStickyView);
+            /*
+      对歌曲列表进行排序的标识
+      0 : 默认排序 (首字母) 、1 : 按评分  、2 : 按播放次数 、 3 : 按添加时间
+     */
+            ArrayList<MusicBean> list = MusicListUtil.sortMusicAddtime(musicBeans);
+            mSongAdapter = new SongAdapter(mActivity, list, isShowStickyView);
         }
         mMusciView.setAdapter(mActivity, Constants.NUMBER_ONE, isShowSlidebar, mSongAdapter);
     }

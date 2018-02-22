@@ -108,7 +108,6 @@ public class AudioPlayService
             mAudioBinder.play();
         } else if (enterPosition != -1 && enterPosition == position) {
             //通知播放界面更新
-            LogUtil.d("Service position  " + position);
             sendCureentMusicInfo();
         }
         return START_NOT_STICKY;
@@ -124,6 +123,7 @@ public class AudioPlayService
         MyApplication.getIntstance()
                 .bus()
                 .post(musicBean);
+
     }
 
 
@@ -150,6 +150,7 @@ public class AudioPlayService
 
 
         //准备完成回调
+
         @Override
         public void onPrepared(MediaPlayer mediaPlayer) {
             //开启播放

@@ -31,7 +31,6 @@ public abstract class BaseRvAdapter<T>
     protected List<T> mList = null;
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_FOOTER = 1;
-    protected String tag = getClass().getSimpleName() + "  ==========";
     private OnItemListener mListener;
 
     public BaseRvAdapter(List<T> list) {
@@ -41,7 +40,6 @@ public abstract class BaseRvAdapter<T>
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
-
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(getLayoutId(), parent, false);
             return getViewHolder(view);
@@ -56,9 +54,21 @@ public abstract class BaseRvAdapter<T>
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
         bindView(holder, mList.get(position));
+        if (holder instanceof LoadMoreHolder) {
+            LoadMoreHolder moreHolder = (LoadMoreHolder) holder;
+            String count = (mList.size() - 1) + getLastItemDes();
+            moreHolder.mSongCount.setText(count);
+        }
     }
+
+    /**
+     * 获取列表的类型，根据类型设置最后一个item的文字内容。
+     *
+     * @return
+     */
+
+    protected abstract String getLastItemDes();
 
     /**
      * 具体的视图数据绑定交给子类去做
@@ -69,7 +79,7 @@ public abstract class BaseRvAdapter<T>
     protected abstract void bindView(RecyclerView.ViewHolder holder, T t);
 
     /**
-     * 根据子类提供的布局ID得到一个RecyclerView的Item视图，并将视图交给子类得到一个ViewHolder
+     * 根据子类提供的布局ID得到一个RecyclerView的Item视图，并将视图交给子类的ViewHolder
      *
      * @param view 当前RecyclerView的Item视图
      * @return
@@ -168,10 +178,6 @@ public abstract class BaseRvAdapter<T>
             ButterKnife.bind(this, view);
         }
 
-        public void setSongCount(int size) {
-            String count = size + R.string.songCount+"";
-            mSongCount.setText(count);
-        }
 
     }
 

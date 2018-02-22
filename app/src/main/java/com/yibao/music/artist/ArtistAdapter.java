@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.yibao.music.R;
@@ -28,11 +27,16 @@ import butterknife.ButterKnife;
  * @描述： {TODO}
  */
 
-public class ArtistAdapter extends BaseRvAdapter<ArtistInfo> implements SectionIndexer {
+public class ArtistAdapter extends BaseRvAdapter<ArtistInfo> {
 
     public ArtistAdapter(Context context, List<ArtistInfo> list) {
         super(list);
 
+    }
+
+    @Override
+    protected String getLastItemDes() {
+        return " 位艺术家";
     }
 
     @Override

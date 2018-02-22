@@ -59,17 +59,20 @@ public class PlayListFragment extends BaseFragment {
     private void initListener() {
         mAdapter.setItemListener(() -> {
             LogUtil.d("=========playlist==========");
-            AlbumListDetailsFragment detailsFragment = (AlbumListDetailsFragment) getChildFragmentManager().findFragmentById(R.id.album_details_content);
+
+            AlbumListDetailsFragment detailsFragment = (AlbumListDetailsFragment) getFragmentManager().findFragmentById(R.id.album_details_content);
             if (detailsFragment == null) {
                 detailsFragment = new AlbumListDetailsFragment();
             }
-            PlayListFragment.this.addFragment(detailsFragment);
+            PlayListFragment.this.addFragment(new AlbumListDetailsFragment());
 
         });
     }
 
+
+
     private void addFragment(Fragment fragment) {
-        FragmentManager manager = getChildFragmentManager();
+        FragmentManager manager = getActivity().getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(R.id.play_list_frag_content, fragment, "A");
         transaction.addToBackStack("a");
@@ -79,7 +82,7 @@ public class PlayListFragment extends BaseFragment {
     private void initData() {
         ArrayList<ArtistInfo> list = new ArrayList<>();
         int number = 20;
-        for (int i = 0; i < number; i++) {
+        for (int i = 1; i < number; i++) {
             ArtistInfo artistInfo = new ArtistInfo();
             artistInfo.setName(i + "爱");
             artistInfo.setSongCount(i);

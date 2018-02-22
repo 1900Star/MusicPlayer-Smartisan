@@ -26,6 +26,7 @@ import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.song.MusicFavoriteBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.view.CircleImageView;
@@ -37,22 +38,19 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 
 /**
  * @项目名： ArtisanMusic
  * @包名： com.yibao.music.activity
- * @文件名: PlayPlayActivity
+ * @文件名: PlayActivity
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/17 20:39
  * @描述： {TODO}
  */
 
-public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavoriteListener {
+public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteListener {
     @BindView(R.id.titlebar_down)
     ImageView mTitlebarDown;
     @BindView(R.id.play_song_name)
@@ -90,8 +88,6 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
     @BindView(R.id.sb_volume)
     SeekBar mSbVolume;
 
-    private int mProgress = 0;
-
     private int mDuration;
     private String mAlbumUrl;
     private MusicBean mCurrenMusicInfo;
@@ -105,23 +101,33 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
         super.onCreate(savedInstanceState);
         setContentView(R.layout.play_activity);
         mBind = ButterKnife.bind(this);
-        initRxBusData();
         initSongInfo();
         checkCurrentIsFavorite();
         initData();
         initListener();
     }
 
+    @Override
+    protected void refreshAllPlayBtn(MusicStatusBean musicStatusBean) {
+        refreshBtnAndAnim(musicStatusBean);
+    }
+
+    @Override
+    protected void updataCurrentTitle(MusicBean info) {
+        perpareMusic(info);
+    }
+
 
     private void initListener() {
         mSbProgress.setOnSeekBarChangeListener(new SeekBarListener());
         mSbVolume.setOnSeekBarChangeListener(new SeekBarListener());
-        rxViewClick();
+
         mPlayingSongAlbum.setOnLongClickListener(view -> {
             TopBigPicDialogFragment.newInstance(mAlbumUrl)
                     .show(getFragmentManager(), "album");
             return true;
         });
+        rxViewClick();
 
     }
 
@@ -179,20 +185,9 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
     /**
      * Rxbus接收歌曲时时的进度 和 时间，并更新UI
      */
-
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        mDisposablePlayTime = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> {
-                    mProgress = audioBinder.getProgress();
-                    updataMusicProgress(mProgress);
-                });
-//        startRollPlayLyrics();
-
+    protected void updataCurrentPlayProgress(int progress) {
+        updataMusicProgress(progress);
     }
 
     @Override
@@ -220,23 +215,6 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
         mSbProgress.setMax(mDuration);
         //  设置歌曲总时长
         mEndTime.setText(StringUtil.parseDuration(mDuration));
-    }
-
-
-    /**
-     * //接收service中的数据,更新UI。
-     */
-    private void initRxBusData() {
-        mCompositeDisposable.add(mBus.toObserverable(MusicBean.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::perpareMusic));
-        //   type 用来判断触发消息的源头，0 表示从 MusicPlayDialogFag发出，
-        // 1 表示从通知栏的音乐控制面板发出(Services中的广播)。
-        mCompositeDisposable.add(mBus.toObserverable(MusicStatusBean.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::refreshBtnAndAnim));
     }
 
     private void refreshBtnAndAnim(MusicStatusBean bean) {
@@ -290,7 +268,7 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
     }
 
     private void switchPlayState() {
-
+        LogUtil.d("============== isShowLyrics", isShowLyrics + "");
         if (audioBinder.isPlaying()) {
             //当前播放  暂停
             audioBinder.pause();
@@ -298,6 +276,9 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
             MyApplication.getIntstance()
                     .bus()
                     .post(new MusicStatusBean(0, true));
+            if (isShowLyrics) {
+                mDisposableLyrics.dispose();
+            }
         } else {
             //当前暂停  播放
             audioBinder.start();
@@ -305,6 +286,9 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
             MyApplication.getIntstance()
                     .bus()
                     .post(new MusicStatusBean(0, false));
+            if (isShowLyrics) {
+                startRollPlayLyrics(mTvLyrics);
+            }
         }
 
 
@@ -364,12 +348,14 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
                 switchPlayMode(mMusicPlayerMode);
                 break;
             case R.id.music_player_pre:
+                mAnimator.pause();
                 audioBinder.playPre();
                 break;
             case R.id.music_play:
                 switchPlayState();
                 break;
             case R.id.music_player_next:
+                mAnimator.pause();
                 audioBinder.playNext();
                 break;
             case R.id.iv_favorite_music:
@@ -399,8 +385,9 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
     }
 
 
-    //    显示歌词 和 屏幕常亮图标显示
-
+    /**
+     * 显示歌词 和 屏幕常亮图标显示
+     */
     private void showLyrics() {
 
         if (isShowLyrics) {
@@ -408,7 +395,7 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
             AnimationDrawable animation = (AnimationDrawable) mIvLyricsSwitch.getBackground();
             animation.start();
             mIvSecreenSunSwitch.setVisibility(View.INVISIBLE);
-            mTvLyrics.setVisibility(View.INVISIBLE);
+            mTvLyrics.setVisibility(View.GONE);
             mDisposableLyrics.dispose();
         } else {
             mIvLyricsSwitch.setBackgroundResource(R.drawable.music_lrc_open);
@@ -416,22 +403,16 @@ public class PlayPlayActivity extends BasePlayActivity implements OnCheckFavorit
             animation.start();
             mIvSecreenSunSwitch.setVisibility(View.VISIBLE);
             // 开始滚动歌词
-            startRollPlayLyrics();
+            if (audioBinder.isPlaying()) {
+                startRollPlayLyrics(mTvLyrics);
+
+            }
+
             mTvLyrics.setVisibility(View.VISIBLE);
         }
         isShowLyrics = !isShowLyrics;
     }
 
-    /**
-     * 根据进度滚动歌词
-     */
-    private void startRollPlayLyrics() {
-        mDisposableLyrics = Observable.interval(50, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> mTvLyrics.rollText(audioBinder.getProgress(), audioBinder.getDuration()));
-
-    }
 
     private void rxViewClick() {
         RxView.clicks(mTitlebarPlayList)

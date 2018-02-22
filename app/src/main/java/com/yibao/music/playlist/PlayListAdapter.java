@@ -31,6 +31,11 @@ public class PlayListAdapter extends BaseRvAdapter<ArtistInfo> {
     }
 
     @Override
+    protected String getLastItemDes() {
+        return " 个播放列表";
+    }
+
+    @Override
     protected void bindView(RecyclerView.ViewHolder holder, ArtistInfo artistInfo) {
 
         if (holder instanceof PlayViewHolder) {
@@ -41,7 +46,6 @@ public class PlayListAdapter extends BaseRvAdapter<ArtistInfo> {
 
             playViewHolder.itemView.setOnClickListener(view -> PlayListAdapter.this.openDetails());
         }
-
     }
 
     @Override

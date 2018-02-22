@@ -85,12 +85,16 @@ public class LyricsUtil {
      */
     private static int parseTime(String s) {
         boolean containsChinese = isContainsEnglishAndChinese(s);
+        String braces = "[";
         if (containsChinese) {
             LogUtil.d("============== 歌词时间解析异常！================");
             return 0;
         } else {
             String[] arr = s.split(":");
             String min = arr[0].substring(1);
+            if (min.contains(braces)) {
+                min = "00";
+            }
             String sec = arr[1];
             return (int) (Integer.parseInt(min) * 60 * 1000 + Float.parseFloat(sec) * 1000);
         }

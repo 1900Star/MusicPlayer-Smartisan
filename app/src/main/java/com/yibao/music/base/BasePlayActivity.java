@@ -14,11 +14,20 @@ import android.widget.SeekBar;
 import com.yibao.music.R;
 import com.yibao.music.artisanlist.MusicActivity;
 import com.yibao.music.base.listener.SeekBarChangeListtener;
+import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.service.AudioPlayService;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.ToastUtil;
+import com.yibao.music.view.music.LyricsView;
 
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -28,7 +37,7 @@ import io.reactivex.disposables.Disposable;
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/18 11:09
- * @描述： {仅仅针对 PlayActivity抽出的基类}
+ * @描述： {仅仅针对 PlayActivity抽出的基类,目的在于减少PlayActivity中的代码}
  */
 
 public abstract class BasePlayActivity extends BaseActivity {
@@ -59,6 +68,60 @@ public abstract class BasePlayActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        LogUtil.d("===========baseplay Acitivyt   onRestart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogUtil.d("===========baseplay Acitivyt   onResume");
+        upDataPlayProgress();
+        updataMusicTitle();
+        recivewServiecInfo();
+
+    }
+
+
+    /**
+     * type 用来判断触发消息的源头，0 表示从 MusicPlayDialogFag发出，
+     * 1 表示从通知栏的音乐控制面板发出(Services中的广播)。
+     */
+    private void recivewServiecInfo() {
+        mCompositeDisposable.add(mBus.toObserverable(MusicStatusBean.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::refreshAllPlayBtn));
+
+
+    }
+
+    /**
+     * 接收Service发的信息，时时更新播放按钮的状态
+     *
+     * @param musicStatusBean
+     */
+    protected abstract void refreshAllPlayBtn(MusicStatusBean musicStatusBean);
+
+
+    private void updataMusicTitle() {
+        mCompositeDisposable.add(mBus.toObserverable(MusicBean.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::updataCurrentTitle));
+
+    }
+
+    /**
+     * 更新音乐的Title和歌手
+     *
+     * @param info
+     */
+    protected abstract void updataCurrentTitle(MusicBean info);
+
     /**
      * 停止更新
      */
@@ -70,9 +133,23 @@ public abstract class BasePlayActivity extends BaseActivity {
         }
 
         if (mCompositeDisposable != null) {
-            mCompositeDisposable.clear();
+//            mCompositeDisposable.clear();
         }
     }
+
+    private void upDataPlayProgress() {
+        mDisposablePlayTime = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> updataCurrentPlayProgress(audioBinder.getProgress()));
+    }
+
+    /**
+     * 时时更新播放进度
+     *
+     * @param progress
+     */
+    protected abstract void updataCurrentPlayProgress(int progress);
 
     private void init() {
         audioBinder = MusicActivity.getAudioBinder();
@@ -83,6 +160,17 @@ public abstract class BasePlayActivity extends BaseActivity {
 
 
         mCompositeDisposable = new CompositeDisposable();
+    }
+
+    /**
+     * 根据进度滚动歌词
+     */
+    protected void startRollPlayLyrics(LyricsView lyricsView) {
+        mDisposableLyrics = Observable.interval(50, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> lyricsView.rollText(audioBinder.getProgress(), audioBinder.getDuration()));
+
     }
 
 

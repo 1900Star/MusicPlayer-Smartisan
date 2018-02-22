@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -34,7 +33,7 @@ import butterknife.ButterKnife;
 
 public class AlbumAdapter
         extends BaseRvAdapter<AlbumInfo>
-        implements SectionIndexer
+
 
 
 {
@@ -51,6 +50,11 @@ public class AlbumAdapter
         super(list);
         this.mContext = context;
         this.mIsShowStickyView = isShowStickyView;
+    }
+
+    @Override
+    protected String getLastItemDes() {
+        return " 张专辑";
     }
 
     @Override

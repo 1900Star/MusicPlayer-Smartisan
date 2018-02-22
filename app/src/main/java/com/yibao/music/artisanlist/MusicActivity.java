@@ -25,7 +25,7 @@ import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
-import com.yibao.music.activity.PlayPlayActivity;
+import com.yibao.music.activity.PlayActivity;
 import com.yibao.music.album.MainActivity;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.base.BaseFragment;
@@ -327,7 +327,7 @@ public class MusicActivity
     }
 
     private void readyMusic() {
-        Intent intent = new Intent(this, PlayPlayActivity.class);
+        Intent intent = new Intent(this, PlayActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable("info", mItem);
         intent.putExtra("bundle", bundle);
