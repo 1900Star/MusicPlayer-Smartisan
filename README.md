@@ -21,15 +21,13 @@ ArtisanMusic
   * [GreenDao](https://github.com/greenrobot/greenDAO)
   * [butterknife](https://github.com/JakeWharton/butterknife)
   * [RxBinding](https://github.com/JakeWharton/RxBinding)
-
-
+  
+  * [BigGirl](https://github.com/1900Star/BigGirl) 我的写的Gank客户端,感兴趣的可以看一下。
 
 
 # 提示
 
 ### 本项目还没写完，没写完! 没写完! 只要有空闲时间就会更新代码。
-
-    [BigGirl](https://github.com/1900Star/BigGirl) 我的另一个Gank客户端,感兴趣的可以看一下。
 
 #### 由于本人水平有限，项目中难免有所纰漏，如果有问题请与我联系 www.strangermy98@gmail.com
 
