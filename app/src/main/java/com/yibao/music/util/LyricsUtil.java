@@ -62,11 +62,14 @@ public class LyricsUtil {
         return lrcList;
     }
 
+
     private static ArrayList<MusicLyrBean> parseLine(String str) {
         ArrayList<MusicLyrBean> list = new ArrayList<>();
         String[] arr = str.split("]");
         String content = arr[arr.length - 1];
+
         for (int i = 0; i < arr.length - 1; i++) {
+
             int startTime = parseTime(arr[i]);
             MusicLyrBean lrcBean = new MusicLyrBean(startTime, content);
             list.add(lrcBean);
@@ -74,13 +77,33 @@ public class LyricsUtil {
         return list;
     }
 
+    /**
+     * 对歌词时间可能出现汉字或英文字母做了处理
+     *
+     * @param s
+     * @return
+     */
     private static int parseTime(String s) {
-        String[] arr = s.split(":");
-        String min = arr[0].substring(1);
-        String sec = arr[1];
+        boolean containsChinese = isContainsEnglishAndChinese(s);
+        String braces = "[";
+        if (containsChinese) {
+            LogUtil.d("============== 歌词时间解析异常！ 有中英文 ================");
+            return 0;
+        } else {
+            String[] arr = s.split(":");
+            String min = arr[0].substring(1);
+            if (min.contains(braces)) {
+                LogUtil.d("============== 歌词时间解析异常！ 有 “[”================");
+                min = "00";
+            }
+            String sec = arr[1];
+            return (int) (Integer.parseInt(min) * 60 * 1000 + Float.parseFloat(sec) * 1000);
+        }
 
-        return (int) (Integer.parseInt(min) * 60 * 1000 + Float.parseFloat(sec) * 1000);
     }
 
-
+    private static boolean isContainsEnglishAndChinese(String str) {
+        String regex = "^[a-z0-9A-Z\\\\u4e00-\u9fa5]+$";
+        return str.matches(regex);
+    }
 }
