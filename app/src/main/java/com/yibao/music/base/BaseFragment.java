@@ -66,7 +66,6 @@ public abstract class BaseFragment extends Fragment {
         if (mSongList == null) {
             mSongList = (ArrayList<MusicBean>) mMusicBeanDao.queryBuilder().list();
 
-
         }
         if (musicBeans == null) {
             musicBeans = (ArrayList<MusicBean>) mMusicBeanDao.queryBuilder().list();
