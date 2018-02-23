@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Parcelable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,10 +23,11 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.song.MusicFavoriteBean;
 import com.yibao.music.service.AudioPlayService;
+import com.yibao.music.util.Constants;
 import com.yibao.music.util.RxBus;
+import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -39,6 +39,8 @@ import io.reactivex.schedulers.Schedulers;
  * Author：Sid
  * Des：${TODO}
  * Time:2017/8/22 14:11
+ *
+ * @author Stran
  */
 public class MusicBottomSheetDialog
         implements View.OnClickListener {
@@ -76,7 +78,7 @@ public class MusicBottomSheetDialog
 
     private void initData(BottomSheetDialog dialog, View view) {
         BottomSheetAdapter adapter = new BottomSheetAdapter(mList);
-        mRecyclerView = RecyclerFactory.creatRecyclerView(1, adapter);
+        mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, adapter);
         String size = StringUtil.getBottomSheetTitile(mList.size());
         mBottomListTitleSize.setText(size);
         mBottomListContent.addView(mRecyclerView);
@@ -152,12 +154,14 @@ public class MusicBottomSheetDialog
     private void playMusic(int position) {
         Intent intent = new Intent();
         intent.setClass(mContext, AudioPlayService.class);
-        intent.putParcelableArrayListExtra("musicItem", (ArrayList<? extends Parcelable>) mList);
+        intent.putExtra("sortFlag", Constants.NUMBER_EIGHT);
         intent.putExtra("position", position);
         AudioServiceConnection connection = new AudioServiceConnection();
         mContext.bindService(intent, connection, Service.BIND_AUTO_CREATE);
         mContext.startService(intent);
+        SharePrefrencesUtil.setMusicDataListFlag(mContext, Constants.NUMBER_EIGHT);
     }
+
 
     private void initView(View view) {
         mBottomListContent = view.findViewById(R.id.bottom_list_content);

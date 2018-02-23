@@ -19,6 +19,7 @@ import com.yibao.music.R;
 import com.yibao.music.artisanlist.MusicNoification;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
@@ -54,6 +55,7 @@ public class AudioPlayService
     private MusicBroacastReceiver mReceiver;
     private NotificationManager manager;
     private RemoteViews mRemoteViews;
+    private MusicBeanDao mMusicDao;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -73,6 +75,9 @@ public class AudioPlayService
         mRemoteViews = new RemoteViews(getPackageName(), R.layout.music_notify);
         if (mMusicDataList == null) {
             mMusicDataList = MyApplication.getIntstance().getMusicDao().queryBuilder().list();
+        }
+        if (mMusicDao == null) {
+            mMusicDao = MyApplication.getIntstance().getMusicDao();
         }
 
         initBroadcast();
@@ -97,11 +102,13 @@ public class AudioPlayService
         LogUtil.d("Service MusicList size==== sortListFlag   " + mMusicDataList.size(), "====  " + sortListFlag);
 
         if (sortListFlag == Constants.NUMBER_ONE) {
-            mMusicDataList = MyApplication.getIntstance().getMusicDao().queryBuilder().list();
+            mMusicDataList = mMusicDao.queryBuilder().list();
         } else if (sortListFlag == Constants.NUMBER_FOUR) {
-
             mMusicDataList = MusicListUtil.sortMusicAddtime((ArrayList<MusicBean>) mMusicDataList);
+        } else if (sortListFlag == Constants.NUMBER_EIGHT) {
+            mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
         }
+
         if (enterPosition != position && enterPosition != -1) {
             position = enterPosition;
             //执行播放
