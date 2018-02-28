@@ -813,22 +813,29 @@ public class MusicActivity
     }
 
 
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        return super.onKeyDown(keyCode, event);
+//    }
+
+
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return super.onKeyDown(keyCode, event);
+    public void onBackPressed() {
+//        super.onBackPressed();
+        LogUtil.d("=========onBackPressed======     back");
+
     }
 
-//
 //    @Override
 //    public boolean onKeyDown(int keyCode, KeyEvent event) {
 //        switch (keyCode) {
 //            case KeyEvent.KEYCODE_BACK:
-//                finish();
+////                finish();
 //                break;
 //            default:
 //                break;
 //        }
-//        return true;
+//        return super.onKeyDown(keyCode, event);
 //    }
 
     @Override

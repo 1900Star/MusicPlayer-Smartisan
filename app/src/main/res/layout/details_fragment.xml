@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/album_details_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/listBg"
@@ -68,27 +67,27 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/iv_details_add_to_list"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:layout_gravity="bottom"
                     android:contentDescription="@null"
-                    android:src="@mipmap/favorite_yes" />
+                    android:src="@drawable/add_to_list_selector" />
 
                 <ImageView
                     android:id="@+id/iv_details_add_to_play_list"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:layout_gravity="bottom"
                     android:layout_marginLeft="12dp"
                     android:layout_marginStart="12dp"
                     android:contentDescription="@null"
-                    android:src="@mipmap/favorite_yes" />
+                    android:src="@drawable/add_pla_list_selector" />
 
             </LinearLayout>
 

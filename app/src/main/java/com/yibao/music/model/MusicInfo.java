@@ -11,18 +11,18 @@ import org.greenrobot.greendao.annotation.Generated;
  * Author：Sid
  * Des：${音乐实体类,收藏 删除等}
  * Time:2017/9/3 14:31
+ *
  * @author Stran
  */
 @Entity
 public class MusicInfo
-        implements Parcelable
-{
+        implements Parcelable {
     @Id(autoincrement = true)
-    private Long   id;
+    private Long id;
     private String title;
     private String artist;
     private String album;
-    private long   albumId;
+    private long albumId;
     private String time;
     private String songUrl;
     private int playStatus;
@@ -31,8 +31,7 @@ public class MusicInfo
     }
 
 
-
-    protected MusicInfo(Parcel in) {
+    private MusicInfo(Parcel in) {
         if (in.readByte() == 0) {
             id = null;
         } else {
@@ -48,10 +47,9 @@ public class MusicInfo
     }
 
 
-
     @Generated(hash = 794557366)
     public MusicInfo(Long id, String title, String artist, String album,
-            long albumId, String time, String songUrl, int playStatus) {
+                     long albumId, String time, String songUrl, int playStatus) {
         this.id = id;
         this.title = title;
         this.artist = artist;
@@ -136,7 +134,6 @@ public class MusicInfo
     }
 
 
-
     public void setPlayStatus(int playStatus) {
         this.playStatus = playStatus;
     }
@@ -162,7 +159,6 @@ public class MusicInfo
         parcel.writeString(songUrl);
         parcel.writeInt(playStatus);
     }
-
 
 
 }

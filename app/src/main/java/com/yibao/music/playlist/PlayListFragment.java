@@ -49,6 +49,7 @@ public class PlayListFragment extends BaseFragment {
     private PlayListAdapter mAdapter;
     private List<MusicInfo> mList;
     private CompositeDisposable mDisposable;
+    private int addListFlag = 1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,7 +88,10 @@ public class PlayListFragment extends BaseFragment {
                     mList.add(info);
                     mAdapter.addData(mList);
                     mAdapter.notifyDataSetChanged();
-                    mMusicInfoDao.insert(info);
+                    if (addListFlag == Constants.NUMBER_ONE) {
+                        mMusicInfoDao.insert(info);
+                        addListFlag++;
+                    }
 
                 }));
 

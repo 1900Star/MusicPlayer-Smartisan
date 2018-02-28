@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
 import com.yibao.music.model.AddNewListBean;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SnakbarUtil;
 
 /**
@@ -48,12 +47,11 @@ public class AddListDialog
     }
 
 
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        mView = getActivity().getLayoutInflater().inflate(R.layout.add_lit_dialog, null);
+        mView = getActivity().getLayoutInflater().inflate(R.layout.add_lit_dialog,null );
         builder.setView(mView);
         AlertDialog dialog = builder.create();
         Window window = dialog.getWindow();
@@ -73,11 +71,10 @@ public class AddListDialog
             case R.id.tv_add_list_continue:
                 String listTitle = mEditAddList.getText().toString().trim();
                 if (!listTitle.isEmpty()) {
-                    LogUtil.d("==============继续     " + listTitle);
                     MyApplication.getIntstance().bus().post(new AddNewListBean(listTitle));
                     dismiss();
                 } else {
-                    SnakbarUtil.favoriteFailView(mEditAddList, "列表名字不能为空！");
+                    SnakbarUtil.favoriteFailView(mEditAddList);
                 }
                 break;
             default:
@@ -97,12 +94,25 @@ public class AddListDialog
         mEditAddList = mView.findViewById(R.id.edit_add_list);
         mTvAddListCancle = mView.findViewById(R.id.tv_add_list_cancle);
         mTvAddListContinue = mView.findViewById(R.id.tv_add_list_continue);
+//        mEditAddList.setFocusable(true);
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+//            InputMethodManager imm = (InputMethodManager) getContext()
+//                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+//
+//            if (imm != null) {
+//                imm.showSoftInput(mEditAddList, InputMethodManager.RESULT_SHOWN);
+//                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,
+//                        InputMethodManager.HIDE_IMPLICIT_ONLY);
+//            }
+//        }
     }
 
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+
     }
 
 

@@ -5,6 +5,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,7 +28,7 @@ import com.yibao.music.util.StringUtil;
  */
 
 public class DetailsView
-        extends RelativeLayout {
+        extends RelativeLayout implements View.OnClickListener {
 
     private RecyclerView mRecyclerView;
     private ImageView mIvArtistAlbummDetails;
@@ -57,13 +58,38 @@ public class DetailsView
         initListener();
     }
 
-    private void initListener() {
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_details_add_to_list:
 
+                break;
+            case R.id.iv_details_add_to_play_list:
+
+                break;
+            case R.id.ll_album_details_playall:
+
+                break;
+            case R.id.ll_album_details_random_play:
+
+                break;
+
+
+            default:
+                break;
+
+        }
+    }
+
+    private void initListener() {
+        mIvDetailsAddToList.setOnClickListener(this);
+        mIvDetailsAddToPlayList.setOnClickListener(this);
+        mLlAlbumDetailsPlayall.setOnClickListener(this);
+        mLlAlbumDetailsRandomPlay.setOnClickListener(this);
     }
 
 
     private void initView() {
-        //自定义组合控件将第三个参数设置为true  解析之后直接添加到当前view中
         LayoutInflater.from(getContext())
                 .inflate(R.layout.details_fragment, this, true);
         mRecyclerView = findViewById(R.id.rv_artist_album_details);
@@ -101,36 +127,29 @@ public class DetailsView
     private void initData(int dataType, Object bean) {
         if (dataType == Constants.NUMBER_ONE) {
             ArtistInfo info = (ArtistInfo) bean;
-            mTvArtistAlbummDetailsTitle.setText(info.getAlbumName());
-            mTvArtistAlbummDetailsArtist.setText(info.getArtist());
-            Glide.with(mIvArtistAlbummDetails.getContext())
-                    .load(StringUtil.getAlbulm(info.getAlbumId()))
-                    .placeholder(R.drawable.noalbumcover_220)
-                    .into(mIvArtistAlbummDetails);
-            setYear(info.getYear());
+            setMusicInfo(info.getAlbumName(), info.getArtist(), info.getAlbumId(), info.getYear());
 
         } else if (dataType == Constants.NUMBER_TWO) {
             AlbumInfo info = (AlbumInfo) bean;
-            mTvArtistAlbummDetailsTitle.setText(info.getAlbumName());
-            mTvArtistAlbummDetailsArtist.setText(info.getArtist());
-            Glide.with(mIvArtistAlbummDetails.getContext())
-                    .load(StringUtil.getAlbulm(info.getAlbumId()))
-                    .placeholder(R.drawable.noalbumcover_220)
-                    .into(mIvArtistAlbummDetails);
-            setYear(info.getYear());
-
+            setMusicInfo(info.getAlbumName(), info.getArtist(), info.getAlbumId(), info.getYear());
 
         }
 
     }
 
-    private void setYear(int year) {
-        if (year != Constants.NUMBER_ZOER) {
-            String s = year + "";
+    private void setMusicInfo(String albumName, String artist, long albumId, int issueYear) {
+        mTvArtistAlbummDetailsTitle.setText(albumName);
+        mTvArtistAlbummDetailsArtist.setText(artist);
+        Glide.with(mIvArtistAlbummDetails.getContext())
+                .load(StringUtil.getAlbulm(albumId))
+                .placeholder(R.drawable.noalbumcover_220)
+                .into(mIvArtistAlbummDetails);
+        if (issueYear != Constants.NUMBER_ZOER) {
+            String s = issueYear + "";
             mTvArtistAlbummDetailsDate.setText(s);
         }
-    }
 
+    }
 
 }
 

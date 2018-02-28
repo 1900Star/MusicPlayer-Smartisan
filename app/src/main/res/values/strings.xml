@@ -25,12 +25,10 @@
     <string name="musicPlayFrequency">播放次数</string>
     <string name="musicScore">评分</string>
     <string name="songName">歌曲名</string>
-    <string name="songCount"> 首歌曲</string>
     <string name="play_list">播放列表</string>
     <string name="music_artisan">艺术家</string>
     <string name="music_song">歌曲</string>
     <string name="music_album">专辑</string>
-    <string name="music_style">风格</string>
     <string name="music_folder">文件夹</string>
     <string name="album_tile">平铺</string>
     <string name="album_list">列表</string>

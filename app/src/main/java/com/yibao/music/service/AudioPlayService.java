@@ -102,9 +102,6 @@ public class AudioPlayService
         int sortListFlag = intent.getIntExtra("sortFlag", 0);
         int dataFlag = intent.getIntExtra("dataFlag", 0);
         String queryFlag = intent.getStringExtra("queryFlag");
-        LogUtil.d("Service MusicList size==== sortListFlag   " + mMusicDataList.size(), "====  " + sortListFlag);
-        LogUtil.d("Service MusicList == dataFlag  queryFlag   " + dataFlag, "====  " + queryFlag);
-
         getMusicDataList(sortListFlag, dataFlag, queryFlag);
 
         if (enterPosition != position && enterPosition != -1) {
