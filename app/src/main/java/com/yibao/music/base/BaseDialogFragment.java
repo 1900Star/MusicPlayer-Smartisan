@@ -1,10 +1,10 @@
 package com.yibao.music.base;
 
+import android.app.DialogFragment;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,25 +18,25 @@ import io.reactivex.disposables.CompositeDisposable;
  * Author：Sid
  * Des：${TODO}
  * Time:2017/5/31 18:50
+ *
  * @author Stran
  */
 public abstract class BaseDialogFragment
-        extends DialogFragment
-{
+        extends DialogFragment {
 
     public MyApplication mApplication;
     public CompositeDisposable mDisposable;
     public static int MAX_DOWN_PREGRESS = 100;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState)
-    {
+                             @Nullable Bundle savedInstanceState) {
 
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow()
-                   .setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                .setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         mApplication = (MyApplication) getActivity().getApplication();
         mDisposable = new CompositeDisposable();
@@ -49,7 +49,7 @@ public abstract class BaseDialogFragment
     public void onDestroy() {
         super.onDestroy();
         if (mDisposable != null) {
-        mDisposable.clear();
+            mDisposable.clear();
         }
     }
 }

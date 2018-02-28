@@ -2,14 +2,18 @@ package com.yibao.music.artisanlist;
 
 import android.animation.ObjectAnimator;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -26,6 +30,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayActivity;
+import com.yibao.music.album.AlbumListDetailsFragment;
 import com.yibao.music.album.MainActivity;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.base.BaseFragment;
@@ -36,7 +41,6 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.song.MusicFavoriteBean;
 import com.yibao.music.service.AudioPlayService;
-import com.yibao.music.service.LoadMusicDataServices;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
@@ -68,7 +72,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class MusicActivity
         extends BaseActivity
-        implements OnMusicItemClickListener, FragBackPressedListener {
+        implements OnMusicItemClickListener {
 
     @BindView(R.id.tv_music_toolbar_title)
     TextView mTvMusicToolbarTitle;
@@ -153,7 +157,6 @@ public class MusicActivity
     private int mPlayState;
     private int mNormalTabbarColor;
     private QqBarPagerAdapter mQqBarPagerAdapter;
-    private BaseFragment mBaseFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -277,6 +280,7 @@ public class MusicActivity
 
 
     /**
+     * 在主列表播放音乐
      * 开启服务，播放音乐并且将数据标记传送过去
      *
      * @param position 当前点击的曲目
@@ -295,6 +299,28 @@ public class MusicActivity
 
     }
 
+    /**
+     * 在详情页面播放音乐
+     *
+     * @param position  播放位置
+     * @param dataFlag  数据列表的标识
+     * @param queryFlag 具体查询的条 ( 按 歌手 或 专辑查询 )
+     */
+    @Override
+    public void startMusicServiceFlag(int position, int dataFlag, String queryFlag) {
+        mCurrentPosition = position;
+        Intent intent = new Intent();
+        intent.setClass(this, AudioPlayService.class);
+        LogUtil.d(" 306  MusicActivity  dataFlag == queryFlag     " + dataFlag + "  ===  " + queryFlag);
+        intent.putExtra("dataFlag", dataFlag);
+        intent.putExtra("queryFlag", queryFlag);
+        intent.putExtra("position", mCurrentPosition);
+        mConnection = new AudioServiceConnection();
+        bindService(intent, mConnection, Service.BIND_AUTO_CREATE);
+        startService(intent);
+
+    }
+
     private int getSpMusicFlag() {
 
         return SharePrefrencesUtil.getMusicDataListFlag(this);
@@ -305,6 +331,7 @@ public class MusicActivity
      */
     @Override
     public void onOpenMusicPlayDialogFag() {
+
         if (mMusicConfig) {
             readyMusic();
         } else {
@@ -374,6 +401,7 @@ public class MusicActivity
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(musicFavoriteBean -> MusicActivity.this.checkCurrentIsFavorite()));
     }
+
 
     private void refreshBtnAndNotify(MusicStatusBean bean) {
         switch (bean.getType()) {
@@ -731,24 +759,18 @@ public class MusicActivity
                 intent.putExtra("position", 8);
                 startActivity(intent);
 
-                startService(new Intent(this, LoadMusicDataServices.class));
+//                startService(new Intent(this, LoadMusicDataServices.class));
                 break;
             default:
                 break;
         }
-        readyMusic();
+//        readyMusic();
         return super.onOptionsItemSelected(item);
     }
 
 
     public static AudioPlayService.AudioBinder getAudioBinder() {
         return audioBinder;
-    }
-
-
-    @Override
-    public void putFragment(Fragment fragment) {
-        this.mBaseFragment = (BaseFragment) fragment;
     }
 
 
@@ -790,36 +812,24 @@ public class MusicActivity
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        System.out.println("============Ok=============");
-        if (mBaseFragment == null || !mBaseFragment.onBackPressed()) {
-            if (getFragmentManager().getBackStackEntryCount() == 0) {
-                System.out.println("==============BBBBBBBBBBBBBBBBBBBBBB================");
-                super.onBackPressed();
-            } else {
-                System.out.println("==============AAAAAAAAAAAAAAAAAAAAAX================");
-                getFragmentManager().popBackStack();
-
-            }
-        }
-    }
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode) {
-//            case KeyEvent.KEYCODE_HEADSETHOOK:
-//                switchPlayState();
-//                break;
-            case KeyEvent.KEYCODE_BACK:
-                finish();
-                break;
-            default:
-                break;
-        }
-        return true;
+        return super.onKeyDown(keyCode, event);
     }
+
+//
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        switch (keyCode) {
+//            case KeyEvent.KEYCODE_BACK:
+//                finish();
+//                break;
+//            default:
+//                break;
+//        }
+//        return true;
+//    }
 
     @Override
     protected void onStop() {

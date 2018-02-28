@@ -46,14 +46,12 @@ android {
             minifyEnabled true
             shrinkResources true
             zipAlignEnabled true
-            debuggable false
             buildConfigField "boolean", "SHOW_LOG", "Boolean.parseBoolean(\"false\")"
         }
 
         debug {
             zipAlignEnabled false
             minifyEnabled false
-            debuggable true
             buildConfigField "boolean", "SHOW_LOG", "Boolean.parseBoolean(\"true\")"
         }
     }
@@ -90,6 +88,7 @@ dependencies {
     compile 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
     compile 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.0.0'
     compile 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
+    compile 'com.squareup.flow:flow:1.0.0-alpha3'
 }
 
 

@@ -11,13 +11,11 @@ import android.widget.TextView;
 import com.yibao.music.R;
 import com.yibao.music.artisan.MusicBottomSheetDialog;
 import com.yibao.music.base.BaseFragment;
-import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
-import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.view.music.MusicView;
 
@@ -92,10 +90,7 @@ public class SongFragment extends BaseFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_music_category_paly:
-                int position = RandomUtil.getRandomPostion(mSongList);
-                if (getActivity() instanceof OnMusicItemClickListener) {
-                    ((OnMusicItemClickListener) getActivity()).startMusicService(position);
-                }
+                randomPlayMusic();
                 break;
             case R.id.tv_music_category_songname:
                 switchListCategory(1);
@@ -204,5 +199,10 @@ public class SongFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    protected int getFlag() {
+        return Constants.NUMBER_THRRE;
     }
 }

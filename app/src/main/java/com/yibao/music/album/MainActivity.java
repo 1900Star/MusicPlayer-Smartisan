@@ -1,18 +1,32 @@
 package com.yibao.music.album;
 
-import android.os.Bundle;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
-import com.yibao.music.R;
-import com.yibao.music.util.LogUtil;
+import flow.Flow;
 
+/**
+ * @author Stran
+ */
 public class MainActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        int position = getIntent().getIntExtra("position", 0);
-        LogUtil.d("==================Main====   "+position);
+    @Override protected void attachBaseContext(Context baseContext) {
+        baseContext = Flow.configure(baseContext, this).install();
+        super.attachBaseContext(baseContext);
     }
+
+    @Override public void onBackPressed() {
+        if (!Flow.get(this).goBack()) {
+            super.onBackPressed();
+        }
+    }
+
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//
+//
+//        setContentView(R.layout.activity_main);
+//        int position = getIntent().getIntExtra("position", 0);
+//        LogUtil.d("==================Main====   " + position);
+//    }
 }

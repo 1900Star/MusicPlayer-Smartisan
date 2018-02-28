@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/root_tile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -14,16 +15,17 @@
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:layout_margin="8dp"
-            android:clickable="true"
             android:background="@drawable/mask_albumcover_list"
-            android:scaleType="centerCrop"
-            android:focusable="true" />
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleType="centerCrop" />
 
         <ImageView
             android:id="@+id/album_cover_shadow_mask"
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:layout_margin="8dp"
+
             android:scaleType="centerCrop"
             android:src="@drawable/album_cover_shadow_mask"
             android:visibility="gone" />

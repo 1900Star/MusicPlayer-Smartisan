@@ -68,12 +68,7 @@ public abstract class BasePlayActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
 
-        LogUtil.d("===========baseplay Acitivyt   onRestart");
-    }
 
     @Override
     protected void onResume() {
@@ -87,8 +82,8 @@ public abstract class BasePlayActivity extends BaseActivity {
 
 
     /**
-     * type 用来判断触发消息的源头，0 表示从 MusicPlayDialogFag发出，
-     * 1 表示从通知栏的音乐控制面板发出(Services中的广播)。
+     * 接收Service发出的播放状态
+     *
      */
     private void recivewServiecInfo() {
         mCompositeDisposable.add(mBus.toObserverable(MusicStatusBean.class)
@@ -132,9 +127,6 @@ public abstract class BasePlayActivity extends BaseActivity {
             mDisposablePlayTime.dispose();
         }
 
-        if (mCompositeDisposable != null) {
-//            mCompositeDisposable.clear();
-        }
     }
 
     private void upDataPlayProgress() {

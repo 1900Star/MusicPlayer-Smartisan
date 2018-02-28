@@ -193,7 +193,9 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
     @Override
     protected void onPause() {
         super.onPause();
-        showLyrics();
+        if (isShowLyrics) {
+            showLyrics();
+        }
         if (mDisposableLyrics != null) {
             mDisposableLyrics.dispose();
         }

@@ -1,30 +1,31 @@
 package com.yibao.music.playlist;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.yibao.music.MyApplication;
 import com.yibao.music.R;
-import com.yibao.music.album.AlbumListDetailsFragment;
 import com.yibao.music.base.BaseFragment;
-import com.yibao.music.model.ArtistInfo;
+import com.yibao.music.dialogfrag.AddListDialog;
+import com.yibao.music.factory.RecyclerFactory;
+import com.yibao.music.model.AddNewListBean;
+import com.yibao.music.model.MusicInfo;
+import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -40,10 +41,20 @@ import butterknife.Unbinder;
 public class PlayListFragment extends BaseFragment {
     @BindView(R.id.ll_add_new_play_list)
     LinearLayout mLlAddNewPlayList;
-    @BindView(R.id.recycler_view_play_list)
-    RecyclerView mRecyclerViewPlayList;
+    @BindView(R.id.play_list_content)
+    LinearLayout mPlayListContent;
+    @BindView(R.id.album_details_head_content)
+    LinearLayout mAlbumDetailsHeadContent;
     private Unbinder unbinder;
     private PlayListAdapter mAdapter;
+    private List<MusicInfo> mList;
+    private CompositeDisposable mDisposable;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mList = mMusicInfoDao.queryBuilder().build().list();
+    }
 
     @Nullable
     @Override
@@ -51,59 +62,64 @@ public class PlayListFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.play_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         initData();
+        receiveRxbuData();
         initListener();
 
         return view;
     }
 
-    private void initListener() {
-        mAdapter.setItemListener(() -> {
-            LogUtil.d("=========playlist==========");
-
-            AlbumListDetailsFragment detailsFragment = (AlbumListDetailsFragment) getFragmentManager().findFragmentById(R.id.album_details_content);
-            if (detailsFragment == null) {
-                detailsFragment = new AlbumListDetailsFragment();
-            }
-            PlayListFragment.this.addFragment(new AlbumListDetailsFragment());
-
-        });
-    }
-
-
-
-    private void addFragment(Fragment fragment) {
-        FragmentManager manager = getActivity().getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.add(R.id.play_list_frag_content, fragment, "A");
-        transaction.addToBackStack("a");
-        transaction.commit();
-    }
-
     private void initData() {
-        ArrayList<ArtistInfo> list = new ArrayList<>();
-        int number = 20;
-        for (int i = 1; i < number; i++) {
-            ArtistInfo artistInfo = new ArtistInfo();
-            artistInfo.setName(i + "爱");
-            artistInfo.setSongCount(i);
-            list.add(artistInfo);
-        }
-
-        mAdapter = new PlayListAdapter(list);
-        LinearLayoutManager manager = new LinearLayoutManager(MyApplication.getIntstance());
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerViewPlayList.setLayoutManager(manager);
-        mRecyclerViewPlayList.setHasFixedSize(true);
-        mRecyclerViewPlayList.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+        mDisposable = new CompositeDisposable();
+        mAdapter = new PlayListAdapter(getActivity(), mList);
+        RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
+        mPlayListContent.addView(recyclerView);
     }
+
+    private void receiveRxbuData() {
+
+        mDisposable.add(mBus.toObserverable(AddNewListBean.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(addNewListBean -> {
+                    MusicInfo info = new MusicInfo();
+                    info.setPlayStatus(1);
+                    info.setTitle(addNewListBean.getNewListTitle());
+                    mList.add(info);
+                    mAdapter.addData(mList);
+                    mAdapter.notifyDataSetChanged();
+                    mMusicInfoDao.insert(info);
+
+                }));
+
+
+    }
+
+    private void initListener() {
+
+        mAdapter.setItemListener(str -> {
+            if (isShowDetailsView) {
+                mPlayListContent.setVisibility(View.VISIBLE);
+                mAlbumDetailsHeadContent.setVisibility(View.GONE);
+
+            } else {
+                mPlayListContent.setVisibility(View.GONE);
+                mAlbumDetailsHeadContent.setVisibility(View.VISIBLE);
+            }
+            isShowDetailsView = !isShowDetailsView;
+        });
+
+    }
+
 
     @OnClick(R.id.ll_add_new_play_list)
     public void onClick(View v) {
         switch (v.getId()) {
             // 打开新建播放列表的Dialog
             case R.id.ll_add_new_play_list:
-                LogUtil.d("================新建播放列表=============");
+
+                AddListDialog.newInstance().show(getFragmentManager(), "addList");
+
+                LogUtil.d("================新建播放列表====  " + mList.size());
 
                 break;
             default:
@@ -115,6 +131,10 @@ public class PlayListFragment extends BaseFragment {
         return new PlayListFragment();
     }
 
+    @Override
+    protected int getFlag() {
+        return Constants.NUMBER_ONE;
+    }
 
     @Override
     public void onDestroyView() {

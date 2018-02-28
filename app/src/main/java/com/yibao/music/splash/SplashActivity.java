@@ -2,20 +2,29 @@ package com.yibao.music.splash;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.artisanlist.MusicActivity;
+import com.yibao.music.base.BaseActivity;
+import com.yibao.music.model.song.MusicCountBean;
+import com.yibao.music.service.LoadMusicDataServices;
+import com.yibao.music.util.Constants;
+import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.SystemUiVisibilityUtil;
+import com.yibao.music.view.ProgressBtn;
 
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -26,31 +35,64 @@ import io.reactivex.schedulers.Schedulers;
  * @author Stran
  */
 public class SplashActivity
-        extends AppCompatActivity {
+        extends BaseActivity {
 
 
     @BindView(R.id.iv_splash)
     ImageView mIvSplash;
+    @BindView(R.id.tv_music_count)
+    TextView mTvMusicCount;
+    @BindView(R.id.music_count_pb)
+    ProgressBtn mMusicLoadProgressBar;
     private Unbinder mBind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        ButterKnife.bind(this);
         mBind = ButterKnife.bind(this);
         SystemUiVisibilityUtil.hideStatusBar(getWindow(), true);
-//        startService(new Intent(this, LoadMusicDataServices.class));
 
+        initRxbusData();
+    }
 
-        Observable.timer(400, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> {
-                    SplashActivity.this.startActivity(new Intent(SplashActivity.this,
-                            MusicActivity.class));
-                    finish();
-                });
-//
+    private void initRxbusData() {
+        if (SharePrefrencesUtil.getLoadMusicFlag(this) != Constants.NUMBER_EIGHT) {
+            mTvMusicCount.setVisibility(View.VISIBLE);
+            mMusicLoadProgressBar.setVisibility(View.VISIBLE);
+            startService(new Intent(this, LoadMusicDataServices.class));
+            mCompositeDisposable.add(mBus.toObserverable(MusicCountBean.class).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<MusicCountBean>() {
+                @Override
+                public void accept(MusicCountBean musicCountBean) throws Exception {
+                    int size = musicCountBean.getSize();
+                    int count = musicCountBean.getMusicCount();
+                    mMusicLoadProgressBar.setMax(size);
+                    String s = "已经加载  " + count + " 首本地音乐";
+
+                    mTvMusicCount.setText(s);
+                    mMusicLoadProgressBar.setProgress(count);
+                    if (count == size) {
+                        mTvMusicCount.setText("本地音乐加载完成 -_-");
+                        SplashActivity.this.startActivity(new Intent(SplashActivity.this,
+                                MusicActivity.class));
+                        finish();
+                        SharePrefrencesUtil.setLoadMusicFlag(SplashActivity.this, Constants.NUMBER_EIGHT);
+                    }
+                }
+            }));
+        } else {
+
+            Observable.timer(400, TimeUnit.MILLISECONDS)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(aLong -> {
+                        SplashActivity.this.startActivity(new Intent(SplashActivity.this,
+                                MusicActivity.class));
+                        finish();
+                    });
+        }
+
     }
 
 
@@ -58,7 +100,17 @@ public class SplashActivity
     protected void onDestroy() {
         super.onDestroy();
         mBind.unbind();
+        mCompositeDisposable.dispose();
     }
 
 
+    @OnClick(R.id.tv_music_count)
+    public void onClick(View v) {
+        switch (v.getId()) {
+            default:
+                break;
+            case R.id.tv_music_count:
+                break;
+        }
+    }
 }

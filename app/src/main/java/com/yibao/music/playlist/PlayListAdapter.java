@@ -1,5 +1,6 @@
 package com.yibao.music.playlist;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -7,7 +8,7 @@ import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
-import com.yibao.music.model.ArtistInfo;
+import com.yibao.music.model.MusicInfo;
 
 import java.util.List;
 
@@ -25,26 +26,24 @@ import butterknife.ButterKnife;
  * @描述： {TODO}
  */
 
-public class PlayListAdapter extends BaseRvAdapter<ArtistInfo> {
-    public PlayListAdapter(List<ArtistInfo> list) {
+public class PlayListAdapter extends BaseRvAdapter<MusicInfo> {
+    private Context mContext;
+
+    public PlayListAdapter(Context context, List<MusicInfo> list) {
         super(list);
+        this.mContext = context;
     }
 
-    @Override
-    protected String getLastItemDes() {
-        return " 个播放列表";
-    }
 
     @Override
-    protected void bindView(RecyclerView.ViewHolder holder, ArtistInfo artistInfo) {
+    protected void bindView(RecyclerView.ViewHolder holder, MusicInfo artistInfo) {
 
         if (holder instanceof PlayViewHolder) {
             PlayViewHolder playViewHolder = (PlayViewHolder) holder;
-            String count = artistInfo.getSongCount() + " 首歌曲";
+            playViewHolder.mTvPlayListName.setText(artistInfo.getTitle());
+            String count = artistInfo.getPlayStatus() + " 首歌曲";
             playViewHolder.mTvPlayListCount.setText(count);
-            playViewHolder.mTvPlayListName.setText(artistInfo.getName());
-
-            playViewHolder.itemView.setOnClickListener(view -> PlayListAdapter.this.openDetails());
+            playViewHolder.itemView.setOnClickListener(view -> PlayListAdapter.this.openDetails(null));
         }
     }
 
@@ -73,4 +72,8 @@ public class PlayListAdapter extends BaseRvAdapter<ArtistInfo> {
         }
     }
 
+    @Override
+    protected String getLastItemDes() {
+        return " 个播放列表";
+    }
 }

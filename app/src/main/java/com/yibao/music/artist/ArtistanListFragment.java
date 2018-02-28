@@ -7,10 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yibao.music.R;
+import com.yibao.music.album.DetailsListAdapter;
 import com.yibao.music.base.BaseFragment;
+import com.yibao.music.model.ArtistInfo;
+import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
+import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,9 +37,10 @@ public class ArtistanListFragment extends BaseFragment {
 
     @BindView(R.id.artist_music_view)
     MusicView mMusicView;
+    @BindView(R.id.details_view)
+    DetailsView mDetailsView;
     private Unbinder unbinder;
     private ArtistAdapter mAdapter;
-    //    private ArrayList<ArtistInfo> mArtistList;
 
 
     @Nullable
@@ -50,20 +57,43 @@ public class ArtistanListFragment extends BaseFragment {
 
 
     private void initListener() {
-        mAdapter.setItemListener(() -> LogUtil.d("=================ArtistanLIstFragment===item============="));
+        mAdapter.setItemListener(ArtistanListFragment.this::openDetailsView);
     }
 
     private void initData() {
-        mAdapter = new ArtistAdapter(getActivity(), mArtistList);
+        mAdapter = new ArtistAdapter(mArtistList);
         mMusicView.setAdapter(getActivity(), Constants.NUMBER_TWO, true, mAdapter);
 
 
+    }
+
+    private void openDetailsView(ArtistInfo bean) {
+        if (isShowDetailsView) {
+            mDetailsView.setVisibility(View.INVISIBLE);
+            mMusicView.setVisibility(View.VISIBLE);
+
+        } else {
+            mMusicView.setVisibility(View.INVISIBLE);
+            mDetailsView.setVisibility(View.VISIBLE);
+            List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(bean.getArtist())).build().list();
+            DetailsListAdapter adapter = new DetailsListAdapter(getActivity(),list,Constants.NUMBER_ONE);
+
+            mDetailsView.setAdapter(getActivity(), Constants.NUMBER_ONE, bean, adapter);
+
+        }
+        isShowDetailsView = !isShowDetailsView;
     }
 
     public static ArtistanListFragment newInstance() {
 
         return new ArtistanListFragment();
     }
+
+    @Override
+    protected int getFlag() {
+        return Constants.NUMBER_TWO;
+    }
+
 
     @Override
     public void onDestroyView() {

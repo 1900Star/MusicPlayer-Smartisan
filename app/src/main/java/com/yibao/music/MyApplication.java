@@ -7,6 +7,7 @@ import com.squareup.leakcanary.LeakCanary;
 import com.yibao.music.model.greendao.DaoMaster;
 import com.yibao.music.model.greendao.DaoSession;
 import com.yibao.music.model.greendao.MusicBeanDao;
+import com.yibao.music.model.greendao.MusicInfoDao;
 import com.yibao.music.util.CrashHandler;
 import com.yibao.music.util.RxBus;
 
@@ -55,6 +56,7 @@ public class MyApplication
         DaoMaster daoMaster = new DaoMaster(db);
         mDaoSession = daoMaster.newSession();
 
+
     }
 
     public MusicBeanDao getMusicDao() {
@@ -63,6 +65,9 @@ public class MyApplication
 
     }
 
+    public MusicInfoDao getMusicInfoDao() {
+        return mDaoSession.getMusicInfoDao();
+    }
 
     public RxBus bus() {
         return mRxBus;

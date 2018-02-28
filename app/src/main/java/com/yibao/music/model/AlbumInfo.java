@@ -16,16 +16,16 @@ import android.support.annotation.NonNull;
 
 public class AlbumInfo implements Parcelable, Comparable<AlbumInfo> {
     private String albumName;
-    private String singerName;
+    private String artist;
     private Long albumId;
     private int songCount;
     private String firstChar;
     private String songName;
-
+    private int year;
 
     protected AlbumInfo(Parcel in) {
         albumName = in.readString();
-        singerName = in.readString();
+        artist = in.readString();
         if (in.readByte() == 0) {
             albumId = null;
         } else {
@@ -34,6 +34,7 @@ public class AlbumInfo implements Parcelable, Comparable<AlbumInfo> {
         songCount = in.readInt();
         firstChar = in.readString();
         songName = in.readString();
+        year = in.readInt();
     }
 
     public static final Creator<AlbumInfo> CREATOR = new Creator<AlbumInfo>() {
@@ -47,6 +48,14 @@ public class AlbumInfo implements Parcelable, Comparable<AlbumInfo> {
             return new AlbumInfo[size];
         }
     };
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
 
     public String getSongName() {
         return songName;
@@ -67,12 +76,12 @@ public class AlbumInfo implements Parcelable, Comparable<AlbumInfo> {
         this.albumName = albumName;
     }
 
-    public String getSingerName() {
-        return singerName;
+    public String getArtist() {
+        return artist;
     }
 
-    public void setSingerName(String singerName) {
-        this.singerName = singerName;
+    public void setArtist(String singerName) {
+        this.artist = singerName;
     }
 
     public Long getAlbumId() {
@@ -117,17 +126,6 @@ public class AlbumInfo implements Parcelable, Comparable<AlbumInfo> {
 
 
     @Override
-    public int hashCode() {
-        int result = albumName != null ? albumName.hashCode() : 0;
-        result = 31 * result + (singerName != null ? singerName.hashCode() : 0);
-        result = 31 * result + (albumId != null ? albumId.hashCode() : 0);
-        result = 31 * result + songCount;
-        result = 31 * result + (firstChar != null ? firstChar.hashCode() : 0);
-        result = 31 * result + (songName != null ? songName.hashCode() : 0);
-        return result;
-    }
-
-    @Override
     public int describeContents() {
         return 0;
     }
@@ -135,7 +133,7 @@ public class AlbumInfo implements Parcelable, Comparable<AlbumInfo> {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(albumName);
-        parcel.writeString(singerName);
+        parcel.writeString(artist);
         if (albumId == null) {
             parcel.writeByte((byte) 0);
         } else {
@@ -145,5 +143,6 @@ public class AlbumInfo implements Parcelable, Comparable<AlbumInfo> {
         parcel.writeInt(songCount);
         parcel.writeString(firstChar);
         parcel.writeString(songName);
+        parcel.writeInt(year);
     }
 }

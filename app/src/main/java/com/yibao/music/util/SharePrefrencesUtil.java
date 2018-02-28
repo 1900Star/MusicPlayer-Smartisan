@@ -51,6 +51,24 @@ public class SharePrefrencesUtil {
     }
 
     /**
+     * 用于存储程序退是否加载过本地音乐。
+     *
+     * @param context
+     * @param value
+     */
+    public static void setLoadMusicFlag(Context context, int value) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_LOAD, Constants.MODE_KEY);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(Constants.MUSIC_LOAD_FLAG, value);
+        editor.commit();
+    }
+
+    public static int getLoadMusicFlag(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_LOAD, Constants.MODE_KEY);
+        return sp.getInt(Constants.MUSIC_LOAD_FLAG, Constants.MODE_KEY);
+    }
+
+    /**
      * 用于存储程序退出或关闭音乐界面时，音乐列表的分类标记，。
      * 1 歌曲名   2  评分   3  播放次数        4  添加时间
      *

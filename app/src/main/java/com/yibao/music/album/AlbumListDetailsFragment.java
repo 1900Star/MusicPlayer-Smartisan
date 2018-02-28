@@ -73,12 +73,12 @@ public class AlbumListDetailsFragment extends BaseFragment {
         ArrayList<ArtistInfo> list = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             ArtistInfo artistInfo = new ArtistInfo();
-            artistInfo.setName(i + "爱");
+            artistInfo.setArtist(i + "爱");
             artistInfo.setSongCount(i);
             list.add(artistInfo);
         }
 
-        PlayListAdapter playListAdapter = new PlayListAdapter(list);
+        PlayListAdapter playListAdapter = new PlayListAdapter(getActivity(),null);
         LinearLayoutManager manager = new LinearLayoutManager(MyApplication.getIntstance());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
@@ -118,6 +118,10 @@ public class AlbumListDetailsFragment extends BaseFragment {
         }
     }
 
+    @Override
+    protected int getFlag() {
+        return 6;
+    }
 
     @Override
     public void onDestroyView() {

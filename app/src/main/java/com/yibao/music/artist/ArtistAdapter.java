@@ -1,6 +1,5 @@
 package com.yibao.music.artist;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -29,7 +28,7 @@ import butterknife.ButterKnife;
 
 public class ArtistAdapter extends BaseRvAdapter<ArtistInfo> {
 
-    public ArtistAdapter(Context context, List<ArtistInfo> list) {
+    public ArtistAdapter(List<ArtistInfo> list) {
         super(list);
 
     }
@@ -46,16 +45,16 @@ public class ArtistAdapter extends BaseRvAdapter<ArtistInfo> {
             int position = holder.getAdapterPosition();
             String songCount = artistInfo.getSongCount() + " 首歌曲,";
             String albumCount = artistInfo.getAlbumCount() + " 张专辑";
-            artisHolder.mArtistName.setText(artistInfo.getName());
+            artisHolder.mArtistName.setText(artistInfo.getArtist());
             artisHolder.mArtistAlbumCount.setText(albumCount);
             artisHolder.mArtistSongCount.setText(songCount);
-            String firstChar = HanziToPinyins.stringToPinyinSpecial(artistInfo.getName()) + "";
+            String firstChar = HanziToPinyins.stringToPinyinSpecial(artistInfo.getArtist()) + "";
 
             artisHolder.mStickyView.setText(firstChar);
             if (position == 0) {
                 artisHolder.mStickyView.setVisibility(View.VISIBLE);
-            } else if (position != 0 && firstChar.equals(HanziToPinyins
-                    .stringToPinyinSpecial(mList.get(position - 1).getName()) + "")) {
+            } else if (firstChar.equals(HanziToPinyins
+                    .stringToPinyinSpecial(mList.get(position - 1).getArtist()) + "")) {
                 artisHolder.mStickyView.setVisibility(View.GONE);
 
             } else {
@@ -63,7 +62,7 @@ public class ArtistAdapter extends BaseRvAdapter<ArtistInfo> {
             }
 
 
-            artisHolder.mArtistItemContent.setOnClickListener(view -> openDetails());
+            artisHolder.mArtistItemContent.setOnClickListener(view -> openDetails(artistInfo));
 
         }
 
@@ -89,7 +88,7 @@ public class ArtistAdapter extends BaseRvAdapter<ArtistInfo> {
     @Override
     public int getPositionForSection(int section) {
         for (int i = 0; i < getItemCount(); i++) {
-            char firstChar = HanziToPinyins.stringToPinyinSpecial(mList.get(i).getName());
+            char firstChar = HanziToPinyins.stringToPinyinSpecial(mList.get(i).getArtist());
             if (firstChar == section) {
                 return i;
             }
@@ -104,7 +103,7 @@ public class ArtistAdapter extends BaseRvAdapter<ArtistInfo> {
     public int getSectionForPosition(int position) {
 
 
-        return HanziToPinyins.stringToPinyinSpecial(mList.get(position).getName());
+        return HanziToPinyins.stringToPinyinSpecial(mList.get(position).getArtist());
     }
 
 

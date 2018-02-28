@@ -66,6 +66,8 @@ public class MusicListUtil {
             int addTime = (int) cursor.getLong(addDed);
             // 文件大小
             long size = cursor.getLong(mSize);
+            //发行时间
+            int year = cursor.getInt(issueYear);
             // 文件路径
             String url = cursor.getString(mUrl);
             //过滤掉小于2分钟的音乐,后续可以通过SharePreference让用户在UI界面自行选择。
@@ -78,7 +80,7 @@ public class MusicListUtil {
                 info.setDuration(duration);
                 info.setAddTime(addTime);
                 info.setSongUrl(url);
-//                MyApplication.getIntstance().getDaoSession().getMusicBeanDao().insert(info);
+                info.setIssueYear(year);
                 musicInfos.add(info);
             }
         }
@@ -91,7 +93,7 @@ public class MusicListUtil {
     /**
      * 按添加时间排序
      *
-     * @param musicList
+     * @param musicList c
      */
     public static ArrayList<MusicBean> sortMusicAddtime(ArrayList<MusicBean> musicList) {
         Collections.sort(musicList, (m1, m2) -> {
@@ -158,17 +160,21 @@ public class MusicListUtil {
 
         for (Map.Entry<String, List<MusicBean>> entry : musicMap.entrySet()) {
 
-            ArtistInfo singerInfo = new ArtistInfo();
-            singerInfo.setFirstChar(HanziToPinyins.stringToPinyinSpecial(entry.getKey()) + "");
-            singerInfo.setName(entry.getKey());
-            singerInfo.setSongCount(entry.getValue().size());
-            singerInfoList.add(singerInfo);
+            ArtistInfo artistInfo = new ArtistInfo();
+            artistInfo.setFirstChar(HanziToPinyins.stringToPinyinSpecial(entry.getKey()) + "");
+            artistInfo.setArtist(entry.getKey());
+            artistInfo.setSongCount(entry.getValue().size());
+            artistInfo.setAlbumName(entry.getValue().get(0).getAlbum());
+            artistInfo.setYear(entry.getValue().get(0).getIssueYear());
+            artistInfo.setAlbumId(entry.getValue().get(0).getAlbumId());
+            singerInfoList.add(artistInfo);
         }
         Collections.sort(singerInfoList);
         return singerInfoList;
     }
 
     //    //按专辑分组
+
     public static ArrayList<AlbumInfo> getAlbumList(ArrayList<MusicBean> list) {
         Map<String, List<MusicBean>> musicMap = new HashMap<>(16);
         ArrayList<AlbumInfo> albumInfoList = new ArrayList<>();
@@ -188,9 +194,11 @@ public class MusicListUtil {
             AlbumInfo albumInfo = new AlbumInfo();
 
             albumInfo.setAlbumName(entry.getKey());
-            albumInfo.setSingerName(entry.getValue().get(0).getArtist());
+            albumInfo.setArtist(entry.getValue().get(0).getArtist());
             albumInfo.setAlbumId(entry.getValue().get(0).getAlbumId());
             albumInfo.setSongName(entry.getValue().get(0).getTitle());
+            albumInfo.setYear(entry.getValue().get(0).getIssueYear());
+            albumInfo.setAlbumId(entry.getValue().get(0).getAlbumId());
             albumInfo.setFirstChar(HanziToPinyins.stringToPinyinSpecial(entry.getKey()) + "");
             albumInfo.setSongCount(entry.getValue().size());
             albumInfoList.add(albumInfo);

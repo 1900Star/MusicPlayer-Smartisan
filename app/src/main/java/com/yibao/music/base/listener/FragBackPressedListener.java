@@ -13,5 +13,5 @@ import android.app.Fragment;
  */
 
 public interface FragBackPressedListener {
-    void putFragment(Fragment fragment);
+    void putFragment(Fragment fragment,int flag);
 }

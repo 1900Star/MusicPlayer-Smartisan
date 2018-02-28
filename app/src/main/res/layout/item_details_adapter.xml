@@ -4,16 +4,21 @@
     android:id="@+id/rl_details_item"
     android:layout_width="match_parent"
     android:layout_height="55dp"
-    android:focusable="true"
-    android:clickable="true"
+    android:layout_marginTop="0.5dp"
     android:background="@drawable/list_item_selector"
+    android:clickable="true"
+    android:focusable="true"
     android:gravity="center_vertical">
+
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:gravity="center_vertical"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:orientation="horizontal"
         tools:ignore="UseCompoundDrawables">
 
@@ -21,21 +26,26 @@
             android:id="@+id/tv_details_song_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:ellipsize="end"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:singleLine="true"
             android:textColor="@color/text_song_name_selector"
-            android:textSize="@dimen/about_sign" />
+            android:textSize="@dimen/bigLyrics" />
 
         <ImageView
             android:id="@+id/iv_blueplay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="20dp"
             android:layout_margin="8dp"
-            android:src="@drawable/playing_blueplay2" />
+            android:src="@drawable/playing_blueplay2"
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:gravity="center_vertical"
         android:orientation="horizontal">

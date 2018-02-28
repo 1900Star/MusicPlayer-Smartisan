@@ -30,6 +30,8 @@ public class MusicInfo
     public MusicInfo() {
     }
 
+
+
     protected MusicInfo(Parcel in) {
         if (in.readByte() == 0) {
             id = null;

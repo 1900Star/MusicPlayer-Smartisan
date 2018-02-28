@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@drawable/tabbar_bg"
+        android:gravity="center"
+        android:text="@string/add_new_play_list"
+        android:textColor="@color/textDes"
+        android:textSize="@dimen/bigLyrics"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <EditText
+            android:id="@+id/edit_add_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/not_name_hint"
+            android:textColor="@color/colorBlack"
+
+            android:textColorHint="@color/tabbarTv"
+            android:textCursorDrawable="@drawable/edittext_cursor_color" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_add_list_cancle"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/add_btn_selector"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/text_cancel_selector"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_add_list_continue"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/add_btn_selector"
+            android:gravity="center"
+            android:text="@string/continues"
+            android:textColor="@color/text_cancel_selector"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</LinearLayout>

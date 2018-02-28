@@ -6,39 +6,52 @@
     android:background="@color/listBg"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/ll_add_new_play_list"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/tabbar_bg"
-        android:gravity="center">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:background="@drawable/btn_add_selector" />
+        <LinearLayout
+            android:id="@+id/ll_add_new_play_list"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/tabbar_bg"
+            android:gravity="center">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:enabled="true"
-            android:focusable="true"
-            android:text="@string/add_new_play_list"
-            android:textColor="@color/text_add_list_selector"
-            android:textSize="@dimen/about_sign" />
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/btn_add_selector"
+                android:contentDescription="@null" />
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:enabled="true"
+                android:focusable="true"
+                android:text="@string/add_new_play_list"
+                android:textColor="@color/text_add_list_selector"
+                android:textSize="@dimen/about_title" />
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/details_fragment_head"
+            android:visibility="gone" />
+    </RelativeLayout>
+
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.2dp"
         android:background="@color/listBg" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_play_list"
+    <LinearLayout
+        android:id="@+id/play_list_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical" />
 
 
 </LinearLayout>

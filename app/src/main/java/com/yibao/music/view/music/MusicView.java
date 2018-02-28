@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 import com.yibao.music.R;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 
 /**
  * Author：Sid
@@ -46,27 +45,27 @@ public class MusicView
     }
 
     private void initListener() {
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                switch (newState) {
-                    case RecyclerView.SCROLL_STATE_DRAGGING:
-                        LogUtil.d("SCROLL_STATE_DRAGGING");
-                        break;
-                    case RecyclerView.SCROLL_STATE_IDLE:
-                        LogUtil.d("SCROLL_STATE_IDLE");
-                        break;
-                    case RecyclerView.SCROLL_STATE_SETTLING:
-                        LogUtil.d("SCROLL_STATE_SETTLING");
-                        break;
-
-                    default:
-                        break;
-                }
-
-            }
-        });
+//        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//                switch (newState) {
+//                    case RecyclerView.SCROLL_STATE_DRAGGING:
+//                        LogUtil.d("SCROLL_STATE_DRAGGING");
+//                        break;
+//                    case RecyclerView.SCROLL_STATE_IDLE:
+//                        LogUtil.d("SCROLL_STATE_IDLE");
+//                        break;
+//                    case RecyclerView.SCROLL_STATE_SETTLING:
+//                        LogUtil.d("SCROLL_STATE_SETTLING");
+//                        break;
+//
+//                    default:
+//                        break;
+//                }
+//
+//            }
+//        });
     }
 
 

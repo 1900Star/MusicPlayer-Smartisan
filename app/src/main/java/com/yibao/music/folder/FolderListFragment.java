@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.yibao.music.R;
 import com.yibao.music.base.BaseFragment;
+import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 
 import butterknife.BindView;
@@ -53,6 +54,10 @@ public class FolderListFragment extends BaseFragment {
         return new FolderListFragment();
     }
 
+    @Override
+    protected int getFlag() {
+        return Constants.NUMBER_FIEV;
+    }
 
     @Override
     public void onDestroyView() {

@@ -3,17 +3,17 @@ package com.yibao.music.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.yibao.music.MyApplication;
 import com.yibao.music.R;
+import com.yibao.music.factory.RecyclerFactory;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.playlist.PlayListAdapter;
+import com.yibao.music.util.Constants;
 
 import java.util.ArrayList;
 
@@ -51,8 +51,9 @@ public class DetailsListControlBarActivity extends AppCompatActivity {
     LinearLayout mLlAlbumDetailsPlayall;
     @BindView(R.id.ll_album_details_random_play)
     LinearLayout mLlAlbumDetailsRandomPlay;
-    @BindView(R.id.rv_artist_album_details)
-    RecyclerView mRecyclerVeiw;
+    @BindView(R.id.artist_album_details_content)
+    LinearLayout mContentView;
+    private PlayListAdapter mAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,18 +67,15 @@ public class DetailsListControlBarActivity extends AppCompatActivity {
         ArrayList<ArtistInfo> list = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             ArtistInfo artistInfo = new ArtistInfo();
-            artistInfo.setName(i + "爱");
+            artistInfo.setArtist(i + "爱");
             artistInfo.setSongCount(i);
             list.add(artistInfo);
         }
 
-        PlayListAdapter playListAdapter = new PlayListAdapter(list);
-        LinearLayoutManager manager = new LinearLayoutManager(MyApplication.getIntstance());
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerVeiw.setLayoutManager(manager);
-        mRecyclerVeiw.setHasFixedSize(true);
-        mRecyclerVeiw.setAdapter(playListAdapter);
-        playListAdapter.notifyDataSetChanged();
+        mAdapter = new PlayListAdapter(this,null);
+        RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
+        mContentView.addView(recyclerView);
+
     }
 
 

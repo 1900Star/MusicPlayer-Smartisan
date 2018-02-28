@@ -56,6 +56,7 @@ public class AudioPlayService
     private NotificationManager manager;
     private RemoteViews mRemoteViews;
     private MusicBeanDao mMusicDao;
+    private MusicBean mMusicBean;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -79,7 +80,7 @@ public class AudioPlayService
         if (mMusicDao == null) {
             mMusicDao = MyApplication.getIntstance().getMusicDao();
         }
-
+        mMusicBean = new MusicBean();
         initBroadcast();
         //初始化播放模式
         PLAY_MODE = SharePrefrencesUtil.getMusicMode(this);
@@ -97,27 +98,40 @@ public class AudioPlayService
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int sortListFlag = intent.getIntExtra("sortFlag", 0);
         int enterPosition = intent.getIntExtra("position", 0);
+        int sortListFlag = intent.getIntExtra("sortFlag", 0);
+        int dataFlag = intent.getIntExtra("dataFlag", 0);
+        String queryFlag = intent.getStringExtra("queryFlag");
         LogUtil.d("Service MusicList size==== sortListFlag   " + mMusicDataList.size(), "====  " + sortListFlag);
+        LogUtil.d("Service MusicList == dataFlag  queryFlag   " + dataFlag, "====  " + queryFlag);
 
+        getMusicDataList(sortListFlag, dataFlag, queryFlag);
+
+        if (enterPosition != position && enterPosition != -1) {
+            position = enterPosition;
+            //执行播放
+            mAudioBinder.play();
+        } else if (enterPosition != -1) {
+            //通知播放界面更新
+            sendCureentMusicInfo();
+        }
+        return START_NOT_STICKY;
+    }
+
+    private void getMusicDataList(int sortListFlag, int dataFlag, String queryFlag) {
         if (sortListFlag == Constants.NUMBER_ONE) {
             mMusicDataList = mMusicDao.queryBuilder().list();
         } else if (sortListFlag == Constants.NUMBER_FOUR) {
             mMusicDataList = MusicListUtil.sortMusicAddtime((ArrayList<MusicBean>) mMusicDataList);
         } else if (sortListFlag == Constants.NUMBER_EIGHT) {
             mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
+        } else if (dataFlag == Constants.NUMBER_ONE) {
+            mMusicBean.setArtist(queryFlag);
+            mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(mMusicBean.getArtist())).build().list();
+        } else if (dataFlag == Constants.NUMBER_TWO) {
+            mMusicBean.setAlbum(queryFlag);
+            mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(mMusicBean.getAlbum())).build().list();
         }
-
-        if (enterPosition != position && enterPosition != -1) {
-            position = enterPosition;
-            //执行播放
-            mAudioBinder.play();
-        } else if (enterPosition != -1 && enterPosition == position) {
-            //通知播放界面更新
-            sendCureentMusicInfo();
-        }
-        return START_NOT_STICKY;
     }
 
 
@@ -170,7 +184,7 @@ public class AudioPlayService
         }
 
         private void showNotification() {
-            Notification notification = MusicNoification.getNotification(MyApplication.getIntstance(), mRemoteViews,
+            Notification notification = MusicNoification.getNotification(getApplicationContext(), mRemoteViews,
                     mMusicInfo);
             manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
