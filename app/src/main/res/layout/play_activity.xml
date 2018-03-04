@@ -258,6 +258,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:background="@drawable/btn_shuffle"
         android:maxHeight="8dp"
         android:minHeight="8dp"
         android:progressDrawable="@drawable/seek_bar"
