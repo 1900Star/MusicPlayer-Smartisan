@@ -13,6 +13,7 @@ import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicView;
 
@@ -76,7 +77,7 @@ public class ArtistanListFragment extends BaseFragment {
             mMusicView.setVisibility(View.INVISIBLE);
             mDetailsView.setVisibility(View.VISIBLE);
             List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(bean.getArtist())).build().list();
-            DetailsListAdapter adapter = new DetailsListAdapter(getActivity(),list,Constants.NUMBER_ONE);
+            DetailsListAdapter adapter = new DetailsListAdapter(getActivity(), list, Constants.NUMBER_ONE);
 
             mDetailsView.setAdapter(getActivity(), Constants.NUMBER_ONE, bean, adapter);
 
@@ -89,11 +90,6 @@ public class ArtistanListFragment extends BaseFragment {
         return new ArtistanListFragment();
     }
 
-    @Override
-    protected int getFlag() {
-        return Constants.NUMBER_TWO;
-    }
-
 
     @Override
     public void onDestroyView() {
@@ -101,4 +97,10 @@ public class ArtistanListFragment extends BaseFragment {
         unbinder.unbind();
     }
 
+    @Override
+    public boolean backPressed() {
+        LogUtil.d("========== 自己处理返回事件");
+
+        return mDetailsView.getVisibility() != View.GONE;
+    }
 }

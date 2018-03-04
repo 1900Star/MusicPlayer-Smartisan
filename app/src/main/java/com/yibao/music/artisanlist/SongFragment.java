@@ -202,7 +202,7 @@ public class SongFragment extends BaseFragment {
     }
 
     @Override
-    protected int getFlag() {
-        return Constants.NUMBER_THRRE;
+    public boolean backPressed() {
+        return false;
     }
 }

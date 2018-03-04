@@ -168,10 +168,6 @@ public class AlbumFragment extends BaseFragment {
         return new AlbumFragment();
     }
 
-    @Override
-    protected int getFlag() {
-        return Constants.NUMBER_FOUR;
-    }
 
     @Override
     public void onDestroyView() {
@@ -180,4 +176,10 @@ public class AlbumFragment extends BaseFragment {
 
     }
 
+    @Override
+    public boolean backPressed() {
+
+
+        return mDetailsView.getVisibility() != View.GONE;
+    }
 }

@@ -1,9 +1,6 @@
 package com.yibao.music.artisanlist;
 
 import android.animation.ObjectAnimator;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -16,7 +13,6 @@ import android.os.IBinder;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,12 +26,11 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayActivity;
-import com.yibao.music.album.AlbumListDetailsFragment;
 import com.yibao.music.album.MainActivity;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.base.BaseFragment;
-import com.yibao.music.base.listener.FragBackPressedListener;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
+import com.yibao.music.base.listener.OnBackHandlePressedListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
@@ -72,7 +67,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class MusicActivity
         extends BaseActivity
-        implements OnMusicItemClickListener {
+        implements OnMusicItemClickListener, OnBackHandlePressedListener {
 
     @BindView(R.id.tv_music_toolbar_title)
     TextView mTvMusicToolbarTitle;
@@ -157,7 +152,10 @@ public class MusicActivity
     private int mPlayState;
     private int mNormalTabbarColor;
     private QqBarPagerAdapter mQqBarPagerAdapter;
+    private BaseFragment mBaseFragment;
 
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -208,7 +206,7 @@ public class MusicActivity
      * getSpMusicFlag()先获取上次播放列表的标记，根据标记初始化对应的列表数据 。
      * 1 歌曲名   2  评分   3  播放次数        4  添加时间
      *
-     * @return
+     * @return h
      */
     private List<MusicBean> initMusicData() {
         int spMusicFlag = getSpMusicFlag();
@@ -232,7 +230,6 @@ public class MusicActivity
                 // 读取用户的播放记录，设置UI显示，做好播放的准备。(暂停和播放两种状态)
                 MusicBean musicBean = mMusicItems.get(mCurrentPosition);
                 perpareItem(musicBean);
-//                mMusicConfig = false;
             } else if (mPlayState == Constants.NUMBER_TWO) {
                 executStartServiceAndInitAnimation();
             }
@@ -245,7 +242,6 @@ public class MusicActivity
 
     private void executStartServiceAndInitAnimation() {
         startMusicService(mCurrentPosition);
-//        initAnimation();
         mMusicFloatingPlay.setImageResource(R.drawable.btn_playing_pause_selector);
         mMusicPagerPlay.setIcon(R.mipmap.notifycation_pause);
         mPlayState = Constants.NUMBER_THRRE;
@@ -363,6 +359,7 @@ public class MusicActivity
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void initRxBusData() {
         //接收service发出的数据，时时更新播放歌曲 进度 歌名 歌手信息
         mCompositeDisposable.add(mBus.toObserverable(MusicBean.class)
@@ -396,13 +393,14 @@ public class MusicActivity
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(MusicActivity.this::refreshBtnAndNotify));
-
+        /* 更新当前歌曲的收藏状态*/
         mCompositeDisposable.add(mBus.toObserverable(MusicFavoriteBean.class).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(musicFavoriteBean -> MusicActivity.this.checkCurrentIsFavorite()));
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void refreshBtnAndNotify(MusicStatusBean bean) {
         switch (bean.getType()) {
             case 0:
@@ -431,7 +429,7 @@ public class MusicActivity
     /**
      * 设置歌曲名和歌手名
      *
-     * @param musicItem
+     * @param musicItem g
      */
     private void perpareItem(MusicBean musicItem) {
         mItem = musicItem;
@@ -470,7 +468,7 @@ public class MusicActivity
 
     }
 
-
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void initAnimation() {
         if (mAnimator == null || mAnimatorListener == null) {
             mAnimator = AnimationUtil.getRotation(mMusicFloatBlockAlbulm);
@@ -506,6 +504,7 @@ public class MusicActivity
      * mPlayState = 2 ：表示在播放时退出音乐播放器的界面，只是短暂的离开，但并没有退出程序，
      * 下次打开播放器的界面时，继续自动播放当前的歌曲。
      */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void switchPlayState() {
         if (mPlayState == Constants.NUMBER_ONE) {
             LogUtil.d(" PlayState == 1 ==================");
@@ -535,7 +534,7 @@ public class MusicActivity
         }
     }
 
-
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @OnClick({R.id.music_floating_pre,
             R.id.music_floating_play,
             R.id.music_floating_next,
@@ -783,11 +782,10 @@ public class MusicActivity
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-
         }
     }
 
-
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onPause() {
         super.onPause();
@@ -796,6 +794,7 @@ public class MusicActivity
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onResume() {
         super.onResume();
@@ -804,6 +803,7 @@ public class MusicActivity
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void headsetPullOut() {
         super.headsetPullOut();
@@ -814,45 +814,37 @@ public class MusicActivity
 
 
 //    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        return super.onKeyDown(keyCode, event);
-//    }
-
-
-    @Override
-    public void onBackPressed() {
-//        super.onBackPressed();
-        LogUtil.d("=========onBackPressed======     back");
-
-    }
-
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        switch (keyCode) {
-//            case KeyEvent.KEYCODE_BACK:
-////                finish();
-//                break;
-//            default:
-//                break;
+//    public void onBackPressed() {
+//        LogUtil.d("=====onBackPressed=      " + mBaseFragment.backPressed());
+//        if (!mBaseFragment.backPressed() || mBaseFragment == null) {
+//            super.onBackPressed();
+//            LogUtil.d("================hhhhhhhhhhhhhhhhhhhhh");
+//        } else if (mBaseFragment.backPressed()) {
+//            LogUtil.d("================kkkkkkkkkkkkkk");
+//
 //        }
-//        return super.onKeyDown(keyCode, event);
+//
+//
 //    }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-
+    public void putFragment(BaseFragment fragment) {
+        mBaseFragment = fragment;
     }
+
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        boolean b = mAnimator != null ||
-                mAnimatorListener != null || mDisposable != null;
-        if (b) {
-            mAnimator.cancel();
-            mAnimatorListener.pause();
+
+        if (mDisposable != null) {
             mDisposable.dispose();
+        }
+        if (mAnimator != null) {
+            mAnimator.cancel();
+        }
+        if (mAnimatorListener != null) {
+            mAnimatorListener.pause();
         }
         if (audioBinder != null && !audioBinder.isPlaying()) {
             audioBinder.closeNotificaction();

@@ -1,5 +1,7 @@
 package com.yibao.music.factory;
 
+import android.annotation.SuppressLint;
+
 import com.yibao.music.album.AlbumFragment;
 import com.yibao.music.album.AlbumListDetailsFragment;
 import com.yibao.music.artisanlist.SongFragment;
@@ -19,6 +21,7 @@ import java.util.Map;
  */
 public class FragmentFactory {
 
+    @SuppressLint("UseSparseArrays")
     private static Map<Integer, BaseFragment> mCacheFragmentMap = new HashMap<>();
 
     public static BaseFragment createFragment(int position) {

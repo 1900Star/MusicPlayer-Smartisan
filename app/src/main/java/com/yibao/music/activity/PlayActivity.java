@@ -328,7 +328,6 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
             R.id.playing_song_album, R.id.rotate_rl, R.id.tv_lyrics, R.id.iv_lyrics_switch, R.id.iv_secreen_sun_switch, R.id.music_player_mode, R.id.music_player_pre, R.id.music_play, R.id.music_player_next, R.id.iv_favorite_music})
     public void onClick(View v) {
         switch (v.getId()) {
-
             case R.id.titlebar_down:
                 finish();
                 break;
@@ -336,6 +335,7 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
                 showLyrics();
                 break;
             case R.id.rotate_rl:
+                // 按下音乐停止播放  动画停止 ，抬起恢复
                 break;
             case R.id.tv_lyrics:
                 showLyrics();

@@ -118,14 +118,15 @@ public class AlbumListDetailsFragment extends BaseFragment {
         }
     }
 
-    @Override
-    protected int getFlag() {
-        return 6;
-    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public boolean backPressed() {
+        return false;
     }
 }

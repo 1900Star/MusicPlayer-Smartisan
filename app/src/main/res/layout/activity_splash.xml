@@ -16,6 +16,14 @@
         android:textStyle="bold"
         android:visibility="gone" />
 
+    <com.yibao.music.view.ProgressBtn
+        android:id="@+id/music_count_pb"
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp"
+        android:background="@android:color/transparent"
+        android:gravity="bottom"
+        android:visibility="gone" />
+
     <ImageView
         android:id="@+id/iv_splash"
         android:layout_width="match_parent"
@@ -25,11 +33,4 @@
         android:scaleType="centerCrop"
         android:src="@mipmap/laoluo" />
 
-    <com.yibao.music.view.ProgressBtn
-        android:id="@+id/music_count_pb"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@android:color/transparent"
-        android:gravity="bottom"
-        android:visibility="gone" />
 </LinearLayout>

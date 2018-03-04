@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.yibao.music.MyApplication;
+import com.yibao.music.base.listener.OnBackHandlePressedListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
@@ -41,6 +42,7 @@ public abstract class BaseFragment extends Fragment {
     public MusicBeanDao mMusicBeanDao;
     public MusicInfoDao mMusicInfoDao;
     protected boolean isShowDetailsView = false;
+    private OnBackHandlePressedListener mHandlePressedListener;
 
     @Override
     public void onAttach(Context context) {
@@ -51,7 +53,11 @@ public abstract class BaseFragment extends Fragment {
         mActivity = getActivity();
         compositeDisposable = new CompositeDisposable();
         mBus = MyApplication.getIntstance().bus();
-
+        if (!(getActivity() instanceof OnBackHandlePressedListener)) {
+            throw new ClassCastException("Hosting Activity must implement BackHandledInterface");
+        } else {
+            this.mHandlePressedListener = (OnBackHandlePressedListener) getActivity();
+        }
 
     }
 
@@ -87,6 +93,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        mHandlePressedListener.putFragment(this);
     }
 
     /**
@@ -94,7 +101,7 @@ public abstract class BaseFragment extends Fragment {
      *
      * @return
      */
-    protected abstract int getFlag();
+    public abstract boolean backPressed();
 
     @Override
     public void onPause() {

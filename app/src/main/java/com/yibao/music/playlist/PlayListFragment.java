@@ -15,7 +15,6 @@ import com.yibao.music.factory.RecyclerFactory;
 import com.yibao.music.model.AddNewListBean;
 import com.yibao.music.model.MusicInfo;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 
 import java.util.List;
 
@@ -56,6 +55,7 @@ public class PlayListFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         mList = mMusicInfoDao.queryBuilder().build().list();
     }
+
 
     @Nullable
     @Override
@@ -100,18 +100,20 @@ public class PlayListFragment extends BaseFragment {
 
     private void initListener() {
 
-        mAdapter.setItemListener(str -> {
-            if (isShowDetailsView) {
-                mPlayListContent.setVisibility(View.VISIBLE);
-                mAlbumDetailsHeadContent.setVisibility(View.GONE);
+        mAdapter.setItemListener(str -> switchShowDetailsView());
 
-            } else {
-                mPlayListContent.setVisibility(View.GONE);
-                mAlbumDetailsHeadContent.setVisibility(View.VISIBLE);
-            }
-            isShowDetailsView = !isShowDetailsView;
-        });
+    }
 
+    private void switchShowDetailsView() {
+        if (isShowDetailsView) {
+            mLlAddNewPlayList.setVisibility(View.VISIBLE);
+            mAlbumDetailsHeadContent.setVisibility(View.GONE);
+
+        } else {
+            mLlAddNewPlayList.setVisibility(View.GONE);
+            mAlbumDetailsHeadContent.setVisibility(View.VISIBLE);
+        }
+        isShowDetailsView = !isShowDetailsView;
     }
 
 
@@ -120,11 +122,7 @@ public class PlayListFragment extends BaseFragment {
         switch (v.getId()) {
             // 打开新建播放列表的Dialog
             case R.id.ll_add_new_play_list:
-
                 AddListDialog.newInstance().show(getFragmentManager(), "addList");
-
-                LogUtil.d("================新建播放列表====  " + mList.size());
-
                 break;
             default:
                 break;
@@ -135,10 +133,21 @@ public class PlayListFragment extends BaseFragment {
         return new PlayListFragment();
     }
 
+    private boolean isHandlePressed;
+
     @Override
-    protected int getFlag() {
-        return Constants.NUMBER_ONE;
+    public boolean backPressed() {
+//        switchShowDetailsView();
+//        if (isHandlePressed) {
+//            return false;
+//        } else {
+//            LogUtil.d("================Click MyFragment");
+//            isHandlePressed = true;
+//            return true;
+//        }
+        return mLlAddNewPlayList.getVisibility() == View.VISIBLE;
     }
+
 
     @Override
     public void onDestroyView() {
