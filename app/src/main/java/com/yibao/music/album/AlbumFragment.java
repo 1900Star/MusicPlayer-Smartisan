@@ -11,10 +11,15 @@ import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.base.BaseFragment;
+import com.yibao.music.model.AlbumInfo;
+import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
+import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +56,10 @@ public class AlbumFragment extends BaseFragment {
     ImageView mIvAlbumCategoryPaly;
     @BindView(R.id.album_music_view)
     MusicView mAlbumMusicView;
+    @BindView(R.id.details_view)
+    DetailsView mDetailsView;
+    @BindView(R.id.album_content_view)
+    LinearLayout mAlbumContentView;
 
 
     private Unbinder unbinder;
@@ -63,10 +72,14 @@ public class AlbumFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.album_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         initData(Constants.NUMBER_ZOER, true, Constants.NUMBER_THRRE);
+        initListener();
         return view;
     }
 
+    private void initListener() {
+        mAdapter.setItemListener(AlbumFragment.this::openDetailsView);
 
+    }
 
 
     /**
@@ -88,8 +101,7 @@ public class AlbumFragment extends BaseFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_album_category_random_paly:
-
-                LogUtil.d("=================randomplay");
+                randomPlayMusic();
                 break;
             case R.id.iv_album_category_paly:
                 break;
@@ -104,6 +116,22 @@ public class AlbumFragment extends BaseFragment {
             default:
                 break;
         }
+    }
+
+    private void openDetailsView(AlbumInfo bean) {
+        if (isShowDetailsView) {
+            mDetailsView.setVisibility(View.INVISIBLE);
+            mAlbumContentView.setVisibility(View.VISIBLE);
+
+        } else {
+            mAlbumContentView.setVisibility(View.INVISIBLE);
+            mDetailsView.setVisibility(View.VISIBLE);
+            List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(bean.getAlbumName())).build().list();
+            DetailsListAdapter adapter = new DetailsListAdapter(getActivity(), list, Constants.NUMBER_TWO);
+            mDetailsView.setAdapter(getActivity(), Constants.NUMBER_TWO, bean, adapter);
+
+        }
+        isShowDetailsView = !isShowDetailsView;
     }
 
     private void switchCategory(int showType) {
@@ -140,6 +168,7 @@ public class AlbumFragment extends BaseFragment {
         return new AlbumFragment();
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -147,4 +176,10 @@ public class AlbumFragment extends BaseFragment {
 
     }
 
+    @Override
+    public boolean backPressed() {
+
+
+        return mDetailsView.getVisibility() != View.GONE;
+    }
 }

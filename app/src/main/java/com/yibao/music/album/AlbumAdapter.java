@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -33,7 +34,6 @@ import butterknife.ButterKnife;
 
 public class AlbumAdapter
         extends BaseRvAdapter<AlbumInfo>
-
 
 
 {
@@ -81,9 +81,9 @@ public class AlbumAdapter
     private void setDataAlbumList(AlbumlistHolder albumlistHolder, AlbumInfo info) {
         int position = albumlistHolder.getAdapterPosition();
 
-        albumlistHolder.mTvAlbumListSongArtist.setText(info.getSingerName());
+        albumlistHolder.mTvAlbumListSongArtist.setText(info.getArtist());
 
-        Glide.with(albumlistHolder.mIvItemAlbumList.getContext())
+        Glide.with(mContext)
                 .load(StringUtil.getAlbulm(info.getAlbumId()))
                 .placeholder(R.drawable.noalbumcover_220)
                 .into(albumlistHolder.mIvItemAlbumList);
@@ -94,7 +94,7 @@ public class AlbumAdapter
         albumlistHolder.mTvAlbumItemStickyView.setText(firstTv);
         if (position == 0) {
             albumlistHolder.mTvAlbumItemStickyView.setVisibility(View.VISIBLE);
-        } else if (position != 0 && firstTv.equals(mList.get(position - 1).getFirstChar())) {
+        } else if (firstTv.equals(mList.get(position - 1).getFirstChar())) {
             albumlistHolder.mTvAlbumItemStickyView.setVisibility(View.GONE);
 
         } else {
@@ -102,25 +102,24 @@ public class AlbumAdapter
         }
 
         //            Item点击监听
-        albumlistHolder.itemView.setOnClickListener(view -> {
+        albumlistHolder.mLlAlbumListItem.setOnClickListener(view -> {
             LogUtil.d("======mIvAlbumTileAlbum===   ", "列表显示");
-            openDetails();
-
+            AlbumAdapter.this.openDetails(info);
         });
     }
 
     private void setDataAlbumTile(AlbumTileHolder holder, AlbumInfo albumInfo) {
 
-        Glide.with(holder.mIvAlbumTileAlbum.getContext())
+        Glide.with(mContext)
                 .load(StringUtil.getAlbulm(albumInfo.getAlbumId()))
                 .placeholder(R.drawable.noalbumcover_220)
                 .into(holder.mIvAlbumTileAlbum);
         holder.mTvAlbumTileName.setText(albumInfo.getSongName());
 
-        holder.itemView.setOnClickListener(view1 -> {
+        holder.mIvAlbumTileAlbum.setOnClickListener(view1 -> {
 
             LogUtil.d("======mIvAlbumTileAlbum===   ", "平铺显示");
-            openDetails();
+            AlbumAdapter.this.openDetails(albumInfo);
 //            holder.mAlbumCoverShadowMask.setVisibility(View.VISIBLE);
         });
 //
@@ -139,6 +138,8 @@ public class AlbumAdapter
         ImageView mAlbumCoverShadowMask;
         @BindView(R.id.tv_album_tile_name)
         TextView mTvAlbumTileName;
+        @BindView(R.id.root_tile)
+        RelativeLayout mRootTile;
 
         AlbumTileHolder(View view) {
             super(view);
@@ -162,6 +163,8 @@ public class AlbumAdapter
         TextView mTvAlbumListSongCount;
         @BindView(R.id.ll_album_list_item)
         LinearLayout mLlAlbumListItem;
+        @BindView(R.id.root_list)
+        RelativeLayout mRootList;
 
         AlbumlistHolder(View view) {
             super(view);

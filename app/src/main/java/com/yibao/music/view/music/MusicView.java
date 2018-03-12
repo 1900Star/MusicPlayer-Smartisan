@@ -24,23 +24,48 @@ public class MusicView
         extends RelativeLayout {
 
     private RecyclerView mRecyclerView;
-    private int defultHeight;
-    private int mCurrentPosition = 0;
     private MusicSlidBar mSlidebar;
 
     public MusicView(Context context) {
         super(context);
         initView();
+        initListener();
     }
 
     public MusicView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
+        initListener();
     }
 
     public MusicView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView();
+        initListener();
+    }
+
+    private void initListener() {
+//        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//                switch (newState) {
+//                    case RecyclerView.SCROLL_STATE_DRAGGING:
+//                        LogUtil.d("SCROLL_STATE_DRAGGING");
+//                        break;
+//                    case RecyclerView.SCROLL_STATE_IDLE:
+//                        LogUtil.d("SCROLL_STATE_IDLE");
+//                        break;
+//                    case RecyclerView.SCROLL_STATE_SETTLING:
+//                        LogUtil.d("SCROLL_STATE_SETTLING");
+//                        break;
+//
+//                    default:
+//                        break;
+//                }
+//
+//            }
+//        });
     }
 
 

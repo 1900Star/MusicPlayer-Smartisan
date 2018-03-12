@@ -39,7 +39,7 @@ public class MyAnimatorUpdateListener
     /**
      * 是否是暂停状态
      *
-     * @return
+     * @return c
      */
     private ObjectAnimator animator;
 
@@ -68,7 +68,7 @@ public class MyAnimatorUpdateListener
 
     @Override
     public void onAnimationUpdate(ValueAnimator animation) {
-        /**
+        /*
          * 如果是暂停则将状态保持下来，并每个刷新动画的时间了；来设置当前时间，让动画
          * 在时间上处于暂停状态，同时要设置一个静止的时间加速器，来保证动画不会抖动
          */

@@ -15,10 +15,15 @@ public class Constants {
     public static final int NUMBER_THRRE = 3;
     public static final int NUMBER_FOUR = 4;
     public static final int NUMBER_FIEV = 5;
+    public static final int NUMBER_EIGHT = 8;
     public static final char LETTER_A = 'A';
     public static final char LETTER_Z = 'Z';
     public static final char LETTER_HASH = '#';
     static final int MODE_KEY = 0;
+    static final String MUSIC_LOAD = "music_load";
+
+    static final String MUSIC_LOAD_FLAG = "play_load_flag";
+
     static final String MUSIC_MODE = "music_mode";
     static final String PLAY_MODE_KEY = "play_mode";
 

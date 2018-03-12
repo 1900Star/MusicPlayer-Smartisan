@@ -34,6 +34,7 @@ public class MusicBean
     private int playFrequency;
     private int songScore;
     private int playStatus;
+    private int issueYear;
     @Transient
     private int cureetPosition;
 
@@ -63,11 +64,11 @@ public class MusicBean
         cureetPosition = in.readInt();
     }
 
-    @Generated(hash = 1382698824)
+    @Generated(hash = 206715861)
     public MusicBean(Long id, String title, String artist, String album,
             long albumId, long addTime, long duration, String time, String songUrl,
             String firstChar, boolean isFavorite, int playFrequency, int songScore,
-            int playStatus) {
+            int playStatus, int issueYear) {
         this.id = id;
         this.title = title;
         this.artist = artist;
@@ -82,7 +83,9 @@ public class MusicBean
         this.playFrequency = playFrequency;
         this.songScore = songScore;
         this.playStatus = playStatus;
+        this.issueYear = issueYear;
     }
+
 
     public static final Creator<MusicBean> CREATOR = new Creator<MusicBean>() {
         @Override
@@ -95,6 +98,14 @@ public class MusicBean
             return new MusicBean[size];
         }
     };
+
+    public int getIssueYear() {
+        return issueYear;
+    }
+
+    public void setIssueYear(int issueYear) {
+        this.issueYear = issueYear;
+    }
 
     public Long getId() {
         return id;
@@ -233,6 +244,15 @@ public class MusicBean
     }
 
 
+
+    public boolean getIsFavorite() {
+        return this.isFavorite;
+    }
+
+    public void setIsFavorite(boolean isFavorite) {
+        this.isFavorite = isFavorite;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -259,14 +279,7 @@ public class MusicBean
         parcel.writeInt(playFrequency);
         parcel.writeInt(songScore);
         parcel.writeInt(playStatus);
+        parcel.writeInt(issueYear);
         parcel.writeInt(cureetPosition);
-    }
-
-    public boolean getIsFavorite() {
-        return this.isFavorite;
-    }
-
-    public void setIsFavorite(boolean isFavorite) {
-        this.isFavorite = isFavorite;
     }
 }

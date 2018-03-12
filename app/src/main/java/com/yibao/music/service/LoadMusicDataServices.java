@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 
 import com.yibao.music.MyApplication;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.song.MusicCountBean;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.ToastUtil;
@@ -32,8 +33,13 @@ public class LoadMusicDataServices extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         ArrayList<MusicBean> dataList = MusicListUtil.getMusicDataList();
+        int size = dataList.size();
+        int s = 0;
         for (MusicBean info : dataList) {
+            s++;
             MyApplication.getIntstance().getMusicDao().insert(info);
+            MyApplication.getIntstance().bus().post(new MusicCountBean(s, size));
+
         }
 //        MyApplication.getIntstance()
 //                .getDaoSession().getMusicBeanDao().deleteAll();
@@ -41,4 +47,6 @@ public class LoadMusicDataServices extends IntentService {
         LogUtil.d("LoadMusicDataServices===== 加载数据完成");
 
     }
+
+
 }

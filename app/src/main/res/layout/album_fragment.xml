@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <include layout="@layout/album_fragment_category" />
-
-    <com.yibao.music.view.music.MusicView
-        android:id="@+id/album_music_view"
+    <LinearLayout
+        android:id="@+id/album_content_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
 
+        <include layout="@layout/album_fragment_category" />
 
-</LinearLayout>
+        <com.yibao.music.view.music.MusicView
+            android:id="@+id/album_music_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <com.yibao.music.view.music.DetailsView
+        android:id="@+id/details_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+</RelativeLayout>

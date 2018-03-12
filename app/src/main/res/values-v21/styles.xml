@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme.NoActionBar">
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowAnimationStyle">@style/Animation</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:activityOpenEnterAnimation">@anim/dialog_push_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/dialog_push_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/dialog_push_out</item>
+        <item name="android:activityCloseExitAnimation">@anim/dialog_push_out</item>
+
+
+    </style>
+</resources>

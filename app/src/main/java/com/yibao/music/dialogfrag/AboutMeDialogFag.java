@@ -36,11 +36,11 @@ public class AboutMeDialogFag
         return mView;
     }
 
+
     private void initView() {
         String url = getArguments().getString("url");
         ImageView headerView = mView.findViewById(R.id.about_header_iv);
         ImageUitl.loadPic(getActivity(), url, headerView);
-
 
     }
 

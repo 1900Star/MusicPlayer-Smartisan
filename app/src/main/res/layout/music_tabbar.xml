@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@drawable/tabbar_bg_down"
+
         android:gravity="center"
         android:orientation="vertical">
 
@@ -21,7 +21,8 @@
             android:id="@+id/music_bar_playlist_iv"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:background="@drawable/tabbar_playlist_selector"
+            android:background="@drawable/tabbar_playlist_down_selector"
+            android:contentDescription="@null"
             android:scaleType="centerCrop" />
 
         <TextView
@@ -29,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/play_list"
-            android:textColor="@color/tabbarDownTv"
+            android:textColor="@color/tabbarTv"
             android:textSize="@dimen/music_tabbar" />
 
     </LinearLayout>
@@ -66,6 +67,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@drawable/tabbar_bg_down"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
@@ -75,7 +77,7 @@
             android:id="@+id/music_bar_songlist_iv"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:background="@drawable/tabbar_songlist_down_selector"
+            android:background="@drawable/tabbar_songlist_selector"
             android:scaleType="centerCrop" />
 
         <TextView
@@ -83,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/music_song"
-            android:textColor="@color/tabbarTv"
+            android:textColor="@color/tabbarDownTv"
             android:textSize="@dimen/music_tabbar" />
 
     </LinearLayout>
@@ -136,7 +138,7 @@
             android:id="@+id/music_bar_stylelist_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/music_style"
+            android:text="@string/about"
             android:textColor="@color/tabbarTv"
             android:textSize="@dimen/music_tabbar" />
 

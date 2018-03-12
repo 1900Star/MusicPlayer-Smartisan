@@ -133,7 +133,7 @@ public class PlayListFragment extends BaseFragment {
 //            isHandlePressed = true;
 //            return true;
 //        }
-        return mAlbumDetailsHeadContent.getVisibility() == View.VISIBLE;
+        return mLlAddNewPlayList.getVisibility() == View.VISIBLE;
     }
 
 

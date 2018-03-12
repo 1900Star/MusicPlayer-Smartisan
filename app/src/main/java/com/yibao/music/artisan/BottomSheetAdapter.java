@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
  * Author：Sid
  * Des：${快速列表的Adapter}
  * Time:2017/8/22 14:31
+ * @author Stran
  */
 public class BottomSheetAdapter
         extends BaseRvAdapter<MusicBean>

@@ -31,7 +31,7 @@ public abstract class BaseRvAdapter<T>
     protected List<T> mList = null;
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_FOOTER = 1;
-    private OnItemListener mListener;
+    private OnItemListener<T> mListener;
 
     public BaseRvAdapter(List<T> list) {
         mList = list;
@@ -122,8 +122,7 @@ public abstract class BaseRvAdapter<T>
         notifyDataSetChanged();
     }
 
-    public void addFooter(List<T> list) {
-
+    public void addData(List<T> list) {
         for (T t : list) {
             if (!mList.contains(t)) {
                 mList.add(t);
@@ -212,20 +211,22 @@ public abstract class BaseRvAdapter<T>
     /**
      * Item的点击事件
      */
-    protected void openDetails() {
+    protected void openDetails(T t) {
         if (mListener != null) {
-            mListener.showDetailsView();
+            mListener.showDetailsView(t);
         }
     }
 
-    public void setItemListener(OnItemListener listener) {
+    public void setItemListener(OnItemListener<T> listener) {
         this.mListener = listener;
     }
 
-    public interface OnItemListener {
+    public interface OnItemListener<T> {
         /**
          * 打开列表详情
+         *
+         * @param bean 子类的数据类型
          */
-        void showDetailsView();
+        void showDetailsView(T bean);
     }
 }

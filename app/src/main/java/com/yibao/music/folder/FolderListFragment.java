@@ -60,4 +60,8 @@ public class FolderListFragment extends BaseFragment {
         unbinder.unbind();
     }
 
+    @Override
+    public boolean backPressed() {
+        return false;
+    }
 }

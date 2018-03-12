@@ -1,34 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/album_details_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/listBg"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/rvBg"
+        android:background="@color/listBg"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/iv_artist_albumm_details"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_margin="8dp"
+            android:layout_margin="12dp"
+            android:contentDescription="@null"
             android:src="@drawable/noalbumcover_220" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="110dp"
+            android:layout_height="120dp"
             android:gravity="center_vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="14dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -39,9 +40,8 @@
                     android:maxLength="18"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:text="aaaaa"
                     android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/music_loating_title" />
+                    android:textSize="@dimen/music_eighteen" />
 
                 <TextView
                     android:id="@+id/tv_artist_albumm_details_artist"
@@ -50,9 +50,8 @@
                     android:layout_marginTop="6dp"
                     android:maxLength="18"
                     android:maxLines="1"
-                    android:text="hhhh"
                     android:textColor="@color/tabbarTv"
-                    android:textSize="@dimen/music_loating_name" />
+                    android:textSize="@dimen/about_title" />
 
                 <TextView
                     android:id="@+id/tv_artist_albumm_details_date"
@@ -61,32 +60,34 @@
                     android:layout_marginTop="6dp"
                     android:maxLength="18"
                     android:maxLines="1"
-                    android:text="2008"
                     android:textColor="@color/tabbarTv"
-                    android:textSize="@dimen/music_loating_name" />
+                    android:textSize="@dimen/about_title" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/iv_details_add_to_list"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:layout_gravity="bottom"
-                    android:src="@mipmap/favorite_yes" />
+                    android:contentDescription="@null"
+                    android:src="@drawable/add_to_list_selector" />
 
                 <ImageView
                     android:id="@+id/iv_details_add_to_play_list"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:layout_gravity="bottom"
                     android:layout_marginLeft="12dp"
-                    android:src="@mipmap/favorite_yes" />
+                    android:layout_marginStart="12dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/add_pla_list_selector" />
 
             </LinearLayout>
 
@@ -117,6 +118,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:contentDescription="@null"
                 android:src="@drawable/album_category_list_selector" />
 
             <TextView
@@ -143,6 +145,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:contentDescription="@null"
                 android:src="@drawable/album_category_tile_selector" />
 
             <TextView
@@ -158,11 +161,15 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:background="@color/listBg" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_artist_album_details"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/colorAccent" />
+        android:layout_weight="1" />
 
 </LinearLayout>

@@ -16,19 +16,22 @@ import android.support.annotation.NonNull;
 
 public class ArtistInfo implements Parcelable, Comparable<ArtistInfo> {
 
-    private String name;
+    private String artist;
+    private String albumName;
     private int albumCount;
     private int songCount;
     private String firstChar;
+    private int year;
+    private long albumId;
 
-    public ArtistInfo() {
-    }
-
-    private ArtistInfo(Parcel in) {
-        name = in.readString();
+    protected ArtistInfo(Parcel in) {
+        artist = in.readString();
+        albumName = in.readString();
         albumCount = in.readInt();
         songCount = in.readInt();
         firstChar = in.readString();
+        year = in.readInt();
+        albumId = in.readLong();
     }
 
     public static final Creator<ArtistInfo> CREATOR = new Creator<ArtistInfo>() {
@@ -43,12 +46,39 @@ public class ArtistInfo implements Parcelable, Comparable<ArtistInfo> {
         }
     };
 
-    public String getName() {
-        return name;
+    public long getAlbumId() {
+        return albumId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAlbumId(long albumId) {
+        this.albumId = albumId;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public ArtistInfo() {
+    }
+
+    public String getAlbumName() {
+        return albumName;
+    }
+
+    public void setAlbumName(String songName) {
+        this.albumName = songName;
+    }
+
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
     }
 
     public int getAlbumCount() {
@@ -75,18 +105,6 @@ public class ArtistInfo implements Parcelable, Comparable<ArtistInfo> {
         this.firstChar = firstChar;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(name);
-        parcel.writeInt(albumCount);
-        parcel.writeInt(songCount);
-        parcel.writeString(firstChar);
-    }
 
     @Override
     public int compareTo(@NonNull ArtistInfo artistInfo) {
@@ -100,5 +118,21 @@ public class ArtistInfo implements Parcelable, Comparable<ArtistInfo> {
             return 1;
         }
         return firstChar.compareTo(artistInfo.getFirstChar());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(artist);
+        parcel.writeString(albumName);
+        parcel.writeInt(albumCount);
+        parcel.writeInt(songCount);
+        parcel.writeString(firstChar);
+        parcel.writeInt(year);
+        parcel.writeLong(albumId);
     }
 }

@@ -16,7 +16,6 @@ import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
-import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.view.music.MusicView;
 
@@ -80,11 +79,6 @@ public class SongFragment extends BaseFragment {
         if (isShowStickyView == Constants.NUMBER_ZOER) {
             mSongAdapter = new SongAdapter(mActivity, mSongList, isShowStickyView);
         } else if (isShowStickyView == Constants.NUMBER_ONE) {
-
-            /*
-      对歌曲列表进行排序的标识
-      0 : 默认排序 (首字母) 、1 : 按评分  、2 : 按播放次数 、 3 : 按添加时间
-     */
             ArrayList<MusicBean> list = MusicListUtil.sortMusicAddtime(musicBeans);
             mSongAdapter = new SongAdapter(mActivity, list, isShowStickyView);
         }
@@ -96,8 +90,7 @@ public class SongFragment extends BaseFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_music_category_paly:
-                int position = RandomUtil.getRandomPostion(musicBeans);
-
+                randomPlayMusic();
                 break;
             case R.id.tv_music_category_songname:
                 switchListCategory(1);
@@ -206,5 +199,10 @@ public class SongFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public boolean backPressed() {
+        return false;
     }
 }

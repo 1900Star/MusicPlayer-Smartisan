@@ -1,5 +1,6 @@
 package com.yibao.music.album;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,7 +9,10 @@ import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
-import com.yibao.music.model.ArtistInfo;
+import com.yibao.music.base.listener.OnMusicItemClickListener;
+import com.yibao.music.model.MusicBean;
+import com.yibao.music.util.Constants;
+import com.yibao.music.util.StringUtil;
 
 import java.util.List;
 
@@ -26,9 +30,14 @@ import butterknife.ButterKnife;
  * @描述： {TODO}
  */
 
-public class DetailsListAdapter extends BaseRvAdapter<ArtistInfo> {
-    public DetailsListAdapter(List<ArtistInfo> list) {
+public class DetailsListAdapter extends BaseRvAdapter<MusicBean> {
+    private Context mContext;
+    private int mDataFlag;
+
+    public DetailsListAdapter(Context context, List<MusicBean> list, int dataFlag) {
         super(list);
+        this.mContext = context;
+        this.mDataFlag = dataFlag;
     }
 
     @Override
@@ -37,8 +46,21 @@ public class DetailsListAdapter extends BaseRvAdapter<ArtistInfo> {
     }
 
     @Override
-    protected void bindView(RecyclerView.ViewHolder holder, ArtistInfo artistInfo) {
+    protected void bindView(RecyclerView.ViewHolder holder, MusicBean info) {
+        String queryFlag = mDataFlag == Constants.NUMBER_ONE ? info.getArtist() : info.getAlbum();
+        if (holder instanceof DetailsHolder) {
+            DetailsHolder detailsHolder = (DetailsHolder) holder;
+            detailsHolder.mTvDetailsSongName.setText(info.getTitle());
+            int duration = (int) info.getDuration();
+            detailsHolder.mTvSongDuration.setText(StringUtil.parseDuration(duration));
+            detailsHolder.itemView.setOnClickListener(view -> {
+                if (mContext instanceof OnMusicItemClickListener) {
+                    ((OnMusicItemClickListener) mContext).startMusicServiceFlag(detailsHolder.getAdapterPosition(), mDataFlag, queryFlag);
+                }
 
+            });
+
+        }
 
     }
 

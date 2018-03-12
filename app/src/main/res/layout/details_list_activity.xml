@@ -157,16 +157,15 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_artist_album_details"
+    <LinearLayout
+        android:id="@+id/artist_album_details_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/colorGreen" />
+        android:background="@color/colorGreen"
+        android:orientation="vertical" />
 
 
-    <include
-        android:id="@+id/music_controlbar"
-        layout="@layout/empty_framelayout" />
+    <include layout="@layout/empty_framelayout" />
 
 </LinearLayout>
