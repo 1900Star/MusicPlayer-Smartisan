@@ -646,6 +646,11 @@ public class MusicActivity
 
     }
 
+    /**
+     * 将Tabbar置于未选种状态
+     * @param flag
+     * @param titleResourceId
+     */
     private void setAllTabbarNotPressed(int flag, int titleResourceId) {
         mTvMusicToolbarTitle.setText(titleResourceId);
         mMusicViewPager.setCurrentItem(flag, false);
