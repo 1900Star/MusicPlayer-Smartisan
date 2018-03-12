@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.yibao.music.MyApplication;
 import com.yibao.music.R;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.model.ArtistInfo;
@@ -58,7 +57,7 @@ public class AlbumListDetailsFragment extends BaseFragment {
     @BindView(R.id.rv_artist_album_details)
     RecyclerView mRecyclerView;
     private Unbinder unbinder;
-    public static String albumTag = "AlbumListDetailsFragment";
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -73,13 +72,13 @@ public class AlbumListDetailsFragment extends BaseFragment {
         ArrayList<ArtistInfo> list = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             ArtistInfo artistInfo = new ArtistInfo();
-            artistInfo.setName(i + "爱");
+            artistInfo.setArtist(i + "爱");
             artistInfo.setSongCount(i);
             list.add(artistInfo);
         }
 
-        PlayListAdapter playListAdapter = new PlayListAdapter(list);
-        LinearLayoutManager manager = new LinearLayoutManager(MyApplication.getIntstance());
+        PlayListAdapter playListAdapter = new PlayListAdapter(null);
+        LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setHasFixedSize(true);
@@ -123,5 +122,10 @@ public class AlbumListDetailsFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public boolean backPressed() {
+        return false;
     }
 }
