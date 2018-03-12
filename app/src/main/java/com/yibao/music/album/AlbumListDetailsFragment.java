@@ -78,7 +78,7 @@ public class AlbumListDetailsFragment extends BaseFragment {
             list.add(artistInfo);
         }
 
-        PlayListAdapter playListAdapter = new PlayListAdapter(getActivity(),null);
+        PlayListAdapter playListAdapter = new PlayListAdapter(null);
         LinearLayoutManager manager = new LinearLayoutManager(MyApplication.getIntstance());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);

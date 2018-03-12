@@ -121,13 +121,14 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
     private void initListener() {
         mSbProgress.setOnSeekBarChangeListener(new SeekBarListener());
         mSbVolume.setOnSeekBarChangeListener(new SeekBarListener());
+        rxViewClick();
+
 
         mPlayingSongAlbum.setOnLongClickListener(view -> {
             TopBigPicDialogFragment.newInstance(mAlbumUrl)
                     .show(getFragmentManager(), "album");
             return true;
         });
-        rxViewClick();
 
     }
 

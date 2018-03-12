@@ -27,7 +27,8 @@ public class MusicInfo
     private String songUrl;
     private int playStatus;
 
-    public MusicInfo() {
+    public MusicInfo(String title) {
+        this.title = title;
     }
 
 
@@ -58,6 +59,11 @@ public class MusicInfo
         this.time = time;
         this.songUrl = songUrl;
         this.playStatus = playStatus;
+    }
+
+
+    @Generated(hash = 1735505054)
+    public MusicInfo() {
     }
 
     public static final Creator<MusicInfo> CREATOR = new Creator<MusicInfo>() {

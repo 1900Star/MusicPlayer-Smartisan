@@ -72,7 +72,7 @@ public class DetailsListControlBarActivity extends AppCompatActivity {
             list.add(artistInfo);
         }
 
-        mAdapter = new PlayListAdapter(this,null);
+        mAdapter = new PlayListAdapter(null);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
         mContentView.addView(recyclerView);
 

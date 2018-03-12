@@ -46,16 +46,15 @@ public class PlayListFragment extends BaseFragment {
     LinearLayout mAlbumDetailsHeadContent;
     private Unbinder unbinder;
     private PlayListAdapter mAdapter;
-    private List<MusicInfo> mList;
     private CompositeDisposable mDisposable;
     private int addListFlag = 1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mList = mMusicInfoDao.queryBuilder().build().list();
-    }
+        mDisposable = new CompositeDisposable();
 
+    }
 
     @Nullable
     @Override
@@ -70,30 +69,19 @@ public class PlayListFragment extends BaseFragment {
     }
 
     private void initData() {
-        mDisposable = new CompositeDisposable();
-        mAdapter = new PlayListAdapter(getActivity(), mList);
+        List<MusicInfo> playList = mMusicInfoDao.queryBuilder().list();
+        mAdapter = new PlayListAdapter(playList);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
         mPlayListContent.addView(recyclerView);
     }
 
     private void receiveRxbuData() {
-
         mDisposable.add(mBus.toObserverable(AddNewListBean.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(addNewListBean -> {
-                    MusicInfo info = new MusicInfo();
-                    info.setPlayStatus(1);
-                    info.setTitle(addNewListBean.getNewListTitle());
-                    mList.add(info);
-                    mAdapter.addData(mList);
-                    mAdapter.notifyDataSetChanged();
-                    if (addListFlag == Constants.NUMBER_ONE) {
-                        mMusicInfoDao.insert(info);
-                        addListFlag++;
-                    }
-
-                }));
+                .subscribeOn(Schedulers.io()).map(addNewListBean -> mMusicInfoDao.queryBuilder().list())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(newPlayList -> {
+                    mAdapter.addData(newPlayList);
+                })
+        );
 
 
     }
@@ -154,5 +142,6 @@ public class PlayListFragment extends BaseFragment {
         super.onDestroyView();
         unbinder.unbind();
     }
+
 
 }

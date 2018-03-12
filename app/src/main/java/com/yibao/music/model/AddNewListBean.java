@@ -11,13 +11,5 @@ package com.yibao.music.model;
  */
 
 public class AddNewListBean {
-    private String newListTitle;
 
-    public AddNewListBean(String newListTitle) {
-        this.newListTitle = newListTitle;
-    }
-
-    public String getNewListTitle() {
-        return newListTitle;
-    }
 }

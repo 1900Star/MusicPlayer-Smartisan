@@ -1,6 +1,5 @@
 package com.yibao.music.playlist;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -27,11 +26,9 @@ import butterknife.ButterKnife;
  */
 
 public class PlayListAdapter extends BaseRvAdapter<MusicInfo> {
-    private Context mContext;
 
-    public PlayListAdapter(Context context, List<MusicInfo> list) {
+    public PlayListAdapter( List<MusicInfo> list) {
         super(list);
-        this.mContext = context;
     }
 
 
