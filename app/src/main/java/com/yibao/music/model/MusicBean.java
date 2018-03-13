@@ -35,6 +35,11 @@ public class MusicBean
     private int songScore;
     private int playStatus;
     private int issueYear;
+    /**
+     * 这个cureetPosition是给QqPagerAdapter用的，用于切换到指定的位置
+     */
+
+
     @Transient
     private int cureetPosition;
 
@@ -66,9 +71,9 @@ public class MusicBean
 
     @Generated(hash = 206715861)
     public MusicBean(Long id, String title, String artist, String album,
-            long albumId, long addTime, long duration, String time, String songUrl,
-            String firstChar, boolean isFavorite, int playFrequency, int songScore,
-            int playStatus, int issueYear) {
+                     long albumId, long addTime, long duration, String time, String songUrl,
+                     String firstChar, boolean isFavorite, int playFrequency, int songScore,
+                     int playStatus, int issueYear) {
         this.id = id;
         this.title = title;
         this.artist = artist;
@@ -228,7 +233,6 @@ public class MusicBean
     }
 
 
-
     @Override
     public int compareTo(@NonNull MusicBean musicBean) {
         String str = "#";
@@ -242,7 +246,6 @@ public class MusicBean
         }
         return firstChar.compareTo(musicBean.getFirstChar());
     }
-
 
 
     public boolean getIsFavorite() {

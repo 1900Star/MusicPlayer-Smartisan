@@ -66,6 +66,11 @@ public class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mCompositeDisposable.dispose();
+        mCompositeDisposable.clear();
+        if (mDisposable != null) {
+            mDisposable.dispose();
+        }
+
         unregisterReceiver(headsetReciver);
     }
 }

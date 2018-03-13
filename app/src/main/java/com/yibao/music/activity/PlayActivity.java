@@ -102,7 +102,6 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
         setContentView(R.layout.play_activity);
         mBind = ButterKnife.bind(this);
         initSongInfo();
-        checkCurrentIsFavorite();
         initData();
         initListener();
     }
@@ -146,11 +145,12 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
     }
 
     public void checkCurrentIsFavorite() {
-        if (mCurrenMusicInfo.isFavorite()) {
-            mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
-        } else {
-            mIvFavoriteMusic.setImageResource(R.drawable.music_favorite_selector);
-
+        if (mIvFavoriteMusic != null) {
+            if (mCurrenMusicInfo.isFavorite()) {
+                mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
+            } else {
+                mIvFavoriteMusic.setImageResource(R.drawable.music_favorite_selector);
+            }
         }
     }
 
@@ -165,7 +165,6 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
         //设置播放模式图片
         int mode = SharePrefrencesUtil.getMusicMode(this);
         updatePlayModeImage(mode, mMusicPlayerMode);
-        //音乐设置
         //音乐设置
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -458,10 +457,15 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
 
     @Override
     public void updataFavoriteStatus() {
-        checkCurrentIsFavorite();
+//        checkCurrentIsFavorite();
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkCurrentIsFavorite();
+    }
 
     @Override
     protected void onDestroy() {

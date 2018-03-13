@@ -116,16 +116,28 @@ public class AudioPlayService
     }
 
     private void getMusicDataList(int sortListFlag, int dataFlag, String queryFlag) {
-        if (sortListFlag == Constants.NUMBER_ONE) {
+        if (sortListFlag == Constants.NUMBER_ZOER) {
+            // 按歌曲名
             mMusicDataList = mMusicDao.queryBuilder().list();
-        } else if (sortListFlag == Constants.NUMBER_FOUR) {
+        } else if (sortListFlag == Constants.NUMBER_ONE) {
+            // 按评分
+            LogUtil.d("");
+        } else if (sortListFlag == Constants.NUMBER_TWO) {
+            // 按播放次数
+            LogUtil.d("");
+            mMusicDataList = MusicListUtil.sortMusicAddtime((ArrayList<MusicBean>) mMusicDataList);
+        } else if (sortListFlag == Constants.NUMBER_THRRE) {
+            // 按添加时间
             mMusicDataList = MusicListUtil.sortMusicAddtime((ArrayList<MusicBean>) mMusicDataList);
         } else if (sortListFlag == Constants.NUMBER_EIGHT) {
+            // 收藏列表
             mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
         } else if (dataFlag == Constants.NUMBER_ONE) {
+            // 按艺术家查询列表
             mMusicBean.setArtist(queryFlag);
             mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(mMusicBean.getArtist())).build().list();
         } else if (dataFlag == Constants.NUMBER_TWO) {
+            // 按专辑名查询列表
             mMusicBean.setAlbum(queryFlag);
             mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(mMusicBean.getAlbum())).build().list();
         }
@@ -137,6 +149,7 @@ public class AudioPlayService
      */
     private void sendCureentMusicInfo() {
         MusicBean musicBean = mMusicDataList.get(position);
+
         musicBean.setCureetPosition(position);
         MyApplication.getIntstance()
                 .bus()

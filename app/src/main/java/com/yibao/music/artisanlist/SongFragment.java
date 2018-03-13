@@ -51,7 +51,6 @@ public class SongFragment extends BaseFragment {
     MusicView mMusciView;
     private Unbinder unbinder;
     private SongAdapter mSongAdapter;
-    private int sortListFlag = 0;
 
     @Nullable
     @Override
@@ -115,23 +114,27 @@ public class SongFragment extends BaseFragment {
     private void switchListCategory(int flag) {
         switch (flag) {
             case 1:
-                categorySongName();
+                setAllCategoryNotNormal(Constants.NUMBER_ZOER);
+                mMusicCategorySongName.setTextColor(ColorUtil.wihtle);
+                mMusicCategorySongName.setBackgroundResource(R.drawable.btn_category_songname_down_selector);
                 initData(true, Constants.NUMBER_ZOER);
-                setPlayListFlag(Constants.NUMBER_ONE);
                 break;
             case 2:
                 LogUtil.d(" 122  songfragment mFlag " + SharePrefrencesUtil.getMusicDataListFlag(getActivity()));
-                categoryScore();
-//                setPlayListFlag(Constants.NUMBER_TWO);
+                setAllCategoryNotNormal(Constants.NUMBER_ONE);
+                mMusicCategoryScore.setTextColor(ColorUtil.wihtle);
+                mMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_down_selector);
                 break;
             case 3:
-                categoryFrequency();
-//                setPlayListFlag(Constants.NUMBER_THRRE);
+                setAllCategoryNotNormal(Constants.NUMBER_TWO);
+                mMusicCategoryFrequency.setTextColor(ColorUtil.wihtle);
+                mMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_down_selector);
                 break;
             case 4:
-                categoryAddtime();
+                setAllCategoryNotNormal(Constants.NUMBER_THRRE);
+                mMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_down_selector);
+                mMusicCategoryAddtime.setTextColor(ColorUtil.wihtle);
                 initData(false, Constants.NUMBER_ONE);
-                setPlayListFlag(Constants.NUMBER_FOUR);
                 break;
             default:
                 break;
@@ -140,55 +143,19 @@ public class SongFragment extends BaseFragment {
 
     }
 
-    private void setPlayListFlag(int playListFlag) {
+
+    private void setAllCategoryNotNormal(int playListFlag) {
+        mMusicCategorySongName.setTextColor(ColorUtil.textName);
+        mMusicCategorySongName.setBackgroundResource(R.drawable.btn_category_songname_selector);
+        mMusicCategoryScore.setTextColor(ColorUtil.textName);
+        mMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_selector);
+        mMusicCategoryFrequency.setTextColor(ColorUtil.textName);
+        mMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_selector);
+        mMusicCategoryAddtime.setTextColor(ColorUtil.textName);
+        mMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_selector);
         SharePrefrencesUtil.setMusicDataListFlag(getActivity(), playListFlag);
     }
 
-    private void categorySongName() {
-        sortListFlag = Constants.NUMBER_ZOER;
-        mMusicCategorySongName.setTextColor(ColorUtil.wihtle);
-        mMusicCategorySongName.setBackgroundResource(R.drawable.btn_category_songname_down_selector);
-        mMusicCategoryScore.setTextColor(ColorUtil.textName);
-        mMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_selector);
-        mMusicCategoryFrequency.setTextColor(ColorUtil.textName);
-        mMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_selector);
-        mMusicCategoryAddtime.setTextColor(ColorUtil.textName);
-        mMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_selector);
-    }
-
-    private void categoryScore() {
-        mMusicCategoryScore.setTextColor(ColorUtil.wihtle);
-        mMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_down_selector);
-        mMusicCategorySongName.setTextColor(ColorUtil.textName);
-        mMusicCategorySongName.setBackgroundResource(R.drawable.btn_category_songname_selector);
-        mMusicCategoryFrequency.setTextColor(ColorUtil.textName);
-        mMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_selector);
-        mMusicCategoryAddtime.setTextColor(ColorUtil.textName);
-        mMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_selector);
-    }
-
-    private void categoryFrequency() {
-        mMusicCategoryFrequency.setTextColor(ColorUtil.wihtle);
-        mMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_down_selector);
-        mMusicCategorySongName.setTextColor(ColorUtil.textName);
-        mMusicCategorySongName.setBackgroundResource(R.drawable.btn_category_songname_selector);
-        mMusicCategoryScore.setTextColor(ColorUtil.textName);
-        mMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_selector);
-        mMusicCategoryAddtime.setTextColor(ColorUtil.textName);
-        mMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_selector);
-    }
-
-    private void categoryAddtime() {
-        sortListFlag = Constants.NUMBER_THRRE;
-        mMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_down_selector);
-        mMusicCategorySongName.setTextColor(ColorUtil.textName);
-        mMusicCategoryAddtime.setTextColor(ColorUtil.wihtle);
-        mMusicCategorySongName.setBackgroundResource(R.drawable.btn_category_songname_selector);
-        mMusicCategoryScore.setTextColor(ColorUtil.textName);
-        mMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_selector);
-        mMusicCategoryFrequency.setTextColor(ColorUtil.textName);
-        mMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_selector);
-    }
 
     public static SongFragment newInstance() {
 

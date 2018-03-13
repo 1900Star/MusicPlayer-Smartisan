@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
-import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.factory.RecyclerFactory;
 import com.yibao.music.model.BottomSheetStatus;
 import com.yibao.music.model.MusicBean;
@@ -139,9 +138,9 @@ public class MusicBottomSheetDialog
         mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         MyApplication.getIntstance().bus().post(new MusicFavoriteBean());
 
-        if (mContext instanceof OnCheckFavoriteListener) {
-            ((OnCheckFavoriteListener) mContext).updataFavoriteStatus();
-        }
+//        if (mContext instanceof OnCheckFavoriteListener) {
+//            ((OnCheckFavoriteListener) mContext).updataFavoriteStatus();
+//        }
     }
 
     private void backTop() {
