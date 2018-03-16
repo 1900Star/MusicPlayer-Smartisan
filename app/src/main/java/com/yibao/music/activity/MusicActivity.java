@@ -1,4 +1,4 @@
-package com.yibao.music.artisanlist;
+package com.yibao.music.activity;
 
 import android.animation.ObjectAnimator;
 import android.content.ComponentName;
@@ -24,7 +24,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
-import com.yibao.music.activity.PlayActivity;
+import com.yibao.music.adapter.MusicPagerAdapter;
 import com.yibao.music.album.MainActivity;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.base.BaseFragment;
@@ -151,7 +151,7 @@ public class MusicActivity
     private boolean isChangeFloatingBlock;
     private int mPlayState;
     private int mNormalTabbarColor;
-    private QqBarPagerAdapter mQqBarPagerAdapter;
+    private com.yibao.music.artisanlist.QqBarPagerAdapter mQqBarPagerAdapter;
     private BaseFragment mBaseFragment;
 
 
@@ -196,7 +196,7 @@ public class MusicActivity
         mMusicViewPager.setAdapter(musicPagerAdapter);
         mMusicViewPager.setCurrentItem(Constants.NUMBER_TWO);
         // 初始化 QqBarPagerAdapter
-        mQqBarPagerAdapter = new QqBarPagerAdapter(this, null);
+        mQqBarPagerAdapter = new com.yibao.music.artisanlist.QqBarPagerAdapter(this, null);
         mMusicSlideViewPager.setAdapter(mQqBarPagerAdapter);
     }
 
@@ -250,7 +250,7 @@ public class MusicActivity
     private void initListener() {
         openMusicPlayDialogFag();
         mTvMusicToolbarTitle.setOnClickListener(view -> switchMusicControlBar());
-        mMusicSlideViewPager.addOnPageChangeListener(new MusicPagerListener() {
+        mMusicSlideViewPager.addOnPageChangeListener(new com.yibao.music.artisanlist.MusicPagerListener() {
             @Override
             public void onPageSelected(int position) {
                 startMusicService(position);
@@ -636,7 +636,12 @@ public class MusicActivity
     }
 
     /**
+<<<<<<< HEAD:app/src/main/java/com/yibao/music/artisanlist/MusicActivity.java
      * 将Tabbar置于未选种状态
+=======
+     * 将Tabbar全部置于未选种状态
+     *
+>>>>>>> features:app/src/main/java/com/yibao/music/activity/MusicActivity.java
      * @param flag
      * @param titleResourceId
      */

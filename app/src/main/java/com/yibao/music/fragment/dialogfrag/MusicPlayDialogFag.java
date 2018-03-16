@@ -1,4 +1,4 @@
-package com.yibao.music.artisan;
+package com.yibao.music.fragment.dialogfrag;
 
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
@@ -24,10 +24,9 @@ import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
-import com.yibao.music.artisanlist.MusicActivity;
+import com.yibao.music.activity.MusicActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.SeekBarChangeListtener;
-import com.yibao.music.dialogfrag.TopBigPicDialogFragment;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;

@@ -1,4 +1,4 @@
-package com.yibao.music.artisan;
+package com.yibao.music.fragment.dialogfrag;
 
 import android.app.Service;
 import android.content.Context;
@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
-import com.yibao.music.factory.RecyclerFactory;
+import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.model.BottomSheetStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
@@ -76,7 +76,7 @@ public class MusicBottomSheetDialog
     }
 
     private void initData(BottomSheetDialog dialog, View view) {
-        BottomSheetAdapter adapter = new BottomSheetAdapter(mList);
+        com.yibao.music.artisan.BottomSheetAdapter adapter = new com.yibao.music.artisan.BottomSheetAdapter(mList);
         mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, adapter);
         String size = StringUtil.getBottomSheetTitile(mList.size());
         mBottomListTitleSize.setText(size);
@@ -144,7 +144,7 @@ public class MusicBottomSheetDialog
     }
 
     private void backTop() {
-        BottomSheetAdapter adapter = (BottomSheetAdapter) mRecyclerView.getAdapter();
+        com.yibao.music.artisan.BottomSheetAdapter adapter = (com.yibao.music.artisan.BottomSheetAdapter) mRecyclerView.getAdapter();
         int positionForSection = adapter.getPositionForSection(0);
         LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
         manager.scrollToPositionWithOffset(positionForSection, 0);
@@ -155,7 +155,7 @@ public class MusicBottomSheetDialog
         intent.setClass(mContext, AudioPlayService.class);
         intent.putExtra("sortFlag", Constants.NUMBER_EIGHT);
         intent.putExtra("position", position);
-        AudioServiceConnection connection = new AudioServiceConnection();
+        com.yibao.music.artisan.AudioServiceConnection connection = new com.yibao.music.artisan.AudioServiceConnection();
         mContext.bindService(intent, connection, Service.BIND_AUTO_CREATE);
         mContext.startService(intent);
         SharePrefrencesUtil.setMusicDataListFlag(mContext, Constants.NUMBER_EIGHT);

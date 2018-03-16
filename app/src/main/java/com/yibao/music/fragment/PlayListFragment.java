@@ -1,4 +1,4 @@
-package com.yibao.music.playlist;
+package com.yibao.music.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,8 +10,8 @@ import android.widget.LinearLayout;
 
 import com.yibao.music.R;
 import com.yibao.music.base.BaseFragment;
-import com.yibao.music.dialogfrag.AddListDialog;
-import com.yibao.music.factory.RecyclerFactory;
+import com.yibao.music.base.factory.RecyclerFactory;
+import com.yibao.music.fragment.dialogfrag.AddListDialog;
 import com.yibao.music.model.AddNewListBean;
 import com.yibao.music.model.MusicInfo;
 import com.yibao.music.util.Constants;
@@ -45,7 +45,7 @@ public class PlayListFragment extends BaseFragment {
     @BindView(R.id.album_details_head_content)
     LinearLayout mAlbumDetailsHeadContent;
     private Unbinder unbinder;
-    private PlayListAdapter mAdapter;
+    private com.yibao.music.playlist.PlayListAdapter mAdapter;
     private CompositeDisposable mDisposable;
     private int addListFlag = 1;
 
@@ -70,7 +70,7 @@ public class PlayListFragment extends BaseFragment {
 
     private void initData() {
         List<MusicInfo> playList = mMusicInfoDao.queryBuilder().list();
-        mAdapter = new PlayListAdapter(playList);
+        mAdapter = new com.yibao.music.playlist.PlayListAdapter(playList);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
         mPlayListContent.addView(recyclerView);
     }

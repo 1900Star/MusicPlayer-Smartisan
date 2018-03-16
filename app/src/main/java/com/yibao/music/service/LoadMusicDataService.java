@@ -24,9 +24,9 @@ import java.util.ArrayList;
  * @描述： {TODO}
  */
 
-public class LoadMusicDataServices extends IntentService {
+public class LoadMusicDataService extends IntentService {
 
-    public LoadMusicDataServices() {
+    public LoadMusicDataService() {
         super("LoadMusicDataServices");
     }
 

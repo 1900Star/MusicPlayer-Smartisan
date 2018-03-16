@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.yibao.music.R;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.model.ArtistInfo;
-import com.yibao.music.adapter.PlayListAdapter;
+import com.yibao.music.playlist.PlayListAdapter;
 import com.yibao.music.util.Constants;
 
 import java.util.ArrayList;

@@ -54,7 +54,7 @@ public class SharePrefrencesUtil {
      * 用于存储程序退是否加载过本地音乐。
      *
      * @param context
-     * @param value
+     * @param value    Constants.NUMBER_EIGHT
      */
     public static void setLoadMusicFlag(Context context, int value) {
         SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_LOAD, Constants.MODE_KEY);

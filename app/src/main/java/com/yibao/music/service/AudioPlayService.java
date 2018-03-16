@@ -16,7 +16,6 @@ import android.widget.RemoteViews;
 
 import com.yibao.music.MyApplication;
 import com.yibao.music.R;
-import com.yibao.music.artisanlist.MusicNoification;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
@@ -24,6 +23,7 @@ import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
+import com.yibao.music.view.music.MusicNoification;
 
 import java.util.ArrayList;
 import java.util.List;

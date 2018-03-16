@@ -1,4 +1,4 @@
-package com.yibao.music.artisanlist;
+package com.yibao.music.adapter;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yibao.music.album.BaseMusicStatePagerAdapter;
-import com.yibao.music.factory.FragmentFactory;
+import com.yibao.music.base.factory.FragmentFactory;
 
 /**
  * 作者：Stran on 2017/3/23 03:31

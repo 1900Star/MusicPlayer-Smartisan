@@ -1,4 +1,4 @@
-package com.yibao.music.splash;
+package com.yibao.music.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,10 +7,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yibao.music.R;
-import com.yibao.music.artisanlist.MusicActivity;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.model.song.MusicCountBean;
-import com.yibao.music.service.LoadMusicDataServices;
+import com.yibao.music.service.LoadMusicDataService;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.SystemUiVisibilityUtil;
@@ -53,15 +52,15 @@ public class SplashActivity
         ButterKnife.bind(this);
         mBind = ButterKnife.bind(this);
         SystemUiVisibilityUtil.hideStatusBar(getWindow(), true);
-
         initRxbusData();
     }
 
     private void initRxbusData() {
-        if (SharePrefrencesUtil.getLoadMusicFlag(this) != Constants.NUMBER_EIGHT) {
+        boolean isInitMusicData = SharePrefrencesUtil.getLoadMusicFlag(this) != Constants.NUMBER_EIGHT;
+        if (isInitMusicData) {
             mTvMusicCount.setVisibility(View.VISIBLE);
             mMusicLoadProgressBar.setVisibility(View.VISIBLE);
-            startService(new Intent(this, LoadMusicDataServices.class));
+            startService(new Intent(this, LoadMusicDataService.class));
             mCompositeDisposable.add(mBus.toObserverable(MusicCountBean.class).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<MusicCountBean>() {
                 @Override
                 public void accept(MusicCountBean musicCountBean) throws Exception {
@@ -69,7 +68,6 @@ public class SplashActivity
                     int count = musicCountBean.getMusicCount();
                     mMusicLoadProgressBar.setMax(size);
                     String s = "已经加载  " + count + " 首本地音乐";
-
                     mTvMusicCount.setText(s);
                     mMusicLoadProgressBar.setProgress(count);
                     if (count == size) {
