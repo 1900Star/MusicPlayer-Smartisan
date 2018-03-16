@@ -637,10 +637,6 @@ public class MusicActivity
 
     /**
      * 将Tabbar置于未选种状态
-<<<<<<< HEAD
-=======
-     *
->>>>>>> features
      * @param flag
      * @param titleResourceId
      */
