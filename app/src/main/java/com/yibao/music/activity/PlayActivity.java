@@ -102,7 +102,6 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
         setContentView(R.layout.play_activity);
         mBind = ButterKnife.bind(this);
         initSongInfo();
-        checkCurrentIsFavorite();
         initData();
         initListener();
     }
@@ -140,17 +139,18 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
         mPlaySongName.setText(mCurrenMusicInfo.getTitle());
         mPlayArtistName.setText(mCurrenMusicInfo.getArtist());
         mTvLyrics.setLrcFile(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
-        String url = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId())
+        mAlbumUrl = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId())
                 .toString();
-        setAlbulm(url);
+        setAlbulm(mAlbumUrl);
     }
 
     public void checkCurrentIsFavorite() {
-        if (mCurrenMusicInfo.isFavorite()) {
-            mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
-        } else {
-            mIvFavoriteMusic.setImageResource(R.drawable.music_favorite_selector);
-
+        if (mIvFavoriteMusic != null) {
+            if (mCurrenMusicInfo.isFavorite()) {
+                mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
+            } else {
+                mIvFavoriteMusic.setImageResource(R.drawable.music_favorite_selector);
+            }
         }
     }
 
@@ -165,7 +165,6 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
         //设置播放模式图片
         int mode = SharePrefrencesUtil.getMusicMode(this);
         updatePlayModeImage(mode, mMusicPlayerMode);
-        //音乐设置
         //音乐设置
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -337,6 +336,7 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
                 break;
             case R.id.rotate_rl:
                 // 按下音乐停止播放  动画停止 ，抬起恢复
+                LogUtil.d("按下音乐停止播放  动画停止 ，抬起恢复");
                 break;
             case R.id.tv_lyrics:
                 showLyrics();
@@ -458,10 +458,23 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
 
     @Override
     public void updataFavoriteStatus() {
-        checkCurrentIsFavorite();
+//        checkCurrentIsFavorite();
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkCurrentIsFavorite();
+    }
+
+    @Override
+    protected void headsetPullOut() {
+        super.headsetPullOut();
+        if (audioBinder != null && audioBinder.isPlaying()) {
+            switchPlayState();
+        }
+    }
 
     @Override
     protected void onDestroy() {

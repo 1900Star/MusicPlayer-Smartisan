@@ -1,8 +1,8 @@
 package com.yibao.music.artisanlist;
 
 import android.animation.ObjectAnimator;
-import android.app.Service;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
@@ -23,7 +23,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
-import com.yibao.music.MyApplication;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayActivity;
 import com.yibao.music.album.MainActivity;
@@ -34,6 +33,7 @@ import com.yibao.music.base.listener.OnBackHandlePressedListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.song.MusicFavoriteBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.AnimationUtil;
@@ -161,8 +161,6 @@ public class MusicActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
         mBind = ButterKnife.bind(this);
-
-
         initView();
         initData();
         initRxBusData();
@@ -211,10 +209,12 @@ public class MusicActivity
     private List<MusicBean> initMusicData() {
         int spMusicFlag = getSpMusicFlag();
         LogUtil.d(" 200 MusicActivity ==    " + spMusicFlag);
-        if (spMusicFlag == Constants.NUMBER_FOUR) {
+        if (spMusicFlag == Constants.NUMBER_THRRE) {
             return MusicListUtil.sortMusicAddtime((ArrayList<MusicBean>) mMusicDao.queryBuilder().list());
-        } else if (spMusicFlag == Constants.NUMBER_ONE) {
+        } else if (spMusicFlag == Constants.NUMBER_ZOER) {
             return mMusicItems = mMusicDao.queryBuilder().list();
+        } else if (spMusicFlag == Constants.NUMBER_EIGHT) {
+            return mMusicItems = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
         }
         return mMusicItems = mMusicDao.queryBuilder().list();
     }
@@ -270,6 +270,7 @@ public class MusicActivity
             mSmartisanMusicBar.setVisibility(View.INVISIBLE);
             mQqBarPagerAdapter.setData(initMusicData());
             mMusicSlideViewPager.setCurrentItem(mCurrentPosition, false);
+            mQqBarPagerAdapter.notifyDataSetChanged();
         }
         isChangeFloatingBlock = !isChangeFloatingBlock;
     }
@@ -289,9 +290,8 @@ public class MusicActivity
         musicIntent.putExtra("sortFlag", getSpMusicFlag());
         musicIntent.putExtra("position", mCurrentPosition);
         mConnection = new AudioServiceConnection();
-        bindService(musicIntent, mConnection, Service.BIND_AUTO_CREATE);
+        bindService(musicIntent, mConnection, Context.BIND_AUTO_CREATE);
         startService(musicIntent);
-
     }
 
     /**
@@ -310,8 +310,8 @@ public class MusicActivity
         musicIntent.putExtra("queryFlag", queryFlag);
         musicIntent.putExtra("position", mCurrentPosition);
         mConnection = new AudioServiceConnection();
-        bindService(musicIntent, mConnection, Service.BIND_AUTO_CREATE);
-        startService(musicIntent);
+        bindService(musicIntent, mConnection, Context.BIND_AUTO_CREATE);
+
 
     }
 
@@ -357,7 +357,6 @@ public class MusicActivity
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void initRxBusData() {
         //接收service发出的数据，时时更新播放歌曲 进度 歌名 歌手信息
         mCompositeDisposable.add(mBus.toObserverable(MusicBean.class)
@@ -398,7 +397,6 @@ public class MusicActivity
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void refreshBtnAndNotify(MusicStatusBean bean) {
         switch (bean.getType()) {
             case 0:
@@ -466,7 +464,6 @@ public class MusicActivity
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void initAnimation() {
         if (mAnimator == null || mAnimatorListener == null) {
             mAnimator = AnimationUtil.getRotation(mMusicFloatBlockAlbulm);
@@ -502,7 +499,6 @@ public class MusicActivity
      * mPlayState = 2 ：表示在播放时退出音乐播放器的界面，只是短暂的离开，但并没有退出程序，
      * 下次打开播放器的界面时，继续自动播放当前的歌曲。
      */
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void switchPlayState() {
         if (mPlayState == Constants.NUMBER_ONE) {
             LogUtil.d(" PlayState == 1 ==================");
@@ -516,23 +512,16 @@ public class MusicActivity
                 // 当前播放  暂停
                 audioBinder.pause();
                 mAnimator.pause();
-                MyApplication.getIntstance()
-                        .bus()
-                        .post(new MusicStatusBean(0, true));
             } else if (!audioBinder.isPlaying()) {
                 // 当前暂停  播放
                 audioBinder.start();
                 mAnimator.resume();
-                MyApplication.getIntstance()
-                        .bus()
-                        .post(new MusicStatusBean(0, false));
             }
             //更新播放状态按钮
             updatePlayBtnStatus();
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @OnClick({R.id.music_floating_pre,
             R.id.music_floating_play,
             R.id.music_floating_next,
@@ -648,6 +637,10 @@ public class MusicActivity
 
     /**
      * 将Tabbar置于未选种状态
+<<<<<<< HEAD
+=======
+     *
+>>>>>>> features
      * @param flag
      * @param titleResourceId
      */
@@ -726,7 +719,6 @@ public class MusicActivity
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onResume() {
         super.onResume();
@@ -735,7 +727,6 @@ public class MusicActivity
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void headsetPullOut() {
         super.headsetPullOut();
@@ -768,10 +759,21 @@ public class MusicActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unbindAudioService();
+        handleAftermath();
+        mBind.unbind();
 
-        if (mDisposable != null) {
-            mDisposable.dispose();
+    }
+
+    public void unbindAudioService() {
+        if (mConnection != null) {
+            unbindService(mConnection);
+            mConnection = null;
         }
+
+    }
+
+    private void handleAftermath() {
         if (mAnimator != null) {
             mAnimator.cancel();
         }
@@ -785,11 +787,6 @@ public class MusicActivity
             mPlayState = audioBinder.isPlaying() ? Constants.NUMBER_TWO : Constants.NUMBER_ONE;
             SharePrefrencesUtil.setMusicPlayState(this, mPlayState);
         }
-
-        mCompositeDisposable.clear();
-        unbindService(mConnection);
         stopService(new Intent(this, AudioPlayService.class));
-        mBind.unbind();
-
     }
 }

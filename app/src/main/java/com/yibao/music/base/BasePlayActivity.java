@@ -69,7 +69,6 @@ public abstract class BasePlayActivity extends BaseActivity {
     }
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -83,7 +82,6 @@ public abstract class BasePlayActivity extends BaseActivity {
 
     /**
      * 接收Service发出的播放状态
-     *
      */
     private void recivewServiecInfo() {
         mCompositeDisposable.add(mBus.toObserverable(MusicStatusBean.class)
@@ -145,11 +143,9 @@ public abstract class BasePlayActivity extends BaseActivity {
     private void init() {
         audioBinder = MusicActivity.getAudioBinder();
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Music Lock");
+        mWakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Music  Lock");
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mMaxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-
-
         mCompositeDisposable = new CompositeDisposable();
     }
 
@@ -285,7 +281,8 @@ public abstract class BasePlayActivity extends BaseActivity {
      * @param b
      */
     protected abstract void updataMusicBarAndVolumeBar(SeekBar seekBar, int progress, boolean b);
-//
+
+    //
 
 
     @Override

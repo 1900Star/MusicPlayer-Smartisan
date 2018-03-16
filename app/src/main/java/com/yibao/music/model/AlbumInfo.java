@@ -23,7 +23,7 @@ public class AlbumInfo implements Parcelable, Comparable<AlbumInfo> {
     private String songName;
     private int year;
 
-    protected AlbumInfo(Parcel in) {
+    private AlbumInfo(Parcel in) {
         albumName = in.readString();
         artist = in.readString();
         if (in.readByte() == 0) {

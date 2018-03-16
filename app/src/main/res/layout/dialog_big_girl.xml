@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_gravity="bottom" />
+
     <LinearLayout
         android:id="@+id/top_big_pic_content"
         android:layout_width="match_parent"
@@ -30,7 +31,8 @@
         android:layout_marginBottom="2dp"
         android:alpha="0.3"
         android:text="@string/save_pic"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:visibility="gone" />
 
 
 </FrameLayout>

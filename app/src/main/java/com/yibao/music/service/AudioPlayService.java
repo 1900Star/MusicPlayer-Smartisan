@@ -30,25 +30,35 @@ import java.util.List;
 import java.util.Random;
 
 
+/**
+ * @author Stran
+ */
 public class AudioPlayService
         extends Service {
 
     private MediaPlayer mediaPlayer;
     private AudioBinder mAudioBinder;
     private static int PLAY_MODE;
-    //三种播放模式
+
+    /**
+     * 三种播放模式
+     */
     public static final int PLAY_MODE_ALL = 0;
     public static final int PLAY_MODE_SINGLE = 1;
     public static final int PLAY_MODE_RANDOM = 2;
-    //音乐通知栏
+    /**
+     * 音乐通知栏
+     */
     public static final int ROOT = 0;
     public static final int PREV = 1;
     public static final int PLAY = 2;
     public static final int NEXT = 3;
     public static final int CLOSE = 4;
-    //广播匹配
+    /**
+     * 广播匹配
+     */
     public final static String BUTTON_ID = "ButtonId";
-    public static final String ACTION_MUSIC = "MUSIC";
+    public final static String ACTION_MUSIC = "MUSIC";
 
     private int position = -2;
     private List<MusicBean> mMusicDataList;
@@ -66,8 +76,8 @@ public class AudioPlayService
     @Override
     public void unbindService(ServiceConnection conn) {
         super.unbindService(conn);
-
     }
+
 
     @Override
     public void onCreate() {
@@ -101,6 +111,7 @@ public class AudioPlayService
         int sortListFlag = intent.getIntExtra("sortFlag", 0);
         int dataFlag = intent.getIntExtra("dataFlag", 0);
         String queryFlag = intent.getStringExtra("queryFlag");
+        LogUtil.d(" position  " + enterPosition + "==  " + sortListFlag + "  " + dataFlag + "   " + queryFlag);
         getMusicDataList(sortListFlag, dataFlag, queryFlag);
 
         if (enterPosition != position && enterPosition != -1) {
@@ -115,16 +126,28 @@ public class AudioPlayService
     }
 
     private void getMusicDataList(int sortListFlag, int dataFlag, String queryFlag) {
-        if (sortListFlag == Constants.NUMBER_ONE) {
+        if (sortListFlag == Constants.NUMBER_ZOER) {
+            // 按歌曲名
             mMusicDataList = mMusicDao.queryBuilder().list();
-        } else if (sortListFlag == Constants.NUMBER_FOUR) {
+        } else if (sortListFlag == Constants.NUMBER_ONE) {
+            // 按评分
+            LogUtil.d("");
+        } else if (sortListFlag == Constants.NUMBER_TWO) {
+            // 按播放次数
+            LogUtil.d("");
+            mMusicDataList = MusicListUtil.sortMusicAddtime((ArrayList<MusicBean>) mMusicDataList);
+        } else if (sortListFlag == Constants.NUMBER_THRRE) {
+            // 按添加时间
             mMusicDataList = MusicListUtil.sortMusicAddtime((ArrayList<MusicBean>) mMusicDataList);
         } else if (sortListFlag == Constants.NUMBER_EIGHT) {
+            // 收藏列表
             mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
         } else if (dataFlag == Constants.NUMBER_ONE) {
+            // 按艺术家查询列表
             mMusicBean.setArtist(queryFlag);
             mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(mMusicBean.getArtist())).build().list();
         } else if (dataFlag == Constants.NUMBER_TWO) {
+            // 按专辑名查询列表
             mMusicBean.setAlbum(queryFlag);
             mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(mMusicBean.getAlbum())).build().list();
         }
@@ -136,6 +159,7 @@ public class AudioPlayService
      */
     private void sendCureentMusicInfo() {
         MusicBean musicBean = mMusicDataList.get(position);
+
         musicBean.setCureetPosition(position);
         MyApplication.getIntstance()
                 .bus()
@@ -343,9 +367,7 @@ public class AudioPlayService
     //控制通知栏的广播
 
     private class MusicBroacastReceiver
-            extends BroadcastReceiver
-
-    {
+            extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {

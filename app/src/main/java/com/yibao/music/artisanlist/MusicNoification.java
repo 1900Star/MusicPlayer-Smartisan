@@ -26,7 +26,7 @@ public class MusicNoification {
 
 
         Notification.Builder builder = new Notification.Builder(context);
-        Notification notification = builder.setSmallIcon(R.mipmap.me)
+        Notification notification = builder.setSmallIcon(R.mipmap.xuan)
                 .setOngoing(true)
                 .setAutoCancel(true)
                 .setContent(remoteView)
