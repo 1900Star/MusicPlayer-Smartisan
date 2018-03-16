@@ -636,7 +636,7 @@ public class MusicActivity
     }
 
     /**
-     * 将Tabbar置于未选种状态
+     * 将Tabbar全部置于未选种状态
      *
      * @param flag
      * @param titleResourceId
