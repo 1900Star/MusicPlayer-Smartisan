@@ -139,9 +139,9 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
         mPlaySongName.setText(mCurrenMusicInfo.getTitle());
         mPlayArtistName.setText(mCurrenMusicInfo.getArtist());
         mTvLyrics.setLrcFile(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
-        String url = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId())
+        mAlbumUrl = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId())
                 .toString();
-        setAlbulm(url);
+        setAlbulm(mAlbumUrl);
     }
 
     public void checkCurrentIsFavorite() {
@@ -336,6 +336,7 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
                 break;
             case R.id.rotate_rl:
                 // 按下音乐停止播放  动画停止 ，抬起恢复
+                LogUtil.d("按下音乐停止播放  动画停止 ，抬起恢复");
                 break;
             case R.id.tv_lyrics:
                 showLyrics();
@@ -465,6 +466,14 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
     protected void onResume() {
         super.onResume();
         checkCurrentIsFavorite();
+    }
+
+    @Override
+    protected void headsetPullOut() {
+        super.headsetPullOut();
+        if (audioBinder != null && audioBinder.isPlaying()) {
+            switchPlayState();
+        }
     }
 
     @Override

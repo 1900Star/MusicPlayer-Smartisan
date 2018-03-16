@@ -69,7 +69,6 @@ public abstract class BasePlayActivity extends BaseActivity {
     }
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -83,7 +82,6 @@ public abstract class BasePlayActivity extends BaseActivity {
 
     /**
      * 接收Service发出的播放状态
-     *
      */
     private void recivewServiecInfo() {
         mCompositeDisposable.add(mBus.toObserverable(MusicStatusBean.class)
@@ -284,7 +282,8 @@ public abstract class BasePlayActivity extends BaseActivity {
      * @param b
      */
     protected abstract void updataMusicBarAndVolumeBar(SeekBar seekBar, int progress, boolean b);
-//
+
+    //
 
 
     @Override

@@ -30,25 +30,35 @@ import java.util.List;
 import java.util.Random;
 
 
+/**
+ * @author Stran
+ */
 public class AudioPlayService
         extends Service {
 
     private MediaPlayer mediaPlayer;
     private AudioBinder mAudioBinder;
     private static int PLAY_MODE;
-    //三种播放模式
+
+    /**
+     * 三种播放模式
+     */
     public static final int PLAY_MODE_ALL = 0;
     public static final int PLAY_MODE_SINGLE = 1;
     public static final int PLAY_MODE_RANDOM = 2;
-    //音乐通知栏
+    /**
+     * 音乐通知栏
+     */
     public static final int ROOT = 0;
     public static final int PREV = 1;
     public static final int PLAY = 2;
     public static final int NEXT = 3;
     public static final int CLOSE = 4;
-    //广播匹配
+    /**
+     * 广播匹配
+     */
     public final static String BUTTON_ID = "ButtonId";
-    public static final String ACTION_MUSIC = "MUSIC";
+    public final static String ACTION_MUSIC = "MUSIC";
 
     private int position = -2;
     private List<MusicBean> mMusicDataList;
@@ -66,8 +76,8 @@ public class AudioPlayService
     @Override
     public void unbindService(ServiceConnection conn) {
         super.unbindService(conn);
-
     }
+
 
     @Override
     public void onCreate() {
@@ -102,6 +112,7 @@ public class AudioPlayService
         int sortListFlag = intent.getIntExtra("sortFlag", 0);
         int dataFlag = intent.getIntExtra("dataFlag", 0);
         String queryFlag = intent.getStringExtra("queryFlag");
+        LogUtil.d(" position  " + enterPosition + "==  " + sortListFlag + "  " + dataFlag + "   " + queryFlag);
         getMusicDataList(sortListFlag, dataFlag, queryFlag);
 
         if (enterPosition != position && enterPosition != -1) {
@@ -358,9 +369,7 @@ public class AudioPlayService
     //控制通知栏的广播
 
     private class MusicBroacastReceiver
-            extends BroadcastReceiver
-
-    {
+            extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {

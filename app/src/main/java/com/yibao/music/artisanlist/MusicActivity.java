@@ -1,8 +1,8 @@
 package com.yibao.music.artisanlist;
 
 import android.animation.ObjectAnimator;
-import android.app.Service;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
@@ -290,9 +290,8 @@ public class MusicActivity
         musicIntent.putExtra("sortFlag", getSpMusicFlag());
         musicIntent.putExtra("position", mCurrentPosition);
         mConnection = new AudioServiceConnection();
-        bindService(musicIntent, mConnection, Service.BIND_AUTO_CREATE);
+        bindService(musicIntent, mConnection, Context.BIND_AUTO_CREATE);
         startService(musicIntent);
-
     }
 
     /**
@@ -311,8 +310,8 @@ public class MusicActivity
         musicIntent.putExtra("queryFlag", queryFlag);
         musicIntent.putExtra("position", mCurrentPosition);
         mConnection = new AudioServiceConnection();
-        bindService(musicIntent, mConnection, Service.BIND_AUTO_CREATE);
-        startService(musicIntent);
+        bindService(musicIntent, mConnection, Context.BIND_AUTO_CREATE);
+
 
     }
 
@@ -358,7 +357,6 @@ public class MusicActivity
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void initRxBusData() {
         //接收service发出的数据，时时更新播放歌曲 进度 歌名 歌手信息
         mCompositeDisposable.add(mBus.toObserverable(MusicBean.class)
@@ -399,7 +397,6 @@ public class MusicActivity
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void refreshBtnAndNotify(MusicStatusBean bean) {
         switch (bean.getType()) {
             case 0:
@@ -467,7 +464,6 @@ public class MusicActivity
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void initAnimation() {
         if (mAnimator == null || mAnimatorListener == null) {
             mAnimator = AnimationUtil.getRotation(mMusicFloatBlockAlbulm);
@@ -503,7 +499,6 @@ public class MusicActivity
      * mPlayState = 2 ：表示在播放时退出音乐播放器的界面，只是短暂的离开，但并没有退出程序，
      * 下次打开播放器的界面时，继续自动播放当前的歌曲。
      */
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void switchPlayState() {
         if (mPlayState == Constants.NUMBER_ONE) {
             LogUtil.d(" PlayState == 1 ==================");
@@ -517,23 +512,16 @@ public class MusicActivity
                 // 当前播放  暂停
                 audioBinder.pause();
                 mAnimator.pause();
-//                MyApplication.getIntstance()
-//                        .bus()
-//                        .post(new MusicStatusBean(0, true));
             } else if (!audioBinder.isPlaying()) {
                 // 当前暂停  播放
                 audioBinder.start();
                 mAnimator.resume();
-//                MyApplication.getIntstance()
-//                        .bus()
-//                        .post(new MusicStatusBean(0, false));
             }
             //更新播放状态按钮
             updatePlayBtnStatus();
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @OnClick({R.id.music_floating_pre,
             R.id.music_floating_play,
             R.id.music_floating_next,
@@ -728,7 +716,6 @@ public class MusicActivity
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onResume() {
         super.onResume();
@@ -737,7 +724,6 @@ public class MusicActivity
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void headsetPullOut() {
         super.headsetPullOut();
@@ -770,8 +756,17 @@ public class MusicActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unbindAudioService();
         handleAftermath();
         mBind.unbind();
+
+    }
+
+    public void unbindAudioService() {
+        if (mConnection != null) {
+            unbindService(mConnection);
+            mConnection = null;
+        }
 
     }
 
@@ -789,7 +784,6 @@ public class MusicActivity
             mPlayState = audioBinder.isPlaying() ? Constants.NUMBER_TWO : Constants.NUMBER_ONE;
             SharePrefrencesUtil.setMusicPlayState(this, mPlayState);
         }
-        unbindService(mConnection);
         stopService(new Intent(this, AudioPlayService.class));
     }
 }
