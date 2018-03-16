@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical"
-    tools:context="com.yibao.music.artisanlist.MusicActivity">
+    tools:context="com.yibao.music.activity.MusicActivity">
 
     <include layout="@layout/song_fragment_category" />
 

@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.yibao.music.R;
-import com.yibao.music.album.DetailsListAdapter;
+import com.yibao.music.adapter.DetailsListAdapter;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.util.Constants;

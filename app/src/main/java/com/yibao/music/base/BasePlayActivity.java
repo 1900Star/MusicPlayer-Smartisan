@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import com.yibao.music.R;
-import com.yibao.music.artisanlist.MusicActivity;
+import com.yibao.music.activity.MusicActivity;
 import com.yibao.music.base.listener.SeekBarChangeListtener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
@@ -124,6 +124,7 @@ public abstract class BasePlayActivity extends BaseActivity {
         if (mDisposablePlayTime != null) {
             mDisposablePlayTime.dispose();
         }
+
     }
 
     private void upDataPlayProgress() {

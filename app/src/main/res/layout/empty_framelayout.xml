@@ -5,5 +5,5 @@
     android:layout_height="115dp"
     android:layout_gravity="bottom"
     android:background="@color/colorWhite"
-    tools:context="com.yibao.music.artisanlist.MusicActivity" />
+    tools:context="com.yibao.music.activity.MusicActivity" />
 
