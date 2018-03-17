@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
+def keystoreFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystoreFile))
 android {
     compileSdkVersion 26
     buildToolsVersion '27.0.1'
@@ -12,10 +15,10 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         signingConfigs {
             config {
-                storeFile file(KEY_PATH)
-                storePassword KEY_PASS
-                keyAlias ALIAS_NAME
-                keyPassword ALIAS_PASS
+                storeFile file(keystoreProperties['KEY_PATH'])
+                storePassword(keystoreProperties['KEY_PASS'])
+                keyAlias(keystoreProperties['ALIAS_NAME'])
+                keyPassword(keystoreProperties['ALIAS_PASS'])
             }
             debug {
                 v1SigningEnabled true

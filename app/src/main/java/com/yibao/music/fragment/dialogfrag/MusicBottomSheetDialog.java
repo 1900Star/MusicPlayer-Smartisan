@@ -14,7 +14,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.yibao.music.MyApplication;
+import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.factory.RecyclerFactory;
 import com.yibao.music.model.BottomSheetStatus;
@@ -54,7 +54,7 @@ public class MusicBottomSheetDialog
     private CompositeDisposable
             mDisposable = new CompositeDisposable();
     private RxBus
-            mBus = MyApplication.getIntstance()
+            mBus = MusicApplication.getIntstance()
             .bus();
 
     public static MusicBottomSheetDialog newInstance() {
@@ -64,7 +64,7 @@ public class MusicBottomSheetDialog
     public void getBottomDialog(Context context) {
         this.mContext = context;
 
-        this.mList = MyApplication.getIntstance().getMusicDao().queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
+        this.mList = MusicApplication.getIntstance().getMusicDao().queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
         BottomSheetDialog dialog = new BottomSheetDialog(context);
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.bottom_sheet_list_dialog, null);
@@ -131,12 +131,12 @@ public class MusicBottomSheetDialog
     private void clearFavoriteMusic() {
         for (MusicBean musicBean : mList) {
             musicBean.setIsFavorite(false);
-            MyApplication.getIntstance().getMusicDao()
+            MusicApplication.getIntstance().getMusicDao()
                     .update(musicBean);
         }
 
         mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        MyApplication.getIntstance().bus().post(new MusicFavoriteBean());
+        MusicApplication.getIntstance().bus().post(new MusicFavoriteBean());
 
 //        if (mContext instanceof OnCheckFavoriteListener) {
 //            ((OnCheckFavoriteListener) mContext).updataFavoriteStatus();

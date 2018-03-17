@@ -1,10 +1,8 @@
-package com.yibao.music.artisanlist;
+package com.yibao.music.adapter;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,7 +70,6 @@ public class QqBarPagerAdapter
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_music_pager, container, false);
@@ -97,7 +94,6 @@ public class QqBarPagerAdapter
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void initView(MusicBean musicInfo, View view) {
         ImageView mAlbulm = view.findViewById(R.id.iv_pager_albulm);
         TextView songName = view.findViewById(R.id.tv_pager_song_name);

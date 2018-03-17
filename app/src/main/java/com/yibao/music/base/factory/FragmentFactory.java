@@ -1,12 +1,12 @@
-package com.yibao.music.factory;
+package com.yibao.music.base.factory;
 
 import android.annotation.SuppressLint;
 
 import com.yibao.music.album.AlbumFragment;
-import com.yibao.music.album.AlbumListDetailsFragment;
 import com.yibao.music.artisanlist.SongFragment;
 import com.yibao.music.artist.ArtistanListFragment;
 import com.yibao.music.base.BaseFragment;
+import com.yibao.music.fragment.FolderListFragment;
 import com.yibao.music.playlist.PlayListFragment;
 
 import java.util.HashMap;
@@ -49,7 +49,7 @@ public class FragmentFactory {
                 fragment = AlbumFragment.newInstance();
                 break;
             case 4:
-                fragment = AlbumListDetailsFragment.newInstance();
+                fragment = FolderListFragment.newInstance();
                 break;
             default:
                 break;

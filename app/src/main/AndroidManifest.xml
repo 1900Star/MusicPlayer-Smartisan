@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name=".MyApplication"
+        android:name=".MusicApplication"
         android:allowBackup="true"
         android:fullBackupContent="@null"
         android:icon="@mipmap/artisan_launcher"
@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".splash.SplashActivity"
+            android:name=".activity.SplashActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.Splash.Fullscreen">
             <intent-filter>
@@ -26,15 +26,15 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.AudioPlayService"/>
-        <service android:name=".service.LoadMusicDataServices" />
+        <service android:name=".service.AudioPlayService" />
         <service android:name=".service.AidlService" />
+        <service android:name=".service.LoadMusicDataService" />
 
         <activity android:name=".base.BaseActivity" />
 
 
         <activity
-            android:name=".artisanlist.MusicActivity"
+            android:name=".activity.MusicActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
 

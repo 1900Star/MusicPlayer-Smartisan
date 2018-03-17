@@ -7,9 +7,11 @@
 
     <TextView
         android:id="@+id/tv_music_count"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@color/seekBarN"
         android:text="@string/load_music"
         android:textColor="@color/textDes"
         android:textSize="@dimen/about_content"
@@ -24,13 +26,18 @@
         android:gravity="bottom"
         android:visibility="gone" />
 
-    <ImageView
-        android:id="@+id/iv_splash"
+    <!--<ImageView-->
+    <!--android:id="@+id/iv_splash"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:contentDescription="@null"-->
+    <!--android:scaleType="centerCrop"-->
+    <!--android:src="@mipmap/laoluo" />-->
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_splash"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:contentDescription="@null"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/laoluo" />
+        android:layout_weight="1" />
 
 </LinearLayout>

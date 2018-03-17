@@ -10,10 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
-import com.yibao.music.MyApplication;
-
-import io.reactivex.disposables.CompositeDisposable;
-
 /**
  * Author：Sid
  * Des：${TODO}
@@ -24,8 +20,6 @@ import io.reactivex.disposables.CompositeDisposable;
 public abstract class BaseDialogFragment
         extends DialogFragment {
 
-    public MyApplication mApplication;
-    public CompositeDisposable mDisposable;
     public static int MAX_DOWN_PREGRESS = 100;
 
     @Nullable
@@ -38,18 +32,18 @@ public abstract class BaseDialogFragment
         getDialog().getWindow()
                 .setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        mApplication = (MyApplication) getActivity().getApplication();
-        mDisposable = new CompositeDisposable();
         return getViews();
     }
 
+    /**
+     * 经过数据绑定的View
+     *
+     * @return
+     */
     public abstract View getViews();
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mDisposable != null) {
-            mDisposable.clear();
-        }
     }
 }

@@ -1,4 +1,4 @@
-package com.yibao.music.artisanlist;
+package com.yibao.music.view.music;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.yibao.music.R;
+import com.yibao.music.activity.MusicActivity;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.LogUtil;
