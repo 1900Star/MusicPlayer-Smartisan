@@ -1,4 +1,4 @@
-package com.yibao.music.artisanlist;
+package com.yibao.music.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yibao.music.R;
+import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.artisan.MusicBottomSheetDialog;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.model.MusicBean;

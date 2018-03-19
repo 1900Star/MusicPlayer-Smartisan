@@ -1,4 +1,4 @@
-package com.yibao.music.dialogfrag;
+package com.yibao.music.fragment.dialogfrag;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

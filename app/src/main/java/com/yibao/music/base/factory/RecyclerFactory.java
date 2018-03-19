@@ -1,4 +1,4 @@
-package com.yibao.music.factory;
+package com.yibao.music.base.factory;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;

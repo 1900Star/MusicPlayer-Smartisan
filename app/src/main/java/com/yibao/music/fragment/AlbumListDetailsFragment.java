@@ -1,4 +1,4 @@
-package com.yibao.music.album;
+package com.yibao.music.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

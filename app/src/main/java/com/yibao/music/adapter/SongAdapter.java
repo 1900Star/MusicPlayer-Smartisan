@@ -1,4 +1,4 @@
-package com.yibao.music.artisanlist;
+package com.yibao.music.adapter;
 
 
 import android.content.Context;
@@ -178,7 +178,7 @@ public class SongAdapter
     }
 
 
-    void setOnItemMenuListener(OnOpenItemMoerMenuListener listener) {
+    public void setOnItemMenuListener(OnOpenItemMoerMenuListener listener) {
         mListener = listener;
     }
 
