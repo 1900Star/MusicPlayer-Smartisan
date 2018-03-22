@@ -1,4 +1,4 @@
-package com.yibao.music.artisan;
+package com.yibao.music.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

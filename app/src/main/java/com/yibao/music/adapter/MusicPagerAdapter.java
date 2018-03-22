@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.yibao.music.album.BaseMusicStatePagerAdapter;
 import com.yibao.music.base.factory.FragmentFactory;
 
 /**

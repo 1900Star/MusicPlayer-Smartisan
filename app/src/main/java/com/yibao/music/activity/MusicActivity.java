@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -50,7 +49,6 @@ import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.MusicProgressView;
 import com.yibao.music.view.ProgressBtn;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -152,12 +150,12 @@ public class MusicActivity
     private boolean mMusicConfig;
     private boolean isChangeFloatingBlock;
     private int mPlayState;
-    private int mNormalTabbarColor;
+
     private QqBarPagerAdapter mQqBarPagerAdapter;
     private BaseFragment mBaseFragment;
+    private boolean isNotDetailsPage = true;
 
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -177,7 +175,7 @@ public class MusicActivity
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(v -> MusicActivity.this.finish());
-        mNormalTabbarColor = Color.parseColor("#939396");
+
 
     }
 
@@ -210,10 +208,11 @@ public class MusicActivity
      */
     private List<MusicBean> initMusicData() {
         int spMusicFlag = getSpMusicFlag();
-        LogUtil.d(" 200 MusicActivity ==    " + spMusicFlag);
         if (spMusicFlag == Constants.NUMBER_THRRE) {
-            return MusicListUtil.sortMusicAddtime((ArrayList<MusicBean>) mMusicDao.queryBuilder().list());
-        } else if (spMusicFlag == Constants.NUMBER_ZOER) {
+            return MusicListUtil.sortMusicAddtime(mMusicDao.queryBuilder().list());
+        } else if (spMusicFlag == Constants.NUMBER_ONE) {
+            return mMusicItems = mMusicDao.queryBuilder().list();
+        } else if (spMusicFlag == Constants.NUMBER_TEN) {
             return mMusicItems = mMusicDao.queryBuilder().list();
         } else if (spMusicFlag == Constants.NUMBER_EIGHT) {
             return mMusicItems = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
@@ -286,14 +285,18 @@ public class MusicActivity
      */
     @Override
     public void startMusicService(int position) {
-        mCurrentPosition = position;
-        Intent musicIntent = new Intent(this, AudioPlayService.class);
-        LogUtil.d(" 278  MusicActivity  mFlag==      " + getSpMusicFlag());
-        musicIntent.putExtra("sortFlag", getSpMusicFlag());
-        musicIntent.putExtra("position", mCurrentPosition);
-        mConnection = new AudioServiceConnection();
-        bindService(musicIntent, mConnection, Context.BIND_AUTO_CREATE);
-        startService(musicIntent);
+        int spMusicFlag = getSpMusicFlag();
+        LogUtil.d(" 290  MusicActivity  mFlag==      " + spMusicFlag);
+        if (spMusicFlag != Constants.NUMBER_TEN) {
+            mCurrentPosition = position;
+            Intent musicIntent = new Intent(this, AudioPlayService.class);
+            musicIntent.putExtra("sortFlag", spMusicFlag);
+            musicIntent.putExtra("position", mCurrentPosition);
+            mConnection = new AudioServiceConnection();
+            bindService(musicIntent, mConnection, Context.BIND_AUTO_CREATE);
+            startService(musicIntent);
+//            SharePrefrencesUtil.setMusicDataListFlag(this, Constants.NUMBER_ONE);
+        }
     }
 
     /**
@@ -306,14 +309,15 @@ public class MusicActivity
     @Override
     public void startMusicServiceFlag(int position, int dataFlag, String queryFlag) {
         mCurrentPosition = position;
-        Intent musicIntent = new Intent(this, AudioPlayService.class);
+        Intent intent = new Intent(this, AudioPlayService.class);
         LogUtil.d(" 306  MusicActivity  dataFlag == queryFlag     " + dataFlag + "  ===  " + queryFlag);
-        musicIntent.putExtra("dataFlag", dataFlag);
-        musicIntent.putExtra("queryFlag", queryFlag);
-        musicIntent.putExtra("position", mCurrentPosition);
-        mConnection = new AudioServiceConnection();
-        bindService(musicIntent, mConnection, Context.BIND_AUTO_CREATE);
-
+        intent.putExtra("sortFlag", Constants.NUMBER_TEN);
+        intent.putExtra("dataFlag", dataFlag);
+        intent.putExtra("queryFlag", queryFlag);
+        intent.putExtra("position", mCurrentPosition);
+        AudioServiceConnection serviceConnection = new AudioServiceConnection();
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        startService(intent);
 
     }
 

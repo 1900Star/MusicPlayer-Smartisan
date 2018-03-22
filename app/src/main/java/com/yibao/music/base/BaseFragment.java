@@ -18,7 +18,7 @@ import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.RxBus;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -33,23 +33,28 @@ import io.reactivex.disposables.CompositeDisposable;
 public abstract class BaseFragment extends Fragment {
     protected String tag;
     protected Activity mActivity;
-    protected static ArrayList<MusicBean> musicBeans;
-    protected static ArrayList<AlbumInfo> mAlbumList;
-    protected static ArrayList<ArtistInfo> mArtistList;
-    protected static RxBus mBus;
-    protected static CompositeDisposable compositeDisposable;
-    public ArrayList<MusicBean> mSongList;
+    protected static List<AlbumInfo> mAlbumList;
+    protected static List<ArtistInfo> mArtistList;
+    protected RxBus mBus;
+    protected CompositeDisposable compositeDisposable;
+    public List<MusicBean> mSongList;
     public MusicBeanDao mMusicBeanDao;
     public MusicInfoDao mMusicInfoDao;
     protected boolean isShowDetailsView = false;
     private OnBackHandlePressedListener mHandlePressedListener;
+    public List<MusicBean> mMusicAddtimeList;
+
+    protected BaseFragment() {
+        mMusicBeanDao = MusicApplication.getIntstance().getMusicDao();
+        mMusicInfoDao = MusicApplication.getIntstance().getMusicInfoDao();
+        mSongList = mMusicBeanDao.queryBuilder().list();
+
+    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         tag = this.getClass().getSimpleName();
-        mMusicBeanDao = MusicApplication.getIntstance().getMusicDao();
-        mMusicInfoDao = MusicApplication.getIntstance().getMusicInfoDao();
         mActivity = getActivity();
         compositeDisposable = new CompositeDisposable();
         mBus = MusicApplication.getIntstance().bus();
@@ -65,19 +70,14 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mSongList == null) {
-            mSongList = (ArrayList<MusicBean>) mMusicBeanDao.queryBuilder().list();
-
-
-        }
-        if (musicBeans == null) {
-            musicBeans = (ArrayList<MusicBean>) mMusicBeanDao.queryBuilder().list();
+        if (mAlbumList == null) {
+            mAlbumList = MusicListUtil.getAlbumList(mSongList);
         }
         if (mAlbumList == null) {
-            mAlbumList = MusicListUtil.getAlbumList((ArrayList<MusicBean>) mMusicBeanDao.queryBuilder().list());
+            mMusicAddtimeList = MusicListUtil.sortMusicAddtime(mSongList);
         }
         if (mArtistList == null) {
-            mArtistList = MusicListUtil.getArtistList((ArrayList<MusicBean>) mMusicBeanDao.queryBuilder().list());
+            mArtistList = MusicListUtil.getArtistList(mSongList);
 
         }
 

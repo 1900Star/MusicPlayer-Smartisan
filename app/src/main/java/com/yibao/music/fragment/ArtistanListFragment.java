@@ -1,4 +1,4 @@
-package com.yibao.music.artist;
+package com.yibao.music.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,7 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yibao.music.R;
-import com.yibao.music.album.DetailsListAdapter;
+import com.yibao.music.adapter.ArtistAdapter;
+import com.yibao.music.adapter.DetailsListAdapter;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;

@@ -3,7 +3,6 @@
     android:id="@+id/smartisan_music_bar"
     android:layout_width="match_parent"
     android:layout_height="58dp"
-    android:background="@android:color/transparent"
     android:visibility="visible">
 
     <com.yibao.music.view.CircleImageView

@@ -16,10 +16,10 @@ import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
-import com.yibao.music.artisan.MusicBottomSheetDialog;
 import com.yibao.music.base.BasePlayActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.OnCheckFavoriteListener;
+import com.yibao.music.fragment.dialogfrag.MusicBottomSheetDialog;
 import com.yibao.music.fragment.dialogfrag.TopBigPicDialogFragment;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
@@ -247,6 +247,8 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
      * @param info
      */
     private void perpareMusic(MusicBean info) {
+
+        LogUtil.d("更新 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
         mCurrenMusicInfo = info;
         checkCurrentIsFavorite();
         initAnimation();

@@ -1,4 +1,4 @@
-package com.yibao.music.album;
+package com.yibao.music.adapter;
 
 
 import android.content.Context;
@@ -122,13 +122,7 @@ public class AlbumAdapter
             AlbumAdapter.this.openDetails(albumInfo);
 //            holder.mAlbumCoverShadowMask.setVisibility(View.VISIBLE);
         });
-//
-//
-//            mIvAlbumTileAlbum.setOnLongClickListener(view -> {
-//                mAlbumCoverShadowMask.setVisibility(View.VISIBLE);
-//                LogUtil.d("======mIvAlbumTileAlbum===   ", "平铺显示");
-//                return false;
-//            });
+
     }
 
     static class AlbumTileHolder extends RecyclerView.ViewHolder {

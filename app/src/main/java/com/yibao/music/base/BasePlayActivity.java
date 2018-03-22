@@ -45,12 +45,12 @@ public abstract class BasePlayActivity extends BaseActivity {
     protected AudioManager mAudioManager;
     protected int mMaxVolume;
     protected AudioPlayService.AudioBinder audioBinder;
-    protected CompositeDisposable mCompositeDisposable;
     private PowerManager.WakeLock mWakeLock;
     private boolean isScreenAlwaysOn;
     private VolumeReceiver mVolumeReceiver;
     protected Disposable mDisposablePlayTime;
     protected Disposable mDisposableLyrics;
+    protected CompositeDisposable mCompositeDisposable;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,10 +121,17 @@ public abstract class BasePlayActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if (mCompositeDisposable != null) {
+            mCompositeDisposable.dispose();
+            mCompositeDisposable.clear();
+
+        }
         if (mDisposablePlayTime != null) {
             mDisposablePlayTime.dispose();
         }
-
+        if (mDisposableLyrics != null) {
+            mDisposableLyrics.dispose();
+        }
     }
 
     private void upDataPlayProgress() {
@@ -295,14 +302,7 @@ public abstract class BasePlayActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mDisposableLyrics != null && mCompositeDisposable != null) {
-            mDisposablePlayTime.dispose();
-            mCompositeDisposable.clear();
 
-        }
-        if (mDisposableLyrics != null) {
-            mDisposableLyrics.dispose();
-        }
         unregisterReceiver(mVolumeReceiver);
     }
 }

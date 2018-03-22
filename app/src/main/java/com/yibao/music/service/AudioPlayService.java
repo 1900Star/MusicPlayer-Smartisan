@@ -25,7 +25,6 @@ import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.view.music.MusicNoification;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -84,12 +83,8 @@ public class AudioPlayService
         super.onCreate();
         mAudioBinder = new AudioBinder();
         mRemoteViews = new RemoteViews(getPackageName(), R.layout.music_notify);
-        if (mMusicDataList == null) {
-            mMusicDataList = MusicApplication.getIntstance().getMusicDao().queryBuilder().list();
-        }
-        if (mMusicDao == null) {
-            mMusicDao = MusicApplication.getIntstance().getMusicDao();
-        }
+
+        mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mMusicBean = new MusicBean();
         initBroadcast();
         //初始化播放模式
@@ -111,8 +106,9 @@ public class AudioPlayService
         int enterPosition = intent.getIntExtra("position", 0);
         int sortListFlag = intent.getIntExtra("sortFlag", 0);
         int dataFlag = intent.getIntExtra("dataFlag", 0);
-        String queryFlag = intent.getStringExtra("queryFlag");
-        LogUtil.d(" position  " + enterPosition + "==  " + sortListFlag + "  " + dataFlag + "   " + queryFlag);
+//        String queryFlag = intent.getStringExtra("queryFlag");
+        String queryFlag = intent.getExtras().getString("queryFlag");
+        LogUtil.d(" position  ==" + enterPosition + "   sortListFlag  ==" + sortListFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
         getMusicDataList(sortListFlag, dataFlag, queryFlag);
 
         if (enterPosition != position && enterPosition != -1) {
@@ -127,28 +123,28 @@ public class AudioPlayService
     }
 
     private void getMusicDataList(int sortListFlag, int dataFlag, String queryFlag) {
-        if (sortListFlag == Constants.NUMBER_ZOER) {
-            // 按歌曲名
+        // 按歌曲名
+        if (sortListFlag == Constants.NUMBER_ONE) {
             mMusicDataList = mMusicDao.queryBuilder().list();
-        } else if (sortListFlag == Constants.NUMBER_ONE) {
             // 按评分
-            LogUtil.d("");
         } else if (sortListFlag == Constants.NUMBER_TWO) {
-            // 按播放次数
             LogUtil.d("");
-            mMusicDataList = MusicListUtil.sortMusicAddtime((ArrayList<MusicBean>) mMusicDataList);
+            // 按播放次数
         } else if (sortListFlag == Constants.NUMBER_THRRE) {
+            LogUtil.d("");
             // 按添加时间
-            mMusicDataList = MusicListUtil.sortMusicAddtime((ArrayList<MusicBean>) mMusicDataList);
-        } else if (sortListFlag == Constants.NUMBER_EIGHT) {
+        } else if (sortListFlag == Constants.NUMBER_FOUR) {
+            LogUtil.d("44444444444444444444444444444");
+            mMusicDataList = MusicListUtil.sortMusicAddtime(mMusicDataList);
             // 收藏列表
+        } else if (sortListFlag == Constants.NUMBER_EIGHT) {
             mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
-        } else if (dataFlag == Constants.NUMBER_ONE) {
             // 按艺术家查询列表
+        } else if (dataFlag == Constants.NUMBER_ONE) {
             mMusicBean.setArtist(queryFlag);
             mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(mMusicBean.getArtist())).build().list();
-        } else if (dataFlag == Constants.NUMBER_TWO) {
             // 按专辑名查询列表
+        } else if (dataFlag == Constants.NUMBER_TWO) {
             mMusicBean.setAlbum(queryFlag);
             mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(mMusicBean.getAlbum())).build().list();
         }
@@ -159,6 +155,8 @@ public class AudioPlayService
      * 通知播放界面更新
      */
     private void sendCureentMusicInfo() {
+
+        LogUtil.d("  发送的postion  " + position);
         MusicBean musicBean = mMusicDataList.get(position);
 
         musicBean.setCureetPosition(position);
@@ -199,7 +197,6 @@ public class AudioPlayService
             mediaPlayer.start();
             //通知播放界面更新
             sendCureentMusicInfo();
-            LogUtil.d("********     onPrepared");
             //显示音乐通知栏
             showNotification();
         }

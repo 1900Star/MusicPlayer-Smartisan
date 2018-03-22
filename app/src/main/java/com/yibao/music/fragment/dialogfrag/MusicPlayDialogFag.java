@@ -522,7 +522,7 @@ public class MusicPlayDialogFag
 
         RxView.clicks(mTitlebarPlayList)
                 .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> com.yibao.music.artisan.MusicBottomSheetDialog.newInstance()
+                .subscribe(o -> MusicBottomSheetDialog.newInstance()
                         .getBottomDialog(getActivity()));
 
 

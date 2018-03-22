@@ -1,4 +1,4 @@
-package com.yibao.music.album;
+package com.yibao.music.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,12 +10,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yibao.music.R;
+import com.yibao.music.adapter.AlbumAdapter;
+import com.yibao.music.adapter.DetailsListAdapter;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicView;
 
@@ -120,15 +123,16 @@ public class AlbumFragment extends BaseFragment {
 
     private void openDetailsView(AlbumInfo bean) {
         if (isShowDetailsView) {
-            mDetailsView.setVisibility(View.INVISIBLE);
-            mAlbumContentView.setVisibility(View.VISIBLE);
-
-        } else {
+            LogUtil.d("===============显示 ");
             mAlbumContentView.setVisibility(View.INVISIBLE);
             mDetailsView.setVisibility(View.VISIBLE);
             List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(bean.getAlbumName())).build().list();
             DetailsListAdapter adapter = new DetailsListAdapter(getActivity(), list, Constants.NUMBER_TWO);
             mDetailsView.setAdapter(getActivity(), Constants.NUMBER_TWO, bean, adapter);
+
+        } else {
+            mDetailsView.setVisibility(View.INVISIBLE);
+            mAlbumContentView.setVisibility(View.VISIBLE);
 
         }
         isShowDetailsView = !isShowDetailsView;

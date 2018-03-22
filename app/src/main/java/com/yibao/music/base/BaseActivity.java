@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -33,7 +34,7 @@ public class BaseActivity extends AppCompatActivity {
     public MusicBeanDao mMusicDao;
     public CompositeDisposable mCompositeDisposable;
     public Disposable mDisposable;
-
+    public final int mNormalTabbarColor = Color.parseColor("#939396");
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +43,7 @@ public class BaseActivity extends AppCompatActivity {
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mCompositeDisposable = new CompositeDisposable();
         registerHeadsetReceiver();
+
     }
 
     /**

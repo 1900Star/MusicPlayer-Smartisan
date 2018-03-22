@@ -34,7 +34,7 @@
     <string name="album_list">列表</string>
     <string name="random_play">随机播放</string>
     <string name="add_new_play_list">新建播放列表</string>
-    <string name="load_music">加载音乐</string>
+    <string name="load_music">正常拼命加载音乐,请稍候 -_-</string>
     <string name="not_name_hint">新建播放列表</string>
     <string name="cancel">取消</string>
     <string name="continues">继续</string>
