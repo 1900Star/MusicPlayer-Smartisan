@@ -97,7 +97,7 @@ public class MusicActivity
     @BindView(R.id.music_floating_pager_play)
     MusicProgressView mMusicPagerPlay;
     @BindView(R.id.music_floating_pager_favorite)
-    ImageView mMusicFloatingPagerPlayNext;
+    ImageView mMusicQqBarFavorite;
     @BindView(R.id.music_float_pb)
     ProgressBtn mPb;
     @BindView(R.id.music_viewpager)
@@ -145,7 +145,7 @@ public class MusicActivity
     private static AudioPlayService.AudioBinder audioBinder;
     private MyAnimatorUpdateListener mAnimatorListener;
     private AudioServiceConnection mConnection;
-    private MusicBean mItem;
+    private MusicBean mCurrentMusicBean;
     private int mCurrentPosition;
     private boolean mMusicConfig;
     private boolean isChangeFloatingBlock;
@@ -180,11 +180,10 @@ public class MusicActivity
     }
 
     public void checkCurrentIsFavorite() {
-
-        if (mItem.isFavorite()) {
-            mMusicFloatingPagerPlayNext.setImageResource(R.mipmap.favorite_yes);
+        if (!mCurrentMusicBean.isFavorite()) {
+            mMusicQqBarFavorite.setImageResource(R.mipmap.favorite_yes);
         } else {
-            mMusicFloatingPagerPlayNext.setImageResource(R.drawable.music_favorite_selector);
+            mMusicQqBarFavorite.setImageResource(R.drawable.music_favorite_selector);
 
         }
     }
@@ -213,6 +212,7 @@ public class MusicActivity
         } else if (spMusicFlag == Constants.NUMBER_ONE) {
             return mMusicItems = mMusicDao.queryBuilder().list();
         } else if (spMusicFlag == Constants.NUMBER_TEN) {
+
             return mMusicItems = mMusicDao.queryBuilder().list();
         } else if (spMusicFlag == Constants.NUMBER_EIGHT) {
             return mMusicItems = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
@@ -295,7 +295,6 @@ public class MusicActivity
             mConnection = new AudioServiceConnection();
             bindService(musicIntent, mConnection, Context.BIND_AUTO_CREATE);
             startService(musicIntent);
-//            SharePrefrencesUtil.setMusicDataListFlag(this, Constants.NUMBER_ONE);
         }
     }
 
@@ -356,7 +355,7 @@ public class MusicActivity
     private void readyMusic() {
         Intent intent = new Intent(this, PlayActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putParcelable("info", mItem);
+        bundle.putParcelable("info", mCurrentMusicBean);
         intent.putExtra("bundle", bundle);
         startActivity(intent);
         overridePendingTransition(R.anim.dialog_push_in, 0);
@@ -434,7 +433,7 @@ public class MusicActivity
      * @param musicItem g
      */
     private void perpareItem(MusicBean musicItem) {
-        mItem = musicItem;
+        mCurrentMusicBean = musicItem;
         checkCurrentIsFavorite();
         mQqBarPagerAdapter.setData(initMusicData());
         mMusicSlideViewPager.setCurrentItem(musicItem.getCureetPosition(), false);
@@ -584,18 +583,18 @@ public class MusicActivity
     }
 
     private void favoritMusic() {
-        if (mItem.isFavorite()) {
-            mItem.setIsFavorite(false);
-            mMusicDao.update(mItem);
-            mMusicFloatingPagerPlayNext.setImageResource(R.drawable.music_favorite_selector);
+        if (mCurrentMusicBean.isFavorite()) {
+            mCurrentMusicBean.setIsFavorite(false);
+            mMusicDao.update(mCurrentMusicBean);
+            mMusicQqBarFavorite.setImageResource(R.drawable.music_favorite_selector);
 
         } else {
             String time = StringUtil.getCurrentTime();
-            mItem.setTime(time);
-            mItem.setIsFavorite(true);
-            mMusicDao.update(mItem);
+            mCurrentMusicBean.setTime(time);
+            mCurrentMusicBean.setIsFavorite(true);
+            mMusicDao.update(mCurrentMusicBean);
 
-            mMusicFloatingPagerPlayNext.setImageResource(R.mipmap.favorite_yes);
+            mMusicQqBarFavorite.setImageResource(R.mipmap.favorite_yes);
 
         }
     }

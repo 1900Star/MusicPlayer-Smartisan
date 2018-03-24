@@ -29,8 +29,8 @@ public class MusicListUtil {
      *
      * @return
      */
-    public static ArrayList<MusicBean> getMusicDataList() {
-        ArrayList<MusicBean> musicInfos = new ArrayList<>();
+    public static List<MusicBean> getMusicDataList() {
+        List<MusicBean> musicInfos = new ArrayList<>();
         Cursor cursor = MusicApplication.getIntstance().getApplicationContext().getContentResolver()
                 .query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         null,

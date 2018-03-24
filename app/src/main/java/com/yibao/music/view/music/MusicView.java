@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
@@ -29,43 +30,42 @@ public class MusicView
     public MusicView(Context context) {
         super(context);
         initView();
-        initListener();
+        initListener(context);
     }
 
     public MusicView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
-        initListener();
+        initListener(context);
     }
 
     public MusicView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView();
-        initListener();
+        initListener(context);
     }
 
-    private void initListener() {
-//        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//                switch (newState) {
-//                    case RecyclerView.SCROLL_STATE_DRAGGING:
-//                        LogUtil.d("SCROLL_STATE_DRAGGING");
-//                        break;
-//                    case RecyclerView.SCROLL_STATE_IDLE:
-//                        LogUtil.d("SCROLL_STATE_IDLE");
-//                        break;
-//                    case RecyclerView.SCROLL_STATE_SETTLING:
-//                        LogUtil.d("SCROLL_STATE_SETTLING");
-//                        break;
-//
-//                    default:
-//                        break;
-//                }
-//
-//            }
-//        });
+    private void initListener(Context context) {
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                switch (newState) {
+                    case RecyclerView.SCROLL_STATE_DRAGGING:
+                        Glide.with(context).pauseRequests();
+                        break;
+                    // 加载图片
+                    case RecyclerView.SCROLL_STATE_IDLE:
+                    case RecyclerView.SCROLL_STATE_SETTLING:
+                        Glide.with(context).pauseRequests();
+                        break;
+
+                    default:
+                        break;
+                }
+
+            }
+        });
     }
 
 

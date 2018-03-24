@@ -11,7 +11,7 @@ import com.yibao.music.model.song.MusicCountBean;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 
-import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -27,6 +27,7 @@ import java.util.ArrayList;
 public class LoadMusicDataService extends IntentService {
 
     private MusicBeanDao mMusicDao;
+    private int songCount = 0;
 
     @Override
     public void onCreate() {
@@ -40,14 +41,19 @@ public class LoadMusicDataService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        ArrayList<MusicBean> dataList = MusicListUtil.getMusicDataList();
-        int size = dataList.size();
-        int s = 0;
-        for (MusicBean info : dataList) {
-            s++;
-            mMusicDao.insert(info);
-            MusicApplication.getIntstance().bus().post(new MusicCountBean(s, size));
-        }
+        List<MusicBean> dataList = MusicListUtil.getMusicDataList();
+        int songSum = dataList.size();
+        dataList.forEach(bean -> {
+            songCount++;
+            mMusicDao.insert(bean);
+            MusicApplication.getIntstance().bus().post(new MusicCountBean(songCount, songSum));
+        });
+//
+//        for (MusicBean info : dataList) {
+//            s++;
+//            mMusicDao.insert(info);
+//            MusicApplication.getIntstance().bus().post(new MusicCountBean(s, size));
+//        }
         LogUtil.d("LoadMusicDataServices===== 加载数据完成");
 
     }

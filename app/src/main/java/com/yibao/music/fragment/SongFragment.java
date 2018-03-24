@@ -116,7 +116,7 @@ public class SongFragment extends BaseFragment {
                 initData(true, Constants.NUMBER_ZOER);
                 break;
             case 2:
-                LogUtil.d(" 122  songfragment mFlag " + SharePrefrencesUtil.getMusicDataListFlag(getActivity()));
+                LogUtil.d(" 119  songfragment mFlag " + SharePrefrencesUtil.getMusicDataListFlag(getActivity()));
                 setAllCategoryNotNormal(Constants.NUMBER_TWO);
                 mMusicCategoryScore.setTextColor(ColorUtil.wihtle);
                 mMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_down_selector);

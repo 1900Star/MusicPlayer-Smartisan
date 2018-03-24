@@ -106,12 +106,12 @@ public class AudioPlayService
         int enterPosition = intent.getIntExtra("position", 0);
         int sortListFlag = intent.getIntExtra("sortFlag", 0);
         int dataFlag = intent.getIntExtra("dataFlag", 0);
-//        String queryFlag = intent.getStringExtra("queryFlag");
-        String queryFlag = intent.getExtras().getString("queryFlag");
-        LogUtil.d(" position  ==" + enterPosition + "   sortListFlag  ==" + sortListFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
-        getMusicDataList(sortListFlag, dataFlag, queryFlag);
-
+        String queryFlag = intent.getStringExtra("queryFlag");
+        int sortFlag = sortListFlag == Constants.NUMBER_ZOER ? Constants.NUMBER_ONE : sortListFlag;
+        LogUtil.d(" position  ==" + enterPosition + "   sortListFlag  ==" + sortFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
+        getMusicDataList(sortFlag, dataFlag, queryFlag);
         if (enterPosition != position && enterPosition != -1) {
+
             position = enterPosition;
             //执行播放
             mAudioBinder.play();
