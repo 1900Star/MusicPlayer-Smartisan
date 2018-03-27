@@ -73,7 +73,8 @@ public class MusicListUtil {
             String url = cursor.getString(mUrl);
             //过滤掉小于2分钟的音乐,后续可以通过SharePreference让用户在UI界面自行选择。
             if (size > 21600) {
-                info.setFirstChar(HanziToPinyins.stringToPinyinSpecial(title) + "");
+                String firstChar = String.valueOf(HanziToPinyins.stringToPinyinSpecial(title));
+                info.setFirstChar(firstChar);
                 info.setTitle(title);
                 info.setArtist(artist);
                 info.setAlbum(album);

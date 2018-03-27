@@ -11,6 +11,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.yibao.music.R;
+import com.yibao.music.util.Constants;
 
 import java.util.List;
 
@@ -53,12 +54,27 @@ public abstract class BaseRvAdapter<T>
     }
 
     @Override
+    public int getItemCount() {
+        return mList == null ? Constants.NUMBER_ZOER : mList.size();
+    }
+
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == getItemCount()) {
+            return TYPE_FOOTER;
+        }
+        return TYPE_ITEM;
+    }
+
+    @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        bindView(holder, mList.get(position));
         if (holder instanceof LoadMoreHolder) {
             LoadMoreHolder moreHolder = (LoadMoreHolder) holder;
             String count = (mList.size() - 1) + getLastItemDes();
             moreHolder.mSongCount.setText(count);
+        } else {
+            bindView(holder, mList.get(position));
         }
     }
 
@@ -86,23 +102,6 @@ public abstract class BaseRvAdapter<T>
      */
     protected abstract RecyclerView.ViewHolder getViewHolder(View view);
 
-
-    @Override
-    public int getItemCount() {
-
-        return mList == null
-                ? 0
-                : mList.size();
-    }
-
-
-    @Override
-    public int getItemViewType(int position) {
-        if (position == getItemCount()) {
-            return TYPE_FOOTER;
-        }
-        return TYPE_ITEM;
-    }
 
     /**
      * 子类提供一个布局ID

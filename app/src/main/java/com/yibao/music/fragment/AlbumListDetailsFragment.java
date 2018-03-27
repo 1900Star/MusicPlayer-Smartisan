@@ -13,9 +13,9 @@ import android.widget.TextView;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
+import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.model.ArtistInfo;
-import com.yibao.music.playlist.PlayListAdapter;
 import com.yibao.music.util.LogUtil;
 
 import java.util.ArrayList;

@@ -49,13 +49,13 @@ public class MusicView
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
                 switch (newState) {
-                    case RecyclerView.SCROLL_STATE_DRAGGING:
-                        Glide.with(context).pauseRequests();
+                    case RecyclerView.SCROLL_STATE_IDLE:
+                        Glide.with(context).resumeRequests();
+
                         break;
                     // 加载图片
-                    case RecyclerView.SCROLL_STATE_IDLE:
+                    case RecyclerView.SCROLL_STATE_DRAGGING:
                     case RecyclerView.SCROLL_STATE_SETTLING:
                         Glide.with(context).pauseRequests();
                         break;
@@ -64,7 +64,10 @@ public class MusicView
                         break;
                 }
 
+
             }
+
+
         });
     }
 
@@ -113,6 +116,9 @@ public class MusicView
 
         }
     }
+
+
+
 
 
 }

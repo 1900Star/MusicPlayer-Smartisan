@@ -183,6 +183,9 @@ public class SongAdapter
     }
 
     public interface OnOpenItemMoerMenuListener {
+        /**
+         * 更多菜单
+         */
         void openClickMoerMenu();
     }
 

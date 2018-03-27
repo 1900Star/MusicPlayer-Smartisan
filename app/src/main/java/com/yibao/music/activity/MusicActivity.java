@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.adapter.MusicPagerAdapter;
@@ -40,6 +39,7 @@ import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
@@ -445,11 +445,7 @@ public class MusicActivity
         mMusicFloatSingerName.setText(artistName);
         //设置专辑
         Uri albumUri = StringUtil.getAlbulm(musicItem.getAlbumId());
-        Glide.with(this)
-                .load(albumUri.toString())
-                .asBitmap()
-                .error(R.drawable.sidebar_cover)
-                .into(mMusicFloatBlockAlbulm);
+        ImageUitl.loadPic(this, albumUri.toString(), mMusicFloatBlockAlbulm);
     }
 
     private void updataProgress() {
@@ -789,6 +785,6 @@ public class MusicActivity
             mPlayState = audioBinder.isPlaying() ? Constants.NUMBER_TWO : Constants.NUMBER_ONE;
             SharePrefrencesUtil.setMusicPlayState(this, mPlayState);
         }
-        stopService(new Intent(this, AudioPlayService.class));
+//        stopService(new Intent(this, AudioPlayService.class));
     }
 }

@@ -79,6 +79,30 @@ public abstract class BasePlayActivity extends BaseActivity {
 
     }
 
+    /**
+     * 停止更新
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (mDisposablePlayTime != null) {
+            mDisposablePlayTime.dispose();
+        }
+        if (mDisposableLyrics != null) {
+            mDisposableLyrics.dispose();
+        }
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mCompositeDisposable != null) {
+            mCompositeDisposable.dispose();
+            mCompositeDisposable.clear();
+
+        }
+        unregisterReceiver(mVolumeReceiver);
+    }
 
     /**
      * 接收Service发出的播放状态
@@ -115,24 +139,6 @@ public abstract class BasePlayActivity extends BaseActivity {
      */
     protected abstract void updataCurrentTitle(MusicBean info);
 
-    /**
-     * 停止更新
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (mCompositeDisposable != null) {
-            mCompositeDisposable.dispose();
-            mCompositeDisposable.clear();
-
-        }
-        if (mDisposablePlayTime != null) {
-            mDisposablePlayTime.dispose();
-        }
-        if (mDisposableLyrics != null) {
-            mDisposableLyrics.dispose();
-        }
-    }
 
     private void upDataPlayProgress() {
         mDisposablePlayTime = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
@@ -299,10 +305,4 @@ public abstract class BasePlayActivity extends BaseActivity {
         overridePendingTransition(0, R.anim.dialog_push_out);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        unregisterReceiver(mVolumeReceiver);
-    }
 }

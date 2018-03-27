@@ -1,8 +1,6 @@
 package com.yibao.music.adapter;
 
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,8 +11,6 @@ import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.service.AudioPlayService;
-import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
@@ -70,16 +66,6 @@ public class DetailsListAdapter extends BaseRvAdapter<MusicBean> {
 
     }
 
-    private void playMusic(int position) {
-        Intent intent = new Intent();
-        intent.setClass(mContext, AudioPlayService.class);
-        intent.putExtra("sortFlag", Constants.NUMBER_EIGHT);
-        intent.putExtra("position", position);
-        AudioServiceConnection connection = new AudioServiceConnection();
-        mContext.bindService(intent, connection, Service.BIND_AUTO_CREATE);
-        mContext.startService(intent);
-        SharePrefrencesUtil.setMusicDataListFlag(mContext, Constants.NUMBER_EIGHT);
-    }
 
     @Override
     protected RecyclerView.ViewHolder getViewHolder(View view) {

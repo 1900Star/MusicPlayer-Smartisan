@@ -109,7 +109,7 @@ public class DetailsView
      * //设置列表的适配器
      *
      * @param context  d
-     * @param dataType 将数据 强转成指定的类型
+     * @param dataType 将数据 强转成指定的类型  1 ： ArtistInfo   2 ： AlbumInfo
      * @param bean     d
      * @param adapter  d
      */

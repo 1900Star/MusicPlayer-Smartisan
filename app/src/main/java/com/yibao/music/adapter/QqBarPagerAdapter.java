@@ -10,13 +10,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.AnimationUtil;
+import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.StringUtil;
 
 import java.util.List;
@@ -99,11 +99,7 @@ public class QqBarPagerAdapter
         TextView songName = view.findViewById(R.id.tv_pager_song_name);
         TextView artName = view.findViewById(R.id.tv_pager_art_name);
         Uri albumUri = StringUtil.getAlbulm(musicInfo.getAlbumId());
-        Glide.with(mContext)
-                .load(albumUri.toString())
-                .asBitmap()
-                .error(R.drawable.sidebar_cover)
-                .into(mAlbulm);
+        ImageUitl.loadPic(mContext,albumUri.toString(),mAlbulm);
         songName.setText(musicInfo.getTitle());
         artName.setText(musicInfo.getArtist());
         if (mAnimator == null || mAnimationListener == null) {

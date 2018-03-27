@@ -37,7 +37,7 @@ public abstract class BaseFragment extends Fragment {
     protected static List<ArtistInfo> mArtistList;
     protected RxBus mBus;
     protected CompositeDisposable compositeDisposable;
-    public List<MusicBean> mSongList;
+    public static List<MusicBean> mSongList;
     public MusicBeanDao mMusicBeanDao;
     public MusicInfoDao mMusicInfoDao;
     protected boolean isShowDetailsView = false;
@@ -73,8 +73,8 @@ public abstract class BaseFragment extends Fragment {
         if (mAlbumList == null) {
             mAlbumList = MusicListUtil.getAlbumList(mSongList);
         }
-        if (mAlbumList == null) {
-            mMusicAddtimeList = MusicListUtil.sortMusicAddtime(mSongList);
+        if (mMusicAddtimeList == null) {
+            mMusicAddtimeList = MusicListUtil.sortMusicAddtime(mMusicBeanDao.queryBuilder().list());
         }
         if (mArtistList == null) {
             mArtistList = MusicListUtil.getArtistList(mSongList);

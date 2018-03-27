@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.yibao.music.R;
+import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
 import com.yibao.music.model.AddNewListBean;
 import com.yibao.music.model.MusicInfo;
-import com.yibao.music.playlist.PlayListAdapter;
 import com.yibao.music.util.Constants;
 
 import java.util.List;
@@ -74,6 +74,7 @@ public class PlayListFragment extends BaseFragment {
         mAdapter = new PlayListAdapter(playList);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
         mPlayListContent.addView(recyclerView);
+
     }
 
     private void receiveRxbuData() {
@@ -109,7 +110,7 @@ public class PlayListFragment extends BaseFragment {
         switch (v.getId()) {
             // 打开新建播放列表的Dialog
             case R.id.ll_add_new_play_list:
-              AddListDialog.newInstance().show(getFragmentManager(), "addList");
+                AddListDialog.newInstance().show(getFragmentManager(), "addList");
                 break;
             default:
                 break;

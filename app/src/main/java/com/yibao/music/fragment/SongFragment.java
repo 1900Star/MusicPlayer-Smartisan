@@ -61,7 +61,6 @@ public class SongFragment extends BaseFragment {
 
     private void initListener() {
         mSongAdapter.setOnItemMenuListener(() -> MusicBottomSheetDialog.newInstance().getBottomDialog(getActivity()));
-
     }
 
     /**

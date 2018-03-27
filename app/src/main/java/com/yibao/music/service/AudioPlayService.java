@@ -134,7 +134,6 @@ public class AudioPlayService
             LogUtil.d("");
             // 按添加时间
         } else if (sortListFlag == Constants.NUMBER_FOUR) {
-            LogUtil.d("44444444444444444444444444444");
             mMusicDataList = MusicListUtil.sortMusicAddtime(mMusicDataList);
             // 收藏列表
         } else if (sortListFlag == Constants.NUMBER_EIGHT) {
