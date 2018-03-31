@@ -4,6 +4,7 @@ package com.yibao.music.base.listener;
  * Author：Sid
  * Des：${TODO}
  * Time:2017/5/14 09:49
+ * @author Stran
  */
 public interface OnMusicItemClickListener {
     /**
@@ -23,7 +24,7 @@ public interface OnMusicItemClickListener {
     void startMusicServiceFlag(int position, int dataFlag, String queryFlag);
 
     /**
-     * 打开播放界面
+     * 打开播放界面  pagerAdapter的点击事件
      */
     void onOpenMusicPlayDialogFag();
 

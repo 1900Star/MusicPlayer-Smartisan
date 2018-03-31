@@ -4,12 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.yibao.music.MyApplication;
+import com.yibao.music.MusicApplication;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.RxBus;
 
@@ -33,15 +34,16 @@ public class BaseActivity extends AppCompatActivity {
     public MusicBeanDao mMusicDao;
     public CompositeDisposable mCompositeDisposable;
     public Disposable mDisposable;
-
+    public final int mNormalTabbarColor = Color.parseColor("#939396");
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBus = MyApplication.getIntstance()
+        mBus = MusicApplication.getIntstance()
                 .bus();
-        mMusicDao = MyApplication.getIntstance().getMusicDao();
+        mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mCompositeDisposable = new CompositeDisposable();
         registerHeadsetReceiver();
+
     }
 
     /**
@@ -59,8 +61,10 @@ public class BaseActivity extends AppCompatActivity {
         }
     };
 
-    protected void headsetPullOut() {
-    }
+    /**
+     * 需要控制音乐的Activity要重写这个方法，在耳机拔出时暂停播放音乐
+     */
+    protected void headsetPullOut() {}
 
     @Override
     protected void onDestroy() {
@@ -70,7 +74,6 @@ public class BaseActivity extends AppCompatActivity {
         if (mDisposable != null) {
             mDisposable.dispose();
         }
-
         unregisterReceiver(headsetReciver);
     }
 }
