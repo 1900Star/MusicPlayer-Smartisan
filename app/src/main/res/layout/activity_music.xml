@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical"
-    tools:context="com.yibao.music.artisanlist.MusicActivity">
+    tools:context="com.yibao.music.activity.MusicActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -60,8 +60,8 @@
         android:layout_height="0.2dp"
         android:background="@color/listBg" />
 
-
-    <include layout="@layout/music_tabbar" />
-
+    <include
+        layout="@layout/music_tabbar"
+        android:visibility="gone" />
 
 </LinearLayout>

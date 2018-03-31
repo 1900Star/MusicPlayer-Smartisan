@@ -139,6 +139,7 @@ public class MusicActivity
     @BindView(R.id.music_bar_stylelist)
     LinearLayout mMusicBarStylelist;
 
+
     private List<MusicBean> mMusicItems;
     private Unbinder mBind;
     private ObjectAnimator mAnimator;
@@ -175,8 +176,6 @@ public class MusicActivity
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(v -> MusicActivity.this.finish());
-
-
     }
 
     public void checkCurrentIsFavorite() {
