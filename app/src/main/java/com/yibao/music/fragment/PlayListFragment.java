@@ -46,7 +46,7 @@ public class PlayListFragment extends BaseFragment {
     @BindView(R.id.album_details_head_content)
     LinearLayout mAlbumDetailsHeadContent;
     private Unbinder unbinder;
-    private com.yibao.music.playlist.PlayListAdapter mAdapter;
+    private PlayListAdapter mAdapter;
     private CompositeDisposable mDisposable;
     private int addListFlag = 1;
 
@@ -71,7 +71,7 @@ public class PlayListFragment extends BaseFragment {
 
     private void initData() {
         List<MusicInfo> playList = mMusicInfoDao.queryBuilder().list();
-        mAdapter = new com.yibao.music.playlist.PlayListAdapter(playList);
+        mAdapter = new PlayListAdapter(playList);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
         mPlayListContent.addView(recyclerView);
 

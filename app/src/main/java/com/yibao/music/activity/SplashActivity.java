@@ -1,5 +1,6 @@
 package com.yibao.music.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -10,7 +11,6 @@ import android.widget.TextView;
 import com.yibao.music.R;
 
 import com.yibao.music.adapter.SplashPagerAdapter;
-
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.model.song.MusicCountBean;
 import com.yibao.music.service.LoadMusicDataService;
@@ -66,14 +66,17 @@ public class SplashActivity
         mVpSplash.setAdapter(splashPagerAdapter);
     }
 
+    @SuppressLint("CheckResult")
     private void initRxbusData() {
         boolean isInitMusicData = SharePrefrencesUtil.getLoadMusicFlag(this) != Constants.NUMBER_EIGHT;
         if (isInitMusicData) {
             mTvMusicCount.setVisibility(View.VISIBLE);
             mMusicLoadProgressBar.setVisibility(View.VISIBLE);
             startService(new Intent(this, LoadMusicDataService.class));
-
-            mCompositeDisposable.add(mBus.toObserverable(MusicCountBean.class).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(musicCountBean -> {
+            mCompositeDisposable.add(mBus.toObserverable(MusicCountBean.class)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(musicCountBean -> {
                 int size = musicCountBean.getSize();
                 int count = musicCountBean.getMusicCount();
                 mMusicLoadProgressBar.setMax(size);
@@ -87,7 +90,6 @@ public class SplashActivity
                             MusicActivity.class));
                     finish();
                     SharePrefrencesUtil.setLoadMusicFlag(SplashActivity.this, Constants.NUMBER_EIGHT);
-
                 }
             }));
         } else {

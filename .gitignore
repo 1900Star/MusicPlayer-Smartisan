@@ -8,4 +8,10 @@
 /captures
 .externalNativeBuild
 keystore.properties
+.idea/caches/
 .idea/codeStyles/
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/vcs.xml
+

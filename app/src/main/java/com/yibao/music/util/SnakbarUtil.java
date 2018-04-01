@@ -32,7 +32,7 @@ public class SnakbarUtil {
      */
     @SuppressLint("ResourceAsColor")
     public static void favoriteFailView(View view) {
-        Snackbar snackbar = make(view, "列表名字不能为空！", Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = make(view, "列表名不能为空！", Snackbar.LENGTH_SHORT);
         snackbar.getView()
                 .setBackgroundColor(Color.parseColor("#325ab1"));
         snackbar.show();

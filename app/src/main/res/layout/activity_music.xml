@@ -18,7 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:background="@drawable/tabbar_bg"
-            android:minHeight="?attr/actionBarSize"
             app:navigationIcon="@drawable/music_titlebar_back_selector">
 
             <TextView
@@ -62,7 +61,7 @@
         android:background="@color/listBg" />
 
     <include
-        layout="@layout/music_tabbar"
-        android:visibility="gone" />
+
+        layout="@layout/music_tabbar" />
 
 </LinearLayout>

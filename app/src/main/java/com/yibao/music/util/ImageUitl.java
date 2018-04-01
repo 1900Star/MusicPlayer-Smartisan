@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.yibao.music.R;
 import com.yibao.music.view.ZoomImageView;
 
@@ -40,6 +41,7 @@ public class ImageUitl {
         Glide.with(context)
                 .load(url)
                 .asBitmap()
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .placeholder(R.mipmap.xuan)
                 .error(R.mipmap.xuan)
                 .into(view);

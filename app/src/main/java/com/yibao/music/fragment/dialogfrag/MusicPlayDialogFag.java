@@ -109,7 +109,6 @@ public class MusicPlayDialogFag
 
         audioBinder = MusicActivity.getAudioBinder();
         mBus = MusicApplication.getIntstance()
-
                 .bus();
         disposables = new CompositeDisposable();
         mInfoDao = MusicApplication.getIntstance().getMusicDao();
@@ -632,6 +631,7 @@ public class MusicPlayDialogFag
 
                 AudioManager mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
                 // 当前的媒体音量
+                assert mAudioManager != null;
                 int currVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                 mSbVolume.setProgress(currVolume);
             }

@@ -5,11 +5,14 @@
     <string name="about_github">https://github.com/1900Star</string>
     <string name="about_sign">O ever youthful, O ever weeping.</string>
     <string name="about_project_introduce">
-       ArtisanMusicPlayer，整体架构参照Google官方的RxMvpDemo示例，写这个项目主要是为公司项目重构做准备。
-        MVP-Rxjava-Dagger2最目前非常流行且比较成熟的架构模式,Dagger2的引入进一步降低Presenter层和View层的耦合。
-        \n\tRxJava\n\tRxBus\n\tOkhttp\n\tRetrofit\n\tButterknife\n\tDagger2\n\tGreenDao3.0\n\tGlide\n\tLeakcanary
-        \n\nArtisanMusicPlayer：https://github.com/1900Star/SmartisanMusicPlayer\n\nApi接口提供：http://gank.io/api\n\n感谢开源社区，特别感谢：干货集中营
+
+       ArtisanMusicPlayer 仿照锤子音乐播放器写的一个本地音乐播放器，会尽可能的实现锤子音乐播放器已有的功能。
+        也会去除一些功能，比如去除:云音乐，联网搜索，因为主要还是播放本地音乐为主。 同时也会增加一些个人觉得有趣的交互，
+        比如增加了类似QQ音乐的左右滑动切换上/下一曲的交互。
+        \n\tRxJava\n\tRxBus\n\tButterknife\n\tGreenDao3.0\n\tGlide\n\tLeakcanary
     </string>
+    <string name="preject_url" >https://github.com/1900Star/SmartisanMusicPlayer</string>
+    <string name="email">Email: strangermy98@gmail.com</string>
     <string name="preject_introduce">关于项目</string>
 
     //*********音乐

@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.adapter.PlayListAdapter;

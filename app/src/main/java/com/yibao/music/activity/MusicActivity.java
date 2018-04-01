@@ -25,6 +25,7 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.MusicPagerAdapter;
 import com.yibao.music.adapter.QqBarPagerAdapter;
 import com.yibao.music.album.MainActivity;
+import com.yibao.music.artisanlist.MusicPagerListener;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;

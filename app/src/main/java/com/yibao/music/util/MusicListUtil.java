@@ -30,7 +30,7 @@ public class MusicListUtil {
      * @return
      */
     public static List<MusicBean> getMusicDataList() {
-        ArrayList<MusicBean> musicInfos = new ArrayList<>();
+        List<MusicBean> musicInfos = new ArrayList<>();
         Cursor cursor = MusicApplication.getIntstance().getApplicationContext().getContentResolver()
                 .query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         null,
@@ -48,6 +48,7 @@ public class MusicListUtil {
         int addDed = cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED);
         int musicType = cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE);
         int issueYear = cursor.getColumnIndex(MediaStore.Audio.Media.YEAR);
+
         for (int i = 0, p = cursor.getCount(); i < p; i++) {
             cursor.moveToNext();
             MusicBean info = new MusicBean();
@@ -72,7 +73,8 @@ public class MusicListUtil {
             String url = cursor.getString(mUrl);
             //过滤掉小于2分钟的音乐,后续可以通过SharePreference让用户在UI界面自行选择。
             if (size > 21600) {
-                info.setFirstChar(HanziToPinyins.stringToPinyinSpecial(title) + "");
+                String firstChar = String.valueOf(HanziToPinyins.stringToPinyinSpecial(title));
+                info.setFirstChar(firstChar);
                 info.setTitle(title);
                 info.setArtist(artist);
                 info.setAlbum(album);
@@ -126,7 +128,7 @@ public class MusicListUtil {
      *
      * @param musicList
      */
-    public static ArrayList<MusicBean> sortMusicAbc(ArrayList<MusicBean> musicList) {
+    public static List<MusicBean> sortMusicAbc(List<MusicBean> musicList) {
         String str = "#";
         Collections.sort(musicList, (m1, m2) -> {
             if (str.equals(m2.getFirstChar())) {
@@ -140,13 +142,12 @@ public class MusicListUtil {
         return musicList;
     }
 
+    //  按艺术家分类
 
-    //按艺术家分类
     public static List<ArtistInfo> getArtistList(List<MusicBean> list) {
         Map<String, List<MusicBean>> musicMap = new HashMap<>(16);
         ArrayList<ArtistInfo> singerInfoList = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            MusicBean musicInfo = list.get(i);
+        list.forEach(musicInfo -> {
             if (musicMap.containsKey(musicInfo.getArtist())) {
                 ArrayList<MusicBean> singerList = (ArrayList<MusicBean>) musicMap.get(musicInfo.getArtist());
                 singerList.add(musicInfo);
@@ -156,30 +157,32 @@ public class MusicListUtil {
                 musicMap.put(musicInfo.getArtist(), tempList);
 
             }
-        }
-
-        for (Map.Entry<String, List<MusicBean>> entry : musicMap.entrySet()) {
-
+        });
+        musicMap.forEach((s, musicBeanList) -> {
             ArtistInfo artistInfo = new ArtistInfo();
-            artistInfo.setFirstChar(HanziToPinyins.stringToPinyinSpecial(entry.getKey()) + "");
-            artistInfo.setArtist(entry.getKey());
-            artistInfo.setSongCount(entry.getValue().size());
-            artistInfo.setAlbumName(entry.getValue().get(0).getAlbum());
-            artistInfo.setYear(entry.getValue().get(0).getIssueYear());
-            artistInfo.setAlbumId(entry.getValue().get(0).getAlbumId());
+            artistInfo.setArtist(s);
+            artistInfo.setSongCount(musicBeanList.size());
+            artistInfo.setAlbumName(musicBeanList.get(0).getAlbum());
+            artistInfo.setYear(musicBeanList.get(0).getIssueYear());
+            artistInfo.setAlbumId(musicBeanList.get(0).getAlbumId());
+            String firstChar = String.valueOf(HanziToPinyins.stringToPinyinSpecial(s));
+            artistInfo.setFirstChar(firstChar);
             singerInfoList.add(artistInfo);
-        }
+        });
+
         Collections.sort(singerInfoList);
         return singerInfoList;
     }
 
+
     //    //按专辑分组
 
-    public static ArrayList<AlbumInfo> getAlbumList(List<MusicBean> list) {
+    public static List<AlbumInfo> getAlbumList(List<MusicBean> list) {
         Map<String, List<MusicBean>> musicMap = new HashMap<>(16);
-        ArrayList<AlbumInfo> albumInfoList = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            MusicBean musicInfo = list.get(i);
+        List<AlbumInfo> albumInfoList = new ArrayList<>();
+
+
+        list.forEach(musicInfo -> {
             if (musicMap.containsKey(musicInfo.getAlbum())) {
                 ArrayList<MusicBean> albumList = (ArrayList<MusicBean>) musicMap.get(musicInfo.getAlbum());
                 albumList.add(musicInfo);
@@ -188,21 +191,23 @@ public class MusicListUtil {
                 tempList.add(musicInfo);
                 musicMap.put(musicInfo.getAlbum(), tempList);
             }
-        }
+        });
 
-        for (Map.Entry<String, List<MusicBean>> entry : musicMap.entrySet()) {
+        musicMap.forEach((s, musicBeanList) -> {
             AlbumInfo albumInfo = new AlbumInfo();
-
-            albumInfo.setAlbumName(entry.getKey());
-            albumInfo.setArtist(entry.getValue().get(0).getArtist());
-            albumInfo.setAlbumId(entry.getValue().get(0).getAlbumId());
-            albumInfo.setSongName(entry.getValue().get(0).getTitle());
-            albumInfo.setYear(entry.getValue().get(0).getIssueYear());
-            albumInfo.setAlbumId(entry.getValue().get(0).getAlbumId());
-            albumInfo.setFirstChar(HanziToPinyins.stringToPinyinSpecial(entry.getKey()) + "");
-            albumInfo.setSongCount(entry.getValue().size());
+            albumInfo.setAlbumName(s);
+            albumInfo.setArtist(musicBeanList.get(0).getArtist());
+            albumInfo.setAlbumId(musicBeanList.get(0).getAlbumId());
+            albumInfo.setSongName(musicBeanList.get(0).getTitle());
+            albumInfo.setYear(musicBeanList.get(0).getIssueYear());
+            albumInfo.setAlbumId(musicBeanList.get(0).getAlbumId());
+            albumInfo.setSongCount(musicBeanList.size());
+            String firstChar = String.valueOf(HanziToPinyins.stringToPinyinSpecial(s));
+            albumInfo.setFirstChar(firstChar);
             albumInfoList.add(albumInfo);
-        }
+        });
+
+
         Collections.sort(albumInfoList);
         return albumInfoList;
     }

@@ -4,8 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.view.View;
 import android.view.ViewGroup;
-
-
 import com.yibao.music.base.factory.FragmentFactory;
 
 /**

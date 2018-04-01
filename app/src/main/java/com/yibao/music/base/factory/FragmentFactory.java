@@ -1,11 +1,10 @@
 package com.yibao.music.base.factory;
 
-import android.annotation.SuppressLint;
 
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.fragment.AlbumFragment;
-import com.yibao.music.fragment.AlbumListDetailsFragment;
 import com.yibao.music.fragment.ArtistanListFragment;
+import com.yibao.music.fragment.FolderListFragment;
 import com.yibao.music.fragment.PlayListFragment;
 import com.yibao.music.fragment.SongFragment;
 
@@ -21,8 +20,7 @@ import java.util.Map;
  */
 public class FragmentFactory {
 
-    @SuppressLint("UseSparseArrays")
-    private static Map<Integer, BaseFragment> mCacheFragmentMap = new HashMap<>();
+    private static Map<Integer, BaseFragment> mCacheFragmentMap = new HashMap<>(16);
 
     public static BaseFragment createFragment(int position) {
 
@@ -49,7 +47,7 @@ public class FragmentFactory {
                 fragment = AlbumFragment.newInstance();
                 break;
             case 4:
-                fragment = AlbumListDetailsFragment.newInstance();
+                fragment = FolderListFragment.newInstance();
                 break;
             default:
                 break;

@@ -2,16 +2,18 @@ package com.yibao.music.service;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.song.MusicCountBean;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
-import com.yibao.music.util.ToastUtil;
 
-import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -26,24 +28,34 @@ import java.util.ArrayList;
 
 public class LoadMusicDataService extends IntentService {
 
+    private MusicBeanDao mMusicDao;
+    private int songCount = 0;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mMusicDao = MusicApplication.getIntstance().getMusicDao();
+    }
+
     public LoadMusicDataService() {
         super("LoadMusicDataServices");
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        ArrayList<MusicBean> dataList = MusicListUtil.getMusicDataList();
-        int size = dataList.size();
-        int s = 0;
-        for (MusicBean info : dataList) {
-            s++;
-            MusicApplication.getIntstance().getMusicDao().insert(info);
-            MusicApplication.getIntstance().bus().post(new MusicCountBean(s, size));
-
-        }
-//        MyApplication.getIntstance()
-//                .getDaoSession().getMusicBeanDao().deleteAll();
-        ToastUtil.showNoMusic(this);
+        List<MusicBean> dataList = MusicListUtil.getMusicDataList();
+        int songSum = dataList.size();
+        dataList.forEach(bean -> {
+            songCount++;
+            mMusicDao.insert(bean);
+            MusicApplication.getIntstance().bus().post(new MusicCountBean(songCount, songSum));
+        });
+//
+//        for (MusicBean info : dataList) {
+//            s++;
+//            mMusicDao.insert(info);
+//            MusicApplication.getIntstance().bus().post(new MusicCountBean(s, size));
+//        }
         LogUtil.d("LoadMusicDataServices===== 加载数据完成");
 
     }

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="45dp"
-    android:layout_marginTop="3dp"
+    android:layout_marginTop="2dp"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
@@ -16,7 +16,7 @@
     <LinearLayout
         android:id="@+id/album_category_list_ll"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_weight="1"
         android:background="@drawable/btn_category_songname_down_selector"
         android:gravity="center"

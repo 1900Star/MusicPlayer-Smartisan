@@ -22,7 +22,7 @@ import butterknife.Unbinder;
  * @包名： com.yibao.music.folder
  * @文件名: FolderListFragment
  * @author: Stran
- * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
+ * @Email: www.strangermy@outlook.com / www.strangermy98@gmail.com
  * @创建时间: 2018/2/9 20:51
  * @描述： {TODO}
  */
@@ -62,15 +62,5 @@ public class FolderListFragment extends BaseFragment {
     @Override
     public boolean backPressed() {
         return false;
-    }
-
-    @OnClick(R.id.about_header_iv)
-    public void onClick(View v) {
-        switch (v.getId()) {
-            default:
-                break;
-            case R.id.about_header_iv:
-                break;
-        }
     }
 }
