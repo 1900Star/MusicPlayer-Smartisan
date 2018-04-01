@@ -138,15 +138,20 @@ public class AudioPlayService
             // 收藏列表
         } else if (sortListFlag == Constants.NUMBER_EIGHT) {
             mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
+            // 艺术家、l
+        } else if (sortListFlag == Constants.NUMBER_TEN) {
             // 按艺术家查询列表
-        } else if (dataFlag == Constants.NUMBER_ONE) {
-            mMusicBean.setArtist(queryFlag);
-            mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(mMusicBean.getArtist())).build().list();
-            // 按专辑名查询列表
-        } else if (dataFlag == Constants.NUMBER_TWO) {
-            mMusicBean.setAlbum(queryFlag);
-            mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(mMusicBean.getAlbum())).build().list();
+            if (dataFlag == Constants.NUMBER_ONE) {
+                mMusicBean.setArtist(queryFlag);
+                mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(mMusicBean.getArtist())).build().list();
+                // 按专辑名查询列表
+            } else if (dataFlag == Constants.NUMBER_TWO) {
+                mMusicBean.setAlbum(queryFlag);
+                mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(mMusicBean.getAlbum())).build().list();
+            }
+
         }
+
     }
 
 

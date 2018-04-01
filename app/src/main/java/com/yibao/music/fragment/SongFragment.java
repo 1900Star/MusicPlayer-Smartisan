@@ -12,11 +12,15 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.fragment.dialogfrag.MusicBottomSheetDialog;
+import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.view.music.MusicView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,6 +67,8 @@ public class SongFragment extends BaseFragment {
         mSongAdapter.setOnItemMenuListener(() -> MusicBottomSheetDialog.newInstance().getBottomDialog(getActivity()));
     }
 
+
+
     /**
      * 是否对歌曲列表按时间排序，按时间排序时，StickyView不显示
      *
@@ -70,11 +76,11 @@ public class SongFragment extends BaseFragment {
      * @param isShowStickyView 控制列表的StickyView是否显示，0 显示 ，1 ：不显示
      */
     private void initData(boolean isShowSlidebar, int isShowStickyView) {
-
+        List<MusicBean> musicAddtimeList = MusicListUtil.sortMusicAddtime(mMusicBeanDao.queryBuilder().list());
         if (isShowStickyView == Constants.NUMBER_ZOER) {
             mSongAdapter = new SongAdapter(mActivity, mSongList, isShowStickyView);
         } else if (isShowStickyView == Constants.NUMBER_ONE) {
-            mSongAdapter = new SongAdapter(mActivity, mMusicAddtimeList, isShowStickyView);
+            mSongAdapter = new SongAdapter(mActivity, musicAddtimeList, isShowStickyView);
         }
         mMusciView.setAdapter(mActivity, Constants.NUMBER_ONE, isShowSlidebar, mSongAdapter);
     }

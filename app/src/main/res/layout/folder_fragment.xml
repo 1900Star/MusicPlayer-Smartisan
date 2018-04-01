@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -40,7 +39,7 @@
                     android:id="@+id/about_header_iv"
                     android:layout_width="65dp"
                     android:layout_height="65dp"
-                    android:src="@mipmap/xuan"/>
+                    android:src="@mipmap/xuan" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -55,7 +54,7 @@
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/about_title"
                     android:textStyle="bold"
-                    android:typeface="serif"/>
+                    android:typeface="serif" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -67,9 +66,10 @@
                     android:layout_toEndOf="@id/about_header_iv"
                     android:layout_toRightOf="@id/about_header_iv"
                     android:autoLink="web"
+                    android:linksClickable="true"
                     android:text="@string/about_github"
-                    android:textColor="@color/aboutSign"
-                    android:textSize="@dimen/about_sign"/>
+                    android:textColorLink="@color/tabbarDownTv"
+                    android:textSize="@dimen/about_sign" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -82,7 +82,7 @@
 
                     android:text="@string/about_sign"
                     android:textColor="@color/colorGreen"
-                    android:textSize="@dimen/about_sign"/>
+                    android:textSize="@dimen/about_sign" />
 
             </RelativeLayout>
 
@@ -91,8 +91,8 @@
                 android:layout_height="wrap_content"
 
                 android:background="@drawable/shape_about_card"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -103,17 +103,42 @@
                     android:textColor="@color/aboutTitle"
                     android:textSize="@dimen/about_title"
                     android:textStyle="bold"
-                    android:typeface="serif"/>
+                    android:typeface="serif" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:autoLink="web"
                     android:lineSpacingExtra="2dp"
                     android:text="@string/about_project_introduce"
                     android:textColor="@color/aboutContent"
                     android:textIsSelectable="true"
-                    android:textSize="@dimen/about_content"/>
+                    android:textSize="@dimen/about_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:autoLink="web"
+                    android:linksClickable="true"
+                    android:text="@string/preject_url"
+                    android:textColorLink="@color/tabbarDownTv"
+                    android:textIsSelectable="true"
+                    android:textSize="@dimen/about_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:autoLink="email"
+                    android:linksClickable="true"
+                    android:text="@string/email"
+                    android:textColor="@color/tabbarDownTv"
+                    android:textColorLink="@color/tabbarDownTv"
+                    android:textIsSelectable="true"
+                    android:textSize="@dimen/about_content" />
 
 
             </LinearLayout>
