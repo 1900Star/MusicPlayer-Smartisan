@@ -26,7 +26,7 @@ public class TopBigPicDialogFragment
 
     @Override
     public View getViews() {
-        mView = LinearLayout.inflate(getActivity(), R.layout.dialog_big_girl, null);
+        mView = LinearLayout.inflate(getActivity(), R.layout.top_dialog_fragment, null);
         initView();
         return mView;
     }

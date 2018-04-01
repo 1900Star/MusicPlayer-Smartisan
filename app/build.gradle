@@ -13,66 +13,85 @@ android {
         versionCode 1
         versionName "1.0"
 
-        greendao {
-            //数据库schema版本，也可以理解为数据库版本号
-            schemaVersion 1
-            //设置DaoMaster 、DaoSession、Dao包名
-            daoPackage 'com.yibao.music.model.greendao'
-            //设置DaoMaster 、DaoSession、Dao目录
-            targetGenDir 'src/main/java/'
-
-
-        }
-
-        buildTypes {
-            release {
-                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-                minifyEnabled true
-                shrinkResources true
-                zipAlignEnabled true
-                buildConfigField "boolean", "SHOW_LOG", "Boolean.parseBoolean(\"false\")"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        signingConfigs {
+            config {
+                storeFile file(keystoreProperties['KEY_PATH'])
+                storePassword(keystoreProperties['KEY_PASS'])
+                keyAlias(keystoreProperties['ALIAS_NAME'])
+                keyPassword(keystoreProperties['ALIAS_PASS'])
             }
-
             debug {
-                zipAlignEnabled false
-                minifyEnabled false
-                buildConfigField "boolean", "SHOW_LOG", "Boolean.parseBoolean(\"true\")"
+                v1SigningEnabled true
+                v2SigningEnabled true
+            }
+            release {
+                v1SigningEnabled true
+                v2SigningEnabled true
+            }
+
+
+            greendao {
+                //数据库schema版本，也可以理解为数据库版本号
+                schemaVersion 1
+                //设置DaoMaster 、DaoSession、Dao包名
+                daoPackage 'com.yibao.music.model.greendao'
+                //设置DaoMaster 、DaoSession、Dao目录
+                targetGenDir 'src/main/java/'
+
+
+            }
+
+            buildTypes {
+                release {
+                    proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+                    minifyEnabled true
+                    shrinkResources true
+                    zipAlignEnabled true
+                    buildConfigField "boolean", "SHOW_LOG", "Boolean.parseBoolean(\"false\")"
+                }
+
+                debug {
+                    zipAlignEnabled false
+                    minifyEnabled false
+                    buildConfigField "boolean", "SHOW_LOG", "Boolean.parseBoolean(\"true\")"
+                }
+            }
+
+            compileOptions {
+                sourceCompatibility JavaVersion.VERSION_1_8
+                targetCompatibility JavaVersion.VERSION_1_8
             }
         }
 
-        compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_8
-            targetCompatibility JavaVersion.VERSION_1_8
+        dependencies {
+            implementation 'com.android.support:support-v4:26.1.0'
+            compile fileTree(include: ['*.jar'], dir: 'libs')
+            androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+                exclude group: 'com.android.support', module: 'support-annotations'
+            })
+            compile 'com.google.code.gson:gson:2.8.2'
+            compile 'com.android.support.constraint:constraint-layout:1.0.2'
+            compile 'com.android.support:appcompat-v7:26.1.0'
+            compile 'com.android.support:design:26.1.0'
+            compile 'com.github.bumptech.glide:glide:3.7.0'
+            compile 'com.jakewharton:butterknife:8.8.1'
+            annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+            compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+            compile 'io.reactivex.rxjava2:rxjava:2.1.5'
+            compile 'org.greenrobot:greendao:3.2.2'
+            compile 'com.belerweb:pinyin4j:2.5.0'
+            testCompile 'junit:junit:4.12'
+            testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+            debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+            releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+            //RxBinding
+            compile 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+            compile 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.0.0'
+            compile 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
+            compile 'com.squareup.flow:flow:1.0.0-alpha3'
         }
+
+
     }
-
-    dependencies {
-        implementation 'com.android.support:support-v4:26.1.0'
-        compile fileTree(include: ['*.jar'], dir: 'libs')
-        androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-            exclude group: 'com.android.support', module: 'support-annotations'
-        })
-        compile 'com.google.code.gson:gson:2.8.2'
-        compile 'com.android.support.constraint:constraint-layout:1.0.2'
-        compile 'com.android.support:appcompat-v7:26.1.0'
-        compile 'com.android.support:design:26.1.0'
-        compile 'com.github.bumptech.glide:glide:3.7.0'
-        compile 'com.jakewharton:butterknife:8.8.1'
-        annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-        compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-        compile 'io.reactivex.rxjava2:rxjava:2.1.5'
-        compile 'org.greenrobot:greendao:3.2.2'
-        compile 'com.belerweb:pinyin4j:2.5.0'
-        testCompile 'junit:junit:4.12'
-        testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
-        debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-        releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
-        //RxBinding
-        compile 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
-        compile 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.0.0'
-        compile 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
-        compile 'com.squareup.flow:flow:1.0.0-alpha3'
-    }
-
-
 }

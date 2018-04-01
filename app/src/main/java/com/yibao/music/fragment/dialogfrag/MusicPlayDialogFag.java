@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
-import com.yibao.music.MyApplication;
+import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.activity.MusicActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
@@ -106,10 +106,13 @@ public class MusicPlayDialogFag
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBus = MyApplication.getIntstance()
+
+        audioBinder = MusicActivity.getAudioBinder();
+        mBus = MusicApplication.getIntstance()
+
                 .bus();
         disposables = new CompositeDisposable();
-        mInfoDao = MyApplication.getIntstance().getMusicDao();
+        mInfoDao = MusicApplication.getIntstance().getMusicDao();
         //注册音量监听广播
         registerVolumeReceiver();
     }
@@ -291,7 +294,7 @@ public class MusicPlayDialogFag
 
 
     private void setAlbulm(String url) {
-        Glide.with(MyApplication.getIntstance())
+        Glide.with(MusicApplication.getIntstance())
                 .load(url)
                 .asBitmap()
                 .into(mPlayingSongAlbum);
@@ -304,14 +307,14 @@ public class MusicPlayDialogFag
             //当前播放  暂停
             audioBinder.pause();
             mAnimator.pause();
-            MyApplication.getIntstance()
+            MusicApplication.getIntstance()
                     .bus()
                     .post(new MusicStatusBean(0, true));
         } else {
             //当前暂停  播放
             audioBinder.start();
             initAnimation();
-            MyApplication.getIntstance()
+            MusicApplication.getIntstance()
                     .bus()
                     .post(new MusicStatusBean(0, false));
         }

@@ -1,4 +1,4 @@
-package com.yibao.music.album;
+package com.yibao.music.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,10 +11,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+
+import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
+import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.model.ArtistInfo;
-import com.yibao.music.playlist.PlayListAdapter;
 import com.yibao.music.util.LogUtil;
 
 import java.util.ArrayList;
@@ -78,7 +80,7 @@ public class AlbumListDetailsFragment extends BaseFragment {
         }
 
         PlayListAdapter playListAdapter = new PlayListAdapter(null);
-        LinearLayoutManager manager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager manager = new LinearLayoutManager(MusicApplication.getIntstance());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setHasFixedSize(true);

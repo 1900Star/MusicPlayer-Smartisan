@@ -1,18 +1,19 @@
-package com.yibao.music.folder;
+package com.yibao.music.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.yibao.music.R;
 import com.yibao.music.base.BaseFragment;
-import com.yibao.music.util.LogUtil;
+import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
+import com.yibao.music.view.CircleImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
@@ -28,8 +29,9 @@ import butterknife.Unbinder;
 
 public class FolderListFragment extends BaseFragment {
 
-    @BindView(R.id.iv_folder)
-    ImageView mIvFolder;
+
+    @BindView(R.id.about_header_iv)
+    CircleImageView mAboutHeaderIv;
     private Unbinder unbinder;
 
     @Nullable
@@ -37,15 +39,12 @@ public class FolderListFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.folder_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
-        initData();
+        initListener();
         return view;
     }
 
-    private void initData() {
-        mIvFolder.setOnClickListener(view -> {
-            LogUtil.d("  ========================------------------=-=-=-=-====   ", "");
-            LogUtil.d("  ==============   ", "");
-        });
+    private void initListener() {
+        mAboutHeaderIv.setOnClickListener(v -> RelaxDialogFragment.newInstance().show(getFragmentManager(), "girlsDialog"));
     }
 
     public static FolderListFragment newInstance() {
@@ -63,5 +62,15 @@ public class FolderListFragment extends BaseFragment {
     @Override
     public boolean backPressed() {
         return false;
+    }
+
+    @OnClick(R.id.about_header_iv)
+    public void onClick(View v) {
+        switch (v.getId()) {
+            default:
+                break;
+            case R.id.about_header_iv:
+                break;
+        }
     }
 }

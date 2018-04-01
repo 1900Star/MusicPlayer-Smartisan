@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import com.yibao.music.MyApplication;
+import com.yibao.music.MusicApplication;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -84,7 +84,7 @@ public class BitmapUtil {
         // 其次把文件插入到系统图库
         if (isShowPhotos) {
             try {
-                MediaStore.Images.Media.insertImage(MyApplication.getIntstance()
+                MediaStore.Images.Media.insertImage(MusicApplication.getIntstance()
                                                                  .getContentResolver(),
                                                     file.getAbsolutePath(),
                                                     name,
@@ -93,7 +93,7 @@ public class BitmapUtil {
                 e.printStackTrace();
             }
             // 最后通知图库更新
-            MyApplication.getIntstance()
+            MusicApplication.getIntstance()
                          .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                                                    Uri.parse("file://" + file)));
         }

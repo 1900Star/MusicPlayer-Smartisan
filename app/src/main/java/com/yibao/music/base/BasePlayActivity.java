@@ -45,12 +45,12 @@ public abstract class BasePlayActivity extends BaseActivity {
     protected AudioManager mAudioManager;
     protected int mMaxVolume;
     protected AudioPlayService.AudioBinder audioBinder;
-    protected CompositeDisposable mCompositeDisposable;
     private PowerManager.WakeLock mWakeLock;
     private boolean isScreenAlwaysOn;
     private VolumeReceiver mVolumeReceiver;
     protected Disposable mDisposablePlayTime;
     protected Disposable mDisposableLyrics;
+    protected CompositeDisposable mCompositeDisposable;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,6 +79,30 @@ public abstract class BasePlayActivity extends BaseActivity {
 
     }
 
+    /**
+     * 停止更新
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (mDisposablePlayTime != null) {
+            mDisposablePlayTime.dispose();
+        }
+        if (mDisposableLyrics != null) {
+            mDisposableLyrics.dispose();
+        }
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mCompositeDisposable != null) {
+            mCompositeDisposable.dispose();
+            mCompositeDisposable.clear();
+
+        }
+        unregisterReceiver(mVolumeReceiver);
+    }
 
     /**
      * 接收Service发出的播放状态
@@ -115,17 +139,6 @@ public abstract class BasePlayActivity extends BaseActivity {
      */
     protected abstract void updataCurrentTitle(MusicBean info);
 
-    /**
-     * 停止更新
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (mDisposablePlayTime != null) {
-            mDisposablePlayTime.dispose();
-        }
-
-    }
 
     private void upDataPlayProgress() {
         mDisposablePlayTime = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
@@ -292,17 +305,4 @@ public abstract class BasePlayActivity extends BaseActivity {
         overridePendingTransition(0, R.anim.dialog_push_out);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mDisposableLyrics != null && mCompositeDisposable != null) {
-            mDisposablePlayTime.dispose();
-            mCompositeDisposable.clear();
-
-        }
-        if (mDisposableLyrics != null) {
-            mDisposableLyrics.dispose();
-        }
-        unregisterReceiver(mVolumeReceiver);
-    }
 }

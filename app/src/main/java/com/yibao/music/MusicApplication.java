@@ -18,18 +18,19 @@ import com.yibao.music.util.RxBus;
  *
  * @author Stran
  */
-public class MyApplication
+public class MusicApplication
         extends Application {
-    private static MyApplication appContext;
+    private static MusicApplication appContext;
     public static boolean isShowLog = true;
 
     private RxBus mRxBus;
 
     private DaoSession mDaoSession;
+    private static MusicBeanDao musicBeanDao;
 
-    public static MyApplication getIntstance() {
+    public static MusicApplication getIntstance() {
         if (appContext == null) {
-            appContext = new MyApplication();
+            appContext = new MusicApplication();
         }
         return appContext;
     }
@@ -60,8 +61,14 @@ public class MyApplication
     }
 
     public MusicBeanDao getMusicDao() {
-
-        return mDaoSession.getMusicBeanDao();
+        if (musicBeanDao == null) {
+            synchronized ("MusicApplication.class") {
+                if (musicBeanDao == null) {
+                    musicBeanDao = mDaoSession.getMusicBeanDao();
+                }
+            }
+        }
+        return musicBeanDao;
 
     }
 

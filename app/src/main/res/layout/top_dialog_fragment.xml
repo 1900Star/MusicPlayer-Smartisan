@@ -5,7 +5,9 @@
     android:layout_height="match_parent"
     android:layout_centerInParent="true"
     android:fitsSystemWindows="true"
-    tools:context=".activity.MusicActivity">
+
+    tools:context=".activity.PlayActivity">
+
 
     <com.yibao.music.view.ProgressBtn
         android:id="@+id/pb_toppic"

@@ -9,6 +9,7 @@ import java.util.Random;
  * Author：Sid
  * Des：${TODO}
  * Time:2017/8/14 05:01
+ *
  * @author Stran
  */
 public class RandomUtil {
@@ -17,4 +18,13 @@ public class RandomUtil {
         return random.nextInt(list.size()) + 1;
 
     }
+
+    public static String getRandomUrl() {
+        Random random = new Random();
+        int position = random.nextInt(Api.picUrlArr.length) + 1;
+        return Api.picUrlArr[position];
+
+    }
+
+
 }

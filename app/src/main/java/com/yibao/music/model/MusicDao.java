@@ -1,6 +1,6 @@
 package com.yibao.music.model;
 
-import com.yibao.music.MyApplication;
+import com.yibao.music.MusicApplication;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.MusicInfoDao;
 import com.yibao.music.util.LogUtil;
@@ -21,7 +21,7 @@ public class MusicDao
     private final MusicBeanDao dao;
 
     public MusicDao() {
-        dao = MyApplication.getIntstance().getMusicDao();
+        dao = MusicApplication.getIntstance().getMusicDao();
     }
 
     @Override

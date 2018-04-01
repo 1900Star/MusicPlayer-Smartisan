@@ -1,4 +1,4 @@
-package com.yibao.music.artisan;
+package com.yibao.music.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.yibao.music.MyApplication;
+import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.model.BottomSheetStatus;
@@ -48,7 +48,7 @@ public class BottomSheetAdapter
             musicHolder.mMusicSinger.setText(musicItem.getArtist());
             musicHolder.mFavoriteTime.setText(musicItem.getTime());
             int position = musicHolder.getAdapterPosition();
-            RxBus bus = MyApplication.getIntstance()
+            RxBus bus = MusicApplication.getIntstance()
                     .bus();
 //            MusicBottomSheetDialog页面接收,用于播放收藏列表中点击Position的音乐
             musicHolder.mRootBottomSheet.setOnClickListener(view -> bus.post(new BottomSheetStatus(

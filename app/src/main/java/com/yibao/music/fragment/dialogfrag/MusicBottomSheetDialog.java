@@ -14,8 +14,10 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.yibao.music.MyApplication;
+import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
+import com.yibao.music.adapter.BottomSheetAdapter;
+import com.yibao.music.artisan.AudioServiceConnection;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.model.BottomSheetStatus;
 import com.yibao.music.model.MusicBean;
@@ -54,7 +56,7 @@ public class MusicBottomSheetDialog
     private CompositeDisposable
             mDisposable = new CompositeDisposable();
     private RxBus
-            mBus = MyApplication.getIntstance()
+            mBus = MusicApplication.getIntstance()
             .bus();
 
     public static MusicBottomSheetDialog newInstance() {
@@ -64,7 +66,7 @@ public class MusicBottomSheetDialog
     public void getBottomDialog(Context context) {
         this.mContext = context;
 
-        this.mList = MyApplication.getIntstance().getMusicDao().queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
+        this.mList = MusicApplication.getIntstance().getMusicDao().queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
         BottomSheetDialog dialog = new BottomSheetDialog(context);
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.bottom_sheet_list_dialog, null);
@@ -76,7 +78,9 @@ public class MusicBottomSheetDialog
     }
 
     private void initData(BottomSheetDialog dialog, View view) {
-        com.yibao.music.artisan.BottomSheetAdapter adapter = new com.yibao.music.artisan.BottomSheetAdapter(mList);
+
+       BottomSheetAdapter adapter = new BottomSheetAdapter(mList);
+
         mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, adapter);
         String size = StringUtil.getBottomSheetTitile(mList.size());
         mBottomListTitleSize.setText(size);
@@ -131,12 +135,12 @@ public class MusicBottomSheetDialog
     private void clearFavoriteMusic() {
         for (MusicBean musicBean : mList) {
             musicBean.setIsFavorite(false);
-            MyApplication.getIntstance().getMusicDao()
+            MusicApplication.getIntstance().getMusicDao()
                     .update(musicBean);
         }
 
         mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        MyApplication.getIntstance().bus().post(new MusicFavoriteBean());
+        MusicApplication.getIntstance().bus().post(new MusicFavoriteBean());
 
 //        if (mContext instanceof OnCheckFavoriteListener) {
 //            ((OnCheckFavoriteListener) mContext).updataFavoriteStatus();
@@ -144,7 +148,9 @@ public class MusicBottomSheetDialog
     }
 
     private void backTop() {
-        com.yibao.music.artisan.BottomSheetAdapter adapter = (com.yibao.music.artisan.BottomSheetAdapter) mRecyclerView.getAdapter();
+
+      BottomSheetAdapter adapter = (BottomSheetAdapter) mRecyclerView.getAdapter();
+
         int positionForSection = adapter.getPositionForSection(0);
         LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
         manager.scrollToPositionWithOffset(positionForSection, 0);
@@ -155,7 +161,9 @@ public class MusicBottomSheetDialog
         intent.setClass(mContext, AudioPlayService.class);
         intent.putExtra("sortFlag", Constants.NUMBER_EIGHT);
         intent.putExtra("position", position);
-        com.yibao.music.artisan.AudioServiceConnection connection = new com.yibao.music.artisan.AudioServiceConnection();
+
+      AudioServiceConnection connection = new AudioServiceConnection();
+
         mContext.bindService(intent, connection, Service.BIND_AUTO_CREATE);
         mContext.startService(intent);
         SharePrefrencesUtil.setMusicDataListFlag(mContext, Constants.NUMBER_EIGHT);

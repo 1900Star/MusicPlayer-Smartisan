@@ -2,11 +2,15 @@ package com.yibao.music.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yibao.music.R;
+
+import com.yibao.music.adapter.SplashPagerAdapter;
+
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.model.song.MusicCountBean;
 import com.yibao.music.service.LoadMusicDataService;
@@ -23,7 +27,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -37,12 +40,14 @@ public class SplashActivity
         extends BaseActivity {
 
 
-    @BindView(R.id.iv_splash)
+    //    @BindView(R.id.iv_splash)
     ImageView mIvSplash;
     @BindView(R.id.tv_music_count)
     TextView mTvMusicCount;
     @BindView(R.id.music_count_pb)
     ProgressBtn mMusicLoadProgressBar;
+    @BindView(R.id.vp_splash)
+    ViewPager mVpSplash;
     private Unbinder mBind;
 
     @Override
@@ -53,6 +58,12 @@ public class SplashActivity
         mBind = ButterKnife.bind(this);
         SystemUiVisibilityUtil.hideStatusBar(getWindow(), true);
         initRxbusData();
+        initData();
+    }
+
+    private void initData() {
+        SplashPagerAdapter splashPagerAdapter = new SplashPagerAdapter();
+        mVpSplash.setAdapter(splashPagerAdapter);
     }
 
     private void initRxbusData() {
@@ -61,22 +72,22 @@ public class SplashActivity
             mTvMusicCount.setVisibility(View.VISIBLE);
             mMusicLoadProgressBar.setVisibility(View.VISIBLE);
             startService(new Intent(this, LoadMusicDataService.class));
-            mCompositeDisposable.add(mBus.toObserverable(MusicCountBean.class).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<MusicCountBean>() {
-                @Override
-                public void accept(MusicCountBean musicCountBean) throws Exception {
-                    int size = musicCountBean.getSize();
-                    int count = musicCountBean.getMusicCount();
-                    mMusicLoadProgressBar.setMax(size);
-                    String s = "已经加载  " + count + " 首本地音乐";
-                    mTvMusicCount.setText(s);
-                    mMusicLoadProgressBar.setProgress(count);
-                    if (count == size) {
-                        mTvMusicCount.setText("本地音乐加载完成 -_-");
-                        SplashActivity.this.startActivity(new Intent(SplashActivity.this,
-                                MusicActivity.class));
-                        finish();
-                        SharePrefrencesUtil.setLoadMusicFlag(SplashActivity.this, Constants.NUMBER_EIGHT);
-                    }
+
+            mCompositeDisposable.add(mBus.toObserverable(MusicCountBean.class).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(musicCountBean -> {
+                int size = musicCountBean.getSize();
+                int count = musicCountBean.getMusicCount();
+                mMusicLoadProgressBar.setMax(size);
+                String s = "已经加载  " + count + " 首本地音乐";
+
+                mTvMusicCount.setText(s);
+                mMusicLoadProgressBar.setProgress(count);
+                if (count == size) {
+                    mTvMusicCount.setText("本地音乐加载完成 -_-");
+                    SplashActivity.this.startActivity(new Intent(SplashActivity.this,
+                            MusicActivity.class));
+                    finish();
+                    SharePrefrencesUtil.setLoadMusicFlag(SplashActivity.this, Constants.NUMBER_EIGHT);
+
                 }
             }));
         } else {

@@ -7,7 +7,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Process;
 
-import com.yibao.music.MyApplication;
+import com.yibao.music.MusicApplication;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -74,7 +74,7 @@ public class CrashHandler
         SharePrefrencesUtil.setMusicPlayState(mContext, 1);
         if (!Environment.getExternalStorageState()
                 .equals(Environment.MEDIA_MOUNTED)) {
-            if (MyApplication.isShowLog) {
+            if (MusicApplication.isShowLog) {
                 LogUtil.d(TAG, "sdcard unmounted,skip dump exception");
                 return;
             }

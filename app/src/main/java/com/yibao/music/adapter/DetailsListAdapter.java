@@ -1,4 +1,4 @@
-package com.yibao.music.album;
+package com.yibao.music.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +12,7 @@ import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
 
 import java.util.List;
@@ -55,6 +56,7 @@ public class DetailsListAdapter extends BaseRvAdapter<MusicBean> {
             detailsHolder.mTvSongDuration.setText(StringUtil.parseDuration(duration));
             detailsHolder.itemView.setOnClickListener(view -> {
                 if (mContext instanceof OnMusicItemClickListener) {
+                    SharePrefrencesUtil.setMusicDataListFlag(mContext, Constants.NUMBER_TEN);
                     ((OnMusicItemClickListener) mContext).startMusicServiceFlag(detailsHolder.getAdapterPosition(), mDataFlag, queryFlag);
                 }
 
@@ -63,6 +65,7 @@ public class DetailsListAdapter extends BaseRvAdapter<MusicBean> {
         }
 
     }
+
 
     @Override
     protected RecyclerView.ViewHolder getViewHolder(View view) {

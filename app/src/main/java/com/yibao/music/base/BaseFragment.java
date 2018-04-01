@@ -6,7 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.yibao.music.MyApplication;
+import com.yibao.music.MusicApplication;
 import com.yibao.music.base.listener.OnBackHandlePressedListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.AlbumInfo;
@@ -18,7 +18,7 @@ import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.RxBus;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -33,26 +33,31 @@ import io.reactivex.disposables.CompositeDisposable;
 public abstract class BaseFragment extends Fragment {
     protected String tag;
     protected Activity mActivity;
-    protected static ArrayList<MusicBean> musicBeans;
-    protected static ArrayList<AlbumInfo> mAlbumList;
-    protected static ArrayList<ArtistInfo> mArtistList;
-    protected static RxBus mBus;
-    protected static CompositeDisposable compositeDisposable;
-    public ArrayList<MusicBean> mSongList;
+    protected static List<AlbumInfo> mAlbumList;
+    protected static List<ArtistInfo> mArtistList;
+    protected RxBus mBus;
+    protected CompositeDisposable compositeDisposable;
+    public static List<MusicBean> mSongList;
     public MusicBeanDao mMusicBeanDao;
     public MusicInfoDao mMusicInfoDao;
     protected boolean isShowDetailsView = false;
     private OnBackHandlePressedListener mHandlePressedListener;
+    public List<MusicBean> mMusicAddtimeList;
+
+    protected BaseFragment() {
+        mMusicBeanDao = MusicApplication.getIntstance().getMusicDao();
+        mMusicInfoDao = MusicApplication.getIntstance().getMusicInfoDao();
+        mSongList = mMusicBeanDao.queryBuilder().list();
+
+    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         tag = this.getClass().getSimpleName();
-        mMusicBeanDao = MyApplication.getIntstance().getMusicDao();
-        mMusicInfoDao = MyApplication.getIntstance().getMusicInfoDao();
         mActivity = getActivity();
         compositeDisposable = new CompositeDisposable();
-        mBus = MyApplication.getIntstance().bus();
+        mBus = MusicApplication.getIntstance().bus();
         if (!(getActivity() instanceof OnBackHandlePressedListener)) {
             throw new ClassCastException("Hosting Activity must implement BackHandledInterface");
         } else {
@@ -65,18 +70,15 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mSongList == null) {
-            mSongList = (ArrayList<MusicBean>) mMusicBeanDao.queryBuilder().list();
 
-        }
-        if (musicBeans == null) {
-            musicBeans = (ArrayList<MusicBean>) mMusicBeanDao.queryBuilder().list();
-        }
         if (mAlbumList == null) {
-            mAlbumList = MusicListUtil.getAlbumList((ArrayList<MusicBean>) mMusicBeanDao.queryBuilder().list());
+            mAlbumList = MusicListUtil.getAlbumList(mSongList);
+        }
+        if (mMusicAddtimeList == null) {
+            mMusicAddtimeList = MusicListUtil.sortMusicAddtime(mMusicBeanDao.queryBuilder().list());
         }
         if (mArtistList == null) {
-            mArtistList = MusicListUtil.getArtistList((ArrayList<MusicBean>) mMusicBeanDao.queryBuilder().list());
+            mArtistList = MusicListUtil.getArtistList(mSongList);
 
         }
 

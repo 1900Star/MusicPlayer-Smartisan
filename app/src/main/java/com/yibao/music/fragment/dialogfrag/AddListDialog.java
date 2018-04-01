@@ -11,7 +11,7 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.yibao.music.MyApplication;
+import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.model.AddNewListBean;
 import com.yibao.music.model.MusicInfo;
@@ -72,8 +72,8 @@ public class AddListDialog
             case R.id.tv_add_list_continue:
                 String listTitle = mEditAddList.getText().toString().trim();
                 if (!listTitle.isEmpty()) {
-                    MyApplication.getIntstance().getMusicInfoDao().insert(new MusicInfo(listTitle));
-                    MyApplication.getIntstance().bus().post(new AddNewListBean());
+                    MusicApplication.getIntstance().getMusicInfoDao().insert(new MusicInfo(listTitle));
+                    MusicApplication.getIntstance().bus().post(new AddNewListBean());
                     dismiss();
                 } else {
                     SnakbarUtil.favoriteFailView(mEditAddList);

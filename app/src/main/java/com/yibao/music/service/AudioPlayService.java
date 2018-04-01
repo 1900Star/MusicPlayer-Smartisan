@@ -14,7 +14,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.widget.RemoteViews;
 
-import com.yibao.music.MyApplication;
+import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
@@ -84,10 +84,10 @@ public class AudioPlayService
         super.onCreate();
         mAudioBinder = new AudioBinder();
         if (mMusicDataList == null) {
-            mMusicDataList = MyApplication.getIntstance().getMusicDao().queryBuilder().list();
+            mMusicDataList = MusicApplication.getIntstance().getMusicDao().queryBuilder().list();
         }
         if (mMusicDao == null) {
-            mMusicDao = MyApplication.getIntstance().getMusicDao();
+            mMusicDao = MusicApplication.getIntstance().getMusicDao();
         }
         mMusicBean = new MusicBean();
         initBroadcast();
@@ -161,7 +161,7 @@ public class AudioPlayService
         MusicBean musicBean = mMusicDataList.get(position);
 
         musicBean.setCureetPosition(position);
-        MyApplication.getIntstance()
+        MusicApplication.getIntstance()
                 .bus()
                 .post(musicBean);
 
@@ -327,12 +327,12 @@ public class AudioPlayService
                 case 0:
                     if (mAudioBinder.isPlaying()) {
                         mAudioBinder.pause();
-                        MyApplication.getIntstance()
+                        MusicApplication.getIntstance()
                                 .bus()
                                 .post(new MusicStatusBean(type, true));
                     } else {
                         mAudioBinder.start();
-                        MyApplication.getIntstance()
+                        MusicApplication.getIntstance()
                                 .bus()
                                 .post(new MusicStatusBean(type, false));
                         LogUtil.d("PLAY");
@@ -340,11 +340,11 @@ public class AudioPlayService
                     break;
                 case 1:
                     if (mAudioBinder.isPlaying()) {
-                        MyApplication.getIntstance()
+                        MusicApplication.getIntstance()
                                 .bus()
                                 .post(new MusicStatusBean(type, true));
                     } else {
-                        MyApplication.getIntstance()
+                        MusicApplication.getIntstance()
                                 .bus()
                                 .post(new MusicStatusBean(type, false));
                         LogUtil.d("PLAY");

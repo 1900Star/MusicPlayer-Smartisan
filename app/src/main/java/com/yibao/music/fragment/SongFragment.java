@@ -12,15 +12,12 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.fragment.dialogfrag.MusicBottomSheetDialog;
-import com.yibao.music.model.MusicBean;
+
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.view.music.MusicView;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,7 +62,6 @@ public class SongFragment extends BaseFragment {
 
     private void initListener() {
         mSongAdapter.setOnItemMenuListener(() -> MusicBottomSheetDialog.newInstance().getBottomDialog(getActivity()));
-
     }
 
     /**
@@ -79,8 +75,7 @@ public class SongFragment extends BaseFragment {
         if (isShowStickyView == Constants.NUMBER_ZOER) {
             mSongAdapter = new SongAdapter(mActivity, mSongList, isShowStickyView);
         } else if (isShowStickyView == Constants.NUMBER_ONE) {
-            ArrayList<MusicBean> list = MusicListUtil.sortMusicAddtime(musicBeans);
-            mSongAdapter = new SongAdapter(mActivity, list, isShowStickyView);
+            mSongAdapter = new SongAdapter(mActivity, mMusicAddtimeList, isShowStickyView);
         }
         mMusciView.setAdapter(mActivity, Constants.NUMBER_ONE, isShowSlidebar, mSongAdapter);
     }
@@ -115,24 +110,24 @@ public class SongFragment extends BaseFragment {
     private void switchListCategory(int flag) {
         switch (flag) {
             case 1:
-                setAllCategoryNotNormal(Constants.NUMBER_ZOER);
+                setAllCategoryNotNormal(Constants.NUMBER_ONE);
                 mMusicCategorySongName.setTextColor(ColorUtil.wihtle);
                 mMusicCategorySongName.setBackgroundResource(R.drawable.btn_category_songname_down_selector);
                 initData(true, Constants.NUMBER_ZOER);
                 break;
             case 2:
-                LogUtil.d(" 122  songfragment mFlag " + SharePrefrencesUtil.getMusicDataListFlag(getActivity()));
-                setAllCategoryNotNormal(Constants.NUMBER_ONE);
+                LogUtil.d(" 119  songfragment mFlag " + SharePrefrencesUtil.getMusicDataListFlag(getActivity()));
+                setAllCategoryNotNormal(Constants.NUMBER_TWO);
                 mMusicCategoryScore.setTextColor(ColorUtil.wihtle);
                 mMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_down_selector);
                 break;
             case 3:
-                setAllCategoryNotNormal(Constants.NUMBER_TWO);
+                setAllCategoryNotNormal(Constants.NUMBER_THRRE);
                 mMusicCategoryFrequency.setTextColor(ColorUtil.wihtle);
                 mMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_down_selector);
                 break;
             case 4:
-                setAllCategoryNotNormal(Constants.NUMBER_THRRE);
+                setAllCategoryNotNormal(Constants.NUMBER_FOUR);
                 mMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_down_selector);
                 mMusicCategoryAddtime.setTextColor(ColorUtil.wihtle);
                 initData(false, Constants.NUMBER_ONE);

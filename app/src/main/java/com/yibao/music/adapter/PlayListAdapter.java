@@ -1,4 +1,4 @@
-package com.yibao.music.playlist;
+package com.yibao.music.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -43,6 +43,8 @@ public class PlayListAdapter extends BaseRvAdapter<MusicInfo> {
             playViewHolder.itemView.setOnClickListener(view -> PlayListAdapter.this.openDetails(null));
         }
     }
+
+
 
     @Override
     protected RecyclerView.ViewHolder getViewHolder(View view) {

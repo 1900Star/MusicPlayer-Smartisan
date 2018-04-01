@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.widget.LinearLayout;
 
-import com.yibao.music.MyApplication;
+import com.yibao.music.MusicApplication;
 import com.yibao.music.base.BaseRvAdapter;
 
 /**
@@ -24,13 +24,13 @@ public class RecyclerFactory {
 
     public static RecyclerView creatRecyclerView(int type,
                                                  RecyclerView.Adapter<RecyclerView.ViewHolder> adapter) {
-        RecyclerView recyclerView = new RecyclerView(MyApplication.getIntstance());
+        RecyclerView recyclerView = new RecyclerView(MusicApplication.getIntstance());
 
         if (type == RECYCLERVIEW_NORMAL) {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,
                     RecyclerView.LayoutParams.MATCH_PARENT);
 
-            LinearLayoutManager manager = new LinearLayoutManager(MyApplication.getIntstance());
+            LinearLayoutManager manager = new LinearLayoutManager(MusicApplication.getIntstance());
             manager.setOrientation(LinearLayoutManager.VERTICAL);
             recyclerView.setVerticalScrollBarEnabled(true);
             recyclerView.setLayoutManager(manager);

@@ -36,6 +36,16 @@ public class ImageUitl {
 
     }
 
+    public static void loadPlaceholder(Context context, String url, ImageView view) {
+        Glide.with(context)
+                .load(url)
+                .asBitmap()
+                .placeholder(R.mipmap.xuan)
+                .error(R.mipmap.xuan)
+                .into(view);
+
+    }
+
 
 }
 

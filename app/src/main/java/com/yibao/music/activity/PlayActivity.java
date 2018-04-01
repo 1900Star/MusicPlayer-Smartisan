@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
-import com.yibao.music.MyApplication;
+import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.base.BasePlayActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
@@ -247,6 +247,8 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
      * @param info
      */
     private void perpareMusic(MusicBean info) {
+
+        LogUtil.d("更新 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
         mCurrenMusicInfo = info;
         checkCurrentIsFavorite();
         initAnimation();
@@ -275,7 +277,7 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
             //当前播放  暂停
             audioBinder.pause();
             mAnimator.pause();
-            MyApplication.getIntstance()
+            MusicApplication.getIntstance()
                     .bus()
                     .post(new MusicStatusBean(0, true));
             if (isShowLyrics) {
@@ -285,7 +287,7 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
             //当前暂停  播放
             audioBinder.start();
             initAnimation();
-            MyApplication.getIntstance()
+            MusicApplication.getIntstance()
                     .bus()
                     .post(new MusicStatusBean(0, false));
             if (isShowLyrics) {

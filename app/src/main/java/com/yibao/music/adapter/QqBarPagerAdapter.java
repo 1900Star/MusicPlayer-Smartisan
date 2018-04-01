@@ -1,10 +1,8 @@
-package com.yibao.music.artisanlist;
+package com.yibao.music.adapter;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +10,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.AnimationUtil;
+import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.StringUtil;
 
 import java.util.List;
@@ -72,7 +70,6 @@ public class QqBarPagerAdapter
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_music_pager, container, false);
@@ -97,17 +94,12 @@ public class QqBarPagerAdapter
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void initView(MusicBean musicInfo, View view) {
         ImageView mAlbulm = view.findViewById(R.id.iv_pager_albulm);
         TextView songName = view.findViewById(R.id.tv_pager_song_name);
         TextView artName = view.findViewById(R.id.tv_pager_art_name);
         Uri albumUri = StringUtil.getAlbulm(musicInfo.getAlbumId());
-        Glide.with(mContext)
-                .load(albumUri.toString())
-                .asBitmap()
-                .error(R.drawable.sidebar_cover)
-                .into(mAlbulm);
+        ImageUitl.loadPic(mContext,albumUri.toString(),mAlbulm);
         songName.setText(musicInfo.getTitle());
         artName.setText(musicInfo.getArtist());
         if (mAnimator == null || mAnimationListener == null) {

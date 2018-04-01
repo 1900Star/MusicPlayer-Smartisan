@@ -13,9 +13,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.yibao.music.R;
+import com.yibao.music.adapter.AlbumAdapter;
+import com.yibao.music.adapter.ArtistAdapter;
 import com.yibao.music.adapter.SongAdapter;
-import com.yibao.music.album.AlbumAdapter;
-import com.yibao.music.artist.ArtistAdapter;
 import com.yibao.music.util.Constants;
 
 

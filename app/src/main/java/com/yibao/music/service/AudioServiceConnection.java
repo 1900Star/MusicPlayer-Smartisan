@@ -1,4 +1,4 @@
-package com.yibao.music.artisan;
+package com.yibao.music.service;
 
 import android.content.ComponentName;
 import android.content.ServiceConnection;

@@ -7,6 +7,7 @@ import android.view.WindowManager;
  * Author：Sid
  * Des：${StatusBar隐藏显示工具类}
  * Time:2017/4/22 02:06
+ * @author Stran
  */
 public class SystemUiVisibilityUtil {
 

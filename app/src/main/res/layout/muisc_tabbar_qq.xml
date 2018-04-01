@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="58dp"
     android:layout_centerInParent="true"
-    android:background="@color/colorWhite"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:visibility="invisible">

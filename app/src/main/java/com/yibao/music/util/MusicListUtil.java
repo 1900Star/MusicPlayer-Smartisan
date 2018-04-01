@@ -3,7 +3,7 @@ package com.yibao.music.util;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
-import com.yibao.music.MyApplication;
+import com.yibao.music.MusicApplication;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
@@ -29,9 +29,9 @@ public class MusicListUtil {
      *
      * @return
      */
-    public static ArrayList<MusicBean> getMusicDataList() {
+    public static List<MusicBean> getMusicDataList() {
         ArrayList<MusicBean> musicInfos = new ArrayList<>();
-        Cursor cursor = MyApplication.getIntstance().getApplicationContext().getContentResolver()
+        Cursor cursor = MusicApplication.getIntstance().getApplicationContext().getContentResolver()
                 .query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         null,
                         null,
@@ -95,7 +95,7 @@ public class MusicListUtil {
      *
      * @param musicList c
      */
-    public static ArrayList<MusicBean> sortMusicAddtime(ArrayList<MusicBean> musicList) {
+    public static List<MusicBean> sortMusicAddtime(List<MusicBean> musicList) {
         Collections.sort(musicList, (m1, m2) -> {
             if (m1 == m2) {
                 return 0;
@@ -142,7 +142,7 @@ public class MusicListUtil {
 
 
     //按艺术家分类
-    public static ArrayList<ArtistInfo> getArtistList(ArrayList<MusicBean> list) {
+    public static List<ArtistInfo> getArtistList(List<MusicBean> list) {
         Map<String, List<MusicBean>> musicMap = new HashMap<>(16);
         ArrayList<ArtistInfo> singerInfoList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
@@ -175,7 +175,7 @@ public class MusicListUtil {
 
     //    //按专辑分组
 
-    public static ArrayList<AlbumInfo> getAlbumList(ArrayList<MusicBean> list) {
+    public static ArrayList<AlbumInfo> getAlbumList(List<MusicBean> list) {
         Map<String, List<MusicBean>> musicMap = new HashMap<>(16);
         ArrayList<AlbumInfo> albumInfoList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {

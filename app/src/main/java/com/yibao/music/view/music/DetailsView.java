@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.yibao.music.R;
-import com.yibao.music.album.DetailsListAdapter;
+import com.yibao.music.adapter.DetailsListAdapter;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.util.Constants;
@@ -109,7 +109,7 @@ public class DetailsView
      * //设置列表的适配器
      *
      * @param context  d
-     * @param dataType 将数据 强转成指定的类型
+     * @param dataType 将数据 强转成指定的类型  1 ： ArtistInfo   2 ： AlbumInfo
      * @param bean     d
      * @param adapter  d
      */
@@ -145,8 +145,8 @@ public class DetailsView
                 .placeholder(R.drawable.noalbumcover_220)
                 .into(mIvArtistAlbummDetails);
         if (issueYear != Constants.NUMBER_ZOER) {
-            String s = issueYear + "";
-            mTvArtistAlbummDetailsDate.setText(s);
+            String year = String.valueOf(issueYear);
+            mTvArtistAlbummDetailsDate.setText(year);
         }
 
     }

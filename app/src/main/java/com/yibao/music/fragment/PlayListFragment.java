@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.yibao.music.R;
+import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
@@ -73,14 +74,13 @@ public class PlayListFragment extends BaseFragment {
         mAdapter = new com.yibao.music.playlist.PlayListAdapter(playList);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
         mPlayListContent.addView(recyclerView);
+
     }
 
     private void receiveRxbuData() {
         mDisposable.add(mBus.toObserverable(AddNewListBean.class)
                 .subscribeOn(Schedulers.io()).map(addNewListBean -> mMusicInfoDao.queryBuilder().list())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(newPlayList -> {
-                    mAdapter.addData(newPlayList);
-                })
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(newPlayList -> mAdapter.addData(newPlayList))
         );
 
 

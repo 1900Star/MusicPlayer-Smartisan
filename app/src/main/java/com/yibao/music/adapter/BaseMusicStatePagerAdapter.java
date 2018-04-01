@@ -1,4 +1,4 @@
-package com.yibao.music.album;
+package com.yibao.music.adapter;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
