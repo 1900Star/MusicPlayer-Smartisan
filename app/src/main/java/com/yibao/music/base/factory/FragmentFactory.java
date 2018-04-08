@@ -3,7 +3,7 @@ package com.yibao.music.base.factory;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.fragment.AlbumFragment;
 import com.yibao.music.fragment.ArtistanListFragment;
-import com.yibao.music.fragment.FolderListFragment;
+import com.yibao.music.fragment.AboutFragment;
 import com.yibao.music.fragment.PlayListFragment;
 import com.yibao.music.fragment.SongFragment;
 
@@ -46,7 +46,7 @@ public class FragmentFactory {
                 fragment = AlbumFragment.newInstance();
                 break;
             case 4:
-                fragment = FolderListFragment.newInstance();
+                fragment = AboutFragment.newInstance();
                 break;
             default:
                 break;

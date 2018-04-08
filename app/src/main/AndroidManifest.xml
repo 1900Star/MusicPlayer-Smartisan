@@ -41,9 +41,9 @@
         <activity
             android:name=".activity.PlayActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".album.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".activity.SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
 
     </application>

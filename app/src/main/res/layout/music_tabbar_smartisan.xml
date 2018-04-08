@@ -65,6 +65,14 @@
 
             <ImageView
 
+                android:id="@+id/music_floating_favorite"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@null"
+                android:src="@drawable/btn_favorite_gray_selector" />
+
+            <ImageView
+
                 android:id="@+id/music_floating_pre"
                 android:layout_width="48dp"
                 android:layout_height="48dp"

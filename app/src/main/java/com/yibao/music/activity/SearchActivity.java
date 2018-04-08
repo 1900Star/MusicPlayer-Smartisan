@@ -1,4 +1,4 @@
-package com.yibao.music.album;
+package com.yibao.music.activity;
 
 import android.app.Service;
 import android.content.ComponentName;
@@ -17,7 +17,7 @@ import flow.Flow;
 /**
  * @author Stran
  */
-public class MainActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity {
     IMusicAidlInterface.Stub mStub;
     @Override protected void attachBaseContext(Context baseContext) {
         baseContext = Flow.configure(baseContext, this).install();

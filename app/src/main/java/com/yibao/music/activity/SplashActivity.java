@@ -1,5 +1,6 @@
 package com.yibao.music.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -12,6 +13,7 @@ import com.yibao.music.adapter.SplashPagerAdapter;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.model.song.MusicCountBean;
 import com.yibao.music.service.LoadMusicDataService;
+import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.SystemUiVisibilityUtil;
@@ -25,6 +27,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -65,6 +68,7 @@ public class SplashActivity
     }
 
     private void initRxbusData() {
+
         if (SharePrefrencesUtil.getLoadMusicFlag(this) != Constants.NUMBER_EIGHT) {
             mTvMusicCount.setVisibility(View.VISIBLE);
             mMusicLoadProgressBar.setVisibility(View.VISIBLE);
@@ -78,6 +82,7 @@ public class SplashActivity
                 mTvMusicCount.setText(s);
                 mMusicLoadProgressBar.setProgress(count);
                 if (count == size) {
+                    mTvMusicCount.setTextColor(getResources().getColor(R.color.lyricsSelected));
                     mTvMusicCount.setText("本地音乐加载完成 -_-");
                     SplashActivity.this.startActivity(new Intent(SplashActivity.this,
                             MusicActivity.class));
@@ -87,7 +92,7 @@ public class SplashActivity
             }));
         } else {
 
-            Observable.timer(400, TimeUnit.MILLISECONDS)
+            mDisposable = Observable.timer(400, TimeUnit.MILLISECONDS)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(aLong -> {

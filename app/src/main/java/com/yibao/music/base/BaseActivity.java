@@ -34,6 +34,7 @@ public class BaseActivity extends AppCompatActivity {
     public MusicBeanDao mMusicDao;
     public CompositeDisposable mCompositeDisposable;
     public Disposable mDisposable;
+    public Disposable mRxViewDisposable;
     public final int mNormalTabbarColor = Color.parseColor("#939396");
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,6 +72,9 @@ public class BaseActivity extends AppCompatActivity {
         mCompositeDisposable.clear();
         if (mDisposable != null) {
             mDisposable.dispose();
+        }
+        if (mRxViewDisposable != null) {
+            mRxViewDisposable.dispose();
         }
 
         unregisterReceiver(headsetReciver);

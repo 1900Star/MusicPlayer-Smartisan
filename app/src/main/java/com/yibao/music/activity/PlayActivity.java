@@ -1,11 +1,13 @@
 package com.yibao.music.activity;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -117,15 +119,32 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initListener() {
         mSbProgress.setOnSeekBarChangeListener(new SeekBarListener());
         mSbVolume.setOnSeekBarChangeListener(new SeekBarListener());
         rxViewClick();
-
-
         mPlayingSongAlbum.setOnLongClickListener(view -> {
             TopBigPicDialogFragment.newInstance(mAlbumUrl)
                     .show(getFragmentManager(), "album");
+            return true;
+        });
+        mRotateRl.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    switchPlayState();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    break;
+                case MotionEvent.ACTION_UP:
+                    switchPlayState();
+                    break;
+                default:
+                    break;
+
+            }
+
+
             return true;
         });
 
@@ -149,7 +168,7 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
             if (mCurrenMusicInfo.isFavorite()) {
                 mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
             } else {
-                mIvFavoriteMusic.setImageResource(R.drawable.music_favorite_selector);
+                mIvFavoriteMusic.setImageResource(R.drawable.music_qqbar_favorite_selector);
             }
         }
     }
@@ -339,6 +358,7 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
             case R.id.rotate_rl:
                 // 按下音乐停止播放  动画停止 ，抬起恢复
                 LogUtil.d("按下音乐停止播放  动画停止 ，抬起恢复");
+//                switchPlayState();
                 break;
             case R.id.tv_lyrics:
                 showLyrics();
@@ -375,7 +395,7 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
         if (mCurrenMusicInfo.isFavorite()) {
             mCurrenMusicInfo.setIsFavorite(false);
             mMusicDao.update(mCurrenMusicInfo);
-            mIvFavoriteMusic.setImageResource(R.drawable.music_favorite_selector);
+            mIvFavoriteMusic.setImageResource(R.drawable.music_qqbar_favorite_selector);
             mBus.post(new MusicFavoriteBean());
 
         } else {
