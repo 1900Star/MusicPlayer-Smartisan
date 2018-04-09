@@ -10,7 +10,7 @@
         比如增加了类似QQ音乐的左右滑动切换上/下一曲的交互。
         \n\tRxJava\n\tRxBus\n\tButterknife\n\tGreenDao3.0\n\tGlide\n\tLeakcanary
     </string>
-    <string name="preject_url" >https://github.com/1900Star/SmartisanMusicPlayer</string>
+    <string name="preject_url">https://github.com/1900Star/SmartisanMusicPlayer</string>
     <string name="email">Email: strangermy98@gmail.com</string>
     <string name="preject_introduce">关于项目</string>
 

@@ -31,21 +31,16 @@
         <service android:name=".service.LoadMusicDataService" />
 
         <activity android:name=".base.BaseActivity" />
-
-
         <activity
             android:name=".activity.MusicActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.PlayActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".activity.SearchActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
-
+        <activity
+            android:name=".activity.SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

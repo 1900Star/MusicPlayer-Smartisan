@@ -164,13 +164,13 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
     }
 
     public void checkCurrentIsFavorite() {
-        if (mIvFavoriteMusic != null) {
             if (mCurrenMusicInfo.isFavorite()) {
                 mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
+//                mIvFavoriteMusic.setImageResource(R.drawable.btn_favorite_red_selector);
             } else {
                 mIvFavoriteMusic.setImageResource(R.drawable.music_qqbar_favorite_selector);
+//                mIvFavoriteMusic.setImageResource(R.drawable.btn_favorite_gray_selector);
             }
-        }
     }
 
     private void initData() {
@@ -396,6 +396,7 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
             mCurrenMusicInfo.setIsFavorite(false);
             mMusicDao.update(mCurrenMusicInfo);
             mIvFavoriteMusic.setImageResource(R.drawable.music_qqbar_favorite_selector);
+//            mIvFavoriteMusic.setImageResource(R.drawable.btn_favorite_gray_selector);
             mBus.post(new MusicFavoriteBean());
 
         } else {
@@ -404,6 +405,7 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
             mCurrenMusicInfo.setIsFavorite(true);
             mMusicDao.update(mCurrenMusicInfo);
             mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
+//            mIvFavoriteMusic.setImageResource(R.drawable.btn_favorite_red_selector);
             mBus.post(new MusicFavoriteBean());
 
         }

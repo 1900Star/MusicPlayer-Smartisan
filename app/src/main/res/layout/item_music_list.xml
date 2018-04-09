@@ -33,7 +33,7 @@
             android:background="@drawable/mask_albumcover_list"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
-            android:src="@mipmap/xuan" />
+            android:src="@mipmap/nina" />
 
         <LinearLayout
             android:layout_width="0dp"

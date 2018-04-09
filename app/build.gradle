@@ -92,5 +92,3 @@ dependencies {
     implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
     implementation 'com.squareup.flow:flow:1.0.0-alpha3'
 }
-
-

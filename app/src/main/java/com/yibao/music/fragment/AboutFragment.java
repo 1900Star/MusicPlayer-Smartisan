@@ -1,5 +1,6 @@
 package com.yibao.music.fragment;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -34,11 +35,15 @@ public class AboutFragment extends BaseFragment {
     CircleImageView mAboutHeaderIv;
     private Unbinder unbinder;
 
+
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.about_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
+
         initListener();
         return view;
     }

@@ -32,7 +32,7 @@ public class ImageUitl {
         Glide.with(context)
                 .load(url)
                 .asBitmap()
-                .error(R.mipmap.maki)
+                .error(R.mipmap.nina)
                 .into(view);
 
     }
@@ -42,8 +42,8 @@ public class ImageUitl {
                 .load(url)
                 .asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .placeholder(R.mipmap.maki)
-                .error(R.mipmap.splash)
+                .placeholder(R.mipmap.ninas)
+                .error(R.mipmap.nina)
                 .into(view);
 
     }
