@@ -139,7 +139,6 @@ public class MusicActivity
     LinearLayout mMusicBarStylelist;
 
 
-
     private List<MusicBean> mMusicItems;
     private Unbinder mBind;
     private ObjectAnimator mAnimator;
@@ -182,8 +181,10 @@ public class MusicActivity
         if (currentMusicBean != null) {
             if (!currentMusicBean.isFavorite()) {
                 mMusicQqBarFavorite.setImageResource(R.drawable.music_qqbar_favorite_selector);
+                mMusicFloatingFavorite.setImageResource(R.drawable.btn_favorite_gray_selector);
             } else {
                 mMusicQqBarFavorite.setImageResource(R.mipmap.favorite_yes);
+                mMusicFloatingFavorite.setImageResource(R.drawable.btn_favorite_red_selector);
 
             }
         }
@@ -258,10 +259,10 @@ public class MusicActivity
                 startMusicService(position);
             }
         });
-        mMusicViewPager.addOnPageChangeListener(new MusicPagerListener(){
+        mMusicViewPager.addOnPageChangeListener(new MusicPagerListener() {
             @Override
             public void onPageSelected(int position) {
-              switchMusicTabbar(position);
+                switchMusicTabbar(position);
             }
         });
     }
