@@ -6,10 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -24,7 +22,6 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.adapter.MusicPagerAdapter;
 import com.yibao.music.adapter.QqBarPagerAdapter;
-import com.yibao.music.album.MainActivity;
 import com.yibao.music.artisanlist.MusicPagerListener;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.base.BaseFragment;
@@ -34,7 +31,6 @@ import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.model.song.MusicFavoriteBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
@@ -62,8 +58,8 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author Stran
- *         Des：${音乐列表界面}
- *         Time:2017/5/30 13:27
+ * Des：${音乐列表界面}
+ * Time:2017/5/30 13:27
  */
 public class MusicActivity
         extends BaseActivity
@@ -78,6 +74,9 @@ public class MusicActivity
     TextView mMusicFloatSongName;
     @BindView(R.id.music_float_singer_name)
     TextView mMusicFloatSingerName;
+    @BindView(R.id.music_floating_favorite)
+    ImageView mMusicFloatingFavorite;
+
     @BindView(R.id.music_floating_pre)
     ImageView mMusicFloatingPre;
     @BindView(R.id.music_floating_next)
@@ -178,12 +177,16 @@ public class MusicActivity
         toolbar.setNavigationOnClickListener(v -> MusicActivity.this.finish());
     }
 
-    public void checkCurrentIsFavorite() {
-        if (!mCurrentMusicBean.isFavorite()) {
-            mMusicQqBarFavorite.setImageResource(R.mipmap.favorite_yes);
-        } else {
-            mMusicQqBarFavorite.setImageResource(R.drawable.music_favorite_selector);
+    public void checkCurrentIsFavorite(MusicBean currentMusicBean) {
+        if (currentMusicBean != null) {
+            if (!currentMusicBean.isFavorite()) {
+                mMusicQqBarFavorite.setImageResource(R.drawable.music_qqbar_favorite_selector);
+                mMusicFloatingFavorite.setImageResource(R.drawable.btn_favorite_gray_selector);
+            } else {
+                mMusicQqBarFavorite.setImageResource(R.mipmap.favorite_yes);
+                mMusicFloatingFavorite.setImageResource(R.drawable.btn_favorite_red_selector);
 
+            }
         }
     }
 
@@ -254,6 +257,12 @@ public class MusicActivity
             @Override
             public void onPageSelected(int position) {
                 startMusicService(position);
+            }
+        });
+        mMusicViewPager.addOnPageChangeListener(new MusicPagerListener() {
+            @Override
+            public void onPageSelected(int position) {
+                switchMusicTabbar(position);
             }
         });
     }
@@ -329,35 +338,27 @@ public class MusicActivity
      */
     @Override
     public void onOpenMusicPlayDialogFag() {
-
-        if (mMusicConfig) {
-            readyMusic();
-        } else {
-            ToastUtil.showNoMusic(this);
-        }
-
+        readyMusic();
     }
 
-
     private void openMusicPlayDialogFag() {
-        RxView.clicks(mSmartisanMusicBar)
+        mRxViewDisposable = RxView.clicks(mSmartisanMusicBar)
                 .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> {
-                    if (mMusicConfig) {
-                        MusicActivity.this.readyMusic();
-                    } else {
-                        ToastUtil.showNoMusic(MusicActivity.this);
-                    }
-                });
+                .subscribe(o -> readyMusic());
     }
 
     private void readyMusic() {
-        Intent intent = new Intent(this, PlayActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("info", mCurrentMusicBean);
-        intent.putExtra("bundle", bundle);
-        startActivity(intent);
-        overridePendingTransition(R.anim.dialog_push_in, 0);
+        if (mMusicConfig) {
+            Intent intent = new Intent(this, PlayActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("info", mCurrentMusicBean);
+            intent.putExtra("bundle", bundle);
+            startActivity(intent);
+            overridePendingTransition(R.anim.dialog_push_in, 0);
+        } else {
+            ToastUtil.showNoMusic(MusicActivity.this);
+        }
+
 
     }
 
@@ -384,7 +385,7 @@ public class MusicActivity
          position = bean.getPosition() 用来判断触发消息的源头，
          < 0 >表示是通知栏播放和暂停按钮发出，
          同时MusicPlayDialogFag在播放和暂停的时候也会发出通知并且type也是< 0 >，
-         MuiscListActivity会接收到两个地方发出的播放状态的消息,用于控制播放按钮的显示状态
+         MuiscListActivity会接收到通知栏发出的播放状态的消息,用于控制播放按钮的显示状态
          < 1 >表示从通知栏打开音列表，即整个通知栏布局的监听。
          < 2 >表示在通知栏关闭通知栏
          < 3 > 切换列表数据
@@ -395,9 +396,9 @@ public class MusicActivity
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(MusicActivity.this::refreshBtnAndNotify));
         /* 更新当前歌曲的收藏状态*/
-        mCompositeDisposable.add(mBus.toObserverable(MusicFavoriteBean.class).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(musicFavoriteBean -> MusicActivity.this.checkCurrentIsFavorite()));
+//        mCompositeDisposable.add(mBus.toObserverable(MusicFavoriteBean.class).subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(musicFavoriteBean -> MusicActivity.this.checkCurrentIsFavorite()));
     }
 
 
@@ -433,7 +434,7 @@ public class MusicActivity
      */
     private void perpareItem(MusicBean musicItem) {
         mCurrentMusicBean = musicItem;
-        checkCurrentIsFavorite();
+        checkCurrentIsFavorite(musicItem);
         mQqBarPagerAdapter.setData(initMusicData());
         mMusicSlideViewPager.setCurrentItem(musicItem.getCureetPosition(), false);
         //更新音乐标题
@@ -527,6 +528,7 @@ public class MusicActivity
             R.id.music_floating_next,
             R.id.music_floating_pager_play,
             R.id.music_floating_pager_favorite,
+            R.id.music_floating_favorite,
             R.id.music_bar_playlist,
             R.id.music_bar_artisanlist, R.id.music_bar_songlist, R.id.music_bar_albumlist, R.id.music_bar_stylelist})
     public void onViewClicked(View view) {
@@ -552,6 +554,10 @@ public class MusicActivity
                     switch (view.getId()) {
                         case R.id.music_floating_pre:
                             audioBinder.playPre();
+                            break;
+                        case R.id.music_floating_favorite:
+
+                            favoritMusic();
                             break;
                         case R.id.music_floating_pager_favorite:
                             favoritMusic();
@@ -581,7 +587,8 @@ public class MusicActivity
         if (mCurrentMusicBean.isFavorite()) {
             mCurrentMusicBean.setIsFavorite(false);
             mMusicDao.update(mCurrentMusicBean);
-            mMusicQqBarFavorite.setImageResource(R.drawable.music_favorite_selector);
+            mMusicQqBarFavorite.setImageResource(R.drawable.music_qqbar_favorite_selector);
+            mMusicFloatingFavorite.setImageResource(R.drawable.btn_favorite_gray_selector);
 
         } else {
             String time = StringUtil.getCurrentTime();
@@ -589,6 +596,7 @@ public class MusicActivity
             mCurrentMusicBean.setIsFavorite(true);
             mMusicDao.update(mCurrentMusicBean);
 
+            mMusicFloatingFavorite.setImageResource(R.drawable.btn_favorite_red_selector);
             mMusicQqBarFavorite.setImageResource(R.mipmap.favorite_yes);
 
         }
@@ -622,7 +630,7 @@ public class MusicActivity
                 mMusicBarAlbumlistTv.setTextColor(ColorUtil.musicbarTvDown);
                 break;
             case 4:
-                setAllTabbarNotPressed(flag, R.string.music_folder);
+                setAllTabbarNotPressed(flag, R.string.about);
                 mMusicBarStylelist.setBackgroundResource(R.drawable.tabbar_bg_down);
                 mMusicBarStylelistIv.setBackgroundResource(R.drawable.tabbar_stylelist_selector);
                 mMusicBarStylelistTv.setTextColor(ColorUtil.musicbarTvDown);
@@ -682,7 +690,7 @@ public class MusicActivity
             case R.id.action_titlebar_search:
                 LogUtil.d("==================search");
                 Intent intent = new Intent();
-                intent.setClass(this, MainActivity.class);
+                intent.setClass(this, SearchActivity.class);
                 intent.putExtra("position", 8);
                 startActivity(intent);
 
@@ -711,7 +719,6 @@ public class MusicActivity
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onPause() {
         super.onPause();
@@ -726,6 +733,7 @@ public class MusicActivity
         if (mAnimator != null && audioBinder.isPlaying()) {
             mAnimator.resume();
         }
+        checkCurrentIsFavorite(mCurrentMusicBean);
     }
 
     @Override

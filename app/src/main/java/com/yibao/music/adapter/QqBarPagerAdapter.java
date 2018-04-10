@@ -1,6 +1,7 @@
 package com.yibao.music.adapter;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
@@ -83,6 +84,7 @@ public class QqBarPagerAdapter
     }
     // 可以通过接口把view传过去，在Activity里面进行动画的控制
 
+    @SuppressLint("CheckResult")
     private void initListener(View view) {
         RxView.clicks(view)
                 .throttleFirst(1, TimeUnit.SECONDS)

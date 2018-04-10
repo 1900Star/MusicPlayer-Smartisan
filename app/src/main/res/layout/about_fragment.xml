@@ -31,24 +31,21 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="10dp"
-
                 android:background="@drawable/shape_about_card"
                 android:padding="15dp">
 
                 <com.yibao.music.view.CircleImageView
                     android:id="@+id/about_header_iv"
-                    android:layout_width="65dp"
-                    android:layout_height="65dp"
-                    android:src="@mipmap/xuan" />
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:src="@mipmap/nina" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/about_header_iv"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="6dp"
-                    android:layout_toEndOf="@id/about_header_iv"
+                    android:id="@+id/tv_name"
                     android:layout_toRightOf="@id/about_header_iv"
                     android:text="@string/about_name"
                     android:textColor="@color/colorBlack"
@@ -59,29 +56,29 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/about_header_iv"
+                    android:layout_marginTop="10dp"
+                    android:layout_below="@id/tv_name"
                     android:layout_marginBottom="6dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
-                    android:layout_toEndOf="@id/about_header_iv"
                     android:layout_toRightOf="@id/about_header_iv"
                     android:autoLink="web"
 
 
                     android:linksClickable="true"
+                    android:id="@+id/tv_github"
                     android:text="@string/about_github"
                     android:textColorLink="@color/tabbarDownTv"
                     android:textSize="@dimen/about_sign" />
 
                 <TextView
+                    android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/about_header_iv"
+                    android:layout_below="@id/tv_github"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="10dp"
-                    android:layout_toEndOf="@id/about_header_iv"
                     android:layout_toRightOf="@id/about_header_iv"
-
                     android:text="@string/about_sign"
                     android:textColor="@color/colorGreen"
 

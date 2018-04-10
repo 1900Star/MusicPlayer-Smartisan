@@ -132,7 +132,7 @@ public class MusicPlayDialogFag
         if (mCurrenMusicInfo.isFavorite()) {
             mIvMusicFavorite.setImageResource(R.mipmap.favorite_yes);
         } else {
-            mIvMusicFavorite.setImageResource(R.drawable.music_favorite_selector);
+            mIvMusicFavorite.setImageResource(R.drawable.music_qqbar_favorite_selector);
 
         }
     }
@@ -482,7 +482,7 @@ public class MusicPlayDialogFag
             mCurrenMusicInfo.setIsFavorite(false);
             mInfoDao.update(mCurrenMusicInfo);
 
-            mIvMusicFavorite.setImageResource(R.drawable.music_favorite_selector);
+            mIvMusicFavorite.setImageResource(R.drawable.music_qqbar_favorite_selector);
 
         } else {
             String time = StringUtil.getCurrentTime();

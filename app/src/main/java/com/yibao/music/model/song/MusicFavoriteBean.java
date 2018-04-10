@@ -7,7 +7,7 @@ package com.yibao.music.model.song;
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/20 14:31
- * @描述： {TODO}
+ * @描述： {仅作为Rxbus发送数据的标识 }
  */
 
 public class MusicFavoriteBean {

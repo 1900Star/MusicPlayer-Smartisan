@@ -244,7 +244,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:contentDescription="@null"
-            android:src="@drawable/music_favorite_selector" />
+            android:src="@drawable/music_qqbar_favorite_selector" />
     </LinearLayout>
 
     <View

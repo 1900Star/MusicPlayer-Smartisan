@@ -285,4 +285,52 @@ public class MusicBean
         parcel.writeInt(issueYear);
         parcel.writeInt(cureetPosition);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MusicBean musicBean = (MusicBean) o;
+
+        if (albumId != musicBean.albumId) return false;
+        if (addTime != musicBean.addTime) return false;
+        if (duration != musicBean.duration) return false;
+        if (isFavorite != musicBean.isFavorite) return false;
+        if (playFrequency != musicBean.playFrequency) return false;
+        if (songScore != musicBean.songScore) return false;
+        if (playStatus != musicBean.playStatus) return false;
+        if (issueYear != musicBean.issueYear) return false;
+        if (cureetPosition != musicBean.cureetPosition) return false;
+        if (id != null ? !id.equals(musicBean.id) : musicBean.id != null) return false;
+        if (title != null ? !title.equals(musicBean.title) : musicBean.title != null) return false;
+        if (artist != null ? !artist.equals(musicBean.artist) : musicBean.artist != null)
+            return false;
+        if (album != null ? !album.equals(musicBean.album) : musicBean.album != null) return false;
+        if (time != null ? !time.equals(musicBean.time) : musicBean.time != null) return false;
+        if (songUrl != null ? !songUrl.equals(musicBean.songUrl) : musicBean.songUrl != null)
+            return false;
+        return firstChar != null ? firstChar.equals(musicBean.firstChar) : musicBean.firstChar == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (artist != null ? artist.hashCode() : 0);
+        result = 31 * result + (album != null ? album.hashCode() : 0);
+        result = 31 * result + (int) (albumId ^ (albumId >>> 32));
+        result = 31 * result + (int) (addTime ^ (addTime >>> 32));
+        result = 31 * result + (int) (duration ^ (duration >>> 32));
+        result = 31 * result + (time != null ? time.hashCode() : 0);
+        result = 31 * result + (songUrl != null ? songUrl.hashCode() : 0);
+        result = 31 * result + (firstChar != null ? firstChar.hashCode() : 0);
+        result = 31 * result + (isFavorite ? 1 : 0);
+        result = 31 * result + playFrequency;
+        result = 31 * result + songScore;
+        result = 31 * result + playStatus;
+        result = 31 * result + issueYear;
+        result = 31 * result + cureetPosition;
+        return result;
+    }
 }

@@ -166,5 +166,34 @@ public class MusicInfo
         parcel.writeInt(playStatus);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        MusicInfo musicInfo = (MusicInfo) o;
+
+        if (albumId != musicInfo.albumId) return false;
+        if (playStatus != musicInfo.playStatus) return false;
+        if (id != null ? !id.equals(musicInfo.id) : musicInfo.id != null) return false;
+        if (title != null ? !title.equals(musicInfo.title) : musicInfo.title != null) return false;
+        if (artist != null ? !artist.equals(musicInfo.artist) : musicInfo.artist != null)
+            return false;
+        if (album != null ? !album.equals(musicInfo.album) : musicInfo.album != null) return false;
+        if (time != null ? !time.equals(musicInfo.time) : musicInfo.time != null) return false;
+        return songUrl != null ? songUrl.equals(musicInfo.songUrl) : musicInfo.songUrl == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (artist != null ? artist.hashCode() : 0);
+        result = 31 * result + (album != null ? album.hashCode() : 0);
+        result = 31 * result + (int) (albumId ^ (albumId >>> 32));
+        result = 31 * result + (time != null ? time.hashCode() : 0);
+        result = 31 * result + (songUrl != null ? songUrl.hashCode() : 0);
+        result = 31 * result + playStatus;
+        return result;
+    }
 }

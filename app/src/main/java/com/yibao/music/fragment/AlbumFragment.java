@@ -104,9 +104,8 @@ public class AlbumFragment extends BaseFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_album_category_random_paly:
-                randomPlayMusic();
-                break;
             case R.id.iv_album_category_paly:
+                randomPlayMusic();
                 break;
             case R.id.album_category_list_ll:
                 switchCategory(Constants.NUMBER_ZOER);

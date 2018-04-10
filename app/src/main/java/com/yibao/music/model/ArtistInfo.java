@@ -135,4 +135,33 @@ public class ArtistInfo implements Parcelable, Comparable<ArtistInfo> {
         parcel.writeInt(year);
         parcel.writeLong(albumId);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ArtistInfo that = (ArtistInfo) o;
+
+        if (albumCount != that.albumCount) return false;
+        if (songCount != that.songCount) return false;
+        if (year != that.year) return false;
+        if (albumId != that.albumId) return false;
+        if (artist != null ? !artist.equals(that.artist) : that.artist != null) return false;
+        if (albumName != null ? !albumName.equals(that.albumName) : that.albumName != null)
+            return false;
+        return firstChar != null ? firstChar.equals(that.firstChar) : that.firstChar == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = artist != null ? artist.hashCode() : 0;
+        result = 31 * result + (albumName != null ? albumName.hashCode() : 0);
+        result = 31 * result + albumCount;
+        result = 31 * result + songCount;
+        result = 31 * result + (firstChar != null ? firstChar.hashCode() : 0);
+        result = 31 * result + year;
+        result = 31 * result + (int) (albumId ^ (albumId >>> 32));
+        return result;
+    }
 }
