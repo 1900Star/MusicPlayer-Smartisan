@@ -46,7 +46,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
                     android:id="@+id/tv_name"
-                    android:layout_toRightOf="@id/about_header_iv"
+                    android:layout_toEndOf="@id/about_header_iv"
                     android:text="@string/about_name"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/about_title"
@@ -61,10 +61,8 @@
                     android:layout_marginBottom="6dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
-                    android:layout_toRightOf="@id/about_header_iv"
+                    android:layout_toEndOf="@id/about_header_iv"
                     android:autoLink="web"
-
-
                     android:linksClickable="true"
                     android:id="@+id/tv_github"
                     android:text="@string/about_github"
@@ -78,10 +76,9 @@
                     android:layout_below="@id/tv_github"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="10dp"
-                    android:layout_toRightOf="@id/about_header_iv"
+                    android:layout_toEndOf="@id/about_header_iv"
                     android:text="@string/about_sign"
                     android:textColor="@color/colorGreen"
-
                     android:textSize="@dimen/about_sign" />
 
             </RelativeLayout>
@@ -91,10 +88,7 @@
                 android:layout_height="wrap_content"
 
                 android:background="@drawable/shape_about_card"
-
-
                 android:orientation="vertical">
-
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -106,49 +100,42 @@
                     android:textColor="@color/aboutTitle"
                     android:textSize="@dimen/about_title"
                     android:textStyle="bold"
-
                     android:typeface="serif" />
-
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-
                     android:lineSpacingExtra="2dp"
                     android:text="@string/about_project_introduce"
                     android:textColor="@color/aboutContent"
                     android:textIsSelectable="true"
-
-
                     android:textSize="@dimen/about_content" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:autoLink="web"
                     android:linksClickable="true"
                     android:text="@string/preject_url"
                     android:textColorLink="@color/tabbarDownTv"
                     android:textIsSelectable="true"
-                    android:textSize="@dimen/about_content"
-                    android:layout_marginStart="10dp" />
+                    android:textSize="@dimen/about_content" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:autoLink="email"
                     android:linksClickable="true"
                     android:text="@string/email"
                     android:textColor="@color/tabbarDownTv"
                     android:textColorLink="@color/tabbarDownTv"
                     android:textIsSelectable="true"
-                    android:textSize="@dimen/about_content"
-                    android:layout_marginStart="10dp" />
+                    android:textSize="@dimen/about_content" />
 
 
             </LinearLayout>
