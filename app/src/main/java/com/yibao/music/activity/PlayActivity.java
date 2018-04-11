@@ -52,7 +52,7 @@ import butterknife.Unbinder;
  * @描述： {TODO}
  */
 
-public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteListener {
+public class PlayActivity extends BasePlayActivity {
     @BindView(R.id.titlebar_down)
     ImageView mTitlebarDown;
     @BindView(R.id.play_song_name)
@@ -143,8 +143,6 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
                     break;
 
             }
-
-
             return true;
         });
 
@@ -154,23 +152,24 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
     private void initSongInfo() {
         Bundle bundle = getIntent().getBundleExtra("bundle");
         mCurrenMusicInfo = bundle.getParcelable("info");
-
-        mPlaySongName.setText(mCurrenMusicInfo.getTitle());
-        mPlayArtistName.setText(mCurrenMusicInfo.getArtist());
-        mTvLyrics.setLrcFile(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
-        mAlbumUrl = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId())
-                .toString();
-        setAlbulm(mAlbumUrl);
+        if (mCurrenMusicInfo != null) {
+            mPlaySongName.setText(mCurrenMusicInfo.getTitle());
+            mPlayArtistName.setText(mCurrenMusicInfo.getArtist());
+            mTvLyrics.setLrcFile(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
+            mAlbumUrl = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId())
+                    .toString();
+            setAlbulm(mAlbumUrl);
+        }
     }
 
-    public void checkCurrentIsFavorite() {
-            if (mCurrenMusicInfo.isFavorite()) {
-                mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
+    public void checkCurrentIsFavorite(boolean cureentMusicIsFavorite) {
+        if (cureentMusicIsFavorite) {
+            mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
 //                mIvFavoriteMusic.setImageResource(R.drawable.btn_favorite_red_selector);
-            } else {
-                mIvFavoriteMusic.setImageResource(R.drawable.music_qqbar_favorite_selector);
+        } else {
+            mIvFavoriteMusic.setImageResource(R.drawable.music_qqbar_favorite_selector);
 //                mIvFavoriteMusic.setImageResource(R.drawable.btn_favorite_gray_selector);
-            }
+        }
     }
 
     private void initData() {
@@ -184,12 +183,9 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
         //设置播放模式图片
         int mode = SharePrefrencesUtil.getMusicMode(this);
         updatePlayModeImage(mode, mMusicPlayerMode);
-        //音乐设置
-        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        mSbVolume.setMax(maxVolume);
-        int volume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        updateMusicVolume(volume);
+        //音量设置
+        mSbVolume.setMax(mMaxVolume);
+        updateMusicVolume(mVolume);
     }
 
     private void updateMusicVolume(int volume) {
@@ -263,13 +259,12 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
     /**
      * //设置歌曲名和歌手名
      *
-     * @param info
+     * @param info k
      */
     private void perpareMusic(MusicBean info) {
 
-        LogUtil.d("更新 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
         mCurrenMusicInfo = info;
-        checkCurrentIsFavorite();
+        checkCurrentIsFavorite(mCurrenMusicInfo.isFavorite());
         initAnimation();
         mPlaySongName.setText(info.getTitle());
         mPlayArtistName.setText(info.getArtist());
@@ -291,7 +286,6 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
     }
 
     private void switchPlayState() {
-        LogUtil.d("============== isShowLyrics", isShowLyrics + "");
         if (audioBinder.isPlaying()) {
             //当前播放  暂停
             audioBinder.pause();
@@ -357,7 +351,6 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
                 break;
             case R.id.rotate_rl:
                 // 按下音乐停止播放  动画停止 ，抬起恢复
-                LogUtil.d("按下音乐停止播放  动画停止 ，抬起恢复");
 //                switchPlayState();
                 break;
             case R.id.tv_lyrics:
@@ -384,20 +377,19 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
                 audioBinder.playNext();
                 break;
             case R.id.iv_favorite_music:
-                favoritMusic();
+                favoriteMusic();
                 break;
             default:
                 break;
         }
     }
 
-    private void favoritMusic() {
+    private void favoriteMusic() {
         if (mCurrenMusicInfo.isFavorite()) {
             mCurrenMusicInfo.setIsFavorite(false);
             mMusicDao.update(mCurrenMusicInfo);
             mIvFavoriteMusic.setImageResource(R.drawable.music_qqbar_favorite_selector);
 //            mIvFavoriteMusic.setImageResource(R.drawable.btn_favorite_gray_selector);
-            mBus.post(new MusicFavoriteBean());
 
         } else {
             String time = StringUtil.getCurrentTime();
@@ -406,7 +398,6 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
             mMusicDao.update(mCurrenMusicInfo);
             mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
 //            mIvFavoriteMusic.setImageResource(R.drawable.btn_favorite_red_selector);
-            mBus.post(new MusicFavoriteBean());
 
         }
     }
@@ -441,6 +432,7 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
     }
 
 
+    @SuppressLint("CheckResult")
     private void rxViewClick() {
         RxView.clicks(mTitlebarPlayList)
                 .throttleFirst(1, TimeUnit.SECONDS)
@@ -473,7 +465,7 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
     /**
      * 广播监听系统音量，同时更新VolumeSeekBar
      *
-     * @param currVolume
+     * @param currVolume c
      */
     @Override
     public void updataVolumeProgresse(int currVolume) {
@@ -482,14 +474,14 @@ public class PlayActivity extends BasePlayActivity implements OnCheckFavoriteLis
 
     @Override
     public void updataFavoriteStatus() {
-//        checkCurrentIsFavorite();
-
+        boolean updataFavorite = mMusicDao.load(mCurrenMusicInfo.getId()).isFavorite();
+        checkCurrentIsFavorite(updataFavorite);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        checkCurrentIsFavorite();
+        checkCurrentIsFavorite(mCurrenMusicInfo.isFavorite());
     }
 
     @Override

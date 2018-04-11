@@ -18,6 +18,7 @@ import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.adapter.BottomSheetAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
+import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.model.BottomSheetStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
@@ -85,10 +86,8 @@ public class MusicBottomSheetDialog
         mBottomListContent.addView(mRecyclerView);
         dialog.setContentView(view);
         dialog.setCancelable(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            dialog.getWindow()
-                    .addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
+        dialog.getWindow()
+                .addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         dialog.setCanceledOnTouchOutside(true);
         mBehavior = BottomSheetBehavior.from((View) view.getParent());
     }
@@ -123,7 +122,6 @@ public class MusicBottomSheetDialog
                 break;
             case R.id.bottom_sheet_bar_clear:
                 clearFavoriteMusic();
-
                 break;
             default:
                 break;
@@ -138,11 +136,10 @@ public class MusicBottomSheetDialog
         }
 
         mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        MusicApplication.getIntstance().bus().post(new MusicFavoriteBean());
 
-//        if (mContext instanceof OnCheckFavoriteListener) {
-//            ((OnCheckFavoriteListener) mContext).updataFavoriteStatus();
-//        }
+        if (mContext instanceof OnCheckFavoriteListener) {
+            ((OnCheckFavoriteListener) mContext).updataFavoriteStatus();
+        }
     }
 
     private void backTop() {

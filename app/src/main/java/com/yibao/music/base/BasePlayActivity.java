@@ -13,6 +13,7 @@ import android.widget.SeekBar;
 
 import com.yibao.music.R;
 import com.yibao.music.activity.MusicActivity;
+import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.base.listener.SeekBarChangeListtener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
@@ -40,7 +41,7 @@ import io.reactivex.schedulers.Schedulers;
  * @描述： {仅仅针对 PlayActivity抽出的基类,目的在于减少PlayActivity中的代码}
  */
 
-public abstract class BasePlayActivity extends BaseActivity {
+public abstract class BasePlayActivity extends BaseActivity  implements OnCheckFavoriteListener{
 
     protected AudioManager mAudioManager;
     protected int mMaxVolume;
@@ -51,6 +52,7 @@ public abstract class BasePlayActivity extends BaseActivity {
     protected Disposable mDisposablePlayTime;
     protected Disposable mDisposableLyrics;
     protected CompositeDisposable mCompositeDisposable;
+    protected int mVolume;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,7 +74,6 @@ public abstract class BasePlayActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        LogUtil.d("===========baseplay Acitivyt   onResume");
         upDataPlayProgress();
         updataMusicTitle();
         recivewServiecInfo();
@@ -122,7 +123,7 @@ public abstract class BasePlayActivity extends BaseActivity {
     /**
      * 接收Service发的信息，时时更新播放按钮的状态
      *
-     * @param musicStatusBean
+     * @param musicStatusBean k
      */
     protected abstract void refreshAllPlayBtn(MusicStatusBean musicStatusBean);
 
@@ -138,7 +139,7 @@ public abstract class BasePlayActivity extends BaseActivity {
     /**
      * 更新音乐的Title和歌手
      *
-     * @param info
+     * @param info k
      */
     protected abstract void updataCurrentTitle(MusicBean info);
 
@@ -163,6 +164,7 @@ public abstract class BasePlayActivity extends BaseActivity {
         mWakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Music  Lock");
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mMaxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        mVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         mCompositeDisposable = new CompositeDisposable();
     }
 

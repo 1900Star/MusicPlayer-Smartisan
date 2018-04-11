@@ -25,17 +25,17 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     @Override public void onBackPressed() {
-        if (!Flow.get(this).goBack()) {
-            super.onBackPressed();
-        }
-        try {
-            Intent intent = new Intent(this, AidlService.class);
-
-            int add = mStub.add(2, 9);
-            bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+//        if (!Flow.get(this).goBack()) {
+//            super.onBackPressed();
+//        }
+//        try {
+//            Intent intent = new Intent(this, AidlService.class);
+//
+//            int add = mStub.add(2, 9);
+//            bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
+//        } catch (RemoteException e) {
+//            e.printStackTrace();
+//        }
     }
     ServiceConnection mServiceConnection=new ServiceConnection() {
         @Override

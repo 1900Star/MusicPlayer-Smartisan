@@ -49,7 +49,6 @@ public class MusicListUtil {
         int addDed = cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED);
         int musicType = cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE);
         int issueYear = cursor.getColumnIndex(MediaStore.Audio.Media.YEAR);
-
         for (int i = 0, p = cursor.getCount(); i < p; i++) {
             cursor.moveToNext();
             MusicBean info = new MusicBean();

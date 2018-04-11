@@ -1,6 +1,7 @@
 package com.yibao.music.activity;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -61,6 +62,7 @@ import io.reactivex.schedulers.Schedulers;
  * Des：${音乐列表界面}
  * Time:2017/5/30 13:27
  */
+@SuppressLint("CheckResult")
 public class MusicActivity
         extends BaseActivity
         implements OnMusicItemClickListener, OnBackHandlePressedListener {
@@ -153,7 +155,6 @@ public class MusicActivity
 
     private QqBarPagerAdapter mQqBarPagerAdapter;
     private BaseFragment mBaseFragment;
-    private boolean isNotDetailsPage = true;
 
 
     @Override
@@ -177,18 +178,7 @@ public class MusicActivity
         toolbar.setNavigationOnClickListener(v -> MusicActivity.this.finish());
     }
 
-    public void checkCurrentIsFavorite(MusicBean currentMusicBean) {
-        if (currentMusicBean != null) {
-            if (!currentMusicBean.isFavorite()) {
-                mMusicQqBarFavorite.setImageResource(R.drawable.music_qqbar_favorite_selector);
-                mMusicFloatingFavorite.setImageResource(R.drawable.btn_favorite_gray_selector);
-            } else {
-                mMusicQqBarFavorite.setImageResource(R.mipmap.favorite_yes);
-                mMusicFloatingFavorite.setImageResource(R.drawable.btn_favorite_red_selector);
 
-            }
-        }
-    }
 
     private void initData() {
         mMusicItems = initMusicData();
@@ -341,8 +331,9 @@ public class MusicActivity
         readyMusic();
     }
 
+
     private void openMusicPlayDialogFag() {
-        mRxViewDisposable = RxView.clicks(mSmartisanMusicBar)
+        RxView.clicks(mSmartisanMusicBar)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribe(o -> readyMusic());
     }
@@ -434,7 +425,7 @@ public class MusicActivity
      */
     private void perpareItem(MusicBean musicItem) {
         mCurrentMusicBean = musicItem;
-        checkCurrentIsFavorite(musicItem);
+        checkCurrentIsFavorite(musicItem, mMusicQqBarFavorite, mMusicFloatingFavorite);
         mQqBarPagerAdapter.setData(initMusicData());
         mMusicSlideViewPager.setCurrentItem(musicItem.getCureetPosition(), false);
         //更新音乐标题
@@ -557,10 +548,10 @@ public class MusicActivity
                             break;
                         case R.id.music_floating_favorite:
 
-                            favoritMusic();
+                            favoriteMusic(mCurrentMusicBean, mMusicQqBarFavorite, mMusicFloatingFavorite);
                             break;
                         case R.id.music_floating_pager_favorite:
-                            favoritMusic();
+                            favoriteMusic(mCurrentMusicBean, mMusicQqBarFavorite, mMusicFloatingFavorite);
                             break;
                         case R.id.music_floating_pager_play:
                             switchPlayState();
@@ -581,25 +572,6 @@ public class MusicActivity
         }
 
 
-    }
-
-    private void favoritMusic() {
-        if (mCurrentMusicBean.isFavorite()) {
-            mCurrentMusicBean.setIsFavorite(false);
-            mMusicDao.update(mCurrentMusicBean);
-            mMusicQqBarFavorite.setImageResource(R.drawable.music_qqbar_favorite_selector);
-            mMusicFloatingFavorite.setImageResource(R.drawable.btn_favorite_gray_selector);
-
-        } else {
-            String time = StringUtil.getCurrentTime();
-            mCurrentMusicBean.setTime(time);
-            mCurrentMusicBean.setIsFavorite(true);
-            mMusicDao.update(mCurrentMusicBean);
-
-            mMusicFloatingFavorite.setImageResource(R.drawable.btn_favorite_red_selector);
-            mMusicQqBarFavorite.setImageResource(R.mipmap.favorite_yes);
-
-        }
     }
 
     private void switchMusicTabbar(int flag) {
@@ -646,8 +618,8 @@ public class MusicActivity
     /**
      * 将Tabbar全部置于未选种状态
      *
-     * @param flag
-     * @param titleResourceId
+     * @param flag            选中的Tag
+     * @param titleResourceId title
      */
     private void setAllTabbarNotPressed(int flag, int titleResourceId) {
         mTvMusicToolbarTitle.setText(titleResourceId);
@@ -729,7 +701,7 @@ public class MusicActivity
         if (mAnimator != null && audioBinder.isPlaying()) {
             mAnimator.resume();
         }
-        checkCurrentIsFavorite(mCurrentMusicBean);
+        checkCurrentIsFavorite(mCurrentMusicBean, mMusicQqBarFavorite, mMusicFloatingFavorite);
     }
 
     @Override
