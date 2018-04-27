@@ -16,6 +16,7 @@ import com.yibao.music.fragment.dialogfrag.AddListDialog;
 import com.yibao.music.model.AddNewListBean;
 import com.yibao.music.model.MusicInfo;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 
 import java.util.List;
 
@@ -58,6 +59,7 @@ public class PlayListFragment extends BaseFragment {
         mDisposable = new CompositeDisposable();
 
     }
+
 
     @Nullable
     @Override

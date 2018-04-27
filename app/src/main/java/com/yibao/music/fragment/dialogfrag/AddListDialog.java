@@ -33,6 +33,7 @@ import org.w3c.dom.Text;
 
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -62,6 +63,7 @@ public class AddListDialog
      */
     private TextView mTvAddListContinue;
     private InputMethodManager mInputMethodManager;
+    private Disposable mSubscribe;
 
     public static AddListDialog newInstance() {
 
@@ -114,46 +116,42 @@ public class AddListDialog
 
     private void initListener() {
         mTvAddListCancle.setOnClickListener(this);
-
         mEditAddList.setSelection(mEditAddList.length());
 
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    @SuppressLint("CheckResult")
     private void initView() {
         mEditAddList = mView.findViewById(R.id.edit_add_list);
         mTvAddListCancle = mView.findViewById(R.id.tv_add_list_cancle);
         mTvAddListContinue = mView.findViewById(R.id.tv_add_list_continue);
         TextView noEdit = mView.findViewById(R.id.tv_add_list_continue_no);
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+        handSoftInput(noEdit);
+    }
+
+    private void handSoftInput(TextView noEdit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mInputMethodManager = (InputMethodManager) getContext()
                     .getSystemService(Context.INPUT_METHOD_SERVICE);
             showAndHintSoftInput(2, InputMethodManager.SHOW_FORCED);
         }
-        RxTextView.textChangeEvents(mEditAddList)
+        mSubscribe = RxTextView.textChangeEvents(mEditAddList)
                 .map(textViewTextChangeEvent -> TextUtils.isEmpty((textViewTextChangeEvent.text()))).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(aBoolean -> {
-            if (aBoolean) {
-                noEdit.setVisibility(View.VISIBLE);
-                mTvAddListContinue.setVisibility(View.INVISIBLE);
-                mTvAddListContinue.setOnClickListener(null);
-            } else {
-                noEdit.setVisibility(View.INVISIBLE);
-                mTvAddListContinue.setVisibility(View.VISIBLE);
-                mTvAddListContinue.setOnClickListener(this);
-            }
+                    if (aBoolean) {
+                        noEdit.setVisibility(View.VISIBLE);
+                        mTvAddListContinue.setVisibility(View.INVISIBLE);
+                        mTvAddListContinue.setOnClickListener(null);
+                    } else {
+                        noEdit.setVisibility(View.INVISIBLE);
+                        mTvAddListContinue.setVisibility(View.VISIBLE);
+                        mTvAddListContinue.setOnClickListener(this);
+                    }
 
-        });
+                });
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        showAndHintSoftInput(1, InputMethodManager.RESULT_UNCHANGED_SHOWN);
-    }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
@@ -166,7 +164,15 @@ public class AddListDialog
             mInputMethodManager.toggleSoftInput(i,
                     resultUnchangedShown);
 
+        }
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mSubscribe != null) {
+
+            mSubscribe.dispose();
         }
     }
 }
