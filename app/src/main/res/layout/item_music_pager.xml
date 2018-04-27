@@ -16,7 +16,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp"
         android:gravity="center_vertical"
         android:layout_weight="1"
         android:orientation="vertical">
@@ -28,7 +28,7 @@
             android:layout_marginTop="2dp"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
-            android:maxLength="18"
+            android:maxLength="22"
             android:singleLine="true"
             android:textColor="@color/textDes"
             android:textSize="@dimen/music_loating_title" />
@@ -40,7 +40,7 @@
             android:layout_marginTop="4dp"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
-            android:maxLength="18"
+            android:maxLength="25"
             android:singleLine="true"
             android:textColor="@color/textName"
             android:textSize="@dimen/music_loating_name" />

@@ -106,6 +106,7 @@ public class PlayActivity extends BasePlayActivity {
         initSongInfo();
         initData();
         initListener();
+
     }
 
     @Override
@@ -129,22 +130,24 @@ public class PlayActivity extends BasePlayActivity {
                     .show(getFragmentManager(), "album");
             return true;
         });
-        mRotateRl.setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    switchPlayState();
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    break;
-                case MotionEvent.ACTION_UP:
-                    switchPlayState();
-                    break;
-                default:
-                    break;
-
-            }
-            return true;
-        });
+//        mRotateRl.setOnTouchListener((v, event) -> {
+//            switch (event.getAction()) {
+//                case MotionEvent.ACTION_DOWN:
+//                    if (audioBinder.isPlaying()) {
+//                        switchPlayState();
+//                    }
+//                    break;
+//                case MotionEvent.ACTION_MOVE:
+//                    break;
+//                case MotionEvent.ACTION_UP:
+//                    switchPlayState();
+//                    break;
+//                default:
+//                    break;
+//
+//            }
+//            return true;
+//        });
 
     }
 
@@ -423,7 +426,6 @@ public class PlayActivity extends BasePlayActivity {
             // 开始滚动歌词
             if (audioBinder.isPlaying()) {
                 startRollPlayLyrics(mTvLyrics);
-
             }
 
             mTvLyrics.setVisibility(View.VISIBLE);

@@ -2,7 +2,9 @@ package com.yibao.music.service;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.model.MusicBean;
@@ -39,6 +41,7 @@ public class LoadMusicDataService extends IntentService {
         super("LoadMusicDataServices");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         List<MusicBean> dataList = MusicListUtil.getMusicDataList();
@@ -48,15 +51,13 @@ public class LoadMusicDataService extends IntentService {
             mMusicDao.insert(bean);
             MusicApplication.getIntstance().bus().post(new MusicCountBean(songCount, songSum));
         });
-//
-//        for (MusicBean info : dataList) {
-//            s++;
-//            mMusicDao.insert(info);
-//            MusicApplication.getIntstance().bus().post(new MusicCountBean(s, size));
-//        }
         LogUtil.d("LoadMusicDataServices===== 加载数据完成");
 
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopSelf();
+    }
 }

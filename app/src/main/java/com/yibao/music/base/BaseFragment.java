@@ -42,7 +42,6 @@ public abstract class BaseFragment extends Fragment {
     public MusicInfoDao mMusicInfoDao;
     protected boolean isShowDetailsView = false;
     private OnBackHandlePressedListener mHandlePressedListener;
-    public List<MusicBean> mMusicAddtimeList;
 
     protected BaseFragment() {
         mMusicBeanDao = MusicApplication.getIntstance().getMusicDao();
@@ -73,9 +72,7 @@ public abstract class BaseFragment extends Fragment {
         if (mAlbumList == null) {
             mAlbumList = MusicListUtil.getAlbumList(mSongList);
         }
-        if (mMusicAddtimeList == null) {
-            mMusicAddtimeList = MusicListUtil.sortMusicAddtime(mMusicBeanDao.queryBuilder().list());
-        }
+
         if (mArtistList == null) {
             mArtistList = MusicListUtil.getArtistList(mSongList);
 

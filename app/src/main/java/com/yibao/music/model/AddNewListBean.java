@@ -7,7 +7,7 @@ package com.yibao.music.model;
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/25 23:29
- * @描述： {TODO}
+ * @描述： {仅作为通知添加列表更新的消息发送载体}
  */
 
 public class AddNewListBean {

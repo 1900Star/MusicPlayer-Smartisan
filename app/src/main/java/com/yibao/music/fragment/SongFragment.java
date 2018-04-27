@@ -1,5 +1,7 @@
 package com.yibao.music.fragment;
 
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -60,13 +62,13 @@ public class SongFragment extends BaseFragment {
         unbinder = ButterKnife.bind(this, view);
         initData(true, Constants.NUMBER_ZOER);
         initListener();
+
         return view;
     }
 
     private void initListener() {
         mSongAdapter.setOnItemMenuListener(() -> MusicBottomSheetDialog.newInstance().getBottomDialog(getActivity()));
     }
-
 
 
     /**
@@ -76,10 +78,10 @@ public class SongFragment extends BaseFragment {
      * @param isShowStickyView 控制列表的StickyView是否显示，0 显示 ，1 ：不显示
      */
     private void initData(boolean isShowSlidebar, int isShowStickyView) {
-        List<MusicBean> musicAddtimeList = MusicListUtil.sortMusicAddtime(mMusicBeanDao.queryBuilder().list());
         if (isShowStickyView == Constants.NUMBER_ZOER) {
-            mSongAdapter = new SongAdapter(mActivity, mSongList, isShowStickyView);
+            mSongAdapter = new SongAdapter(mActivity, MusicListUtil.sortMusicAbc(mSongList), isShowStickyView);
         } else if (isShowStickyView == Constants.NUMBER_ONE) {
+            List<MusicBean> musicAddtimeList = MusicListUtil.sortMusicAddtime(mMusicBeanDao.queryBuilder().list());
             mSongAdapter = new SongAdapter(mActivity, musicAddtimeList, isShowStickyView);
         }
         mMusciView.setAdapter(mActivity, Constants.NUMBER_ONE, isShowSlidebar, mSongAdapter);

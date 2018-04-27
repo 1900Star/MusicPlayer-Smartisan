@@ -19,12 +19,16 @@ import flow.Flow;
  */
 public class SearchActivity extends AppCompatActivity {
     IMusicAidlInterface.Stub mStub;
-    @Override protected void attachBaseContext(Context baseContext) {
+
+    @Override
+    protected void attachBaseContext(Context baseContext) {
         baseContext = Flow.configure(baseContext, this).install();
         super.attachBaseContext(baseContext);
     }
 
-    @Override public void onBackPressed() {
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 //        if (!Flow.get(this).goBack()) {
 //            super.onBackPressed();
 //        }
@@ -37,7 +41,8 @@ public class SearchActivity extends AppCompatActivity {
 //            e.printStackTrace();
 //        }
     }
-    ServiceConnection mServiceConnection=new ServiceConnection() {
+
+    ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mStub = (IMusicAidlInterface.Stub) iBinder;

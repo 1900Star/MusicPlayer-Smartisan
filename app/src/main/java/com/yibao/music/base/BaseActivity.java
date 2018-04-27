@@ -16,6 +16,7 @@ import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.StringUtil;
 
@@ -55,7 +56,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-    protected void checkCurrentIsFavorite(MusicBean currentMusicBean, ImageView qqFavorite,ImageView smartisanFavorite) {
+    protected void checkCurrentIsFavorite(MusicBean currentMusicBean, ImageView qqFavorite, ImageView smartisanFavorite) {
         mCurrentIsFavorite = mMusicDao.load(currentMusicBean.getId()).isFavorite();
         if (mCurrentIsFavorite) {
             qqFavorite.setImageResource(R.mipmap.favorite_yes);
@@ -67,7 +68,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-    protected void favoriteMusic(MusicBean currentMusicBean, ImageView qqFavorite,ImageView smartisanFavorite) {
+    protected void favoriteMusic(MusicBean currentMusicBean, ImageView qqFavorite, ImageView smartisanFavorite) {
         mCurrentIsFavorite = mMusicDao.load(currentMusicBean.getId()).isFavorite();
         if (mCurrentIsFavorite) {
             currentMusicBean.setIsFavorite(false);
@@ -85,12 +86,6 @@ public class BaseActivity extends AppCompatActivity {
 
         }
     }
-
-
-
-
-
-
 
 
     /**

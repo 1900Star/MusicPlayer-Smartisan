@@ -6,7 +6,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.model.MusicLyrBean;
@@ -23,13 +22,13 @@ import java.util.ArrayList;
  * @author Stran
  */
 public class LyricsView
-        extends TextView {
+        extends android.support.v7.widget.AppCompatTextView {
 
     private Paint mPaint;
     private int mViewW;
     private int mViewH;
     private String mCurrentLrc;
-    private static ArrayList<MusicLyrBean> mList;
+    private static ArrayList<MusicLyrBean> musicLyrList;
     private static int centerLine;
     private float mBigText;
     private int mLyricsSelected;
@@ -37,7 +36,8 @@ public class LyricsView
     private int mLyricsNormal;
     private int lineHeight;
     private int duration;
-    private int progress;
+    private int currentProgress;
+    private Rect mBounds;
 
     public LyricsView(Context context) {
         super(context);
@@ -57,6 +57,7 @@ public class LyricsView
 
     private void initView() {
         mPaint = new Paint();
+        mBounds = new Rect();
         mLyricsSelected = getResources().getColor(R.color.lyricsSelected);
         mLyricsNormal = getResources().getColor(R.color.lyricsNormal);
         mBigText = getResources().getDimension(R.dimen.bigLyrics);
@@ -67,7 +68,7 @@ public class LyricsView
         mPaint.setAntiAlias(true);
         mPaint.setColor(mLyricsSelected);
         mPaint.setTextSize(mBigText);
-        mList = new ArrayList<>();
+        musicLyrList = new ArrayList<>();
 
     }
 
@@ -83,7 +84,7 @@ public class LyricsView
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (mList == null || mList.size() == 1 || mList.size() == 0) {
+        if (musicLyrList == null || musicLyrList.size() == 1 || musicLyrList.size() == 0) {
 
             drawSingLine(canvas);
         } else {
@@ -95,25 +96,25 @@ public class LyricsView
     /**
      * 绘制多行歌词。
      *
-     * @param canvas
+     * @param canvas c
      */
     private void drawMunitLine(Canvas canvas) {
         //        中间行y=中间行开始位置-移的距离
         int lineTime;
         //        最后一行居中
-        if (centerLine == mList.size() - 1) {
+        if (centerLine == musicLyrList.size() - 1) {
             //     行可用时间 = 总进度 - 行开始时间
-            lineTime = duration - mList.get(centerLine)
+            lineTime = duration - musicLyrList.get(centerLine)
                     .getStartTime();
         } else {
 //                           其它行居中，
 //            行可用时间 = 下一行开始 时间 - 居中行开始 时间
-            lineTime = mList.get(centerLine + 1)
-                    .getStartTime() - mList.get(centerLine)
+            lineTime = musicLyrList.get(centerLine + 1)
+                    .getStartTime() - musicLyrList.get(centerLine)
                     .getStartTime();
         }
         //          播放时间偏移 = 播放进度 - 居中开始时间
-        int offsetTime = progress - mList.get(centerLine)
+        int offsetTime = currentProgress - musicLyrList.get(centerLine)
                 .getStartTime();
         //           播放时间比 = 播放时间偏移/行可用时间
         float offsetTimePercent = offsetTime / (float) lineTime;
@@ -121,14 +122,15 @@ public class LyricsView
         //          y方向移动的距离 = 行高*播放时间比
         int offsetY = (int) (lineHeight * offsetTimePercent);
         //          中间行歌词
-        String centerLrc = mList.get(centerLine)
+        String centerLrc = musicLyrList.get(centerLine)
                 .getContent();
-        Rect bounds = new Rect();
-        mPaint.getTextBounds(centerLrc, 0, centerLrc.length(), bounds);
+        // 将当前歌词传送给QqPagerBar,时时更新歌词。
+        // 歌词绘制的边界
+        mPaint.getTextBounds(centerLrc, 0, centerLrc.length(), mBounds);
         //          中间行 y view 高度一半 + text高度一半
         //          中间行y = 中间行开始 位置 - 移动的距离
-        int centerY = mViewH / 2 + bounds.height() / 2 - offsetY;
-        for (int i = 0; i < mList.size(); i++) {
+        int centerY = mViewH / 2 + mBounds.height() / 2 - offsetY;
+        for (int i = 0; i < musicLyrList.size(); i++) {
             if (i == centerLine) {
                 mPaint.setTextSize(mBigText);
                 mPaint.setColor(mLyricsSelected);
@@ -137,8 +139,10 @@ public class LyricsView
                 mPaint.setTextSize(smallText);
                 mPaint.setColor(mLyricsNormal);
             }
-            mCurrentLrc = mList.get(i)
+            mCurrentLrc = musicLyrList.get(i)
                     .getContent();
+
+
             float textW = mPaint.measureText(mCurrentLrc, 0, mCurrentLrc.length());
 
             float x = mViewW / 2 - textW / 2;
@@ -152,30 +156,32 @@ public class LyricsView
     /**
      * 根据播放时间滚动歌词，将已经播放的歌词滚动出屏幕。
      *
-     * @param progress
-     * @param duration
+     * @param progress p
+     * @param duration d
      */
     public void rollText(int progress, int duration) {
-        if (mList == null || mList.size() == 0) {
+        if (musicLyrList == null || musicLyrList.size() == 0) {
             return;
         }
-        LogUtil.d("==================正在滚动歌词");
-        this.progress = progress;
+        this.currentProgress = progress;
         this.duration = duration;
-        int startTime = mList.get(mList.size() - 1)
+        int startTime = musicLyrList.get(musicLyrList.size() - 1)
                 .getStartTime();
 
         if (progress >= startTime) {
-            centerLine = mList.size() - 1;
+            centerLine = musicLyrList.size() - 1;
         } else {
-            for (int i = 0; i < mList.size() - 1; i++) {
-                if (progress >= mList.get(i)
-                        .getStartTime() && progress < mList.get(i + 1)
-                        .getStartTime()) {
+            for (int i = 0; i < musicLyrList.size() - 1; i++) {
+                boolean b = progress >= musicLyrList.get(i)
+                        .getStartTime() && progress < musicLyrList.get(i + 1)
+                        .getStartTime();
+                if (b) {
                     centerLine = i;
                     break;
                 }
             }
+
+
         }
 //        触发重新绘制
         invalidate();
@@ -184,12 +190,12 @@ public class LyricsView
     /**
      * 根据歌曲名和歌手名查找歌词，并将歌词解析到List里。
      *
-     * @param songName
-     * @param artist
+     * @param songName s
+     * @param artist   a
      */
     public void setLrcFile(String songName, String artist) {
 
-        mList = LyricsUtil.getLyricList(songName, artist);
+        musicLyrList = LyricsUtil.getLyricList(songName, artist);
         //默认剧中行=0
         centerLine = 0;
     }
@@ -204,6 +210,7 @@ public class LyricsView
         float y = mViewH / 2 + bounds.height() / 2;
         canvas.drawText(mCurrentLrc, 0, mCurrentLrc.length(), x, y, mPaint);
     }
+
 
 
 

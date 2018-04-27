@@ -36,10 +36,12 @@ public class MusicBean
     private int playStatus;
     private int issueYear;
     /**
+     * QQ bar上需要时时更新的歌词
+     */
+    private String currentLyrics;
+    /**
      * 这个cureetPosition是给QqPagerAdapter用的，用于切换到指定的位置
      */
-
-
     @Transient
     private int cureetPosition;
 
@@ -69,11 +71,10 @@ public class MusicBean
         cureetPosition = in.readInt();
     }
 
-    @Generated(hash = 206715861)
-    public MusicBean(Long id, String title, String artist, String album,
-                     long albumId, long addTime, long duration, String time, String songUrl,
-                     String firstChar, boolean isFavorite, int playFrequency, int songScore,
-                     int playStatus, int issueYear) {
+    @Generated(hash = 1733221446)
+    public MusicBean(Long id, String title, String artist, String album, long albumId, long addTime,
+            long duration, String time, String songUrl, String firstChar, boolean isFavorite,
+            int playFrequency, int songScore, int playStatus, int issueYear, String currentLyrics) {
         this.id = id;
         this.title = title;
         this.artist = artist;
@@ -89,6 +90,7 @@ public class MusicBean
         this.songScore = songScore;
         this.playStatus = playStatus;
         this.issueYear = issueYear;
+        this.currentLyrics = currentLyrics;
     }
 
 
@@ -332,5 +334,13 @@ public class MusicBean
         result = 31 * result + issueYear;
         result = 31 * result + cureetPosition;
         return result;
+    }
+
+    public String getCurrentLyrics() {
+        return this.currentLyrics;
+    }
+
+    public void setCurrentLyrics(String currentLyrics) {
+        this.currentLyrics = currentLyrics;
     }
 }

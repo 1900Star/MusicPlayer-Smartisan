@@ -28,7 +28,7 @@ public class MusicListUtil {
     /**
      * 从本地获取歌曲的信息，保存在List当中
      *
-     * @return
+     * @return d
      */
     public static List<MusicBean> getMusicDataList() {
         List<MusicBean> musicInfos = new ArrayList<>();
@@ -38,7 +38,7 @@ public class MusicListUtil {
                         null,
                         null,
                         MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
-        int mId = cursor.getColumnIndex(MediaStore.Audio.Media._ID);
+        int musicId = cursor.getColumnIndex(MediaStore.Audio.Media._ID);
         int mTitle = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
         int mArtist = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
         int mAlbum = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
@@ -53,7 +53,7 @@ public class MusicListUtil {
             cursor.moveToNext();
             MusicBean info = new MusicBean();
             // 音乐id
-            long id = cursor.getLong(mId);
+            long mId = cursor.getLong(musicId);
             // 音乐标题
             String title = cursor.getString(mTitle);
             // 艺术家
@@ -75,6 +75,7 @@ public class MusicListUtil {
             if (size > 21600) {
                 String firstChar = String.valueOf(HanziToPinyins.stringToPinyinSpecial(title));
                 info.setFirstChar(firstChar);
+                info.setId(mId);
                 info.setTitle(title);
                 info.setArtist(artist);
                 info.setAlbum(album);
@@ -98,7 +99,7 @@ public class MusicListUtil {
      * @param musicList c
      */
     public static List<MusicBean> sortMusicAddtime(List<MusicBean> musicList) {
-        Collections.sort(musicList, (m1, m2) -> {
+        musicList.sort((m1, m2) -> {
             if (m1 == m2) {
                 return 0;
             }
@@ -126,11 +127,11 @@ public class MusicListUtil {
     /**
      * 按ABCD 首字母排序
      *
-     * @param musicList
+     * @param musicList d
      */
     public static List<MusicBean> sortMusicAbc(List<MusicBean> musicList) {
         String str = "#";
-        Collections.sort(musicList, (m1, m2) -> {
+        musicList.sort((m1, m2) -> {
             if (str.equals(m2.getFirstChar())) {
                 return -1;
             }
