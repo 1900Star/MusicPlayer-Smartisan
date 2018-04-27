@@ -37,6 +37,11 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:background="@color/seekBarN" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,16 +58,33 @@
             android:textColor="@color/text_cancel_selector"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tv_add_list_continue"
+        <RelativeLayout
             android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_weight="1"
-            android:background="@drawable/add_btn_selector"
-            android:gravity="center"
-            android:text="@string/continues"
-            android:textColor="@color/text_cancel_selector"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_add_list_continue_no"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:gravity="center"
+                android:textColor="@color/tabbarTv"
+                android:text="@string/continues"
+                android:textStyle="bold" />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/tv_add_list_continue"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:background="@drawable/add_btn_selector"
+                android:textColor="@color/text_cancel_selector"
+                android:gravity="center"
+                android:text="@string/continues"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
 
     </LinearLayout>
 

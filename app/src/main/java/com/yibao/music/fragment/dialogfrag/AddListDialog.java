@@ -1,12 +1,18 @@
 package com.yibao.music.fragment.dialogfrag;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -14,12 +20,22 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.model.AddNewListBean;
 import com.yibao.music.model.MusicInfo;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SnakbarUtil;
+
+import org.w3c.dom.Text;
+
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Author：Sid
@@ -53,6 +69,7 @@ public class AddListDialog
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -77,39 +94,66 @@ public class AddListDialog
                 dismiss();
                 break;
             case R.id.tv_add_list_continue:
-                String listTitle = mEditAddList.getText().toString().trim();
-                if (!listTitle.isEmpty()) {
-                    MusicApplication.getIntstance().getMusicInfoDao().insert(new MusicInfo(listTitle));
-                    MusicApplication.getIntstance().bus().post(new AddNewListBean());
-                    dismiss();
-                } else {
-                    SnakbarUtil.favoriteFailView(mEditAddList);
-                }
+                addNewPlayList();
                 break;
             default:
                 break;
         }
     }
 
+    private void addNewPlayList() {
+        String listTitle = mEditAddList.getText().toString().trim();
+        if (!listTitle.isEmpty()) {
+            MusicApplication.getIntstance().getMusicInfoDao().insert(new MusicInfo(listTitle));
+            MusicApplication.getIntstance().bus().post(new AddNewListBean());
+            dismiss();
+        } else {
+            SnakbarUtil.favoriteFailView(mEditAddList);
+        }
+    }
+
     private void initListener() {
         mTvAddListCancle.setOnClickListener(this);
-        mTvAddListContinue.setOnClickListener(this);
+
         mEditAddList.setSelection(mEditAddList.length());
 
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @SuppressLint("CheckResult")
     private void initView() {
         mEditAddList = mView.findViewById(R.id.edit_add_list);
         mTvAddListCancle = mView.findViewById(R.id.tv_add_list_cancle);
         mTvAddListContinue = mView.findViewById(R.id.tv_add_list_continue);
+        TextView noEdit = mView.findViewById(R.id.tv_add_list_continue_no);
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             mInputMethodManager = (InputMethodManager) getContext()
                     .getSystemService(Context.INPUT_METHOD_SERVICE);
             showAndHintSoftInput(2, InputMethodManager.SHOW_FORCED);
         }
+        RxTextView.textChangeEvents(mEditAddList)
+                .map(textViewTextChangeEvent -> TextUtils.isEmpty((textViewTextChangeEvent.text()))).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(aBoolean -> {
+            if (aBoolean) {
+                noEdit.setVisibility(View.VISIBLE);
+                mTvAddListContinue.setVisibility(View.INVISIBLE);
+                mTvAddListContinue.setOnClickListener(null);
+            } else {
+                noEdit.setVisibility(View.INVISIBLE);
+                mTvAddListContinue.setVisibility(View.VISIBLE);
+                mTvAddListContinue.setOnClickListener(this);
+            }
+
+        });
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        showAndHintSoftInput(1, InputMethodManager.RESULT_UNCHANGED_SHOWN);
+    }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
