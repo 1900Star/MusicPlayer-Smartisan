@@ -2,7 +2,6 @@ package com.yibao.music.activity;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -31,6 +30,7 @@ import com.yibao.music.base.BaseFragment;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.OnBackHandlePressedListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
+import com.yibao.music.model.DetailsFlagBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyrBean;
 import com.yibao.music.model.MusicStatusBean;
@@ -50,8 +50,10 @@ import com.yibao.music.view.MusicProgressView;
 import com.yibao.music.view.ProgressBtn;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,7 +70,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class MusicActivity
         extends BaseActivity
-        implements OnMusicItemClickListener, OnBackHandlePressedListener {
+        implements OnMusicItemClickListener {
 
     @BindView(R.id.tv_music_toolbar_title)
     TextView mTvMusicToolbarTitle;
@@ -157,9 +159,8 @@ public class MusicActivity
     private int mPlayState;
 
     private QqBarPagerAdapter mQqBarPagerAdapter;
-    private BaseFragment mBaseFragment;
+    // 控制歌词发送
     private int coutn = 0;
-    private ArrayList<MusicLyrBean> mLyricList;
 
 
     @Override
@@ -183,7 +184,7 @@ public class MusicActivity
             supportActionBar.setDisplayHomeAsUpEnabled(true);
             setSupportActionBar(toolbar);
         }
-        toolbar.setNavigationOnClickListener(v -> MusicActivity.this.finish());
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
 
 
@@ -530,8 +531,10 @@ public class MusicActivity
                 // 当前播放  暂停
                 audioBinder.pause();
                 mAnimator.pause();
-                mDisposable.dispose();
-                mDisposable = null;
+                if (mDisposable != null) {
+                    mDisposable.dispose();
+                    mDisposable = null;
+                }
             } else if (!audioBinder.isPlaying()) {
                 // 当前暂停  播放
                 audioBinder.start();
@@ -604,38 +607,53 @@ public class MusicActivity
 
     }
 
+    /**
+     * @param className      展示详情的Fragment
+     * @param detailsViewKey 这个Key必须为 8 (PlayListFragment)、9 (ArtistanListFragment)、10 (AlbumFragment)
+     *                       这三个整数，这样展示详情的Fragment就能自己处理返回事件。
+     */
+    private void forEachDetailsMap(String className, int detailsViewKey) {
+        if (BaseFragment.mDetailsViewMap.containsKey(className)) {
+            SharePrefrencesUtil.setDetailsFlag(this, detailsViewKey);
+        }
+    }
+
     private void switchMusicTabbar(int flag) {
         switch (flag) {
             case 0:
-                setAllTabbarNotPressed(flag, R.string.play_list);
-                mMusicBarPlaylist.setBackgroundResource(R.drawable.tabbar_bg_down);
+                SharePrefrencesUtil.getMusicDataListFlag(this);
+                setAllTabbarNotPressed(flag, R.string.play_list, mMusicBarSonglist);
                 mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_selector);
                 mMusicBarPlaylistTv.setTextColor(ColorUtil.musicbarTvDown);
+                forEachDetailsMap(Constants.FRAGMENT_PLAYLIST, Constants.NUMBER_EIGHT);
                 break;
             case 1:
-                setAllTabbarNotPressed(flag, R.string.music_artisan);
-                mMusicBarArtisanlist.setBackgroundResource(R.drawable.tabbar_bg_down);
+                setAllTabbarNotPressed(flag, R.string.music_artisan, mMusicBarSonglist);
                 mMusicBarArtisanlistIv.setBackgroundResource(R.drawable.tabbar_artisanlist_selector);
                 mMusicBarArtisanlistTv.setTextColor(ColorUtil.musicbarTvDown);
+                forEachDetailsMap(Constants.FRAGMENT_ARTIST, Constants.NUMBER_NINE);
                 break;
             case 2:
-                setAllTabbarNotPressed(flag, R.string.music_song);
-                mMusicBarSonglist.setBackgroundResource(R.drawable.tabbar_bg_down);
+                setAllTabbarNotPressed(flag, R.string.music_song, mMusicBarSonglist);
                 mMusicBarSonglistIv.setBackgroundResource(R.drawable.tabbar_songlist_selector);
                 mMusicBarSonglistTv.setTextColor(ColorUtil.musicbarTvDown);
+                // 没有详情页面，直接返回桌面。
+                SharePrefrencesUtil.setDetailsFlag(this, Constants.NUMBER_ZOER);
 
                 break;
             case 3:
-                setAllTabbarNotPressed(flag, R.string.music_album);
-                mMusicBarAlbumlist.setBackgroundResource(R.drawable.tabbar_bg_down);
+                setAllTabbarNotPressed(flag, R.string.music_album, mMusicBarAlbumlist);
                 mMusicBarAlbumlistIv.setBackgroundResource(R.drawable.tabbar_albumlist_selector);
                 mMusicBarAlbumlistTv.setTextColor(ColorUtil.musicbarTvDown);
+                forEachDetailsMap(Constants.FRAGMENT_ALBUM, Constants.NUMBER_TEN);
                 break;
             case 4:
-                setAllTabbarNotPressed(flag, R.string.about);
-                mMusicBarStylelist.setBackgroundResource(R.drawable.tabbar_bg_down);
+                setAllTabbarNotPressed(flag, R.string.about, mMusicBarStylelist);
                 mMusicBarStylelistIv.setBackgroundResource(R.drawable.tabbar_stylelist_selector);
                 mMusicBarStylelistTv.setTextColor(ColorUtil.musicbarTvDown);
+                // 没有详情页面，直接返回桌面。
+                SharePrefrencesUtil.setDetailsFlag(this, Constants.NUMBER_ZOER);
+
 
                 break;
             default:
@@ -651,7 +669,8 @@ public class MusicActivity
      * @param flag            选中的Tag
      * @param titleResourceId title
      */
-    private void setAllTabbarNotPressed(int flag, int titleResourceId) {
+    private void setAllTabbarNotPressed(int flag, int titleResourceId, LinearLayout llTabBarBg) {
+        llTabBarBg.setBackgroundResource(R.drawable.tabbar_bg_down);
         mTvMusicToolbarTitle.setText(titleResourceId);
         mMusicViewPager.setCurrentItem(flag, false);
         mMusicBarPlaylist.setBackgroundColor(ColorUtil.wihtle);
@@ -721,6 +740,7 @@ public class MusicActivity
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            audioBinder = null;
         }
     }
 
@@ -752,23 +772,14 @@ public class MusicActivity
     }
 
 
-//    @Override
-//    public void onBackPressed() {
-//        LogUtil.d("=====onBackPressed=      " + mBaseFragment.backPressed());
-//        if (!mBaseFragment.backPressed() || mBaseFragment == null) {
-//            super.onBackPressed();
-//            LogUtil.d("================hhhhhhhhhhhhhhhhhhhhh");
-//        } else if (mBaseFragment.backPressed()) {
-//            LogUtil.d("================kkkkkkkkkkkkkk");
-//
-//        }
-//
-//
-//    }
-
     @Override
-    public void putFragment(BaseFragment fragment) {
-        mBaseFragment = fragment;
+    public void onBackPressed() {
+        int detailFlag = SharePrefrencesUtil.getDetailFlag(this);
+        if (detailFlag > Constants.NUMBER_ZOER) {
+            mBus.post(new DetailsFlagBean(detailFlag));
+        } else {
+            super.onBackPressed();
+        }
     }
 
 
@@ -805,4 +816,5 @@ public class MusicActivity
         }
 //        stopService(new Intent(this, AudioPlayService.class));
     }
+
 }

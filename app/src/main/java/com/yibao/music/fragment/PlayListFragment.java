@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import com.yibao.music.R;
 import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.BaseFragment;
-import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
 import com.yibao.music.fragment.dialogfrag.DeletePlayListDialog;
@@ -20,6 +19,7 @@ import com.yibao.music.model.DeletePlayListBean;
 import com.yibao.music.model.MusicInfo;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.SharePrefrencesUtil;
 
 import java.util.List;
 
@@ -28,9 +28,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -50,20 +47,11 @@ public class PlayListFragment extends BaseFragment {
     @BindView(R.id.play_list_content)
     LinearLayout mPlayListContent;
     @BindView(R.id.album_details_head_content)
-    LinearLayout mAlbumDetailsHeadContent;
+    LinearLayout mDetailsView;
     private Unbinder unbinder;
     private PlayListAdapter mAdapter;
-    private CompositeDisposable mDisposable;
-    private int addListFlag = 1;
+
     private int mDeletePosition;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mDisposable = new CompositeDisposable();
-
-    }
-
 
     @Nullable
     @Override
@@ -89,20 +77,15 @@ public class PlayListFragment extends BaseFragment {
         mDisposable.add(mBus.toObserverable(AddNewListBean.class)
                 .subscribeOn(Schedulers.io()).map(addNewListBean -> mMusicInfoDao.queryBuilder().list())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(newPlayList -> mAdapter.addData(newPlayList))
-
-
         );
         mDisposable.add(mBus.toObserverable(DeletePlayListBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(deletePlayListBean -> mAdapter.removeItem(mDeletePosition))
-
-
         );
 
     }
 
     private void initListener() {
-
         mAdapter.setItemListener(str -> PlayListFragment.this.switchShowDetailsView());
         mAdapter.setItemLongClickListener((musicInfo, currentPosition) -> {
             mDeletePosition = currentPosition;
@@ -113,11 +96,15 @@ public class PlayListFragment extends BaseFragment {
     private void switchShowDetailsView() {
         if (isShowDetailsView) {
             mLlAddNewPlayList.setVisibility(View.VISIBLE);
-            mAlbumDetailsHeadContent.setVisibility(View.GONE);
+            mDetailsView.setVisibility(View.GONE);
 
         } else {
-            mLlAddNewPlayList.setVisibility(View.GONE);
-            mAlbumDetailsHeadContent.setVisibility(View.VISIBLE);
+            mLlAddNewPlayList.setVisibility(View.INVISIBLE);
+            mDetailsView.setVisibility(View.VISIBLE);
+            SharePrefrencesUtil.setDetailsFlag(getActivity(), Constants.NUMBER_EIGHT);
+            if (!mDetailsViewMap.containsKey(mClassName)) {
+                mDetailsViewMap.put(mClassName, this);
+            }
         }
         isShowDetailsView = !isShowDetailsView;
     }
@@ -139,19 +126,21 @@ public class PlayListFragment extends BaseFragment {
         return new PlayListFragment();
     }
 
-    private boolean isHandlePressed;
-
     @Override
-    public boolean backPressed() {
-//        switchShowDetailsView();
-//        if (isHandlePressed) {
-//            return false;
-//        } else {
-//            LogUtil.d("================Click MyFragment");
-//            isHandlePressed = true;
-//            return true;
-//        }
-        return mLlAddNewPlayList.getVisibility() == View.VISIBLE;
+    protected void handleDetailsBack(int detailFlag) {
+        super.handleDetailsBack(detailFlag);
+        if (detailFlag == Constants.NUMBER_EIGHT) {
+            mLlAddNewPlayList.setVisibility(View.VISIBLE);
+            mDetailsView.setVisibility(View.GONE);
+            if (mDetailsViewMap.containsKey(mClassName)) {
+                LogUtil.d("======确定移除   ");
+                mDetailsViewMap.remove(mClassName);
+            }
+            isShowDetailsView = !isShowDetailsView;
+
+        }
+
+
     }
 
 

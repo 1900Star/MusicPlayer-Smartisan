@@ -120,15 +120,10 @@ public class AddListDialog
             showAndHintSoftInput(2, InputMethodManager.SHOW_FORCED);
         }
         mSubscribe = RxTextView.textChangeEvents(mEditAddList)
-                .observeOn(AndroidSchedulers.mainThread())
                 .map(textViewTextChangeEvent -> {
-
-                    LogUtil.d("============长度 " + textViewTextChangeEvent.text().length());
                     if (textViewTextChangeEvent.text().length() == 21) {
-                        LogUtil.d("============长度超过21 ");
                         SnakbarUtil.favoriteFailView(mView);
                     }
-
                     return TextUtils.isEmpty((textViewTextChangeEvent.text()));
                 }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(aBoolean -> {

@@ -272,10 +272,12 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
             String volumeAction = "android.media.VOLUME_CHANGED_ACTION";
             if (volumeAction.equals(intent.getAction())) {
                 AudioManager mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-                // 当前的媒体音量
-                int currVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                // 如果系统音量发生变化就更新Seekbar
-                updataVolumeProgresse(currVolume);
+                if (mAudioManager != null) {
+                    // 当前的媒体音量
+                    int currVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                    // 如果系统音量发生变化就更新Seekbar
+                    updataVolumeProgresse(currVolume);
+                }
             }
         }
     }

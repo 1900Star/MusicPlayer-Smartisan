@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -31,6 +32,7 @@ import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
+import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.LyricsView;
 
@@ -289,10 +291,11 @@ public class PlayActivity extends BasePlayActivity {
             //当前播放  暂停
             audioBinder.pause();
             mAnimator.pause();
+            // 只有Notifycation需要接收
             MusicApplication.getIntstance()
                     .bus()
                     .post(new MusicStatusBean(0, true));
-            if (isShowLyrics&&mDisposableLyrics!=null) {
+            if (isShowLyrics && mDisposableLyrics != null) {
                 mDisposableLyrics.dispose();
                 mDisposableLyrics = null;
             }
@@ -318,6 +321,7 @@ public class PlayActivity extends BasePlayActivity {
     //根据当前播放状态设置图片
 
     private void updatePlayBtnStatus() {
+
         if (audioBinder.isPlaying()) {
             //正在播放    设置为暂停
             mMusicPlay.setImageResource(R.drawable.btn_playing_pause_selector);

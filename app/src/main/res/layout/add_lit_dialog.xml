@@ -16,6 +16,10 @@
         android:textColor="@color/textDes"
         android:textSize="@dimen/bigLyrics"
         android:textStyle="bold" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:background="@color/seekBarN" />
 
     <LinearLayout
         android:layout_width="match_parent"

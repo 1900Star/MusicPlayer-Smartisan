@@ -170,9 +170,4 @@ public class SongFragment extends BaseFragment {
         super.onDestroyView();
         unbinder.unbind();
     }
-
-    @Override
-    public boolean backPressed() {
-        return false;
-    }
 }

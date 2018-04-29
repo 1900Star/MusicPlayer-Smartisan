@@ -41,7 +41,6 @@ public class LoadMusicDataService extends IntentService {
         super("LoadMusicDataServices");
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         List<MusicBean> dataList = MusicListUtil.getMusicDataList();

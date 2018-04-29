@@ -11,6 +11,7 @@ import com.yibao.music.R;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.TopBigPicDialogFragment;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.view.CircleImageView;
 
 import butterknife.BindView;
@@ -36,8 +37,6 @@ public class AboutFragment extends BaseFragment {
     private Unbinder unbinder;
 
 
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,7 +48,14 @@ public class AboutFragment extends BaseFragment {
     }
 
     private void initListener() {
-        mAboutHeaderIv.setOnClickListener(v -> RelaxDialogFragment.newInstance().show(getFragmentManager(), "girlsDialog"));
+        mAboutHeaderIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogUtil.d("======Map 的长度    " + mDetailsViewMap.size());
+
+//                RelaxDialogFragment.newInstance().show(AboutFragment.this.getFragmentManager(), "girlsDialog");
+            }
+        });
         mAboutHeaderIv.setOnLongClickListener(view -> {
             TopBigPicDialogFragment.newInstance("")
                     .show(getFragmentManager(), "album");
@@ -67,11 +73,6 @@ public class AboutFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @Override
-    public boolean backPressed() {
-        return false;
     }
 
 }
