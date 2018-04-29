@@ -1,5 +1,6 @@
 package com.yibao.music.base;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -11,6 +12,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.yibao.music.R;
+import com.yibao.music.model.MusicInfo;
 import com.yibao.music.util.Constants;
 
 import java.util.List;
@@ -29,15 +31,17 @@ public abstract class BaseRvAdapter<T>
         extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements SectionIndexer
 
 {
-    protected List<T> mList = null;
+    protected List<T> mList;
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_FOOTER = 1;
     private OnItemListener<T> mListener;
+    private ItemLongClickListener mLongClickListener;
 
     public BaseRvAdapter(List<T> list) {
         mList = list;
     }
 
+    @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
@@ -216,16 +220,36 @@ public abstract class BaseRvAdapter<T>
         }
     }
 
+
     public void setItemListener(OnItemListener<T> listener) {
         this.mListener = listener;
     }
 
+
     public interface OnItemListener<T> {
-        /**
-         * 打开列表详情
-         *
-         * @param bean 子类的数据类型
-         */
+        // T 子类的数据类型
         void showDetailsView(T bean);
     }
+
+
+
+    /**
+     * Item长按的点击事件
+     */
+
+    public interface ItemLongClickListener {
+        void deleteItemList(MusicInfo musicInfo,int currentPosition);
+    }
+
+
+    public void setItemLongClickListener(ItemLongClickListener longClickListener) {
+        this.mLongClickListener = longClickListener;
+    }
+    protected void deletePlaylist(MusicInfo musicInfo,int itemPosition) {
+        if (mLongClickListener != null) {
+            mLongClickListener.deleteItemList(musicInfo,itemPosition);
+        }
+    }
+
+
 }

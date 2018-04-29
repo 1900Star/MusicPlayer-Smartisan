@@ -7,9 +7,9 @@ package com.yibao.music.model;
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/25 23:29
- * @描述： {仅作为通知添加列表更新的消息}
+ * @描述： {仅作为通知播放列表删除后更新List}
  */
 
-public class AddNewListBean {
+public class DeletePlayListBean {
 
 }

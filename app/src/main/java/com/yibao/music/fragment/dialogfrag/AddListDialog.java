@@ -1,15 +1,12 @@
 package com.yibao.music.fragment.dialogfrag;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
@@ -21,21 +18,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
-import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.model.AddNewListBean;
 import com.yibao.music.model.MusicInfo;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SnakbarUtil;
 
-import org.w3c.dom.Text;
-
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -125,7 +115,7 @@ public class AddListDialog
         mEditAddList = mView.findViewById(R.id.edit_add_list);
         mTvAddListCancle = mView.findViewById(R.id.tv_add_list_cancle);
         mTvAddListContinue = mView.findViewById(R.id.tv_add_list_continue);
-        TextView noEdit = mView.findViewById(R.id.tv_add_list_continue_no);
+        TextView noEdit = mView.findViewById(R.id.tv_add_list_cancel);
 
         handSoftInput(noEdit);
     }
@@ -171,7 +161,6 @@ public class AddListDialog
     public void onDestroy() {
         super.onDestroy();
         if (mSubscribe != null) {
-
             mSubscribe.dispose();
         }
     }

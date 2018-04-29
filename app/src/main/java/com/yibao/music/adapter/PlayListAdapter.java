@@ -27,25 +27,29 @@ import butterknife.ButterKnife;
 
 public class PlayListAdapter extends BaseRvAdapter<MusicInfo> {
 
-    public PlayListAdapter( List<MusicInfo> list) {
+    public PlayListAdapter(List<MusicInfo> list) {
         super(list);
     }
 
 
     @Override
-    protected void bindView(RecyclerView.ViewHolder holder, MusicInfo artistInfo) {
+    protected void bindView(RecyclerView.ViewHolder holder, MusicInfo musicInfo) {
 
         if (holder instanceof PlayViewHolder) {
             PlayViewHolder playViewHolder = (PlayViewHolder) holder;
-            playViewHolder.mTvPlayListName.setText(artistInfo.getTitle());
-            String count = artistInfo.getPlayStatus() + " 首歌曲";
+            playViewHolder.mTvPlayListName.setText(musicInfo.getTitle());
+            String count = musicInfo.getPlayStatus() + " 首歌曲";
             playViewHolder.mTvPlayListCount.setText(count);
             playViewHolder.itemView.setOnClickListener(view -> PlayListAdapter.this.openDetails(null));
+            playViewHolder.itemView.setOnLongClickListener(v -> { deletePlaylist(musicInfo, holder.getAdapterPosition());
+                return true;
+            });
         }
     }
-
-
-
+    public void removeItem(int itemPosition) {
+        mList.remove(itemPosition);
+        notifyDataSetChanged();
+    }
     @Override
     protected RecyclerView.ViewHolder getViewHolder(View view) {
 

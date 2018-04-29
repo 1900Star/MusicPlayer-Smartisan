@@ -41,7 +41,7 @@ import io.reactivex.schedulers.Schedulers;
  * @描述： {仅仅针对 PlayActivity抽出的基类,目的在于减少PlayActivity中的代码}
  */
 
-public abstract class BasePlayActivity extends BaseActivity  implements OnCheckFavoriteListener{
+public abstract class BasePlayActivity extends BaseActivity implements OnCheckFavoriteListener {
 
     protected AudioManager mAudioManager;
     protected int mMaxVolume;
@@ -143,7 +143,9 @@ public abstract class BasePlayActivity extends BaseActivity  implements OnCheckF
      */
     protected abstract void updataCurrentTitle(MusicBean info);
 
-
+    /**
+     * 时时更新播放进度
+     */
     private void upDataPlayProgress() {
         mDisposablePlayTime = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
                 .subscribeOn(Schedulers.io())
@@ -151,21 +153,21 @@ public abstract class BasePlayActivity extends BaseActivity  implements OnCheckF
                 .subscribe(aLong -> updataCurrentPlayProgress(audioBinder.getProgress()));
     }
 
-    /**
-     * 时时更新播放进度
-     *
-     * @param progress
-     */
+
     protected abstract void updataCurrentPlayProgress(int progress);
 
     private void init() {
         audioBinder = MusicActivity.getAudioBinder();
-        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Music  Lock");
-        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        mMaxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        mVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         mCompositeDisposable = new CompositeDisposable();
+        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        if (powerManager != null) {
+            mWakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Music  Lock");
+        }
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        if (mAudioManager != null) {
+            mMaxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+            mVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        }
     }
 
     /**
@@ -299,8 +301,6 @@ public abstract class BasePlayActivity extends BaseActivity  implements OnCheckF
      * @param b
      */
     protected abstract void updataMusicBarAndVolumeBar(SeekBar seekBar, int progress, boolean b);
-
-    //
 
 
     @Override

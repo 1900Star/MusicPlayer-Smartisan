@@ -64,7 +64,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/tv_add_list_continue_no"
+                android:id="@+id/tv_add_list_cancel"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:gravity="center"

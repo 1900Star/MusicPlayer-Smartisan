@@ -2,17 +2,16 @@ package com.yibao.music.activity;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.databinding.DataBindingUtil;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,7 +41,6 @@ import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
@@ -54,7 +52,6 @@ import com.yibao.music.view.ProgressBtn;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,7 +80,7 @@ public class MusicActivity
     @BindView(R.id.music_float_singer_name)
     TextView mMusicFloatSingerName;
     @BindView(R.id.music_floating_favorite)
-    ImageView mMusicFloatingFavorite;
+    ImageView mIvMusicFloatingFavorite;
 
     @BindView(R.id.music_floating_pre)
     ImageView mMusicFloatingPre;
@@ -104,7 +101,7 @@ public class MusicActivity
     @BindView(R.id.music_floating_pager_play)
     MusicProgressView mMusicPagerPlay;
     @BindView(R.id.music_floating_pager_favorite)
-    ImageView mMusicQqBarFavorite;
+    ImageView mIvMusicQqBarFavorite;
     @BindView(R.id.music_float_pb)
     ProgressBtn mPb;
     @BindView(R.id.music_viewpager)
@@ -180,9 +177,12 @@ public class MusicActivity
 
     private void initView() {
         Toolbar toolbar = findViewById(R.id.toolbar_music);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayShowTitleEnabled(false);
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            setSupportActionBar(toolbar);
+        }
         toolbar.setNavigationOnClickListener(v -> MusicActivity.this.finish());
     }
 
@@ -195,6 +195,7 @@ public class MusicActivity
         MusicPagerAdapter musicPagerAdapter = new MusicPagerAdapter(getFragmentManager());
         mMusicViewPager.setAdapter(musicPagerAdapter);
         mMusicViewPager.setCurrentItem(Constants.NUMBER_TWO);
+        mMusicViewPager.setOffscreenPageLimit(5);
         // 初始化 QqBarPagerAdapter
         mQqBarPagerAdapter = new QqBarPagerAdapter(this, null);
         mMusicSlideViewPager.setAdapter(mQqBarPagerAdapter);
@@ -400,10 +401,6 @@ public class MusicActivity
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(MusicActivity.this::refreshBtnAndNotify));
-        /* 更新当前歌曲的收藏状态*/
-//        mCompositeDisposable.add(mBus.toObserverable(MusicFavoriteBean.class).subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(musicFavoriteBean -> MusicActivity.this.checkCurrentIsFavorite()));
     }
 
 
@@ -439,7 +436,7 @@ public class MusicActivity
      */
     private void perpareItem(MusicBean musicItem) {
         mCurrentMusicBean = musicItem;
-        checkCurrentIsFavorite(musicItem, mMusicQqBarFavorite, mMusicFloatingFavorite);
+        checkCurrentIsFavorite(musicItem, mIvMusicQqBarFavorite, mIvMusicFloatingFavorite);
         mQqBarPagerAdapter.setData(initMusicData());
         mMusicSlideViewPager.setCurrentItem(musicItem.getCureetPosition(), false);
         //更新音乐标题
@@ -467,23 +464,22 @@ public class MusicActivity
     }
 
     private void updataProgress() {
-        LogUtil.d(" 当前 进度   " + audioBinder.getProgress());
-        int duration = audioBinder.getDuration();
-        mPb.setMax(duration);
-        mMusicPagerPlay.setMax(duration);
-        if (mDisposable == null) {
-
-            mDisposable = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(aLong -> {
-                        mPb.setProgress(audioBinder.getProgress());
-                        mMusicPagerPlay.setProgress(audioBinder.getProgress());
-                    });
-
+        if (audioBinder != null && audioBinder.isPlaying()) {
+            if (mDisposable == null) {
+                LogUtil.d(" 当前 进度   " + audioBinder.getProgress());
+                int duration = audioBinder.getDuration();
+                mPb.setMax(duration);
+                mMusicPagerPlay.setMax(duration);
+                mDisposable = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(aLong -> {
+                            mPb.setProgress(audioBinder.getProgress());
+                            mMusicPagerPlay.setProgress(audioBinder.getProgress());
+                        });
+            }
 
         }
-
     }
 
     private void initAnimation() {
@@ -513,12 +509,12 @@ public class MusicActivity
 
     /**
      * 切换当前播放状态
-     * mPlayState 记录音乐的播放状态到本地，方便用户下次打开时进行UI初始化操作。
+     * mPlayState  将音乐的播放状态记录到本地，方便用户下次打开时进行UI初始化操作。
      * <p>
-     * mPlayState = 1 ：表示用户点击暂停后，并且退出音乐播放器，下次打开播放器的界面时，
+     * mPlayState = 1 ：表示用户点击暂停后，并退出音乐播放器。下次打开播放器的界面时，
      * 不会自动播放上一次记录的歌曲，需要点击播放按钮，才能播放上一次记录的歌曲。
      * <p>
-     * mPlayState = 2 ：表示在播放时退出音乐播放器的界面，只是短暂的离开，但并没有退出程序，
+     * mPlayState = 2 ：表示在播放时退出音乐播放器的界面，只是短暂的离开，但并没有退出程序(程序并没有被后台杀死)，
      * 下次打开播放器的界面时，继续自动播放当前的歌曲。
      */
     private void switchPlayState() {
@@ -534,11 +530,15 @@ public class MusicActivity
                 // 当前播放  暂停
                 audioBinder.pause();
                 mAnimator.pause();
+                mDisposable.dispose();
+                mDisposable = null;
             } else if (!audioBinder.isPlaying()) {
                 // 当前暂停  播放
                 audioBinder.start();
                 mAnimator.resume();
+                updataProgress();
             }
+
             //更新播放状态按钮
             updatePlayBtnStatus();
         }
@@ -578,10 +578,10 @@ public class MusicActivity
                             break;
                         case R.id.music_floating_favorite:
 
-                            favoriteMusic(mCurrentMusicBean, mMusicQqBarFavorite, mMusicFloatingFavorite);
+                            favoriteMusic(mCurrentMusicBean, mIvMusicQqBarFavorite, mIvMusicFloatingFavorite);
                             break;
                         case R.id.music_floating_pager_favorite:
-                            favoriteMusic(mCurrentMusicBean, mMusicQqBarFavorite, mMusicFloatingFavorite);
+                            favoriteMusic(mCurrentMusicBean, mIvMusicQqBarFavorite, mIvMusicFloatingFavorite);
                             break;
                         case R.id.music_floating_pager_play:
                             switchPlayState();
@@ -730,6 +730,7 @@ public class MusicActivity
         if (mAnimator != null) {
             mAnimator.pause();
         }
+
     }
 
     @Override
@@ -738,7 +739,8 @@ public class MusicActivity
         if (mAnimator != null && audioBinder.isPlaying()) {
             mAnimator.resume();
         }
-        checkCurrentIsFavorite(mCurrentMusicBean, mMusicQqBarFavorite, mMusicFloatingFavorite);
+        checkCurrentIsFavorite(mCurrentMusicBean, mIvMusicQqBarFavorite, mIvMusicFloatingFavorite);
+        updataProgress();
     }
 
     @Override

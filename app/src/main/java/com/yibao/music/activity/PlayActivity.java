@@ -168,10 +168,8 @@ public class PlayActivity extends BasePlayActivity {
     public void checkCurrentIsFavorite(boolean cureentMusicIsFavorite) {
         if (cureentMusicIsFavorite) {
             mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
-//                mIvFavoriteMusic.setImageResource(R.drawable.btn_favorite_red_selector);
         } else {
             mIvFavoriteMusic.setImageResource(R.drawable.music_qqbar_favorite_selector);
-//                mIvFavoriteMusic.setImageResource(R.drawable.btn_favorite_gray_selector);
         }
     }
 
@@ -392,7 +390,6 @@ public class PlayActivity extends BasePlayActivity {
             mCurrenMusicInfo.setIsFavorite(false);
             mMusicDao.update(mCurrenMusicInfo);
             mIvFavoriteMusic.setImageResource(R.drawable.music_qqbar_favorite_selector);
-//            mIvFavoriteMusic.setImageResource(R.drawable.btn_favorite_gray_selector);
 
         } else {
             String time = StringUtil.getCurrentTime();
@@ -400,7 +397,6 @@ public class PlayActivity extends BasePlayActivity {
             mCurrenMusicInfo.setIsFavorite(true);
             mMusicDao.update(mCurrenMusicInfo);
             mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
-//            mIvFavoriteMusic.setImageResource(R.drawable.btn_favorite_red_selector);
 
         }
     }

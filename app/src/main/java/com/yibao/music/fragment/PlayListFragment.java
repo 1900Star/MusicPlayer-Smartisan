@@ -11,9 +11,12 @@ import android.widget.LinearLayout;
 import com.yibao.music.R;
 import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.BaseFragment;
+import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
+import com.yibao.music.fragment.dialogfrag.DeletePlayListDialog;
 import com.yibao.music.model.AddNewListBean;
+import com.yibao.music.model.DeletePlayListBean;
 import com.yibao.music.model.MusicInfo;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
@@ -38,7 +41,7 @@ import io.reactivex.schedulers.Schedulers;
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/9 16:07
- * @描述： {TODO}
+ * @描述： {个人播放列表}
  */
 
 public class PlayListFragment extends BaseFragment {
@@ -52,6 +55,7 @@ public class PlayListFragment extends BaseFragment {
     private PlayListAdapter mAdapter;
     private CompositeDisposable mDisposable;
     private int addListFlag = 1;
+    private int mDeletePosition;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,15 +89,25 @@ public class PlayListFragment extends BaseFragment {
         mDisposable.add(mBus.toObserverable(AddNewListBean.class)
                 .subscribeOn(Schedulers.io()).map(addNewListBean -> mMusicInfoDao.queryBuilder().list())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(newPlayList -> mAdapter.addData(newPlayList))
-        );
 
+
+        );
+        mDisposable.add(mBus.toObserverable(DeletePlayListBean.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(deletePlayListBean -> mAdapter.removeItem(mDeletePosition))
+
+
+        );
 
     }
 
     private void initListener() {
 
-        mAdapter.setItemListener(str -> switchShowDetailsView());
-
+        mAdapter.setItemListener(str -> PlayListFragment.this.switchShowDetailsView());
+        mAdapter.setItemLongClickListener((musicInfo, currentPosition) -> {
+            mDeletePosition = currentPosition;
+            DeletePlayListDialog.newInstance(musicInfo).show(PlayListFragment.this.getFragmentManager(), "deleteList");
+        });
     }
 
     private void switchShowDetailsView() {

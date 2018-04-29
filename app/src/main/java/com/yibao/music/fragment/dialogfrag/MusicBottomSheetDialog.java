@@ -3,7 +3,6 @@ package com.yibao.music.fragment.dialogfrag;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,7 +21,6 @@ import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.model.BottomSheetStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.model.song.MusicFavoriteBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
@@ -121,14 +119,14 @@ public class MusicBottomSheetDialog
                 backTop();
                 break;
             case R.id.bottom_sheet_bar_clear:
-                clearFavoriteMusic();
+                clearAllFavoriteMusic();
                 break;
             default:
                 break;
         }
     }
 
-    private void clearFavoriteMusic() {
+    private void clearAllFavoriteMusic() {
         for (MusicBean musicBean : mList) {
             musicBean.setIsFavorite(false);
             MusicApplication.getIntstance().getMusicDao()

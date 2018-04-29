@@ -103,7 +103,17 @@ public class BaseActivity extends AppCompatActivity {
         }
     };
 
+    // 需要监听耳机拔出的页面重写这个方法
     protected void headsetPullOut() {
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mDisposable != null) {
+            mDisposable.dispose();
+            mDisposable = null;
+        }
     }
 
     @Override
@@ -111,9 +121,9 @@ public class BaseActivity extends AppCompatActivity {
         super.onDestroy();
         mCompositeDisposable.dispose();
         mCompositeDisposable.clear();
-        if (mDisposable != null) {
-            mDisposable.dispose();
-        }
+//        if (mDisposable != null) {
+//            mDisposable.dispose();
+//        }
         if (mRxViewDisposable != null) {
             mRxViewDisposable.dispose();
         }
