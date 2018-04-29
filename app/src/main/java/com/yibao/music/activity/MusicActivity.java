@@ -311,7 +311,7 @@ public class MusicActivity
     }
 
     /**
-     * 在详情页面播放音乐
+     * 在详情页面播放音乐回调
      *
      * @param position  播放位置
      * @param dataFlag  数据列表的标识

@@ -30,8 +30,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/not_name_hint"
+            android:maxLength="21"
             android:textColor="@color/colorBlack"
-
             android:textColorHint="@color/tabbarTv"
             android:textCursorDrawable="@drawable/edittext_cursor_color" />
 

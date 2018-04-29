@@ -16,17 +16,21 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.model.AddNewListBean;
 import com.yibao.music.model.MusicInfo;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SnakbarUtil;
+import com.yibao.music.util.ToastUtil;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -116,7 +120,17 @@ public class AddListDialog
             showAndHintSoftInput(2, InputMethodManager.SHOW_FORCED);
         }
         mSubscribe = RxTextView.textChangeEvents(mEditAddList)
-                .map(textViewTextChangeEvent -> TextUtils.isEmpty((textViewTextChangeEvent.text()))).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(textViewTextChangeEvent -> {
+
+                    LogUtil.d("============长度 " + textViewTextChangeEvent.text().length());
+                    if (textViewTextChangeEvent.text().length() == 21) {
+                        LogUtil.d("============长度超过21 ");
+                        SnakbarUtil.favoriteFailView(mView);
+                    }
+
+                    return TextUtils.isEmpty((textViewTextChangeEvent.text()));
+                }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(aBoolean -> {
                     if (aBoolean) {
                         noEdit.setVisibility(View.VISIBLE);
