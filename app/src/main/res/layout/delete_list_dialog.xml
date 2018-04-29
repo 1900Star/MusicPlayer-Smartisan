@@ -11,6 +11,8 @@
         android:id="@+id/tv_delete_list_title"
         android:layout_width="match_parent"
         android:layout_height="52dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:background="@drawable/tabbar_bg"
         android:gravity="center"
         android:textColor="@color/tabbarDownTv"

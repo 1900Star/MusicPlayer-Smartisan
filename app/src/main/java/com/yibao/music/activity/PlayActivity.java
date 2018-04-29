@@ -292,8 +292,9 @@ public class PlayActivity extends BasePlayActivity {
             MusicApplication.getIntstance()
                     .bus()
                     .post(new MusicStatusBean(0, true));
-            if (isShowLyrics) {
+            if (isShowLyrics&&mDisposableLyrics!=null) {
                 mDisposableLyrics.dispose();
+                mDisposableLyrics = null;
             }
         } else {
             //当前暂停  播放
@@ -413,6 +414,7 @@ public class PlayActivity extends BasePlayActivity {
             mTvLyrics.setVisibility(View.GONE);
             if (mDisposableLyrics != null) {
                 mDisposableLyrics.dispose();
+                mDisposableLyrics = null;
             }
         } else {
             mIvLyricsSwitch.setBackgroundResource(R.drawable.music_lrc_open);
