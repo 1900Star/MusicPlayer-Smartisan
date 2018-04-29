@@ -179,7 +179,7 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
      * 根据进度滚动歌词
      */
     protected void startRollPlayLyrics(LyricsView lyricsView) {
-        if (mDisposablePlayTime == null) {
+        if (mDisposableLyrics == null) {
             mDisposableLyrics = Observable.interval(50, TimeUnit.MILLISECONDS)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())

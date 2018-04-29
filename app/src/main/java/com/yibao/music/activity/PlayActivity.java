@@ -411,7 +411,9 @@ public class PlayActivity extends BasePlayActivity {
             animation.start();
             mIvSecreenSunSwitch.setVisibility(View.INVISIBLE);
             mTvLyrics.setVisibility(View.GONE);
-            mDisposableLyrics.dispose();
+            if (mDisposableLyrics != null) {
+                mDisposableLyrics.dispose();
+            }
         } else {
             mIvLyricsSwitch.setBackgroundResource(R.drawable.music_lrc_open);
             AnimationDrawable animation = (AnimationDrawable) mIvLyricsSwitch.getBackground();
