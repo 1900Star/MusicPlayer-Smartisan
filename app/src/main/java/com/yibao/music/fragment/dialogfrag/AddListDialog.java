@@ -22,6 +22,7 @@ import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.model.AddNewListBean;
 import com.yibao.music.model.MusicInfo;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SnakbarUtil;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -40,23 +41,13 @@ public class AddListDialog
 
 
     private View mView;
-    /**
-     * 未命名播放列表 1
-     */
     private EditText mEditAddList;
-    /**
-     * 取消
-     */
     private TextView mTvAddListCancle;
-    /**
-     * 继续
-     */
     private TextView mTvAddListContinue;
     private InputMethodManager mInputMethodManager;
     private Disposable mSubscribe;
 
     public static AddListDialog newInstance() {
-
         return new AddListDialog();
     }
 
@@ -79,6 +70,21 @@ public class AddListDialog
         return dialog;
     }
 
+    private void initListener() {
+        mTvAddListCancle.setOnClickListener(this);
+        mEditAddList.setSelection(mEditAddList.length());
+    }
+
+
+    private void initView() {
+        mEditAddList = mView.findViewById(R.id.edit_add_list);
+        mTvAddListCancle = mView.findViewById(R.id.tv_add_list_cancle);
+        mTvAddListContinue = mView.findViewById(R.id.tv_add_list_continue);
+        TextView noEdit = mView.findViewById(R.id.tv_add_list_cancel);
+        // 主动弹出键盘
+        handSoftInput(noEdit);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -99,26 +105,9 @@ public class AddListDialog
             MusicApplication.getIntstance().getMusicInfoDao().insert(new MusicInfo(listTitle));
             MusicApplication.getIntstance().bus().post(new AddNewListBean());
             dismiss();
-        } else {
-            SnakbarUtil.favoriteFailView(mEditAddList);
         }
     }
 
-    private void initListener() {
-        mTvAddListCancle.setOnClickListener(this);
-        mEditAddList.setSelection(mEditAddList.length());
-
-    }
-
-
-    private void initView() {
-        mEditAddList = mView.findViewById(R.id.edit_add_list);
-        mTvAddListCancle = mView.findViewById(R.id.tv_add_list_cancle);
-        mTvAddListContinue = mView.findViewById(R.id.tv_add_list_continue);
-        TextView noEdit = mView.findViewById(R.id.tv_add_list_cancel);
-
-        handSoftInput(noEdit);
-    }
 
     private void handSoftInput(TextView noEdit) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -147,6 +136,12 @@ public class AddListDialog
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
         showAndHintSoftInput(1, InputMethodManager.RESULT_UNCHANGED_SHOWN);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        dismiss();
     }
 
     private void showAndHintSoftInput(int i, int resultUnchangedShown) {

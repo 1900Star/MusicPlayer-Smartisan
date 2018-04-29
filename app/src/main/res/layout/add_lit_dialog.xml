@@ -58,6 +58,13 @@
             android:textColor="@color/text_cancel_selector"
             android:textStyle="bold" />
 
+        <View
+            android:layout_width="0.1dp"
+            android:layout_height="42dp"
+            android:layout_gravity="center"
+            android:background="@color/seekBarN"
+            android:visibility="visible" />
+
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -68,20 +75,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:gravity="center"
-                android:textColor="@color/tabbarTv"
                 android:text="@string/continues"
+                android:textColor="@color/tabbarTv"
                 android:textStyle="bold" />
 
+
             <TextView
-                android:visibility="gone"
                 android:id="@+id/tv_add_list_continue"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:background="@drawable/add_btn_selector"
-                android:textColor="@color/text_cancel_selector"
                 android:gravity="center"
                 android:text="@string/continues"
-                android:textStyle="bold" />
+                android:textColor="@color/text_cancel_selector"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
         </RelativeLayout>
 

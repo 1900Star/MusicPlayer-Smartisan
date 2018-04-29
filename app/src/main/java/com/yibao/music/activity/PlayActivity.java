@@ -212,9 +212,7 @@ public class PlayActivity extends BasePlayActivity {
         if (isShowLyrics) {
             showLyrics();
         }
-        if (mDisposableLyrics != null) {
-            mDisposableLyrics.dispose();
-        }
+
     }
 
     protected void updataMusicProgress(int progress) {
@@ -470,6 +468,7 @@ public class PlayActivity extends BasePlayActivity {
         mSbVolume.setProgress(currVolume);
     }
 
+    // 清空收藏列表中所有音乐后的回调，
     @Override
     public void updataFavoriteStatus() {
         boolean updataFavorite = mMusicDao.load(mCurrenMusicInfo.getId()).isFavorite();
@@ -479,7 +478,7 @@ public class PlayActivity extends BasePlayActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        checkCurrentIsFavorite(mCurrenMusicInfo.isFavorite());
+        checkCurrentIsFavorite(mMusicDao.load(mCurrenMusicInfo.getId()).isFavorite());
     }
 
     @Override

@@ -88,9 +88,11 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
         super.onPause();
         if (mDisposablePlayTime != null) {
             mDisposablePlayTime.dispose();
+            mDisposablePlayTime = null;
         }
         if (mDisposableLyrics != null) {
             mDisposableLyrics.dispose();
+            mDisposableLyrics = null;
         }
         if (mWakeLock.isHeld()) {
             mWakeLock.release();
@@ -147,10 +149,13 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
      * 时时更新播放进度
      */
     private void upDataPlayProgress() {
-        mDisposablePlayTime = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> updataCurrentPlayProgress(audioBinder.getProgress()));
+        if (mDisposablePlayTime == null) {
+
+            mDisposablePlayTime = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(aLong -> updataCurrentPlayProgress(audioBinder.getProgress()));
+        }
     }
 
 
@@ -174,10 +179,12 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
      * 根据进度滚动歌词
      */
     protected void startRollPlayLyrics(LyricsView lyricsView) {
-        mDisposableLyrics = Observable.interval(50, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> lyricsView.rollText(audioBinder.getProgress(), audioBinder.getDuration()));
+        if (mDisposablePlayTime == null) {
+            mDisposableLyrics = Observable.interval(50, TimeUnit.MILLISECONDS)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(aLong -> lyricsView.rollText(audioBinder.getProgress(), audioBinder.getDuration()));
+        }
 
     }
 

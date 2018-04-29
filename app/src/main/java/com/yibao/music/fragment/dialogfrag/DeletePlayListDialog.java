@@ -115,6 +115,8 @@ public class DeletePlayListDialog
         }
     }
 
+
+
     private void deletePlayList() {
         mMusicInfoDao.delete(mMusicInfo);
         mBus.post(new DeletePlayListBean());
