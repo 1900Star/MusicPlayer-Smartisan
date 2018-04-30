@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -46,6 +47,7 @@ import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.CircleImageView;
+import com.yibao.music.view.MainViewPager;
 import com.yibao.music.view.MusicProgressView;
 import com.yibao.music.view.ProgressBtn;
 
@@ -106,8 +108,6 @@ public class MusicActivity
     ImageView mIvMusicQqBarFavorite;
     @BindView(R.id.music_float_pb)
     ProgressBtn mPb;
-    @BindView(R.id.music_viewpager)
-    ViewPager mMusicViewPager;
     @BindView(R.id.qq_music_vp)
     ViewPager mMusicSlideViewPager;
     @BindView(R.id.music_bar_playlist_iv)
@@ -145,6 +145,8 @@ public class MusicActivity
     @BindView(R.id.music_bar_stylelist)
     LinearLayout mMusicBarStylelist;
 
+    @BindView(R.id.music_viewpager)
+    MainViewPager mMusicViewPager;
 
     private List<MusicBean> mMusicItems;
     private Unbinder mBind;
@@ -183,8 +185,9 @@ public class MusicActivity
             supportActionBar.setDisplayShowTitleEnabled(false);
             supportActionBar.setDisplayHomeAsUpEnabled(true);
             setSupportActionBar(toolbar);
+            toolbar.setNavigationOnClickListener(v -> onBackPressed());
         }
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
     }
 
 
@@ -448,7 +451,7 @@ public class MusicActivity
         mMusicFloatSingerName.setText(artistName);
         //设置专辑
         Uri albumUri = StringUtil.getAlbulm(musicItem.getAlbumId());
-        ImageUitl.loadPic(this, albumUri.toString(), mMusicFloatBlockAlbulm);
+        ImageUitl.loadPlaceholder(this, albumUri.toString(), mMusicFloatBlockAlbulm);
         // 得到歌词List
 //        mLyricList = LyricsUtil.getLyricList(musicItem.getTitle(), musicItem.getArtist());
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

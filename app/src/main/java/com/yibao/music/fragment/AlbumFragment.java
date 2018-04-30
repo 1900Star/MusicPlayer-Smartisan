@@ -147,7 +147,6 @@ public class AlbumFragment extends BaseFragment {
     protected void handleDetailsBack(int detailFlag) {
         super.handleDetailsBack(detailFlag);
         if (detailFlag == Constants.NUMBER_TEN) {
-            LogUtil.d("DetailsView 的标记==========  " + detailFlag);
             mAlbumContentView.setVisibility(View.VISIBLE);
             mDetailsView.setVisibility(View.GONE);
             if (mDetailsViewMap.containsKey(mClassName)) {

@@ -134,7 +134,6 @@ public class PlayListFragment extends BaseFragment {
             mLlAddNewPlayList.setVisibility(View.VISIBLE);
             mDetailsView.setVisibility(View.GONE);
             if (mDetailsViewMap.containsKey(mClassName)) {
-                LogUtil.d("======确定移除   ");
                 mDetailsViewMap.remove(mClassName);
             }
             isShowDetailsView = !isShowDetailsView;
