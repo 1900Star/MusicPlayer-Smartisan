@@ -17,6 +17,7 @@ import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.StringUtil;
 
 import java.util.List;
@@ -77,10 +78,12 @@ public class SongAdapter
             int position = holder.getAdapterPosition();
             songListViewHolder.mSongArtistName.setText(info.getArtist());
 
-            Glide.with(songListViewHolder.mIvSongItemMenu.getContext())
-                    .load(StringUtil.getAlbulm(info.getAlbumId()))
-                    .placeholder(R.drawable.noalbumcover_120)
-                    .into(songListViewHolder.mSongAlbum);
+            ImageUitl.customLoadPic(mContext, StringUtil.getAlbulm(info.getAlbumId()), R.drawable.noalbumcover_120, songListViewHolder.mSongAlbum);
+
+
+
+
+
 
             songListViewHolder.mSongName.setText(info.getTitle());
 

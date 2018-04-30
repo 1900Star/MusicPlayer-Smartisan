@@ -14,6 +14,7 @@ import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
 
@@ -82,11 +83,7 @@ public class AlbumAdapter
         int position = albumlistHolder.getAdapterPosition();
 
         albumlistHolder.mTvAlbumListSongArtist.setText(info.getArtist());
-
-        Glide.with(mContext)
-                .load(StringUtil.getAlbulm(info.getAlbumId()))
-                .placeholder(R.drawable.noalbumcover_220)
-                .into(albumlistHolder.mIvItemAlbumList);
+        ImageUitl.customLoadPic(mContext, StringUtil.getAlbulm(info.getAlbumId()), R.drawable.noalbumcover_220, albumlistHolder.mIvItemAlbumList);
         albumlistHolder.mTvAlbumListSongName.setText(info.getAlbumName());
         String songCount = info.getSongCount() + "首";
         albumlistHolder.mTvAlbumListSongCount.setText(songCount);
@@ -110,10 +107,9 @@ public class AlbumAdapter
 
     private void setDataAlbumTile(AlbumTileHolder holder, AlbumInfo albumInfo) {
 
-        Glide.with(mContext)
-                .load(StringUtil.getAlbulm(albumInfo.getAlbumId()))
-                .placeholder(R.drawable.noalbumcover_220)
-                .into(holder.mIvAlbumTileAlbum);
+
+
+        ImageUitl.customLoadPic(mContext, StringUtil.getAlbulm(albumInfo.getAlbumId()), R.drawable.noalbumcover_120, holder.mIvAlbumTileAlbum);
         holder.mTvAlbumTileName.setText(albumInfo.getSongName());
 
         holder.mIvAlbumTileAlbum.setOnClickListener(view1 -> {

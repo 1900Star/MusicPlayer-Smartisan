@@ -29,6 +29,7 @@ import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.song.MusicFavoriteBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
+import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
@@ -280,10 +281,8 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     private void setAlbulm(String url) {
-        Glide.with(this)
-                .load(url)
-                .asBitmap()
-                .into(mPlayingSongAlbum);
+        ImageUitl.loadPic(this,url,mPlayingSongAlbum);
+
     }
 
     private void switchPlayState() {

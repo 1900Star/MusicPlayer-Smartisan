@@ -34,6 +34,7 @@ import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.DialogUtil;
+import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
@@ -293,10 +294,8 @@ public class MusicPlayDialogFag
 
 
     private void setAlbulm(String url) {
-        Glide.with(MusicApplication.getIntstance())
-                .load(url)
-                .asBitmap()
-                .into(mPlayingSongAlbum);
+
+        ImageUitl.loadPic(getActivity(), url, mPlayingSongAlbum);
     }
 
 

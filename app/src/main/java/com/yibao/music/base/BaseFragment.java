@@ -99,7 +99,7 @@ public abstract class BaseFragment extends Fragment {
 
 
     }
-
+    // 子类需要自己处理返回事件的，重写这个方法。
     protected void handleDetailsBack(int detailFlag) {
         // 详情页面关闭后，将标记置为0，将返回事件交给Activity处理，这样就能正常返回。
         SharePrefrencesUtil.setDetailsFlag(mActivity, Constants.NUMBER_ZOER);

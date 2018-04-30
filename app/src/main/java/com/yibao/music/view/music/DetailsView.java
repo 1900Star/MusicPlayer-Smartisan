@@ -17,6 +17,7 @@ import com.yibao.music.adapter.DetailsListAdapter;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
 
@@ -140,10 +141,9 @@ public class DetailsView
     private void setMusicInfo(String albumName, String artist, long albumId, int issueYear) {
         mTvArtistAlbummDetailsTitle.setText(albumName);
         mTvArtistAlbummDetailsArtist.setText(artist);
-        Glide.with(mIvArtistAlbummDetails.getContext())
-                .load(StringUtil.getAlbulm(albumId))
-                .placeholder(R.drawable.noalbumcover_220)
-                .into(mIvArtistAlbummDetails);
+
+        ImageUitl.customLoadPic(getContext(), StringUtil.getAlbulm((albumId)), R.drawable.noalbumcover_220, mIvArtistAlbummDetails);
+
         if (issueYear != Constants.NUMBER_ZOER) {
             String year = String.valueOf(issueYear);
             mTvArtistAlbummDetailsDate.setText(year);

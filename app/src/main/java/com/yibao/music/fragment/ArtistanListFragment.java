@@ -95,7 +95,6 @@ public class ArtistanListFragment extends BaseFragment {
     protected void handleDetailsBack(int detailFlag) {
         super.handleDetailsBack(detailFlag);
         if (detailFlag == Constants.NUMBER_NINE) {
-            LogUtil.d("DetailsView 的标记==========  " + detailFlag);
             mMusicView.setVisibility(View.VISIBLE);
             mDetailsView.setVisibility(View.GONE);
             if (mDetailsViewMap.containsKey(mClassName)) {
