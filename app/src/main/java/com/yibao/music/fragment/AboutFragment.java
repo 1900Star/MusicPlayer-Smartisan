@@ -1,6 +1,5 @@
 package com.yibao.music.fragment;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -48,14 +47,7 @@ public class AboutFragment extends BaseFragment {
     }
 
     private void initListener() {
-        mAboutHeaderIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LogUtil.d("======Map 的长度    " + mDetailsViewMap.size());
-
-//                RelaxDialogFragment.newInstance().show(AboutFragment.this.getFragmentManager(), "girlsDialog");
-            }
-        });
+        mAboutHeaderIv.setOnClickListener(v -> RelaxDialogFragment.newInstance().show(AboutFragment.this.getFragmentManager(), "girlsDialog"));
         mAboutHeaderIv.setOnLongClickListener(view -> {
             TopBigPicDialogFragment.newInstance("")
                     .show(getFragmentManager(), "album");
