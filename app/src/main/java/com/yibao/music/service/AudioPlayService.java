@@ -125,7 +125,7 @@ public class AudioPlayService
     private void getMusicDataList(int sortListFlag, int dataFlag, String queryFlag) {
         // 按歌曲名
         if (sortListFlag == Constants.NUMBER_ONE) {
-            mMusicDataList = mMusicDao.queryBuilder().list();
+            mMusicDataList = MusicListUtil.sortMusicAbc(mMusicDao.queryBuilder().list());
             // 按评分
         } else if (sortListFlag == Constants.NUMBER_TWO) {
             LogUtil.d("");
@@ -134,7 +134,7 @@ public class AudioPlayService
             LogUtil.d("");
             // 按添加时间
         } else if (sortListFlag == Constants.NUMBER_FOUR) {
-            mMusicDataList = MusicListUtil.sortMusicAddtime(mMusicDataList);
+            mMusicDataList = MusicListUtil.sortMusicAddtime(mMusicDao.queryBuilder().list());
             // 收藏列表
         } else if (sortListFlag == Constants.NUMBER_EIGHT) {
             mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();

@@ -19,6 +19,7 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicView;
 
@@ -128,14 +129,35 @@ public class AlbumFragment extends BaseFragment {
             List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(bean.getAlbumName())).build().list();
             DetailsListAdapter adapter = new DetailsListAdapter(getActivity(), list, Constants.NUMBER_TWO);
             mDetailsView.setAdapter(getActivity(), Constants.NUMBER_TWO, bean, adapter);
+            SharePrefrencesUtil.setDetailsFlag(getActivity(), Constants.NUMBER_TEN);
+            if (!mDetailsViewMap.containsKey(mClassName)) {
+                mDetailsViewMap.put(mClassName, this);
+            }
 
         } else {
-            mDetailsView.setVisibility(View.INVISIBLE);
+            mDetailsView.setVisibility(View.GONE);
             mAlbumContentView.setVisibility(View.VISIBLE);
 
         }
         isShowDetailsView = !isShowDetailsView;
     }
+
+    @Override
+    protected void handleDetailsBack(int detailFlag) {
+        super.handleDetailsBack(detailFlag);
+        if (detailFlag == Constants.NUMBER_TEN) {
+            LogUtil.d("DetailsView 的标记==========  " + detailFlag);
+            mAlbumContentView.setVisibility(View.VISIBLE);
+            mDetailsView.setVisibility(View.GONE);
+            if (mDetailsViewMap.containsKey(mClassName)) {
+                mDetailsViewMap.remove(mClassName);
+            }
+            isShowDetailsView = !isShowDetailsView;
+        }
+
+
+    }
+
 
     private void switchCategory(int showType) {
         if (showType == Constants.NUMBER_ZOER) {
@@ -179,10 +201,4 @@ public class AlbumFragment extends BaseFragment {
 
     }
 
-    @Override
-    public boolean backPressed() {
-
-
-        return mDetailsView.getVisibility() != View.GONE;
-    }
 }

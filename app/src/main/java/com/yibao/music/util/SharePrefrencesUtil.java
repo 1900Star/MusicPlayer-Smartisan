@@ -15,6 +15,24 @@ import android.content.SharedPreferences;
 public class SharePrefrencesUtil {
 
     /**
+     * 用于标记详情页面是否打开
+     *
+     * @param context
+     * @param value
+     */
+    public static void setDetailsFlag(Context context, int value) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.DETAIL_FLAG, Constants.MODE_KEY);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(Constants.DETAIL_FLAG_KEY, value);
+        editor.apply();
+    }
+
+    public static int getDetailFlag(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.DETAIL_FLAG, Constants.MODE_KEY);
+        return sp.getInt(Constants.DETAIL_FLAG_KEY, Constants.MODE_KEY);
+    }
+
+    /**
      * 用于存储和获取音乐的播放模式
      *
      * @param context
@@ -24,7 +42,7 @@ public class SharePrefrencesUtil {
         SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_MODE, Constants.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(Constants.PLAY_MODE_KEY, value);
-        editor.commit();
+        editor.apply();
     }
 
     public static int getMusicMode(Context context) {
@@ -42,7 +60,7 @@ public class SharePrefrencesUtil {
         SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_POSITION, Constants.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(Constants.MUSIC_ITEM_POSITION, value);
-        editor.commit();
+        editor.apply();
     }
 
     public static int getMusicPosition(Context context) {
@@ -60,7 +78,7 @@ public class SharePrefrencesUtil {
         SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_LOAD, Constants.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(Constants.MUSIC_LOAD_FLAG, value);
-        editor.commit();
+        editor.apply();
     }
 
     public static int getLoadMusicFlag(Context context) {
@@ -79,7 +97,7 @@ public class SharePrefrencesUtil {
         SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_DATA_FLAG, Constants.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(Constants.MUSIC_DATA_LIST_FLAG, value);
-        editor.commit();
+        editor.apply();
     }
 
     public static int getMusicDataListFlag(Context context) {
@@ -97,7 +115,7 @@ public class SharePrefrencesUtil {
         SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_PLAY_STATE, Constants.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(Constants.MUSIC_PLAY_STATE_KEY, value);
-        editor.commit();
+        editor.apply();
     }
 
     public static int getMusicPlayState(Context context) {
@@ -114,7 +132,7 @@ public class SharePrefrencesUtil {
         SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_CONFIG, Constants.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(Constants.MUSIC_REMENBER_FLAG, true);
-        editor.commit();
+        editor.apply();
     }
 
     public static boolean getMusicConfig(Context context, boolean b) {

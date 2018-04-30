@@ -50,15 +50,13 @@ public class LoadMusicDataService extends IntentService {
             mMusicDao.insert(bean);
             MusicApplication.getIntstance().bus().post(new MusicCountBean(songCount, songSum));
         });
-//
-//        for (MusicBean info : dataList) {
-//            s++;
-//            mMusicDao.insert(info);
-//            MusicApplication.getIntstance().bus().post(new MusicCountBean(s, size));
-//        }
         LogUtil.d("LoadMusicDataServices===== 加载数据完成");
 
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopSelf();
+    }
 }

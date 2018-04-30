@@ -18,9 +18,9 @@
             android:id="@+id/titlebar_down"
             android:layout_width="52dp"
             android:layout_height="45dp"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:marqueeRepeatLimit="marquee_forever"
-                android:maxLength="18"
+                android:maxLength="20"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/textDes"
@@ -66,7 +66,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/titlebar_down"
             android:layout_centerInParent="true"
-            android:layout_marginRight="4dp"
+            android:layout_marginEnd="4dp"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
@@ -84,7 +84,7 @@
             android:id="@+id/start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:textColor="@color/aboutSign" />
 
 
@@ -108,7 +108,7 @@
             android:id="@+id/end_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
             android:textColor="@color/aboutSign" />
     </LinearLayout>
 
@@ -169,7 +169,7 @@
         <LinearLayout
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="40dp"
             android:background="@mipmap/lyrics_bm">
 
@@ -188,7 +188,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="right"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginTop="40dp"
             android:contentDescription="@null"
             android:src="@drawable/sun_always_of_selector"
@@ -257,8 +257,7 @@
         android:id="@+id/sb_volume"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@color/colorWhite"
+        android:layout_marginTop="15dp"
         android:maxHeight="8dp"
         android:minHeight="8dp"
         android:progressDrawable="@drawable/seek_bar"

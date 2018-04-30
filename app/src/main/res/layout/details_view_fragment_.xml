@@ -39,7 +39,6 @@
                     android:maxLength="18"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:text="aaaaa"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/music_loating_title" />
 
@@ -50,7 +49,6 @@
                     android:layout_marginTop="6dp"
                     android:maxLength="18"
                     android:maxLines="1"
-                    android:text="hhhh"
                     android:textColor="@color/tabbarTv"
                     android:textSize="@dimen/music_loating_name" />
 
@@ -61,7 +59,6 @@
                     android:layout_marginTop="6dp"
                     android:maxLength="18"
                     android:maxLines="1"
-                    android:text="2008"
                     android:textColor="@color/tabbarTv"
                     android:textSize="@dimen/music_loating_name" />
 
@@ -85,7 +82,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="bottom"
-                    android:layout_marginLeft="12dp"
+                    android:layout_marginStart="12dp"
                     android:src="@mipmap/favorite_yes" />
 
             </LinearLayout>

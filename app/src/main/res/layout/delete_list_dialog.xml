@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/tv_delete_list_title"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/tabbar_bg"
+        android:gravity="center"
+        android:textColor="@color/tabbarDownTv"
+        android:textSize="@dimen/bigLyrics"
+        android:textStyle="bold" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:background="@color/seekBarN" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:layout_marginTop="80dp"
+        android:background="@color/seekBarN"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_delete_list_cancel"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/add_btn_selector"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/text_cancel_selector"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="0.1dp"
+            android:layout_height="42dp"
+            android:layout_gravity="center"
+            android:background="@color/seekBarN"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tv_delete_list_continue"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/add_btn_selector"
+            android:gravity="center"
+            android:text="@string/sure"
+            android:textColor="@color/text_cancel_selector"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</LinearLayout>

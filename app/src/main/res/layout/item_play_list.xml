@@ -14,18 +14,20 @@
         android:layout_width="wrap_content"
         android:layout_height="62dp"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_centerInParent="true"
         android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        tools:ignore="UseCompoundDrawables"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="20dp">
+        tools:ignore="UseCompoundDrawables">
 
         <TextView
             android:id="@+id/tv_play_list_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLength="21"
+            android:maxLines="1"
             android:textColor="@color/text_song_name_selector"
             android:textSize="@dimen/music_loating_title" />
 
@@ -44,11 +46,10 @@
     <ImageView
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_margin="8dp"
-        android:src="@drawable/arrow_more"
-        android:layout_alignParentEnd="true" />
+        android:src="@drawable/arrow_more" />
 
 
 </RelativeLayout>

@@ -16,6 +16,7 @@ public class Constants {
     public static final int NUMBER_FOUR = 4;
     public static final int NUMBER_FIEV = 5;
     public static final int NUMBER_EIGHT = 8;
+    public static final int NUMBER_NINE = 9;
     public static final int NUMBER_TEN = 10;
     public static final char LETTER_A = 'A';
     public static final char LETTER_Z = 'Z';
@@ -28,6 +29,9 @@ public class Constants {
     static final String MUSIC_MODE = "music_mode";
     static final String PLAY_MODE_KEY = "play_mode";
 
+    static final String DETAIL_FLAG = "detail_flag";
+    static final String DETAIL_FLAG_KEY = "detail_flag_key";
+
     static final String MUSIC_DATA_FLAG = "music_data_flag";
     static final String MUSIC_DATA_LIST_FLAG = "music_data_list_flag";
 
@@ -39,5 +43,8 @@ public class Constants {
 
     static final String MUSIC_CONFIG = "music_config";
     static final String MUSIC_REMENBER_FLAG = "music_remenber_flag";
+    public static final String FRAGMENT_PLAYLIST = "PlayListFragment";
+    public static final String FRAGMENT_ARTIST = "ArtistanListFragment";
+    public static final String FRAGMENT_ALBUM = "AlbumFragment";
 
 }

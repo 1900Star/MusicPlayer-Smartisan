@@ -3,7 +3,6 @@ package com.yibao.music.fragment.dialogfrag;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,10 +17,10 @@ import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.adapter.BottomSheetAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
+import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.model.BottomSheetStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.model.song.MusicFavoriteBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
@@ -85,10 +84,8 @@ public class MusicBottomSheetDialog
         mBottomListContent.addView(mRecyclerView);
         dialog.setContentView(view);
         dialog.setCancelable(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            dialog.getWindow()
-                    .addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
+        dialog.getWindow()
+                .addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         dialog.setCanceledOnTouchOutside(true);
         mBehavior = BottomSheetBehavior.from((View) view.getParent());
     }
@@ -122,15 +119,14 @@ public class MusicBottomSheetDialog
                 backTop();
                 break;
             case R.id.bottom_sheet_bar_clear:
-                clearFavoriteMusic();
-
+                clearAllFavoriteMusic();
                 break;
             default:
                 break;
         }
     }
 
-    private void clearFavoriteMusic() {
+    private void clearAllFavoriteMusic() {
         for (MusicBean musicBean : mList) {
             musicBean.setIsFavorite(false);
             MusicApplication.getIntstance().getMusicDao()
@@ -138,11 +134,10 @@ public class MusicBottomSheetDialog
         }
 
         mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        MusicApplication.getIntstance().bus().post(new MusicFavoriteBean());
 
-//        if (mContext instanceof OnCheckFavoriteListener) {
-//            ((OnCheckFavoriteListener) mContext).updataFavoriteStatus();
-//        }
+        if (mContext instanceof OnCheckFavoriteListener) {
+            ((OnCheckFavoriteListener) mContext).updataFavoriteStatus();
+        }
     }
 
     private void backTop() {

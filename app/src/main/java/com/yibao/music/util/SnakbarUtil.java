@@ -30,9 +30,8 @@ public class SnakbarUtil {
     /**
      * 列表名字不能为空提示
      */
-    @SuppressLint("ResourceAsColor")
     public static void favoriteFailView(View view) {
-        Snackbar snackbar = make(view, "列表名不能为空！", Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = make(view, "列表名的长度不能超过21个字符", Snackbar.LENGTH_LONG);
         snackbar.getView()
                 .setBackgroundColor(Color.parseColor("#325ab1"));
         snackbar.show();

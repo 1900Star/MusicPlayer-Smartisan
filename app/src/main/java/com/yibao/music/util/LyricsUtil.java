@@ -31,7 +31,7 @@ public class LyricsUtil {
         String str = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyric/";
         String path = str + songName + "$$" + artist + ".lrc";
         File file = new File(path);
-        if (file == null || !file.exists()) {
+        if (!file.exists()) {
             lrcList.add(new MusicLyrBean(0, "暂无歌词"));
             return lrcList;
         }
@@ -71,6 +71,7 @@ public class LyricsUtil {
         for (int i = 0; i < arr.length - 1; i++) {
 
             int startTime = parseTime(arr[i]);
+
             MusicLyrBean lrcBean = new MusicLyrBean(startTime, content);
             list.add(lrcBean);
         }
@@ -80,8 +81,8 @@ public class LyricsUtil {
     /**
      * 对歌词时间可能出现汉字或英文字母做了处理
      *
-     * @param s
-     * @return
+     * @param s s
+     * @return d
      */
     private static int parseTime(String s) {
         boolean containsChinese = isContainsEnglishAndChinese(s);

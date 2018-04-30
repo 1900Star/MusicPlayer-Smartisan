@@ -15,6 +15,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicView;
 
@@ -71,7 +72,7 @@ public class ArtistanListFragment extends BaseFragment {
 
     private void openDetailsView(ArtistInfo bean) {
         if (isShowDetailsView) {
-            mDetailsView.setVisibility(View.INVISIBLE);
+            mDetailsView.setVisibility(View.GONE);
             mMusicView.setVisibility(View.VISIBLE);
 
         } else {
@@ -79,12 +80,32 @@ public class ArtistanListFragment extends BaseFragment {
             mDetailsView.setVisibility(View.VISIBLE);
             List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(bean.getArtist())).build().list();
             DetailsListAdapter adapter = new DetailsListAdapter(getActivity(), list, Constants.NUMBER_ONE);
-
             mDetailsView.setAdapter(getActivity(), Constants.NUMBER_ONE, bean, adapter);
+            SharePrefrencesUtil.setDetailsFlag(getActivity(), Constants.NUMBER_NINE);
+            if (!mDetailsViewMap.containsKey(mClassName)) {
+                mDetailsViewMap.put(mClassName, this);
+            }
 
         }
         isShowDetailsView = !isShowDetailsView;
     }
+
+    @Override
+    protected void handleDetailsBack(int detailFlag) {
+        super.handleDetailsBack(detailFlag);
+        if (detailFlag == Constants.NUMBER_NINE) {
+            LogUtil.d("DetailsView 的标记==========  " + detailFlag);
+            mMusicView.setVisibility(View.VISIBLE);
+            mDetailsView.setVisibility(View.GONE);
+            if (mDetailsViewMap.containsKey(mClassName)) {
+                mDetailsViewMap.remove(mClassName);
+            }
+            isShowDetailsView = !isShowDetailsView;
+        }
+
+
+    }
+
 
     public static ArtistanListFragment newInstance() {
 
@@ -96,12 +117,5 @@ public class ArtistanListFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @Override
-    public boolean backPressed() {
-        LogUtil.d("========== 自己处理返回事件");
-
-        return mDetailsView.getVisibility() != View.GONE;
     }
 }

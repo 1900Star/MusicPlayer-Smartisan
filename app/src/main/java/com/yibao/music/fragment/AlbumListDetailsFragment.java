@@ -87,9 +87,7 @@ public class AlbumListDetailsFragment extends BaseFragment {
     }
 
 
-    public static AlbumListDetailsFragment newInstance() {
-        return new AlbumListDetailsFragment();
-    }
+
 
     @Override
     public void onDestroy() {
@@ -124,8 +122,4 @@ public class AlbumListDetailsFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @Override
-    public boolean backPressed() {
-        return false;
-    }
 }

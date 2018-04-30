@@ -17,6 +17,7 @@ import com.yibao.music.adapter.DetailsListAdapter;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
 
 /**
@@ -62,19 +63,17 @@ public class DetailsView
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_details_add_to_list:
-
+                LogUtil.d("=================添加到个人列表");
                 break;
             case R.id.iv_details_add_to_play_list:
-
+                LogUtil.d("=================添加到当前播放列表");
                 break;
             case R.id.ll_album_details_playall:
-
+                LogUtil.d("=================播放全部");
                 break;
             case R.id.ll_album_details_random_play:
-
+                LogUtil.d("=================随机播放");
                 break;
-
-
             default:
                 break;
 
@@ -124,6 +123,7 @@ public class DetailsView
 
     }
 
+    // 根据dataType将bean转换具体的数据类型
     private void initData(int dataType, Object bean) {
         if (dataType == Constants.NUMBER_ONE) {
             ArtistInfo info = (ArtistInfo) bean;

@@ -39,6 +39,7 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
         public final static Property SongScore = new Property(12, int.class, "songScore", false, "SONG_SCORE");
         public final static Property PlayStatus = new Property(13, int.class, "playStatus", false, "PLAY_STATUS");
         public final static Property IssueYear = new Property(14, int.class, "issueYear", false, "ISSUE_YEAR");
+        public final static Property CurrentLyrics = new Property(15, String.class, "currentLyrics", false, "CURRENT_LYRICS");
     }
 
 
@@ -68,7 +69,8 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
                 "\"PLAY_FREQUENCY\" INTEGER NOT NULL ," + // 11: playFrequency
                 "\"SONG_SCORE\" INTEGER NOT NULL ," + // 12: songScore
                 "\"PLAY_STATUS\" INTEGER NOT NULL ," + // 13: playStatus
-                "\"ISSUE_YEAR\" INTEGER NOT NULL );"); // 14: issueYear
+                "\"ISSUE_YEAR\" INTEGER NOT NULL ," + // 14: issueYear
+                "\"CURRENT_LYRICS\" TEXT);"); // 15: currentLyrics
     }
 
     /** Drops the underlying database table. */
@@ -123,6 +125,11 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
         stmt.bindLong(13, entity.getSongScore());
         stmt.bindLong(14, entity.getPlayStatus());
         stmt.bindLong(15, entity.getIssueYear());
+ 
+        String currentLyrics = entity.getCurrentLyrics();
+        if (currentLyrics != null) {
+            stmt.bindString(16, currentLyrics);
+        }
     }
 
     @Override
@@ -171,6 +178,11 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
         stmt.bindLong(13, entity.getSongScore());
         stmt.bindLong(14, entity.getPlayStatus());
         stmt.bindLong(15, entity.getIssueYear());
+ 
+        String currentLyrics = entity.getCurrentLyrics();
+        if (currentLyrics != null) {
+            stmt.bindString(16, currentLyrics);
+        }
     }
 
     @Override
@@ -195,7 +207,8 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
             cursor.getInt(offset + 11), // playFrequency
             cursor.getInt(offset + 12), // songScore
             cursor.getInt(offset + 13), // playStatus
-            cursor.getInt(offset + 14) // issueYear
+            cursor.getInt(offset + 14), // issueYear
+            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15) // currentLyrics
         );
         return entity;
     }
@@ -217,6 +230,7 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
         entity.setSongScore(cursor.getInt(offset + 12));
         entity.setPlayStatus(cursor.getInt(offset + 13));
         entity.setIssueYear(cursor.getInt(offset + 14));
+        entity.setCurrentLyrics(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
      }
     
     @Override

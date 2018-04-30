@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="18dp"
+        android:layout_marginStart="18dp"
         android:background="@color/listBg"
         android:textColor="@color/aboutSign"
         android:visibility="visible" />
@@ -51,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:maxLength="18"
+                    android:maxLength="22"
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textColor="@color/text_song_name_selector"
@@ -84,9 +84,9 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="25dp"
+        android:layout_marginEnd="25dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -100,7 +100,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="13dp"
+            android:layout_marginEnd="13dp"
             android:textColor="@color/text_singer_selector"
             android:textSize="@dimen/music_loating_name"
             android:textStyle="bold"
