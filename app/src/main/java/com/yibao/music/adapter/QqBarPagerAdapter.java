@@ -64,7 +64,7 @@ public class QqBarPagerAdapter
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        if (mAnimator != null || mAnimationListener != null) {
+        if (mAnimator != null && mAnimationListener != null) {
             mAnimator.cancel();
             mAnimationListener.pause();
         }

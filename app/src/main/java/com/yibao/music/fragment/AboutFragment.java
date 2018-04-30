@@ -2,6 +2,7 @@ package com.yibao.music.fragment;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +40,7 @@ public class AboutFragment extends BaseFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.about_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
 
@@ -48,17 +49,10 @@ public class AboutFragment extends BaseFragment {
     }
 
     private void initListener() {
-        mAboutHeaderIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LogUtil.d("======Map 的长度    " + mDetailsViewMap.size());
-
-//                RelaxDialogFragment.newInstance().show(AboutFragment.this.getFragmentManager(), "girlsDialog");
-            }
-        });
+        mAboutHeaderIv.setOnClickListener(v -> RelaxDialogFragment.newInstance().show(mFragmentManager, "girlsDialog"));
         mAboutHeaderIv.setOnLongClickListener(view -> {
             TopBigPicDialogFragment.newInstance("")
-                    .show(getFragmentManager(), "album");
+                    .show(mFragmentManager, "album");
             return true;
         });
     }

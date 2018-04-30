@@ -1,6 +1,7 @@
 package com.yibao.music.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -55,7 +56,7 @@ public class PlayListFragment extends BaseFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.play_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         initData();
@@ -89,7 +90,7 @@ public class PlayListFragment extends BaseFragment {
         mAdapter.setItemListener(str -> PlayListFragment.this.switchShowDetailsView());
         mAdapter.setItemLongClickListener((musicInfo, currentPosition) -> {
             mDeletePosition = currentPosition;
-            DeletePlayListDialog.newInstance(musicInfo).show(PlayListFragment.this.getFragmentManager(), "deleteList");
+            DeletePlayListDialog.newInstance(musicInfo).show(mActivity.getFragmentManager(), "deleteList");
         });
     }
 
@@ -101,7 +102,7 @@ public class PlayListFragment extends BaseFragment {
         } else {
             mLlAddNewPlayList.setVisibility(View.INVISIBLE);
             mDetailsView.setVisibility(View.VISIBLE);
-            SharePrefrencesUtil.setDetailsFlag(getActivity(), Constants.NUMBER_EIGHT);
+            SharePrefrencesUtil.setDetailsFlag(mActivity, Constants.NUMBER_EIGHT);
             if (!mDetailsViewMap.containsKey(mClassName)) {
                 mDetailsViewMap.put(mClassName, this);
             }
@@ -115,7 +116,7 @@ public class PlayListFragment extends BaseFragment {
         switch (v.getId()) {
             // 打开新建播放列表的Dialog
             case R.id.ll_add_new_play_list:
-                AddListDialog.newInstance().show(getFragmentManager(), "addList");
+                AddListDialog.newInstance().show(mActivity.getFragmentManager(), "addList");
                 break;
             default:
                 break;

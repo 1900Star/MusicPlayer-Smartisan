@@ -1,10 +1,11 @@
 package com.yibao.music.base;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
@@ -49,6 +50,7 @@ public abstract class BaseFragment extends Fragment {
     protected CompositeDisposable mDisposable;
     public static HashMap<String, BaseFragment> mDetailsViewMap;
     protected String mClassName;
+    protected FragmentManager mFragmentManager;
 
     protected BaseFragment() {
         mMusicBeanDao = MusicApplication.getIntstance().getMusicDao();
@@ -66,6 +68,7 @@ public abstract class BaseFragment extends Fragment {
         mBus = MusicApplication.getIntstance().bus();
         mDetailsViewMap = new HashMap<>(5);
         mClassName = getClass().getSimpleName();
+        mFragmentManager = mActivity.getFragmentManager();
 
     }
 

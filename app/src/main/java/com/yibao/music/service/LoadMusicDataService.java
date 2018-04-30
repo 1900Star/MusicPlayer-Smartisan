@@ -12,6 +12,7 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.song.MusicCountBean;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
+import com.yibao.music.util.RxBus;
 
 import java.util.List;
 
@@ -30,11 +31,13 @@ public class LoadMusicDataService extends IntentService {
 
     private MusicBeanDao mMusicDao;
     private int songCount = 0;
+    private RxBus mBus;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
+        mBus = MusicApplication.getIntstance().bus();
     }
 
     public LoadMusicDataService() {
@@ -45,13 +48,22 @@ public class LoadMusicDataService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         List<MusicBean> dataList = MusicListUtil.getMusicDataList();
         int songSum = dataList.size();
-        dataList.forEach(bean -> {
-            songCount++;
-            mMusicDao.insert(bean);
-            MusicApplication.getIntstance().bus().post(new MusicCountBean(songCount, songSum));
-        });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            dataList.forEach((MusicBean bean) -> sendLoadProgress(songSum, bean));
+        } else {
+            for (MusicBean musicInfo : dataList) {
+                sendLoadProgress(songSum, musicInfo);
+            }
+        }
         LogUtil.d("LoadMusicDataServices===== 加载数据完成");
 
+    }
+
+    private void sendLoadProgress(int songSum, MusicBean bean) {
+        songCount++;
+        mMusicDao.insert(bean);
+
+        mBus.post(new MusicCountBean(songCount, songSum));
     }
 
     @Override
