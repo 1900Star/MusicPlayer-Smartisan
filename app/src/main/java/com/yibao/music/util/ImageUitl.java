@@ -44,7 +44,7 @@ public class ImageUitl {
         RequestOptions options = new RequestOptions();
         options.placeholder(R.mipmap.ninas);
         options.error(R.mipmap.nina);
-        options.diskCacheStrategy(DiskCacheStrategy.NONE);
+        options.diskCacheStrategy(DiskCacheStrategy.ALL);
         Glide.with(context).load(url).apply(options).into(view);
     }
 

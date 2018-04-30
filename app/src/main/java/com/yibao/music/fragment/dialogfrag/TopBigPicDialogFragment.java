@@ -47,7 +47,7 @@ public class TopBigPicDialogFragment
         ZoomImageView view = ImageUitl.creatZoomView(getActivity());
         String url = getArguments().getString("url");
 
-        ImageUitl.loadPic(getActivity(), url, view);
+        ImageUitl.loadPlaceholder(getActivity(), url, view);
         view.setOnClickListener(view1 -> TopBigPicDialogFragment.this.dismiss());
         save.setOnClickListener(view12 -> LogUtil.d(""));
         AnimationUtil.applyBobbleAnim(topPicContent);
