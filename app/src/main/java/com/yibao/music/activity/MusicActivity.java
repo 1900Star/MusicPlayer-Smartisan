@@ -193,7 +193,7 @@ public class MusicActivity
         mCurrentPosition = SharePrefrencesUtil.getMusicPosition(this);
         mCurrentMusicBean = mMusicItems.get(mCurrentPosition);
         // 初始化 MusicPagerAdapter 主页面
-        MusicPagerAdapter musicPagerAdapter = new MusicPagerAdapter(getFragmentManager());
+        MusicPagerAdapter musicPagerAdapter = new MusicPagerAdapter(getSupportFragmentManager());
         mMusicViewPager.setAdapter(musicPagerAdapter);
         mMusicViewPager.setCurrentItem(Constants.NUMBER_TWO);
         mMusicViewPager.setOffscreenPageLimit(5);

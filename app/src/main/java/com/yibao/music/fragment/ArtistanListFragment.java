@@ -1,6 +1,7 @@
 package com.yibao.music.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +49,7 @@ public class ArtistanListFragment extends BaseFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.artisan_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
@@ -81,7 +82,7 @@ public class ArtistanListFragment extends BaseFragment {
             List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(bean.getArtist())).build().list();
             DetailsListAdapter adapter = new DetailsListAdapter(getActivity(), list, Constants.NUMBER_ONE);
             mDetailsView.setAdapter(getActivity(), Constants.NUMBER_ONE, bean, adapter);
-            SharePrefrencesUtil.setDetailsFlag(getActivity(), Constants.NUMBER_NINE);
+            SharePrefrencesUtil.setDetailsFlag(mActivity, Constants.NUMBER_NINE);
             if (!mDetailsViewMap.containsKey(mClassName)) {
                 mDetailsViewMap.put(mClassName, this);
             }
