@@ -7,11 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -42,6 +46,8 @@ import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.LyricsUtil;
+import com.yibao.music.util.MusicDataTranslateUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
@@ -51,9 +57,13 @@ import com.yibao.music.view.MainViewPager;
 import com.yibao.music.view.MusicProgressView;
 import com.yibao.music.view.ProgressBtn;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
@@ -63,6 +73,9 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -161,9 +174,8 @@ public class MusicActivity
     private int mPlayState;
 
     private QqBarPagerAdapter mQqBarPagerAdapter;
-    // 控制歌词发送
-    private int coutn = 0;
-
+    private HashMap<String, String> mLyricMap;
+    private static String mEntryValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,7 +194,7 @@ public class MusicActivity
         Toolbar toolbar = findViewById(R.id.toolbar_music);
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
-            supportActionBar.setDisplayShowTitleEnabled(false);
+            supportActionBar.setDisplayShowTitleEnabled(true);
             supportActionBar.setDisplayHomeAsUpEnabled(true);
             setSupportActionBar(toolbar);
             toolbar.setNavigationOnClickListener(v -> onBackPressed());
@@ -212,16 +224,16 @@ public class MusicActivity
      * @return h
      */
     private List<MusicBean> initMusicData() {
-        int spMusicFlag = getSpMusicFlag();
-        if (spMusicFlag == Constants.NUMBER_THRRE) {
-            return MusicListUtil.sortMusicAddtime(mMusicDao.queryBuilder().list());
-        } else if (spMusicFlag == Constants.NUMBER_ONE) {
-            return mMusicItems = mMusicDao.queryBuilder().list();
-        } else if (spMusicFlag == Constants.NUMBER_TEN) {
-            return mMusicItems = mMusicDao.queryBuilder().list();
-        } else if (spMusicFlag == Constants.NUMBER_EIGHT) {
-            return mMusicItems = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
-        }
+//        int spMusicFlag = getSpMusicFlag();
+//        if (spMusicFlag == Constants.NUMBER_THRRE) {
+//            return MusicListUtil.sortMusicAddTime(mMusicDao.queryBuilder().list());
+//        } else if (spMusicFlag == Constants.NUMBER_ONE) {
+//            return mMusicItems = mMusicDao.queryBuilder().list();
+//        } else if (spMusicFlag == Constants.NUMBER_TEN) {
+//            return mMusicItems = mMusicDao.queryBuilder().list();
+//        } else if (spMusicFlag == Constants.NUMBER_EIGHT) {
+//            return mMusicItems = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
+//        }
         return mMusicItems = MusicListUtil.sortMusicAbc(mMusicDao.queryBuilder().list());
     }
 
@@ -277,19 +289,61 @@ public class MusicActivity
         if (isChangeFloatingBlock) {
             mQqMusicBar.setVisibility(View.INVISIBLE);
             mSmartisanMusicBar.setVisibility(View.VISIBLE);
+            if (mDisposablesLyric != null) {
+                mDisposablesLyric.dispose();
+            }
         } else {
             mQqMusicBar.setVisibility(View.VISIBLE);
             mSmartisanMusicBar.setVisibility(View.INVISIBLE);
-            //TODO 这里做更新歌词的操作
-//            List<MusicBean> musicBeans = initMusicData();
-//            coutn++;
-//            mCurrentMusicBean.setCurrentLyrics("时时显示的歌词" + coutn);
-//            musicBeans.set(mCurrentPosition, mCurrentMusicBean);
-            mQqBarPagerAdapter.setData(initMusicData());
+            mQqBarPagerAdapter = new QqBarPagerAdapter(MusicActivity.this, mMusicItems);
+            mMusicSlideViewPager.setAdapter(mQqBarPagerAdapter);
             mMusicSlideViewPager.setCurrentItem(mCurrentPosition, false);
             mQqBarPagerAdapter.notifyDataSetChanged();
+
+            //TODO 这里做更新歌词的操作
+//            setQqPagerLyric();
         }
         isChangeFloatingBlock = !isChangeFloatingBlock;
+    }
+
+
+    @SuppressLint("CheckResult")
+    private void setQqPagerLyric() {
+
+
+        mDisposablesLyric = Observable.interval(1000, 1000, TimeUnit.MICROSECONDS)
+                .subscribeOn(Schedulers.io()).map(aLong -> {
+
+                    String currentProgress = String.valueOf(audioBinder.getProgress());
+
+
+                    for (Map.Entry<String, String> entry : mLyricMap.entrySet()) {
+                        if (currentProgress.equals(entry.getKey())) {
+//                            LogUtil.d(" 当前 进度   " + currentProgress);
+//                            LogUtil.d("当前的Key ====================  " + entry.getKey());
+                            LogUtil.d("当前的Value ====================  " + entry.getValue());
+                            mEntryValue = entry.getValue();
+                        }
+
+                    }
+
+//                    LogUtil.d("=====得到   " + mEntryValue);
+                    return mEntryValue == null ? "加载中..." : mEntryValue;
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(str -> {
+
+                    LogUtil.d("=====得到的歌词   " + str);
+//                    MusicBean musicBean = MusicDataTranslateUtil.tanslateData(mCurrentMusicBean);
+//                    musicBean.setCurrentLyrics(str);
+//                    mMusicItems.set(mCurrentPosition, musicBean);
+//                    mQqBarPagerAdapter = new QqBarPagerAdapter(MusicActivity.this, mMusicItems);
+//                    mMusicSlideViewPager.setAdapter(mQqBarPagerAdapter);
+//                    mMusicSlideViewPager.setCurrentItem(mCurrentPosition, false);
+//                    mQqBarPagerAdapter.notifyDataSetChanged();
+                });
+
+
     }
 
 
@@ -302,7 +356,6 @@ public class MusicActivity
     @Override
     public void startMusicService(int position) {
         int spMusicFlag = getSpMusicFlag();
-        LogUtil.d(" 290  MusicActivity  mFlag==      " + spMusicFlag);
         if (spMusicFlag != Constants.NUMBER_TEN) {
             mCurrentPosition = position;
             Intent musicIntent = new Intent(this, AudioPlayService.class);
@@ -325,7 +378,6 @@ public class MusicActivity
     public void startMusicServiceFlag(int position, int dataFlag, String queryFlag) {
         mCurrentPosition = position;
         Intent intent = new Intent(this, AudioPlayService.class);
-        LogUtil.d(" 306  MusicActivity  dataFlag == queryFlag     " + dataFlag + "  ===  " + queryFlag);
         intent.putExtra("sortFlag", Constants.NUMBER_TEN);
         intent.putExtra("dataFlag", dataFlag);
         intent.putExtra("queryFlag", queryFlag);
@@ -441,8 +493,7 @@ public class MusicActivity
     private void perpareItem(MusicBean musicItem) {
         mCurrentMusicBean = musicItem;
         checkCurrentIsFavorite(musicItem, mIvMusicQqBarFavorite, mIvMusicFloatingFavorite);
-        mQqBarPagerAdapter.setData(initMusicData());
-        mMusicSlideViewPager.setCurrentItem(musicItem.getCureetPosition(), false);
+
         //更新音乐标题
         String songName = musicItem.getTitle();
         mMusicFloatSongName.setText(songName);
@@ -452,25 +503,22 @@ public class MusicActivity
         //设置专辑
         Uri albumUri = StringUtil.getAlbulm(musicItem.getAlbumId());
         ImageUitl.loadPlaceholder(this, albumUri.toString(), mMusicFloatBlockAlbulm);
-        // 得到歌词List
-//        mLyricList = LyricsUtil.getLyricList(musicItem.getTitle(), musicItem.getArtist());
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//            mLyricList.forEach(new Consumer<MusicLyrBean>() {
-//                @Override
-//                public void accept(MusicLyrBean musicLyrBean) {
-//
-//
-//                    LogUtil.d(" 当前 时间   " + musicLyrBean.getStartTime());
-//                    LogUtil.d(" 当前 歌词   " + musicLyrBean.getContent());
-//                }
-//            });
-//        }
+//         加载歌词的List，并将歌词的开始时间和歌词内容存到Map集合里。
+        mLyricMap = new HashMap<>(16);
+        ArrayList<MusicLyrBean> lyricList = LyricsUtil.getLyricList(musicItem.getTitle(), musicItem.getArtist());
+        if (lyricList != null && lyricList.size() > 1) {
+            for (MusicLyrBean musicLyrBean : lyricList) {
+                String songTime = String.valueOf(musicLyrBean.getStartTime());
+                mLyricMap.put(songTime, musicLyrBean.getContent());
+            }
+        }
+        mQqBarPagerAdapter.setData(initMusicData());
+        mMusicSlideViewPager.setCurrentItem(musicItem.getCureetPosition(), false);
     }
 
     private void updataProgress() {
         if (audioBinder != null && audioBinder.isPlaying()) {
             if (mDisposable == null) {
-                LogUtil.d(" 当前 进度   " + audioBinder.getProgress());
                 int duration = audioBinder.getDuration();
                 mPb.setMax(duration);
                 mMusicPagerPlay.setMax(duration);
@@ -611,6 +659,8 @@ public class MusicActivity
     }
 
     /**
+     * 判断mDetailsMap中是否包含当前的Fragment页面,如果有，就说明有详情页面打开。
+     *
      * @param className      展示详情的Fragment
      * @param detailsViewKey 这个Key必须为 8 (PlayListFragment)、9 (ArtistanListFragment)、10 (AlbumFragment)
      *                       这三个整数，这样展示详情的Fragment就能自己处理返回事件。
@@ -704,6 +754,7 @@ public class MusicActivity
         return true;
     }
 
+    //TODO
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -711,16 +762,7 @@ public class MusicActivity
                 LogUtil.d("==================search");
 //                startActivity(new Intent(this, SearchActivity.class));
 
-                List<MusicBean> beanList = initMusicData();
-                coutn++;
-                mCurrentMusicBean.setCurrentLyrics("时时显示的歌词" + coutn);
-                beanList.set(mCurrentPosition, mCurrentMusicBean);
-//                QqBarPagerAdapter barPagerAdapter = new QqBarPagerAdapter(this, beanList);
-                mQqBarPagerAdapter.setData(beanList);
-
-                mMusicSlideViewPager.setAdapter(mQqBarPagerAdapter);
-                mMusicSlideViewPager.setCurrentItem(mCurrentPosition, false);
-                mQqBarPagerAdapter.notifyDataSetChanged();
+//                setQqPagerLyric();
                 break;
             default:
                 break;

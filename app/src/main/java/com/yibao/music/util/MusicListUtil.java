@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 
 /**
  * Author：Sid
- * Des：${ 音乐列表 }
+ * Des：${ 获取手机音乐数据 }
  * Time:2017/9/3 14:38
  *
  * @author Stran
@@ -105,7 +105,7 @@ public class MusicListUtil {
      *
      * @param musicList c
      */
-    public static List<MusicBean> sortMusicAddtime(List<MusicBean> musicList) {
+    public static List<MusicBean> sortMusicAddTime(List<MusicBean> musicList) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             musicList.sort(MusicListUtil::sortAddTime);
         } else {
@@ -227,7 +227,7 @@ public class MusicListUtil {
                 forAlbumList(musicMap, musicInfo);
             }
             for (Map.Entry<String, List<MusicBean>> entry : musicMap.entrySet()) {
-                forAlbumMap(albumInfoList,entry.getKey(),entry.getValue());
+                forAlbumMap(albumInfoList, entry.getKey(), entry.getValue());
             }
 
         }

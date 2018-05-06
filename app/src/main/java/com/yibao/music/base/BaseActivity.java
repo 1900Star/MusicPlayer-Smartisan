@@ -36,12 +36,13 @@ import io.reactivex.disposables.Disposable;
 
 public class BaseActivity extends AppCompatActivity {
 
-    public RxBus mBus;
-    public MusicBeanDao mMusicDao;
-    public CompositeDisposable mCompositeDisposable;
-    public Disposable mDisposable;
-    public Disposable mRxViewDisposable;
-    public final int mNormalTabbarColor = Color.parseColor("#939396");
+    protected RxBus mBus;
+    protected MusicBeanDao mMusicDao;
+    protected CompositeDisposable mCompositeDisposable;
+    protected Disposable mDisposable;
+    protected Disposable mDisposablesLyric;
+    protected Disposable mRxViewDisposable;
+    protected final int mNormalTabbarColor = Color.parseColor("#939396");
     private boolean mCurrentIsFavorite;
 
     @Override
@@ -127,7 +128,10 @@ public class BaseActivity extends AppCompatActivity {
         if (mRxViewDisposable != null) {
             mRxViewDisposable.dispose();
         }
+        if (mDisposablesLyric != null) {
+            mDisposablesLyric.dispose();
 
+        }
         unregisterReceiver(headsetReciver);
     }
 }

@@ -17,9 +17,9 @@ import java.util.Collections;
  * @包名： com.yibao.biggirl.util
  * @文件名: LyricsUtil
  * @author: Stran
- * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
+ * @Email: www.strangermy@outlook.com / www.strangermy98@gmail.com
  * @创建时间: 2018/1/28 22:08
- * @描述： {TODO}
+ * @描述： {将歌词封装到List里}
  */
 
 public class LyricsUtil {

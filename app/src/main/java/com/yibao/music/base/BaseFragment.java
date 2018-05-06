@@ -66,7 +66,7 @@ public abstract class BaseFragment extends Fragment {
         mActivity = getActivity();
         mDisposable = new CompositeDisposable();
         mBus = MusicApplication.getIntstance().bus();
-        mDetailsViewMap = new HashMap<>(5);
+        mDetailsViewMap = new HashMap<>(3);
         mClassName = getClass().getSimpleName();
         mFragmentManager = mActivity.getFragmentManager();
 
@@ -87,6 +87,7 @@ public abstract class BaseFragment extends Fragment {
 
     }
 
+
     // 根据detailFlag处理具体详情页面的返回事件
     private void initDetailsFlag() {
         mDisposable.add(mBus.toObserverable(DetailsFlagBean.class)
@@ -99,7 +100,7 @@ public abstract class BaseFragment extends Fragment {
 
 
     }
-    // 子类需要自己处理返回事件的，重写这个方法。
+    // 有详情页面的子类重写这个方法，让自己处理返回事件的，只要这个方法一调用，按返回键就会将详情页面隐藏。
     protected void handleDetailsBack(int detailFlag) {
         // 详情页面关闭后，将标记置为0，将返回事件交给Activity处理，这样就能正常返回。
         SharePrefrencesUtil.setDetailsFlag(mActivity, Constants.NUMBER_ZOER);

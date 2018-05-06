@@ -1,7 +1,5 @@
 package com.yibao.music.fragment;
 
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -82,7 +80,7 @@ public class SongFragment extends BaseFragment {
         if (isShowStickyView == Constants.NUMBER_ZOER) {
             mSongAdapter = new SongAdapter(mActivity, MusicListUtil.sortMusicAbc(mSongList), isShowStickyView);
         } else if (isShowStickyView == Constants.NUMBER_ONE) {
-            List<MusicBean> musicAddtimeList = MusicListUtil.sortMusicAddtime(mMusicBeanDao.queryBuilder().list());
+            List<MusicBean> musicAddtimeList = MusicListUtil.sortMusicAddTime(mMusicBeanDao.queryBuilder().list());
             mSongAdapter = new SongAdapter(mActivity, musicAddtimeList, isShowStickyView);
         }
         mMusciView.setAdapter(mActivity, Constants.NUMBER_ONE, isShowSlidebar, mSongAdapter);
