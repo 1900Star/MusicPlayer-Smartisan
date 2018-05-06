@@ -35,6 +35,7 @@ public class MusicBean
     private int songScore;
     private int playStatus;
     private int issueYear;
+    private int musicQualityType;
     /**
      * QQ bar上需要时时更新的歌词
      */
@@ -49,70 +50,6 @@ public class MusicBean
     public MusicBean() {
     }
 
-    protected MusicBean(Parcel in) {
-        if (in.readByte() == 0) {
-            id = null;
-        } else {
-            id = in.readLong();
-        }
-        title = in.readString();
-        artist = in.readString();
-        album = in.readString();
-        albumId = in.readLong();
-        addTime = in.readLong();
-        duration = in.readLong();
-        time = in.readString();
-        songUrl = in.readString();
-        firstChar = in.readString();
-        isFavorite = in.readByte() != 0;
-        playFrequency = in.readInt();
-        songScore = in.readInt();
-        playStatus = in.readInt();
-        cureetPosition = in.readInt();
-    }
-
-    @Generated(hash = 1733221446)
-    public MusicBean(Long id, String title, String artist, String album, long albumId, long addTime,
-            long duration, String time, String songUrl, String firstChar, boolean isFavorite,
-            int playFrequency, int songScore, int playStatus, int issueYear, String currentLyrics) {
-        this.id = id;
-        this.title = title;
-        this.artist = artist;
-        this.album = album;
-        this.albumId = albumId;
-        this.addTime = addTime;
-        this.duration = duration;
-        this.time = time;
-        this.songUrl = songUrl;
-        this.firstChar = firstChar;
-        this.isFavorite = isFavorite;
-        this.playFrequency = playFrequency;
-        this.songScore = songScore;
-        this.playStatus = playStatus;
-        this.issueYear = issueYear;
-        this.currentLyrics = currentLyrics;
-    }
-
-
-    public static final Creator<MusicBean> CREATOR = new Creator<MusicBean>() {
-        @Override
-        public MusicBean createFromParcel(Parcel in) {
-            return new MusicBean(in);
-        }
-
-        @Override
-        public MusicBean[] newArray(int size) {
-            return new MusicBean[size];
-        }
-    };
-
-    public int getIssueYear() {
-        return issueYear;
-    }
-
-    public void setIssueYear(int issueYear) {
-        this.issueYear = issueYear;
-    }
 
     public Long getId() {
         return id;
@@ -226,6 +163,30 @@ public class MusicBean
         this.playStatus = playStatus;
     }
 
+    public int getIssueYear() {
+        return issueYear;
+    }
+
+    public void setIssueYear(int issueYear) {
+        this.issueYear = issueYear;
+    }
+
+    public int getMusicQualityType() {
+        return musicQualityType;
+    }
+
+    public void setMusicQualityType(int musicQualityType) {
+        this.musicQualityType = musicQualityType;
+    }
+
+    public String getCurrentLyrics() {
+        return currentLyrics;
+    }
+
+    public void setCurrentLyrics(String currentLyrics) {
+        this.currentLyrics = currentLyrics;
+    }
+
     public int getCureetPosition() {
         return cureetPosition;
     }
@@ -234,29 +195,72 @@ public class MusicBean
         this.cureetPosition = cureetPosition;
     }
 
+    public static Creator<MusicBean> getCREATOR() {
+        return CREATOR;
+    }
 
-    @Override
-    public int compareTo(@NonNull MusicBean musicBean) {
-        String str = "#";
-        if (str.equals(musicBean.getFirstChar())) {
-
-            return -1;
+    protected MusicBean(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readLong();
         }
-        if (str.equals(firstChar)) {
-
-            return 1;
-        }
-        return firstChar.compareTo(musicBean.getFirstChar());
+        title = in.readString();
+        artist = in.readString();
+        album = in.readString();
+        albumId = in.readLong();
+        addTime = in.readLong();
+        duration = in.readLong();
+        time = in.readString();
+        songUrl = in.readString();
+        firstChar = in.readString();
+        isFavorite = in.readByte() != 0;
+        playFrequency = in.readInt();
+        songScore = in.readInt();
+        playStatus = in.readInt();
+        issueYear = in.readInt();
+        musicQualityType = in.readInt();
+        currentLyrics = in.readString();
+        cureetPosition = in.readInt();
     }
 
 
-    public boolean getIsFavorite() {
-        return this.isFavorite;
-    }
-
-    public void setIsFavorite(boolean isFavorite) {
+    @Generated(hash = 1772482409)
+    public MusicBean(Long id, String title, String artist, String album,
+            long albumId, long addTime, long duration, String time, String songUrl,
+            String firstChar, boolean isFavorite, int playFrequency, int songScore,
+            int playStatus, int issueYear, int musicQualityType,
+            String currentLyrics) {
+        this.id = id;
+        this.title = title;
+        this.artist = artist;
+        this.album = album;
+        this.albumId = albumId;
+        this.addTime = addTime;
+        this.duration = duration;
+        this.time = time;
+        this.songUrl = songUrl;
+        this.firstChar = firstChar;
         this.isFavorite = isFavorite;
+        this.playFrequency = playFrequency;
+        this.songScore = songScore;
+        this.playStatus = playStatus;
+        this.issueYear = issueYear;
+        this.musicQualityType = musicQualityType;
+        this.currentLyrics = currentLyrics;
     }
+
+    public static final Creator<MusicBean> CREATOR = new Creator<MusicBean>() {
+        @Override
+        public MusicBean createFromParcel(Parcel in) {
+            return new MusicBean(in);
+        }
+
+        @Override
+        public MusicBean[] newArray(int size) {
+            return new MusicBean[size];
+        }
+    };
 
     @Override
     public int describeContents() {
@@ -264,83 +268,44 @@ public class MusicBean
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
+    public void writeToParcel(Parcel dest, int flags) {
         if (id == null) {
-            parcel.writeByte((byte) 0);
+            dest.writeByte((byte) 0);
         } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeLong(id);
+            dest.writeByte((byte) 1);
+            dest.writeLong(id);
         }
-        parcel.writeString(title);
-        parcel.writeString(artist);
-        parcel.writeString(album);
-        parcel.writeLong(albumId);
-        parcel.writeLong(addTime);
-        parcel.writeLong(duration);
-        parcel.writeString(time);
-        parcel.writeString(songUrl);
-        parcel.writeString(firstChar);
-        parcel.writeByte((byte) (isFavorite ? 1 : 0));
-        parcel.writeInt(playFrequency);
-        parcel.writeInt(songScore);
-        parcel.writeInt(playStatus);
-        parcel.writeInt(issueYear);
-        parcel.writeInt(cureetPosition);
+        dest.writeString(title);
+        dest.writeString(artist);
+        dest.writeString(album);
+        dest.writeLong(albumId);
+        dest.writeLong(addTime);
+        dest.writeLong(duration);
+        dest.writeString(time);
+        dest.writeString(songUrl);
+        dest.writeString(firstChar);
+        dest.writeByte((byte) (isFavorite ? 1 : 0));
+        dest.writeInt(playFrequency);
+        dest.writeInt(songScore);
+        dest.writeInt(playStatus);
+        dest.writeInt(issueYear);
+        dest.writeInt(musicQualityType);
+        dest.writeString(currentLyrics);
+        dest.writeInt(cureetPosition);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        MusicBean musicBean = (MusicBean) o;
-
-        if (albumId != musicBean.albumId) return false;
-        if (addTime != musicBean.addTime) return false;
-        if (duration != musicBean.duration) return false;
-        if (isFavorite != musicBean.isFavorite) return false;
-        if (playFrequency != musicBean.playFrequency) return false;
-        if (songScore != musicBean.songScore) return false;
-        if (playStatus != musicBean.playStatus) return false;
-        if (issueYear != musicBean.issueYear) return false;
-        if (cureetPosition != musicBean.cureetPosition) return false;
-        if (id != null ? !id.equals(musicBean.id) : musicBean.id != null) return false;
-        if (title != null ? !title.equals(musicBean.title) : musicBean.title != null) return false;
-        if (artist != null ? !artist.equals(musicBean.artist) : musicBean.artist != null)
-            return false;
-        if (album != null ? !album.equals(musicBean.album) : musicBean.album != null) return false;
-        if (time != null ? !time.equals(musicBean.time) : musicBean.time != null) return false;
-        if (songUrl != null ? !songUrl.equals(musicBean.songUrl) : musicBean.songUrl != null)
-            return false;
-        return firstChar != null ? firstChar.equals(musicBean.firstChar) : musicBean.firstChar == null;
+    public int compareTo(@NonNull MusicBean o) {
+        return 0;
     }
 
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (artist != null ? artist.hashCode() : 0);
-        result = 31 * result + (album != null ? album.hashCode() : 0);
-        result = 31 * result + (int) (albumId ^ (albumId >>> 32));
-        result = 31 * result + (int) (addTime ^ (addTime >>> 32));
-        result = 31 * result + (int) (duration ^ (duration >>> 32));
-        result = 31 * result + (time != null ? time.hashCode() : 0);
-        result = 31 * result + (songUrl != null ? songUrl.hashCode() : 0);
-        result = 31 * result + (firstChar != null ? firstChar.hashCode() : 0);
-        result = 31 * result + (isFavorite ? 1 : 0);
-        result = 31 * result + playFrequency;
-        result = 31 * result + songScore;
-        result = 31 * result + playStatus;
-        result = 31 * result + issueYear;
-        result = 31 * result + cureetPosition;
-        return result;
+
+    public boolean getIsFavorite() {
+        return this.isFavorite;
     }
 
-    public String getCurrentLyrics() {
-        return this.currentLyrics;
-    }
 
-    public void setCurrentLyrics(String currentLyrics) {
-        this.currentLyrics = currentLyrics;
+    public void setIsFavorite(boolean isFavorite) {
+        this.isFavorite = isFavorite;
     }
 }

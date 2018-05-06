@@ -53,7 +53,7 @@ public class MusicListUtil {
             int mSize = cursor.getColumnIndex(MediaStore.Audio.Media.SIZE);
             int mUrl = cursor.getColumnIndex(MediaStore.Audio.Media.DATA);
             int addDed = cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED);
-            int musicType = cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE);
+            int qualityType = cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE);
             int issueYear = cursor.getColumnIndex(MediaStore.Audio.Media.YEAR);
             for (int i = 0, p = cursor.getCount(); i < p; i++) {
                 cursor.moveToNext();
@@ -71,6 +71,8 @@ public class MusicListUtil {
                 long duration = cursor.getInt(mDuration);
                 // 添加时间
                 int addTime = (int) cursor.getLong(addDed);
+                // 音质类型
+                int musicQualityType = cursor.getInt(qualityType);
                 // 文件大小
                 long size = cursor.getLong(mSize);
                 //发行时间
