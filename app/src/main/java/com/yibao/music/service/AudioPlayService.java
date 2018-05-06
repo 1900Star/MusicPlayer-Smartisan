@@ -134,7 +134,7 @@ public class AudioPlayService
             LogUtil.d("");
             // 按添加时间
         } else if (sortListFlag == Constants.NUMBER_FOUR) {
-            mMusicDataList = MusicListUtil.sortMusicAddtime(mMusicDao.queryBuilder().list());
+            mMusicDataList = MusicListUtil.sortMusicAddTime(mMusicDao.queryBuilder().list());
             // 收藏列表
         } else if (sortListFlag == Constants.NUMBER_EIGHT) {
             mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();

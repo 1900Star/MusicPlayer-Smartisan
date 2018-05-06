@@ -131,8 +131,8 @@ public class PlayListFragment extends BaseFragment {
     protected void handleDetailsBack(int detailFlag) {
         super.handleDetailsBack(detailFlag);
         if (detailFlag == Constants.NUMBER_EIGHT) {
-            mLlAddNewPlayList.setVisibility(View.VISIBLE);
             mDetailsView.setVisibility(View.GONE);
+            mLlAddNewPlayList.setVisibility(View.VISIBLE);
             if (mDetailsViewMap.containsKey(mClassName)) {
                 mDetailsViewMap.remove(mClassName);
             }

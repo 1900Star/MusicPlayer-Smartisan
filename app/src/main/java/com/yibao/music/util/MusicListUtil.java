@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 
 /**
  * Author：Sid
- * Des：${ 音乐列表 }
+ * Des：${ 获取手机音乐数据 }
  * Time:2017/9/3 14:38
  *
  * @author Stran
@@ -53,7 +53,7 @@ public class MusicListUtil {
             int mSize = cursor.getColumnIndex(MediaStore.Audio.Media.SIZE);
             int mUrl = cursor.getColumnIndex(MediaStore.Audio.Media.DATA);
             int addDed = cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED);
-            int musicType = cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE);
+            int qualityType = cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE);
             int issueYear = cursor.getColumnIndex(MediaStore.Audio.Media.YEAR);
             for (int i = 0, p = cursor.getCount(); i < p; i++) {
                 cursor.moveToNext();
@@ -71,6 +71,8 @@ public class MusicListUtil {
                 long duration = cursor.getInt(mDuration);
                 // 添加时间
                 int addTime = (int) cursor.getLong(addDed);
+                // 音质类型
+                int musicQualityType = cursor.getInt(qualityType);
                 // 文件大小
                 long size = cursor.getLong(mSize);
                 //发行时间
@@ -105,7 +107,7 @@ public class MusicListUtil {
      *
      * @param musicList c
      */
-    public static List<MusicBean> sortMusicAddtime(List<MusicBean> musicList) {
+    public static List<MusicBean> sortMusicAddTime(List<MusicBean> musicList) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             musicList.sort(MusicListUtil::sortAddTime);
         } else {
@@ -227,7 +229,7 @@ public class MusicListUtil {
                 forAlbumList(musicMap, musicInfo);
             }
             for (Map.Entry<String, List<MusicBean>> entry : musicMap.entrySet()) {
-                forAlbumMap(albumInfoList,entry.getKey(),entry.getValue());
+                forAlbumMap(albumInfoList, entry.getKey(), entry.getValue());
             }
 
         }
