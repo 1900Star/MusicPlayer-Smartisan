@@ -1,8 +1,8 @@
 ﻿
 
-![image](https://github.com/1900Star/SmartisanMusicPlayer/blob/master/app/screenshot/a.jpg)
-![image](https://github.com/1900Star/SmartisanMusicPlayer/blob/master/app/screenshot/b.jpg)
-![image](https://github.com/1900Star/SmartisanMusicPlayer/blob/master/app/screenshot/artisanMusic.gif)
+![image](https://github.com/1900Star/SmartisanMusicPlayer/blob/master/screenshot/a.jpg)
+![image](https://github.com/1900Star/SmartisanMusicPlayer/blob/master/screenshot/b.jpg)
+![image](https://github.com/1900Star/SmartisanMusicPlayer/blob/masterscreenshot/artisanMusic.gif)
 
 ArtisanMusic
 
