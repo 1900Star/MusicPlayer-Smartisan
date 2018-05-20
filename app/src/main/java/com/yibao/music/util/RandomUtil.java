@@ -13,9 +13,9 @@ import java.util.Random;
  * @author Stran
  */
 public class RandomUtil {
-    public static int getRandomPostion(List<MusicBean> list) {
+    public static int getRandomPostion(int listSize) {
         Random random = new Random();
-        return random.nextInt(list.size()) + 1;
+        return random.nextInt(listSize);
 
     }
 

@@ -66,7 +66,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/titlebar_down"
             android:layout_centerInParent="true"
-            android:layout_marginRight="4dp"
+            android:layout_marginEnd="4dp"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
@@ -84,7 +84,7 @@
             android:id="@+id/start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:textColor="@color/aboutSign" />
 
 
@@ -108,7 +108,7 @@
             android:id="@+id/end_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
             android:textColor="@color/aboutSign" />
     </LinearLayout>
 
@@ -165,11 +165,20 @@
             android:layout_height="350dp"
             android:background="@drawable/mask_playing_lyric"
             android:visibility="gone" />
+        <ImageView
+            android:layout_width="350dp"
+            android:id="@+id/iv_lyrics_mask"
+            android:src="@drawable/mask"
+            android:layout_gravity="center"
+            android:background="@color/colorWhite"
+            android:visibility="gone"
+            android:layout_height="350dp"
+            android:contentDescription="@null" />
 
         <LinearLayout
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="40dp"
             android:background="@mipmap/lyrics_bm">
 
@@ -188,11 +197,11 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="right"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginTop="40dp"
             android:contentDescription="@null"
             android:src="@drawable/sun_always_of_selector"
-            android:visibility="invisible" />
+            android:visibility="gone" />
 
 
     </FrameLayout>

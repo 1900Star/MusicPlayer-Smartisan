@@ -122,9 +122,6 @@ public class BaseActivity extends AppCompatActivity {
         super.onDestroy();
         mCompositeDisposable.dispose();
         mCompositeDisposable.clear();
-//        if (mDisposable != null) {
-//            mDisposable.dispose();
-//        }
         if (mRxViewDisposable != null) {
             mRxViewDisposable.dispose();
         }

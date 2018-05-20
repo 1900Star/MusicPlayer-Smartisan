@@ -90,6 +90,8 @@ public class PlayActivity extends BasePlayActivity {
     ImageView mMusicPlayerNext;
     @BindView(R.id.iv_favorite_music)
     ImageView mIvFavoriteMusic;
+    @BindView(R.id.iv_lyrics_mask)
+    ImageView mIvLyricsMask;
     @BindView(R.id.sb_volume)
     SeekBar mSbVolume;
 
@@ -180,8 +182,6 @@ public class PlayActivity extends BasePlayActivity {
         if (audioBinder.isPlaying()) {
             initAnimation();
             updatePlayBtnStatus();
-            setSongDuration();
-
         }
         setSongDuration();
         //设置播放模式图片
@@ -281,7 +281,7 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     private void setAlbulm(String url) {
-        ImageUitl.loadPic(this,url,mPlayingSongAlbum);
+        ImageUitl.loadPic(this, url, mPlayingSongAlbum);
 
     }
 
@@ -413,8 +413,9 @@ public class PlayActivity extends BasePlayActivity {
             mIvLyricsSwitch.setBackgroundResource(R.drawable.music_lrc_close);
             AnimationDrawable animation = (AnimationDrawable) mIvLyricsSwitch.getBackground();
             animation.start();
-            mIvSecreenSunSwitch.setVisibility(View.INVISIBLE);
             mTvLyrics.setVisibility(View.GONE);
+            mIvLyricsMask.setVisibility(View.GONE);
+            mIvSecreenSunSwitch.setVisibility(View.GONE);
             if (mDisposableLyrics != null) {
                 mDisposableLyrics.dispose();
                 mDisposableLyrics = null;
@@ -423,13 +424,14 @@ public class PlayActivity extends BasePlayActivity {
             mIvLyricsSwitch.setBackgroundResource(R.drawable.music_lrc_open);
             AnimationDrawable animation = (AnimationDrawable) mIvLyricsSwitch.getBackground();
             animation.start();
+            mTvLyrics.setVisibility(View.VISIBLE);
+            mIvLyricsMask.setVisibility(View.GONE);
             mIvSecreenSunSwitch.setVisibility(View.VISIBLE);
             // 开始滚动歌词
             if (audioBinder.isPlaying()) {
                 startRollPlayLyrics(mTvLyrics);
             }
 
-            mTvLyrics.setVisibility(View.VISIBLE);
         }
         isShowLyrics = !isShowLyrics;
     }

@@ -57,6 +57,7 @@ public class DetailsListAdapter extends BaseRvAdapter<MusicBean> {
             detailsHolder.itemView.setOnClickListener(view -> {
                 if (mContext instanceof OnMusicItemClickListener) {
                     SharePrefrencesUtil.setMusicDataListFlag(mContext, Constants.NUMBER_TEN);
+
                     ((OnMusicItemClickListener) mContext).startMusicServiceFlag(detailsHolder.getAdapterPosition(), mDataFlag, queryFlag);
                 }
 
