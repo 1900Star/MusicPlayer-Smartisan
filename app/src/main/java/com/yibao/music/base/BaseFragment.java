@@ -108,7 +108,7 @@ public abstract class BaseFragment extends Fragment {
 
 
     protected void randomPlayMusic() {
-        int position = RandomUtil.getRandomPostion(mSongList);
+        int position = RandomUtil.getRandomPostion(mSongList.size());
         if (getActivity() instanceof OnMusicItemClickListener) {
             ((OnMusicItemClickListener) getActivity()).startMusicService(position);
         }

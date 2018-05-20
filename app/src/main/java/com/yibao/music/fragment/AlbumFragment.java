@@ -128,6 +128,8 @@ public class AlbumFragment extends BaseFragment {
             mAlbumContentView.setVisibility(View.INVISIBLE);
             mDetailsView.setVisibility(View.VISIBLE);
             List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(bean.getAlbumName())).build().list();
+            // DetailsView播放音乐需要的参数
+            mDetailsView.setDataFlag(list.size(),bean.getAlbumName(),Constants.NUMBER_TWO);
             DetailsListAdapter adapter = new DetailsListAdapter(getActivity(), list, Constants.NUMBER_TWO);
             mDetailsView.setAdapter(getActivity(), Constants.NUMBER_TWO, bean, adapter);
             SharePrefrencesUtil.setDetailsFlag(mActivity, Constants.NUMBER_TEN);

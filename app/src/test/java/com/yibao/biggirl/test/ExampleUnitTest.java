@@ -1,6 +1,5 @@
 package com.yibao.biggirl.test;
 
-import com.yibao.biggirl.util.WallPaperUtil;
 
 import org.junit.Test;
 
@@ -16,9 +15,7 @@ public class ExampleUnitTest {
     public void testAdd()
             throws Exception
     {
-        WallPaperUtil paperUtil = new WallPaperUtil();
-        int           sum       = paperUtil.add(2, 6);
-        assertEquals(8, sum);
+
 
     }
 

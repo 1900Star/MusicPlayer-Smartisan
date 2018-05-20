@@ -18,10 +18,13 @@ import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
+import com.yibao.music.model.QqBarUpdataBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
+import com.yibao.music.util.QueryMusicFlagListUtil;
+import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.view.music.MusicNoification;
 
@@ -66,6 +69,7 @@ public class AudioPlayService
     private RemoteViews mRemoteViews;
     private MusicBeanDao mMusicDao;
     private MusicBean mMusicBean;
+    private RxBus mBus;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -83,7 +87,8 @@ public class AudioPlayService
         super.onCreate();
         mAudioBinder = new AudioBinder();
         mRemoteViews = new RemoteViews(getPackageName(), R.layout.music_notify);
-
+        mBus = MusicApplication.getIntstance()
+                .bus();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mMusicBean = new MusicBean();
         initBroadcast();
@@ -109,7 +114,8 @@ public class AudioPlayService
         String queryFlag = intent.getStringExtra("queryFlag");
         int sortFlag = sortListFlag == Constants.NUMBER_ZOER ? Constants.NUMBER_ONE : sortListFlag;
         LogUtil.d(" position  ==" + enterPosition + "   sortListFlag  ==" + sortFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
-        getMusicDataList(sortFlag, dataFlag, queryFlag);
+        mBus.post(new QqBarUpdataBean(mMusicDao, mMusicBean, sortFlag, dataFlag, queryFlag));
+        mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao, mMusicBean, sortFlag, dataFlag, queryFlag);
         if (enterPosition != position && enterPosition != -1) {
 
             position = enterPosition;
@@ -122,38 +128,6 @@ public class AudioPlayService
         return START_NOT_STICKY;
     }
 
-    private void getMusicDataList(int sortListFlag, int dataFlag, String queryFlag) {
-        // 按歌曲名
-        if (sortListFlag == Constants.NUMBER_ONE) {
-            mMusicDataList = MusicListUtil.sortMusicAbc(mMusicDao.queryBuilder().list());
-            // 按评分
-        } else if (sortListFlag == Constants.NUMBER_TWO) {
-            LogUtil.d("");
-            // 按播放次数
-        } else if (sortListFlag == Constants.NUMBER_THRRE) {
-            LogUtil.d("");
-            // 按添加时间
-        } else if (sortListFlag == Constants.NUMBER_FOUR) {
-            mMusicDataList = MusicListUtil.sortMusicAddTime(mMusicDao.queryBuilder().list());
-            // 收藏列表
-        } else if (sortListFlag == Constants.NUMBER_EIGHT) {
-            mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
-            // 艺术家、l
-        } else if (sortListFlag == Constants.NUMBER_TEN) {
-            // 按艺术家查询列表
-            if (dataFlag == Constants.NUMBER_ONE) {
-                mMusicBean.setArtist(queryFlag);
-                mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(mMusicBean.getArtist())).build().list();
-                // 按专辑名查询列表
-            } else if (dataFlag == Constants.NUMBER_TWO) {
-                mMusicBean.setAlbum(queryFlag);
-                mMusicDataList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(mMusicBean.getAlbum())).build().list();
-            }
-
-        }
-
-    }
-
 
     /**
      * 通知播放界面更新
@@ -164,9 +138,7 @@ public class AudioPlayService
         MusicBean musicBean = mMusicDataList.get(position);
 
         musicBean.setCureetPosition(position);
-        MusicApplication.getIntstance()
-                .bus()
-                .post(musicBean);
+        mBus.post(musicBean);
 
     }
 
@@ -209,8 +181,9 @@ public class AudioPlayService
             Notification notification = MusicNoification.getNotification(getApplicationContext(), mRemoteViews,
                     mMusicInfo);
             manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-            manager.notify(0, notification);
+            if (manager != null) {
+                manager.notify(0, notification);
+            }
         }
 
         //获取当前播放进度
@@ -329,26 +302,18 @@ public class AudioPlayService
                 case 0:
                     if (mAudioBinder.isPlaying()) {
                         mAudioBinder.pause();
-                        MusicApplication.getIntstance()
-                                .bus()
-                                .post(new MusicStatusBean(type, true));
+                        mBus.post(new MusicStatusBean(type, true));
                     } else {
                         mAudioBinder.start();
-                        MusicApplication.getIntstance()
-                                .bus()
-                                .post(new MusicStatusBean(type, false));
+                        mBus.post(new MusicStatusBean(type, false));
                         LogUtil.d("PLAY");
                     }
                     break;
                 case 1:
                     if (mAudioBinder.isPlaying()) {
-                        MusicApplication.getIntstance()
-                                .bus()
-                                .post(new MusicStatusBean(type, true));
+                        mBus.post(new MusicStatusBean(type, true));
                     } else {
-                        MusicApplication.getIntstance()
-                                .bus()
-                                .post(new MusicStatusBean(type, false));
+                        mBus.post(new MusicStatusBean(type, false));
                         LogUtil.d("PLAY");
                     }
 
