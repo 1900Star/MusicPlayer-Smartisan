@@ -16,6 +16,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.MusicInfoDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.RxBus;
@@ -76,15 +77,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mAlbumList == null) {
-            mAlbumList = MusicListUtil.getAlbumList(mSongList);
-        }
-
-        if (mArtistList == null) {
-            mArtistList = MusicListUtil.getArtistList(mSongList);
-        }
         initDetailsFlag();
-
     }
 
 
@@ -100,6 +93,7 @@ public abstract class BaseFragment extends Fragment {
 
 
     }
+
     // 有详情页面的子类重写这个方法，让自己处理返回事件的，只要这个方法一调用，按返回键就会将详情页面隐藏。
     protected void handleDetailsBack(int detailFlag) {
         // 详情页面关闭后，将标记置为0，将返回事件交给Activity处理，这样就能正常返回。
@@ -114,4 +108,9 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mDisposable.clear();
+    }
 }

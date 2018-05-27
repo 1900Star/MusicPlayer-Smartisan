@@ -9,8 +9,6 @@ import android.util.AttributeSet;
 
 import com.yibao.music.R;
 import com.yibao.music.model.MusicLyrBean;
-import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.LyricsUtil;
 
 import java.util.ArrayList;
 
@@ -38,6 +36,7 @@ public class LyricsView
     private int duration;
     private int currentProgress;
     private Rect mBounds;
+    private Rect mSingleBounds;
 
     public LyricsView(Context context) {
         super(context);
@@ -58,6 +57,7 @@ public class LyricsView
     private void initView() {
         mPaint = new Paint();
         mBounds = new Rect();
+        mSingleBounds = new Rect();
         mLyricsSelected = getResources().getColor(R.color.lyricsSelected);
         mLyricsNormal = getResources().getColor(R.color.lyricsNormal);
         mBigText = getResources().getDimension(R.dimen.bigLyrics);
@@ -85,7 +85,6 @@ public class LyricsView
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (musicLyrList == null || musicLyrList.size() == 1 || musicLyrList.size() == 0) {
-
             drawSingLine(canvas);
         } else {
             drawMunitLine(canvas);
@@ -190,28 +189,25 @@ public class LyricsView
     /**
      * 根据歌曲名和歌手名查找歌词，并将歌词解析到List里。
      *
-     * @param songName s
-     * @param artist   a
+     * @param lrcList s
      */
-    public void setLrcFile(String songName, String artist) {
+    public void setLrcFile(ArrayList<MusicLyrBean> lrcList) {
 
-        musicLyrList = LyricsUtil.getLyricList(songName, artist);
+        musicLyrList = lrcList;
         //默认剧中行=0
         centerLine = 0;
     }
 
 
     private void drawSingLine(Canvas canvas) {
-        Rect bounds = new Rect();
+
         mCurrentLrc = "暂无歌词";
         mPaint.setColor(mLyricsNormal);
-        mPaint.getTextBounds(mCurrentLrc, 0, mCurrentLrc.length(), bounds);
-        float x = mViewW / 2 - bounds.width() / 2;
-        float y = mViewH / 2 + bounds.height() / 2;
+        mPaint.getTextBounds(mCurrentLrc, 0, mCurrentLrc.length(), mSingleBounds);
+        float x = mViewW / 2 - mSingleBounds.width() / 2;
+        float y = mViewH / 2 + mSingleBounds.height() / 2;
         canvas.drawText(mCurrentLrc, 0, mCurrentLrc.length(), x, y, mPaint);
     }
-
-
 
 
 }

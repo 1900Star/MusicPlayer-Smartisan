@@ -55,19 +55,16 @@ public class SplashActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        ButterKnife.bind(this);
         mBind = ButterKnife.bind(this);
         SystemUiVisibilityUtil.hideStatusBar(getWindow(), true);
         initRxbusData();
-        initData();
     }
 
-    private void initData() {
-        SplashPagerAdapter splashPagerAdapter = new SplashPagerAdapter();
-        mVpSplash.setAdapter(splashPagerAdapter);
-    }
+
 
     private void initRxbusData() {
+        SplashPagerAdapter splashPagerAdapter = new SplashPagerAdapter();
+        mVpSplash.setAdapter(splashPagerAdapter);
 
         if (SharePrefrencesUtil.getLoadMusicFlag(this) != Constants.NUMBER_EIGHT) {
             mTvMusicCount.setVisibility(View.VISIBLE);
@@ -86,20 +83,20 @@ public class SplashActivity
                     mTvMusicCount.setText("本地音乐加载完成 -_-");
                     SplashActivity.this.startActivity(new Intent(SplashActivity.this,
                             MusicActivity.class));
-                    finish();
                     SharePrefrencesUtil.setLoadMusicFlag(SplashActivity.this, Constants.NUMBER_EIGHT);
+                    finish();
                 }
             }));
         } else {
 
-            mDisposable = Observable.timer(400, TimeUnit.MILLISECONDS)
+            mCompositeDisposable.add(Observable.timer(400, TimeUnit.MILLISECONDS)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(aLong -> {
                         SplashActivity.this.startActivity(new Intent(SplashActivity.this,
                                 MusicActivity.class));
                         finish();
-                    });
+                    }));
         }
 
     }

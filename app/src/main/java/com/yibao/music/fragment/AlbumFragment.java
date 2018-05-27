@@ -20,6 +20,7 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicView;
@@ -81,6 +82,16 @@ public class AlbumFragment extends BaseFragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAlbumList == null) {
+            mAlbumList = MusicListUtil.getAlbumList(mSongList);
+        }
+        mAdapter.setNewData(mAlbumList);
+
+    }
+
     private void initListener() {
         mAdapter.setItemListener(AlbumFragment.this::openDetailsView);
 
@@ -129,7 +140,7 @@ public class AlbumFragment extends BaseFragment {
             mDetailsView.setVisibility(View.VISIBLE);
             List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(bean.getAlbumName())).build().list();
             // DetailsView播放音乐需要的参数
-            mDetailsView.setDataFlag(list.size(),bean.getAlbumName(),Constants.NUMBER_TWO);
+            mDetailsView.setDataFlag(list.size(), bean.getAlbumName(), Constants.NUMBER_TWO);
             DetailsListAdapter adapter = new DetailsListAdapter(getActivity(), list, Constants.NUMBER_TWO);
             mDetailsView.setAdapter(getActivity(), Constants.NUMBER_TWO, bean, adapter);
             SharePrefrencesUtil.setDetailsFlag(mActivity, Constants.NUMBER_TEN);

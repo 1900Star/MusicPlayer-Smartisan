@@ -18,7 +18,6 @@ import com.yibao.music.base.listener.SeekBarChangeListtener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.service.AudioPlayService;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.LyricsView;
 
@@ -96,6 +95,7 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
         }
         if (mWakeLock.isHeld()) {
             mWakeLock.release();
+            mWakeLock = null;
         }
     }
 
@@ -105,6 +105,7 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
         if (mCompositeDisposable != null) {
             mCompositeDisposable.dispose();
             mCompositeDisposable.clear();
+            mCompositeDisposable = null;
 
         }
         unregisterReceiver(mVolumeReceiver);
@@ -155,6 +156,7 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(aLong -> updataCurrentPlayProgress(audioBinder.getProgress()));
+            mCompositeDisposable.add(mDisposablePlayTime);
         }
     }
 
@@ -184,6 +186,7 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(aLong -> lyricsView.rollText(audioBinder.getProgress(), audioBinder.getDuration()));
+            mCompositeDisposable.add(mDisposableLyrics);
         }
 
     }

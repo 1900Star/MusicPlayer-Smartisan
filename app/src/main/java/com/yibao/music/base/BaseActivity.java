@@ -125,10 +125,6 @@ public class BaseActivity extends AppCompatActivity {
         if (mRxViewDisposable != null) {
             mRxViewDisposable.dispose();
         }
-        if (mDisposablesLyric != null) {
-            mDisposablesLyric.dispose();
-
-        }
         unregisterReceiver(headsetReciver);
     }
 }

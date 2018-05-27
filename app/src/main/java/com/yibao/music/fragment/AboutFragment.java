@@ -8,12 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.TopBigPicDialogFragment;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.view.CircleImageView;
+
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,7 +52,9 @@ public class AboutFragment extends BaseFragment {
     }
 
     private void initListener() {
-        mAboutHeaderIv.setOnClickListener(v -> RelaxDialogFragment.newInstance().show(mFragmentManager, "girlsDialog"));
+        mDisposable.add(RxView.clicks(mAboutHeaderIv)
+                .throttleFirst(1, TimeUnit.SECONDS)
+                .subscribe(o -> RelaxDialogFragment.newInstance().show(mFragmentManager, "girlsDialog")));
         mAboutHeaderIv.setOnLongClickListener(view -> {
             TopBigPicDialogFragment.newInstance("")
                     .show(mFragmentManager, "album");
