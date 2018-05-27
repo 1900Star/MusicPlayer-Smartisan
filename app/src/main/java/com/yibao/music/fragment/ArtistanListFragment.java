@@ -16,6 +16,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicView;
@@ -53,7 +54,6 @@ public class ArtistanListFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.artisan_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
-
         initData();
         initListener();
         return view;
@@ -62,6 +62,15 @@ public class ArtistanListFragment extends BaseFragment {
 
     private void initListener() {
         mAdapter.setItemListener(ArtistanListFragment.this::openDetailsView);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mArtistList == null) {
+            mArtistList = MusicListUtil.getArtistList(mSongList);
+        }
+        mAdapter.setNewData(mArtistList);
     }
 
     private void initData() {

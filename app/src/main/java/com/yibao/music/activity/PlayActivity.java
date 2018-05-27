@@ -2,47 +2,48 @@ package com.yibao.music.activity;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.base.BasePlayActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
-import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.fragment.dialogfrag.MusicBottomSheetDialog;
 import com.yibao.music.fragment.dialogfrag.TopBigPicDialogFragment;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.MusicLyrBean;
 import com.yibao.music.model.MusicStatusBean;
-import com.yibao.music.model.song.MusicFavoriteBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
-import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.LyricsView;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -102,6 +103,7 @@ public class PlayActivity extends BasePlayActivity {
     private Unbinder mBind;
     private ObjectAnimator mAnimator;
     private MyAnimatorUpdateListener mAnimatorListener;
+    private Disposable mCloseLyrDisposable;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -163,7 +165,8 @@ public class PlayActivity extends BasePlayActivity {
         if (mCurrenMusicInfo != null) {
             mPlaySongName.setText(mCurrenMusicInfo.getTitle());
             mPlayArtistName.setText(mCurrenMusicInfo.getArtist());
-            mTvLyrics.setLrcFile(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
+            ArrayList<MusicLyrBean> musicLyrBeans = LyricsUtil.getLyricList(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
+            mTvLyrics.setLrcFile(musicLyrBeans);
             mAlbumUrl = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId())
                     .toString();
             setAlbulm(mAlbumUrl);
@@ -215,6 +218,7 @@ public class PlayActivity extends BasePlayActivity {
         if (isShowLyrics) {
             showLyrics();
         }
+        disPosableLyricsView();
 
     }
 
@@ -264,7 +268,7 @@ public class PlayActivity extends BasePlayActivity {
      * @param info k
      */
     private void perpareMusic(MusicBean info) {
-
+        disPosableLyricsView();
         mCurrenMusicInfo = info;
         checkCurrentIsFavorite(mCurrenMusicInfo.isFavorite());
         initAnimation();
@@ -276,8 +280,19 @@ public class PlayActivity extends BasePlayActivity {
         setSongDuration();
         updatePlayBtnStatus();
 //        初始化歌词
-        mTvLyrics.setLrcFile(info.getTitle(), info.getArtist());
+        ArrayList<MusicLyrBean> lyricList = LyricsUtil.getLyricList(info.getTitle(), info.getArtist());
+        mTvLyrics.setLrcFile(lyricList);
+        if (isShowLyrics) {
+            closeLyricsView(lyricList);
+        }
 
+    }
+
+    private void disPosableLyricsView() {
+        if (mCloseLyrDisposable != null) {
+            mCloseLyrDisposable.dispose();
+            mCloseLyrDisposable = null;
+        }
     }
 
     private void setAlbulm(String url) {
@@ -420,6 +435,7 @@ public class PlayActivity extends BasePlayActivity {
                 mDisposableLyrics.dispose();
                 mDisposableLyrics = null;
             }
+            disPosableLyricsView();
         } else {
             mIvLyricsSwitch.setBackgroundResource(R.drawable.music_lrc_open);
             AnimationDrawable animation = (AnimationDrawable) mIvLyricsSwitch.getBackground();
@@ -431,18 +447,19 @@ public class PlayActivity extends BasePlayActivity {
             if (audioBinder.isPlaying()) {
                 startRollPlayLyrics(mTvLyrics);
             }
+            ArrayList<MusicLyrBean> lyricList = LyricsUtil.getLyricList(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
+            closeLyricsView(lyricList);
 
         }
         isShowLyrics = !isShowLyrics;
     }
 
 
-    @SuppressLint("CheckResult")
     private void rxViewClick() {
-        RxView.clicks(mTitlebarPlayList)
+        mCompositeDisposable.add(RxView.clicks(mTitlebarPlayList)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribe(o -> MusicBottomSheetDialog.newInstance()
-                        .getBottomDialog(this));
+                        .getBottomDialog(this)));
     }
 
     @Override
@@ -506,7 +523,19 @@ public class PlayActivity extends BasePlayActivity {
             mAnimatorListener.pause();
             mAnimator.cancel();
         }
+
         mBind.unbind();
 
+    }
+
+    public void closeLyricsView(ArrayList<MusicLyrBean> lyricList) {
+        if (lyricList.size() == 1) {
+            if (mCloseLyrDisposable == null) {
+                mCloseLyrDisposable = Observable.timer(5, TimeUnit.SECONDS)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(aLong -> PlayActivity.this.showLyrics());
+            }
+        }
     }
 }

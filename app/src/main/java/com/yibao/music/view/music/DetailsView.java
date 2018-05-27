@@ -140,9 +140,7 @@ public class DetailsView
     private void setMusicInfo(String albumName, String artist, long albumId, int issueYear) {
         mTvArtistAlbummDetailsTitle.setText(albumName);
         mTvArtistAlbummDetailsArtist.setText(artist);
-
         ImageUitl.customLoadPic(getContext(), StringUtil.getAlbulm((albumId)), R.drawable.noalbumcover_220, mIvArtistAlbummDetails);
-
         if (issueYear != Constants.NUMBER_ZOER) {
             String year = String.valueOf(issueYear);
             mTvArtistAlbummDetailsDate.setText(year);

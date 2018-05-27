@@ -339,33 +339,35 @@ public class AudioPlayService
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(ACTION_MUSIC)) {
-                int id = intent.getIntExtra(BUTTON_ID, 0);
-                switch (id) {
-                    case ROOT:
-                        LogUtil.d("Root");
-                        mAudioBinder.playStatus(1);
-                        break;
-                    case CLOSE:
-                        LogUtil.d("CLOSE");
-                        mAudioBinder.playStatus
-                                (0);
-                        manager.cancel(0);
-                        break;
-                    case PREV:
-                        mAudioBinder.playPre();
-                        updatePlayBtn();
-                        break;
-                    case PLAY:
-                        updatePlayBtn();
-                        mAudioBinder.playStatus(0);
-                        break;
-                    case NEXT:
-                        mAudioBinder.playNext();
-                        updatePlayBtn();
-                        break;
-                    default:
-                        break;
+            if (action != null) {
+                if (action.equals(ACTION_MUSIC)) {
+                    int id = intent.getIntExtra(BUTTON_ID, 0);
+                    switch (id) {
+                        case ROOT:
+                            LogUtil.d("Root");
+                            mAudioBinder.playStatus(1);
+                            break;
+                        case CLOSE:
+                            LogUtil.d("CLOSE");
+                            mAudioBinder.playStatus
+                                    (0);
+                            manager.cancel(0);
+                            break;
+                        case PREV:
+                            mAudioBinder.playPre();
+                            updatePlayBtn();
+                            break;
+                        case PLAY:
+                            updatePlayBtn();
+                            mAudioBinder.playStatus(0);
+                            break;
+                        case NEXT:
+                            mAudioBinder.playNext();
+                            updatePlayBtn();
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }

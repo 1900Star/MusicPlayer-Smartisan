@@ -28,6 +28,7 @@ import com.yibao.music.activity.MusicActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.SeekBarChangeListtener;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.MusicLyrBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.service.AudioPlayService;
@@ -35,6 +36,7 @@ import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.DialogUtil;
 import com.yibao.music.util.ImageUitl;
+import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
@@ -42,6 +44,7 @@ import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.LyricsView;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -142,7 +145,8 @@ public class MusicPlayDialogFag
         mCurrenMusicInfo = getArguments().getParcelable("info");
         mSongName.setText(mCurrenMusicInfo.getTitle());
         mArtistName.setText(mCurrenMusicInfo.getArtist());
-        mLyricsView.setLrcFile(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
+        ArrayList<MusicLyrBean> lyrBeans = LyricsUtil.getLyricList(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
+        mLyricsView.setLrcFile(lyrBeans);
         String url = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId())
                 .toString();
         setAlbulm(url);
@@ -288,7 +292,8 @@ public class MusicPlayDialogFag
         setSongDuration();
         updatePlayBtnStatus();
 //        初始化歌词
-        mLyricsView.setLrcFile(info.getTitle(), info.getArtist());
+        ArrayList<MusicLyrBean> lyricList = LyricsUtil.getLyricList(info.getTitle(), info.getArtist());
+        mLyricsView.setLrcFile(lyricList);
 
     }
 

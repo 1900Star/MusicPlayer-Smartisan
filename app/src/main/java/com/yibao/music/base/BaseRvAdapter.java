@@ -43,7 +43,7 @@ public abstract class BaseRvAdapter<T>
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(getLayoutId(), parent, false);
@@ -54,7 +54,7 @@ public abstract class BaseRvAdapter<T>
             return new LoadMoreHolder(view);
         }
 
-        return null;
+        return getViewHolder(null);
     }
 
     @Override
@@ -72,7 +72,7 @@ public abstract class BaseRvAdapter<T>
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof LoadMoreHolder) {
             LoadMoreHolder moreHolder = (LoadMoreHolder) holder;
             String count = (mList.size() - 1) + getLastItemDes();
@@ -85,7 +85,7 @@ public abstract class BaseRvAdapter<T>
     /**
      * 获取列表的类型，根据类型设置最后一个item的文字内容。
      *
-     * @return
+     * @return r
      */
 
     protected abstract String getLastItemDes();
@@ -102,7 +102,7 @@ public abstract class BaseRvAdapter<T>
      * 根据子类提供的布局ID得到一个RecyclerView的Item视图，并将视图交给子类的ViewHolder
      *
      * @param view 当前RecyclerView的Item视图
-     * @return
+     * @return d
      */
     protected abstract RecyclerView.ViewHolder getViewHolder(View view);
 
@@ -110,7 +110,7 @@ public abstract class BaseRvAdapter<T>
     /**
      * 子类提供一个布局ID
      *
-     * @return
+     * @return r
      */
     protected abstract int getLayoutId();
 
@@ -184,7 +184,7 @@ public abstract class BaseRvAdapter<T>
     }
 
     @Override
-    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+    public void onViewAttachedToWindow(@NonNull RecyclerView.ViewHolder holder) {
         super.onViewAttachedToWindow(holder);
         ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
         if (params != null && params instanceof StaggeredGridLayoutManager.LayoutParams) {
@@ -194,7 +194,7 @@ public abstract class BaseRvAdapter<T>
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
 
         RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
@@ -232,22 +232,22 @@ public abstract class BaseRvAdapter<T>
     }
 
 
-
     /**
      * Item长按的点击事件
      */
 
     public interface ItemLongClickListener {
-        void deleteItemList(MusicInfo musicInfo,int currentPosition);
+        void deleteItemList(MusicInfo musicInfo, int currentPosition);
     }
 
 
     public void setItemLongClickListener(ItemLongClickListener longClickListener) {
         this.mLongClickListener = longClickListener;
     }
-    protected void deletePlaylist(MusicInfo musicInfo,int itemPosition) {
+
+    protected void deletePlaylist(MusicInfo musicInfo, int itemPosition) {
         if (mLongClickListener != null) {
-            mLongClickListener.deleteItemList(musicInfo,itemPosition);
+            mLongClickListener.deleteItemList(musicInfo, itemPosition);
         }
     }
 
