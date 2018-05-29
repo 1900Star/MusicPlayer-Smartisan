@@ -38,8 +38,8 @@
                 android:id="@+id/play_song_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:ellipsize="end"
-                android:marqueeRepeatLimit="marquee_forever"
                 android:maxLength="20"
                 android:maxLines="1"
                 android:singleLine="true"
@@ -63,7 +63,6 @@
             android:layout_width="52dp"
             android:layout_height="45dp"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/titlebar_down"
             android:layout_centerInParent="true"
             android:layout_marginEnd="4dp"
@@ -165,15 +164,16 @@
             android:layout_height="350dp"
             android:background="@drawable/mask_playing_lyric"
             android:visibility="gone" />
+
         <ImageView
-            android:layout_width="350dp"
             android:id="@+id/iv_lyrics_mask"
-            android:src="@drawable/mask"
+            android:layout_width="350dp"
+            android:layout_height="350dp"
             android:layout_gravity="center"
             android:background="@color/colorWhite"
-            android:visibility="gone"
-            android:layout_height="350dp"
-            android:contentDescription="@null" />
+            android:contentDescription="@null"
+            android:src="@drawable/mask"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="32dp"
@@ -201,7 +201,8 @@
             android:layout_marginTop="40dp"
             android:contentDescription="@null"
             android:src="@drawable/sun_always_of_selector"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:ignore="RtlHardcoded" />
 
 
     </FrameLayout>
