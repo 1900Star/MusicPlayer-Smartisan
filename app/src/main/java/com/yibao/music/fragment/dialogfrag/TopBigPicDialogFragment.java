@@ -44,7 +44,7 @@ public class TopBigPicDialogFragment
         TextView save = mView.findViewById(R.id.tv_save);
         ProgressBtn pb = mView.findViewById(R.id.pb_toppic);
         pb.setMax(MAX_DOWN_PREGRESS);
-        ZoomImageView view = ImageUitl.creatZoomView(getActivity());
+        ZoomImageView view = ImageUitl.creatZoomViewTop(getActivity());
         String url = getArguments().getString("url");
 
         ImageUitl.loadPlaceholder(getActivity(), url, view);

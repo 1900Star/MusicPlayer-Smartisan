@@ -16,21 +16,17 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
-import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
-import com.yibao.music.model.AddNewListBean;
+import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicInfo;
-import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.Constants;
 import com.yibao.music.util.SnakbarUtil;
-import com.yibao.music.util.ToastUtil;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -105,10 +101,12 @@ public class AddListDialog
 
     private void addNewPlayList() {
         String listTitle = mEditAddList.getText().toString().trim();
+
         if (!listTitle.isEmpty()) {
-            MusicApplication.getIntstance().getMusicInfoDao().insert(new MusicInfo(listTitle));
-            MusicApplication.getIntstance().bus().post(new AddNewListBean());
+            String addTime = String.valueOf(System.currentTimeMillis());
+            MusicApplication.getIntstance().getMusicInfoDao().insert(new MusicInfo(listTitle, addTime));
             dismiss();
+            MusicApplication.getIntstance().bus().post(new AddAndDeleteListBean(Constants.NUMBER_ONE));
         }
     }
 

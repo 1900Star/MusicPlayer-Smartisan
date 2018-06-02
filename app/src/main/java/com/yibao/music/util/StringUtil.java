@@ -1,8 +1,10 @@
 package com.yibao.music.util;
 
+import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.net.Uri;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -26,6 +28,7 @@ public class StringUtil {
      * @param duration
      * @return
      */
+    @SuppressLint("DefaultLocale")
     public static String parseDuration(int duration) {
         int hour = duration / HOUR;
         int min = duration % HOUR / MIN;
@@ -38,11 +41,15 @@ public class StringUtil {
         }
     }
 
+    public static Long stringToLong(String str) {
+        return Long.valueOf(str.replaceAll("[^\\d]+", ""));
+    }
+
     /**
      * 返回专辑图片地址
      *
-     * @param albulmId
-     * @return
+     * @param albulmId a
+     * @return f
      */
     public static Uri getAlbulm(Long albulmId) {
 

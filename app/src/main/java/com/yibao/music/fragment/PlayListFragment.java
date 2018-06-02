@@ -15,11 +15,10 @@ import com.yibao.music.base.BaseFragment;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
 import com.yibao.music.fragment.dialogfrag.DeletePlayListDialog;
-import com.yibao.music.model.AddNewListBean;
-import com.yibao.music.model.DeletePlayListBean;
+import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicInfo;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 
 import java.util.List;
@@ -29,6 +28,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -37,7 +37,7 @@ import io.reactivex.schedulers.Schedulers;
  * @包名： com.yibao.music.playlist
  * @文件名: PlayListFragment
  * @author: Stran
- * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
+ * @Email: www.strangermy@outlook.com / www.strangermy98@gmail.com
  * @创建时间: 2018/2/9 16:07
  * @描述： {个人播放列表}
  */
@@ -67,23 +67,26 @@ public class PlayListFragment extends BaseFragment {
     }
 
     private void initData() {
-        List<MusicInfo> playList = mMusicInfoDao.queryBuilder().list();
+        List<MusicInfo> playList = MusicListUtil.sortNewListAddTime(mMusicInfoDao.queryBuilder().list());
         mAdapter = new PlayListAdapter(playList);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
         mPlayListContent.addView(recyclerView);
 
     }
 
+    /**
+     * 新增和删除列表
+     */
     private void receiveRxbuData() {
-        mDisposable.add(mBus.toObserverable(AddNewListBean.class)
-                .subscribeOn(Schedulers.io()).map(addNewListBean -> mMusicInfoDao.queryBuilder().list())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(newPlayList -> mAdapter.addData(newPlayList))
+        mDisposable.add(mBus.toObserverable(AddAndDeleteListBean.class)
+                .subscribeOn(Schedulers.io()).map(addAndDeleteListBean -> {
+                    if (addAndDeleteListBean.getOperationType() == Constants.NUMBER_TWO) {
+                        mAdapter.removeItem(mDeletePosition);
+                    }
+                    return MusicListUtil.sortNewListAddTime(mMusicInfoDao.queryBuilder().list());
+                })
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(newPlayList -> mAdapter.setNewData(newPlayList))
         );
-        mDisposable.add(mBus.toObserverable(DeletePlayListBean.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(deletePlayListBean -> mAdapter.removeItem(mDeletePosition))
-        );
-
     }
 
     private void initListener() {

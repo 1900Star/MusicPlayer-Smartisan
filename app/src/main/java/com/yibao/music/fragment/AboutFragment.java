@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.functions.Consumer;
 
 
 /**
@@ -53,10 +54,10 @@ public class AboutFragment extends BaseFragment {
     private void initListener() {
         mDisposable.add(RxView.clicks(mAboutHeaderIv)
                 .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> RelaxDialogFragment.newInstance().show(mFragmentManager, "girlsDialog")));
+                .subscribe(o -> TopBigPicDialogFragment.newInstance("")
+                        .show(mFragmentManager, "album")));
         mAboutHeaderIv.setOnLongClickListener(view -> {
-            TopBigPicDialogFragment.newInstance("")
-                    .show(mFragmentManager, "album");
+            RelaxDialogFragment.newInstance().show(mFragmentManager, "girlsDialog");
             return true;
         });
     }

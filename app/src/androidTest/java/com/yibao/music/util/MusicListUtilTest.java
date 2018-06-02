@@ -72,9 +72,15 @@ public class MusicListUtilTest {
         List<AlbumInfo> albumList = MusicListUtil.getAlbumList(mMusicDataList);
         assertNotNull(albumList);
     }
+    @Test
+    public void stringToLong() {
+        Long longTime = StringUtil.getLongTime("2009-12-02 10:17:51");
+        assertNotNull(longTime);
+    }
 
     @After
     public void complete() {
         System.out.println("歌曲列表数据测试完成！");
     }
+
 }

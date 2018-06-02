@@ -13,7 +13,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-
         android:gravity="center"
         android:orientation="vertical">
 
@@ -118,7 +117,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/music_bar_stylelist"
+        android:id="@+id/music_bar_about"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"

@@ -59,7 +59,7 @@ public class SongAdapter
 
     @NonNull
     @Override
-    public SongListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SongListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_music_list, parent, false);
         return new SongListViewHolder(view);
@@ -77,23 +77,15 @@ public class SongAdapter
             SongListViewHolder songListViewHolder = (SongListViewHolder) holder;
             int position = holder.getAdapterPosition();
             songListViewHolder.mSongArtistName.setText(info.getArtist());
-
             ImageUitl.customLoadPic(mContext, StringUtil.getAlbulm(info.getAlbumId()), R.drawable.noalbumcover_120, songListViewHolder.mSongAlbum);
-
-
-
-
-
-
             songListViewHolder.mSongName.setText(info.getTitle());
-
             if (mIsShowStickyView == Constants.NUMBER_ZOER) {
                 String firstTv = info.getFirstChar();
                 songListViewHolder.mTvStickyView.setText(firstTv);
                 if (position == 0) {
                     songListViewHolder.mTvStickyView.setVisibility(View.VISIBLE);
                 } else if (firstTv.equals(mList.get(position - 1)
-                                        .getFirstChar())) {
+                        .getFirstChar())) {
                     songListViewHolder.mTvStickyView.setVisibility(View.GONE);
 
                 } else {

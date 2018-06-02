@@ -3,34 +3,22 @@ package com.yibao.music.fragment.dialogfrag;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
-import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
-import com.yibao.music.model.AddNewListBean;
-import com.yibao.music.model.DeletePlayListBean;
+import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicInfo;
 import com.yibao.music.model.greendao.MusicInfoDao;
-import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.Constants;
 import com.yibao.music.util.RxBus;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Author：Sid
@@ -116,10 +104,9 @@ public class DeletePlayListDialog
     }
 
 
-
     private void deletePlayList() {
         mMusicInfoDao.delete(mMusicInfo);
-        mBus.post(new DeletePlayListBean());
+        mBus.post(new AddAndDeleteListBean(Constants.NUMBER_TWO));
     }
 
 

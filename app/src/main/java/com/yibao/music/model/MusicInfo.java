@@ -27,8 +27,9 @@ public class MusicInfo
     private String songUrl;
     private int playStatus;
 
-    public MusicInfo(String title) {
+    public MusicInfo(String title,String tiem) {
         this.title = title;
+        this.time = tiem;
     }
 
 

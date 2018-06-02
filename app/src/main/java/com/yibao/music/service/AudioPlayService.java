@@ -101,7 +101,6 @@ public class AudioPlayService
         mReceiver = new MusicBroacastReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_MUSIC);
-        mRemoteViews = new RemoteViews(getPackageName(), R.layout.music_notify);
         registerReceiver(mReceiver, filter);
 
     }

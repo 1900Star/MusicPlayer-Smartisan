@@ -7,18 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,14 +28,12 @@ import com.yibao.music.artisanlist.MusicPagerListener;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
-import com.yibao.music.base.listener.OnBackHandlePressedListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.DetailsFlagBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyrBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.QqBarUpdataBean;
-import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
@@ -48,8 +41,6 @@ import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
-import com.yibao.music.util.MusicDataTranslateUtil;
-import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.QueryMusicFlagListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
@@ -59,15 +50,11 @@ import com.yibao.music.view.MainViewPager;
 import com.yibao.music.view.MusicProgressView;
 import com.yibao.music.view.ProgressBtn;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,9 +62,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -157,8 +141,8 @@ public class MusicActivity
     ImageView mMusicBarStylelistIv;
     @BindView(R.id.music_bar_stylelist_tv)
     TextView mMusicBarStylelistTv;
-    @BindView(R.id.music_bar_stylelist)
-    LinearLayout mMusicBarStylelist;
+    @BindView(R.id.music_bar_about)
+    LinearLayout mMusicBarAboutLl;
 
     @BindView(R.id.music_viewpager)
     MainViewPager mMusicViewPager;
@@ -387,11 +371,11 @@ public class MusicActivity
     }
 
 
-    @SuppressLint("CheckResult")
     private void openMusicPlayDialogFag() {
-        RxView.clicks(mSmartisanMusicBar)
+        mCompositeDisposable.add(RxView.clicks(mSmartisanMusicBar)
                 .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> readyMusic());
+                .subscribe(o -> readyMusic()));
+
     }
 
     private void readyMusic() {
@@ -596,7 +580,7 @@ public class MusicActivity
             R.id.music_floating_pager_favorite,
             R.id.music_floating_favorite,
             R.id.music_bar_playlist,
-            R.id.music_bar_artisanlist, R.id.music_bar_songlist, R.id.music_bar_albumlist, R.id.music_bar_stylelist})
+            R.id.music_bar_artisanlist, R.id.music_bar_songlist, R.id.music_bar_albumlist, R.id.music_bar_about})
     public void onViewClicked(View view) {
         switch (view.getId()) {
 
@@ -612,7 +596,7 @@ public class MusicActivity
             case R.id.music_bar_albumlist:
                 switchMusicTabbar(3);
                 break;
-            case R.id.music_bar_stylelist:
+            case R.id.music_bar_about:
                 switchMusicTabbar(4);
                 break;
             default:
@@ -666,39 +650,42 @@ public class MusicActivity
         switch (flag) {
             case 0:
                 SharePrefrencesUtil.getMusicDataListFlag(this);
-                setAllTabbarNotPressed(flag, R.string.play_list, mMusicBarSonglist);
+                setAllTabbarNotPressed(flag, R.string.play_list);
                 mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_selector);
                 mMusicBarPlaylistTv.setTextColor(ColorUtil.musicbarTvDown);
+                mMusicBarPlaylist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 forEachDetailsMap(Constants.FRAGMENT_PLAYLIST, Constants.NUMBER_EIGHT);
                 break;
             case 1:
-                setAllTabbarNotPressed(flag, R.string.music_artisan, mMusicBarSonglist);
+                setAllTabbarNotPressed(flag, R.string.music_artisan);
                 mMusicBarArtisanlistIv.setBackgroundResource(R.drawable.tabbar_artisanlist_selector);
                 mMusicBarArtisanlistTv.setTextColor(ColorUtil.musicbarTvDown);
+                mMusicBarArtisanlist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 forEachDetailsMap(Constants.FRAGMENT_ARTIST, Constants.NUMBER_NINE);
                 break;
             case 2:
-                setAllTabbarNotPressed(flag, R.string.music_song, mMusicBarSonglist);
+                setAllTabbarNotPressed(flag, R.string.music_song);
                 mMusicBarSonglistIv.setBackgroundResource(R.drawable.tabbar_songlist_selector);
                 mMusicBarSonglistTv.setTextColor(ColorUtil.musicbarTvDown);
+                mMusicBarSonglist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 // 没有详情页面，直接返回桌面。
                 SharePrefrencesUtil.setDetailsFlag(this, Constants.NUMBER_ZOER);
 
                 break;
             case 3:
-                setAllTabbarNotPressed(flag, R.string.music_album, mMusicBarAlbumlist);
+                setAllTabbarNotPressed(flag, R.string.music_album);
                 mMusicBarAlbumlistIv.setBackgroundResource(R.drawable.tabbar_albumlist_selector);
+                mMusicBarAlbumlist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 mMusicBarAlbumlistTv.setTextColor(ColorUtil.musicbarTvDown);
                 forEachDetailsMap(Constants.FRAGMENT_ALBUM, Constants.NUMBER_TEN);
                 break;
             case 4:
-                setAllTabbarNotPressed(flag, R.string.about, mMusicBarStylelist);
+                setAllTabbarNotPressed(flag, R.string.about);
                 mMusicBarStylelistIv.setBackgroundResource(R.drawable.tabbar_stylelist_selector);
                 mMusicBarStylelistTv.setTextColor(ColorUtil.musicbarTvDown);
+                mMusicBarAboutLl.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 // 没有详情页面，直接返回桌面。
                 SharePrefrencesUtil.setDetailsFlag(this, Constants.NUMBER_ZOER);
-
-
                 break;
             default:
                 break;
@@ -708,22 +695,12 @@ public class MusicActivity
     }
 
     /**
-<<<<<<< HEAD:app/src/main/java/com/yibao/music/artisanlist/MusicActivity.java
-     * 将Tabbar置于未选种状态
-=======
      * 将Tabbar全部置于未选种状态
      *
-<<<<<<< HEAD
->>>>>>> features:app/src/main/java/com/yibao/music/activity/MusicActivity.java
-     * @param flag
-     * @param titleResourceId
-=======
      * @param flag            选中的Tag
      * @param titleResourceId title
->>>>>>> features
      */
-    private void setAllTabbarNotPressed(int flag, int titleResourceId, LinearLayout llTabBarBg) {
-        llTabBarBg.setBackgroundResource(R.drawable.tabbar_bg_down);
+    private void setAllTabbarNotPressed(int flag, int titleResourceId) {
         mTvMusicToolbarTitle.setText(titleResourceId);
         mMusicViewPager.setCurrentItem(flag, false);
         mMusicBarPlaylist.setBackgroundColor(ColorUtil.wihtle);
@@ -742,7 +719,7 @@ public class MusicActivity
         mMusicBarAlbumlistIv.setBackgroundResource(R.drawable.tabbar_albumlist_down_selector);
         mMusicBarAlbumlistTv.setTextColor(mNormalTabbarColor);
 
-        mMusicBarStylelist.setBackgroundColor(ColorUtil.wihtle);
+        mMusicBarAboutLl.setBackgroundColor(ColorUtil.wihtle);
         mMusicBarStylelistIv.setBackgroundResource(R.drawable.tabbar_stylelist_down_selector);
         mMusicBarStylelistTv.setTextColor(mNormalTabbarColor);
     }

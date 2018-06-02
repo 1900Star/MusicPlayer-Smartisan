@@ -8,17 +8,14 @@ import com.yibao.music.MusicApplication;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.MusicInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * Author：Sid
@@ -82,6 +79,7 @@ public class MusicListUtil {
                 //过滤掉小于2分钟的音乐,后续可以通过SharePreference让用户在UI界面自行选择。
                 if (size > 21600) {
                     String firstChar = String.valueOf(HanziToPinyins.stringToPinyinSpecial(title));
+                    info.setMusicQualityType(musicQualityType);
                     info.setFirstChar(firstChar);
                     info.setId(mId);
                     info.setTitle(title);
@@ -107,16 +105,17 @@ public class MusicListUtil {
      *
      * @param musicList c
      */
-    public static List<MusicBean> sortMusicAddTime(List<MusicBean> musicList) {
+    public static List<MusicBean> sortMusicAddTime(List<MusicBean> musicList, int sortFlag) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            musicList.sort(MusicListUtil::sortAddTime);
+            musicList.sort((m1, m2) -> sortAddTime(sortFlag, m1, m2));
         } else {
-            Collections.sort(musicList, MusicListUtil::sortAddTime);
+            Collections.sort(musicList, (m1, m2) -> sortAddTime(sortFlag, m1, m2));
         }
         return musicList;
     }
 
-    private static int sortAddTime(MusicBean m1, MusicBean m2) {
+    private static int sortAddTime(int sortFlag, MusicBean m1, MusicBean m2) {
+        int value;
         if (m1 == m2) {
             return 0;
         }
@@ -129,8 +128,13 @@ public class MusicListUtil {
         if (m1.equals(m2)) {
             return 0;
         }
+        if (sortFlag == Constants.NUMBER_ONE) {
+            value = Float.compare(m2.getAddTime(), m1.getAddTime());
 
-        int value = Float.compare(m2.getAddTime(), m1.getAddTime());
+        } else {
+            value = Float.compare(StringUtil.stringToLong(m2.getTime()), StringUtil.stringToLong(m1.getTime()));
+
+        }
         if (value != 0) {
             return value;
         }
@@ -138,6 +142,44 @@ public class MusicListUtil {
         // Warning, this line is not fool proof as unequal objects can have identical hash codes.
         return m1.hashCode() - m2.hashCode();
     }
+
+    /**
+     * 自己添加的播放列表，按添加时间排序
+     *
+     * @param musicList c
+     */
+    public static List<MusicInfo> sortNewListAddTime(List<MusicInfo> musicList) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            musicList.sort(MusicListUtil::sortNewList);
+        } else {
+            Collections.sort(musicList, MusicListUtil::sortNewList);
+        }
+        return musicList;
+    }
+
+    private static int sortNewList(MusicInfo m1, MusicInfo m2) {
+        int value;
+        if (m1 == m2) {
+            return 0;
+        }
+        if (m1 == null) {
+            return -1;
+        }
+        if (m2 == null) {
+            return 1;
+        }
+        if (m1.equals(m2)) {
+            return 0;
+        }
+        value = Float.compare(StringUtil.stringToLong(m2.getTime()), StringUtil.stringToLong(m1.getTime()));
+        if (value != 0) {
+            return value;
+        }
+        // https://stackoverflow.com/questions/28004269/java-collections-sort-comparison-method-violates-its-general-contract#
+        // Warning, this line is not fool proof as unequal objects can have identical hash codes.
+        return m1.hashCode() - m2.hashCode();
+    }
+
 
     /**
      * 按ABCD 首字母排序

@@ -24,6 +24,7 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
@@ -77,7 +78,7 @@ public class MusicBottomSheetDialog
     }
 
     private void initData(BottomSheetDialog dialog, View view) {
-       BottomSheetAdapter adapter = new BottomSheetAdapter(mList);
+        BottomSheetAdapter adapter = new BottomSheetAdapter(MusicListUtil.sortMusicAddTime(mList,Constants.NUMBER_TWO));
         mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, adapter);
         String size = StringUtil.getBottomSheetTitile(mList.size());
         mBottomListTitleSize.setText(size);
@@ -141,7 +142,7 @@ public class MusicBottomSheetDialog
     }
 
     private void backTop() {
-      BottomSheetAdapter adapter = (BottomSheetAdapter) mRecyclerView.getAdapter();
+        BottomSheetAdapter adapter = (BottomSheetAdapter) mRecyclerView.getAdapter();
         int positionForSection = adapter.getPositionForSection(0);
         LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
         manager.scrollToPositionWithOffset(positionForSection, 0);
@@ -152,7 +153,7 @@ public class MusicBottomSheetDialog
         intent.setClass(mContext, AudioPlayService.class);
         intent.putExtra("sortFlag", Constants.NUMBER_EIGHT);
         intent.putExtra("position", position);
-      AudioServiceConnection connection = new AudioServiceConnection();
+        AudioServiceConnection connection = new AudioServiceConnection();
         mContext.bindService(intent, connection, Service.BIND_AUTO_CREATE);
         mContext.startService(intent);
         SharePrefrencesUtil.setMusicDataListFlag(mContext, Constants.NUMBER_EIGHT);

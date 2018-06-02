@@ -80,7 +80,7 @@ public class SongFragment extends BaseFragment {
         if (isShowStickyView == Constants.NUMBER_ZOER) {
             mSongAdapter = new SongAdapter(mActivity, MusicListUtil.sortMusicAbc(mSongList), isShowStickyView);
         } else if (isShowStickyView == Constants.NUMBER_ONE) {
-            List<MusicBean> musicAddtimeList = MusicListUtil.sortMusicAddTime(mMusicBeanDao.queryBuilder().list());
+            List<MusicBean> musicAddtimeList = MusicListUtil.sortMusicAddTime(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
             mSongAdapter = new SongAdapter(mActivity, musicAddtimeList, isShowStickyView);
         }
         mMusciView.setAdapter(mActivity, Constants.NUMBER_ONE, isShowSlidebar, mSongAdapter);

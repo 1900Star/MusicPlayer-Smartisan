@@ -31,7 +31,9 @@
         <service android:name=".service.AidlService" />
         <service android:name=".service.LoadMusicDataService" />
 
-        <activity android:name=".base.BaseActivity" />
+        <activity
+            android:name=".base.BaseActivity"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".activity.MusicActivity"
             android:launchMode="singleTask"

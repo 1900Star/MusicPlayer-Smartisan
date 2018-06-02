@@ -59,13 +59,13 @@ public abstract class BaseRvAdapter<T>
 
     @Override
     public int getItemCount() {
-        return mList == null ? Constants.NUMBER_ZOER : mList.size();
+        return mList == null ? Constants.NUMBER_ZOER : mList.size() + 1;
     }
 
 
     @Override
     public int getItemViewType(int position) {
-        if (position == getItemCount()) {
+        if (position == getItemCount() - 1) {
             return TYPE_FOOTER;
         }
         return TYPE_ITEM;
@@ -75,7 +75,7 @@ public abstract class BaseRvAdapter<T>
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof LoadMoreHolder) {
             LoadMoreHolder moreHolder = (LoadMoreHolder) holder;
-            String count = (mList.size() - 1) + getLastItemDes();
+            String count = (mList.size()) + getLastItemDes();
             moreHolder.mSongCount.setText(count);
         } else {
             bindView(holder, mList.get(position));
@@ -126,17 +126,22 @@ public abstract class BaseRvAdapter<T>
     }
 
     public void addData(List<T> list) {
-        for (T t : list) {
-            if (!mList.contains(t)) {
-                mList.add(t);
+        if (list != null) {
+            for (T t : list) {
+                if (!mList.contains(t)) {
+                    mList.add(t);
+                }
             }
+            notifyDataSetChanged();
         }
-        notifyDataSetChanged();
 
 
     }
 
     public void setNewData(List<T> data) {
+        if (mList != null && mList.size() > Constants.NUMBER_ZOER) {
+            mList.clear();
+        }
         this.mList = data;
         notifyDataSetChanged();
     }

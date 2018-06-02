@@ -19,7 +19,6 @@ import com.yibao.music.view.ZoomImageView;
  *
  * @author Stran
  */
-@SuppressLint("CheckResult")
 public class ImageUitl {
 
     public static ZoomImageView creatZoomView(Context context) {
@@ -29,6 +28,11 @@ public class ImageUitl {
         view.reSetState();
         view.setLayoutParams(params);
         return view;
+    }
+
+    public static ZoomImageView creatZoomViewTop(Context context) {
+
+        return new ZoomImageView(context);
     }
 
     // 加载图片
@@ -42,7 +46,7 @@ public class ImageUitl {
 
     public static void loadPlaceholder(Context context, String url, ImageView view) {
         RequestOptions options = new RequestOptions();
-        options.placeholder(R.mipmap.ninas);
+        options.placeholder(R.mipmap.nina);
         options.error(R.mipmap.nina);
         options.diskCacheStrategy(DiskCacheStrategy.ALL);
         Glide.with(context).load(url).apply(options).into(view);

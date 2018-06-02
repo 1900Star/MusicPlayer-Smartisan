@@ -52,7 +52,6 @@ public class MusicView
                 switch (newState) {
                     case RecyclerView.SCROLL_STATE_IDLE:
                         Glide.with(context).resumeRequests();
-
                         break;
                     // 加载图片
                     case RecyclerView.SCROLL_STATE_DRAGGING:
