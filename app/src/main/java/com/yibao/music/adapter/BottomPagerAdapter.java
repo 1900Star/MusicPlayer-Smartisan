@@ -54,6 +54,7 @@ public class BottomPagerAdapter
 
     }
 
+
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {

@@ -87,13 +87,13 @@ public class MusicBottomSheetDialog
     private void initData(BottomSheetDialog dialog, View view) {
         mListList.add(MusicListUtil.sortMusicAddTime(mList, Constants.NUMBER_TWO));
         mListList.add(musicDao.queryBuilder().list());
-//        BottomPagerAdapter bottomPagerAdapter = new BottomPagerAdapter(mContext, mListList);
-//        mBottomViewPager.setAdapter(bottomPagerAdapter);
+        BottomPagerAdapter bottomPagerAdapter = new BottomPagerAdapter(mContext, mListList);
+        mBottomViewPager.setAdapter(bottomPagerAdapter);
         String size = StringUtil.getBottomSheetTitile(mList.size());
         mBottomListTitleSize.setText(size);
-        BottomSheetAdapter adapter = new BottomSheetAdapter(mContext,MusicListUtil.sortMusicAddTime(mList, Constants.NUMBER_TWO));
-        mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, adapter);
-        mBottomListContent.addView(mRecyclerView);
+//        BottomSheetAdapter adapter = new BottomSheetAdapter(mContext, MusicListUtil.sortMusicAddTime(mList, Constants.NUMBER_TWO));
+//        mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, adapter);
+//        mBottomListContent.addView(mRecyclerView);
         dialog.setContentView(view);
         dialog.setCancelable(true);
         dialog.getWindow()

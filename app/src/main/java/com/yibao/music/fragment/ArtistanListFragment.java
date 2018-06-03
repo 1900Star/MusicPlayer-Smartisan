@@ -83,10 +83,7 @@ public class ArtistanListFragment extends BaseFragment {
     private void openDetailsView(ArtistInfo bean) {
         if (isShowDetailsView) {
             mDetailsView.setVisibility(View.GONE);
-            mMusicView.setVisibility(View.VISIBLE);
-
         } else {
-            mMusicView.setVisibility(View.INVISIBLE);
             mDetailsView.setVisibility(View.VISIBLE);
             List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(bean.getArtist())).build().list();
             // DetailsView播放音乐需要的参数

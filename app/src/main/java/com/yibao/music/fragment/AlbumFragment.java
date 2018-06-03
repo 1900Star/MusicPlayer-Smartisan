@@ -136,7 +136,6 @@ public class AlbumFragment extends BaseFragment {
     private void openDetailsView(AlbumInfo bean) {
         if (isShowDetailsView) {
             LogUtil.d("===============显示 ");
-            mAlbumContentView.setVisibility(View.INVISIBLE);
             mDetailsView.setVisibility(View.VISIBLE);
             List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(bean.getAlbumName())).build().list();
             // DetailsView播放音乐需要的参数
@@ -150,8 +149,6 @@ public class AlbumFragment extends BaseFragment {
 
         } else {
             mDetailsView.setVisibility(View.GONE);
-            mAlbumContentView.setVisibility(View.VISIBLE);
-
         }
         isShowDetailsView = !isShowDetailsView;
     }

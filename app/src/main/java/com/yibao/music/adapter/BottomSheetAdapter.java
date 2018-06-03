@@ -55,11 +55,8 @@ public class BottomSheetAdapter
             RxBus bus = MusicApplication.getIntstance()
                     .bus();
 //            MusicBottomSheetDialog页面接收,用于播放收藏列表中点击Position的音乐
-            musicHolder.mRootBottomSheet.setOnClickListener(view -> {
-                SharePrefrencesUtil.setMusicDataListFlag(mContext, Constants.NUMBER_EIGHT);
-                bus.post(new BottomSheetStatus(
-                        position));
-            });
+            musicHolder.mRootBottomSheet.setOnClickListener(view -> bus.post(new BottomSheetStatus(
+                    position)));
         }
     }
 

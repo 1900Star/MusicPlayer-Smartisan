@@ -30,7 +30,7 @@ public class QueryMusicFlagListUtil {
             return MusicListUtil.sortMusicAddTime(musicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
             // 收藏列表
         } else if (sortListFlag == Constants.NUMBER_EIGHT) {
-            return musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
+            return MusicListUtil.sortMusicAddTime(musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list(), Constants.NUMBER_TWO);
             // 艺术家、l
         } else if (sortListFlag == Constants.NUMBER_TEN) {
             // 按艺术家查询列表
