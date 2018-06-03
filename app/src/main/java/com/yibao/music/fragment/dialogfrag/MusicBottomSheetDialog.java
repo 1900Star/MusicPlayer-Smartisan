@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
+import com.yibao.music.adapter.BottomPagerAdapter;
 import com.yibao.music.adapter.BottomSheetAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnCheckFavoriteListener;
@@ -24,11 +26,13 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -44,7 +48,7 @@ import io.reactivex.schedulers.Schedulers;
  * @author Stran
  */
 public class MusicBottomSheetDialog
-        implements View.OnClickListener {
+        implements View.OnClickListener, ViewPager.OnPageChangeListener {
     private LinearLayout mBottomListContent;
     private TextView mBottomListColection;
     private TextView mBottomListClear;
@@ -58,6 +62,9 @@ public class MusicBottomSheetDialog
     private RxBus
             mBus = MusicApplication.getIntstance()
             .bus();
+    private MusicBeanDao musicDao = MusicApplication.getIntstance().getMusicDao();
+    private ViewPager mBottomViewPager;
+    private List<List<MusicBean>> mListList = new ArrayList<>();
 
     public static MusicBottomSheetDialog newInstance() {
         return new MusicBottomSheetDialog();
@@ -66,7 +73,7 @@ public class MusicBottomSheetDialog
     public void getBottomDialog(Context context) {
         this.mContext = context;
 
-        this.mList = MusicApplication.getIntstance().getMusicDao().queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
+        this.mList = musicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
         BottomSheetDialog dialog = new BottomSheetDialog(context);
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.bottom_sheet_list_dialog, null);
@@ -78,10 +85,14 @@ public class MusicBottomSheetDialog
     }
 
     private void initData(BottomSheetDialog dialog, View view) {
-        BottomSheetAdapter adapter = new BottomSheetAdapter(MusicListUtil.sortMusicAddTime(mList,Constants.NUMBER_TWO));
-        mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, adapter);
+        mListList.add(MusicListUtil.sortMusicAddTime(mList, Constants.NUMBER_TWO));
+        mListList.add(musicDao.queryBuilder().list());
+//        BottomPagerAdapter bottomPagerAdapter = new BottomPagerAdapter(mContext, mListList);
+//        mBottomViewPager.setAdapter(bottomPagerAdapter);
         String size = StringUtil.getBottomSheetTitile(mList.size());
         mBottomListTitleSize.setText(size);
+        BottomSheetAdapter adapter = new BottomSheetAdapter(mContext,MusicListUtil.sortMusicAddTime(mList, Constants.NUMBER_TWO));
+        mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, adapter);
         mBottomListContent.addView(mRecyclerView);
         dialog.setContentView(view);
         dialog.setCancelable(true);
@@ -104,6 +115,7 @@ public class MusicBottomSheetDialog
         mBottomListColection.setOnClickListener(this);
         mBottomListClear.setOnClickListener(this);
         mBottomListTitleSize.setOnClickListener(this);
+        mBottomViewPager.addOnPageChangeListener(this);
 
     }
 
@@ -165,9 +177,26 @@ public class MusicBottomSheetDialog
         mBottomListColection = view.findViewById(R.id.bottom_sheet_bar_play);
         mBottomListClear = view.findViewById(R.id.bottom_sheet_bar_clear);
         mBottomListTitleSize = view.findViewById(R.id.bottom_list_title_size);
+        mBottomViewPager = view.findViewById(R.id.bottom_vp);
     }
 
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+        LogUtil.d("==========退回客户   " + position);
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
 }
 
 

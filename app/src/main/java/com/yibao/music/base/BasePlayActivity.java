@@ -35,7 +35,7 @@ import io.reactivex.schedulers.Schedulers;
  * @包名： com.yibao.music.base
  * @文件名: BasePlayActivity
  * @author: Stran
- * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
+ * @Email: www.strangermy@outlook.com / www.strangermy98@gmail.com
  * @创建时间: 2018/2/18 11:09
  * @描述： {仅仅针对 PlayActivity抽出的基类,目的在于减少PlayActivity中的代码}
  */

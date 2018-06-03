@@ -40,6 +40,7 @@ public class BaseActivity extends AppCompatActivity {
     protected MusicBeanDao mMusicDao;
     protected CompositeDisposable mCompositeDisposable;
     protected Disposable mDisposable;
+    protected Disposable qqLyricsDisposable;
     protected Disposable mDisposablesLyric;
     protected Disposable mRxViewDisposable;
     protected final int mNormalTabbarColor = Color.parseColor("#939396");
@@ -108,6 +109,13 @@ public class BaseActivity extends AppCompatActivity {
     protected void headsetPullOut() {
     }
 
+    protected void disposableQqLyric() {
+        if (qqLyricsDisposable != null) {
+            qqLyricsDisposable.dispose();
+            qqLyricsDisposable = null;
+        }
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -115,7 +123,12 @@ public class BaseActivity extends AppCompatActivity {
             mDisposable.dispose();
             mDisposable = null;
         }
+//        if (mDisposablesLyric != null) {
+//            mDisposablesLyric.dispose();
+//            mDisposablesLyric = null;
+//        }
     }
+
 
     @Override
     protected void onDestroy() {

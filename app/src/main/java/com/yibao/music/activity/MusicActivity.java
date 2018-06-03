@@ -54,14 +54,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -162,6 +166,8 @@ public class MusicActivity
     private QqBarPagerAdapter mQqBarPagerAdapter;
     private HashMap<String, String> mLyricMap;
     private static String mEntryValue;
+    private int lyricsFlag = 0;
+    private ArrayList<MusicLyrBean> mLyricList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -267,6 +273,7 @@ public class MusicActivity
             mQqBarPagerAdapter.notifyDataSetChanged();
 
             //TODO 这里做更新歌词的操作
+
 //            setQqPagerLyric();
         }
         isChangeFloatingBlock = !isChangeFloatingBlock;
@@ -278,31 +285,45 @@ public class MusicActivity
     //TODO
     @SuppressLint("CheckResult")
     private void setQqPagerLyric() {
-
-
-        mDisposablesLyric = Observable.interval(1000, 1000, TimeUnit.MICROSECONDS)
-                .subscribeOn(Schedulers.io()).map(aLong -> {
-
+//        if (qqLyricsDisposable != null) {
+        Flowable.interval(0, 2800, TimeUnit.MICROSECONDS)
+                .onBackpressureDrop()
+                .subscribeOn(Schedulers.io())
+                .map(aLong -> {
                     String currentProgress = String.valueOf(audioBinder.getProgress());
+                    int progress = audioBinder.getProgress();
 
+                    if (mLyricList != null && mLyricList.size() > 1) {
+                        int startTime = mLyricList.get(lyricsFlag).getStartTime();
 
-                    for (Map.Entry<String, String> entry : mLyricMap.entrySet()) {
-                        if (currentProgress.equals(entry.getKey())) {
-//                            LogUtil.d(" 当前 进度   " + currentProgress);
-//                            LogUtil.d("当前的Key ====================  " + entry.getKey());
-                            LogUtil.d("当前的Value ====================  " + entry.getValue());
-                            mEntryValue = entry.getValue();
+                        if (progress > startTime) {
+                            String content = mLyricList.get(lyricsFlag).getContent();
+                            LogUtil.d("当前的Value ====================  " + content);
+                            lyricsFlag++;
                         }
+
 
                     }
 
-//                    LogUtil.d("=====得到   " + mEntryValue);
+//                    for (Map.Entry<String, String> entry : mLyricMap.entrySet()) {
+//                        if (currentProgress.equals(entry.getKey())) {
+//                            lyricsFlag = 1;
+////                            LogUtil.d("当前的进度 ====================  " + currentProgress);
+////                            LogUtil.d( "当前的Key ====================  " + entry.getKey());
+////                            LogUtil.d("当前的Value ====================  " + entry.getValue());
+//                            mEntryValue = entry.getValue();
+//                        }
+//
+//                    }
+
                     return mEntryValue == null ? "加载中..." : mEntryValue;
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(str -> {
-
-                    LogUtil.d("=====得到的歌词   " + str);
+                    if (lyricsFlag == 1) {
+//                        LogUtil.d("=====得到的歌词   " + str);
+                    }
+                    lyricsFlag = 2;
 //                    MusicBean musicBean = MusicDataTranslateUtil.tanslateData(mCurrentMusicBean);
 //                    musicBean.setCurrentLyrics(str);
 //                    mMusicItems.set(mCurrentPosition, musicBean);
@@ -311,6 +332,7 @@ public class MusicActivity
 //                    mMusicSlideViewPager.setCurrentItem(mCurrentPosition, false);
 //                    mQqBarPagerAdapter.notifyDataSetChanged();
                 });
+//        }
 
 
     }
@@ -466,6 +488,7 @@ public class MusicActivity
      * @param musicItem g
      */
     private void perpareItem(MusicBean musicItem) {
+//        disposableQqLyric();
         mCurrentMusicBean = musicItem;
         checkCurrentIsFavorite(mCurrentMusicBean, mIvMusicQqBarFavorite, mIvMusicFloatingFavorite);
 
@@ -480,13 +503,13 @@ public class MusicActivity
         ImageUitl.loadPlaceholder(this, albumUri.toString(), mMusicFloatBlockAlbulm);
 //         加载歌词的List，并将歌词的开始时间和歌词内容存到Map集合里。
         mLyricMap = new HashMap<>(16);
-        ArrayList<MusicLyrBean> lyricList = LyricsUtil.getLyricList(mCurrentMusicBean.getTitle(), mCurrentMusicBean.getArtist());
-        if (lyricList != null && lyricList.size() > 1) {
-            for (MusicLyrBean musicLyrBean : lyricList) {
-                String songTime = String.valueOf(musicLyrBean.getStartTime());
-                mLyricMap.put(songTime, musicLyrBean.getContent());
-            }
-        }
+        mLyricList = LyricsUtil.getLyricList(mCurrentMusicBean.getTitle(), mCurrentMusicBean.getArtist());
+//        if (lyricList != null && lyricList.size() > 1) {
+//            for (MusicLyrBean musicLyrBean : lyricList) {
+//                String songTime = String.valueOf(musicLyrBean.getStartTime());
+//                mLyricMap.put(songTime, musicLyrBean.getContent());
+//            }
+//        }
         mQqBarPagerAdapter.setData(mMusicItems);
         mMusicSlideViewPager.setCurrentItem(mCurrentMusicBean.getCureetPosition(), false);
     }

@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 
 import com.yibao.music.R;
 import com.yibao.music.model.MusicLyrBean;
+import com.yibao.music.util.LogUtil;
 
 import java.util.ArrayList;
 
