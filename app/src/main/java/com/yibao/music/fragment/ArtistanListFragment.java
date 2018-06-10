@@ -59,7 +59,6 @@ public class ArtistanListFragment extends BaseFragment {
         return view;
     }
 
-
     private void initListener() {
         mAdapter.setItemListener(ArtistanListFragment.this::openDetailsView);
     }
@@ -67,16 +66,11 @@ public class ArtistanListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (mArtistList == null) {
-            mArtistList = MusicListUtil.getArtistList(mSongList);
-        }
-        mAdapter.setNewData(mArtistList);
     }
 
     private void initData() {
         mAdapter = new ArtistAdapter(mArtistList);
         mMusicView.setAdapter(getActivity(), Constants.NUMBER_TWO, true, mAdapter);
-
 
     }
 
@@ -110,16 +104,12 @@ public class ArtistanListFragment extends BaseFragment {
             }
             isShowDetailsView = !isShowDetailsView;
         }
-
-
     }
 
 
     public static ArtistanListFragment newInstance() {
-
         return new ArtistanListFragment();
     }
-
 
     @Override
     public void onDestroyView() {

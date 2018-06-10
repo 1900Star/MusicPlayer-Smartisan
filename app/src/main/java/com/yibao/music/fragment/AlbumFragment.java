@@ -85,11 +85,6 @@ public class AlbumFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (mAlbumList == null) {
-            mAlbumList = MusicListUtil.getAlbumList(mSongList);
-        }
-        mAdapter.setNewData(mAlbumList);
-
     }
 
     private void initListener() {

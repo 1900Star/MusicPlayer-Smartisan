@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import com.yibao.music.R;
 import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.BaseFragment;
+import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
 import com.yibao.music.fragment.dialogfrag.DeletePlayListDialog;
@@ -91,8 +92,10 @@ public class PlayListFragment extends BaseFragment {
 
     private void initListener() {
         mAdapter.setItemListener(str -> PlayListFragment.this.switchShowDetailsView());
+        // 长按删除
         mAdapter.setItemLongClickListener((musicInfo, currentPosition) -> {
             mDeletePosition = currentPosition;
+            musicInfo.setPlayStatus(Constants.NUMBER_TWO);
             DeletePlayListDialog.newInstance(musicInfo).show(mActivity.getFragmentManager(), "deleteList");
         });
     }

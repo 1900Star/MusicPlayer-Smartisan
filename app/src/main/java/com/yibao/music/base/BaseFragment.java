@@ -77,6 +77,12 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (mAlbumList == null) {
+            mAlbumList = MusicListUtil.getAlbumList(mSongList);
+        }
+        if (mArtistList == null) {
+            mArtistList = MusicListUtil.getArtistList(mSongList);
+        }
         initDetailsFlag();
     }
 

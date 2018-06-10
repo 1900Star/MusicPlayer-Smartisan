@@ -32,7 +32,7 @@ public class RelaxDialogFragment
         ViewPager girlsViewPager = view.findViewById(R.id.vp_girls);
         SplashPagerAdapter splashPagerAdapter = new SplashPagerAdapter();
         girlsViewPager.setAdapter(splashPagerAdapter);
-        splashPagerAdapter.setZoomViewClickListener(this::dismiss);
+//        splashPagerAdapter.setZoomViewClickListener(this::dismiss);
     }
 
 

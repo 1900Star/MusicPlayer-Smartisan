@@ -18,7 +18,12 @@ import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicInfo;
 import com.yibao.music.model.greendao.MusicInfoDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RxBus;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Author：Sid
@@ -71,7 +76,6 @@ public class DeletePlayListDialog
     private void initListener() {
         mTvCancelDelete.setOnClickListener(this);
         mTvDelete.setOnClickListener(this);
-
     }
 
 
@@ -105,8 +109,10 @@ public class DeletePlayListDialog
 
 
     private void deletePlayList() {
-        mMusicInfoDao.delete(mMusicInfo);
-        mBus.post(new AddAndDeleteListBean(Constants.NUMBER_TWO));
+        if (mMusicInfo.getPlayStatus() == Constants.NUMBER_TWO) {
+            mMusicInfoDao.delete(mMusicInfo);
+        }
+        mBus.post(new AddAndDeleteListBean(mMusicInfo.getPlayStatus()));
     }
 
 

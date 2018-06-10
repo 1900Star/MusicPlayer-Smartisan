@@ -11,7 +11,7 @@ package com.yibao.music.model;
  */
 
 public class AddAndDeleteListBean {
-    // 1 表示添加列表    2 表示删除列表
+    // 1 表示添加列表    2 表示删除列表  3 清除收藏列表
     private int operationType;
 
     public AddAndDeleteListBean(int operationType) {
