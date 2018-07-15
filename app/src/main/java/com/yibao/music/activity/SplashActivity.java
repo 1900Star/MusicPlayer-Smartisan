@@ -63,7 +63,6 @@ public class SplashActivity
 
 
 
-    @SuppressLint("CheckResult")
     private void initRxbusData() {
         SplashPagerAdapter splashPagerAdapter = new SplashPagerAdapter();
         mVpSplash.setAdapter(splashPagerAdapter);

@@ -76,7 +76,6 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
         upDataPlayProgress();
         updataMusicTitle();
         recivewServiecInfo();
-
     }
 
     /**

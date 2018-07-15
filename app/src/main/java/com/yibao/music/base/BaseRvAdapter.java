@@ -78,7 +78,8 @@ public abstract class BaseRvAdapter<T>
             String count = (mList.size()) + getLastItemDes();
             moreHolder.mSongCount.setText(count);
         } else {
-            bindView(holder, mList.get(position));
+
+            bindView(holder, mList.get(position >= mList.size() ? position - 1 : position));
         }
     }
 
