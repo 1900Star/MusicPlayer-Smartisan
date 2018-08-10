@@ -1,7 +1,6 @@
 package com.yibao.music.activity;
 
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -332,13 +331,7 @@ public class PlayActivity extends BasePlayActivity {
     //根据当前播放状态设置图片
 
     private void updatePlayBtnStatus() {
-
-        if (audioBinder.isPlaying()) {
-            //正在播放    设置为暂停
-            mMusicPlay.setImageResource(R.drawable.btn_playing_pause_selector);
-        } else {
-            mMusicPlay.setImageResource(R.drawable.btn_playing_play_selector);
-        }
+        mMusicPlay.setImageResource(audioBinder.isPlaying() ? R.drawable.btn_playing_pause_selector : R.drawable.btn_playing_play_selector);
     }
 
 
