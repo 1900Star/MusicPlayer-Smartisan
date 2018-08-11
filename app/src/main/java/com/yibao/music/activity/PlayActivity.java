@@ -173,7 +173,7 @@ public class PlayActivity extends BasePlayActivity {
         if (cureentMusicIsFavorite) {
             mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
         } else {
-            mIvFavoriteMusic.setImageResource(R.drawable.music_qqbar_favorite_selector);
+            mIvFavoriteMusic.setImageResource(R.drawable.music_qqbar_favorite_normal_selector);
         }
     }
 
@@ -396,7 +396,7 @@ public class PlayActivity extends BasePlayActivity {
         if (mCurrenMusicInfo.isFavorite()) {
             mCurrenMusicInfo.setIsFavorite(false);
             mMusicDao.update(mCurrenMusicInfo);
-            mIvFavoriteMusic.setImageResource(R.drawable.music_qqbar_favorite_selector);
+            mIvFavoriteMusic.setImageResource(R.drawable.music_qqbar_favorite_normal_selector);
 
         } else {
             String time = StringUtil.getCurrentTime();

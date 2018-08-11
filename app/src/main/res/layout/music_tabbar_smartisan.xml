@@ -97,7 +97,7 @@
     </LinearLayout>
 
     <com.yibao.music.view.ProgressBtn
-        android:id="@+id/music_float_pb"
+        android:id="@+id/smartisan_bar_progress"
         android:layout_width="match_parent"
         android:layout_height="1.5dp"
         android:layout_alignParentBottom="true"

@@ -19,6 +19,8 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.StringUtil;
+import com.yibao.music.view.music.QqControlBar;
+import com.yibao.music.view.music.SmartisanControlBar;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -43,7 +45,6 @@ public class BaseActivity extends AppCompatActivity {
     protected Disposable qqLyricsDisposable;
     protected Disposable mDisposablesLyric;
     protected Disposable mRxViewDisposable;
-    protected final int mNormalTabbarColor = Color.parseColor("#939396");
     private boolean mCurrentIsFavorite;
 
     @Override
@@ -58,37 +59,27 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-    protected void checkCurrentIsFavorite(MusicBean currentMusicBean, ImageView qqFavorite, ImageView smartisanFavorite) {
+    protected void checkCurrentSongIsFavorite(MusicBean currentMusicBean, QqControlBar qqControlBar, SmartisanControlBar smartisanControlBar) {
         mCurrentIsFavorite = mMusicDao.load(currentMusicBean.getId()).isFavorite();
-        if (mCurrentIsFavorite) {
-            qqFavorite.setImageResource(R.mipmap.favorite_yes);
-            smartisanFavorite.setImageResource(R.drawable.btn_favorite_red_selector);
-        } else {
-            qqFavorite.setImageResource(R.drawable.music_qqbar_favorite_selector);
-            smartisanFavorite.setImageResource(R.drawable.btn_favorite_gray_selector);
-        }
+        smartisanControlBar.setFavoriteButtonState(mCurrentIsFavorite);
+        qqControlBar.setFavoriteButtonState(mCurrentIsFavorite);
     }
 
 
-    protected void favoriteMusic(MusicBean currentMusicBean, ImageView qqFavorite, ImageView smartisanFavorite) {
+    protected void setSongfavoriteState(MusicBean currentMusicBean, QqControlBar qqControlBar, SmartisanControlBar smartisanControlBar) {
         mCurrentIsFavorite = mMusicDao.load(currentMusicBean.getId()).isFavorite();
-        if (mCurrentIsFavorite) {
-            currentMusicBean.setIsFavorite(false);
-            mMusicDao.update(currentMusicBean);
-            qqFavorite.setImageResource(R.drawable.music_qqbar_favorite_selector);
-            smartisanFavorite.setImageResource(R.drawable.btn_favorite_gray_selector);
-
-        } else {
-            String time = StringUtil.getCurrentTime();
-            currentMusicBean.setTime(time);
-            currentMusicBean.setIsFavorite(true);
-            mMusicDao.update(currentMusicBean);
-            smartisanFavorite.setImageResource(R.drawable.btn_favorite_red_selector);
-            qqFavorite.setImageResource(R.mipmap.favorite_yes);
-
-        }
+        smartisanControlBar.setFavoriteButtonState(!mCurrentIsFavorite);
+        qqControlBar.setFavoriteButtonState(!mCurrentIsFavorite);
+        currentMusicBean.setIsFavorite(!mCurrentIsFavorite);
+        mMusicDao.update(mCurrentIsFavorite ? currentMusicBean : getCurrentMusicBean(currentMusicBean));
     }
 
+    private MusicBean getCurrentMusicBean(MusicBean musicBean) {
+        String time = StringUtil.getCurrentTime();
+        musicBean.setTime(time);
+        mMusicDao.update(musicBean);
+        return musicBean;
+    }
 
     /**
      * 耳机插入和拔出监听

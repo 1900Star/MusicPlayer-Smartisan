@@ -19,6 +19,7 @@ import com.yibao.music.view.ZoomImageView;
  *
  * @author Stran
  */
+@SuppressLint("CheckResult")
 public class ImageUitl {
 
     public static ZoomImageView creatZoomView(Context context) {

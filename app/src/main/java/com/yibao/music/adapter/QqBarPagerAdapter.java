@@ -111,7 +111,7 @@ public class QqBarPagerAdapter
             mTempUrl = albumUri.toString();
             urlFlag = 2;
         }
-        ImageUitl.loadPlaceholder(mContext, mTempUrl, mAlbulm);
+        ImageUitl.loadPlaceholder(mContext, albumUri.toString(), mAlbulm);
 //        LogUtil.i("当前的歌词    " + StringUtil.getAlbulm(musicInfo.getAlbumId()));
         songName.setText(musicInfo.getTitle());
 

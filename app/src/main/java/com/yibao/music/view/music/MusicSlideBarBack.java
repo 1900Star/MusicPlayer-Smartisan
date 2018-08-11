@@ -16,7 +16,7 @@ import com.yibao.music.util.LogUtil;
  * @author ThinkPad
  * @date 2016/8/12
  */
-public class MusicSlider
+public class MusicSlideBarBack
         extends View {
     private String[] names = new String[]{"A",
             "B",
@@ -53,17 +53,17 @@ public class MusicSlider
     private Context mContext;
     private OnMusicSlidbarTouchListener mTouchListener;
 
-    public MusicSlider(Context context) {
+    public MusicSlideBarBack(Context context) {
         super(context);
         initView(context);
     }
 
-    public MusicSlider(Context context, AttributeSet attrs) {
+    public MusicSlideBarBack(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView(context);
     }
 
-    public MusicSlider(Context context, AttributeSet attrs, int defStyleAttr) {
+    public MusicSlideBarBack(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(context);
     }

@@ -35,7 +35,6 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-
     <View
         android:layout_width="match_parent"
         android:layout_height="0.2dp"
@@ -45,11 +44,20 @@
         android:layout_width="match_parent"
         android:layout_height="58dp">
 
-        <include layout="@layout/music_tabbar_smartisan" />
+        <com.yibao.music.view.music.SmartisanControlBar
+            android:id="@+id/smartisan_control_bar"
+            android:layout_width="match_parent"
+            android:layout_height="58dp" />
 
-        <include
-            layout="@layout/muisc_tabbar_qq"
+        <com.yibao.music.view.music.QqControlBar
+            android:id="@+id/qq_control_bar"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
             android:visibility="gone" />
+
+        <!--<include-->
+        <!--layout="@layout/muisc_tabbar_qq"-->
+        <!--android:visibility="gone" />-->
 
     </RelativeLayout>
 
@@ -58,6 +66,10 @@
         android:layout_height="0.2dp"
         android:background="@color/listBg" />
 
-    <include layout="@layout/music_tabbar" />
+    <com.yibao.music.view.music.MusicNavigationBar
+        android:id="@+id/music_navigation_bar"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="bottom" />
 
 </LinearLayout>

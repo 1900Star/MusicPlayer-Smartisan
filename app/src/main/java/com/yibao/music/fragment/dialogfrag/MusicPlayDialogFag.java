@@ -20,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
@@ -136,7 +135,7 @@ public class MusicPlayDialogFag
         if (mCurrenMusicInfo.isFavorite()) {
             mIvMusicFavorite.setImageResource(R.mipmap.favorite_yes);
         } else {
-            mIvMusicFavorite.setImageResource(R.drawable.music_qqbar_favorite_selector);
+            mIvMusicFavorite.setImageResource(R.drawable.music_qqbar_favorite_normal_selector);
 
         }
     }
@@ -486,7 +485,7 @@ public class MusicPlayDialogFag
             mCurrenMusicInfo.setIsFavorite(false);
             mInfoDao.update(mCurrenMusicInfo);
 
-            mIvMusicFavorite.setImageResource(R.drawable.music_qqbar_favorite_selector);
+            mIvMusicFavorite.setImageResource(R.drawable.music_qqbar_favorite_normal_selector);
 
         } else {
             String time = StringUtil.getCurrentTime();
