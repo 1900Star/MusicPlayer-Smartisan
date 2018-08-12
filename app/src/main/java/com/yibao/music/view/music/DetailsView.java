@@ -49,6 +49,7 @@ public class DetailsView
     private int mDataFlag;
     private int mListSize;
     private String mQueryFlag;
+    private LinearLayout mHeadView;
 
     public void setDataFlag(int listSize, String queryFlag, int dataFlag) {
         this.mDataFlag = dataFlag;
@@ -154,12 +155,14 @@ public class DetailsView
         mIvDetailsAddToPlayList.setOnClickListener(this);
         mLlAlbumDetailsPlayall.setOnClickListener(this);
         mLlAlbumDetailsRandomPlay.setOnClickListener(this);
+        mHeadView.setOnClickListener(this);
     }
 
 
     private void initView() {
         LayoutInflater.from(getContext())
                 .inflate(R.layout.details_fragment, this, true);
+        mHeadView = findViewById(R.id.details_head_view);
         mRecyclerView = findViewById(R.id.rv_artist_album_details);
         mIvArtistAlbummDetails = findViewById(R.id.iv_artist_albumm_details);
         mTvArtistAlbummDetailsTitle = findViewById(R.id.tv_artist_albumm_details_title);

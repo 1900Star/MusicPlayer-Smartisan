@@ -512,6 +512,8 @@ public class PlayActivity extends BasePlayActivity {
         if (allSwitch) {
             mAnimatorListener.pause();
             mAnimator.cancel();
+            mAnimator = null;
+            mAnimatorListener = null;
         }
 
         mBind.unbind();

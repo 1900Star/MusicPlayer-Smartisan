@@ -102,6 +102,8 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
     public void animatorOnResume(boolean isPlaying) {
         if (mAnimator != null && isPlaying) {
             mAnimator.resume();
+        } else if (mAnimator != null) {
+            mAnimator.pause();
         }
     }
 
@@ -122,9 +124,11 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
     public void animatorStop() {
         if (mAnimator != null) {
             mAnimator.cancel();
+            mAnimator = null;
         }
         if (mAnimatorListener != null) {
             mAnimatorListener.pause();
+            mAnimatorListener = null;
         }
     }
 
