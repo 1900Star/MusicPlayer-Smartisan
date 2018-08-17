@@ -120,7 +120,6 @@ public class BaseActivity extends AppCompatActivity {
 //        }
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -130,5 +129,10 @@ public class BaseActivity extends AppCompatActivity {
             mRxViewDisposable.dispose();
         }
         unregisterReceiver(headsetReciver);
+    }
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, R.anim.dialog_push_out);
     }
 }

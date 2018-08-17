@@ -41,10 +41,10 @@ public class SnakbarUtil {
     /**
      * 图片已经下载过啦
      */
-    public static void picAlreadyExists(View view) {
-        Snackbar snackbar = make(view, "图片已经下载过啦  -_-", Snackbar.LENGTH_LONG);
+    public static void noFavoriteMusic(View view) {
+        Snackbar snackbar = make(view, "当前没有收藏歌曲  -_-", Snackbar.LENGTH_LONG);
         snackbar.getView()
-                .setBackgroundColor(ColorUtil.picAlreadyExists);
+                .setBackgroundColor(ColorUtil.errorColor);
         snackbar.show();
 
     }

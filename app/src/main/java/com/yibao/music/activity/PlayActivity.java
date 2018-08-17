@@ -2,6 +2,7 @@ package com.yibao.music.activity;
 
 import android.animation.ObjectAnimator;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,10 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
@@ -70,6 +75,8 @@ public class PlayActivity extends BasePlayActivity {
     TextView mEndTime;
     @BindView(R.id.playing_song_album)
     CircleImageView mPlayingSongAlbum;
+    @BindView(R.id.album_cover)
+    ImageView mAlbumCover;
     @BindView(R.id.rotate_rl)
     RelativeLayout mRotateRl;
     @BindView(R.id.tv_lyrics)
@@ -292,7 +299,21 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     private void setAlbulm(String url) {
-        ImageUitl.loadPic(this, url, mPlayingSongAlbum);
+        ImageUitl.loadPic(this, url, mPlayingSongAlbum, new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                mPlayingSongAlbum.setVisibility(View.GONE);
+                mAlbumCover.setVisibility(View.VISIBLE);
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                mPlayingSongAlbum.setVisibility(View.VISIBLE);
+                mAlbumCover.setVisibility(View.GONE);
+                return false;
+            }
+        });
 
     }
 
@@ -348,22 +369,23 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     @OnClick({R.id.titlebar_down,
-            R.id.playing_song_album, R.id.rotate_rl, R.id.tv_lyrics, R.id.iv_lyrics_switch, R.id.iv_secreen_sun_switch, R.id.music_player_mode, R.id.music_player_pre, R.id.music_play, R.id.music_player_next, R.id.iv_favorite_music})
+            R.id.playing_song_album, R.id.album_cover, R.id.rotate_rl, R.id.tv_lyrics, R.id.iv_lyrics_switch, R.id.iv_secreen_sun_switch, R.id.music_player_mode, R.id.music_player_pre, R.id.music_play, R.id.music_player_next, R.id.iv_favorite_music})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.titlebar_down:
                 finish();
                 break;
-            case R.id.playing_song_album:
-                showLyrics();
-                break;
             case R.id.rotate_rl:
                 // 按下音乐停止播放  动画停止 ，抬起恢复
 //                switchPlayState();
                 break;
+            case R.id.playing_song_album:
+            case R.id.album_cover:
+//                showLyrics();
+//                break;
             case R.id.tv_lyrics:
-                showLyrics();
-                break;
+//                showLyrics();
+//                break;
             case R.id.iv_lyrics_switch:
                 showLyrics();
                 break;
@@ -512,8 +534,6 @@ public class PlayActivity extends BasePlayActivity {
         if (allSwitch) {
             mAnimatorListener.pause();
             mAnimator.cancel();
-            mAnimator = null;
-            mAnimatorListener = null;
         }
 
         mBind.unbind();

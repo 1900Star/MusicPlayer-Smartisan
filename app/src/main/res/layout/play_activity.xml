@@ -118,13 +118,14 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
 
         <RelativeLayout
             android:id="@+id/rotate_rl"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:visibility="visible">
 
@@ -136,41 +137,44 @@
                 android:src="@mipmap/playing_lp" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:contentDescription="@null"
                 android:src="@mipmap/playing_veins_lp" />
 
             <ImageView
-                android:layout_width="350dp"
-                android:layout_height="350dp"
+                android:id="@+id/album_cover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:contentDescription="@null"
                 android:src="@mipmap/playing_cover_lp" />
 
             <com.yibao.music.view.CircleImageView
                 android:id="@+id/playing_song_album"
-                android:layout_width="132dp"
-                android:layout_height="132dp"
+                android:layout_width="135dp"
+                android:layout_height="135dp"
                 android:layout_centerInParent="true"
                 android:contentDescription="@null"
-                android:maxHeight="130dp" />
+                android:maxHeight="130dp"
+                android:visibility="gone" />
         </RelativeLayout>
 
         <com.yibao.music.view.music.LyricsView
             android:id="@+id/tv_lyrics"
-            android:layout_width="350dp"
-            android:layout_height="350dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:background="@drawable/mask_playing_lyric"
             android:visibility="gone" />
 
         <ImageView
             android:id="@+id/iv_lyrics_mask"
-            android:layout_width="350dp"
-            android:layout_height="350dp"
-            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@color/colorWhite"
+            android:layout_gravity="center"
             android:contentDescription="@null"
             android:src="@drawable/mask"
             android:visibility="gone" />
@@ -267,6 +271,7 @@
         android:id="@+id/sb_volume"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
         android:layout_marginTop="15dp"
         android:maxHeight="8dp"
         android:minHeight="8dp"

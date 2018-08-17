@@ -9,8 +9,10 @@ import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,7 +35,9 @@ import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SharePrefrencesUtil;
+import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.StringUtil;
+import com.yibao.music.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +94,6 @@ public class MusicBottomSheetDialog
 
     private void initData(BottomSheetDialog dialog, View view) {
         mListList.add(MusicListUtil.sortMusicAddTime(mList, Constants.NUMBER_TWO));
-        mListList.add(musicDao.queryBuilder().list());
         // ViewPager 显示多个列表
 //        BottomPagerAdapter bottomPagerAdapter = new BottomPagerAdapter(mContext, mListList);
 //        mBottomViewPager.setAdapter(bottomPagerAdapter);
@@ -98,11 +101,15 @@ public class MusicBottomSheetDialog
         mBottomListTitleSize.setText(size);
         BottomSheetAdapter adapter = new BottomSheetAdapter(mContext, MusicListUtil.sortMusicAddTime(mList, Constants.NUMBER_TWO));
         mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, adapter);
+//        mRecyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener());
         mBottomListContent.addView(mRecyclerView);
         dialog.setContentView(view);
         dialog.setCancelable(true);
-        dialog.getWindow()
-                .addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+
         dialog.setCanceledOnTouchOutside(true);
         mBehavior = BottomSheetBehavior.from((View) view.getParent());
     }
@@ -137,19 +144,27 @@ public class MusicBottomSheetDialog
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bottom_sheet_bar_play:
-                Random random = new Random();
-                int position = random.nextInt(mList.size());
-                playMusic(position);
+                if (mList != null && mList.size() > 0) {
+                    Random random = new Random();
+                    int position = random.nextInt(mList.size());
+                    playMusic(position);
+                } else {
+                    SnakbarUtil.noFavoriteMusic(mBottomListClear);
+                }
                 break;
             case R.id.bottom_list_title_size:
                 backTop();
                 break;
             case R.id.bottom_sheet_bar_clear:
-                MusicInfo musicInfo = new MusicInfo();
-                // playstatus 在这里暂时有来做删除播放列表和收藏列表的标识，2 为播放列表 ，3 为 收藏列表。
-                musicInfo.setPlayStatus(Constants.NUMBER_THRRE);
-                musicInfo.setTitle("收藏的所有");
-                DeletePlayListDialog.newInstance(musicInfo).show(((Activity) mContext).getFragmentManager(), "favoriteList");
+                if (mList != null && mList.size() > 0) {
+                    MusicInfo musicInfo = new MusicInfo();
+                    // playstatus 在这里暂时用来做删除播放列表和收藏列表的标识，2 为播放列表 ，3 为 收藏列表。
+                    musicInfo.setPlayStatus(Constants.NUMBER_THRRE);
+                    musicInfo.setTitle("收藏的所有");
+                    DeletePlayListDialog.newInstance(musicInfo).show(((Activity) mContext).getFragmentManager(), "favoriteList");
+                } else {
+                    SnakbarUtil.noFavoriteMusic(mBottomListClear);
+                }
                 break;
             default:
                 break;

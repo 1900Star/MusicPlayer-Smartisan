@@ -172,7 +172,7 @@ public class DetailsView
         mIvDetailsAddToPlayList = findViewById(R.id.iv_details_add_to_play_list);
         mLlAlbumDetailsPlayall = findViewById(R.id.ll_album_details_playall);
         mLlAlbumDetailsRandomPlay = findViewById(R.id.ll_album_details_random_play);
-
+        mRecyclerView.setNestedScrollingEnabled(false);
     }
 
     @Override

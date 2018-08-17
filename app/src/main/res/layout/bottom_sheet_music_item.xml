@@ -25,7 +25,7 @@
                 android:id="@+id/favorite_music_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:ellipsize="end"
                 android:maxLength="20"
                 android:textColor="@color/text_song_name_selector"
@@ -35,7 +35,7 @@
                 android:id="@+id/favorite_artist_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:textColor="@color/text_singer_selector"
                 android:textSize="14sp" />
 
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/ll"
             android:layout_marginBottom="3dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="8dp"
             android:textColor="@color/text_song_time_selector"
             android:textSize="12sp" />
@@ -56,9 +56,9 @@
             android:id="@+id/bottom_list_itme_clear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp"
             android:contentDescription="@null"
             android:src="@mipmap/icon_close"
             android:visibility="gone" />

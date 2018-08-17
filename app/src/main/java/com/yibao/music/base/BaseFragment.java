@@ -117,6 +117,10 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (mDetailsViewMap != null) {
+            mDetailsViewMap.clear();
+            mDetailsViewMap = null;
+        }
         mDisposable.clear();
     }
 }

@@ -37,7 +37,7 @@
         </LinearLayout>
 
         <include
-            layout="@layout/details_view_fragment_"
+            layout="@layout/my_play_detail"
             android:visibility="gone" />
     </RelativeLayout>
 

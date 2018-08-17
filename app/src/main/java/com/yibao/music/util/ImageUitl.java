@@ -2,13 +2,20 @@ package com.yibao.music.util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.annotation.Nullable;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.yibao.music.R;
 import com.yibao.music.view.ZoomImageView;
 
@@ -37,10 +44,10 @@ public class ImageUitl {
     }
 
     // 加载图片
-    public static void loadPic(Context context, String url, ImageView view) {
+    public static void loadPic(Context context, String url, ImageView view,RequestListener listener) {
         RequestOptions options = new RequestOptions();
         options.diskCacheStrategy(DiskCacheStrategy.NONE);
-        Glide.with(context).load(url).apply(options).into(view);
+        Glide.with(context).load(url).listener(listener).apply(options).into(view);
 
     }
 
@@ -63,6 +70,7 @@ public class ImageUitl {
 
 
     }
+
 
 }
 

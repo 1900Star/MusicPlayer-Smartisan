@@ -313,11 +313,4 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
      */
     protected abstract void updataMusicBarAndVolumeBar(SeekBar seekBar, int progress, boolean b);
 
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(0, R.anim.dialog_push_out);
-    }
-
 }

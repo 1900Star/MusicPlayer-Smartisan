@@ -25,25 +25,26 @@ import butterknife.ButterKnife;
  * Author：Sid
  * Des：${快速列表的Adapter}
  * Time:2017/8/22 14:31
+ *
  * @author Stran
  */
 public class BottomSheetAdapter
-        extends BaseRvAdapter<MusicBean>
-         {
+        extends BaseRvAdapter<MusicBean> {
 
-             private Context mContext;
-    public BottomSheetAdapter(Context context,List<MusicBean> list) {
+    private Context mContext;
+
+    public BottomSheetAdapter(Context context, List<MusicBean> list) {
         super(list);
         this.mContext = context;
 
     }
 
-             @Override
-             protected String getLastItemDes() {
-                 return " 首歌";
-             }
+    @Override
+    protected String getLastItemDes() {
+        return " 首歌";
+    }
 
-             @Override
+    @Override
     protected void bindView(RecyclerView.ViewHolder holder, MusicBean musicItem) {
         if (holder instanceof MusicHolder) {
             MusicHolder musicHolder = (MusicHolder) holder;

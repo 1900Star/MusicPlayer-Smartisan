@@ -150,11 +150,12 @@ public class MusicSlidBar
     }
 
     public void setBarVisibility(int visibilityType) {
-        if (visibilityType == Constants.NUMBER_ZOER) {
-            setVisibility(View.VISIBLE);
-        } else if (visibilityType == Constants.NUMBER_FOUR) {
-            setVisibility(View.INVISIBLE);
-        }
+//        if (visibilityType == Constants.NUMBER_ZOER) {
+//            setVisibility(View.VISIBLE);
+//        } else if (visibilityType == Constants.NUMBER_FOUR) {
+//            setVisibility(View.INVISIBLE);
+//        }
+        setVisibility(visibilityType);
     }
 
     @Override

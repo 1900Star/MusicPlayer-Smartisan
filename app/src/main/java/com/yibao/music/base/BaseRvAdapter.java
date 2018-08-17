@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.yibao.music.R;
 import com.yibao.music.model.MusicInfo;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 
 import java.util.List;
 
@@ -221,8 +222,12 @@ public abstract class BaseRvAdapter<T>
      * Item的点击事件
      */
     protected void openDetails(T t) {
+        LogUtil.d("Listener " + mListener.toString());
         if (mListener != null) {
             mListener.showDetailsView(t);
+        } else {
+            LogUtil.d("Listener 空 " + mListener.toString());
+
         }
     }
 

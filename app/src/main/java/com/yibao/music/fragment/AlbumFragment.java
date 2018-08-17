@@ -88,7 +88,7 @@ public class AlbumFragment extends BaseFragment {
     }
 
     private void initListener() {
-        mAdapter.setItemListener(AlbumFragment.this::openDetailsView);
+
 
     }
 
@@ -104,6 +104,7 @@ public class AlbumFragment extends BaseFragment {
     private void initData(int adapterShowType, boolean isShowSlideBar, int adapterAndManagerType) {
         mAdapter = new AlbumAdapter(mActivity, mAlbumList, adapterShowType);
         mAlbumMusicView.setAdapter(mActivity, adapterAndManagerType, isShowSlideBar, mAdapter);
+        mAdapter.setItemListener(AlbumFragment.this::openDetailsView);
     }
 
 

@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 
 /**
  * Author：Sid
@@ -108,16 +109,9 @@ public class MusicView
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        if (isShowSlideBar) {
-            mSlidebar.setBarVisibility(Constants.NUMBER_ZOER);
-        } else {
-            mSlidebar.setBarVisibility(Constants.NUMBER_FOUR);
+        mSlidebar.setBarVisibility(isShowSlideBar ? VISIBLE : GONE);
 
-        }
     }
-
-
-
 
 
 }

@@ -299,7 +299,7 @@ public class MusicPlayDialogFag
 
     private void setAlbulm(String url) {
 
-        ImageUitl.loadPic(getActivity(), url, mPlayingSongAlbum);
+//        ImageUitl.loadPic(getActivity(), url, mPlayingSongAlbum);
     }
 
 

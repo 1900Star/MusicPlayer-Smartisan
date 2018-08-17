@@ -103,13 +103,8 @@ public class MusicActivity
 
     private void initView() {
         Toolbar toolbar = findViewById(R.id.toolbar_music);
-        ActionBar supportActionBar = getSupportActionBar();
-        if (supportActionBar != null) {
-            supportActionBar.setDisplayShowTitleEnabled(true);
-            supportActionBar.setDisplayHomeAsUpEnabled(true);
-            setSupportActionBar(toolbar);
-            toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        }
+        toolbar.setNavigationIcon(R.drawable.music_titlebar_back_selector);
+        toolbar.setNavigationOnClickListener(v -> MusicActivity.this.onBackPressed());
 
     }
 
@@ -123,7 +118,6 @@ public class MusicActivity
         mMusicViewPager.setAdapter(musicPagerAdapter);
         mMusicViewPager.setCurrentItem(Constants.NUMBER_TWO);
         mMusicViewPager.setOffscreenPageLimit(5);
-        // 初始化 QqBarPagerAdapter
     }
 
 
@@ -599,7 +593,6 @@ public class MusicActivity
         }
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -616,7 +609,6 @@ public class MusicActivity
         }
 
     }
-
     private void handleAftermath() {
         mSmartisanControlBar.animatorStop();
         if (audioBinder != null && !audioBinder.isPlaying()) {
@@ -628,5 +620,6 @@ public class MusicActivity
         }
 //        stopService(new Intent(this, AudioPlayService.class));
     }
+
 
 }

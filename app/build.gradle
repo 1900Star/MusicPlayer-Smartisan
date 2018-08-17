@@ -3,9 +3,6 @@ apply plugin: 'org.greenrobot.greendao'
 android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
-    dataBinding {
-        enabled = true
-    }
     defaultConfig {
         applicationId "com.yibao.music"
         minSdkVersion 19
