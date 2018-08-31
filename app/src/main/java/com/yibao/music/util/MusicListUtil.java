@@ -9,6 +9,7 @@ import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicInfo;
+import com.yibao.music.model.greendao.MusicBeanDao;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +17,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Author：Sid
@@ -305,4 +311,12 @@ public class MusicListUtil {
         }
     }
 
+    public static Observable<List<MusicBean>> getFavoriteList() {
+        return Observable.create((ObservableOnSubscribe<List<MusicBean>>) emitter -> {
+            emitter.onNext(MusicApplication.getIntstance()
+                    .getMusicDao().queryBuilder()
+                    .where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list());
+            emitter.onComplete();
+        }).subscribeOn(Schedulers.io());
+    }
 }

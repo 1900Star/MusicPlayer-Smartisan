@@ -1,29 +1,31 @@
 package com.yibao.music.base;
 
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
+import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.view.music.QqControlBar;
 import com.yibao.music.view.music.SmartisanControlBar;
 
+import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 
 /**
@@ -36,13 +38,14 @@ import io.reactivex.disposables.Disposable;
  * @描述： {TODO}
  */
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     protected RxBus mBus;
     protected MusicBeanDao mMusicDao;
     protected CompositeDisposable mCompositeDisposable;
     protected Disposable mDisposable;
     protected Disposable qqLyricsDisposable;
+    protected Unbinder mBind;
     protected Disposable mDisposablesLyric;
     protected Disposable mRxViewDisposable;
     private boolean mCurrentIsFavorite;
@@ -71,7 +74,25 @@ public class BaseActivity extends AppCompatActivity {
         smartisanControlBar.setFavoriteButtonState(!mCurrentIsFavorite);
         qqControlBar.setFavoriteButtonState(!mCurrentIsFavorite);
         currentMusicBean.setIsFavorite(!mCurrentIsFavorite);
+        MusicBean newMusicBean = getCurrentMusicBean(currentMusicBean);
         mMusicDao.update(mCurrentIsFavorite ? currentMusicBean : getCurrentMusicBean(currentMusicBean));
+        updataFavoriteFile(mCurrentIsFavorite ? currentMusicBean : newMusicBean, mCurrentIsFavorite);
+    }
+
+    protected void updataFavoriteFile(MusicBean musicBean, boolean currentIsFavorite) {
+        //更新收藏文件  后期将时间也拼接上去，恢复的时间通过截取字符串获取
+        if (currentIsFavorite) {
+            mCompositeDisposable.add(ReadFavoriteFileUtil.deleteFavorite(musicBean.getTitle()).observeOn(AndroidSchedulers.mainThread()).subscribe(aBoolean -> {
+                if (!aBoolean) {
+                    Toast.makeText(BaseActivity.this, "该歌曲还没有添加到收藏文件", Toast.LENGTH_SHORT).show();
+                }
+            }));
+        } else {
+            String songInfo = musicBean.getTitle() + "T" + musicBean.getTime();
+            ReadFavoriteFileUtil.writeFile(songInfo);
+
+        }
+
     }
 
     private MusicBean getCurrentMusicBean(MusicBean musicBean) {
@@ -123,13 +144,15 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mBind.unbind();
+        unregisterReceiver(headsetReciver);
         mCompositeDisposable.dispose();
         mCompositeDisposable.clear();
         if (mRxViewDisposable != null) {
             mRxViewDisposable.dispose();
         }
-        unregisterReceiver(headsetReciver);
     }
+
     @Override
     public void finish() {
         super.finish();

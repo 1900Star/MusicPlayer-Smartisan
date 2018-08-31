@@ -40,12 +40,6 @@ public class MusicView
         initListener(context);
     }
 
-    public MusicView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        initView();
-        initListener(context);
-    }
-
     private void initListener(Context context) {
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

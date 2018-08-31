@@ -73,11 +73,6 @@ public class MusicSlidBar
         initView(context);
     }
 
-    public MusicSlidBar(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        initView(context);
-    }
-
     private void initView(Context context) {
         mContext = context;
         mTvPaint = new Paint(Paint.ANTI_ALIAS_FLAG);

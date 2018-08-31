@@ -126,6 +126,7 @@
             android:id="@+id/rotate_rl"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:gravity="center"
             android:visibility="visible">
 
@@ -155,6 +156,7 @@
                 android:id="@+id/playing_song_album"
                 android:layout_width="135dp"
                 android:layout_height="135dp"
+
                 android:layout_centerInParent="true"
                 android:contentDescription="@null"
                 android:maxHeight="130dp"

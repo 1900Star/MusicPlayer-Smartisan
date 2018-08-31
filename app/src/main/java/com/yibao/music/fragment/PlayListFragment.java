@@ -14,10 +14,12 @@ import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
+import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
 import com.yibao.music.fragment.dialogfrag.DeletePlayListDialog;
 import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicInfo;
+import com.yibao.music.model.UpdataToolbaTitle;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
@@ -50,7 +52,6 @@ public class PlayListFragment extends BaseFragment {
     LinearLayout mPlayListContent;
     @BindView(R.id.album_details_head_content)
     LinearLayout mDetailsView;
-    private Unbinder unbinder;
     private PlayListAdapter mAdapter;
 
     private int mDeletePosition;
@@ -86,7 +87,9 @@ public class PlayListFragment extends BaseFragment {
                     }
                     return MusicListUtil.sortNewListAddTime(mMusicInfoDao.queryBuilder().list());
                 })
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(newPlayList -> mAdapter.setNewData(newPlayList))
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(newPlayList -> {
+                    mAdapter.setNewData(newPlayList);
+                })
         );
     }
 
@@ -111,6 +114,10 @@ public class PlayListFragment extends BaseFragment {
             SharePrefrencesUtil.setDetailsFlag(mActivity, Constants.NUMBER_EIGHT);
             if (!mDetailsViewMap.containsKey(mClassName)) {
                 mDetailsViewMap.put(mClassName, this);
+            }
+
+            if (mContext instanceof UpdataTitleListener) {
+                ((UpdataTitleListener) mContext).updataTitle("列表");
             }
         }
         isShowDetailsView = !isShowDetailsView;
@@ -148,13 +155,5 @@ public class PlayListFragment extends BaseFragment {
 
 
     }
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
-
 
 }

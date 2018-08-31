@@ -66,8 +66,14 @@ public class StringUtil {
      */
     public static String getCurrentTime() {
         long time = System.currentTimeMillis();
-        SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date date = new Date(time);
+        return format.format(date);
+
+    }public static String getCurrentTime(Long l) {
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
+        Date date = new Date(l);
         return format.format(date);
 
     }

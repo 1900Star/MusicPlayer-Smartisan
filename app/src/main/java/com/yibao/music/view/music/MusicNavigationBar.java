@@ -53,10 +53,6 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
         initView();
     }
 
-    public MusicNavigationBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        initView();
-    }
 
     @Override
     public void onClick(View view) {

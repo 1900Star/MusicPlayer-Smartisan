@@ -18,7 +18,7 @@ public class LogUtil {
 
     private static boolean isDebug = BuildConfig.SHOW_LOG;
 
-    private static final String TAG = "LogUtil";
+    private static final String TAG = "lsp";
 
     // 下面四个是默认tag的函数
 

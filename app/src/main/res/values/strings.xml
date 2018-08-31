@@ -43,5 +43,7 @@
     <string name="continues">继续</string>
     <string name="sure">确定</string>
     <string name="about">关于</string>
+    <string name="backupsFavoriteSong">备份收藏歌曲</string>
+    <string name="recoveryFavoriteSong">恢复收藏歌曲</string>
 
 </resources>

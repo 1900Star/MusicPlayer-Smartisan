@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +18,7 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.MusicPagerAdapter;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
+import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.model.DetailsFlagBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyrBean;
@@ -57,7 +57,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class MusicActivity
         extends BaseActivity
-        implements OnMusicItemClickListener {
+        implements OnMusicItemClickListener, UpdataTitleListener {
 
     @BindView(R.id.tv_music_toolbar_title)
     TextView mTvMusicToolbarTitle;
@@ -74,19 +74,22 @@ public class MusicActivity
 
 
     private List<MusicBean> mMusicItems;
-    private Unbinder mBind;
+
     private static AudioPlayService.AudioBinder audioBinder;
     private AudioServiceConnection mConnection;
     private MusicBean mCurrentMusicBean;
     private int mCurrentPosition;
     private boolean mMusicConfig;
-    private boolean isChangeFloatingBlock;
+    private boolean isShowQqBar;
     private int mPlayState;
 
     private HashMap<String, String> mLyricMap;
     private static String mEntryValue;
     private int lyricsFlag = 0;
     private ArrayList<MusicLyrBean> mLyricList;
+    private int mTitleResourceId;
+    // 切换Tab时更改TiTle的标记
+    private boolean mIsShowDetail = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +151,10 @@ public class MusicActivity
 
     private void initListener() {
         mMusicNavigationBar.setOnNavigationbarListener((currentSelecteFlag, titleResourceId) -> {
+            mTitleResourceId = titleResourceId;
+//            if (mIsShowDetail) {
+//
+//            }
             mTvMusicToolbarTitle.setText(titleResourceId);
             mMusicViewPager.setCurrentItem(currentSelecteFlag, false);
         });
@@ -198,7 +205,7 @@ public class MusicActivity
      * 切换音乐控制面板的样式
      */
     private void switchMusicControlBar() {
-        if (isChangeFloatingBlock) {
+        if (isShowQqBar) {
             mQqControlBar.setVisibility(View.INVISIBLE);
             mSmartisanControlBar.setVisibility(View.VISIBLE);
             if (mDisposablesLyric != null) {
@@ -212,7 +219,7 @@ public class MusicActivity
 
 //            setQqPagerLyric();
         }
-        isChangeFloatingBlock = !isChangeFloatingBlock;
+        isShowQqBar = !isShowQqBar;
     }
 
     /**
@@ -390,6 +397,7 @@ public class MusicActivity
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(qqBarBean -> mMusicItems = QueryMusicFlagListUtil.getMusicDataList(mMusicDao, qqBarBean.getMusicBean(), qqBarBean.getSortListFlag(), qqBarBean.getDataFlag(), qqBarBean.getQueryFlag())));
         mQqControlBar.setPagerData(mMusicItems);
+
     }
 
 
@@ -542,7 +550,6 @@ public class MusicActivity
         return audioBinder;
     }
 
-
     private class AudioServiceConnection
             implements ServiceConnection {
         @Override
@@ -582,12 +589,20 @@ public class MusicActivity
         }
     }
 
+    @Override
+    public void updataTitle(String toolbarTitle) {
+        mTvMusicToolbarTitle.setText(toolbarTitle);
+        mIsShowDetail = true;
+    }
+
 
     @Override
     public void onBackPressed() {
         int detailFlag = SharePrefrencesUtil.getDetailFlag(this);
         if (detailFlag > Constants.NUMBER_ZOER) {
             mBus.post(new DetailsFlagBean(detailFlag));
+
+            mTvMusicToolbarTitle.setText(mTitleResourceId);
         } else {
             super.onBackPressed();
         }
@@ -598,7 +613,6 @@ public class MusicActivity
         super.onDestroy();
         unbindAudioService();
         handleAftermath();
-        mBind.unbind();
 
     }
 
@@ -609,8 +623,11 @@ public class MusicActivity
         }
 
     }
+
     private void handleAftermath() {
-        mSmartisanControlBar.animatorStop();
+        if (mSmartisanControlBar != null) {
+            mSmartisanControlBar.animatorStop();
+        }
         if (audioBinder != null && !audioBinder.isPlaying()) {
             audioBinder.closeNotificaction();
         }

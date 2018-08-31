@@ -48,7 +48,6 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
         switch (view.getId()) {
             case R.id.music_floating_favorite:
                 controlBarClick(Constants.NUMBER_ONE);
-
                 break;
             case R.id.music_floating_pre:
                 controlBarClick(Constants.NUMBER_TWO);
@@ -111,7 +110,9 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
         if (isPlaying) {
             mAnimator.resume();
         } else {
-            mAnimator.pause();
+            if (mAnimator != null) {
+                mAnimator.pause();
+            }
         }
     }
 
@@ -168,7 +169,7 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
         mButtonPre.setOnClickListener(this);
         mButtonNext.setOnClickListener(this);
         mButtonPlay.setOnClickListener(this);
-        mSongAlbulm.setOnClickListener(this);
+//        mSongAlbulm.setOnClickListener(this);
 //        mSmartisanMusicBar.setOnClickListener(this);
 
     }
@@ -183,17 +184,13 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
         initView();
     }
 
-    public SmartisanControlBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        initView();
-    }
-
     private void controlBarClick(int clickFlag) {
         if (mControlBarListener != null) {
             mControlBarListener.click(clickFlag);
         }
     }
 
+    //**************歌曲点击监听********************
     private OnSmartisanControlBarListener mControlBarListener;
 
     public void setClickListener(OnSmartisanControlBarListener controlBarListener) {
@@ -202,7 +199,6 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
 
     public interface OnSmartisanControlBarListener {
         void click(int clickFlag);
-
     }
 
 }

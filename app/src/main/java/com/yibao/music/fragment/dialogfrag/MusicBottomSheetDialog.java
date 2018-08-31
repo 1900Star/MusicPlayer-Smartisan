@@ -9,7 +9,6 @@ import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
-import com.yibao.music.adapter.BottomPagerAdapter;
 import com.yibao.music.adapter.BottomSheetAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnCheckFavoriteListener;
@@ -37,12 +35,12 @@ import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.StringUtil;
-import com.yibao.music.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
@@ -62,26 +60,28 @@ public class MusicBottomSheetDialog
     private TextView mBottomListClear;
     private TextView mBottomListTitleSize;
     private Context mContext;
-    private List<MusicBean> mList;
     private RecyclerView mRecyclerView;
     private BottomSheetBehavior<View> mBehavior;
+    private List<MusicBean> mList = new ArrayList<>();
     private CompositeDisposable
             mDisposable = new CompositeDisposable();
     private RxBus
             mBus = MusicApplication.getIntstance()
             .bus();
-    private MusicBeanDao musicDao = MusicApplication.getIntstance().getMusicDao();
     private ViewPager mBottomViewPager;
+    // ViewPager使用
     private List<List<MusicBean>> mListList = new ArrayList<>();
+    private BottomSheetAdapter mAdapter;
 
     public static MusicBottomSheetDialog newInstance() {
+
         return new MusicBottomSheetDialog();
     }
 
     public void getBottomDialog(Context context) {
         this.mContext = context;
 
-        this.mList = musicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
+//        this.mList = musicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
         BottomSheetDialog dialog = new BottomSheetDialog(context);
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.bottom_sheet_list_dialog, null);
@@ -93,16 +93,11 @@ public class MusicBottomSheetDialog
     }
 
     private void initData(BottomSheetDialog dialog, View view) {
-        mListList.add(MusicListUtil.sortMusicAddTime(mList, Constants.NUMBER_TWO));
+//        mListList.add(MusicListUtil.sortMusicAddTime(mList, Constants.NUMBER_TWO));
         // ViewPager 显示多个列表
 //        BottomPagerAdapter bottomPagerAdapter = new BottomPagerAdapter(mContext, mListList);
 //        mBottomViewPager.setAdapter(bottomPagerAdapter);
-        String size = StringUtil.getBottomSheetTitile(mList.size());
-        mBottomListTitleSize.setText(size);
-        BottomSheetAdapter adapter = new BottomSheetAdapter(mContext, MusicListUtil.sortMusicAddTime(mList, Constants.NUMBER_TWO));
-        mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, adapter);
 //        mRecyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener());
-        mBottomListContent.addView(mRecyclerView);
         dialog.setContentView(view);
         dialog.setCancelable(true);
         Window window = dialog.getWindow();
@@ -117,6 +112,15 @@ public class MusicBottomSheetDialog
     //    接收BottomSheetAdapter发过来的当前点击Item的Position
 
     private void rxData() {
+        mDisposable.add(MusicListUtil.getFavoriteList().observeOn(AndroidSchedulers.mainThread()).subscribe(musicBeanList -> {
+            mList.addAll(musicBeanList);
+            String size = StringUtil.getBottomSheetTitile(musicBeanList.size());
+            mBottomListTitleSize.setText(size);
+            mAdapter = new BottomSheetAdapter(mContext, MusicListUtil.sortMusicAddTime(musicBeanList, Constants.NUMBER_TWO));
+            mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
+            mBottomListContent.addView(mRecyclerView);
+        }));
+
         mDisposable.add(mBus.toObserverable(BottomSheetStatus.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -136,7 +140,6 @@ public class MusicBottomSheetDialog
         mBottomListClear.setOnClickListener(this);
         mBottomListTitleSize.setOnClickListener(this);
         mBottomViewPager.addOnPageChangeListener(this);
-
     }
 
 
@@ -173,17 +176,20 @@ public class MusicBottomSheetDialog
 
 
     private void clearAllFavoriteMusic() {
-        for (MusicBean musicBean : mList) {
-            musicBean.setIsFavorite(false);
-            MusicApplication.getIntstance().getMusicDao()
-                    .update(musicBean);
-        }
-
         mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        mDisposable.add(Observable.fromIterable(mList)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(musicBean -> {
+                    musicBean.setIsFavorite(false);
+                    MusicApplication.getIntstance().getMusicDao()
+                            .update(musicBean);
 
-        if (mContext instanceof OnCheckFavoriteListener) {
-            ((OnCheckFavoriteListener) mContext).updataFavoriteStatus();
-        }
+                    if (mContext instanceof OnCheckFavoriteListener) {
+                        ((OnCheckFavoriteListener) mContext).updataFavoriteStatus();
+                    }
+                }));
+
     }
 
     private void backTop() {

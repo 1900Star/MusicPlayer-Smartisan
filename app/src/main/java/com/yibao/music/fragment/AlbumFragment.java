@@ -1,5 +1,6 @@
 package com.yibao.music.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,13 +15,13 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.AlbumAdapter;
 import com.yibao.music.adapter.DetailsListAdapter;
 import com.yibao.music.base.BaseFragment;
+import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicView;
@@ -68,8 +69,6 @@ public class AlbumFragment extends BaseFragment {
     LinearLayout mAlbumContentView;
 
 
-    private Unbinder unbinder;
-    private AlbumAdapter mAdapter;
 
 
     @Nullable
@@ -78,7 +77,6 @@ public class AlbumFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.album_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         initData(Constants.NUMBER_ZOER, true, Constants.NUMBER_THRRE);
-        initListener();
         return view;
     }
 
@@ -87,10 +85,6 @@ public class AlbumFragment extends BaseFragment {
         super.onResume();
     }
 
-    private void initListener() {
-
-
-    }
 
 
     /**
@@ -102,9 +96,9 @@ public class AlbumFragment extends BaseFragment {
      *                              4 == GridLayoutManager
      */
     private void initData(int adapterShowType, boolean isShowSlideBar, int adapterAndManagerType) {
-        mAdapter = new AlbumAdapter(mActivity, mAlbumList, adapterShowType);
-        mAlbumMusicView.setAdapter(mActivity, adapterAndManagerType, isShowSlideBar, mAdapter);
-        mAdapter.setItemListener(AlbumFragment.this::openDetailsView);
+        AlbumAdapter adapter = new AlbumAdapter(mActivity, mAlbumList, adapterShowType);
+        mAlbumMusicView.setAdapter(mActivity, adapterAndManagerType, isShowSlideBar, adapter);
+        adapter.setItemListener(AlbumFragment.this::openDetailsView);
     }
 
 
@@ -131,17 +125,20 @@ public class AlbumFragment extends BaseFragment {
 
     private void openDetailsView(AlbumInfo bean) {
         if (isShowDetailsView) {
-            LogUtil.d("===============显示 ");
             mDetailsView.setVisibility(View.VISIBLE);
             List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(bean.getAlbumName())).build().list();
             // DetailsView播放音乐需要的参数
-            mDetailsView.setDataFlag(list.size(), bean.getAlbumName(), Constants.NUMBER_TWO);
+            mDetailsView.setDataFlag(mFragmentManager,list.size(), bean.getAlbumName(), Constants.NUMBER_TWO);
             DetailsListAdapter adapter = new DetailsListAdapter(getActivity(), list, Constants.NUMBER_TWO);
             mDetailsView.setAdapter(getActivity(), Constants.NUMBER_TWO, bean, adapter);
             SharePrefrencesUtil.setDetailsFlag(mActivity, Constants.NUMBER_TEN);
             if (!mDetailsViewMap.containsKey(mClassName)) {
                 mDetailsViewMap.put(mClassName, this);
             }
+            if (mContext instanceof UpdataTitleListener) {
+                ((UpdataTitleListener) mContext).updataTitle(bean.getAlbumName());
+            }
+
 
         } else {
             mDetailsView.setVisibility(View.GONE);
@@ -199,12 +196,5 @@ public class AlbumFragment extends BaseFragment {
         return new AlbumFragment();
     }
 
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-
-    }
 
 }

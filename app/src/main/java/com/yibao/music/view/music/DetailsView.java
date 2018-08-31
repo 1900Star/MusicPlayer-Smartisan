@@ -1,5 +1,6 @@
 package com.yibao.music.view.music;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,9 +17,12 @@ import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.adapter.DetailsListAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
+import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
+import com.yibao.music.fragment.dialogfrag.TopBigPicDialogFragment;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.UpdataToolbaTitle;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
@@ -50,8 +54,11 @@ public class DetailsView
     private int mListSize;
     private String mQueryFlag;
     private LinearLayout mHeadView;
+    private FragmentManager mFragmentManager;
+    private Long mAlbumId;
 
-    public void setDataFlag(int listSize, String queryFlag, int dataFlag) {
+    public void setDataFlag(FragmentManager fragmentManager, int listSize, String queryFlag, int dataFlag) {
+        this.mFragmentManager = fragmentManager;
         this.mDataFlag = dataFlag;
         this.mQueryFlag = queryFlag;
         this.mListSize = listSize;
@@ -68,13 +75,6 @@ public class DetailsView
         initView();
         initListener();
     }
-
-    public DetailsView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        initView();
-        initListener();
-    }
-
 
     /**
      * //设置列表的适配器
@@ -98,6 +98,12 @@ public class DetailsView
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.iv_artist_albumm_details:
+                String albumUrl = StringUtil.getAlbulm(mAlbumId)
+                        .toString();
+                TopBigPicDialogFragment.newInstance(albumUrl)
+                        .show(mFragmentManager, "album");
+                break;
             case R.id.iv_details_add_to_list:
                 LogUtil.d("=================添加到个人列表");
                 break;
@@ -128,11 +134,13 @@ public class DetailsView
     private void initData(int dataType, Object bean) {
         if (dataType == Constants.NUMBER_ONE) {
             ArtistInfo info = (ArtistInfo) bean;
-            setMusicInfo(info.getAlbumName(), info.getArtist(), info.getAlbumId(), info.getYear());
+            mAlbumId = info.getAlbumId();
+            setMusicInfo(info.getAlbumName(), info.getArtist(), mAlbumId, info.getYear());
 
         } else if (dataType == Constants.NUMBER_TWO) {
             AlbumInfo info = (AlbumInfo) bean;
-            setMusicInfo(info.getAlbumName(), info.getArtist(), info.getAlbumId(), info.getYear());
+            mAlbumId = info.getAlbumId();
+            setMusicInfo(info.getAlbumName(), info.getArtist(), mAlbumId, info.getYear());
 
         }
 
@@ -156,6 +164,11 @@ public class DetailsView
         mLlAlbumDetailsPlayall.setOnClickListener(this);
         mLlAlbumDetailsRandomPlay.setOnClickListener(this);
         mHeadView.setOnClickListener(this);
+        mIvArtistAlbummDetails.setOnClickListener(this);
+        mIvArtistAlbummDetails.setOnLongClickListener(v -> {
+            RelaxDialogFragment.newInstance().show(mFragmentManager, "girlsDialog");
+            return true;
+        });
     }
 
 

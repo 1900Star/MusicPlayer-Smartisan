@@ -11,8 +11,10 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.ArtistAdapter;
 import com.yibao.music.adapter.DetailsListAdapter;
 import com.yibao.music.base.BaseFragment;
+import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.UpdataToolbaTitle;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
@@ -44,7 +46,6 @@ public class ArtistanListFragment extends BaseFragment {
     MusicView mMusicView;
     @BindView(R.id.details_view)
     DetailsView mDetailsView;
-    private Unbinder unbinder;
     private ArtistAdapter mAdapter;
 
 
@@ -81,14 +82,16 @@ public class ArtistanListFragment extends BaseFragment {
             mDetailsView.setVisibility(View.VISIBLE);
             List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(bean.getArtist())).build().list();
             // DetailsView播放音乐需要的参数
-            mDetailsView.setDataFlag(list.size(), bean.getArtist(), Constants.NUMBER_ONE);
+            mDetailsView.setDataFlag(mFragmentManager, list.size(), bean.getArtist(), Constants.NUMBER_ONE);
             DetailsListAdapter adapter = new DetailsListAdapter(getActivity(), list, Constants.NUMBER_ONE);
             mDetailsView.setAdapter(getActivity(), Constants.NUMBER_ONE, bean, adapter);
             SharePrefrencesUtil.setDetailsFlag(mActivity, Constants.NUMBER_NINE);
             if (!mDetailsViewMap.containsKey(mClassName)) {
                 mDetailsViewMap.put(mClassName, this);
             }
-
+            if (mContext instanceof UpdataTitleListener) {
+                ((UpdataTitleListener) mContext).updataTitle(bean.getAlbumName());
+            }
         }
         isShowDetailsView = !isShowDetailsView;
     }
@@ -109,11 +112,5 @@ public class ArtistanListFragment extends BaseFragment {
 
     public static ArtistanListFragment newInstance() {
         return new ArtistanListFragment();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 }

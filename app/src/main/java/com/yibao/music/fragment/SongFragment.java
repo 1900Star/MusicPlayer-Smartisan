@@ -14,10 +14,12 @@ import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.fragment.dialogfrag.MusicBottomSheetDialog;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
+import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.view.music.MusicView;
 
@@ -51,7 +53,6 @@ public class SongFragment extends BaseFragment {
     TextView mMusicCategoryAddtime;
     @BindView(R.id.musci_view)
     MusicView mMusciView;
-    private Unbinder unbinder;
     private SongAdapter mSongAdapter;
 
     @Nullable
@@ -122,7 +123,6 @@ public class SongFragment extends BaseFragment {
                 initData(true, Constants.NUMBER_ZOER);
                 break;
             case 2:
-                LogUtil.d(" 119  songfragment mFlag " + SharePrefrencesUtil.getMusicDataListFlag(getActivity()));
                 setAllCategoryNotNormal(Constants.NUMBER_TWO);
                 mMusicCategoryScore.setTextColor(ColorUtil.wihtle);
                 mMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_down_selector);
@@ -164,9 +164,4 @@ public class SongFragment extends BaseFragment {
         return new SongFragment();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
 }

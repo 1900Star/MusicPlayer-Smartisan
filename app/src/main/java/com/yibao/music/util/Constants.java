@@ -1,5 +1,7 @@
 package com.yibao.music.util;
 
+import android.os.Environment;
+
 /**
  * 作者：Stran on 2017/3/23 15:26
  * 描述：${常量类}
@@ -47,4 +49,5 @@ public class Constants {
     public static final String FRAGMENT_ARTIST = "ArtistanListFragment";
     public static final String FRAGMENT_ALBUM = "AlbumFragment";
 
+    public static final String FAVORITE_FILE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/favorite.txt/";
 }

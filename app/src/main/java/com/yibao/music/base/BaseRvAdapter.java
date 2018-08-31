@@ -225,9 +225,6 @@ public abstract class BaseRvAdapter<T>
         LogUtil.d("Listener " + mListener.toString());
         if (mListener != null) {
             mListener.showDetailsView(t);
-        } else {
-            LogUtil.d("Listener 空 " + mListener.toString());
-
         }
     }
 

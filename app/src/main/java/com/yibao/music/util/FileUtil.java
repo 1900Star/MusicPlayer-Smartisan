@@ -20,9 +20,12 @@ public class FileUtil {
     private static final String TAG = "FileUtil";
     public static final String ROOT_SDCARD = Environment.getExternalStorageDirectory()
                                                         .getAbsolutePath();
-
     public static final String IMAGE_PATH = ROOT_SDCARD + "/DCIM/";
 
+    public static boolean getFavoriteFile() {
+        File file = new File(Constants.FAVORITE_FILE);
+        return file.exists();
+    }
     public static File getFile(String name) {
 
         File dir = new File(IMAGE_PATH);

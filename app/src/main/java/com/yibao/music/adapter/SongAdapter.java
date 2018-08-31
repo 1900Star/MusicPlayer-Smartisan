@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
@@ -123,6 +122,12 @@ public class SongAdapter
     protected int getLayoutId() {
 
         return R.layout.item_music_list;
+    }
+
+    @Override
+    public int getItemCount() {
+
+        return mList == null ? Constants.NUMBER_ZOER : mList.size();
     }
 
     @Override

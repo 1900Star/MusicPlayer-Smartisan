@@ -50,11 +50,6 @@ public class LyricsView
         initView();
     }
 
-    public LyricsView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        initView();
-    }
-
     private void initView() {
         mPaint = new Paint();
         mBounds = new Rect();

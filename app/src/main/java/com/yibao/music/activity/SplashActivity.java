@@ -50,7 +50,6 @@ public class SplashActivity
     ProgressBtn mMusicLoadProgressBar;
     @BindView(R.id.vp_splash)
     ViewPager mVpSplash;
-    private Unbinder mBind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,14 +102,6 @@ public class SplashActivity
                     }));
         }
 
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mBind.unbind();
-        mCompositeDisposable.dispose();
     }
 
 

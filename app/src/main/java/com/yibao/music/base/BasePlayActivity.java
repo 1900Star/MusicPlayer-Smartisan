@@ -27,6 +27,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -101,12 +102,6 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCompositeDisposable != null) {
-            mCompositeDisposable.dispose();
-            mCompositeDisposable.clear();
-            mCompositeDisposable = null;
-
-        }
         unregisterReceiver(mVolumeReceiver);
     }
 
@@ -149,14 +144,19 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
      * 时时更新播放进度
      */
     private void upDataPlayProgress() {
-        if (mDisposablePlayTime == null) {
+        if (audioBinder != null) {
+            if (mDisposablePlayTime == null) {
 
-            mDisposablePlayTime = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(aLong -> updataCurrentPlayProgress(audioBinder.getProgress()));
-            mCompositeDisposable.add(mDisposablePlayTime);
+                mDisposablePlayTime = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(aLong -> BasePlayActivity.this.updataCurrentPlayProgress(audioBinder.getProgress()));
+                mCompositeDisposable.add(mDisposablePlayTime);
+            }
+        } else {
+            ToastUtil.initPlayState(BasePlayActivity.this);
         }
+
     }
 
 
@@ -312,5 +312,4 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
      * @param b
      */
     protected abstract void updataMusicBarAndVolumeBar(SeekBar seekBar, int progress, boolean b);
-
 }

@@ -32,6 +32,7 @@ import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
+import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.LyricsView;
 
@@ -104,7 +105,6 @@ public class PlayActivity extends BasePlayActivity {
     private String mAlbumUrl;
     private MusicBean mCurrenMusicInfo;
     boolean isShowLyrics = false;
-    private Unbinder mBind;
     private ObjectAnimator mAnimator;
     private MyAnimatorUpdateListener mAnimatorListener;
     private Disposable mCloseLyrDisposable;
@@ -177,25 +177,28 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     public void checkCurrentIsFavorite(boolean cureentMusicIsFavorite) {
-        if (cureentMusicIsFavorite) {
-            mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
-        } else {
-            mIvFavoriteMusic.setImageResource(R.drawable.music_qqbar_favorite_normal_selector);
+        if (mIvFavoriteMusic != null) {
+            mIvFavoriteMusic.setImageResource(cureentMusicIsFavorite ? R.mipmap.favorite_yes : R.drawable.music_qqbar_favorite_normal_selector);
         }
     }
 
     private void initData() {
-        if (audioBinder.isPlaying()) {
-            initAnimation();
-            updatePlayBtnStatus();
+        if (audioBinder != null) {
+            if (audioBinder.isPlaying()) {
+                initAnimation();
+                updatePlayBtnStatus();
+            }
+            setSongDuration();
+            //设置播放模式图片
+            int mode = SharePrefrencesUtil.getMusicMode(this);
+            updatePlayModeImage(mode, mMusicPlayerMode);
+            //音量设置
+            mSbVolume.setMax(mMaxVolume);
+            updateMusicVolume(mVolume);
+        } else {
+            ToastUtil.initPlayState(this);
         }
-        setSongDuration();
-        //设置播放模式图片
-        int mode = SharePrefrencesUtil.getMusicMode(this);
-        updatePlayModeImage(mode, mMusicPlayerMode);
-        //音量设置
-        mSbVolume.setMax(mMaxVolume);
-        updateMusicVolume(mVolume);
+
     }
 
     private void updateMusicVolume(int volume) {
@@ -357,14 +360,19 @@ public class PlayActivity extends BasePlayActivity {
 
 
     private void initAnimation() {
-        mRotateRl.setBackgroundColor(ColorUtil.transparentColor);
+        if (mRotateRl != null) {
+            mRotateRl.setBackgroundColor(ColorUtil.transparentColor);
+        }
         if (mAnimator == null || mAnimatorListener == null) {
             mAnimator = AnimationUtil.getRotation(mRotateRl);
             mAnimatorListener = new MyAnimatorUpdateListener(mAnimator);
             mAnimator.start();
             mMusicPlay.setImageResource(R.drawable.btn_playing_pause);
         }
-        mAnimator.resume();
+        if (mAnimator != null) {
+
+            mAnimator.resume();
+        }
 
     }
 
@@ -415,6 +423,7 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     private void favoriteMusic() {
+
         if (mCurrenMusicInfo.isFavorite()) {
             mCurrenMusicInfo.setIsFavorite(false);
             mMusicDao.update(mCurrenMusicInfo);
@@ -428,6 +437,7 @@ public class PlayActivity extends BasePlayActivity {
             mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
 
         }
+        updataFavoriteFile(mCurrenMusicInfo, mCurrenMusicInfo.isFavorite());
     }
 
 
@@ -536,7 +546,6 @@ public class PlayActivity extends BasePlayActivity {
             mAnimator.cancel();
         }
 
-        mBind.unbind();
 
     }
 

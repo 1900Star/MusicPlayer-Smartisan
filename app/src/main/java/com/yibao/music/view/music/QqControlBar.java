@@ -41,11 +41,6 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
         initView();
     }
 
-    public QqControlBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        initView();
-    }
-
     private void initView() {
         LayoutInflater.from(getContext()).inflate(R.layout.muisc_tabbar_qq, this, true);
         mQqMusicBar = findViewById(R.id.qq_music_bar);
@@ -77,7 +72,6 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
 
     //**************按钮状态********************
     public void setPlayButtonState(int resourceId) {
-
         mButtonPlay.setIcon(resourceId);
     }
 
@@ -95,7 +89,6 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
         mSlideViewPager.setAdapter(mPagerAdapter);
         mSlideViewPager.setCurrentItem(currentPosition, false);
         mPagerAdapter.notifyDataSetChanged();
-
     }
 
     public void setPagerData(List<MusicBean> musicItems) {
@@ -137,7 +130,7 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
         }
     }
 
-
+    //**************按钮点击监听********************
     private OnButtonClickListener mButtonClickListener;
 
     public void setOnButtonClickListener(OnButtonClickListener buttonClickListener) {
@@ -147,7 +140,7 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
     public interface OnButtonClickListener {
         void click(int clickFlag);
     }
-
+    //**************歌曲切换监听********************
     private OnPagerSelecteListener mSelecteListener;
 
     public void setOnPagerSelecteListener(OnPagerSelecteListener selecteListener) {

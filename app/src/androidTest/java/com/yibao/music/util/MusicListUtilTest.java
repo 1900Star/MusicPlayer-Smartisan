@@ -57,8 +57,8 @@ public class MusicListUtilTest {
 
     @Test
     public void sortAddTimeList() {
-        List<MusicBean> abcList = MusicListUtil.sortMusicAddTime(mMusicDataList);
-        assertNotNull(abcList);
+//        List<MusicBean> abcList = MusicListUtil.sortMusicAddTime(mMusicDataList);
+//        assertNotNull(abcList);
     }
 
     @Test
@@ -72,10 +72,25 @@ public class MusicListUtilTest {
         List<AlbumInfo> albumList = MusicListUtil.getAlbumList(mMusicDataList);
         assertNotNull(albumList);
     }
+
     @Test
     public void stringToLong() {
-        Long longTime = StringUtil.getLongTime("2009-12-02 10:17:51");
-        assertNotNull(longTime);
+//        Long longTime = StringUtil.getLongTime("2009-12-02 10:17:51");
+//        assertNotNull(longTime);
+    }
+
+    @Test
+    public void subName() {
+        String str = "童话T2009-12-02 10:17:51";
+        String s = str.substring(str.lastIndexOf("T") + 1);
+        assertNotNull(s);
+    }
+
+    @Test
+    public void substringTime() {
+        String str = "童话T2009-12-02 10:17:51";
+        String s = str.substring(0, str.lastIndexOf("T"));
+        assertNotNull(s);
     }
 
     @After

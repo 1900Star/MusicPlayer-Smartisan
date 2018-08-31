@@ -534,7 +534,6 @@ public class MusicPlayDialogFag
     }
 
     private void rxViewClick() {
-
         RxView.clicks(mTitlebarPlayList)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribe(o -> MusicBottomSheetDialog.newInstance()

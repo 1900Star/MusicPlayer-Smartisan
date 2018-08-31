@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -52,6 +53,8 @@ public abstract class BaseFragment extends Fragment {
     public static HashMap<String, BaseFragment> mDetailsViewMap;
     protected String mClassName;
     protected FragmentManager mFragmentManager;
+    protected Context mContext;
+    protected Unbinder unbinder;
 
     protected BaseFragment() {
         mMusicBeanDao = MusicApplication.getIntstance().getMusicDao();
@@ -65,6 +68,7 @@ public abstract class BaseFragment extends Fragment {
         super.onAttach(context);
         tag = this.getClass().getSimpleName();
         mActivity = getActivity();
+        mContext = getActivity();
         mDisposable = new CompositeDisposable();
         mBus = MusicApplication.getIntstance().bus();
         mDetailsViewMap = new HashMap<>(3);
@@ -117,10 +121,12 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        unbinder.unbind();
         if (mDetailsViewMap != null) {
             mDetailsViewMap.clear();
             mDetailsViewMap = null;
         }
         mDisposable.clear();
+        mDisposable = null;
     }
 }
