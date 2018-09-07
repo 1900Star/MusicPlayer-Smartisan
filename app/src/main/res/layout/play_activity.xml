@@ -42,6 +42,7 @@
                 android:ellipsize="end"
                 android:maxLength="20"
                 android:maxLines="1"
+                android:textStyle="bold"
                 android:singleLine="true"
                 android:textColor="@color/textDes"
                 android:textSize="@dimen/bigLyrics" />
@@ -55,7 +56,7 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/aboutSign"
-                android:textSize="@dimen/about_sign" />
+                android:textSize="@dimen/music_loating_name" />
         </LinearLayout>
 
         <ImageView

@@ -19,7 +19,7 @@ import com.yibao.music.view.ZoomImageView;
  * Time:2017/5/30 13:27
  * @author Stran
  */
-public class TopBigPicDialogFragment
+public class PreviewBigPicDialogFragment
         extends BaseDialogFragment {
 
     private View mView;
@@ -31,8 +31,8 @@ public class TopBigPicDialogFragment
         return mView;
     }
 
-    public static TopBigPicDialogFragment newInstance(String url) {
-        TopBigPicDialogFragment fragment = new TopBigPicDialogFragment();
+    public static PreviewBigPicDialogFragment newInstance(String url) {
+        PreviewBigPicDialogFragment fragment = new PreviewBigPicDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString("url", url);
         fragment.setArguments(bundle);
@@ -48,7 +48,7 @@ public class TopBigPicDialogFragment
         String url = getArguments().getString("url");
 
         ImageUitl.loadPlaceholder(getActivity(), url, view);
-        view.setOnClickListener(view1 -> TopBigPicDialogFragment.this.dismiss());
+        view.setOnClickListener(view1 -> PreviewBigPicDialogFragment.this.dismiss());
         save.setOnClickListener(view12 -> LogUtil.d(""));
         AnimationUtil.applyBobbleAnim(topPicContent);
         topPicContent.addView(view);

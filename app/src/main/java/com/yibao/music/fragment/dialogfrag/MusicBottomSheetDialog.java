@@ -25,7 +25,6 @@ import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.BottomSheetStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicInfo;
-import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
@@ -43,7 +42,6 @@ import java.util.Random;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -114,9 +112,10 @@ public class MusicBottomSheetDialog
     private void rxData() {
         mDisposable.add(MusicListUtil.getFavoriteList().observeOn(AndroidSchedulers.mainThread()).subscribe(musicBeanList -> {
             mList.addAll(musicBeanList);
-            String size = StringUtil.getBottomSheetTitile(musicBeanList.size());
-            mBottomListTitleSize.setText(size);
-            mAdapter = new BottomSheetAdapter(mContext, MusicListUtil.sortMusicAddTime(musicBeanList, Constants.NUMBER_TWO));
+            String sheetTitle = StringUtil.getBottomSheetTitle(musicBeanList.size());
+            mBottomListTitleSize.setText(sheetTitle);
+            List<MusicBean> addTime = MusicListUtil.sortMusicAddTime(musicBeanList, Constants.NUMBER_TWO);
+            mAdapter = new BottomSheetAdapter(mContext, addTime);
             mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
             mBottomListContent.addView(mRecyclerView);
         }));

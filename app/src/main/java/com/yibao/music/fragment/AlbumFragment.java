@@ -67,8 +67,7 @@ public class AlbumFragment extends BaseFragment {
     DetailsView mDetailsView;
     @BindView(R.id.album_content_view)
     LinearLayout mAlbumContentView;
-
-
+    private String mAlbumName;
 
 
     @Nullable
@@ -79,12 +78,6 @@ public class AlbumFragment extends BaseFragment {
         initData(Constants.NUMBER_ZOER, true, Constants.NUMBER_THRRE);
         return view;
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
 
 
     /**
@@ -128,7 +121,7 @@ public class AlbumFragment extends BaseFragment {
             mDetailsView.setVisibility(View.VISIBLE);
             List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(bean.getAlbumName())).build().list();
             // DetailsView播放音乐需要的参数
-            mDetailsView.setDataFlag(mFragmentManager,list.size(), bean.getAlbumName(), Constants.NUMBER_TWO);
+            mDetailsView.setDataFlag(mFragmentManager, list.size(), bean.getAlbumName(), Constants.NUMBER_TWO);
             DetailsListAdapter adapter = new DetailsListAdapter(getActivity(), list, Constants.NUMBER_TWO);
             mDetailsView.setAdapter(getActivity(), Constants.NUMBER_TWO, bean, adapter);
             SharePrefrencesUtil.setDetailsFlag(mActivity, Constants.NUMBER_TEN);
@@ -136,14 +129,27 @@ public class AlbumFragment extends BaseFragment {
                 mDetailsViewMap.put(mClassName, this);
             }
             if (mContext instanceof UpdataTitleListener) {
-                ((UpdataTitleListener) mContext).updataTitle(bean.getAlbumName());
+                mAlbumName = bean.getAlbumName();
+                ((UpdataTitleListener) mContext).updataTitle(mAlbumName, isShowDetailsView);
             }
 
 
         } else {
             mDetailsView.setVisibility(View.GONE);
+
         }
         isShowDetailsView = !isShowDetailsView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isShowDetailsView) {
+            if (mContext instanceof UpdataTitleListener) {
+                ((UpdataTitleListener) mContext).updataTitle(mAlbumName, isShowDetailsView);
+            }
+        }
+
     }
 
     @Override

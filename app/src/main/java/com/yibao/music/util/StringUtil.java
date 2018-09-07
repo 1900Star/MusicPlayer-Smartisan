@@ -66,7 +66,6 @@ public class StringUtil {
      */
     public static String getCurrentTime() {
         long time = System.currentTimeMillis();
-
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date date = new Date(time);
         return format.format(date);
@@ -85,7 +84,7 @@ public class StringUtil {
         return songName;
     }
 
-    public static String getBottomSheetTitile(int size) {
+    public static String getBottomSheetTitle(int size) {
 
         return "收藏列表 ( " + size + " )";
     }

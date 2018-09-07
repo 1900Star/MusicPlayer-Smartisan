@@ -1,6 +1,5 @@
 package com.yibao.music.activity;
 
-import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -16,12 +15,13 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.adapter.MusicPagerAdapter;
+import com.yibao.music.artisanlist.MusicPagerListener;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.model.DetailsFlagBean;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicLyrBean;
+import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.QqBarUpdataBean;
 import com.yibao.music.service.AudioPlayService;
@@ -38,14 +38,11 @@ import com.yibao.music.view.music.QqControlBar;
 import com.yibao.music.view.music.SmartisanControlBar;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -61,8 +58,10 @@ public class MusicActivity
 
     @BindView(R.id.tv_music_toolbar_title)
     TextView mTvMusicToolbarTitle;
+
     @BindView(R.id.music_navigation_bar)
     MusicNavigationBar mMusicNavigationBar;
+
     @BindView(R.id.music_viewpager)
     MainViewPager mMusicViewPager;
 
@@ -83,13 +82,12 @@ public class MusicActivity
     private boolean isShowQqBar;
     private int mPlayState;
 
-    private HashMap<String, String> mLyricMap;
-    private static String mEntryValue;
     private int lyricsFlag = 0;
-    private ArrayList<MusicLyrBean> mLyricList;
+    private ArrayList<MusicLyricBean> mLyricList;
     private int mTitleResourceId;
-    // 切换Tab时更改TiTle的标记
-    private boolean mIsShowDetail = false;
+    // 切换Tab时更改TiTle的标记,打开详情页面时正确显示Title
+    private boolean mIsShowDetail;
+    private String mDetailViewTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,11 +149,13 @@ public class MusicActivity
 
     private void initListener() {
         mMusicNavigationBar.setOnNavigationbarListener((currentSelecteFlag, titleResourceId) -> {
-            mTitleResourceId = titleResourceId;
 //            if (mIsShowDetail) {
-//
+//                mTvMusicToolbarTitle.setText(mDetailViewTitle);
+//            } else {
 //            }
+            mTitleResourceId = titleResourceId;
             mTvMusicToolbarTitle.setText(titleResourceId);
+
             mMusicViewPager.setCurrentItem(currentSelecteFlag, false);
         });
         mSmartisanControlBar.setClickListener(clickFlag -> {
@@ -208,16 +208,12 @@ public class MusicActivity
         if (isShowQqBar) {
             mQqControlBar.setVisibility(View.INVISIBLE);
             mSmartisanControlBar.setVisibility(View.VISIBLE);
-            if (mDisposablesLyric != null) {
-                mDisposablesLyric.dispose();
-            }
+            disposableQqLyric();
         } else {
             mQqControlBar.setVisibility(View.VISIBLE);
             mSmartisanControlBar.setVisibility(View.INVISIBLE);
-            mQqControlBar.updaPagerData(mMusicItems, mCurrentPosition);
             //TODO 这里做更新歌词的操作
-
-//            setQqPagerLyric();
+            setQqPagerLyric();
         }
         isShowQqBar = !isShowQqBar;
     }
@@ -226,56 +222,60 @@ public class MusicActivity
      * QQbar时时更新歌词
      */
     //TODO
-    @SuppressLint("CheckResult")
     private void setQqPagerLyric() {
-//        if (qqLyricsDisposable != null) {
-        Flowable.interval(0, 2800, TimeUnit.MICROSECONDS)
-                .onBackpressureDrop()
-                .subscribeOn(Schedulers.io())
-                .map(aLong -> {
-                    String currentProgress = String.valueOf(audioBinder.getProgress());
-                    int progress = audioBinder.getProgress();
+        if (mQqLyricsDisposable == null) {
+            mQqLyricsDisposable = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
+//                .onBackpressureBuffer()
+                    .subscribeOn(Schedulers.io())
+//                .map(new Function<Long, List<MusicBean>>() {
+//                    @Override
+//                    public List<MusicBean> apply(Long aLong) {
+//                        SparseArray<String> lyricArry = new SparseArray<>();
+//                        HashMap<String, Integer> flagMap = new HashMap<>();
+////                        for (int i = 0; i < mLyricList.size() - 1; i++) {
+////                            MusicLyricBean lyricBean = mLyricList.get(i);
+////                            lyricArry.put(i, lyricBean.getContent());
+////                            flagMap.put(lyricBean.getContent(), i);
+////                        }
+//
+//
+//
+//                        return mMusicItems;
+//                    }
+//                })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(musicBeanList -> {
+                        if (mLyricList != null && mLyricList.size() > 1 && lyricsFlag < mLyricList.size()) {
+                            //通过集合，播放过的歌词就从集合中删除
+                            MusicLyricBean lyrBean = mLyricList.get(lyricsFlag);
+                            String content = lyrBean.getContent();
+                            int progress = audioBinder.getProgress();
+                            int startTime = lyrBean.getStartTime();
+//                            String s = lyricArry.get(startTime);
+//                            Integer integer = flagMap.get(lyrBean.getContent());
+                            if (progress > startTime) {
+                                MusicBean musicBean = new MusicBean();
+                                if (mCurrentPosition < mMusicItems.size()) {
+                                    musicBean.setTitle(mMusicItems.get(mCurrentPosition).getTitle());
+                                }
+                                musicBean.setArtist(content);
+                                if (mCurrentPosition < mMusicItems.size()) {
+                                    mMusicItems.set(mCurrentPosition, musicBean);
+                                }
+                                LogUtil.d("当前的位置 ===  " + mCurrentPosition);
+                                LogUtil.d("当前的时间和歌词 ===  " + startTime + " ==  " + content);
 
-                    if (mLyricList != null && mLyricList.size() > 1) {
-                        int startTime = mLyricList.get(lyricsFlag).getStartTime();
+                                mQqControlBar.updaPagerData(mMusicItems, mCurrentPosition);
+                                lyricsFlag++;
+                            }
 
-                        if (progress > startTime) {
-                            String content = mLyricList.get(lyricsFlag).getContent();
-                            LogUtil.d("当前的Value ====================  " + content);
-                            lyricsFlag++;
+
                         }
 
 
-                    }
+                    });
 
-//                    for (Map.Entry<String, String> entry : mLyricMap.entrySet()) {
-//                        if (currentProgress.equals(entry.getKey())) {
-//                            lyricsFlag = 1;
-////                            LogUtil.d("当前的进度 ====================  " + currentProgress);
-////                            LogUtil.d( "当前的Key ====================  " + entry.getKey());
-////                            LogUtil.d("当前的Value ====================  " + entry.getValue());
-//                            mEntryValue = entry.getValue();
-//                        }
-//
-//                    }
-
-                    return mEntryValue == null ? "加载中..." : mEntryValue;
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(str -> {
-                    if (lyricsFlag == 1) {
-//                        LogUtil.d("=====得到的歌词   " + str);
-                    }
-                    lyricsFlag = 2;
-//                    MusicBean musicBean = MusicDataTranslateUtil.tanslateData(mCurrentMusicBean);
-//                    musicBean.setCurrentLyrics(str);
-//                    mMusicItems.set(mCurrentPosition, musicBean);
-//                    mQqBarPagerAdapter = new QqBarPagerAdapter(MusicActivity.this, mMusicItems);
-//                    mMusicSlideViewPager.setAdapter(mQqBarPagerAdapter);
-//                    mMusicSlideViewPager.setCurrentItem(mCurrentPosition, false);
-//                    mQqBarPagerAdapter.notifyDataSetChanged();
-                });
-//        }
+        }
 
 
     }
@@ -364,6 +364,8 @@ public class MusicActivity
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(musicItem -> {
+                    //将QQBar的释放掉
+                    disposableQqLyric();
                     // 将MusicConfig设置为ture
                     SharePrefrencesUtil.setMusicConfig(MusicActivity.this);
                     mMusicConfig = true;
@@ -431,7 +433,6 @@ public class MusicActivity
      * @param musicItem g
      */
     private void perpareItem(MusicBean musicItem) {
-//        disposableQqLyric();
         mCurrentMusicBean = musicItem;
         checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
 
@@ -444,26 +445,22 @@ public class MusicActivity
         //设置专辑
         String albumUri = StringUtil.getAlbulm(mCurrentMusicBean.getAlbumId()).toString();
         mSmartisanControlBar.setAlbulmUrl(albumUri);
-//         加载歌词的List，并将歌词的开始时间和歌词内容存到Map集合里。
-        mLyricMap = new HashMap<>(16);
-        mLyricList = LyricsUtil.getLyricList(mCurrentMusicBean.getTitle(), mCurrentMusicBean.getArtist());
-//        if (lyricList != null && lyricList.size() > 1) {
-//            for (MusicLyrBean musicLyrBean : lyricList) {
-//                String songTime = String.valueOf(musicLyrBean.getStartTime());
-//                mLyricMap.put(songTime, musicLyrBean.getContent());
-//            }
-//        }
         mQqControlBar.setPagerData(mMusicItems);
         mQqControlBar.setPagerCurrentItem(mCurrentMusicBean.getCureetPosition());
+//         加载歌词的List，
+        mLyricList = LyricsUtil.getLyricList(mCurrentMusicBean.getTitle(), mCurrentMusicBean.getArtist());
+        if (isShowQqBar) {
+            setQqPagerLyric();
+        }
     }
 
     private void updataProgress() {
         if (audioBinder != null && audioBinder.isPlaying()) {
-            if (mDisposable == null) {
+            if (mDisposableProgresse == null) {
                 int duration = audioBinder.getDuration();
                 mSmartisanControlBar.setMaxProgress(duration);
                 mQqControlBar.setMaxProgress(duration);
-                mDisposable = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
+                mDisposableProgresse = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(aLong -> {
@@ -508,9 +505,9 @@ public class MusicActivity
             } else if (audioBinder.isPlaying()) {
                 // 当前播放  暂停
                 audioBinder.pause();
-                if (mDisposable != null) {
-                    mDisposable.dispose();
-                    mDisposable = null;
+                if (mDisposableProgresse != null) {
+                    mDisposableProgresse.dispose();
+                    mDisposableProgresse = null;
                 }
             } else if (!audioBinder.isPlaying()) {
                 // 当前暂停  播放
@@ -577,7 +574,9 @@ public class MusicActivity
             mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
             checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
             updataProgress();
-
+            if (isShowQqBar) {
+                setQqPagerLyric();
+            }
         }
     }
 
@@ -590,9 +589,10 @@ public class MusicActivity
     }
 
     @Override
-    public void updataTitle(String toolbarTitle) {
+    public void updataTitle(String toolbarTitle, boolean isShowDetail) {
+        mDetailViewTitle = toolbarTitle;
         mTvMusicToolbarTitle.setText(toolbarTitle);
-        mIsShowDetail = true;
+        mIsShowDetail = isShowDetail;
     }
 
 
@@ -601,8 +601,8 @@ public class MusicActivity
         int detailFlag = SharePrefrencesUtil.getDetailFlag(this);
         if (detailFlag > Constants.NUMBER_ZOER) {
             mBus.post(new DetailsFlagBean(detailFlag));
-
             mTvMusicToolbarTitle.setText(mTitleResourceId);
+            mIsShowDetail = false;
         } else {
             super.onBackPressed();
         }

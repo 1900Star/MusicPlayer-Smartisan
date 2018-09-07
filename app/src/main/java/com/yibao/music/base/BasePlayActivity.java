@@ -103,6 +103,11 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mVolumeReceiver);
+        if (mCompositeDisposable != null) {
+            mCompositeDisposable.clear();
+            mCompositeDisposable.dispose();
+            mCompositeDisposable = null;
+        }
     }
 
     /**

@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
-import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.ReadFavoriteFileUtil;
@@ -25,7 +24,6 @@ import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 
 /**
@@ -43,10 +41,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected RxBus mBus;
     protected MusicBeanDao mMusicDao;
     protected CompositeDisposable mCompositeDisposable;
-    protected Disposable mDisposable;
-    protected Disposable qqLyricsDisposable;
+    protected Disposable mDisposableProgresse;
+    protected Disposable mQqLyricsDisposable;
     protected Unbinder mBind;
-    protected Disposable mDisposablesLyric;
     protected Disposable mRxViewDisposable;
     private boolean mCurrentIsFavorite;
 
@@ -74,13 +71,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         smartisanControlBar.setFavoriteButtonState(!mCurrentIsFavorite);
         qqControlBar.setFavoriteButtonState(!mCurrentIsFavorite);
         currentMusicBean.setIsFavorite(!mCurrentIsFavorite);
-        MusicBean newMusicBean = getCurrentMusicBean(currentMusicBean);
-        mMusicDao.update(mCurrentIsFavorite ? currentMusicBean : getCurrentMusicBean(currentMusicBean));
-        updataFavoriteFile(mCurrentIsFavorite ? currentMusicBean : newMusicBean, mCurrentIsFavorite);
+        if (!mCurrentIsFavorite) {
+            MusicBean newMusicBean = getCurrentMusicBean(currentMusicBean);
+            mMusicDao.update(newMusicBean);
+            updataFavoriteFile(newMusicBean, mCurrentIsFavorite);
+        }
     }
 
     protected void updataFavoriteFile(MusicBean musicBean, boolean currentIsFavorite) {
-        //更新收藏文件  后期将时间也拼接上去，恢复的时间通过截取字符串获取
         if (currentIsFavorite) {
             mCompositeDisposable.add(ReadFavoriteFileUtil.deleteFavorite(musicBean.getTitle()).observeOn(AndroidSchedulers.mainThread()).subscribe(aBoolean -> {
                 if (!aBoolean) {
@@ -88,6 +86,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 }
             }));
         } else {
+            //更新收藏文件  将歌名和收藏时间拼接储存，恢复的时候，歌名和时间以“T”为标记进行截取
             String songInfo = musicBean.getTitle() + "T" + musicBean.getTime();
             ReadFavoriteFileUtil.writeFile(songInfo);
 
@@ -97,8 +96,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private MusicBean getCurrentMusicBean(MusicBean musicBean) {
         String time = StringUtil.getCurrentTime();
+//        musicBean.setTime(Long.toString(System.currentTimeMillis()));
         musicBean.setTime(time);
-        mMusicDao.update(musicBean);
+//        mMusicDao.update(musicBean);
         return musicBean;
     }
 
@@ -122,23 +122,20 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void disposableQqLyric() {
-        if (qqLyricsDisposable != null) {
-            qqLyricsDisposable.dispose();
-            qqLyricsDisposable = null;
+        if (mQqLyricsDisposable != null) {
+            mQqLyricsDisposable.dispose();
+            mQqLyricsDisposable = null;
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mDisposable != null) {
-            mDisposable.dispose();
-            mDisposable = null;
+        if (mDisposableProgresse != null) {
+            mDisposableProgresse.dispose();
+            mDisposableProgresse = null;
         }
-//        if (mDisposablesLyric != null) {
-//            mDisposablesLyric.dispose();
-//            mDisposablesLyric = null;
-//        }
+        disposableQqLyric();
     }
 
     @Override

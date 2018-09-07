@@ -8,11 +8,11 @@ import android.support.annotation.NonNull;
  * Time:2017/9/14 00:58
  * @author Stran
  */
-public class MusicLyrBean
-        implements Comparable<MusicLyrBean> {
+public class MusicLyricBean
+        implements Comparable<MusicLyricBean> {
     private int startTime;
     private String content;
-    public MusicLyrBean(int startTime, String content) {
+    public MusicLyricBean(int startTime, String content) {
         this.startTime = startTime;
         this.content = content;
     }
@@ -34,7 +34,7 @@ public class MusicLyrBean
     }
 
     @Override
-    public int compareTo(@NonNull MusicLyrBean musicLrcBean) {
+    public int compareTo(@NonNull MusicLyricBean musicLrcBean) {
         return startTime - musicLrcBean.getStartTime();
     }
 }

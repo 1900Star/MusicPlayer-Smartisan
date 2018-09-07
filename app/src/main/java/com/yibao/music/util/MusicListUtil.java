@@ -110,6 +110,7 @@ public class MusicListUtil {
      * 按添加时间排序
      *
      * @param musicList c
+     * @param sortFlag  1按照歌曲下载时间，2按照歌曲收藏时间
      */
     public static List<MusicBean> sortMusicAddTime(List<MusicBean> musicList, int sortFlag) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -150,7 +151,7 @@ public class MusicListUtil {
     }
 
     /**
-     * 自己添加的播放列表，按添加时间排序
+     * 收藏列表，按添加时间排序
      *
      * @param musicList c
      */

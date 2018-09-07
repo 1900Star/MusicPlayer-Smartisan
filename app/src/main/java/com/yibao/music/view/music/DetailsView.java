@@ -13,16 +13,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.adapter.DetailsListAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
-import com.yibao.music.fragment.dialogfrag.TopBigPicDialogFragment;
+import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
-import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.UpdataToolbaTitle;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
@@ -101,7 +98,7 @@ public class DetailsView
             case R.id.iv_artist_albumm_details:
                 String albumUrl = StringUtil.getAlbulm(mAlbumId)
                         .toString();
-                TopBigPicDialogFragment.newInstance(albumUrl)
+                PreviewBigPicDialogFragment.newInstance(albumUrl)
                         .show(mFragmentManager, "album");
                 break;
             case R.id.iv_details_add_to_list:

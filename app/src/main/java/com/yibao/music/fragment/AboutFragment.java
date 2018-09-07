@@ -12,7 +12,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
-import com.yibao.music.fragment.dialogfrag.TopBigPicDialogFragment;
+import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.FileUtil;
@@ -28,11 +28,9 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -72,7 +70,7 @@ public class AboutFragment extends BaseFragment {
     private void initListener() {
         mDisposable.add(RxView.clicks(mAboutHeaderIv)
                 .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> TopBigPicDialogFragment.newInstance("")
+                .subscribe(o -> PreviewBigPicDialogFragment.newInstance("")
                         .show(mFragmentManager, "album")));
         mDisposable.add(RxView.clicks(mTvBackupsFavorite)
                 .throttleFirst(3, TimeUnit.SECONDS)

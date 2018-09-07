@@ -117,7 +117,7 @@ public class PlayListFragment extends BaseFragment {
             }
 
             if (mContext instanceof UpdataTitleListener) {
-                ((UpdataTitleListener) mContext).updataTitle("列表");
+                ((UpdataTitleListener) mContext).updataTitle("列表",isShowDetailsView);
             }
         }
         isShowDetailsView = !isShowDetailsView;

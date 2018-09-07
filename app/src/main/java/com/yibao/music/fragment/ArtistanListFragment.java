@@ -47,6 +47,7 @@ public class ArtistanListFragment extends BaseFragment {
     @BindView(R.id.details_view)
     DetailsView mDetailsView;
     private ArtistAdapter mAdapter;
+    private String mAlbumName;
 
 
     @Nullable
@@ -64,10 +65,6 @@ public class ArtistanListFragment extends BaseFragment {
         mAdapter.setItemListener(ArtistanListFragment.this::openDetailsView);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     private void initData() {
         mAdapter = new ArtistAdapter(mArtistList);
@@ -90,10 +87,21 @@ public class ArtistanListFragment extends BaseFragment {
                 mDetailsViewMap.put(mClassName, this);
             }
             if (mContext instanceof UpdataTitleListener) {
-                ((UpdataTitleListener) mContext).updataTitle(bean.getAlbumName());
+                mAlbumName = bean.getAlbumName();
+                ((UpdataTitleListener) mContext).updataTitle(mAlbumName,isShowDetailsView);
             }
         }
         isShowDetailsView = !isShowDetailsView;
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isShowDetailsView) {
+            if (mContext instanceof UpdataTitleListener) {
+                ((UpdataTitleListener) mContext).updataTitle(mAlbumName,isShowDetailsView);
+            }
+        }
+
     }
 
     @Override

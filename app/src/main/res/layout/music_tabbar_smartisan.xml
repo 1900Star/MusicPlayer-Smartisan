@@ -36,22 +36,23 @@
 
             <TextView
                 android:id="@+id/music_float_song_name"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:ellipsize="marquee"
                 android:marqueeRepeatLimit="marquee_forever"
-                android:maxLength="18"
                 android:singleLine="true"
                 android:textColor="@color/textDes"
                 android:textSize="@dimen/music_loating_title" />
 
             <TextView
                 android:id="@+id/music_float_singer_name"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:maxLines="1"
+                android:ellipsize="marquee"
+                android:maxLength="25"
+                android:singleLine="true"
                 android:textColor="@color/textName"
                 android:textSize="@dimen/music_loating_name" />
 

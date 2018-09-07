@@ -26,6 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:maxLines="1"
+                android:textStyle="bold"
                 android:text="@string/music_song"
                 android:textColor="@color/music_activity_title_selector"
                 android:textSize="@dimen/big_tv" />

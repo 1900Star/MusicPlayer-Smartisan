@@ -85,6 +85,7 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
 
     //**************ViewPager数据********************
     public void updaPagerData(List<MusicBean> musicItems, int currentPosition) {
+        mPagerAdapter = null;
         mPagerAdapter = new QqBarPagerAdapter(getContext(), musicItems);
         mSlideViewPager.setAdapter(mPagerAdapter);
         mSlideViewPager.setCurrentItem(currentPosition, false);
@@ -92,7 +93,9 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
     }
 
     public void setPagerData(List<MusicBean> musicItems) {
+//        mList = musicItems;
         mPagerAdapter.setData(musicItems);
+
     }
 
     public void setPagerCurrentItem(int cureetPosition) {
@@ -140,6 +143,7 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
     public interface OnButtonClickListener {
         void click(int clickFlag);
     }
+
     //**************歌曲切换监听********************
     private OnPagerSelecteListener mSelecteListener;
 

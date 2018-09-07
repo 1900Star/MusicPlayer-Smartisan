@@ -1,9 +1,6 @@
 package com.yibao.music.util;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Environment;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,11 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -87,16 +79,17 @@ public class ReadFavoriteFileUtil {
 
     }
 
+    // 不同版本之间对收藏文件兼容处理
     public static void backFile() {
         String time = StringUtil.getCurrentTime();
-        String currentTime = "T"+time;
-        Set<String> stringSet = deleteText(currentTime, true);
+        String currentTime = "T" + time;
+        Set<String> stringSet = backStringToSet(currentTime, true);
         againWrite(FAVORITE_FILE, stringSet);
 
 
     }
 
-    private static Set<String> deleteText(String str, Boolean aBoolean) {
+    private static Set<String> backStringToSet(String str, Boolean aBoolean) {
         Set<String> list = new HashSet<>();
         if (!aBoolean) {
             return list;
@@ -114,7 +107,7 @@ public class ReadFavoriteFileUtil {
 //                        if (text.equals(str)) {
 //                            continue;
 //                        }
-                        list.add(text + str );
+                        list.add(text + str);
                     }
                 }
                 reader.close();

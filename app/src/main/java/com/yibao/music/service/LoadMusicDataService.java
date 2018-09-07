@@ -86,9 +86,9 @@ public class LoadMusicDataService extends IntentService {
                     mMusicDao.update(musicBean);
                 }
             }
-            LogUtil.d("lsp", "自动恢复收藏列表");
+            LogUtil.d("自动恢复收藏列表");
         } else {
-            LogUtil.d("lsp", "没有发现歌曲收藏文件");
+            LogUtil.d("没有发现歌曲收藏文件");
             ToastUtil.showNotFoundFavoriteFile(this);
 
         }
@@ -104,8 +104,11 @@ public class LoadMusicDataService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mDisposable.clear();
-        mDisposable = null;
+        if (mDisposable != null) {
+            mDisposable.dispose();
+            mDisposable.clear();
+            mDisposable = null;
+        }
         stopSelf();
     }
 }

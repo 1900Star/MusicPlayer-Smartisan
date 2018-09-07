@@ -39,8 +39,7 @@ public class QqBarPagerAdapter
     private List<MusicBean> mList;
     private ObjectAnimator mAnimator;
     private MyAnimatorUpdateListener mAnimationListener;
-    private static int urlFlag = 1;
-    private String mTempUrl;
+    private boolean urlFlag = true;
 
 
     public QqBarPagerAdapter(Context context, List<MusicBean> list) {
@@ -70,10 +69,10 @@ public class QqBarPagerAdapter
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        if (mAnimator != null && mAnimationListener != null) {
-            mAnimator.cancel();
-            mAnimationListener.pause();
-        }
+//        if (mAnimator != null && mAnimationListener != null) {
+//            mAnimator.cancel();
+//            mAnimationListener.pause();
+//        }
         container.removeView((View) object);
 
     }
@@ -106,21 +105,15 @@ public class QqBarPagerAdapter
         TextView songName = view.findViewById(R.id.tv_pager_song_name);
         TextView artName = view.findViewById(R.id.tv_pager_art_name);
 
-        Uri albumUri = StringUtil.getAlbulm(musicInfo.getAlbumId());
-        if (urlFlag == 1) {
-            mTempUrl = albumUri.toString();
-            urlFlag = 2;
+        if (urlFlag) {
+            urlFlag = true;
+            Uri albumUri = StringUtil.getAlbulm(musicInfo.getAlbumId());
+            ImageUitl.loadPlaceholder(mContext, albumUri.toString(), mAlbulm);
         }
-        ImageUitl.loadPlaceholder(mContext, albumUri.toString(), mAlbulm);
 //        LogUtil.i("当前的歌词    " + StringUtil.getAlbulm(musicInfo.getAlbumId()));
         songName.setText(musicInfo.getTitle());
-
-        artName.setText(musicInfo.getArtist());
-        if (musicInfo.getCurrentLyrics() != null) {
-//            LogUtil.i("当前的歌词    " + musicInfo.getCurrentLyrics());
-            artName.setText(musicInfo.getCurrentLyrics());
-        }
-
+        String currentLyrics = musicInfo.getCurrentLyrics();
+        artName.setText(currentLyrics != null ? currentLyrics : musicInfo.getArtist());
         if (mAnimator == null || mAnimationListener == null) {
             mAnimator = AnimationUtil.getRotation(mAlbulm);
             mAnimationListener = new MyAnimatorUpdateListener(mAnimator);

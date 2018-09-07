@@ -8,8 +8,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.yibao.music.R;
-import com.yibao.music.model.MusicLyrBean;
-import com.yibao.music.util.LogUtil;
+import com.yibao.music.model.MusicLyricBean;
 
 import java.util.ArrayList;
 
@@ -27,7 +26,7 @@ public class LyricsView
     private int mViewW;
     private int mViewH;
     private String mCurrentLrc;
-    private static ArrayList<MusicLyrBean> musicLyrList;
+    private static ArrayList<MusicLyricBean> musicLyrList;
     private static int centerLine;
     private float mBigText;
     private int mLyricsSelected;
@@ -187,7 +186,7 @@ public class LyricsView
      *
      * @param lrcList s
      */
-    public void setLrcFile(ArrayList<MusicLyrBean> lrcList) {
+    public void setLrcFile(ArrayList<MusicLyricBean> lrcList) {
 
         musicLyrList = lrcList;
         //默认剧中行=0

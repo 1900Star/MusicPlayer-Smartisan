@@ -22,9 +22,9 @@ import com.yibao.music.R;
 import com.yibao.music.base.BasePlayActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.fragment.dialogfrag.MusicBottomSheetDialog;
-import com.yibao.music.fragment.dialogfrag.TopBigPicDialogFragment;
+import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicLyrBean;
+import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
@@ -42,7 +42,6 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -136,7 +135,7 @@ public class PlayActivity extends BasePlayActivity {
         mSbVolume.setOnSeekBarChangeListener(new SeekBarListener());
         rxViewClick();
         mPlayingSongAlbum.setOnLongClickListener(view -> {
-            TopBigPicDialogFragment.newInstance(mAlbumUrl)
+            PreviewBigPicDialogFragment.newInstance(mAlbumUrl)
                     .show(getFragmentManager(), "album");
             return true;
         });
@@ -168,8 +167,8 @@ public class PlayActivity extends BasePlayActivity {
         if (mCurrenMusicInfo != null) {
             mPlaySongName.setText(mCurrenMusicInfo.getTitle());
             mPlayArtistName.setText(mCurrenMusicInfo.getArtist());
-            ArrayList<MusicLyrBean> musicLyrBeans = LyricsUtil.getLyricList(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
-            mTvLyrics.setLrcFile(musicLyrBeans);
+            ArrayList<MusicLyricBean> musicLyricBeans = LyricsUtil.getLyricList(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
+            mTvLyrics.setLrcFile(musicLyricBeans);
             mAlbumUrl = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId())
                     .toString();
             setAlbulm(mAlbumUrl);
@@ -177,9 +176,7 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     public void checkCurrentIsFavorite(boolean cureentMusicIsFavorite) {
-        if (mIvFavoriteMusic != null) {
-            mIvFavoriteMusic.setImageResource(cureentMusicIsFavorite ? R.mipmap.favorite_yes : R.drawable.music_qqbar_favorite_normal_selector);
-        }
+        mIvFavoriteMusic.setImageResource(cureentMusicIsFavorite ? R.mipmap.favorite_yes : R.drawable.music_qqbar_favorite_normal_selector);
     }
 
     private void initData() {
@@ -286,7 +283,7 @@ public class PlayActivity extends BasePlayActivity {
         setSongDuration();
         updatePlayBtnStatus();
 //        初始化歌词
-        ArrayList<MusicLyrBean> lyricList = LyricsUtil.getLyricList(info.getTitle(), info.getArtist());
+        ArrayList<MusicLyricBean> lyricList = LyricsUtil.getLyricList(info.getTitle(), info.getArtist());
         mTvLyrics.setLrcFile(lyricList);
         if (isShowLyrics) {
             closeLyricsView(lyricList);
@@ -469,7 +466,7 @@ public class PlayActivity extends BasePlayActivity {
             if (audioBinder.isPlaying()) {
                 startRollPlayLyrics(mTvLyrics);
             }
-            ArrayList<MusicLyrBean> lyricList = LyricsUtil.getLyricList(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
+            ArrayList<MusicLyricBean> lyricList = LyricsUtil.getLyricList(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
             closeLyricsView(lyricList);
 
         }
@@ -545,11 +542,9 @@ public class PlayActivity extends BasePlayActivity {
             mAnimatorListener.pause();
             mAnimator.cancel();
         }
-
-
     }
 
-    public void closeLyricsView(ArrayList<MusicLyrBean> lyricList) {
+    public void closeLyricsView(ArrayList<MusicLyricBean> lyricList) {
         if (lyricList.size() == 1) {
             if (mCloseLyrDisposable == null) {
                 mCloseLyrDisposable = Observable.timer(5, TimeUnit.SECONDS)

@@ -2,7 +2,7 @@ package com.yibao.music.util;
 
 import android.os.Environment;
 
-import com.yibao.music.model.MusicLyrBean;
+import com.yibao.music.model.MusicLyricBean;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,26 +26,26 @@ public class LyricsUtil {
 
     private static BufferedReader br;
 
-    public static ArrayList<MusicLyrBean> getLyricList(String songName, String artist) {
-        ArrayList<MusicLyrBean> lrcList = new ArrayList<>();
+    public static ArrayList<MusicLyricBean> getLyricList(String songName, String artist) {
+        ArrayList<MusicLyricBean> lrcList = new ArrayList<>();
         String str = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyric/";
         String path = str + songName + "$$" + artist + ".lrc";
         File file = new File(path);
         if (!file.exists()) {
-            lrcList.add(new MusicLyrBean(0, "暂无歌词"));
+            lrcList.add(new MusicLyricBean(0, "暂无歌词"));
             return lrcList;
         }
         try {
             br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"));
             String line = br.readLine();
             while (line != null) {
-                ArrayList<MusicLyrBean> been = parseLine(line);
+                ArrayList<MusicLyricBean> been = parseLine(line);
                 lrcList.addAll(been);
                 line = br.readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
-            lrcList.add(new MusicLyrBean(0, "歌词加载出错"));
+            lrcList.add(new MusicLyricBean(0, "歌词加载出错"));
             return lrcList;
         } finally {
             try {
@@ -63,8 +63,8 @@ public class LyricsUtil {
     }
 
 
-    private static ArrayList<MusicLyrBean> parseLine(String str) {
-        ArrayList<MusicLyrBean> list = new ArrayList<>();
+    private static ArrayList<MusicLyricBean> parseLine(String str) {
+        ArrayList<MusicLyricBean> list = new ArrayList<>();
         String[] arr = str.split("]");
         String content = arr[arr.length - 1];
 
@@ -72,7 +72,7 @@ public class LyricsUtil {
 
             int startTime = parseTime(arr[i]);
 
-            MusicLyrBean lrcBean = new MusicLyrBean(startTime, content);
+            MusicLyricBean lrcBean = new MusicLyricBean(startTime, content);
             list.add(lrcBean);
         }
         return list;

@@ -8,5 +8,5 @@ package com.yibao.music.base.listener;
  * @ Des:    TODO
  */
 public interface UpdataTitleListener {
-    void updataTitle(String toolbarTitle);
+    void updataTitle(String toolbarTitle,boolean isShowDetail);
 }

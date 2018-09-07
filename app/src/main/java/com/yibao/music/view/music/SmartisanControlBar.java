@@ -169,6 +169,8 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
         mButtonPre.setOnClickListener(this);
         mButtonNext.setOnClickListener(this);
         mButtonPlay.setOnClickListener(this);
+        mSingerName.setSelected(true);
+        mSingerName.setSelected(true);
 //        mSongAlbulm.setOnClickListener(this);
 //        mSmartisanMusicBar.setOnClickListener(this);
 
