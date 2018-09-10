@@ -126,7 +126,10 @@ public abstract class BaseFragment extends Fragment {
             mDetailsViewMap.clear();
             mDetailsViewMap = null;
         }
-        mDisposable.clear();
-        mDisposable = null;
+        if (mDisposable != null) {
+            mDisposable.dispose();
+            mDisposable.clear();
+            mDisposable = null;
+        }
     }
 }

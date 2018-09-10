@@ -83,7 +83,8 @@ public class MusicView
      * @param context
      * @param adapterType 1 : SongListAdapter  、 2  ：ArtistAdapter  、
      *                    3  ： AlbumAdapter  普通视图  、 4  ： AlbumAdapter  平铺视图 GridView 3列
-     * @param adapter
+     * @param isShowSlideBar 只有按歌曲名排列时，Slidebar才显示 。
+     *
      */
     public void setAdapter(Context context, int adapterType, boolean isShowSlideBar, RecyclerView.Adapter adapter) {
         mSlidebar.setAdapterType(adapterType);

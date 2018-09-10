@@ -1,17 +1,14 @@
 package com.yibao.music.base.factory;
 
 
-import android.annotation.SuppressLint;
+import android.util.SparseArray;
 
 import com.yibao.music.base.BaseFragment;
+import com.yibao.music.fragment.AboutFragment;
 import com.yibao.music.fragment.AlbumFragment;
 import com.yibao.music.fragment.ArtistanListFragment;
-import com.yibao.music.fragment.AboutFragment;
 import com.yibao.music.fragment.PlayListFragment;
 import com.yibao.music.fragment.SongFragment;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Author：Sid
@@ -22,17 +19,16 @@ import java.util.Map;
  */
 public class FragmentFactory {
 
-    @SuppressLint("UseSparseArrays")
-    private static Map<Integer, BaseFragment> mCacheFragmentMap = new HashMap<>(16);
+    private static SparseArray<BaseFragment> mTabFagArray = new SparseArray<>();
 
     public static BaseFragment createFragment(int position) {
 
         BaseFragment fragment = null;
-
+        mTabFagArray.get(position);
 
         //优先从集合中取出来
-        if (mCacheFragmentMap.containsKey(position)) {
-            fragment = mCacheFragmentMap.get(position);
+        if (mTabFagArray.get(position) != null) {
+            fragment = mTabFagArray.get(position);
             return fragment;
         }
 
@@ -56,8 +52,9 @@ public class FragmentFactory {
                 break;
         }
         //保存fragment到集合中
-        mCacheFragmentMap.put(position, fragment);
+        mTabFagArray.put(position, fragment);
 
         return fragment;
     }
+
 }

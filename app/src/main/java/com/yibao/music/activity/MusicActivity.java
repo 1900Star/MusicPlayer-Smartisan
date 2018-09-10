@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.adapter.MusicPagerAdapter;
-import com.yibao.music.artisanlist.MusicPagerListener;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.UpdataTitleListener;
@@ -225,24 +224,7 @@ public class MusicActivity
     private void setQqPagerLyric() {
         if (mQqLyricsDisposable == null) {
             mQqLyricsDisposable = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
-//                .onBackpressureBuffer()
                     .subscribeOn(Schedulers.io())
-//                .map(new Function<Long, List<MusicBean>>() {
-//                    @Override
-//                    public List<MusicBean> apply(Long aLong) {
-//                        SparseArray<String> lyricArry = new SparseArray<>();
-//                        HashMap<String, Integer> flagMap = new HashMap<>();
-////                        for (int i = 0; i < mLyricList.size() - 1; i++) {
-////                            MusicLyricBean lyricBean = mLyricList.get(i);
-////                            lyricArry.put(i, lyricBean.getContent());
-////                            flagMap.put(lyricBean.getContent(), i);
-////                        }
-//
-//
-//
-//                        return mMusicItems;
-//                    }
-//                })
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(musicBeanList -> {
                         if (mLyricList != null && mLyricList.size() > 1 && lyricsFlag < mLyricList.size()) {
@@ -251,8 +233,6 @@ public class MusicActivity
                             String content = lyrBean.getContent();
                             int progress = audioBinder.getProgress();
                             int startTime = lyrBean.getStartTime();
-//                            String s = lyricArry.get(startTime);
-//                            Integer integer = flagMap.get(lyrBean.getContent());
                             if (progress > startTime) {
                                 MusicBean musicBean = new MusicBean();
                                 if (mCurrentPosition < mMusicItems.size()) {
@@ -266,6 +246,7 @@ public class MusicActivity
                                 LogUtil.d("当前的时间和歌词 ===  " + startTime + " ==  " + content);
 
                                 mQqControlBar.updaPagerData(mMusicItems, mCurrentPosition);
+//                                mQqControlBar.updataLyric(content);
                                 lyricsFlag++;
                             }
 

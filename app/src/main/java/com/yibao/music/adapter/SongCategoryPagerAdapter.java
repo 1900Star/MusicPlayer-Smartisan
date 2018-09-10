@@ -2,13 +2,13 @@ package com.yibao.music.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.yibao.music.base.BasePagerAdapter;
 import com.yibao.music.base.factory.FragmentFactory;
+import com.yibao.music.fragment.SongCategoryFragment;
+import com.yibao.music.fragment.SongFragment;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 
 /**
  * 作者：Stran on 2017/3/23 03:31
@@ -17,25 +17,24 @@ import com.yibao.music.util.Constants;
  *
  * @author Stran
  */
-public class MusicPagerAdapter
+public class SongCategoryPagerAdapter
         extends BasePagerAdapter {
 
 
-    public MusicPagerAdapter(FragmentManager fm) {
+    public SongCategoryPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
     @Override
     public Fragment getItem(int position) {
-        return FragmentFactory.createFragment(position);
+        return SongCategoryFragment.newInstance(position);
     }
 
 
     @Override
     public int getCount() {
-        return Constants.NUMBER_FIEV;
+        return Constants.NUMBER_FOUR;
     }
-
 
 
 }
