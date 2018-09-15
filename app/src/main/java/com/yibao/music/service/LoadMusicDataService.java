@@ -8,13 +8,12 @@ import android.support.annotation.Nullable;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.model.song.MusicCountBean;
+import com.yibao.music.model.MusicCountBean;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
-import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.ToastUtil;
 
 import java.util.HashMap;

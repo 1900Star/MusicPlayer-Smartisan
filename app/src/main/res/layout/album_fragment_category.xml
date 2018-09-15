@@ -75,6 +75,6 @@
         android:layout_width="60dp"
         android:layout_height="45dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="4dp"
+        android:layout_marginEnd="4dp"
         android:src="@drawable/btn_play_selector" />
 </LinearLayout>

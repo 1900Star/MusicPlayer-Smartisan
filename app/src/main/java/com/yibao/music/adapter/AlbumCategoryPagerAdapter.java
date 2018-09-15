@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.yibao.music.base.BasePagerAdapter;
+import com.yibao.music.fragment.AlbumCategoryFragment;
 import com.yibao.music.fragment.SongCategoryFragment;
 import com.yibao.music.util.Constants;
 
@@ -14,23 +15,23 @@ import com.yibao.music.util.Constants;
  *
  * @author Stran
  */
-public class SongCategoryPagerAdapter
+public class AlbumCategoryPagerAdapter
         extends BasePagerAdapter {
 
 
-    public SongCategoryPagerAdapter(FragmentManager fm) {
+    public AlbumCategoryPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
     @Override
     public Fragment getItem(int position) {
-        return SongCategoryFragment.newInstance(position);
+        return AlbumCategoryFragment.newInstance(position);
     }
 
 
     @Override
     public int getCount() {
-        return Constants.NUMBER_FOUR;
+        return Constants.NUMBER_TWO;
     }
 
 

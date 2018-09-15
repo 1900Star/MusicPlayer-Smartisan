@@ -113,6 +113,7 @@ public class AudioPlayService
         String queryFlag = intent.getStringExtra("queryFlag");
         int sortFlag = sortListFlag == Constants.NUMBER_ZOER ? Constants.NUMBER_ONE : sortListFlag;
         LogUtil.d(" position  ==" + enterPosition + "   sortListFlag  ==" + sortFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
+        // 更新QQBar
         mBus.post(new QqBarUpdataBean(mMusicDao, mMusicBean, sortFlag, dataFlag, queryFlag));
         mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao, mMusicBean, sortFlag, dataFlag, queryFlag);
         if (enterPosition != position && enterPosition != -1) {
@@ -161,6 +162,8 @@ public class AudioPlayService
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.setOnCompletionListener(this);
             SharePrefrencesUtil.setMusicPosition(AudioPlayService.this, position);
+            //显示音乐通知栏
+            showNotification();
         }
 
 
@@ -172,8 +175,6 @@ public class AudioPlayService
             mediaPlayer.start();
             //通知播放界面更新
             sendCureentMusicInfo();
-            //显示音乐通知栏
-            showNotification();
         }
 
         private void showNotification() {

@@ -3,12 +3,12 @@ package com.yibao.music.base.factory;
 
 import android.util.SparseArray;
 
-import com.yibao.music.base.BaseFragment;
-import com.yibao.music.fragment.AboutFragment;
-import com.yibao.music.fragment.AlbumFragment;
-import com.yibao.music.fragment.ArtistanListFragment;
-import com.yibao.music.fragment.PlayListFragment;
-import com.yibao.music.fragment.SongFragment;
+import com.yibao.music.base.BaseMusicFragment;
+import com.yibao.music.fragment.AboutMusicFragment;
+import com.yibao.music.fragment.AlbumMusicFragment;
+import com.yibao.music.fragment.ArtistanListMusicFragment;
+import com.yibao.music.fragment.PlayListMusicFragment;
+import com.yibao.music.fragment.SongMusicFragment;
 
 /**
  * Author：Sid
@@ -19,11 +19,11 @@ import com.yibao.music.fragment.SongFragment;
  */
 public class FragmentFactory {
 
-    private static SparseArray<BaseFragment> mTabFagArray = new SparseArray<>();
+    private static SparseArray<BaseMusicFragment> mTabFagArray = new SparseArray<>();
 
-    public static BaseFragment createFragment(int position) {
+    public static BaseMusicFragment createFragment(int position) {
 
-        BaseFragment fragment = null;
+        BaseMusicFragment fragment = null;
         mTabFagArray.get(position);
 
         //优先从集合中取出来
@@ -34,19 +34,19 @@ public class FragmentFactory {
 
         switch (position) {
             case 0:
-                fragment = PlayListFragment.newInstance();
+                fragment = PlayListMusicFragment.newInstance();
                 break;
             case 1:
-                fragment = ArtistanListFragment.newInstance();
+                fragment = ArtistanListMusicFragment.newInstance();
                 break;
             case 2:
-                fragment = SongFragment.newInstance();
+                fragment = SongMusicFragment.newInstance();
                 break;
             case 3:
-                fragment = AlbumFragment.newInstance();
+                fragment = AlbumMusicFragment.newInstance();
                 break;
             case 4:
-                fragment = AboutFragment.newInstance();
+                fragment = AboutMusicFragment.newInstance();
                 break;
             default:
                 break;

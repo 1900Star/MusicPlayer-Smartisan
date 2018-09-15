@@ -24,6 +24,7 @@ import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicInfo;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.SnakbarUtil;
+import com.yibao.music.util.SoftKeybordUtil;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -115,7 +116,7 @@ public class AddListDialog
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mInputMethodManager = (InputMethodManager) getContext()
                     .getSystemService(Context.INPUT_METHOD_SERVICE);
-            showAndHintSoftInput(2, InputMethodManager.SHOW_FORCED);
+            SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED);
         }
         mSubscribe = RxTextView.textChangeEvents(mEditAddList)
                 .map(textViewTextChangeEvent -> {
@@ -142,7 +143,8 @@ public class AddListDialog
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        showAndHintSoftInput(1, InputMethodManager.RESULT_UNCHANGED_SHOWN);
+        SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 1, InputMethodManager.RESULT_UNCHANGED_SHOWN);
+
     }
 
     @Override

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
-import com.yibao.music.base.BaseFragment;
+import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.MusicBean;
@@ -38,14 +38,14 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * @项目名： ArtisanMusic
  * @包名： com.yibao.music.folder
- * @文件名: AboutFragment
+ * @文件名: AboutMusicFragment
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.strangermy98@gmail.com
  * @创建时间: 2018/2/9 20:51
  * @描述： {TODO}
  */
 
-public class AboutFragment extends BaseFragment {
+public class AboutMusicFragment extends BaseMusicFragment {
 
 
     @BindView(R.id.about_header_iv)
@@ -128,9 +128,9 @@ public class AboutFragment extends BaseFragment {
         ToastUtil.showFavoriteListBackupsDown(mActivity);
     }
 
-    public static AboutFragment newInstance() {
+    public static AboutMusicFragment newInstance() {
 
-        return new AboutFragment();
+        return new AboutMusicFragment();
     }
 
 }

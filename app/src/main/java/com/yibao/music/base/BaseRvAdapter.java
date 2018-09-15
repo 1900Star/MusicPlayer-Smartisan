@@ -76,8 +76,11 @@ public abstract class BaseRvAdapter<T>
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof LoadMoreHolder) {
             LoadMoreHolder moreHolder = (LoadMoreHolder) holder;
-            String count = (mList.size()) + getLastItemDes();
-            moreHolder.mSongCount.setText(count);
+            String lastItemDes = getLastItemDes();
+            if (lastItemDes != null) {
+                String count = (mList.size()) + lastItemDes;
+                moreHolder.mSongCount.setText(count);
+            }
         } else {
 
             bindView(holder, mList.get(position >= mList.size() ? position - 1 : position));
@@ -117,8 +120,10 @@ public abstract class BaseRvAdapter<T>
     protected abstract int getLayoutId();
 
     public void clear() {
-        mList.clear();
-        notifyDataSetChanged();
+        if (mList != null) {
+            mList.clear();
+            notifyDataSetChanged();
+        }
     }
 
 

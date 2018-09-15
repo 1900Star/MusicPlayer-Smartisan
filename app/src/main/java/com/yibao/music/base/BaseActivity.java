@@ -14,6 +14,7 @@ import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
+import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.StringUtil;
@@ -40,6 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected RxBus mBus;
     protected MusicBeanDao mMusicDao;
+    protected SearchHistoryBeanDao mSearchDao;
     protected CompositeDisposable mCompositeDisposable;
     protected Disposable mDisposableProgresse;
     protected Disposable mQqLyricsDisposable;
@@ -53,11 +55,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         mBus = MusicApplication.getIntstance()
                 .bus();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
-        mCompositeDisposable = new CompositeDisposable();
+        mSearchDao = MusicApplication.getIntstance().getSearchDao();
         registerHeadsetReceiver();
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCompositeDisposable = new CompositeDisposable();
+    }
 
     protected void checkCurrentSongIsFavorite(MusicBean currentMusicBean, QqControlBar qqControlBar, SmartisanControlBar smartisanControlBar) {
         mCurrentIsFavorite = mMusicDao.load(currentMusicBean.getId()).isFavorite();
@@ -135,6 +142,11 @@ public abstract class BaseActivity extends AppCompatActivity {
             mDisposableProgresse.dispose();
             mDisposableProgresse = null;
         }
+        if (mCompositeDisposable != null) {
+            mCompositeDisposable.dispose();
+            mCompositeDisposable.clear();
+            mCompositeDisposable = null;
+        }
         disposableQqLyric();
     }
 
@@ -143,8 +155,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onDestroy();
         mBind.unbind();
         unregisterReceiver(headsetReciver);
-        mCompositeDisposable.dispose();
-        mCompositeDisposable.clear();
         if (mRxViewDisposable != null) {
             mRxViewDisposable.dispose();
         }

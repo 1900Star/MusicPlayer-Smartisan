@@ -1,9 +1,9 @@
 package com.yibao.music.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +12,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yibao.music.R;
+import com.yibao.music.activity.MusicActivity;
 import com.yibao.music.adapter.AlbumAdapter;
+import com.yibao.music.adapter.AlbumCategoryPagerAdapter;
 import com.yibao.music.adapter.DetailsListAdapter;
-import com.yibao.music.base.BaseFragment;
+import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicView;
@@ -31,20 +33,21 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
  * @项目名： ArtisanMusic
  * @包名： com.yibao.music.album
- * @文件名: AlbumFragment
+ * @文件名: AlbumMusicFragment
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/8 20:01
  * @描述： {TODO}
  */
 
-public class AlbumFragment extends BaseFragment {
+public class AlbumMusicFragment extends BaseMusicFragment {
     @BindView(R.id.iv_album_category_random_paly)
     ImageView mIvAlbumCategoryRandomPaly;
     @BindView(R.id.iv_album_category_list)
@@ -61,6 +64,9 @@ public class AlbumFragment extends BaseFragment {
     LinearLayout mAlbumCategoryTileLl;
     @BindView(R.id.iv_album_category_paly)
     ImageView mIvAlbumCategoryPaly;
+
+    @BindView(R.id.view_pager_album)
+    ViewPager mViewPager;
     @BindView(R.id.album_music_view)
     MusicView mAlbumMusicView;
     @BindView(R.id.details_view)
@@ -75,25 +81,29 @@ public class AlbumFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.album_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
-        initData(Constants.NUMBER_ZOER, true, Constants.NUMBER_THRRE);
+        initData();
         return view;
     }
 
 
-    /**
-     * 加载列表
-     *
-     * @param adapterShowType       普通视图显示  和 GridView视图显示  ( 3 列 )
-     * @param isShowSlideBar        是否显示SlideBar
-     * @param adapterAndManagerType RecyclerView的Manager ，3 == LinearLayoutManager
-     *                              4 == GridLayoutManager
-     */
-    private void initData(int adapterShowType, boolean isShowSlideBar, int adapterAndManagerType) {
-        AlbumAdapter adapter = new AlbumAdapter(mActivity, mAlbumList, adapterShowType);
-        mAlbumMusicView.setAdapter(mActivity, adapterAndManagerType, isShowSlideBar, adapter);
-        adapter.setItemListener(AlbumFragment.this::openDetailsView);
+    private void initData() {
+        AlbumCategoryPagerAdapter pagerAdapter = new AlbumCategoryPagerAdapter(getChildFragmentManager());
+        mViewPager.setAdapter(pagerAdapter);
+        mViewPager.addOnPageChangeListener(new com.yibao.music.artisanlist.MusicPagerListener() {
+            @Override
+            public void onPageSelected(int position) {
+                switchCategory(position);
+            }
+        });
+        initRxbusData();
     }
 
+    private void initRxbusData() {
+        mDisposable.add(mBus.toObserverable(AlbumInfo.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::openDetailsView));
+    }
 
     @OnClick({R.id.iv_album_category_random_paly,
             R.id.album_category_list_ll, R.id.album_category_tile_ll, R.id.iv_album_category_paly})
@@ -105,11 +115,9 @@ public class AlbumFragment extends BaseFragment {
                 break;
             case R.id.album_category_list_ll:
                 switchCategory(Constants.NUMBER_ZOER);
-                initData(Constants.NUMBER_ZOER, true, Constants.NUMBER_THRRE);
                 break;
             case R.id.album_category_tile_ll:
                 switchCategory(Constants.NUMBER_ONE);
-                initData(Constants.NUMBER_ONE, false, Constants.NUMBER_FOUR);
                 break;
             default:
                 break;
@@ -169,6 +177,7 @@ public class AlbumFragment extends BaseFragment {
 
 
     private void switchCategory(int showType) {
+        mViewPager.setCurrentItem(showType,false);
         if (showType == Constants.NUMBER_ZOER) {
 
             mAlbumCategoryListLl.setBackgroundResource(R.drawable.btn_category_songname_down_selector);
@@ -198,8 +207,8 @@ public class AlbumFragment extends BaseFragment {
 
     }
 
-    public static AlbumFragment newInstance() {
-        return new AlbumFragment();
+    public static AlbumMusicFragment newInstance() {
+        return new AlbumMusicFragment();
     }
 
 

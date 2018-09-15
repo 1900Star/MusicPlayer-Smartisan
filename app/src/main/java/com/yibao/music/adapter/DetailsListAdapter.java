@@ -1,6 +1,7 @@
 package com.yibao.music.adapter;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -41,6 +42,10 @@ public class DetailsListAdapter extends BaseRvAdapter<MusicBean> {
         this.mDataFlag = dataFlag;
     }
 
+    public void setDataFlag(int flag) {
+        mDataFlag = flag;
+    }
+
     @Override
     protected String getLastItemDes() {
         return " 首歌";
@@ -48,7 +53,6 @@ public class DetailsListAdapter extends BaseRvAdapter<MusicBean> {
 
     @Override
     protected void bindView(RecyclerView.ViewHolder holder, MusicBean info) {
-        String queryFlag = mDataFlag == Constants.NUMBER_ONE ? info.getArtist() : info.getAlbum();
         if (holder instanceof DetailsHolder) {
             DetailsHolder detailsHolder = (DetailsHolder) holder;
             detailsHolder.mTvDetailsSongName.setText(info.getTitle());
@@ -58,13 +62,29 @@ public class DetailsListAdapter extends BaseRvAdapter<MusicBean> {
                 if (mContext instanceof OnMusicItemClickListener) {
                     SharePrefrencesUtil.setMusicDataListFlag(mContext, Constants.NUMBER_TEN);
 
-                    ((OnMusicItemClickListener) mContext).startMusicServiceFlag(detailsHolder.getAdapterPosition(), mDataFlag, queryFlag);
+                    ((OnMusicItemClickListener) mContext).startMusicServiceFlag(detailsHolder.getAdapterPosition(), mDataFlag, getQueryFlag(info));
+                }
+                if (mContext instanceof OnMusicItemClickListener) {
+                    ((OnMusicItemClickListener) mContext).startMusicServiceFlag(detailsHolder.getAdapterPosition(), mDataFlag, getQueryFlag(info));
                 }
 
             });
 
         }
 
+    }
+
+    @Nullable
+    private String getQueryFlag(MusicBean info) {
+        String queryFlag = null;
+        if (mDataFlag == Constants.NUMBER_ONE) {
+            queryFlag = info.getArtist();
+        } else if (mDataFlag == Constants.NUMBER_TWO) {
+            queryFlag = info.getAlbum();
+        } else if (mDataFlag == Constants.NUMBER_THRRE) {
+            queryFlag = info.getTitle();
+        }
+        return queryFlag;
     }
 
 

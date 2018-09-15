@@ -1,4 +1,4 @@
-package com.yibao.music.model.song;
+package com.yibao.music.model;
 
 /**
  * @项目名： ArtisanMusic

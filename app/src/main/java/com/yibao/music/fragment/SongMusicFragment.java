@@ -11,17 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yibao.music.R;
-import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.adapter.SongCategoryPagerAdapter;
 import com.yibao.music.artisanlist.MusicPagerListener;
-import com.yibao.music.base.BaseFragment;
-import com.yibao.music.model.MusicBean;
+import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,14 +25,14 @@ import butterknife.OnClick;
 /**
  * @项目名： ArtisanMusic
  * @包名： com.yibao.music.artisanlist
- * @文件名: SongFragment
+ * @文件名: SongMusicFragment
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/4 21:45
  * @描述： {显示当前音乐列表}
  */
 
-public class SongFragment extends BaseFragment {
+public class SongMusicFragment extends BaseMusicFragment {
     @BindView(R.id.iv_music_category_paly)
     ImageView mIvMusicCategoryPaly;
     @BindView(R.id.tv_music_category_songname)
@@ -57,16 +52,11 @@ public class SongFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.song_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         initData();
-        initListener();
-
         return view;
     }
 
+
     private void initData() {
-
-    }
-
-    private void initListener() {
         SongCategoryPagerAdapter adapter = new SongCategoryPagerAdapter(getChildFragmentManager());
         mViewPager.setAdapter(adapter);
         mViewPager.addOnPageChangeListener(new MusicPagerListener() {
@@ -112,7 +102,6 @@ public class SongFragment extends BaseFragment {
                 setAllCategoryNotNormal(Constants.NUMBER_ONE);
                 mMusicCategorySongName.setTextColor(ColorUtil.wihtle);
                 mMusicCategorySongName.setBackgroundResource(R.drawable.btn_category_songname_down_selector);
-//                initData(true, Constants.NUMBER_ZOER);
                 break;
             case 1:
                 setAllCategoryNotNormal(Constants.NUMBER_TWO);
@@ -128,7 +117,6 @@ public class SongFragment extends BaseFragment {
                 setAllCategoryNotNormal(Constants.NUMBER_FOUR);
                 mMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_down_selector);
                 mMusicCategoryAddtime.setTextColor(ColorUtil.wihtle);
-//                initData(false, Constants.NUMBER_ONE);
                 break;
             default:
                 break;
@@ -151,9 +139,9 @@ public class SongFragment extends BaseFragment {
     }
 
 
-    public static SongFragment newInstance() {
+    public static SongMusicFragment newInstance() {
 
-        return new SongFragment();
+        return new SongMusicFragment();
     }
 
 }

@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yibao.music.R;
-import com.yibao.music.base.BaseFragment;
+import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.SharePrefrencesUtil;
@@ -129,11 +129,11 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
      * 判断mDetailsMap中是否包含当前的Fragment页面,如果有，就说明有详情页面打开。
      *
      * @param className      展示详情的Fragment
-     * @param detailsViewKey 这个Key必须为 8 (PlayListFragment)、9 (ArtistanListFragment)、10 (AlbumFragment)
+     * @param detailsViewKey 这个Key必须为 8 (PlayListMusicFragment)、9 (ArtistanListMusicFragment)、10 (AlbumMusicFragment)
      *                       这三个整数，这样展示详情的Fragment就能自己处理返回事件。
      */
     private void isContainDetailFragment(String className, int detailsViewKey) {
-        if (BaseFragment.mDetailsViewMap.containsKey(className)) {
+        if (BaseMusicFragment.mDetailsViewMap.containsKey(className)) {
             SharePrefrencesUtil.setDetailsFlag(getContext(), detailsViewKey);
         }
     }

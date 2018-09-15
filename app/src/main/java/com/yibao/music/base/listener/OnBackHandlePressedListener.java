@@ -1,6 +1,6 @@
 package com.yibao.music.base.listener;
 
-import com.yibao.music.base.BaseFragment;
+import com.yibao.music.base.BaseMusicFragment;
 
 /**
  * @项目名： ArtisanMusic
@@ -13,5 +13,5 @@ import com.yibao.music.base.BaseFragment;
  */
 
 public interface OnBackHandlePressedListener {
-    void putFragment(BaseFragment fragment);
+    void putFragment(BaseMusicFragment fragment);
 }

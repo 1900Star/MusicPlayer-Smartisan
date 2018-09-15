@@ -38,6 +38,7 @@ import com.yibao.music.view.music.SmartisanControlBar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -95,7 +96,7 @@ public class MusicActivity
         mBind = ButterKnife.bind(this);
         initView();
         initData();
-        initRxBusData();
+//        initRxBusData();
         initMusicConfig();
         initListener();
     }
@@ -103,6 +104,8 @@ public class MusicActivity
 
     private void initView() {
         Toolbar toolbar = findViewById(R.id.toolbar_music);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         toolbar.setNavigationIcon(R.drawable.music_titlebar_back_selector);
         toolbar.setNavigationOnClickListener(v -> MusicActivity.this.onBackPressed());
 
@@ -195,7 +198,7 @@ public class MusicActivity
                 ToastUtil.showNoMusic(MusicActivity.this);
             }
         });
-        openMusicPlayDialogFag();
+//        openMusicPlayDialogFag();
         mTvMusicToolbarTitle.setOnClickListener(view -> switchMusicControlBar());
         mQqControlBar.setOnPagerSelecteListener(this::startMusicService);
     }
@@ -284,6 +287,8 @@ public class MusicActivity
 
     /**
      * 在详情页面播放音乐回调
+     * <p>
+     * sortFlag        列表的排序方式
      *
      * @param position  播放位置
      * @param dataFlag  数据列表的标识
@@ -316,7 +321,7 @@ public class MusicActivity
         readyMusic();
     }
 
-
+    // 防止快速点击
     private void openMusicPlayDialogFag() {
         mCompositeDisposable.add(RxView.clicks(mSmartisanControlBar)
                 .throttleFirst(1, TimeUnit.SECONDS)
@@ -513,8 +518,8 @@ public class MusicActivity
         switch (item.getItemId()) {
             case R.id.action_titlebar_search:
                 LogUtil.d("==================search");
-//                startActivity(new Intent(this, SearchActivity.class));
-
+                startActivity(new Intent(this, SearchActivity.class));
+                overridePendingTransition(R.anim.dialog_push_in, 0);
 //                setQqPagerLyric();
                 break;
             default:
@@ -545,7 +550,6 @@ public class MusicActivity
     protected void onPause() {
         super.onPause();
         mSmartisanControlBar.animatorOnPause();
-
     }
 
     @Override
@@ -559,6 +563,8 @@ public class MusicActivity
                 setQqPagerLyric();
             }
         }
+        initRxBusData();
+        openMusicPlayDialogFag();
     }
 
     @Override

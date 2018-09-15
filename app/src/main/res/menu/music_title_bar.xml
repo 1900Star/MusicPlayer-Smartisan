@@ -6,8 +6,7 @@
     <item
         android:id="@+id/action_titlebar_search"
         android:icon="@drawable/music_title_bar_search_selector"
-        android:orderInCategory="100"
         android:title="@string/action_search"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
 </menu>

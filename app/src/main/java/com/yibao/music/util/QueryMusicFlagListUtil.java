@@ -1,7 +1,9 @@
 package com.yibao.music.util;
 
+import com.yibao.music.MusicApplication;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
+import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 
 import java.util.List;
 
@@ -16,7 +18,7 @@ public class QueryMusicFlagListUtil {
 
 
     public static List<MusicBean> getMusicDataList(MusicBeanDao musicBeanDao, MusicBean musicBean, int sortListFlag, int dataFlag, String queryFlag) {
-        // 按歌曲名
+        // 按歌ABC
         if (sortListFlag == Constants.NUMBER_ONE) {
             return MusicListUtil.sortMusicAbc(musicBeanDao.queryBuilder().list());
             // 按评分
@@ -31,8 +33,9 @@ public class QueryMusicFlagListUtil {
             // 收藏列表
         } else if (sortListFlag == Constants.NUMBER_EIGHT) {
             return MusicListUtil.sortMusicAddTime(musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list(), Constants.NUMBER_TWO);
-            // 艺术家、l
+            // 10表示按条件查询
         } else if (sortListFlag == Constants.NUMBER_TEN) {
+
             // 按艺术家查询列表
             if (dataFlag == Constants.NUMBER_ONE) {
                 musicBean.setArtist(queryFlag);
@@ -41,6 +44,10 @@ public class QueryMusicFlagListUtil {
             } else if (dataFlag == Constants.NUMBER_TWO) {
                 musicBean.setAlbum(queryFlag);
                 return musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(musicBean.getAlbum())).build().list();
+                // 按歌曲名查询
+            } else if (dataFlag == Constants.NUMBER_THRRE) {
+                musicBean.setTitle(queryFlag);
+                return musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Title.eq(musicBean.getTitle())).build().list();
             }
 
         }

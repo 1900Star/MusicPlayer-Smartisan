@@ -9,6 +9,7 @@ import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicInfo;
+import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 
 import java.util.ArrayList;
@@ -150,12 +151,45 @@ public class MusicListUtil {
         return m1.hashCode() - m2.hashCode();
     }
 
+    public static List<SearchHistoryBean> sortSearchHistory(List<SearchHistoryBean> musicList) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            musicList.sort(MusicListUtil::sortSearchTime);
+        } else {
+            Collections.sort(musicList, MusicListUtil::sortSearchTime);
+        }
+        return musicList;
+    }
+
+    private static int sortSearchTime(SearchHistoryBean m1, SearchHistoryBean m2) {
+        int value;
+        if (m1 == m2) {
+            return 0;
+        }
+        if (m1 == null) {
+            return -1;
+        }
+        if (m2 == null) {
+            return 1;
+        }
+        if (m1.equals(m2)) {
+            return 0;
+        }
+
+        value = Float.compare(StringUtil.stringToLong(m2.getSearchTime()), StringUtil.stringToLong(m1.getSearchTime()));
+        if (value != 0) {
+            return value;
+        }
+        // https://stackoverflow.com/questions/28004269/java-collections-sort-comparison-method-violates-its-general-contract#
+        // Warning, this line is not fool proof as unequal objects can have identical hash codes.
+        return m1.hashCode() - m2.hashCode();
+    }
+
     /**
      * 收藏列表，按添加时间排序
      *
      * @param musicList c
      */
-    public static List<MusicInfo> sortNewListAddTime(List<MusicInfo> musicList) {
+    public static List<MusicInfo> sortFavoriteTime(List<MusicInfo> musicList) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             musicList.sort(MusicListUtil::sortNewList);
         } else {

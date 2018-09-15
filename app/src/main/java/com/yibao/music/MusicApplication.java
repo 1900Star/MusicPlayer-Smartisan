@@ -8,6 +8,7 @@ import com.yibao.music.model.greendao.DaoMaster;
 import com.yibao.music.model.greendao.DaoSession;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.MusicInfoDao;
+import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.CrashHandler;
 import com.yibao.music.util.RxBus;
 
@@ -74,6 +75,10 @@ public class MusicApplication
 
     public MusicInfoDao getMusicInfoDao() {
         return mDaoSession.getMusicInfoDao();
+    }
+
+    public SearchHistoryBeanDao getSearchDao() {
+        return mDaoSession.getSearchHistoryBeanDao();
     }
 
     public RxBus bus() {

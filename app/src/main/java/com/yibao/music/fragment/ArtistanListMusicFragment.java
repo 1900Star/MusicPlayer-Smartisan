@@ -10,14 +10,12 @@ import android.view.ViewGroup;
 import com.yibao.music.R;
 import com.yibao.music.adapter.ArtistAdapter;
 import com.yibao.music.adapter.DetailsListAdapter;
-import com.yibao.music.base.BaseFragment;
+import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.UpdataToolbaTitle;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.view.music.DetailsView;
@@ -27,20 +25,19 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 
 /**
  * @项目名： ArtisanMusic
  * @包名： com.yibao.music.artisanlist
- * @文件名: ArtistanListFragment
+ * @文件名: ArtistanListMusicFragment
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/4 23:49
  * @描述： {TODO}
  */
 
-public class ArtistanListFragment extends BaseFragment {
+public class ArtistanListMusicFragment extends BaseMusicFragment {
 
     @BindView(R.id.artist_music_view)
     MusicView mMusicView;
@@ -48,7 +45,13 @@ public class ArtistanListFragment extends BaseFragment {
     DetailsView mDetailsView;
     private ArtistAdapter mAdapter;
     private String mAlbumName;
+    private List<ArtistInfo> mArtistList;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mArtistList = MusicListUtil.getArtistList(mSongList);
+    }
 
     @Nullable
     @Override
@@ -62,7 +65,7 @@ public class ArtistanListFragment extends BaseFragment {
     }
 
     private void initListener() {
-        mAdapter.setItemListener(ArtistanListFragment.this::openDetailsView);
+        mAdapter.setItemListener(ArtistanListMusicFragment.this::openDetailsView);
     }
 
 
@@ -88,17 +91,18 @@ public class ArtistanListFragment extends BaseFragment {
             }
             if (mContext instanceof UpdataTitleListener) {
                 mAlbumName = bean.getAlbumName();
-                ((UpdataTitleListener) mContext).updataTitle(mAlbumName,isShowDetailsView);
+                ((UpdataTitleListener) mContext).updataTitle(mAlbumName, isShowDetailsView);
             }
         }
         isShowDetailsView = !isShowDetailsView;
     }
+
     @Override
     public void onResume() {
         super.onResume();
         if (isShowDetailsView) {
             if (mContext instanceof UpdataTitleListener) {
-                ((UpdataTitleListener) mContext).updataTitle(mAlbumName,isShowDetailsView);
+                ((UpdataTitleListener) mContext).updataTitle(mAlbumName, isShowDetailsView);
             }
         }
 
@@ -118,7 +122,7 @@ public class ArtistanListFragment extends BaseFragment {
     }
 
 
-    public static ArtistanListFragment newInstance() {
-        return new ArtistanListFragment();
+    public static ArtistanListMusicFragment newInstance() {
+        return new ArtistanListMusicFragment();
     }
 }

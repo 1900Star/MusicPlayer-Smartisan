@@ -24,10 +24,10 @@
     <string name="childe_view_not">SwipeItemLayout的子视图不符合规定</string>
 
     <string name="action_search">搜索</string>
-    <string name="musicAddTime">添加时间</string>
-    <string name="musicPlayFrequency">播放次数</string>
-    <string name="musicScore">评分</string>
-    <string name="songName">歌曲名</string>
+    <string name="music_add_time">添加时间</string>
+    <string name="music_play_frequency">播放次数</string>
+    <string name="music_score">评分</string>
+    <string name="song_name">歌曲名</string>
     <string name="play_list">播放列表</string>
     <string name="music_artisan">艺术家</string>
     <string name="music_song">歌曲</string>
@@ -43,7 +43,10 @@
     <string name="continues">继续</string>
     <string name="sure">确定</string>
     <string name="about">关于</string>
-    <string name="backupsFavoriteSong">备份收藏歌曲</string>
-    <string name="recoveryFavoriteSong">恢复收藏歌曲</string>
+    <string name="backups_favorite_song">备份收藏歌曲</string>
+    <string name="recovery_favorite_song">恢复收藏歌曲</string>
+    <string name="search_history">搜索历史</string>
+    <string name="clear_edit">清空输入框</string>
+    <string name="not_search_result">无搜索结果</string>
 
 </resources>

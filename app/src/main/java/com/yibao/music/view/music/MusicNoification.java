@@ -49,13 +49,13 @@ public class MusicNoification {
         remoteView.setImageViewResource(R.id.notify_prev, R.mipmap.notifycation_prev);
         remoteView.setImageViewResource(R.id.notify_next, R.mipmap.notifycation_next);
             remoteView.setImageViewResource(R.id.notify_play, R.mipmap.notifycation_play);
-        if (MusicActivity.getAudioBinder().isPlaying()) {
-            LogUtil.d("===  play =");
-        } else {
-            LogUtil.d("===  pause =");
-            remoteView.setImageViewResource(R.id.notify_play, R.mipmap.notifycation_pause);
-
-        }
+//        if (MusicActivity.getAudioBinder().isPlaying()) {
+//            LogUtil.d("===  play =");
+//        } else {
+//            LogUtil.d("===  pause =");
+//
+//            remoteView.setImageViewResource(R.id.notify_play, R.mipmap.notifycation_pause);
+//        }
         remoteViewClickListenr(context, remoteView);
 
     }
