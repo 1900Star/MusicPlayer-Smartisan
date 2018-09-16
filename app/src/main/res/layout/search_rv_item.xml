@@ -9,18 +9,18 @@
     android:clickable="true"
     android:focusable="true"
     android:gravity="center"
-    android:minWidth="48dp"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/grid_tv"
         android:layout_width="wrap_content"
-        android:layout_height="24dp"
+        android:layout_height="22dp"
         android:layout_margin="5dp"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
         android:maxLines="1"
+        android:minWidth="42dp"
         android:textColor="@color/music_activity_title_selector"
         android:textSize="12sp" />
 </LinearLayout>

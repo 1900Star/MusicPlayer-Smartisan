@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -32,6 +33,9 @@ import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.MusicDaoUtil;
 import com.yibao.music.util.MusicListUtil;
+import com.zhy.view.flowlayout.FlowLayout;
+import com.zhy.view.flowlayout.TagAdapter;
+import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.util.List;
 
@@ -50,19 +54,20 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     ImageView mIvSearchClear;
     @BindView(R.id.iv_edit_clear)
     ImageView mIvEditClear;
-    @BindView(R.id.grid_search_item)
-    GridView mGridSearchItem;
+    //    @BindView(R.id.grid_search_item)
+//    GridView mGridSearchItem;
     @BindView(R.id.edit_search)
     EditText mEditSearch;
-    @BindView(R.id.rv_search_item)
-    RecyclerView mRecyclerSearchItem;
+    //    @BindView(R.id.rv_search_item)
+//    RecyclerView mRecyclerSearchItem;
     @BindView(R.id.tv_no_search_result)
     TextView mTvNoSearchResult;
     @BindView(R.id.ll_query_view)
     LinearLayout mLinearDetail;
     @BindView(R.id.ll_history)
     LinearLayout mLayoutHistory;
-
+    @BindView(R.id.flowlayout)
+    TagFlowLayout mTagFlowLayout;
     private SearchHistoryAdapter mHistoryAdapter;
     private DetailsListAdapter mSearchDetailAdapter;
     private List<SearchHistoryBean> mSearchList;
@@ -88,12 +93,24 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
             mSearchRvAdapter = new SearchRvAdapter(mSearchList);
             StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(4,
                     StaggeredGridLayoutManager.VERTICAL);
-            mRecyclerSearchItem.setLayoutManager(manager);
-            mRecyclerSearchItem.setAdapter(mSearchRvAdapter);
+//            mRecyclerSearchItem.setLayoutManager(manager);
+//            mRecyclerSearchItem.setAdapter(mSearchRvAdapter);
         }
-        mSearchDetailAdapter = new DetailsListAdapter(SearchActivity.this, null, Constants.NUMBER_ONE);
-        RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(1, mSearchDetailAdapter);
-        mLinearDetail.addView(recyclerView);
+//        mSearchDetailAdapter = new DetailsListAdapter(SearchActivity.this, null, Constants.NUMBER_ONE);
+//        RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(1, mSearchDetailAdapter);
+//        mLinearDetail.addView(recyclerView);
+        mTagFlowLayout.setAdapter(new TagAdapter<SearchHistoryBean>(mSearchList) {
+            @Override
+            public View getView(FlowLayout parent, int position, SearchHistoryBean bean) {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.search_rv_item, mTagFlowLayout, false);
+                TextView tv = view.findViewById(R.id.grid_tv);
+                tv.setText(bean.getSearchContent());
+                return view;
+            }
+        });
+
+
     }
 
     private void initListener() {
@@ -112,18 +129,24 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
                 String searchContent = s.toString();
                 if (!"".equals(searchContent) && searchContent.length() > 0) {
                     searchMusic(searchContent);
+                    mIvEditClear.setVisibility(View.VISIBLE);
                 } else {
                     historyViewVisibility();
                     mLinearDetail.setVisibility(View.GONE);
                     mTvNoSearchResult.setVisibility(View.GONE);
+                    mIvEditClear.setVisibility(View.GONE);
                 }
             }
         });
-        mGridSearchItem.setOnItemClickListener((parent, view, position, id) -> {
-            String searchContent = mSearchList.get(position).getSearchContent();
-            initSearch(searchContent);
+        mTagFlowLayout.setOnTagClickListener((view, position, parent) -> {
+            initSearch(mSearchList.get(position).getSearchContent());
+            return true;
         });
-        mSearchRvAdapter.setItemListener(bean -> initSearch(bean.getSearchContent()));
+//        mGridSearchItem.setOnItemClickListener((parent, view, position, id) -> {
+//            String searchContent = mSearchList.get(position).getSearchContent();
+//            initSearch(searchContent);
+//        });
+//        mSearchRvAdapter.setItemListener(bean -> initSearch(bean.getSearchContent()));
     }
 
     private void initSearch(String searchContent) {
@@ -135,6 +158,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     private void historyViewVisibility() {
         List<SearchHistoryBean> historyList = MusicListUtil.sortSearchHistory(mSearchDao.queryBuilder().list());
         if (historyList != null && historyList.size() > 0) {
+            mSearchRvAdapter.setNewData(historyList);
             mLayoutHistory.setVisibility(View.VISIBLE);
             mTvNoSearchResult.setVisibility(View.GONE);
         }

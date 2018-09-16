@@ -68,9 +68,11 @@ android {
         testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
         debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
         releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
-        //RxBinding
+        // RxBinding
         implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
         implementation 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.0.0'
         implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
+        // zhy FlowLayoutView
+        implementation 'com.hyman:flowlayout-lib:1.1.2'
     }
 }
