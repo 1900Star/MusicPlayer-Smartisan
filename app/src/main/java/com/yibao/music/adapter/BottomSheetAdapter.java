@@ -31,11 +31,9 @@ import butterknife.ButterKnife;
 public class BottomSheetAdapter
         extends BaseRvAdapter<MusicBean> {
 
-    private Context mContext;
 
-    public BottomSheetAdapter(Context context, List<MusicBean> list) {
+    public BottomSheetAdapter(List<MusicBean> list) {
         super(list);
-        this.mContext = context;
 
     }
 

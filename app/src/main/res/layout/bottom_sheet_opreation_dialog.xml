@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/seekBarN"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:background="@drawable/titlebar_playing_bg">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/select_operational"
+            android:textColor="@color/text_bottom_dialog_selector"
+            android:textSize="@dimen/bigLyrics"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/bottom_operational_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/cancel_btn_selector"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/textDes"
+            android:textSize="@dimen/about_content"
+            android:textStyle="bold"
+            tools:ignore="RtlHardcoded" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_list_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="0.2dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+    </LinearLayout>
+</LinearLayout>

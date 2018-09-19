@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.yibao.music.R;
 import com.yibao.music.adapter.ArtistAdapter;
-import com.yibao.music.adapter.DetailsListAdapter;
+import com.yibao.music.adapter.SearchDetailsAdapter;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.model.ArtistInfo;
@@ -83,7 +83,7 @@ public class ArtistanListMusicFragment extends BaseMusicFragment {
             List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(bean.getArtist())).build().list();
             // DetailsView播放音乐需要的参数
             mDetailsView.setDataFlag(mFragmentManager, list.size(), bean.getArtist(), Constants.NUMBER_ONE);
-            DetailsListAdapter adapter = new DetailsListAdapter(getActivity(), list, Constants.NUMBER_ONE);
+            SearchDetailsAdapter adapter = new SearchDetailsAdapter(getActivity(), list, Constants.NUMBER_ONE);
             mDetailsView.setAdapter(getActivity(), Constants.NUMBER_ONE, bean, adapter);
             SharePrefrencesUtil.setDetailsFlag(mActivity, Constants.NUMBER_NINE);
             if (!mDetailsViewMap.containsKey(mClassName)) {

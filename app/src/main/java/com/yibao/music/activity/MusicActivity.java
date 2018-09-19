@@ -302,8 +302,8 @@ public class MusicActivity
         intent.putExtra("dataFlag", dataFlag);
         intent.putExtra("queryFlag", queryFlag);
         intent.putExtra("position", mCurrentPosition);
-        AudioServiceConnection serviceConnection = new AudioServiceConnection();
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        mConnection = new AudioServiceConnection();
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         startService(intent);
 
     }

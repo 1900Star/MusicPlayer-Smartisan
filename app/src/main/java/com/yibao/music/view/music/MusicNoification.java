@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import com.yibao.music.R;
@@ -21,7 +22,6 @@ import com.yibao.music.util.StringUtil;
  * @author Stran
  */
 public class MusicNoification {
-
     public static Notification getNotification(Context context, RemoteViews remoteView, MusicBean info) {
         initRemotViews(context, remoteView, info);
 

@@ -71,6 +71,9 @@ public class AudioPlayService
     private MusicBean mMusicBean;
     private RxBus mBus;
 
+    public void setData(List<MusicBean> list) {
+        mMusicDataList = list;
+    }
     @Override
     public IBinder onBind(Intent intent) {
         return mAudioBinder;

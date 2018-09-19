@@ -53,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLength="18"
+                android:layout_marginTop="2dp"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/aboutSign"

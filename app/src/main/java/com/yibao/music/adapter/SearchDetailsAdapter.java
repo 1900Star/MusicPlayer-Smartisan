@@ -32,11 +32,11 @@ import butterknife.ButterKnife;
  * @描述： {TODO}
  */
 
-public class DetailsListAdapter extends BaseRvAdapter<MusicBean> {
+public class SearchDetailsAdapter extends BaseRvAdapter<MusicBean> {
     private Context mContext;
     private int mDataFlag;
 
-    public DetailsListAdapter(Context context, List<MusicBean> list, int dataFlag) {
+    public SearchDetailsAdapter(Context context, List<MusicBean> list, int dataFlag) {
         super(list);
         this.mContext = context;
         this.mDataFlag = dataFlag;

@@ -1,9 +1,11 @@
 package com.yibao.music.base;
 
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +17,8 @@ import com.yibao.music.R;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
+import com.yibao.music.service.AudioPlayService;
+import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.StringUtil;
@@ -57,13 +61,19 @@ public abstract class BaseActivity extends AppCompatActivity {
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mSearchDao = MusicApplication.getIntstance().getSearchDao();
         registerHeadsetReceiver();
+        mCompositeDisposable = new CompositeDisposable();
+//        startMusicServer();
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mCompositeDisposable = new CompositeDisposable();
+    private void startMusicServer() {
+        startService(new Intent(this, AudioPlayService.class));
+    }
+
+    //绑定服务
+    public void bindService(ServiceConnection connection) {
+        Intent intent = new Intent(this, AudioPlayService.class);
+        bindService(intent, connection, Service.BIND_AUTO_CREATE);
     }
 
     protected void checkCurrentSongIsFavorite(MusicBean currentMusicBean, QqControlBar qqControlBar, SmartisanControlBar smartisanControlBar) {
@@ -142,11 +152,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             mDisposableProgresse.dispose();
             mDisposableProgresse = null;
         }
-        if (mCompositeDisposable != null) {
-            mCompositeDisposable.dispose();
-            mCompositeDisposable.clear();
-            mCompositeDisposable = null;
-        }
         disposableQqLyric();
     }
 
@@ -157,6 +162,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         unregisterReceiver(headsetReciver);
         if (mRxViewDisposable != null) {
             mRxViewDisposable.dispose();
+        }
+        if (mCompositeDisposable != null) {
+            mCompositeDisposable.dispose();
+            mCompositeDisposable.clear();
+            mCompositeDisposable = null;
         }
     }
 

@@ -10,13 +10,14 @@
         android:layout_width="60dp"
         android:layout_height="45dp"
         android:layout_gravity="center_vertical"
+        android:contentDescription="@null"
         android:src="@drawable/btn_playing_all_selector" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_gravity="center"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
         android:orientation="horizontal">
 
         <TextView
@@ -26,8 +27,8 @@
             android:layout_weight="1"
             android:background="@drawable/btn_category_songname_down_selector"
             android:gravity="center"
-            android:textColor="@color/colorWhite"
             android:text="@string/song_name"
+            android:textColor="@color/colorWhite"
 
             />
 

@@ -40,7 +40,6 @@ public class MusicApplication
     @Override
     public void onCreate() {
         super.onCreate();
-
         if (LeakCanary.isInAnalyzerProcess(this)) {
             return;
         }

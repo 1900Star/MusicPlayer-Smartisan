@@ -12,15 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yibao.music.R;
-import com.yibao.music.activity.MusicActivity;
-import com.yibao.music.adapter.AlbumAdapter;
 import com.yibao.music.adapter.AlbumCategoryPagerAdapter;
-import com.yibao.music.adapter.DetailsListAdapter;
+import com.yibao.music.adapter.SearchDetailsAdapter;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
@@ -130,7 +127,7 @@ public class AlbumMusicFragment extends BaseMusicFragment {
             List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(bean.getAlbumName())).build().list();
             // DetailsView播放音乐需要的参数
             mDetailsView.setDataFlag(mFragmentManager, list.size(), bean.getAlbumName(), Constants.NUMBER_TWO);
-            DetailsListAdapter adapter = new DetailsListAdapter(getActivity(), list, Constants.NUMBER_TWO);
+            SearchDetailsAdapter adapter = new SearchDetailsAdapter(getActivity(), list, Constants.NUMBER_TWO);
             mDetailsView.setAdapter(getActivity(), Constants.NUMBER_TWO, bean, adapter);
             SharePrefrencesUtil.setDetailsFlag(mActivity, Constants.NUMBER_TEN);
             if (!mDetailsViewMap.containsKey(mClassName)) {

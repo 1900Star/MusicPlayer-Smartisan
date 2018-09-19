@@ -57,4 +57,11 @@ public class FragmentFactory {
         return fragment;
     }
 
+    public static void clearMap() {
+        if (mTabFagArray != null) {
+            mTabFagArray.clear();
+            mTabFagArray = null;
+        }
+
+    }
 }

@@ -174,8 +174,9 @@ public class MusicListUtil {
         if (m1.equals(m2)) {
             return 0;
         }
-
-        value = Float.compare(StringUtil.stringToLong(m2.getSearchTime()), StringUtil.stringToLong(m1.getSearchTime()));
+        Long m1T = StringUtil.stringToLong(m1.getSearchTime());
+        Long m2T = StringUtil.stringToLong(m2.getSearchTime());
+        value = Float.compare(m2T, m1T);
         if (value != 0) {
             return value;
         }

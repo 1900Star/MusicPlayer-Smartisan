@@ -58,7 +58,7 @@ public class BottomPagerAdapter
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        BottomSheetAdapter adapter = new BottomSheetAdapter(mContext,mList.get(position));
+        BottomSheetAdapter adapter = new BottomSheetAdapter(mList.get(position));
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, adapter);
         container.addView(recyclerView);
         return recyclerView;

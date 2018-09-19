@@ -15,9 +15,11 @@ public class AudioServiceConnection
 {
 
 
+    private AudioPlayService.AudioBinder audioBinder;
+
     @Override
     public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-
+        audioBinder = (AudioPlayService.AudioBinder) iBinder;
     }
 
     @Override

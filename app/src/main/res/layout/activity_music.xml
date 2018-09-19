@@ -16,7 +16,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_music"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="48dp"
             android:background="@drawable/tabbar_bg"
             app:navigationIcon="@drawable/music_titlebar_back_selector">
 

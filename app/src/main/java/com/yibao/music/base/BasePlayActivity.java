@@ -59,17 +59,7 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
         super.onCreate(savedInstanceState);
         init();
         registerVolumeReceiver();
-
-
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        audioBinder = MusicActivity.getAudioBinder();
-
-    }
-
 
     @Override
     protected void onResume() {
@@ -107,6 +97,9 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
             mCompositeDisposable.clear();
             mCompositeDisposable.dispose();
             mCompositeDisposable = null;
+        }
+        if (audioBinder != null) {
+            audioBinder = null;
         }
     }
 

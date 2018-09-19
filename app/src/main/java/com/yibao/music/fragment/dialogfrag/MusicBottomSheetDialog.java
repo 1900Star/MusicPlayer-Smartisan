@@ -115,7 +115,7 @@ public class MusicBottomSheetDialog
             String sheetTitle = StringUtil.getBottomSheetTitle(musicBeanList.size());
             mBottomListTitleSize.setText(sheetTitle);
             List<MusicBean> addTime = MusicListUtil.sortMusicAddTime(musicBeanList, Constants.NUMBER_TWO);
-            mAdapter = new BottomSheetAdapter(mContext, addTime);
+            mAdapter = new BottomSheetAdapter(addTime);
             mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
             mBottomListContent.addView(mRecyclerView);
         }));
@@ -124,11 +124,15 @@ public class MusicBottomSheetDialog
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bean -> MusicBottomSheetDialog.this.playMusic(bean.getPosition())));
+        // 清空收藏列表
         mDisposable.add(mBus.toObserverable(AddAndDeleteListBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(bean -> {
                     if (bean.getOperationType() == Constants.NUMBER_THRRE) {
                         clearAllFavoriteMusic();
+                        if (mContext != null) {
+                            mContext = null;
+                        }
                     }
                 }));
 
@@ -160,7 +164,7 @@ public class MusicBottomSheetDialog
             case R.id.bottom_sheet_bar_clear:
                 if (mList != null && mList.size() > 0) {
                     MusicInfo musicInfo = new MusicInfo();
-                    // playstatus 在这里暂时用来做删除播放列表和收藏列表的标识，2 为播放列表 ，3 为 收藏列表。
+                    // playstatus 在这里暂时用来做删除播放列表和收藏列表的标识，2 为播放列表PlayActivity界面 ，3 为收藏列表MusicBottomDialog界面。
                     musicInfo.setPlayStatus(Constants.NUMBER_THRRE);
                     musicInfo.setTitle("收藏的所有");
                     DeletePlayListDialog.newInstance(musicInfo).show(((Activity) mContext).getFragmentManager(), "favoriteList");
@@ -188,7 +192,6 @@ public class MusicBottomSheetDialog
                         ((OnCheckFavoriteListener) mContext).updataFavoriteStatus();
                     }
                 }));
-
     }
 
     private void backTop() {

@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.yibao.music.R;
-import com.yibao.music.adapter.DetailsListAdapter;
+import com.yibao.music.adapter.SearchDetailsAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
@@ -81,7 +81,7 @@ public class DetailsView
      * @param bean     d
      * @param adapter  d
      */
-    public void setAdapter(Context context, int dataType, Object bean, DetailsListAdapter adapter) {
+    public void setAdapter(Context context, int dataType, Object bean, SearchDetailsAdapter adapter) {
         initData(dataType, bean);
         LinearLayoutManager manager = new LinearLayoutManager(context);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
