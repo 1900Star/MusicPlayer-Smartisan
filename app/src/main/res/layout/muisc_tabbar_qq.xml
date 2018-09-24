@@ -31,7 +31,6 @@
             android:maxLength="54"
             android:singleLine="true"
             android:textColor="@color/tabbarDownTv"
-            android:text="kjdlj8645ijkmlidkchyxzkd"
             android:textSize="@dimen/music_loating_name" />
     </FrameLayout>
 

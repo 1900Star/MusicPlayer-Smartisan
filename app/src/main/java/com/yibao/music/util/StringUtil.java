@@ -2,7 +2,10 @@ package com.yibao.music.util;
 
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
+import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.MediaStore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,13 +54,36 @@ public class StringUtil {
      * @param albulmId a
      * @return f
      */
-    public static Uri getAlbulm(Long albulmId) {
+    public static String getAlbulm(Long albulmId) {
 
         return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"),
-                albulmId);
+                albulmId).toString();
 
     }
 
+    //根据专辑 id 获得专辑图片保存路径,通知栏使用。
+    public static synchronized String getAlbumArtPath(Context context, String albumId) {
+
+        if (!StringUtil.isReal(albumId)) {
+            return null;
+        }
+
+        String[] projection = {MediaStore.Audio.Albums.ALBUM_ART};
+        String imagePath = null;
+        Uri uri = Uri.parse("content://media" + MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI.getPath() + "/" + albumId);
+
+        Cursor cur = context.getContentResolver().query(uri, projection, null, null, null);
+        if (cur == null) {
+            return null;
+        }
+
+        if (cur.getCount() > 0 && cur.getColumnCount() > 0) {
+            cur.moveToNext();
+            imagePath = cur.getString(0);
+        }
+        cur.close();
+        return imagePath;
+    }
 
     /**
      * 返回一个标准的时间格式   yyyy-MM-dd HH:mm:ss
@@ -70,7 +96,9 @@ public class StringUtil {
         Date date = new Date(time);
         return format.format(date);
 
-    }public static String getCurrentTime(Long l) {
+    }
+
+    public static String getCurrentTime(Long l) {
         SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
         Date date = new Date(l);
         return format.format(date);
@@ -89,4 +117,7 @@ public class StringUtil {
         return "收藏列表 ( " + size + " )";
     }
 
+    public static boolean isReal(String string) {
+        return string != null && string.length() > 0 && !"null".equals(string);
+    }
 }

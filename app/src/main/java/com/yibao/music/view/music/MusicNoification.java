@@ -27,7 +27,7 @@ public class MusicNoification {
 
 
         Notification.Builder builder = new Notification.Builder(context);
-        Notification notification = builder.setSmallIcon(R.mipmap.maki)
+        Notification notification = builder.setSmallIcon(R.drawable.noalbumcover_120)
                 .setOngoing(true)
                 .setAutoCancel(true)
                 .setContent(remoteView)
@@ -43,7 +43,7 @@ public class MusicNoification {
         remoteView.setTextViewText(R.id.notify_song_name, info.getTitle());
         remoteView.setTextViewText(R.id.notify_song_artist, info.getArtist());
         //通知栏的专辑图片
-        remoteView.setImageViewUri(R.id.notify_album, StringUtil.getAlbulm(info.getAlbumId()));
+//        remoteView.setImageViewUri(R.id.notify_album, StringUtil.getAlbulm(info.getAlbumId()));
         LogUtil.d("NotifyCation  ========= " + StringUtil.getAlbulm(info.getAlbumId()));
         remoteView.setImageViewResource(R.id.notify_close, R.mipmap.notifycation_close);
         remoteView.setImageViewResource(R.id.notify_prev, R.mipmap.notifycation_prev);

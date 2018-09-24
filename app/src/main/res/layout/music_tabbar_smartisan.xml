@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
+                android:maxLength="25"
                 android:singleLine="true"
                 android:textColor="@color/textDes"
                 android:textSize="@dimen/music_loating_title" />

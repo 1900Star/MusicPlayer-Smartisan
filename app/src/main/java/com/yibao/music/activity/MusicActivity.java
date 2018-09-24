@@ -33,6 +33,7 @@ import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.MainViewPager;
 import com.yibao.music.view.music.MusicNavigationBar;
+import com.yibao.music.view.music.PlayNotifyManager;
 import com.yibao.music.view.music.QqControlBar;
 import com.yibao.music.view.music.SmartisanControlBar;
 
@@ -89,6 +90,7 @@ public class MusicActivity
     private boolean mIsShowDetail;
     private String mDetailViewTitle;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,9 +98,9 @@ public class MusicActivity
         mBind = ButterKnife.bind(this);
         initView();
         initData();
-//        initRxBusData();
         initMusicConfig();
         initListener();
+        LogUtil.d("lsp", "============  二次启动");
     }
 
 
@@ -122,7 +124,6 @@ public class MusicActivity
         mMusicViewPager.setCurrentItem(Constants.NUMBER_TWO);
         mMusicViewPager.setOffscreenPageLimit(5);
     }
-
 
     private void initMusicConfig() {
         mMusicConfig = SharePrefrencesUtil.getMusicConfig(this, false);
@@ -151,10 +152,6 @@ public class MusicActivity
 
     private void initListener() {
         mMusicNavigationBar.setOnNavigationbarListener((currentSelecteFlag, titleResourceId) -> {
-//            if (mIsShowDetail) {
-//                mTvMusicToolbarTitle.setText(mDetailViewTitle);
-//            } else {
-//            }
             mTitleResourceId = titleResourceId;
             mTvMusicToolbarTitle.setText(titleResourceId);
 
@@ -167,12 +164,14 @@ public class MusicActivity
                         setSongfavoriteState(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
                         break;
                     case Constants.NUMBER_TWO:
+                        clearDisposableProgresse();
                         audioBinder.playPre();
                         break;
                     case Constants.NUMBER_THRRE:
                         switchPlayState();
                         break;
                     case Constants.NUMBER_FOUR:
+                        clearDisposableProgresse();
                         audioBinder.playNext();
                         break;
                     default:
@@ -198,7 +197,6 @@ public class MusicActivity
                 ToastUtil.showNoMusic(MusicActivity.this);
             }
         });
-//        openMusicPlayDialogFag();
         mTvMusicToolbarTitle.setOnClickListener(view -> switchMusicControlBar());
         mQqControlBar.setOnPagerSelecteListener(this::startMusicService);
     }
@@ -273,6 +271,7 @@ public class MusicActivity
      */
     @Override
     public void startMusicService(int position) {
+        clearDisposableProgresse();
         int spMusicFlag = getSpMusicFlag();
         if (spMusicFlag != Constants.NUMBER_TEN) {
             mCurrentPosition = position;
@@ -331,12 +330,7 @@ public class MusicActivity
 
     private void readyMusic() {
         if (mMusicConfig) {
-            Intent intent = new Intent(this, PlayActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("info", mCurrentMusicBean);
-            intent.putExtra("bundle", bundle);
-            startActivity(intent);
-            overridePendingTransition(R.anim.dialog_push_in, 0);
+            startPlayActivity(mCurrentMusicBean);
         } else {
             ToastUtil.showNoMusic(MusicActivity.this);
         }
@@ -363,6 +357,8 @@ public class MusicActivity
                     mSmartisanControlBar.initAnimation();
                     //更新歌曲的进度
                     MusicActivity.this.updataProgress();
+                    // 打开通知栏
+                    showNotifycation(mCurrentMusicBean, audioBinder.isPlaying());
 
                 }));
         /*
@@ -379,6 +375,7 @@ public class MusicActivity
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(MusicActivity.this::refreshBtnAndNotify));
+
         // 同步两个Bar上的数据
         mCompositeDisposable.add(mBus.toObserverable(QqBarUpdataBean.class)
                 .subscribeOn(Schedulers.io())
@@ -392,21 +389,18 @@ public class MusicActivity
     private void refreshBtnAndNotify(MusicStatusBean bean) {
         switch (bean.getType()) {
             case 0:
-                if (bean.isPlay()) {
-                    audioBinder.pause();
-                } else {
-                    audioBinder.start();
-                }
-                mSmartisanControlBar.setAnimaorState(bean.isPlay);
+                mSmartisanControlBar.animatorOnResume(!bean.isPlay);
                 updatePlayBtnStatus();
                 break;
             case 1:
-                startActivity(new Intent(this, MusicActivity.class));
                 break;
             case 2:
-                finish();
+                mSmartisanControlBar.animatorOnResume(bean.isPlay);
+                updatePlayBtnStatus();
+                audioBinder.pause();
+                mNotifyManager.hide();
+                isNotifyShow = false;
                 break;
-
             default:
                 break;
         }
@@ -429,7 +423,8 @@ public class MusicActivity
         String artistName = mCurrentMusicBean.getArtist();
         mSmartisanControlBar.setSingerName(artistName);
         //设置专辑
-        String albumUri = StringUtil.getAlbulm(mCurrentMusicBean.getAlbumId()).toString();
+        String albumUri = StringUtil.getAlbulm(mCurrentMusicBean.getAlbumId());
+        LogUtil.d("lsp", "======albumUri==========" + albumUri);
         mSmartisanControlBar.setAlbulmUrl(albumUri);
         mQqControlBar.setPagerData(mMusicItems);
         mQqControlBar.setPagerCurrentItem(mCurrentMusicBean.getCureetPosition());
@@ -499,8 +494,11 @@ public class MusicActivity
                 // 当前暂停  播放
                 audioBinder.start();
                 updataProgress();
+                if (!isNotifyShow) {
+                    showNotifycation(mCurrentMusicBean, audioBinder.isPlaying());
+                }
             }
-            mSmartisanControlBar.setAnimaorState(audioBinder.isPlaying());
+            mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
             //更新播放状态按钮
             updatePlayBtnStatus();
         }
@@ -517,10 +515,10 @@ public class MusicActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_titlebar_search:
-                LogUtil.d("==================search");
-                startActivity(new Intent(this, SearchActivity.class));
+                Intent intent = new Intent(this, SearchActivity.class);
+                intent.putExtra("musicBean", mCurrentMusicBean);
+                startActivity(intent);
                 overridePendingTransition(R.anim.dialog_push_in, 0);
-//                setQqPagerLyric();
                 break;
             default:
                 break;
@@ -558,6 +556,7 @@ public class MusicActivity
         if (audioBinder != null) {
             mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
             checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
+            updatePlayBtnStatus();
             updataProgress();
             if (isShowQqBar) {
                 setQqPagerLyric();
@@ -622,6 +621,7 @@ public class MusicActivity
             mPlayState = audioBinder.isPlaying() ? Constants.NUMBER_TWO : Constants.NUMBER_ONE;
             SharePrefrencesUtil.setMusicPlayState(this, mPlayState);
         }
+        unbindAudioService();
 //        stopService(new Intent(this, AudioPlayService.class));
     }
 

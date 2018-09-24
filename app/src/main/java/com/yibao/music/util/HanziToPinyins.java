@@ -66,16 +66,20 @@ public class HanziToPinyins {
                 result += input.charAt(i);
             }
         }
-        if (result.length() > Constants.NUMBER_FOUR) {
-            result = result.substring(4, result.length());
-        }
-        //如果首字母不在[a,z]和[A,Z]内则首字母改为‘#’
-        if (!(result.toUpperCase().charAt(0) >= Constants.LETTER_A && result.toUpperCase().charAt(0) <= Constants.LETTER_Z)) {
-            StringBuilder builder = new StringBuilder(result);
-            builder.replace(0, 1, "#");
-            result = builder.toString();
-        }
+        if (result != null) {
+            if (result.length() > Constants.NUMBER_FOUR) {
+                result = result.substring(4, result.length());
+            }
+
+            //如果首字母不在[a,z]和[A,Z]内则首字母改为‘#’
+            if (!(result.toUpperCase().charAt(0) >= Constants.LETTER_A && result.toUpperCase().charAt(0) <= Constants.LETTER_Z)) {
+                StringBuilder builder = new StringBuilder(result);
+                builder.replace(0, 1, "#");
+                result = builder.toString();
+            }
         return result.toUpperCase().charAt(0);
+        }
+        return 'a';
     }
 
 }

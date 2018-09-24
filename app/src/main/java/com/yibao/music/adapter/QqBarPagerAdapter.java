@@ -24,6 +24,7 @@ import com.yibao.music.util.StringUtil;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -107,8 +108,8 @@ public class QqBarPagerAdapter
 
         if (urlFlag) {
             urlFlag = true;
-            Uri albumUri = StringUtil.getAlbulm(musicInfo.getAlbumId());
-            ImageUitl.loadPlaceholder(mContext, albumUri.toString(), mAlbulm);
+            String albumUri = Objects.requireNonNull(StringUtil.getAlbulm(musicInfo.getAlbumId()));
+            ImageUitl.loadPlaceholder(mContext, albumUri, mAlbulm);
         }
 //        LogUtil.i("当前的歌词    " + StringUtil.getAlbulm(musicInfo.getAlbumId()));
         songName.setText(musicInfo.getTitle());

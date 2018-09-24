@@ -145,9 +145,21 @@
         android:id="@+id/ll_list_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_marginTop="3dp"
         android:background="@color/listBg"
+        android:layout_weight="1"
         android:orientation="vertical"
-        android:visibility="gone" />
+        android:visibility="invisible" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:background="@color/listBg" />
+
+    <com.yibao.music.view.music.SmartisanControlBar
+        android:id="@+id/smartisan_control_bar"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:visibility="invisible" />
 
 </LinearLayout>

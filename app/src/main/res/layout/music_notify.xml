@@ -18,7 +18,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_marginLeft="6dp"
+        android:layout_marginStart="6dp"
         android:orientation="vertical"
     >
         <RelativeLayout
@@ -51,10 +51,10 @@
                 android:id="@+id/notify_close"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_margin="5dp"
-                android:layout_marginRight="3dp"
+                android:layout_marginEnd="3dp"
                 android:contentDescription="@null"
                 android:src="@mipmap/icon_close"
             />

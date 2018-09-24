@@ -24,7 +24,7 @@
     <!--SeekBar-->
     <color name="seekBarP">#8e8e8f</color>
     <color name="seekBarN">#ccdcdbdb</color>
-
+    <color name="bg_hint">#a1a1a1</color>
     <!-- 透明 -->
 
 </resources>

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.adapter.SearchDetailsAdapter;
 import com.yibao.music.base.BaseActivity;
@@ -20,20 +21,29 @@ import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.TextChangedListener;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.MusicDaoUtil;
 import com.yibao.music.util.MusicListUtil;
+import com.yibao.music.util.StringUtil;
 import com.yibao.music.view.FlowLayoutView;
+import com.yibao.music.view.music.SmartisanControlBar;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author Stran
@@ -55,22 +65,82 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     LinearLayout mLayoutHistory;
     @BindView(R.id.flowlayout)
     FlowLayoutView mFlowLayoutView;
+
+    @BindView(R.id.smartisan_control_bar)
+    SmartisanControlBar mSmartisanControlBar;
     private SearchDetailsAdapter mSearchDetailAdapter;
     private List<SearchHistoryBean> mSearchList;
+    private MusicBean mMusicBean;
+    private AudioPlayService.AudioBinder audioBinder;
+    private ArrayList<MusicLyricBean> mLyricList;
+    private int lyricsFlag;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         mBind = ButterKnife.bind(this);
-        initView();
+        init();
         initData();
         initListener();
+    }
+
+    private void init() {
+        audioBinder = MusicActivity.getAudioBinder();
+        mMusicBean = getIntent().getParcelableExtra("musicBean");
+        mSmartisanControlBar.setPbolorAndPreBtnGone();
+        setMusicInfo(mMusicBean);
+        if (audioBinder != null) {
+            mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+            mSmartisanControlBar.initAnimation();
+        } else {
+            mSmartisanControlBar.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        rxBusData();
+        if (audioBinder != null) {
+            checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
+//            mSmartisanControlBar.animatorOnResume(!audioBinder.isPlaying());
+            mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+            LogUtil.d("111111111111111111111111111111111111111111");
+            updataProgress();
+            updataLyric();
+
+        }
+    }
+
+    private void rxBusData() {
+        // 更新歌曲的信息
+        mCompositeDisposable.add(mBus.toObserverable(MusicBean.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(musicItem -> {
+                    mMusicBean = musicItem;
+                    SearchActivity.this.setMusicInfo(musicItem);
+                    mSmartisanControlBar.initAnimation();
+                    if (audioBinder != null) {
+                        checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
+                        LogUtil.d("2222222222222222222222222222222222");
+                        mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+                        updataProgress();
+                        updataLyric();
+                    }
+                }));
 
     }
 
-    private void initView() {
-
+    private void setMusicInfo(MusicBean musicItem) {
+        if (musicItem != null) {
+            mSmartisanControlBar.setVisibility(View.VISIBLE);
+            mSmartisanControlBar.setSongName(musicItem.getTitle());
+            mSmartisanControlBar.setSingerName(musicItem.getArtist());
+            mSmartisanControlBar.setAlbulmUrl(StringUtil.getAlbulm(musicItem.getAlbumId()));
+            mLyricList = LyricsUtil.getLyricList(musicItem.getTitle(), musicItem.getArtist());
+        }
     }
 
 
@@ -105,6 +175,38 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
             }
         });
         mFlowLayoutView.setItemClickListener((position, bean) -> initSearch(bean.getSearchContent()));
+        mSmartisanControlBar.setClickListener(clickFlag -> {
+            switch (clickFlag) {
+                case Constants.NUMBER_ONE:
+                    setSongfavoriteState(mMusicBean, null, mSmartisanControlBar);
+                    break;
+                case Constants.NUMBER_TWO:
+                    audioBinder.playPre();
+                    break;
+                case Constants.NUMBER_THRRE:
+                    switchPlayState();
+                    break;
+                case Constants.NUMBER_FOUR:
+                    audioBinder.playNext();
+                    break;
+                default:
+                    break;
+            }
+        });
+        mCompositeDisposable.add(RxView.clicks(mSmartisanControlBar)
+                .throttleFirst(1, TimeUnit.SECONDS)
+                .subscribe(o -> startPlayActivity(mMusicBean)));
+
+    }
+
+    private void switchPlayState() {
+        if (audioBinder.isPlaying()) {
+            audioBinder.pause();
+        } else {
+            audioBinder.start();
+        }
+        mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+        mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
     }
 
     /**
@@ -131,6 +233,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
 
     /**
      * 搜索音乐
+     *
      * @param searchconditions 搜索关键字
      */
     private void searchMusic(String searchconditions) {
@@ -150,6 +253,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
                         mLayoutHistory.setVisibility(View.GONE);
                         mLinearDetail.setVisibility(View.GONE);
                         mTvNoSearchResult.setVisibility(View.VISIBLE);
+                        mSmartisanControlBar.setVisibility(View.VISIBLE);
                     }
 
                 });
@@ -168,14 +272,14 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
                 if (mSearchDetailAdapter != null) {
                     mSearchDetailAdapter.clear();
                 }
-                mLinearDetail.setVisibility(View.GONE);
+                mLinearDetail.setVisibility(View.INVISIBLE);
                 historyViewVisibility();
                 break;
             case R.id.iv_search_clear:
                 mSearchDao.deleteAll();
                 mFlowLayoutView.removeAllViews();
-                mLayoutHistory.setVisibility(View.GONE);
-                mLinearDetail.setVisibility(View.GONE);
+                mLayoutHistory.setVisibility(View.INVISIBLE);
+                mLinearDetail.setVisibility(View.INVISIBLE);
                 break;
         }
     }
@@ -187,6 +291,8 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
 
     @Override
     public void startMusicServiceFlag(int position, int dataFlag, String queryFlag) {
+        clearDisposableProgresse();
+        disposableQqLyric();
         Intent intent = new Intent(this, AudioPlayService.class);
         intent.putExtra("sortFlag", Constants.NUMBER_TEN);
         intent.putExtra("dataFlag", dataFlag);
@@ -200,6 +306,56 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
 
     @Override
     public void onOpenMusicPlayDialogFag() {
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mSmartisanControlBar.animatorOnPause();
+    }
+
+    private void updataProgress() {
+        clearDisposableProgresse();
+        if (audioBinder != null && audioBinder.isPlaying()) {
+            if (mDisposableProgresse == null) {
+                int duration = audioBinder.getDuration();
+                mSmartisanControlBar.setMaxProgress(duration);
+                mDisposableProgresse = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(aLong -> mSmartisanControlBar.setSongProgress(audioBinder.getProgress()));
+            }
+
+        }
+    }
+
+    private void updataLyric() {
+        disposableQqLyric();
+        if (mQqLyricsDisposable == null) {
+            mQqLyricsDisposable = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(musicBeanList -> {
+                        if (mLyricList != null && mLyricList.size() > 1 && lyricsFlag < mLyricList.size()) {
+                            //通过集合，播放过的歌词就从集合中删除
+                            MusicLyricBean lyrBean = mLyricList.get(lyricsFlag);
+                            String content = lyrBean.getContent();
+                            int progress = audioBinder.getProgress();
+                            int startTime = lyrBean.getStartTime();
+                            if (progress > startTime) {
+                                mSmartisanControlBar.setSingerName(content);
+                                lyricsFlag++;
+                            }
+
+
+                        }
+
+
+                    });
+
+        }
+
 
     }
 }

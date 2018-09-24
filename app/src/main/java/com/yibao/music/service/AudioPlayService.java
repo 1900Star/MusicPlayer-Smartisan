@@ -12,21 +12,21 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.app.NotificationManagerCompat;
 import android.widget.RemoteViews;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
+import com.yibao.music.activity.MusicActivity;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.QqBarUpdataBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.QueryMusicFlagListUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SharePrefrencesUtil;
-import com.yibao.music.view.music.MusicNoification;
 
 import java.util.List;
 import java.util.Random;
@@ -65,15 +65,16 @@ public class AudioPlayService
     private int position = -2;
     private List<MusicBean> mMusicDataList;
     private MusicBroacastReceiver mReceiver;
-    private NotificationManager manager;
     private RemoteViews mRemoteViews;
     private MusicBeanDao mMusicDao;
     private MusicBean mMusicBean;
     private RxBus mBus;
+    private NotificationManagerCompat manager;
 
     public void setData(List<MusicBean> list) {
         mMusicDataList = list;
     }
+
     @Override
     public IBinder onBind(Intent intent) {
         return mAudioBinder;
@@ -84,12 +85,17 @@ public class AudioPlayService
         super.unbindService(conn);
     }
 
+    @Override
+    public boolean onUnbind(Intent intent) {
+        return super.onUnbind(intent);
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        manager = NotificationManagerCompat.from(this);
         mAudioBinder = new AudioBinder();
-        mRemoteViews = new RemoteViews(getPackageName(), R.layout.music_notify);
+        mRemoteViews = new RemoteViews(getApplicationContext().getPackageName(), R.layout.music_notify);
         mBus = MusicApplication.getIntstance()
                 .bus();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
@@ -166,7 +172,7 @@ public class AudioPlayService
             mediaPlayer.setOnCompletionListener(this);
             SharePrefrencesUtil.setMusicPosition(AudioPlayService.this, position);
             //显示音乐通知栏
-            showNotification();
+//            showNotification();
         }
 
 
@@ -180,14 +186,6 @@ public class AudioPlayService
             sendCureentMusicInfo();
         }
 
-        private void showNotification() {
-            Notification notification = MusicNoification.getNotification(getApplicationContext(), mRemoteViews,
-                    mMusicInfo);
-            manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            if (manager != null) {
-                manager.notify(0, notification);
-            }
-        }
 
         //获取当前播放进度
 
@@ -300,25 +298,18 @@ public class AudioPlayService
 
         // type : 1 表示点击通知栏进入播放界面，0 表示在通知栏进行播放和暂停的控制，并不进入播放的界面。
 
-        private void playStatus(int type) {
+        public void playStatus(int type) {
             switch (type) {
                 case 0:
-                    if (mAudioBinder.isPlaying()) {
-                        mAudioBinder.pause();
-                        mBus.post(new MusicStatusBean(type, true));
-                    } else {
-                        mAudioBinder.start();
-                        mBus.post(new MusicStatusBean(type, false));
-                        LogUtil.d("PLAY");
-                    }
+                    mBus.post(new MusicStatusBean(type, mAudioBinder.isPlaying()));
+//                    if (mAudioBinder.isPlaying()) {
+//                        mAudioBinder.pause();
+//                    } else {
+//                        mAudioBinder.start();
+//                        LogUtil.d("PLAY");
+//                    }
                     break;
                 case 1:
-                    if (mAudioBinder.isPlaying()) {
-                        mBus.post(new MusicStatusBean(type, true));
-                    } else {
-                        mBus.post(new MusicStatusBean(type, false));
-                        LogUtil.d("PLAY");
-                    }
 
                     break;
                 default:
@@ -346,27 +337,22 @@ public class AudioPlayService
                 if (action.equals(ACTION_MUSIC)) {
                     int id = intent.getIntExtra(BUTTON_ID, 0);
                     switch (id) {
-                        case ROOT:
-                            LogUtil.d("Root");
-                            mAudioBinder.playStatus(1);
-                            break;
                         case CLOSE:
                             LogUtil.d("CLOSE");
-                            mAudioBinder.playStatus
-                                    (0);
-                            manager.cancel(0);
-                            break;
+//                            mAudioBinder.pause();
+                            mBus.post(new MusicStatusBean(2, false));
                         case PREV:
-                            mAudioBinder.playPre();
-                            updatePlayBtn();
+//                            mAudioBinder.playPre();
+                            LogUtil.d("Pre");
                             break;
                         case PLAY:
-                            updatePlayBtn();
+                            LogUtil.d("Play");
                             mAudioBinder.playStatus(0);
                             break;
                         case NEXT:
                             mAudioBinder.playNext();
-                            updatePlayBtn();
+                            LogUtil.d("Next");
+//                            updatePlayBtn();
                             break;
                         default:
                             break;

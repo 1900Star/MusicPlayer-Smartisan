@@ -60,7 +60,7 @@ public class ImageUitl {
         Glide.with(context).load(url).apply(options).into(view);
     }
 
-    public static void customLoadPic(Context context, Uri url, int placeId, ImageView view) {
+    public static void customLoadPic(Context context, String url, int placeId, ImageView view) {
         RequestOptions options = new RequestOptions();
         options.placeholder(placeId);
         options.diskCacheStrategy(DiskCacheStrategy.NONE);

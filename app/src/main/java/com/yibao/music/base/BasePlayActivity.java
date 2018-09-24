@@ -27,7 +27,6 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -75,6 +74,14 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
     @Override
     protected void onPause() {
         super.onPause();
+        clearDisposableLyric();
+        if (mWakeLock.isHeld()) {
+            mWakeLock.release();
+            mWakeLock = null;
+        }
+    }
+
+    protected void clearDisposableLyric() {
         if (mDisposablePlayTime != null) {
             mDisposablePlayTime.dispose();
             mDisposablePlayTime = null;
@@ -82,10 +89,6 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
         if (mDisposableLyrics != null) {
             mDisposableLyrics.dispose();
             mDisposableLyrics = null;
-        }
-        if (mWakeLock.isHeld()) {
-            mWakeLock.release();
-            mWakeLock = null;
         }
     }
 
@@ -111,8 +114,6 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::refreshAllPlayBtn));
-
-
     }
 
     /**
@@ -161,8 +162,8 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
     protected abstract void updataCurrentPlayProgress(int progress);
 
     private void init() {
-        audioBinder = MusicActivity.getAudioBinder();
         mCompositeDisposable = new CompositeDisposable();
+        audioBinder = MusicActivity.getAudioBinder();
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         if (powerManager != null) {
             mWakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Music  Lock");

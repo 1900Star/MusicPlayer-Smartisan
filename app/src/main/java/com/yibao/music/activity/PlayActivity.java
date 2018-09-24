@@ -29,6 +29,7 @@ import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.ImageUitl;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
@@ -113,10 +114,9 @@ public class PlayActivity extends BasePlayActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.play_activity);
         mBind = ButterKnife.bind(this);
+        init();
         initSongInfo();
-        initData();
         initListener();
-
     }
 
     @Override
@@ -139,38 +139,17 @@ public class PlayActivity extends BasePlayActivity {
                     .show(getFragmentManager(), "album");
             return true;
         });
-//        mRotateRl.setOnTouchListener((v, event) -> {
-//            switch (event.getAction()) {
-//                case MotionEvent.ACTION_DOWN:
-//                    if (audioBinder.isPlaying()) {
-//                        switchPlayState();
-//                    }
-//                    break;
-//                case MotionEvent.ACTION_MOVE:
-//                    break;
-//                case MotionEvent.ACTION_UP:
-//                    switchPlayState();
-//                    break;
-//                default:
-//                    break;
-//
-//            }
-//            return true;
-//        });
-
     }
 
 
     private void initSongInfo() {
-        Bundle bundle = getIntent().getBundleExtra("bundle");
-        mCurrenMusicInfo = bundle.getParcelable("info");
+        mCurrenMusicInfo = getIntent().getParcelableExtra("currentBean");
         if (mCurrenMusicInfo != null) {
             mPlaySongName.setText(mCurrenMusicInfo.getTitle());
             mPlayArtistName.setText(mCurrenMusicInfo.getArtist());
             ArrayList<MusicLyricBean> musicLyricBeans = LyricsUtil.getLyricList(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
             mTvLyrics.setLrcFile(musicLyricBeans);
-            mAlbumUrl = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId())
-                    .toString();
+            mAlbumUrl = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId());
             setAlbulm(mAlbumUrl);
         }
     }
@@ -179,7 +158,7 @@ public class PlayActivity extends BasePlayActivity {
         mIvFavoriteMusic.setImageResource(cureentMusicIsFavorite ? R.mipmap.favorite_yes : R.drawable.music_qqbar_favorite_normal_selector);
     }
 
-    private void initData() {
+    private void init() {
         if (audioBinder != null) {
             if (audioBinder.isPlaying()) {
                 initAnimation();
@@ -200,7 +179,7 @@ public class PlayActivity extends BasePlayActivity {
 
     private void updateMusicVolume(int volume) {
         mSbVolume.setProgress(volume);
-        //更新音量值  flag 0 默认不显示系统控制栏  1 显示系统音量控制
+        // 更新音量值  flag 0 默认不显示系统控制栏  1 显示系统音量控制
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
 
 
@@ -226,7 +205,7 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     protected void updataMusicProgress(int progress) {
-//        // 时间进度
+        // 时间进度
         mStartTime.setText(StringUtil.parseDuration(progress));
         // 时时播放进度
         mSbProgress.setProgress(progress);
@@ -235,11 +214,11 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     private void setSongDuration() {
-        //获取并记录总时长
+        // 获取并记录总时长
         mDuration = audioBinder.getDuration();
-        //设置进度条的总进度
+        // 设置进度条的总进度
         mSbProgress.setMax(mDuration);
-        //  设置歌曲总时长
+        // 设置歌曲总时长
         mEndTime.setText(StringUtil.parseDuration(mDuration));
     }
 
@@ -277,8 +256,7 @@ public class PlayActivity extends BasePlayActivity {
         initAnimation();
         mPlaySongName.setText(info.getTitle());
         mPlayArtistName.setText(info.getArtist());
-        mAlbumUrl = StringUtil.getAlbulm(info.getAlbumId())
-                .toString();
+        mAlbumUrl = StringUtil.getAlbulm(info.getAlbumId());
         setAlbulm(mAlbumUrl);
         setSongDuration();
         updatePlayBtnStatus();
@@ -323,9 +301,9 @@ public class PlayActivity extends BasePlayActivity {
             audioBinder.pause();
             mAnimator.pause();
             // 只有Notifycation需要接收
-            MusicApplication.getIntstance()
-                    .bus()
-                    .post(new MusicStatusBean(0, true));
+//            MusicApplication.getIntstance()
+//                    .bus()
+//                    .post(new MusicStatusBean(0, true));
             if (isShowLyrics && mDisposableLyrics != null) {
                 mDisposableLyrics.dispose();
                 mDisposableLyrics = null;
@@ -334,9 +312,9 @@ public class PlayActivity extends BasePlayActivity {
             //当前暂停  播放
             audioBinder.start();
             initAnimation();
-            MusicApplication.getIntstance()
-                    .bus()
-                    .post(new MusicStatusBean(0, false));
+//            MusicApplication.getIntstance()
+//                    .bus()
+//                    .post(new MusicStatusBean(0, false));
             if (isShowLyrics) {
                 startRollPlayLyrics(mTvLyrics);
             }
@@ -357,19 +335,14 @@ public class PlayActivity extends BasePlayActivity {
 
 
     private void initAnimation() {
-        if (mRotateRl != null) {
-            mRotateRl.setBackgroundColor(ColorUtil.transparentColor);
-        }
+        mRotateRl.setBackgroundColor(ColorUtil.transparentColor);
         if (mAnimator == null || mAnimatorListener == null) {
             mAnimator = AnimationUtil.getRotation(mRotateRl);
             mAnimatorListener = new MyAnimatorUpdateListener(mAnimator);
             mAnimator.start();
             mMusicPlay.setImageResource(R.drawable.btn_playing_pause);
         }
-        if (mAnimator != null) {
-
-            mAnimator.resume();
-        }
+        mAnimator.resume();
 
     }
 
@@ -434,7 +407,7 @@ public class PlayActivity extends BasePlayActivity {
             mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
 
         }
-        updataFavoriteFile(mCurrenMusicInfo, mCurrenMusicInfo.isFavorite());
+        updataFavoriteSong(mCurrenMusicInfo, mCurrenMusicInfo.isFavorite());
     }
 
 
@@ -449,7 +422,6 @@ public class PlayActivity extends BasePlayActivity {
             animation.start();
             mTvLyrics.setVisibility(View.GONE);
             mIvLyricsMask.setVisibility(View.GONE);
-            mIvSecreenSunSwitch.setVisibility(View.GONE);
             if (mDisposableLyrics != null) {
                 mDisposableLyrics.dispose();
                 mDisposableLyrics = null;

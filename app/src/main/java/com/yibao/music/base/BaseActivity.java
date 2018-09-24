@@ -14,14 +14,15 @@ import android.widget.Toast;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
+import com.yibao.music.activity.PlayActivity;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.service.AudioPlayService;
-import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.StringUtil;
+import com.yibao.music.view.music.PlayNotifyManager;
 import com.yibao.music.view.music.QqControlBar;
 import com.yibao.music.view.music.SmartisanControlBar;
 
@@ -52,6 +53,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Unbinder mBind;
     protected Disposable mRxViewDisposable;
     private boolean mCurrentIsFavorite;
+    protected PlayNotifyManager mNotifyManager;
+    protected boolean isNotifyShow;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,40 +65,43 @@ public abstract class BaseActivity extends AppCompatActivity {
         mSearchDao = MusicApplication.getIntstance().getSearchDao();
         registerHeadsetReceiver();
         mCompositeDisposable = new CompositeDisposable();
-//        startMusicServer();
-
     }
 
-    private void startMusicServer() {
-        startService(new Intent(this, AudioPlayService.class));
-    }
-
-    //绑定服务
-    public void bindService(ServiceConnection connection) {
-        Intent intent = new Intent(this, AudioPlayService.class);
-        bindService(intent, connection, Service.BIND_AUTO_CREATE);
+    protected void startPlayActivity(MusicBean musicBean) {
+        Intent intent = new Intent(this, PlayActivity.class);
+        intent.putExtra("currentBean", musicBean);
+        startActivity(intent);
+        overridePendingTransition(R.anim.dialog_push_in, 0);
     }
 
     protected void checkCurrentSongIsFavorite(MusicBean currentMusicBean, QqControlBar qqControlBar, SmartisanControlBar smartisanControlBar) {
         mCurrentIsFavorite = mMusicDao.load(currentMusicBean.getId()).isFavorite();
         smartisanControlBar.setFavoriteButtonState(mCurrentIsFavorite);
-        qqControlBar.setFavoriteButtonState(mCurrentIsFavorite);
+        if (qqControlBar != null) {
+            qqControlBar.setFavoriteButtonState(mCurrentIsFavorite);
+        }
     }
 
 
     protected void setSongfavoriteState(MusicBean currentMusicBean, QqControlBar qqControlBar, SmartisanControlBar smartisanControlBar) {
         mCurrentIsFavorite = mMusicDao.load(currentMusicBean.getId()).isFavorite();
         smartisanControlBar.setFavoriteButtonState(!mCurrentIsFavorite);
-        qqControlBar.setFavoriteButtonState(!mCurrentIsFavorite);
+        if (qqControlBar != null) {
+            qqControlBar.setFavoriteButtonState(!mCurrentIsFavorite);
+        }
         currentMusicBean.setIsFavorite(!mCurrentIsFavorite);
         if (!mCurrentIsFavorite) {
             MusicBean newMusicBean = getCurrentMusicBean(currentMusicBean);
             mMusicDao.update(newMusicBean);
-            updataFavoriteFile(newMusicBean, mCurrentIsFavorite);
+            updataFavoriteSong(newMusicBean, mCurrentIsFavorite);
         }
     }
-
-    protected void updataFavoriteFile(MusicBean musicBean, boolean currentIsFavorite) {
+    protected void showNotifycation(MusicBean musicBean,boolean isPlaying) {
+        mNotifyManager = new PlayNotifyManager(this, musicBean,isPlaying);
+        mNotifyManager.show();
+        isNotifyShow = true;
+    }
+    protected void updataFavoriteSong(MusicBean musicBean, boolean currentIsFavorite) {
         if (currentIsFavorite) {
             mCompositeDisposable.add(ReadFavoriteFileUtil.deleteFavorite(musicBean.getTitle()).observeOn(AndroidSchedulers.mainThread()).subscribe(aBoolean -> {
                 if (!aBoolean) {
@@ -113,9 +119,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private MusicBean getCurrentMusicBean(MusicBean musicBean) {
         String time = StringUtil.getCurrentTime();
-//        musicBean.setTime(Long.toString(System.currentTimeMillis()));
         musicBean.setTime(time);
-//        mMusicDao.update(musicBean);
         return musicBean;
     }
 
@@ -148,11 +152,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        clearDisposableProgresse();
+        disposableQqLyric();
+    }
+
+    protected void clearDisposableProgresse() {
         if (mDisposableProgresse != null) {
             mDisposableProgresse.dispose();
             mDisposableProgresse = null;
         }
-        disposableQqLyric();
     }
 
     @Override
