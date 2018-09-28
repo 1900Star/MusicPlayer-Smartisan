@@ -33,7 +33,6 @@ import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.MainViewPager;
 import com.yibao.music.view.music.MusicNavigationBar;
-import com.yibao.music.view.music.PlayNotifyManager;
 import com.yibao.music.view.music.QqControlBar;
 import com.yibao.music.view.music.SmartisanControlBar;
 
@@ -100,7 +99,6 @@ public class MusicActivity
         initData();
         initMusicConfig();
         initListener();
-        LogUtil.d("lsp", "============  二次启动");
     }
 
 
@@ -150,6 +148,33 @@ public class MusicActivity
         mPlayState = Constants.NUMBER_THRRE;
     }
 
+    @Override
+    protected void refreshBtnAndNotify(MusicStatusBean bean) {
+        switch (bean.getType()) {
+            case 0:
+                mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+                updataNotifyPlayBtn(audioBinder.isPlaying());
+                updatePlayBtnStatus();
+                break;
+            case 1:
+                boolean favorite = mMusicDao.load(mCurrentMusicBean.getId()).isFavorite();
+                updataNotifyFavorite(favorite);
+                mSmartisanControlBar.setFavoriteButtonState(!favorite);
+                mQqControlBar.setFavoriteButtonState(!favorite);
+                refreshFavorite(mCurrentMusicBean,favorite);
+                break;
+            case 2:
+                mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+                updatePlayBtnStatus();
+                mNotifyManager.hide();
+                isNotifyShow = false;
+                break;
+            default:
+                break;
+        }
+        bean.type = 5;
+    }
+
     private void initListener() {
         mMusicNavigationBar.setOnNavigationbarListener((currentSelecteFlag, titleResourceId) -> {
             mTitleResourceId = titleResourceId;
@@ -161,7 +186,12 @@ public class MusicActivity
             if (mMusicConfig) {
                 switch (clickFlag) {
                     case Constants.NUMBER_ONE:
+//                        updataNotifyFavorite(mMusicDao.load(mCurrentMusicBean.getId()).isFavorite());
                         setSongfavoriteState(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
+//                        boolean isFavorite = mMusicDao.load(mCurrentMusicBean.getId()).isFavorite();
+//                        mSmartisanControlBar.setFavoriteButtonState(!isFavorite);
+//                        mCurrentMusicBean.setFavorite(!isFavorite);
+//                        mMusicDao.update(mCurrentMusicBean);
                         break;
                     case Constants.NUMBER_TWO:
                         clearDisposableProgresse();
@@ -188,7 +218,8 @@ public class MusicActivity
                         switchPlayState();
                         break;
                     case Constants.NUMBER_TWO:
-                        setSongfavoriteState(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
+//                        setSongfavoriteState(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
+//                        updataNotifyFavorite(mMusicDao.load(mCurrentMusicBean.getId()).getFavorite());
                         break;
                     default:
                         break;
@@ -200,6 +231,43 @@ public class MusicActivity
         mTvMusicToolbarTitle.setOnClickListener(view -> switchMusicControlBar());
         mQqControlBar.setOnPagerSelecteListener(this::startMusicService);
     }
+
+    /**
+     * 切换当前播放状态
+     * mPlayState  将音乐的播放状态记录到本地，方便用户下次打开时进行UI初始化操作。
+     * <p>
+     * mPlayState = 1 ：表示用户点击暂停后，并退出音乐播放器。下次打开播放器的界面时，
+     * 不会自动播放上一次记录的歌曲，需要点击播放按钮，才能播放上一次记录的歌曲。
+     * <p>
+     * mPlayState = 2 ：表示在播放时退出音乐播放器的界面，只是短暂的离开，但并没有退出程序(程序并没有被后台杀死)，
+     * 下次打开播放器的界面时，继续自动播放当前的歌曲。
+     */
+    private void switchPlayState() {
+        if (mPlayState == Constants.NUMBER_ONE) {
+            LogUtil.d(" PlayState == 1 ==================");
+            executStartServiceAndInitAnimation();
+        } else if (mPlayState == Constants.NUMBER_TWO) {
+            mPlayState = Constants.NUMBER_THRRE;
+        } else {
+            if (audioBinder == null) {
+                ToastUtil.showNoMusic(this);
+            } else if (audioBinder.isPlaying()) {
+                // 当前播放  暂停
+                audioBinder.pause();
+                clearDisposableProgresse();
+            } else if (!audioBinder.isPlaying()) {
+                // 当前暂停  播放
+                audioBinder.start();
+                upDataPlayProgress();
+
+            }
+            mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+            //更新播放状态按钮
+            updatePlayBtnStatus();
+            showNotifycation(mCurrentMusicBean, audioBinder.isPlaying());
+        }
+    }
+
 
     /**
      * 切换音乐控制面板的样式
@@ -247,19 +315,11 @@ public class MusicActivity
                                 LogUtil.d("当前的时间和歌词 ===  " + startTime + " ==  " + content);
 
                                 mQqControlBar.updaPagerData(mMusicItems, mCurrentPosition);
-//                                mQqControlBar.updataLyric(content);
                                 lyricsFlag++;
                             }
-
-
                         }
-
-
                     });
-
         }
-
-
     }
 
 
@@ -308,7 +368,6 @@ public class MusicActivity
     }
 
     private int getSpMusicFlag() {
-
         return SharePrefrencesUtil.getMusicDataListFlag(this);
     }
 
@@ -325,7 +384,6 @@ public class MusicActivity
         mCompositeDisposable.add(RxView.clicks(mSmartisanControlBar)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribe(o -> readyMusic()));
-
     }
 
     private void readyMusic() {
@@ -334,48 +392,37 @@ public class MusicActivity
         } else {
             ToastUtil.showNoMusic(MusicActivity.this);
         }
+    }
 
+    // 接收service发出的数据，时时更新播放歌曲 进度 歌名 歌手信息
+    @Override
+    protected void updataCurrentPlayInfo(MusicBean musicItem) {
+        //将QQBar的释放掉
+        disposableQqLyric();
+        // 将MusicConfig设置为ture
+        SharePrefrencesUtil.setMusicConfig(MusicActivity.this);
+        mMusicConfig = true;
+        // 更新歌曲的信息
+        MusicActivity.this.perpareItem(musicItem);
+        // 设置歌曲最大进度
+        setDuration();
+        // 更新播放状态按钮
+        MusicActivity.this.updatePlayBtnStatus();
+        // 初始化动画
+        mSmartisanControlBar.initAnimation();
+        //更新歌曲的进度
+        MusicActivity.this.updataCurrentPlayProgress();
+        // 打开通知栏
+        showNotifycation(mCurrentMusicBean, audioBinder.isPlaying());
+    }
 
+    private void setDuration() {
+        int duration = audioBinder.getDuration();
+        mSmartisanControlBar.setMaxProgress(duration);
+        mQqControlBar.setMaxProgress(duration);
     }
 
     private void initRxBusData() {
-        //接收service发出的数据，时时更新播放歌曲 进度 歌名 歌手信息
-        mCompositeDisposable.add(mBus.toObserverable(MusicBean.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(musicItem -> {
-                    //将QQBar的释放掉
-                    disposableQqLyric();
-                    // 将MusicConfig设置为ture
-                    SharePrefrencesUtil.setMusicConfig(MusicActivity.this);
-                    mMusicConfig = true;
-                    // 更新歌曲的信息
-                    MusicActivity.this.perpareItem(musicItem);
-                    //更新播放状态按钮
-                    MusicActivity.this.updatePlayBtnStatus();
-                    //初始化动画
-                    mSmartisanControlBar.initAnimation();
-                    //更新歌曲的进度
-                    MusicActivity.this.updataProgress();
-                    // 打开通知栏
-                    showNotifycation(mCurrentMusicBean, audioBinder.isPlaying());
-
-                }));
-        /*
-         position = bean.getPosition() 用来判断触发消息的源头，
-         < 0 >表示是通知栏播放和暂停按钮发出，
-         同时MusicPlayDialogFag在播放和暂停的时候也会发出通知并且type也是< 0 >，
-         MuiscListActivity会接收到通知栏发出的播放状态的消息,用于控制播放按钮的显示状态
-         < 1 >表示从通知栏打开音列表，即整个通知栏布局的监听。
-         < 2 >表示在通知栏关闭通知栏
-         < 3 > 切换列表数据
-         < 4 >
-         */
-        mCompositeDisposable.add(mBus.toObserverable(MusicStatusBean.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(MusicActivity.this::refreshBtnAndNotify));
-
         // 同步两个Bar上的数据
         mCompositeDisposable.add(mBus.toObserverable(QqBarUpdataBean.class)
                 .subscribeOn(Schedulers.io())
@@ -385,28 +432,6 @@ public class MusicActivity
 
     }
 
-
-    private void refreshBtnAndNotify(MusicStatusBean bean) {
-        switch (bean.getType()) {
-            case 0:
-                mSmartisanControlBar.animatorOnResume(!bean.isPlay);
-                updatePlayBtnStatus();
-                break;
-            case 1:
-                break;
-            case 2:
-                mSmartisanControlBar.animatorOnResume(bean.isPlay);
-                updatePlayBtnStatus();
-                audioBinder.pause();
-                mNotifyManager.hide();
-                isNotifyShow = false;
-                break;
-            default:
-                break;
-        }
-    }
-
-
     /**
      * 设置歌曲名和歌手名
      *
@@ -415,93 +440,36 @@ public class MusicActivity
     private void perpareItem(MusicBean musicItem) {
         mCurrentMusicBean = musicItem;
         checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
-
-        //更新音乐标题
+        // 更新音乐标题
         String songName = mCurrentMusicBean.getTitle();
         mSmartisanControlBar.setSongName(songName);
-        //更新歌手名称
+        // 更新歌手名称
         String artistName = mCurrentMusicBean.getArtist();
         mSmartisanControlBar.setSingerName(artistName);
-        //设置专辑
+        // 设置专辑
         String albumUri = StringUtil.getAlbulm(mCurrentMusicBean.getAlbumId());
-        LogUtil.d("lsp", "======albumUri==========" + albumUri);
         mSmartisanControlBar.setAlbulmUrl(albumUri);
         mQqControlBar.setPagerData(mMusicItems);
         mQqControlBar.setPagerCurrentItem(mCurrentMusicBean.getCureetPosition());
-//         加载歌词的List，
+        // 加载歌词的List，
         mLyricList = LyricsUtil.getLyricList(mCurrentMusicBean.getTitle(), mCurrentMusicBean.getArtist());
         if (isShowQqBar) {
             setQqPagerLyric();
         }
     }
 
-    private void updataProgress() {
+    @Override
+    protected void updataCurrentPlayProgress() {
         if (audioBinder != null && audioBinder.isPlaying()) {
-            if (mDisposableProgresse == null) {
-                int duration = audioBinder.getDuration();
-                mSmartisanControlBar.setMaxProgress(duration);
-                mQqControlBar.setMaxProgress(duration);
-                mDisposableProgresse = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(aLong -> {
-                            mSmartisanControlBar.setSongProgress(audioBinder.getProgress());
-                            mQqControlBar.setProgress(audioBinder.getProgress());
-                        });
-            }
-
+            mSmartisanControlBar.setSongProgress(audioBinder.getProgress());
+            mQqControlBar.setProgress(audioBinder.getProgress());
         }
     }
-
 
     private void updatePlayBtnStatus() {
         //根据当前播放状态设置图片
         mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
         mQqControlBar.updatePlayButtonState(audioBinder.isPlaying());
-
-//        更新通知栏的按钮状态
-//        MusicNoification.updatePlayBtn(audioBinder.isPlaying());
-    }
-
-
-    /**
-     * 切换当前播放状态
-     * mPlayState  将音乐的播放状态记录到本地，方便用户下次打开时进行UI初始化操作。
-     * <p>
-     * mPlayState = 1 ：表示用户点击暂停后，并退出音乐播放器。下次打开播放器的界面时，
-     * 不会自动播放上一次记录的歌曲，需要点击播放按钮，才能播放上一次记录的歌曲。
-     * <p>
-     * mPlayState = 2 ：表示在播放时退出音乐播放器的界面，只是短暂的离开，但并没有退出程序(程序并没有被后台杀死)，
-     * 下次打开播放器的界面时，继续自动播放当前的歌曲。
-     */
-    private void switchPlayState() {
-        if (mPlayState == Constants.NUMBER_ONE) {
-            LogUtil.d(" PlayState == 1 ==================");
-            executStartServiceAndInitAnimation();
-        } else if (mPlayState == Constants.NUMBER_TWO) {
-            mPlayState = Constants.NUMBER_THRRE;
-        } else {
-            if (audioBinder == null) {
-                ToastUtil.showNoMusic(this);
-            } else if (audioBinder.isPlaying()) {
-                // 当前播放  暂停
-                audioBinder.pause();
-                if (mDisposableProgresse != null) {
-                    mDisposableProgresse.dispose();
-                    mDisposableProgresse = null;
-                }
-            } else if (!audioBinder.isPlaying()) {
-                // 当前暂停  播放
-                audioBinder.start();
-                updataProgress();
-                if (!isNotifyShow) {
-                    showNotifycation(mCurrentMusicBean, audioBinder.isPlaying());
-                }
-            }
-            mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
-            //更新播放状态按钮
-            updatePlayBtnStatus();
-        }
     }
 
 
@@ -557,7 +525,8 @@ public class MusicActivity
             mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
             checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
             updatePlayBtnStatus();
-            updataProgress();
+            updataCurrentPlayProgress();
+            setDuration();
             if (isShowQqBar) {
                 setQqPagerLyric();
             }
@@ -615,7 +584,7 @@ public class MusicActivity
             mSmartisanControlBar.animatorStop();
         }
         if (audioBinder != null && !audioBinder.isPlaying()) {
-            audioBinder.closeNotificaction();
+            mNotifyManager.hide();
         }
         if (audioBinder != null) {
             mPlayState = audioBinder.isPlaying() ? Constants.NUMBER_TWO : Constants.NUMBER_ONE;

@@ -32,7 +32,6 @@
     <string name="music_artisan">艺术家</string>
     <string name="music_song">歌曲</string>
     <string name="music_album">专辑</string>
-    <string name="music_folder">文件夹</string>
     <string name="album_tile">平铺</string>
     <string name="album_list">列表</string>
     <string name="random_play">随机播放</string>
@@ -48,6 +47,5 @@
     <string name="search_history">搜索历史</string>
     <string name="clear_edit">清空输入框</string>
     <string name="not_search_result">无搜索结果</string>
-    <string name="select_operational">选择操作</string>
 
 </resources>

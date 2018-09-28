@@ -48,9 +48,7 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
     private PowerManager.WakeLock mWakeLock;
     private boolean isScreenAlwaysOn;
     private VolumeReceiver mVolumeReceiver;
-    protected Disposable mDisposablePlayTime;
     protected Disposable mDisposableLyrics;
-    protected CompositeDisposable mCompositeDisposable;
     protected int mVolume;
 
     @Override
@@ -58,14 +56,6 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
         super.onCreate(savedInstanceState);
         init();
         registerVolumeReceiver();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        upDataPlayProgress();
-        updataMusicTitle();
-        recivewServiecInfo();
     }
 
     /**
@@ -82,10 +72,7 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
     }
 
     protected void clearDisposableLyric() {
-        if (mDisposablePlayTime != null) {
-            mDisposablePlayTime.dispose();
-            mDisposablePlayTime = null;
-        }
+
         if (mDisposableLyrics != null) {
             mDisposableLyrics.dispose();
             mDisposableLyrics = null;
@@ -96,73 +83,12 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mVolumeReceiver);
-        if (mCompositeDisposable != null) {
-            mCompositeDisposable.clear();
-            mCompositeDisposable.dispose();
-            mCompositeDisposable = null;
-        }
         if (audioBinder != null) {
             audioBinder = null;
         }
     }
 
-    /**
-     * 接收Service发出的播放状态
-     */
-    private void recivewServiecInfo() {
-        mCompositeDisposable.add(mBus.toObserverable(MusicStatusBean.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::refreshAllPlayBtn));
-    }
-
-    /**
-     * 接收Service发的信息，时时更新播放按钮的状态
-     *
-     * @param musicStatusBean k
-     */
-    protected abstract void refreshAllPlayBtn(MusicStatusBean musicStatusBean);
-
-
-    private void updataMusicTitle() {
-        mCompositeDisposable.add(mBus.toObserverable(MusicBean.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::updataCurrentTitle));
-
-    }
-
-    /**
-     * 更新音乐的Title和歌手
-     *
-     * @param info k
-     */
-    protected abstract void updataCurrentTitle(MusicBean info);
-
-    /**
-     * 时时更新播放进度
-     */
-    private void upDataPlayProgress() {
-        if (audioBinder != null) {
-            if (mDisposablePlayTime == null) {
-
-                mDisposablePlayTime = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(aLong -> BasePlayActivity.this.updataCurrentPlayProgress(audioBinder.getProgress()));
-                mCompositeDisposable.add(mDisposablePlayTime);
-            }
-        } else {
-            ToastUtil.initPlayState(BasePlayActivity.this);
-        }
-
-    }
-
-
-    protected abstract void updataCurrentPlayProgress(int progress);
-
     private void init() {
-        mCompositeDisposable = new CompositeDisposable();
         audioBinder = MusicActivity.getAudioBinder();
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         if (powerManager != null) {

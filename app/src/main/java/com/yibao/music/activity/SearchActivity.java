@@ -22,6 +22,7 @@ import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.TextChangedListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
+import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
@@ -43,6 +44,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -89,6 +91,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         audioBinder = MusicActivity.getAudioBinder();
         mMusicBean = getIntent().getParcelableExtra("musicBean");
         mSmartisanControlBar.setPbolorAndPreBtnGone();
+        showNotifycation(mMusicBean, audioBinder.isPlaying());
         setMusicInfo(mMusicBean);
         if (audioBinder != null) {
             mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
@@ -101,36 +104,57 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     @Override
     protected void onResume() {
         super.onResume();
-        rxBusData();
         if (audioBinder != null) {
             checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
-//            mSmartisanControlBar.animatorOnResume(!audioBinder.isPlaying());
             mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
-            LogUtil.d("111111111111111111111111111111111111111111");
-            updataProgress();
+            mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
             updataLyric();
-
+            setDuration();
         }
     }
 
-    private void rxBusData() {
-        // 更新歌曲的信息
-        mCompositeDisposable.add(mBus.toObserverable(MusicBean.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(musicItem -> {
-                    mMusicBean = musicItem;
-                    SearchActivity.this.setMusicInfo(musicItem);
-                    mSmartisanControlBar.initAnimation();
-                    if (audioBinder != null) {
-                        checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
-                        LogUtil.d("2222222222222222222222222222222222");
-                        mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
-                        updataProgress();
-                        updataLyric();
-                    }
-                }));
+    @Override
+    protected void refreshBtnAndNotify(MusicStatusBean musicStatusBean) {
+        switch (musicStatusBean.getType()) {
+            case 0:
+                mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+                mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+                updataNotifyPlayBtn(audioBinder.isPlaying());
+                break;
+            case 1:
+                updataNotifyFavorite(mMusicDao.load(mMusicBean.getId()).isFavorite());
+                break;
+            case 2:
+                mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+                mNotifyManager.hide();
+                isNotifyShow = false;
+                break;
+            default:
+                break;
+        }
+    }
 
+    @Override
+    protected void updataCurrentPlayInfo(MusicBean musicItem) {
+        mMusicBean = musicItem;
+        SearchActivity.this.setMusicInfo(musicItem);
+        mSmartisanControlBar.initAnimation();
+        if (audioBinder != null) {
+            setDuration();
+            SearchActivity.this.checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
+            mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+            SearchActivity.this.updataLyric();
+        }
+    }
+
+    @Override
+    protected void updataCurrentPlayProgress() {
+        mSmartisanControlBar.setSongProgress(audioBinder.getProgress());
+    }
+
+    private void setDuration() {
+        int duration = audioBinder.getDuration();
+        mSmartisanControlBar.setMaxProgress(duration);
     }
 
     private void setMusicInfo(MusicBean musicItem) {
@@ -179,6 +203,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
             switch (clickFlag) {
                 case Constants.NUMBER_ONE:
                     setSongfavoriteState(mMusicBean, null, mSmartisanControlBar);
+                    updataNotifyFavorite(mMusicDao.load(mMusicBean.getId()).isFavorite());
                     break;
                 case Constants.NUMBER_TWO:
                     audioBinder.playPre();
@@ -205,6 +230,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         } else {
             audioBinder.start();
         }
+        mNotifyManager.updataPlayBtn(audioBinder.isPlaying());
         mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
         mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
     }
@@ -285,11 +311,6 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     }
 
     @Override
-    public void startMusicService(int position) {
-
-    }
-
-    @Override
     public void startMusicServiceFlag(int position, int dataFlag, String queryFlag) {
         clearDisposableProgresse();
         disposableQqLyric();
@@ -305,6 +326,11 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     }
 
     @Override
+    public void startMusicService(int position) {
+
+    }
+
+    @Override
     public void onOpenMusicPlayDialogFag() {
 
     }
@@ -313,21 +339,6 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     protected void onPause() {
         super.onPause();
         mSmartisanControlBar.animatorOnPause();
-    }
-
-    private void updataProgress() {
-        clearDisposableProgresse();
-        if (audioBinder != null && audioBinder.isPlaying()) {
-            if (mDisposableProgresse == null) {
-                int duration = audioBinder.getDuration();
-                mSmartisanControlBar.setMaxProgress(duration);
-                mDisposableProgresse = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(aLong -> mSmartisanControlBar.setSongProgress(audioBinder.getProgress()));
-            }
-
-        }
     }
 
     private void updataLyric() {

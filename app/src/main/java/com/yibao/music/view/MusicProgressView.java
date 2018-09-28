@@ -79,7 +79,8 @@ public class MusicProgressView
     }
 
     /**
-     *  在ViewGroup上绘制东西的时候往往重写的是dispatchDraw()
+     * 在ViewGroup上绘制东西的时候往往重写的是dispatchDraw()
+     *
      * @param canvas
      */
     @Override
@@ -142,8 +143,6 @@ public class MusicProgressView
      */
     public void setProgress(int progress) {
         mProgress = progress;
-        //重绘
-        //        invalidate()        这个方法会报子线程修改UI异常，
         postInvalidate();
     }
 

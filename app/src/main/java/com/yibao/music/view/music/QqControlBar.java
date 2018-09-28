@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.adapter.QqBarPagerAdapter;
+import com.yibao.music.base.listener.MusicPagerListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.view.MusicProgressView;
@@ -31,7 +32,6 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
     ImageView mButtonFavorite;
     ViewPager mSlideViewPager;
     private QqBarPagerAdapter mPagerAdapter;
-    private TextView mTvLyric;
 
     public QqControlBar(Context context) {
         super(context);
@@ -46,7 +46,6 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
     private void initView() {
         LayoutInflater.from(getContext()).inflate(R.layout.muisc_tabbar_qq, this, true);
         mQqMusicBar = findViewById(R.id.qq_music_bar);
-        mTvLyric = findViewById(R.id.tv_pager_lyric);
         mSlideViewPager = findViewById(R.id.qq_music_vp);
         mButtonPlay = findViewById(R.id.music_floating_pager_play);
         mButtonFavorite = findViewById(R.id.music_floating_pager_favorite);
@@ -60,18 +59,10 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
 
     }
 
-    public void updataLyric(String lyrice) {
-        mTvLyric.setText(lyrice);
-    }
-
-    public void setTvLyricVisibility(boolean isVisibility) {
-        mTvLyric.setVisibility(isVisibility ? VISIBLE : GONE);
-    }
-
     private void initListener() {
         mButtonFavorite.setOnClickListener(this);
         mButtonPlay.setOnClickListener(this);
-        mSlideViewPager.addOnPageChangeListener(new com.yibao.music.artisanlist.MusicPagerListener() {
+        mSlideViewPager.addOnPageChangeListener(new MusicPagerListener() {
             @Override
             public void onPageSelected(int position) {
                 if (mSelecteListener != null) {
@@ -104,7 +95,6 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
     }
 
     public void setPagerData(List<MusicBean> musicItems) {
-//        mList = musicItems;
         mPagerAdapter.setData(musicItems);
 
     }

@@ -12,6 +12,7 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.SplashPagerAdapter;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.model.MusicCountBean;
+import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.service.LoadMusicDataService;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.SharePrefrencesUtil;
@@ -65,6 +66,16 @@ public class SplashActivity
     protected void onResume() {
         super.onResume();
         initRxbusData();
+    }
+
+    @Override
+    protected void refreshBtnAndNotify(MusicStatusBean musicStatusBean) {
+
+    }
+
+    @Override
+    protected void updataCurrentPlayProgress() {
+
     }
 
     private void initRxbusData() {

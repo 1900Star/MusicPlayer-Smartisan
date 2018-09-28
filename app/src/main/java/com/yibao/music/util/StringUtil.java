@@ -45,7 +45,11 @@ public class StringUtil {
     }
 
     public static Long stringToLong(String str) {
-        return Long.valueOf(str.replaceAll("[^\\d]+", ""));
+        if (str != null) {
+            return Long.valueOf(str.replaceAll("[^\\d]+", ""));
+
+        }
+        return 1L;
     }
 
     /**

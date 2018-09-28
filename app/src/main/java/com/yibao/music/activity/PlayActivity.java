@@ -17,7 +17,6 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.jakewharton.rxbinding2.view.RxView;
-import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.base.BasePlayActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
@@ -29,7 +28,6 @@ import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.ImageUitl;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
@@ -120,15 +118,9 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     @Override
-    protected void refreshAllPlayBtn(MusicStatusBean musicStatusBean) {
+    protected void refreshBtnAndNotify(MusicStatusBean musicStatusBean) {
         refreshBtnAndAnim(musicStatusBean);
     }
-
-    @Override
-    protected void updataCurrentTitle(MusicBean info) {
-        perpareMusic(info);
-    }
-
 
     private void initListener() {
         mSbProgress.setOnSeekBarChangeListener(new SeekBarListener());
@@ -151,6 +143,7 @@ public class PlayActivity extends BasePlayActivity {
             mTvLyrics.setLrcFile(musicLyricBeans);
             mAlbumUrl = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId());
             setAlbulm(mAlbumUrl);
+            showNotifycation(mCurrenMusicInfo,audioBinder.isPlaying());
         }
     }
 
@@ -181,17 +174,34 @@ public class PlayActivity extends BasePlayActivity {
         mSbVolume.setProgress(volume);
         // 更新音量值  flag 0 默认不显示系统控制栏  1 显示系统音量控制
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
-
-
     }
 
+    @Override
+    protected void updataCurrentPlayInfo(MusicBean musicBean) {
+        disPosableLyricsView();
+        mCurrenMusicInfo = musicBean;
+        checkCurrentIsFavorite(mCurrenMusicInfo.isFavorite());
+        initAnimation();
+        mPlaySongName.setText(musicBean.getTitle());
+        mPlayArtistName.setText(musicBean.getArtist());
+        mAlbumUrl = StringUtil.getAlbulm(musicBean.getAlbumId());
+        setAlbulm(mAlbumUrl);
+        setSongDuration();
+        updatePlayBtnStatus();
+//        初始化歌词
+        ArrayList<MusicLyricBean> lyricList = LyricsUtil.getLyricList(musicBean.getTitle(), musicBean.getArtist());
+        mTvLyrics.setLrcFile(lyricList);
+        if (isShowLyrics) {
+            closeLyricsView(lyricList);
+        }
+    }
 
     /**
      * Rxbus接收歌曲时时的进度 和 时间，并更新UI
      */
     @Override
-    protected void updataCurrentPlayProgress(int progress) {
-        updataMusicProgress(progress);
+    protected void updataCurrentPlayProgress() {
+        updataMusicProgress(audioBinder.getProgress());
     }
 
     @Override
@@ -223,17 +233,18 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     private void refreshBtnAndAnim(MusicStatusBean bean) {
-
         switch (bean.getType()) {
             case 0:
-                if (bean.isPlay()) {
-                    audioBinder.pause();
-                    mAnimator.pause();
-                } else {
-                    audioBinder.start();
+                if (audioBinder.isPlaying()) {
                     mAnimator.resume();
+                } else {
+                    mAnimator.pause();
                 }
                 updatePlayBtnStatus();
+                updataNotifyPlayBtn(audioBinder.isPlaying());
+                break;
+            case 1:
+                updataNotifyFavorite(mMusicDao.load(mCurrenMusicInfo.getId()).isFavorite());
                 break;
             case 2:
                 finish();
@@ -243,31 +254,6 @@ public class PlayActivity extends BasePlayActivity {
         }
     }
 
-
-    /**
-     * //设置歌曲名和歌手名
-     *
-     * @param info k
-     */
-    private void perpareMusic(MusicBean info) {
-        disPosableLyricsView();
-        mCurrenMusicInfo = info;
-        checkCurrentIsFavorite(mCurrenMusicInfo.isFavorite());
-        initAnimation();
-        mPlaySongName.setText(info.getTitle());
-        mPlayArtistName.setText(info.getArtist());
-        mAlbumUrl = StringUtil.getAlbulm(info.getAlbumId());
-        setAlbulm(mAlbumUrl);
-        setSongDuration();
-        updatePlayBtnStatus();
-//        初始化歌词
-        ArrayList<MusicLyricBean> lyricList = LyricsUtil.getLyricList(info.getTitle(), info.getArtist());
-        mTvLyrics.setLrcFile(lyricList);
-        if (isShowLyrics) {
-            closeLyricsView(lyricList);
-        }
-
-    }
 
     private void disPosableLyricsView() {
         if (mCloseLyrDisposable != null) {
@@ -300,10 +286,6 @@ public class PlayActivity extends BasePlayActivity {
             //当前播放  暂停
             audioBinder.pause();
             mAnimator.pause();
-            // 只有Notifycation需要接收
-//            MusicApplication.getIntstance()
-//                    .bus()
-//                    .post(new MusicStatusBean(0, true));
             if (isShowLyrics && mDisposableLyrics != null) {
                 mDisposableLyrics.dispose();
                 mDisposableLyrics = null;
@@ -312,14 +294,11 @@ public class PlayActivity extends BasePlayActivity {
             //当前暂停  播放
             audioBinder.start();
             initAnimation();
-//            MusicApplication.getIntstance()
-//                    .bus()
-//                    .post(new MusicStatusBean(0, false));
             if (isShowLyrics) {
                 startRollPlayLyrics(mTvLyrics);
             }
         }
-
+        mNotifyManager.updataPlayBtn(audioBinder.isPlaying());
 
         //更新播放状态按钮
         updatePlayBtnStatus();
@@ -386,6 +365,7 @@ public class PlayActivity extends BasePlayActivity {
                 break;
             case R.id.iv_favorite_music:
                 favoriteMusic();
+                updataNotifyFavorite(mMusicDao.load(mCurrenMusicInfo.getId()).isFavorite());
                 break;
             default:
                 break;
@@ -395,19 +375,20 @@ public class PlayActivity extends BasePlayActivity {
     private void favoriteMusic() {
 
         if (mCurrenMusicInfo.isFavorite()) {
-            mCurrenMusicInfo.setIsFavorite(false);
+            mCurrenMusicInfo.setFavorite(false);
             mMusicDao.update(mCurrenMusicInfo);
             mIvFavoriteMusic.setImageResource(R.drawable.music_qqbar_favorite_normal_selector);
 
         } else {
             String time = StringUtil.getCurrentTime();
             mCurrenMusicInfo.setTime(time);
-            mCurrenMusicInfo.setIsFavorite(true);
+            mCurrenMusicInfo.setFavorite(true);
             mMusicDao.update(mCurrenMusicInfo);
             mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
 
         }
-        updataFavoriteSong(mCurrenMusicInfo, mCurrenMusicInfo.isFavorite());
+        // 更新本地收藏文件
+//        updataFavoriteSong(mCurrenMusicInfo, mCurrenMusicInfo.isFavorite());
     }
 
 

@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.adapter.SongCategoryPagerAdapter;
-import com.yibao.music.artisanlist.MusicPagerListener;
 import com.yibao.music.base.BaseMusicFragment;
+import com.yibao.music.base.listener.MusicPagerListener;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.SharePrefrencesUtil;

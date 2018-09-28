@@ -3,14 +3,9 @@ package com.yibao.music.view.music;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -18,19 +13,20 @@ import android.widget.RemoteViews;
 
 import com.yibao.music.R;
 import com.yibao.music.activity.MusicActivity;
-import com.yibao.music.base.listener.ViewVisibilityChangeListener;
+import com.yibao.music.base.listener.NotifycationChangeListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.service.AudioPlayService;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
 
 
 /**
- * Created by DuanJiaNing on 2017/8/22.
+ * @author Stran
+ * Des：${音乐列表界面} 发送的广播在AudioPlayService中注册和解除
+ * Time:2017/5/30 13:27
  */
 
-public class PlayNotifyManager implements
-        ViewVisibilityChangeListener {
+public class MusicNotifyManager implements
+        NotifycationChangeListener {
 
     /**
      * 广播匹配
@@ -55,7 +51,7 @@ public class PlayNotifyManager implements
     private boolean isFavorite = false;
     private MusicBean mMusicBean;
 
-    public PlayNotifyManager(Activity activity, MusicBean musicBean, boolean isPlay) {
+    public MusicNotifyManager(Activity activity, MusicBean musicBean, boolean isPlay) {
         this.activity = activity;
         this.mMusicBean = musicBean;
         this.isPlay = isPlay;
@@ -111,18 +107,14 @@ public class PlayNotifyManager implements
 
     // 图片，歌名，艺术家，播放按钮
     private void setCommonView(RemoteViews view) {
-
         final String name = mMusicBean.getTitle();
         final String arts = mMusicBean.getArtist();
         String albumArtPath = StringUtil.getAlbumArtPath(activity, String.valueOf(mMusicBean.getAlbumId()));
-        LogUtil.d("lsp", "=======ss=========" + albumArtPath);
         final Bitmap cover = createCover(albumArtPath);
         isFavorite = mMusicBean.getIsFavorite();
         view.setImageViewBitmap(R.id.play_notify_cover, cover);
-
         view.setTextViewText(R.id.play_notify_name, name);
-        view.setTextViewText(R.id.play_notify_arts, arts + " - " + name);
-
+        view.setTextViewText(R.id.play_notify_arts, arts);
         view.setImageViewResource(R.id.play_notify_play,
                 isPlay ? R.drawable.ic_pause
                         : R.drawable.ic_play_arrow);
@@ -174,39 +166,15 @@ public class PlayNotifyManager implements
         return manager.areNotificationsEnabled();
     }
 
-
-    private class NotifyReceiversss {
-
-
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action != null) {
-                if (action.equals(ACTION_MUSIC)) {
-                    int id = intent.getIntExtra(BUTTON_ID, 0);
-                    switch (id) {
-                        case CLOSE:
-                            LogUtil.d("CLOSE");
-//                            manager.cancelAll();
-                        case PREV:
-//                            mAudioBinder.playPre();
-                            break;
-                        case PLAY:
-//                            mAudioBinder.playStatus(1);
-                            break;
-                        case NEXT:
-//                            mAudioBinder.playNext();
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
-
-        private void handlePlayStatusSwitch() {
-
-        }
-
+    @Override
+    public void updataFavoriteBtn(boolean isCurrentFavorite) {
+        mMusicBean.setIsFavorite(!isCurrentFavorite);
+        show();
     }
 
+    @Override
+    public void updataPlayBtn(boolean isPlaying) {
+        isPlay = isPlaying;
+        show();
+    }
 }

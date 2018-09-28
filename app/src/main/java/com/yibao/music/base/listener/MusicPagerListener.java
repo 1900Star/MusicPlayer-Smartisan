@@ -1,4 +1,4 @@
-package com.yibao.music.artisanlist;
+package com.yibao.music.base.listener;
 
 import android.support.v4.view.ViewPager;
 

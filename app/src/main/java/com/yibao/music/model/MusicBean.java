@@ -50,7 +50,6 @@ public class MusicBean
     public MusicBean() {
     }
 
-
     public Long getId() {
         return id;
     }
@@ -227,10 +226,10 @@ public class MusicBean
 
     @Generated(hash = 1772482409)
     public MusicBean(Long id, String title, String artist, String album,
-            long albumId, long addTime, long duration, String time, String songUrl,
-            String firstChar, boolean isFavorite, int playFrequency, int songScore,
-            int playStatus, int issueYear, int musicQualityType,
-            String currentLyrics) {
+                     long albumId, long addTime, long duration, String time, String songUrl,
+                     String firstChar, boolean isFavorite, int playFrequency, int songScore,
+                     int playStatus, int issueYear, int musicQualityType,
+                     String currentLyrics) {
         this.id = id;
         this.title = title;
         this.artist = artist;
@@ -299,13 +298,12 @@ public class MusicBean
         return 0;
     }
 
-
     public boolean getIsFavorite() {
         return this.isFavorite;
     }
 
-
     public void setIsFavorite(boolean isFavorite) {
         this.isFavorite = isFavorite;
     }
+
 }

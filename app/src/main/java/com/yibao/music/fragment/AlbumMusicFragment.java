@@ -15,6 +15,7 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.AlbumCategoryPagerAdapter;
 import com.yibao.music.adapter.SearchDetailsAdapter;
 import com.yibao.music.base.BaseMusicFragment;
+import com.yibao.music.base.listener.MusicPagerListener;
 import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.MusicBean;
@@ -86,7 +87,7 @@ public class AlbumMusicFragment extends BaseMusicFragment {
     private void initData() {
         AlbumCategoryPagerAdapter pagerAdapter = new AlbumCategoryPagerAdapter(getChildFragmentManager());
         mViewPager.setAdapter(pagerAdapter);
-        mViewPager.addOnPageChangeListener(new com.yibao.music.artisanlist.MusicPagerListener() {
+        mViewPager.addOnPageChangeListener(new MusicPagerListener() {
             @Override
             public void onPageSelected(int position) {
                 switchCategory(position);

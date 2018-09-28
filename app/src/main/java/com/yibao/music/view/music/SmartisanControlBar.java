@@ -78,8 +78,6 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
 
     public void updatePlayBtnStatus(boolean isPlaying) {
         mButtonPlay.setImageResource(isPlaying ? R.drawable.btn_playing_pause_selector : R.drawable.btn_playing_play_selector);
-//        更新通知栏的按钮状态
-//        MusicNoification.updatePlayBtn(audioBinder.isPlaying());
     }
 
     public void setMaxProgress(int maxProgress) {
