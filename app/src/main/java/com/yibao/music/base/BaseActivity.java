@@ -61,7 +61,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCompositeDisposable = new CompositeDisposable();
         mBus = MusicApplication.getIntstance()
                 .bus();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
@@ -93,16 +92,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updataCurrentPlayInfo));
         upDataPlayProgress();
-        /*
-         position = bean.getPosition() 用来判断触发消息的源头，
-         < 0 >表示是通知栏播放和暂停按钮发出，
-         同时MusicPlayDialogFag在播放和暂停的时候也会发出通知并且type也是< 0 >，
-         MuiscListActivity会接收到通知栏发出的播放状态的消息,用于控制播放按钮的显示状态
-         < 1 >表示从通知栏打开音列表，即整个通知栏布局的监听。
-         < 2 >表示在通知栏关闭通知栏
-         < 3 > 切换列表数据
-         < 4 >
-         */
         mCompositeDisposable.add(mBus.toObserverable(MusicStatusBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -318,7 +318,12 @@ public class PlayActivity extends BasePlayActivity {
                 refreshFavorite(mCurrenMusicInfo, favorite);
                 break;
             case 2:
-                finish();
+
+                mNotifyManager.hide();
+                audioBinder.pause();
+                mAnimator.pause();
+                updatePlayBtnStatus();
+                isNotifyShow = false;
                 break;
             default:
                 break;

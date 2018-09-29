@@ -1,12 +1,8 @@
 package com.yibao.music.model;
 
-import android.support.annotation.NonNull;
-
-import com.yibao.music.util.StringUtil;
-
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 import java.util.Comparator;
 
@@ -24,10 +20,6 @@ public class SearchHistoryBean implements Comparator<SearchHistoryBean> {
     private String searchContent;
     private String searchTime;
 
-    public SearchHistoryBean() {
-    }
-
-
     public SearchHistoryBean(String searchContent, String searchTime) {
         this.searchContent = searchContent;
         this.searchTime = searchTime;
@@ -39,6 +31,11 @@ public class SearchHistoryBean implements Comparator<SearchHistoryBean> {
         this.id = id;
         this.searchContent = searchContent;
         this.searchTime = searchTime;
+    }
+
+
+    @Generated(hash = 1570282321)
+    public SearchHistoryBean() {
     }
 
     public Long getId() {

@@ -302,7 +302,7 @@ public class AudioPlayService
                             break;
                         case CLOSE:
                             mBus.post(new MusicStatusBean(2));
-                            onDestroy();
+//                            onDestroy();
                             break;
                         case PREV:
                             mAudioBinder.playPre();

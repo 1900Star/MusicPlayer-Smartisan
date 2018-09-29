@@ -2,11 +2,16 @@ package com.yibao.music.view.music;
 
 import android.app.Activity;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.widget.RemoteViews;
@@ -45,17 +50,18 @@ public class MusicNotifyManager implements
 
     private static final int PLAY_NOTIFY_ID = 0x1213;
     private final Activity activity;
-    private final NotificationManagerCompat manager;
+    private final NotificationManager manager;
 
     private boolean isPlay;
     private boolean isFavorite = false;
     private MusicBean mMusicBean;
+    private final String channelId="music";
 
     public MusicNotifyManager(Activity activity, MusicBean musicBean, boolean isPlay) {
         this.activity = activity;
         this.mMusicBean = musicBean;
         this.isPlay = isPlay;
-        this.manager = NotificationManagerCompat.from(activity);
+        this.manager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
 
@@ -71,6 +77,7 @@ public class MusicNotifyManager implements
                 .setOngoing(true)
                 .setCustomContentView(createContentView())
                 .setCustomBigContentView(createContentBigView())
+                .setChannelId(channelId)
                 .setPriority(Notification.PRIORITY_HIGH);
 
         return builder.build();
@@ -152,6 +159,10 @@ public class MusicNotifyManager implements
 
     @Override
     public void show() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId, "music", NotificationManager.IMPORTANCE_DEFAULT);
+            manager.createNotificationChannel(channel);
+        }
         Notification nf = buildNotification();
         manager.notify(PLAY_NOTIFY_ID, nf);
     }
@@ -161,6 +172,7 @@ public class MusicNotifyManager implements
         manager.cancelAll();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public boolean visible() {
         return manager.areNotificationsEnabled();

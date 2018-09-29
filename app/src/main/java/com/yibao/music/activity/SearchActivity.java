@@ -111,8 +111,10 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
             updataLyric();
             setDuration();
         }
+        mCompositeDisposable.add(RxView.clicks(mSmartisanControlBar)
+                .throttleFirst(1, TimeUnit.SECONDS)
+                .subscribe(o -> startPlayActivity(mMusicBean)));
     }
-
 
 
     @Override
@@ -162,6 +164,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         mFlowLayoutView.setData(mSearchList);
 
     }
+
     @Override
     protected void refreshBtnAndNotify(MusicStatusBean musicStatusBean) {
         switch (musicStatusBean.getType()) {
@@ -174,14 +177,17 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
                 setSongfavoriteState(mMusicBean, null, mSmartisanControlBar);
                 break;
             case 2:
-                mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
                 mNotifyManager.hide();
+                audioBinder.pause();
+                mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+                mSmartisanControlBar.animatorOnPause();
                 isNotifyShow = false;
                 break;
             default:
                 break;
         }
     }
+
     private void initListener() {
         mEditSearch.addTextChangedListener(new TextChangedListener() {
             @Override
@@ -217,10 +223,6 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
                     break;
             }
         });
-        mCompositeDisposable.add(RxView.clicks(mSmartisanControlBar)
-                .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> startPlayActivity(mMusicBean)));
-
     }
 
     private void switchPlayState() {

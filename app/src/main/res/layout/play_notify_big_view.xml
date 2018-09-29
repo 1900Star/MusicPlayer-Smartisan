@@ -62,8 +62,8 @@
             <ImageButton
                 android:id="@+id/play_notify_close"
                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"

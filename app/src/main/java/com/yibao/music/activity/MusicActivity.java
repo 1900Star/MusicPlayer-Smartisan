@@ -160,15 +160,15 @@ public class MusicActivity
                 setSongfavoriteState(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
                 break;
             case 2:
-                mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
-                updatePlayBtnStatus();
                 mNotifyManager.hide();
+                audioBinder.pause();
+                updatePlayBtnStatus();
+                mSmartisanControlBar.animatorOnPause();
                 isNotifyShow = false;
                 break;
             default:
                 break;
         }
-        bean.type = 5;
     }
 
     private void initListener() {
