@@ -113,26 +113,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         }
     }
 
-    @Override
-    protected void refreshBtnAndNotify(MusicStatusBean musicStatusBean) {
-        switch (musicStatusBean.getType()) {
-            case 0:
-                mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
-                mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
-                updataNotifyPlayBtn(audioBinder.isPlaying());
-                break;
-            case 1:
-                updataNotifyFavorite(mMusicDao.load(mMusicBean.getId()).isFavorite());
-                break;
-            case 2:
-                mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
-                mNotifyManager.hide();
-                isNotifyShow = false;
-                break;
-            default:
-                break;
-        }
-    }
+
 
     @Override
     protected void updataCurrentPlayInfo(MusicBean musicItem) {
@@ -181,7 +162,26 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         mFlowLayoutView.setData(mSearchList);
 
     }
-
+    @Override
+    protected void refreshBtnAndNotify(MusicStatusBean musicStatusBean) {
+        switch (musicStatusBean.getType()) {
+            case 0:
+                updataNotifyPlayBtn(audioBinder.isPlaying());
+                mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+                mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+                break;
+            case 1:
+                setSongfavoriteState(mMusicBean, null, mSmartisanControlBar);
+                break;
+            case 2:
+                mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+                mNotifyManager.hide();
+                isNotifyShow = false;
+                break;
+            default:
+                break;
+        }
+    }
     private void initListener() {
         mEditSearch.addTextChangedListener(new TextChangedListener() {
             @Override
@@ -203,7 +203,6 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
             switch (clickFlag) {
                 case Constants.NUMBER_ONE:
                     setSongfavoriteState(mMusicBean, null, mSmartisanControlBar);
-                    updataNotifyFavorite(mMusicDao.load(mMusicBean.getId()).isFavorite());
                     break;
                 case Constants.NUMBER_TWO:
                     audioBinder.playPre();
@@ -312,7 +311,6 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
 
     @Override
     public void startMusicServiceFlag(int position, int dataFlag, String queryFlag) {
-        clearDisposableProgresse();
         disposableQqLyric();
         Intent intent = new Intent(this, AudioPlayService.class);
         intent.putExtra("sortFlag", Constants.NUMBER_TEN);

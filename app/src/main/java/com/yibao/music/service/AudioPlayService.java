@@ -298,7 +298,6 @@ public class AudioPlayService
                     int id = intent.getIntExtra(BUTTON_ID, 0);
                     switch (id) {
                         case FAVORITE:
-                            boolean favorite = mMusicDao.load(mMusicDataList.get(position).getId()).isFavorite();
                             mBus.post(new MusicStatusBean(1));
                             break;
                         case CLOSE:

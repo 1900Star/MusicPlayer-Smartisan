@@ -157,11 +157,7 @@ public class MusicActivity
                 updatePlayBtnStatus();
                 break;
             case 1:
-                boolean favorite = mMusicDao.load(mCurrentMusicBean.getId()).isFavorite();
-                updataNotifyFavorite(favorite);
-                mSmartisanControlBar.setFavoriteButtonState(!favorite);
-                mQqControlBar.setFavoriteButtonState(!favorite);
-                refreshFavorite(mCurrentMusicBean,favorite);
+                setSongfavoriteState(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
                 break;
             case 2:
                 mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
@@ -186,12 +182,7 @@ public class MusicActivity
             if (mMusicConfig) {
                 switch (clickFlag) {
                     case Constants.NUMBER_ONE:
-//                        updataNotifyFavorite(mMusicDao.load(mCurrentMusicBean.getId()).isFavorite());
                         setSongfavoriteState(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
-//                        boolean isFavorite = mMusicDao.load(mCurrentMusicBean.getId()).isFavorite();
-//                        mSmartisanControlBar.setFavoriteButtonState(!isFavorite);
-//                        mCurrentMusicBean.setFavorite(!isFavorite);
-//                        mMusicDao.update(mCurrentMusicBean);
                         break;
                     case Constants.NUMBER_TWO:
                         clearDisposableProgresse();
@@ -218,9 +209,7 @@ public class MusicActivity
                         switchPlayState();
                         break;
                     case Constants.NUMBER_TWO:
-//                        setSongfavoriteState(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
-//                        updataNotifyFavorite(mMusicDao.load(mCurrentMusicBean.getId()).getFavorite());
-                        break;
+                        setSongfavoriteState(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
                     default:
                         break;
                 }
@@ -331,7 +320,7 @@ public class MusicActivity
      */
     @Override
     public void startMusicService(int position) {
-        clearDisposableProgresse();
+//        clearDisposableProgresse();
         int spMusicFlag = getSpMusicFlag();
         if (spMusicFlag != Constants.NUMBER_TEN) {
             mCurrentPosition = position;

@@ -28,6 +28,7 @@ import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.ImageUitl;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.StringUtil;
@@ -117,10 +118,6 @@ public class PlayActivity extends BasePlayActivity {
         initListener();
     }
 
-    @Override
-    protected void refreshBtnAndNotify(MusicStatusBean musicStatusBean) {
-        refreshBtnAndAnim(musicStatusBean);
-    }
 
     private void initListener() {
         mSbProgress.setOnSeekBarChangeListener(new SeekBarListener());
@@ -143,7 +140,7 @@ public class PlayActivity extends BasePlayActivity {
             mTvLyrics.setLrcFile(musicLyricBeans);
             mAlbumUrl = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId());
             setAlbulm(mAlbumUrl);
-            showNotifycation(mCurrenMusicInfo,audioBinder.isPlaying());
+            showNotifycation(mCurrenMusicInfo, audioBinder.isPlaying());
         }
     }
 
@@ -232,28 +229,6 @@ public class PlayActivity extends BasePlayActivity {
         mEndTime.setText(StringUtil.parseDuration(mDuration));
     }
 
-    private void refreshBtnAndAnim(MusicStatusBean bean) {
-        switch (bean.getType()) {
-            case 0:
-                if (audioBinder.isPlaying()) {
-                    mAnimator.resume();
-                } else {
-                    mAnimator.pause();
-                }
-                updatePlayBtnStatus();
-                updataNotifyPlayBtn(audioBinder.isPlaying());
-                break;
-            case 1:
-                updataNotifyFavorite(mMusicDao.load(mCurrenMusicInfo.getId()).isFavorite());
-                break;
-            case 2:
-                finish();
-                break;
-            default:
-                break;
-        }
-    }
-
 
     private void disPosableLyricsView() {
         if (mCloseLyrDisposable != null) {
@@ -281,8 +256,18 @@ public class PlayActivity extends BasePlayActivity {
 
     }
 
-    private void switchPlayState() {
-        if (audioBinder.isPlaying()) {
+    private void switchPlayState(boolean isPlaying) {
+        mNotifyManager.updataPlayBtn(audioBinder.isPlaying());
+        playBtnState(isPlaying);
+
+        //更新播放状态按钮
+        updatePlayBtnStatus();
+
+
+    }
+
+    private void playBtnState(boolean isPlaying) {
+        if (isPlaying) {
             //当前播放  暂停
             audioBinder.pause();
             mAnimator.pause();
@@ -291,6 +276,7 @@ public class PlayActivity extends BasePlayActivity {
                 mDisposableLyrics = null;
             }
         } else {
+            LogUtil.d("lsp", "=========== Play");
             //当前暂停  播放
             audioBinder.start();
             initAnimation();
@@ -298,12 +284,6 @@ public class PlayActivity extends BasePlayActivity {
                 startRollPlayLyrics(mTvLyrics);
             }
         }
-        mNotifyManager.updataPlayBtn(audioBinder.isPlaying());
-
-        //更新播放状态按钮
-        updatePlayBtnStatus();
-
-
     }
 
     //根据当前播放状态设置图片
@@ -324,6 +304,27 @@ public class PlayActivity extends BasePlayActivity {
         mAnimator.resume();
 
     }
+
+    @Override
+    protected void refreshBtnAndNotify(MusicStatusBean bean) {
+        switch (bean.getType()) {
+            case 0:
+                switchPlayState(!audioBinder.isPlaying());
+                break;
+            case 1:
+                boolean favorite = getFavoriteState(mCurrenMusicInfo);
+                updataNotifyFavorite(favorite);
+                checkCurrentIsFavorite(!favorite);
+                refreshFavorite(mCurrenMusicInfo, favorite);
+                break;
+            case 2:
+                finish();
+                break;
+            default:
+                break;
+        }
+    }
+
 
     @OnClick({R.id.titlebar_down,
             R.id.playing_song_album, R.id.album_cover, R.id.rotate_rl, R.id.tv_lyrics, R.id.iv_lyrics_switch, R.id.iv_secreen_sun_switch, R.id.music_player_mode, R.id.music_player_pre, R.id.music_play, R.id.music_player_next, R.id.iv_favorite_music})
@@ -357,38 +358,21 @@ public class PlayActivity extends BasePlayActivity {
                 audioBinder.playPre();
                 break;
             case R.id.music_play:
-                switchPlayState();
+                switchPlayState(audioBinder.isPlaying());
                 break;
             case R.id.music_player_next:
                 mAnimator.pause();
                 audioBinder.playNext();
                 break;
             case R.id.iv_favorite_music:
-                favoriteMusic();
-                updataNotifyFavorite(mMusicDao.load(mCurrenMusicInfo.getId()).isFavorite());
+                boolean favoriteState = getFavoriteState(mCurrenMusicInfo);
+                checkCurrentIsFavorite(!favoriteState);
+                updataNotifyFavorite(favoriteState);
+                refreshFavorite(mCurrenMusicInfo, favoriteState);
                 break;
             default:
                 break;
         }
-    }
-
-    private void favoriteMusic() {
-
-        if (mCurrenMusicInfo.isFavorite()) {
-            mCurrenMusicInfo.setFavorite(false);
-            mMusicDao.update(mCurrenMusicInfo);
-            mIvFavoriteMusic.setImageResource(R.drawable.music_qqbar_favorite_normal_selector);
-
-        } else {
-            String time = StringUtil.getCurrentTime();
-            mCurrenMusicInfo.setTime(time);
-            mCurrenMusicInfo.setFavorite(true);
-            mMusicDao.update(mCurrenMusicInfo);
-            mIvFavoriteMusic.setImageResource(R.mipmap.favorite_yes);
-
-        }
-        // 更新本地收藏文件
-//        updataFavoriteSong(mCurrenMusicInfo, mCurrenMusicInfo.isFavorite());
     }
 
 
@@ -483,7 +467,7 @@ public class PlayActivity extends BasePlayActivity {
     protected void headsetPullOut() {
         super.headsetPullOut();
         if (audioBinder != null && audioBinder.isPlaying()) {
-            switchPlayState();
+            switchPlayState(audioBinder.isPlaying());
         }
     }
 

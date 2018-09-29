@@ -85,6 +85,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void subscribe() {
+        if (mCompositeDisposable == null) {
+            mCompositeDisposable = new CompositeDisposable();
+        }
         mCompositeDisposable.add(mBus.toObserverable(MusicBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -104,7 +107,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::refreshBtnAndNotify));
-
     }
 
     protected abstract void refreshBtnAndNotify(MusicStatusBean musicStatusBean);
@@ -126,6 +128,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param musicItem 当前播放的歌曲信息，用于更新进度和动画状态,需要用的界面复写这个方法
      */
     protected void updataCurrentPlayInfo(MusicBean musicItem) {
+        upDataPlayProgress();
     }
 
     protected void startPlayActivity(MusicBean musicBean) {
@@ -145,7 +148,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     protected void setSongfavoriteState(MusicBean currentMusicBean, QqControlBar qqControlBar, SmartisanControlBar smartisanControlBar) {
-        boolean mCurrentIsFavorite = mMusicDao.load(currentMusicBean.getId()).isFavorite();
+        boolean mCurrentIsFavorite = getFavoriteState(currentMusicBean);
+        updataNotifyFavorite(mCurrentIsFavorite);
         // Ui更新
         smartisanControlBar.setFavoriteButtonState(!mCurrentIsFavorite);
         if (qqControlBar != null) {
@@ -154,15 +158,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         refreshFavorite(currentMusicBean, mCurrentIsFavorite);
         // 更新本地收藏文件
         updataFavoriteSong(currentMusicBean, mCurrentIsFavorite);
-        updataNotifyFavorite(mCurrentIsFavorite);
     }
 
     protected void refreshFavorite(MusicBean currentMusicBean, boolean mCurrentIsFavorite) {
         // 数据更新
         currentMusicBean.setIsFavorite(!mCurrentIsFavorite);
         if (!mCurrentIsFavorite) {
-            currentMusicBean.setTitle(StringUtil.getCurrentTime());
-//            currentMusicBean.setIsFavorite(true);
+            currentMusicBean.setTime(StringUtil.getCurrentTime());
         }
         mMusicDao.update(currentMusicBean);
     }
@@ -189,10 +191,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     }
 
-    private MusicBean getCurrentMusicBean(MusicBean musicBean) {
-        String time = StringUtil.getCurrentTime();
-        musicBean.setTime(time);
-        return musicBean;
+    protected boolean getFavoriteState(MusicBean musicBean) {
+        return mMusicDao.load(musicBean.getId()).isFavorite();
     }
 
     /**
@@ -226,6 +226,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onPause();
         clearDisposableProgresse();
         disposableQqLyric();
+        if (mCompositeDisposable != null) {
+            mCompositeDisposable.dispose();
+            mCompositeDisposable.clear();
+            mCompositeDisposable = null;
+        }
     }
 
     protected void clearDisposableProgresse() {
@@ -242,11 +247,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         unregisterReceiver(headsetReciver);
         if (mRxViewDisposable != null) {
             mRxViewDisposable.dispose();
-        }
-        if (mCompositeDisposable != null) {
-            mCompositeDisposable.dispose();
-            mCompositeDisposable.clear();
-            mCompositeDisposable = null;
         }
     }
 
