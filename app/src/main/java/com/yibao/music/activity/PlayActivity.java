@@ -308,7 +308,8 @@ public class PlayActivity extends BasePlayActivity {
                 boolean favorite = getFavoriteState(mCurrenMusicInfo);
                 updataNotifyFavorite(favorite);
                 checkCurrentIsFavorite(!favorite);
-                refreshFavorite(mCurrenMusicInfo, favorite);
+
+                updataFavorite(mCurrenMusicInfo, favorite);
                 break;
             case 2:
                 mNotifyManager.hide();
@@ -336,11 +337,7 @@ public class PlayActivity extends BasePlayActivity {
                 break;
             case R.id.playing_song_album:
             case R.id.album_cover:
-//                showLyrics();
-//                break;
             case R.id.tv_lyrics:
-//                showLyrics();
-//                break;
             case R.id.iv_lyrics_switch:
                 showLyrics();
                 break;
@@ -355,9 +352,7 @@ public class PlayActivity extends BasePlayActivity {
                 audioBinder.playPre();
                 break;
             case R.id.music_play:
-//                switchPlayState(audioBinder.isPlaying());
                 mNotifyManager.updataPlayBtn(!audioBinder.isPlaying());
-                // 更新播放状态按钮
                 playBtnState(audioBinder.isPlaying());
                 updatePlayBtnStatus();
                 break;
@@ -369,7 +364,7 @@ public class PlayActivity extends BasePlayActivity {
                 boolean favoriteState = getFavoriteState(mCurrenMusicInfo);
                 checkCurrentIsFavorite(!favoriteState);
                 updataNotifyFavorite(favoriteState);
-                refreshFavorite(mCurrenMusicInfo, favoriteState);
+                updataFavorite(mCurrenMusicInfo, favoriteState);
                 break;
             default:
                 break;

@@ -144,9 +144,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (qqControlBar != null) {
             qqControlBar.setFavoriteButtonState(!mCurrentIsFavorite);
         }
-        refreshFavorite(currentMusicBean, mCurrentIsFavorite);
-        // 更新本地收藏文件
-        updataFavoriteSong(currentMusicBean, mCurrentIsFavorite);
+        updataFavorite(currentMusicBean, mCurrentIsFavorite);
+    }
+
+    protected void updataFavorite(MusicBean currentMusicBean, boolean mCurrentIsFavorite) {
+        new Thread(() -> {
+            refreshFavorite(currentMusicBean, mCurrentIsFavorite);
+            // 更新本地收藏文件
+            updataFavoriteSong(currentMusicBean, mCurrentIsFavorite);
+        }).start();
     }
 
     protected void refreshFavorite(MusicBean currentMusicBean, boolean mCurrentIsFavorite) {
@@ -164,7 +170,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         isNotifyShow = true;
     }
 
-    protected void updataFavoriteSong(MusicBean musicBean, boolean currentIsFavorite) {
+    private void updataFavoriteSong(MusicBean musicBean, boolean currentIsFavorite) {
         if (currentIsFavorite) {
             mCompositeDisposable.add(ReadFavoriteFileUtil.deleteFavorite(musicBean.getTitle()).observeOn(AndroidSchedulers.mainThread()).subscribe(aBoolean -> {
                 if (!aBoolean) {

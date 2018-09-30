@@ -1,5 +1,6 @@
 package com.yibao.music.activity;
 
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -351,9 +352,8 @@ public class MusicActivity
         intent.putExtra("queryFlag", queryFlag);
         intent.putExtra("position", mCurrentPosition);
         mConnection = new AudioServiceConnection();
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         startService(intent);
-
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     private int getSpMusicFlag() {
@@ -400,7 +400,7 @@ public class MusicActivity
         // 初始化动画
         mSmartisanControlBar.initAnimation();
         //更新歌曲的进度
-        MusicActivity.this.updataCurrentPlayProgress();
+        upDataPlayProgress();
         // 打开通知栏
         showNotifycation(mCurrentMusicBean, audioBinder.isPlaying());
     }
