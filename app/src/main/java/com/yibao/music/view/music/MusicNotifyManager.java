@@ -26,7 +26,7 @@ import com.yibao.music.util.StringUtil;
 
 /**
  * @author Stran
- * Des：${音乐列表界面} 发送的广播在AudioPlayService中注册和解除
+ * Des：${通知管理}
  * Time:2017/5/30 13:27
  */
 

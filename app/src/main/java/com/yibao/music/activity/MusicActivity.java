@@ -328,8 +328,8 @@ public class MusicActivity
             musicIntent.putExtra("sortFlag", spMusicFlag);
             musicIntent.putExtra("position", mCurrentPosition);
             mConnection = new AudioServiceConnection();
-            bindService(musicIntent, mConnection, Context.BIND_AUTO_CREATE);
             startService(musicIntent);
+            bindService(musicIntent, mConnection, Context.BIND_AUTO_CREATE);
         }
     }
 
@@ -511,6 +511,7 @@ public class MusicActivity
     protected void onResume() {
         super.onResume();
         if (audioBinder != null) {
+            perpareItem(audioBinder.getTitleAndArtist());
             mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
             checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
             updatePlayBtnStatus();

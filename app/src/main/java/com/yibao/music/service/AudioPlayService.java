@@ -165,7 +165,9 @@ public class AudioPlayService
             SharePrefrencesUtil.setMusicPosition(AudioPlayService.this, position);
         }
 
-
+        public MusicBean getTitleAndArtist() {
+            return mMusicInfo;
+        }
         //准备完成回调
 
         @Override

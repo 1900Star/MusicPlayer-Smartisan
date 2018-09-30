@@ -122,7 +122,6 @@ public class PlayActivity extends BasePlayActivity {
     private void initListener() {
         mSbProgress.setOnSeekBarChangeListener(new SeekBarListener());
         mSbVolume.setOnSeekBarChangeListener(new SeekBarListener());
-        rxViewClick();
         mPlayingSongAlbum.setOnLongClickListener(view -> {
             PreviewBigPicDialogFragment.newInstance(mAlbumUrl)
                     .show(getFragmentManager(), "album");
@@ -253,31 +252,25 @@ public class PlayActivity extends BasePlayActivity {
                 return false;
             }
         });
-
     }
 
     private void switchPlayState(boolean isPlaying) {
         mNotifyManager.updataPlayBtn(audioBinder.isPlaying());
-        playBtnState(isPlaying);
-
-        //更新播放状态按钮
+        // 更新播放状态按钮
         updatePlayBtnStatus();
-
-
+        playBtnState(isPlaying);
     }
 
     private void playBtnState(boolean isPlaying) {
         if (isPlaying) {
-            //当前播放  暂停
+            // 当前播放  暂停
             audioBinder.pause();
             mAnimator.pause();
             if (isShowLyrics && mDisposableLyrics != null) {
-                mDisposableLyrics.dispose();
-                mDisposableLyrics = null;
+                clearDisposableLyric();
             }
         } else {
-            LogUtil.d("lsp", "=========== Play");
-            //当前暂停  播放
+            // 当前暂停  播放
             audioBinder.start();
             initAnimation();
             if (isShowLyrics) {
@@ -318,7 +311,6 @@ public class PlayActivity extends BasePlayActivity {
                 refreshFavorite(mCurrenMusicInfo, favorite);
                 break;
             case 2:
-
                 mNotifyManager.hide();
                 audioBinder.pause();
                 mAnimator.pause();
@@ -363,7 +355,11 @@ public class PlayActivity extends BasePlayActivity {
                 audioBinder.playPre();
                 break;
             case R.id.music_play:
-                switchPlayState(audioBinder.isPlaying());
+//                switchPlayState(audioBinder.isPlaying());
+                mNotifyManager.updataPlayBtn(!audioBinder.isPlaying());
+                // 更新播放状态按钮
+                playBtnState(audioBinder.isPlaying());
+                updatePlayBtnStatus();
                 break;
             case R.id.music_player_next:
                 mAnimator.pause();
@@ -466,6 +462,7 @@ public class PlayActivity extends BasePlayActivity {
     protected void onResume() {
         super.onResume();
         checkCurrentIsFavorite(mMusicDao.load(mCurrenMusicInfo.getId()).isFavorite());
+        rxViewClick();
     }
 
     @Override

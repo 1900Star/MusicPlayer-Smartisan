@@ -15,8 +15,6 @@ import com.yibao.music.R;
 import com.yibao.music.activity.MusicActivity;
 import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.base.listener.SeekBarChangeListtener;
-import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.LyricsView;
@@ -25,7 +23,6 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -72,7 +69,6 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
     }
 
     protected void clearDisposableLyric() {
-
         if (mDisposableLyrics != null) {
             mDisposableLyrics.dispose();
             mDisposableLyrics = null;
@@ -144,7 +140,7 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
     /**
      * 更新播放模式图片
      *
-     * @param playMode
+     * @param playMode 播放模式
      */
     protected void updatePlayModeImage(int playMode, ImageView mMusicPlayerMode) {
         switch (playMode) {
