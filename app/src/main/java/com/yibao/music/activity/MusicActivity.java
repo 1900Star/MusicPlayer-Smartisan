@@ -1,9 +1,10 @@
 package com.yibao.music.activity;
 
-import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -89,6 +90,7 @@ public class MusicActivity
     // 切换Tab时更改TiTle的标记,打开详情页面时正确显示Title
     private boolean mIsShowDetail;
     private String mDetailViewTitle;
+    private NotifyBroacastReceiver mReceiver;
 
 
     @Override
@@ -234,7 +236,6 @@ public class MusicActivity
      */
     private void switchPlayState() {
         if (mPlayState == Constants.NUMBER_ONE) {
-            LogUtil.d(" PlayState == 1 ==================");
             executStartServiceAndInitAnimation();
         } else if (mPlayState == Constants.NUMBER_TWO) {
             mPlayState = Constants.NUMBER_THRRE;
@@ -511,7 +512,7 @@ public class MusicActivity
     protected void onResume() {
         super.onResume();
         if (audioBinder != null) {
-            perpareItem(audioBinder.getTitleAndArtist());
+            perpareItem(audioBinder.getMusicBean());
             mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
             checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
             updatePlayBtnStatus();
@@ -523,6 +524,15 @@ public class MusicActivity
         }
         initRxBusData();
         openMusicPlayDialogFag();
+        // 清除广播
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mReceiver != null) {
+            unregisterReceiver(mReceiver);
+        }
     }
 
     @Override
@@ -573,15 +583,68 @@ public class MusicActivity
         if (mSmartisanControlBar != null) {
             mSmartisanControlBar.animatorStop();
         }
-        if (audioBinder != null && !audioBinder.isPlaying()) {
-            mNotifyManager.hide();
-        }
         if (audioBinder != null) {
             mPlayState = audioBinder.isPlaying() ? Constants.NUMBER_TWO : Constants.NUMBER_ONE;
             SharePrefrencesUtil.setMusicPlayState(this, mPlayState);
         }
+        mNotifyManager.hide();
         unbindAudioService();
 //        stopService(new Intent(this, AudioPlayService.class));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LogUtil.d("lsp", "========onStop");
+        initBroadcast();
+    }
+
+    private void initBroadcast() {
+        mReceiver = new NotifyBroacastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(AudioPlayService.ACTION_MUSIC);
+        registerReceiver(mReceiver, filter);
+
+    }
+
+    // 在程序处于后台时（此时Activity的onPause已经执行了，所有的订阅者都被清除，无法接收Service中RxBus发出的事件，
+    // 也无法更新通知栏的信息），在MusicActivity的onStop中注册这个广播，仅仅用来更新通知栏，在onResume中将广播解除注册。
+    private class NotifyBroacastReceiver
+            extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action != null) {
+                if (action.equals(ACTION_MUSIC)) {
+                    int id = intent.getIntExtra(BUTTON_ID, 0);
+                    LogUtil.d("lsp", "=======收藏广播");
+                    switch (id) {
+                        // favorite
+                        case Constants.NUMBER_ZOER:
+                            updataNotifyFavorite(mCurrentMusicBean.getIsFavorite());
+                            refreshFavorite(mCurrentMusicBean, getFavoriteState(mCurrentMusicBean));
+                            break;
+                        // close
+                        case Constants.NUMBER_FOUR:
+                            mNotifyManager.hide();
+                            audioBinder.pause();
+                            break;
+                        // pre
+                        case Constants.NUMBER_ONE:
+                            break;
+                        // play
+                        case Constants.NUMBER_TWO:
+                            updataNotifyPlayBtn(audioBinder.isPlaying());
+                            break;
+                        // next
+                        case Constants.NUMBER_THRRE:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
     }
 
 

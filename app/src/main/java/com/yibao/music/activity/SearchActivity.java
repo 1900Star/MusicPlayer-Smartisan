@@ -27,7 +27,6 @@ import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.MusicDaoUtil;
 import com.yibao.music.util.MusicListUtil;
@@ -44,7 +43,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -105,6 +103,8 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     protected void onResume() {
         super.onResume();
         if (audioBinder != null) {
+            mMusicBean = audioBinder.getMusicBean();
+            setMusicInfo(mMusicBean);
             checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
             mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
             mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());

@@ -118,7 +118,6 @@ public class AudioPlayService
         mBus.post(new QqBarUpdataBean(mMusicDao, mMusicBean, sortFlag, dataFlag, queryFlag));
         mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao, mMusicBean, sortFlag, dataFlag, queryFlag);
         if (enterPosition != position && enterPosition != -1) {
-
             position = enterPosition;
             //执行播放
             mAudioBinder.play();
@@ -134,13 +133,10 @@ public class AudioPlayService
      * 通知播放界面更新
      */
     private void sendCureentMusicInfo() {
-
         LogUtil.d("  发送的postion  " + position);
         MusicBean musicBean = mMusicDataList.get(position);
-
         musicBean.setCureetPosition(position);
         mBus.post(musicBean);
-
     }
 
 
@@ -165,7 +161,7 @@ public class AudioPlayService
             SharePrefrencesUtil.setMusicPosition(AudioPlayService.this, position);
         }
 
-        public MusicBean getTitleAndArtist() {
+        public MusicBean getMusicBean() {
             return mMusicInfo;
         }
         //准备完成回调
@@ -252,7 +248,7 @@ public class AudioPlayService
             play();
         }
 
-        //手动播放下一曲
+        // 手动播放下一曲
 
         public void playNext() {
             switch (PLAY_MODE) {
@@ -289,7 +285,7 @@ public class AudioPlayService
         }
     }
 
-    //控制通知栏的广播
+    // 控制通知栏的广播
     private class MusicBroacastReceiver
             extends BroadcastReceiver {
         @Override
@@ -304,7 +300,6 @@ public class AudioPlayService
                             break;
                         case CLOSE:
                             mBus.post(new MusicStatusBean(2));
-//                            onDestroy();
                             break;
                         case PREV:
                             mAudioBinder.playPre();

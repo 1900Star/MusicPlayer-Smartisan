@@ -57,7 +57,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Disposable mRxViewDisposable;
     protected MusicNotifyManager mNotifyManager;
     protected boolean isNotifyShow;
-
+    /**
+     * 广播匹配
+     */
+    protected final static String BUTTON_ID = "ButtonId";
+    protected final static String ACTION_MUSIC = "MUSIC";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,7 +1,9 @@
 package com.yibao.music;
 
+import android.app.Activity;
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.yibao.music.model.greendao.DaoMaster;
@@ -10,6 +12,7 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.MusicInfoDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.CrashHandler;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RxBus;
 
 /**
@@ -28,6 +31,7 @@ public class MusicApplication
 
     private DaoSession mDaoSession;
     private static MusicBeanDao musicBeanDao;
+    private boolean isBack = false;
 
     public static MusicApplication getIntstance() {
         if (appContext == null) {
@@ -49,6 +53,7 @@ public class MusicApplication
                 .init(this);
         setUpDataBase();
         mRxBus = new RxBus();
+//        backTask();
     }
 
     private void setUpDataBase() {
@@ -84,5 +89,43 @@ public class MusicApplication
         return mRxBus;
     }
 
+    public void backTask() {
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+                LogUtil.d("=============前台");
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+                LogUtil.d("=============后台");
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+
+            }
+        });
+    }
 
 }
