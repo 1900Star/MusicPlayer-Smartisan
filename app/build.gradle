@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.2'
     defaultConfig {
         applicationId "com.yibao.music"
         minSdkVersion 19
@@ -72,7 +72,5 @@ android {
         implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
         implementation 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.0.0'
         implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
-        // zhy FlowLayoutView
-        implementation 'com.hyman:flowlayout-lib:1.1.2'
     }
 }
