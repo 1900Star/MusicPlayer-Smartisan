@@ -126,7 +126,6 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
             setDuration();
             SearchActivity.this.checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
             mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
-            SearchActivity.this.updataLyric();
         }
     }
 
@@ -158,7 +157,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         if (mSearchList != null && mSearchList.size() > 0) {
             mLayoutHistory.setVisibility(View.VISIBLE);
         }
-        mSearchDetailAdapter = new SearchDetailsAdapter(SearchActivity.this, null, Constants.NUMBER_ONE);
+        mSearchDetailAdapter = new SearchDetailsAdapter(SearchActivity.this, null, Constants.NUMBER_THRRE);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(1, mSearchDetailAdapter);
         mLinearDetail.addView(recyclerView);
         mFlowLayoutView.setData(mSearchList);
@@ -264,7 +263,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
      * @param searchconditions 搜索关键字
      */
     private void searchMusic(String searchconditions) {
-        MusicDaoUtil.getSearchResult(mMusicDao, mSearchDao, searchconditions)
+        MusicDaoUtil.getSearchResult(flag -> mSearchDetailAdapter.setDataFlag(flag), mMusicDao, mSearchDao, searchconditions)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseObserver<List<MusicBean>>() {
                     @Override
@@ -313,7 +312,6 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
 
     @Override
     public void startMusicServiceFlag(int position, int dataFlag, String queryFlag) {
-        disposableQqLyric();
         Intent intent = new Intent(this, AudioPlayService.class);
         intent.putExtra("sortFlag", Constants.NUMBER_TEN);
         intent.putExtra("dataFlag", dataFlag);
@@ -322,7 +320,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         AudioServiceConnection serviceConnection = new AudioServiceConnection();
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         startService(intent);
-//        SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 1, InputMethodManager.RESULT_UNCHANGED_SHOWN);
+        updataLyric();
     }
 
     @Override
@@ -358,15 +356,9 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
                                 mSmartisanControlBar.setSingerName(content);
                                 lyricsFlag++;
                             }
-
-
                         }
-
-
                     });
-
         }
-
 
     }
 }

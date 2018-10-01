@@ -302,8 +302,8 @@ public class MusicActivity
                                 if (mCurrentPosition < mMusicItems.size()) {
                                     mMusicItems.set(mCurrentPosition, musicBean);
                                 }
-                                LogUtil.d("当前的位置 ===  " + mCurrentPosition);
-                                LogUtil.d("当前的时间和歌词 ===  " + startTime + " ==  " + content);
+//                                LogUtil.d("当前的位置 ===  " + mCurrentPosition);
+//                                LogUtil.d("当前的时间和歌词 ===  " + startTime + " ==  " + content);
 
                                 mQqControlBar.updaPagerData(mMusicItems, mCurrentPosition);
                                 lyricsFlag++;

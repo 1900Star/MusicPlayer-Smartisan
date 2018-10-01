@@ -1,9 +1,7 @@
 package com.yibao.music.util;
 
-import com.yibao.music.MusicApplication;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 
 import java.util.List;
 

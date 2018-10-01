@@ -34,6 +34,7 @@ import butterknife.ButterKnife;
 
 public class SearchDetailsAdapter extends BaseRvAdapter<MusicBean> {
     private Context mContext;
+    // 用来区分搜索的标识：1 Artist 、 2 Album 、  3 SongName
     private int mDataFlag;
 
     public SearchDetailsAdapter(Context context, List<MusicBean> list, int dataFlag) {
@@ -43,7 +44,7 @@ public class SearchDetailsAdapter extends BaseRvAdapter<MusicBean> {
     }
 
     public void setDataFlag(int flag) {
-        mDataFlag = flag;
+        this.mDataFlag = flag;
     }
 
     @Override
@@ -61,10 +62,6 @@ public class SearchDetailsAdapter extends BaseRvAdapter<MusicBean> {
             detailsHolder.itemView.setOnClickListener(view -> {
                 if (mContext instanceof OnMusicItemClickListener) {
                     SharePrefrencesUtil.setMusicDataListFlag(mContext, Constants.NUMBER_TEN);
-
-                    ((OnMusicItemClickListener) mContext).startMusicServiceFlag(detailsHolder.getAdapterPosition(), mDataFlag, getQueryFlag(info));
-                }
-                if (mContext instanceof OnMusicItemClickListener) {
                     ((OnMusicItemClickListener) mContext).startMusicServiceFlag(detailsHolder.getAdapterPosition(), mDataFlag, getQueryFlag(info));
                 }
 
