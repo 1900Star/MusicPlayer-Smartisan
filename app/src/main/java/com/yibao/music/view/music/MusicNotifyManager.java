@@ -75,6 +75,7 @@ public class MusicNotifyManager implements
                 .setSmallIcon(R.drawable.noalbumcover_120)
                 .setWhen(System.currentTimeMillis())
                 .setOngoing(true)
+                .setOnlyAlertOnce(true)
                 .setCustomContentView(createContentView())
                 .setCustomBigContentView(createContentBigView())
                 .setChannelId(channelId)
@@ -160,7 +161,8 @@ public class MusicNotifyManager implements
     @Override
     public void show() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId, "music", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel channel = new NotificationChannel(channelId, "music", NotificationManager.IMPORTANCE_LOW);
+            channel.enableVibration(false);
             manager.createNotificationChannel(channel);
         }
         Notification nf = buildNotification();
