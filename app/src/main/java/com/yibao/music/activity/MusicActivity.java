@@ -86,7 +86,7 @@ public class MusicActivity
 
     private int lyricsFlag = 0;
     private ArrayList<MusicLyricBean> mLyricList;
-    private int mTitleResourceId;
+    private int mTitleResourceId=R.string.music_song;
     // 切换Tab时更改TiTle的标记,打开详情页面时正确显示Title
     private boolean mIsShowDetail;
     private String mDetailViewTitle;
@@ -282,6 +282,7 @@ public class MusicActivity
      */
     //TODO
     private void setQqPagerLyric() {
+        disposableQqLyric();
         if (mQqLyricsDisposable == null) {
             mQqLyricsDisposable = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
                     .subscribeOn(Schedulers.io())

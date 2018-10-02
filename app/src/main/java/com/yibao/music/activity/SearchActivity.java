@@ -126,6 +126,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
             setDuration();
             SearchActivity.this.checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
             mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+            showNotifycation(mMusicBean, audioBinder.isPlaying());
         }
     }
 

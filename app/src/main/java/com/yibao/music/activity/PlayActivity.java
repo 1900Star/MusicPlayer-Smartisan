@@ -190,6 +190,7 @@ public class PlayActivity extends BasePlayActivity {
         if (isShowLyrics) {
             closeLyricsView(lyricList);
         }
+        showNotifycation(musicBean, audioBinder.isPlaying());
     }
 
     /**
