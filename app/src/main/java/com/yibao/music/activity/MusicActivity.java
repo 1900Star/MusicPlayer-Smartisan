@@ -111,7 +111,6 @@ public class MusicActivity
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         toolbar.setNavigationIcon(R.drawable.music_titlebar_back_selector);
         toolbar.setNavigationOnClickListener(v -> MusicActivity.this.onBackPressed());
-
     }
 
 
@@ -597,7 +596,7 @@ public class MusicActivity
     protected void onStop() {
         super.onStop();
         LogUtil.d("lsp", "========onStop");
-        initBroadcast();
+//        initBroadcast();
     }
 
     private void initBroadcast() {

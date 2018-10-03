@@ -480,7 +480,7 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     public void closeLyricsView(ArrayList<MusicLyricBean> lyricList) {
-        if (lyricList.size() == 1) {
+        if (lyricList.size() < 2) {
             if (mCloseLyrDisposable == null) {
                 mCloseLyrDisposable = Observable.timer(5, TimeUnit.SECONDS)
                         .subscribeOn(Schedulers.io())

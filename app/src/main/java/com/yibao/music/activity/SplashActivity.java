@@ -89,32 +89,39 @@ public class SplashActivity
                     .subscribe(musicCountBean -> {
                         int size = musicCountBean.getSize();
                         int count = musicCountBean.getMusicCount();
-                        mMusicLoadProgressBar.setMax(size);
-                        String s = "已经加载  " + count + " 首本地音乐";
-
-                        mTvMusicCount.setText(s);
-                        mMusicLoadProgressBar.setProgress(count);
-                        if (count == size) {
-                            mTvMusicCount.setTextColor(getResources().getColor(R.color.lyricsSelected));
-                            mTvMusicCount.setText("本地音乐加载完成 -_-");
-                            SplashActivity.this.startActivity(new Intent(SplashActivity.this,
-                                    MusicActivity.class));
-                            SharePrefrencesUtil.setLoadMusicFlag(SplashActivity.this, Constants.NUMBER_EIGHT);
-                            finish();
+                        if (size < 1) {
+                            mTvMusicCount.setText("本地没有发现音乐,去下载歌曲后再来体验吧!");
+                        } else {
+                            mMusicLoadProgressBar.setMax(size);
+                            String s = "已经加载  " + count + " 首本地音乐";
+                            mTvMusicCount.setText(s);
+                            mMusicLoadProgressBar.setProgress(count);
+                            if (count == size) {
+                                mTvMusicCount.setTextColor(getResources().getColor(R.color.lyricsSelected));
+                                mTvMusicCount.setText("本地音乐加载完成 -_-");
+                                SplashActivity.this.startActivity(new Intent(SplashActivity.this,
+                                        MusicActivity.class));
+                                SharePrefrencesUtil.setLoadMusicFlag(SplashActivity.this, Constants.NUMBER_EIGHT);
+                                finish();
+                            }
                         }
                     }));
         } else {
 
-            mCompositeDisposable.add(Observable.timer(400, TimeUnit.MILLISECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(aLong -> {
-                        SplashActivity.this.startActivity(new Intent(SplashActivity.this,
-                                MusicActivity.class));
-                        finish();
-                    }));
+            startMusicActivity();
         }
 
+    }
+
+    private void startMusicActivity() {
+        mCompositeDisposable.add(Observable.timer(400, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+                    SplashActivity.this.startActivity(new Intent(SplashActivity.this,
+                            MusicActivity.class));
+                    finish();
+                }));
     }
 
 

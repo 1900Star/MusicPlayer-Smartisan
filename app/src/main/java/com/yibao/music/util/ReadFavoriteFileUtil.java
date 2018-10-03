@@ -1,5 +1,6 @@
 package com.yibao.music.util;
 
+import android.annotation.SuppressLint;
 import android.os.Environment;
 
 import java.io.BufferedReader;
@@ -16,6 +17,10 @@ import java.util.Map;
 import java.util.Set;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -36,7 +41,7 @@ public class ReadFavoriteFileUtil {
      */
     public static synchronized Observable<Boolean> deleteFavorite(final String content) {
 
-        return Observable.create(emitter -> Observable.just(stringToSet())
+        return Observable.just(stringToSet())
                 .map(strings -> strings.contains(content))
                 .map(aBoolean -> {
                     Set<String> stringSet = stringToSet();
@@ -44,12 +49,7 @@ public class ReadFavoriteFileUtil {
                     return stringSet;
                 })
                 .map(list -> againWrite(FAVORITE_FILE, list))
-                .observeOn(Schedulers.io())
-                .subscribe(aBoolean -> {
-                    emitter.onNext(aBoolean);
-                    emitter.onComplete();
-
-                }));
+                .subscribeOn(Schedulers.io());
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.yibao.music.base;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -84,6 +85,7 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
         }
     }
 
+    @SuppressLint("InvalidWakeLockTag")
     private void init() {
         audioBinder = MusicActivity.getAudioBinder();
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);

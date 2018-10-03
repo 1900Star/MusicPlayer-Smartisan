@@ -9,6 +9,7 @@ import com.yibao.music.MusicApplication;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.MusicCountBean;
+import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
@@ -38,14 +39,12 @@ public class LoadMusicDataService extends IntentService {
     private MusicBeanDao mMusicDao;
     private int songCount = 0;
     private RxBus mBus;
-    private CompositeDisposable mDisposable;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mBus = MusicApplication.getIntstance().bus();
-        mDisposable = new CompositeDisposable();
     }
 
     public LoadMusicDataService() {
@@ -56,16 +55,19 @@ public class LoadMusicDataService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         List<MusicBean> dataList = MusicListUtil.getMusicDataList();
         int songSum = dataList.size();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            dataList.forEach((MusicBean bean) -> sendLoadProgress(songSum, bean));
+        if (songSum < 1) {
+            mBus.post(new MusicCountBean(Constants.NUMBER_ZOER, Constants.NUMBER_ZOER));
         } else {
-            for (MusicBean musicInfo : dataList) {
-                sendLoadProgress(songSum, musicInfo);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                dataList.forEach((MusicBean bean) -> sendLoadProgress(songSum, bean));
+            } else {
+                for (MusicBean musicInfo : dataList) {
+                    sendLoadProgress(songSum, musicInfo);
+                }
             }
+            LogUtil.d("lsp", "LoadMusicDataServices===== 加载数据完成");
+            recoverFavoriteMusic(dataList);
         }
-        LogUtil.d("lsp", "LoadMusicDataServices===== 加载数据完成");
-        recoverFavoriteMusic(dataList);
-
     }
 
     private void recoverFavoriteMusic(List<MusicBean> musicBeanList) {
@@ -88,7 +90,7 @@ public class LoadMusicDataService extends IntentService {
             LogUtil.d("自动恢复收藏列表");
         } else {
             LogUtil.d("没有发现歌曲收藏文件");
-            ToastUtil.showNotFoundFavoriteFile(this);
+//            ToastUtil.showNotFoundFavoriteFile(this);
 
         }
     }
@@ -96,18 +98,12 @@ public class LoadMusicDataService extends IntentService {
     private void sendLoadProgress(int songSum, MusicBean bean) {
         songCount++;
         mMusicDao.insert(bean);
-
         mBus.post(new MusicCountBean(songCount, songSum));
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mDisposable != null) {
-            mDisposable.dispose();
-            mDisposable.clear();
-            mDisposable = null;
-        }
         stopSelf();
     }
 }

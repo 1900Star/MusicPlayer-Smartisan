@@ -45,6 +45,7 @@ public class SongMusicFragment extends BaseMusicFragment {
     TextView mMusicCategoryAddtime;
     @BindView(R.id.vp_song_fag)
     ViewPager mViewPager;
+    private int curentIndex=0;
 
     @Nullable
     @Override
@@ -55,6 +56,11 @@ public class SongMusicFragment extends BaseMusicFragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        switchListCategory(curentIndex);
+    }
 
     private void initData() {
         switchListCategory(0);
@@ -97,6 +103,7 @@ public class SongMusicFragment extends BaseMusicFragment {
 
 
     private void switchListCategory(int flag) {
+        curentIndex = flag;
         mViewPager.setCurrentItem(flag, false);
         switch (flag) {
             case 0:

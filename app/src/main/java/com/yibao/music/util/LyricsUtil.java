@@ -27,14 +27,46 @@ public class LyricsUtil {
     private static BufferedReader br;
 
     public static ArrayList<MusicLyricBean> getLyricList(String songName, String artist) {
+        String actualArtist = "<unknown>".equals(artist) ? "Smartisan" : artist;
         ArrayList<MusicLyricBean> lrcList = new ArrayList<>();
         String str = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyric/";
-        String path = str + songName + "$$" + artist + ".lrc";
+        String path = str + songName + "$$" + actualArtist + ".lrc";
         File file = new File(path);
         if (!file.exists()) {
-            lrcList.add(new MusicLyricBean(0, "暂无歌词"));
+            new Thread(() -> {
+                // 本地没有歌词，从网络下载，如果下载失败，返回" 暂无歌词"
+                String lyricsUrl = DownloadLyricsUtil.getLyricsUrl(songName, actualArtist);
+                if (lyricsUrl != null) {
+                    loadLtyrics(songName, actualArtist, lrcList, file, lyricsUrl);
+                } else {
+                    // 只用歌名搜索歌词
+                    String lastUrl = DownloadLyricsUtil.getLyricsUrl(songName, null);
+                    if (lastUrl != null) {
+                        loadLtyrics(songName, actualArtist, lrcList, file, lastUrl);
+                    } else {
+                        lrcList.add(new MusicLyricBean(0, "暂无歌词"));
+                    }
+                }
+            }).start();
+
             return lrcList;
+
+        } else {
+            // 本地有歌词，直接返回。
+            return loadLyrics(lrcList, file);
         }
+    }
+
+    private static void loadLtyrics(String songName, String actualArtist, ArrayList<MusicLyricBean> lrcList, File file, String lyricsUrl) {
+        boolean isSuccessful = DownloadLyricsUtil.getLyrics(lyricsUrl, songName, actualArtist);
+        if (isSuccessful) {
+            loadLyrics(lrcList, file);
+        } else {
+            lrcList.add(new MusicLyricBean(0, "暂无歌词"));
+        }
+    }
+
+    private static ArrayList<MusicLyricBean> loadLyrics(ArrayList<MusicLyricBean> lrcList, File file) {
         try {
             br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"));
             String line = br.readLine();
