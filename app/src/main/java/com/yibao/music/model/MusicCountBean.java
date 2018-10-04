@@ -11,20 +11,20 @@ package com.yibao.music.model;
  */
 
 public class MusicCountBean {
-    private int musicCount;
+    private int currentCount;
     private int size;
 
     public MusicCountBean(int musicCount, int size) {
-        this.musicCount = musicCount;
+        this.currentCount = musicCount;
         this.size = size;
     }
 
-    public int getMusicCount() {
-        return musicCount;
+    public int getCurrentCount() {
+        return currentCount;
     }
 
-    public void setMusicCount(int musicCount) {
-        this.musicCount = musicCount;
+    public void setCurrentCount(int currentCount) {
+        this.currentCount = currentCount;
     }
 
     public int getSize() {

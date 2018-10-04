@@ -1,4 +1,4 @@
-package com.yibao.filereaddemo.util;
+package com.yibao.music.model;
 
 import java.util.List;
 

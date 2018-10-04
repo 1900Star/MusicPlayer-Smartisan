@@ -13,18 +13,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="4dp"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="20dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/shape_about_card"
             android:padding="15dp">
 
@@ -38,8 +38,8 @@
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 android:layout_toEndOf="@id/about_header_iv"
                 android:text="@string/about_name"
                 android:textColor="@color/colorBlack"
@@ -53,10 +53,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_name"
-                android:layout_marginBottom="6dp"
-                android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="6dp"
                 android:layout_toEndOf="@id/about_header_iv"
                 android:autoLink="web"
                 android:linksClickable="true"
@@ -90,8 +90,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
                 android:text="@string/preject_introduce"
                 android:textColor="@color/aboutTitle"
                 android:textSize="@dimen/about_title"
@@ -111,8 +111,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
                 android:layout_marginStart="10dp"
+                android:layout_marginBottom="10dp"
                 android:autoLink="web"
                 android:linksClickable="true"
                 android:text="@string/preject_url"
@@ -123,8 +123,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
                 android:layout_marginStart="10dp"
+                android:layout_marginBottom="20dp"
                 android:autoLink="email"
                 android:linksClickable="true"
                 android:text="@string/email"
@@ -139,8 +139,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/shape_about_card"
             android:orientation="horizontal">
 
@@ -166,10 +166,45 @@
                 android:textColor="@color/tabbarDownTv"
                 android:textSize="@dimen/about_title"
                 android:textStyle="bold"
-                android:typeface="serif" />
+                android:typeface="serif"
+                tools:ignore="RelativeOverlap" />
 
 
         </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/shape_about_card"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:id="@+id/tv_scanner_media"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:text="@string/scanner_music"
+                android:textColor="@color/music_activity_title_selector"
+                android:textSize="@dimen/about_title"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:text="@string/recovery_favorite_song"
+                android:textColor="@color/tabbarDownTv"
+                android:textSize="@dimen/about_title"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
 
     </LinearLayout>

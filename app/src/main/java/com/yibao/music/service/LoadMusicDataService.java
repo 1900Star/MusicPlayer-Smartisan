@@ -37,7 +37,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public class LoadMusicDataService extends IntentService {
 
     private MusicBeanDao mMusicDao;
-    private int songCount = 0;
+    private int currentCount = 0;
     private RxBus mBus;
 
     @Override
@@ -55,19 +55,46 @@ public class LoadMusicDataService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         List<MusicBean> dataList = MusicListUtil.getMusicDataList();
         int songSum = dataList.size();
-        if (songSum < 1) {
-            mBus.post(new MusicCountBean(Constants.NUMBER_ZOER, Constants.NUMBER_ZOER));
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                dataList.forEach((MusicBean bean) -> sendLoadProgress(songSum, bean));
-            } else {
-                for (MusicBean musicInfo : dataList) {
-                    sendLoadProgress(songSum, musicInfo);
+        // 手动扫描本地歌曲
+        if (getIsNeedAgainScaner(intent)) {
+            // 数据库的歌曲和最新媒体库中歌曲数量比较
+            List<MusicBean> beanList = mMusicDao.queryBuilder().build().list();
+            int newSong = songSum - beanList.size();
+            // newSong新增歌曲的数量，大于0表示有新的歌曲。
+            if (newSong > 0) {
+                // 对集合按添加时间排序，这样新增的歌曲就会排在最前面，通过循环将前面新增的歌曲添加到本地数据库
+                List<MusicBean> newList = MusicListUtil.sortMusicAddTime(dataList, 1);
+                for (int i = 0; i < newSong; i++) {
+                    sendLoadProgress(newSong, newList.get(i));
                 }
+            } else {
+                LogUtil.d("没有新增歌曲!");
+                mBus.post(new MusicCountBean(Constants.NUMBER_ZOER, Constants.NUMBER_ZOER));
             }
-            LogUtil.d("lsp", "LoadMusicDataServices===== 加载数据完成");
-            recoverFavoriteMusic(dataList);
+        } else {
+            if (songSum > 0) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    dataList.forEach((MusicBean bean) -> sendLoadProgress(songSum, bean));
+                } else {
+                    for (MusicBean musicInfo : dataList) {
+                        sendLoadProgress(songSum, musicInfo);
+                    }
+                }
+                LogUtil.d("lsp", "LoadMusicDataServices===== 加载数据完成");
+                recoverFavoriteMusic(dataList);
+            } else {
+                // 本地没有发现歌曲
+                mBus.post(new MusicCountBean(Constants.NUMBER_ZOER, Constants.NUMBER_ZOER));
+            }
         }
+    }
+
+    private boolean getIsNeedAgainScaner(Intent intent) {
+        if (intent != null) {
+            String scanner = intent.getStringExtra(Constants.SCANNER_MEDIA);
+            return scanner != null;
+        }
+        return false;
     }
 
     private void recoverFavoriteMusic(List<MusicBean> musicBeanList) {
@@ -96,9 +123,9 @@ public class LoadMusicDataService extends IntentService {
     }
 
     private void sendLoadProgress(int songSum, MusicBean bean) {
-        songCount++;
+        currentCount++;
         mMusicDao.insert(bean);
-        mBus.post(new MusicCountBean(songCount, songSum));
+        mBus.post(new MusicCountBean(currentCount, songSum));
     }
 
     @Override

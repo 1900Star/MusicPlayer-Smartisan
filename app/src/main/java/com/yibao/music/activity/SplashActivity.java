@@ -15,6 +15,7 @@ import com.yibao.music.model.MusicCountBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.service.LoadMusicDataService;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SharePrefrencesUtil;
 import com.yibao.music.util.SystemUiVisibilityUtil;
 import com.yibao.music.view.ProgressBtn;
@@ -47,6 +48,8 @@ public class SplashActivity
     ProgressBtn mMusicLoadProgressBar;
     @BindView(R.id.vp_splash)
     ViewPager mVpSplash;
+    private String mScanner;
+    private boolean mIsFirstScanner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class SplashActivity
     }
 
     private void init() {
+        mScanner = getIntent().getStringExtra(Constants.SCANNER_MEDIA);
         SplashPagerAdapter splashPagerAdapter = new SplashPagerAdapter();
         mVpSplash.setAdapter(splashPagerAdapter);
     }
@@ -79,49 +83,85 @@ public class SplashActivity
     }
 
     private void initRxbusData() {
-        if (SharePrefrencesUtil.getLoadMusicFlag(this) != Constants.NUMBER_EIGHT) {
-            mTvMusicCount.setVisibility(View.VISIBLE);
-            mMusicLoadProgressBar.setVisibility(View.VISIBLE);
-            startService(new Intent(this, LoadMusicDataService.class));
-            mCompositeDisposable.add(mBus.toObserverable(MusicCountBean.class)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(musicCountBean -> {
-                        int size = musicCountBean.getSize();
-                        int count = musicCountBean.getMusicCount();
-                        if (size < 1) {
-                            mTvMusicCount.setText("本地没有发现音乐,去下载歌曲后再来体验吧!");
-                        } else {
-                            mMusicLoadProgressBar.setMax(size);
-                            String s = "已经加载  " + count + " 首本地音乐";
-                            mTvMusicCount.setText(s);
-                            mMusicLoadProgressBar.setProgress(count);
-                            if (count == size) {
-                                mTvMusicCount.setTextColor(getResources().getColor(R.color.lyricsSelected));
-                                mTvMusicCount.setText("本地音乐加载完成 -_-");
-                                SplashActivity.this.startActivity(new Intent(SplashActivity.this,
-                                        MusicActivity.class));
-                                SharePrefrencesUtil.setLoadMusicFlag(SplashActivity.this, Constants.NUMBER_EIGHT);
-                                finish();
-                            }
-                        }
-                    }));
-        } else {
 
-            startMusicActivity();
+        if (mScanner == null) {
+            LogUtil.d("============空Scanner");
+            mIsFirstScanner = true;
+            // 是否是首次安装，本地数据库是否创建，等 8 表示不是首次安装，数据库已经创建，直接进入MusicActivity。
+            if (SharePrefrencesUtil.getLoadMusicFlag(this) == Constants.NUMBER_EIGHT) {
+                countDwonOpareton(true);
+            } else {
+                // 首次安装，创建本地数据库。
+                startService(new Intent(this, LoadMusicDataService.class));
+                updataLoadProgress();
+            }
+
+        } else {
+            LogUtil.d("============手动Scanner");
+            // 手动扫描歌曲
+            mIsFirstScanner = false;
+            Intent intent = new Intent(this, LoadMusicDataService.class);
+            intent.putExtra(Constants.SCANNER_MEDIA, Constants.SCANNER_MEDIA);
+            startService(intent);
+            updataLoadProgress();
         }
+
+
+    }
+
+    private void updataLoadProgress() {
+        mTvMusicCount.setVisibility(View.VISIBLE);
+        mMusicLoadProgressBar.setVisibility(View.VISIBLE);
+        mCompositeDisposable.add(mBus.toObserverable(MusicCountBean.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(musicCountBean -> {
+                    // 初次启动时size为所有音乐的数量，当手动扫描时为新增歌曲的数量。
+                    int size = musicCountBean.getSize();
+                    int currentCount = musicCountBean.getCurrentCount();
+                    if (size > 0) {
+                        mMusicLoadProgressBar.setMax(size);
+                        String s = "已经加载  " + currentCount + " 首本地音乐";
+                        mTvMusicCount.setText(s);
+                        mMusicLoadProgressBar.setProgress(currentCount);
+                        if (currentCount == size) {
+                            mTvMusicCount.setTextColor(getResources().getColor(R.color.lyricsSelected));
+                            mTvMusicCount.setText("本地音乐加载完成 -_-");
+                            // 初次扫描完成后进入MusicActivity
+                            if (mIsFirstScanner) {
+                                SharePrefrencesUtil.setLoadMusicFlag(SplashActivity.this, Constants.NUMBER_EIGHT);
+                            } else {
+                                String newSongCount = "新增 " + size + " 首歌曲";
+                                mTvMusicCount.setText(newSongCount);
+                            }
+                            countDwonOpareton(mIsFirstScanner);
+                        }
+                    } else {
+                        mTvMusicCount.setText(mIsFirstScanner ? "本地没有发现音乐,去下载歌曲后再来体验吧!" : "没有新增歌曲!");
+                        countDwonOpareton(mIsFirstScanner);
+                    }
+                }));
+    }
+
+    private void countDwonOpareton(boolean b) {
+        mCompositeDisposable.add(Observable.timer(1500, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+                    if (b) {
+                        startMusicActivity();
+                    } else {
+                        mTvMusicCount.setVisibility(View.GONE);
+                        mMusicLoadProgressBar.setVisibility(View.GONE);
+                    }
+                }));
 
     }
 
     private void startMusicActivity() {
-        mCompositeDisposable.add(Observable.timer(400, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> {
-                    SplashActivity.this.startActivity(new Intent(SplashActivity.this,
-                            MusicActivity.class));
-                    finish();
-                }));
+        SplashActivity.this.startActivity(new Intent(SplashActivity.this,
+                MusicActivity.class));
+        finish();
     }
 
 

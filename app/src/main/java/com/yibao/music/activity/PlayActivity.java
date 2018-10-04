@@ -295,7 +295,11 @@ public class PlayActivity extends BasePlayActivity {
             mAnimator.start();
             mMusicPlay.setImageResource(R.drawable.btn_playing_pause);
         }
-        mAnimator.resume();
+        if (audioBinder != null && audioBinder.isPlaying()) {
+            mAnimator.resume();
+        } else {
+            mAnimator.pause();
+        }
 
     }
 
@@ -384,10 +388,7 @@ public class PlayActivity extends BasePlayActivity {
             animation.start();
             mTvLyrics.setVisibility(View.GONE);
             mIvLyricsMask.setVisibility(View.GONE);
-            if (mDisposableLyrics != null) {
-                mDisposableLyrics.dispose();
-                mDisposableLyrics = null;
-            }
+            clearDisposableLyric();
             disPosableLyricsView();
         } else {
             mIvLyricsSwitch.setBackgroundResource(R.drawable.music_lrc_open);
@@ -458,6 +459,7 @@ public class PlayActivity extends BasePlayActivity {
     protected void onResume() {
         super.onResume();
         checkCurrentIsFavorite(mMusicDao.load(mCurrenMusicInfo.getId()).isFavorite());
+        updataCurrentPlayInfo(audioBinder.getMusicBean());
         rxViewClick();
     }
 

@@ -2,7 +2,8 @@ package com.yibao.music.util;
 
 import android.support.annotation.NonNull;
 
-import com.yibao.music.base.listener.OnDownloadLyricsListener;
+import com.google.gson.Gson;
+import com.yibao.music.model.OnlineLyricBean;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Random;
 
 import okhttp3.Call;
@@ -33,8 +35,15 @@ import okhttp3.ResponseBody;
  */
 public class DownloadLyricsUtil {
     private static final String queryLrcURLRoot = "http://geci.me/api/lyric/";
+    private static boolean isDownloadSucssce = false;
 
-
+    /**
+     * 获取网络歌词的下载地址
+     *
+     * @param songName 歌名
+     * @param artist   歌手
+     * @return 返回下载地址
+     */
     public static String getLyricsUrl(String songName, String artist) {
         String queryLrcURL = getQueryLrcURL(songName, artist);
         try {
@@ -49,20 +58,16 @@ public class DownloadLyricsUtil {
             while ((temp = in.readLine()) != null) {
                 sb.append(temp);
             }
-//            Gson gson = new Gson();
-//            OnlineLyricBean o = gson.fromJson(sb.toString(), OnlineLyricBean.class);
-//            Log.d(TAG, o.getResult().size() + "");
-            JSONObject jObject = new JSONObject(sb.toString());
-            int count = jObject.getInt("count");
-            int index = count == 0 ? 0 : new Random().nextInt() % count;
-            JSONArray jArray = jObject.getJSONArray("result");
-            JSONObject obj = jArray.getJSONObject(index);
-            return obj.getString("lrc");
+            Gson gson = new Gson();
+            OnlineLyricBean o = gson.fromJson(sb.toString(), OnlineLyricBean.class);
+            int count1 = o.getCount();
+            int randomPostion = RandomUtil.getRandomPostion(count1);
+            int index = count1 == 0 ? 0 : randomPostion;
+            List<OnlineLyricBean.ResultBean> result = o.getResult();
+            return result.get(index).getLrc();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
         return null;
     }
 
@@ -71,11 +76,8 @@ public class DownloadLyricsUtil {
         return artist == null ? str : str + "/" + Encode(artist);
     }
 
-
-    private static boolean isDownloadSucssce = false;
-
-    // 歌词文件网络地址，歌词文件本地缓冲地址
-    public static boolean getLyrics(String url, final String songName, String artist) {
+    // 歌词文件网络地址，将歌词文件本地缓冲地址
+    public static boolean getLyricsFile(String url, final String songName, String artist) {
         Request request = new Request.Builder().url(url).addHeader("Accept-Encoding", "identity")
                 .build();
         OkHttpUtil.getClient()
@@ -85,7 +87,6 @@ public class DownloadLyricsUtil {
                     public void onFailure(@NonNull Call call, @NonNull IOException e) {
                         e.printStackTrace();
                         isDownloadSucssce = false;
-//                        listener.downLoadResult(false);
                     }
 
                     @Override
@@ -107,10 +108,8 @@ public class DownloadLyricsUtil {
                                 fos.close();
                                 is.close();
                                 isDownloadSucssce = true;
-//                                listener.downLoadResult(true);
                             } catch (IOException e) {
                                 e.printStackTrace();
-//                                listener.downLoadResult(false);
                             }
                         }
                     }

@@ -4,22 +4,24 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.yibao.music.MusicApplication;
+
 /**
  * Author：Sid
  * Des：${TODO}
  * Time:2017/4/7 15:52
  */
-public class NetworkUtil {
+class NetworkUtil {
     /**
      * 判断是否有网络连接
-     * @param context
-     * @return
+     *
+     * @return 网络状态
      */
-    public static boolean isNetworkConnected(Context context) {
+    static boolean isNetworkConnected() {
 
-        if (context != null) {
-            ConnectivityManager manager = (ConnectivityManager) context.getSystemService(
-                    Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager manager = (ConnectivityManager) MusicApplication.getIntstance().getSystemService(
+                Context.CONNECTIVITY_SERVICE);
+        if (manager != null) {
             NetworkInfo info = manager.getActiveNetworkInfo();
             if (info != null) {
                 return info.isAvailable();
@@ -27,6 +29,4 @@ public class NetworkUtil {
         }
         return false;
     }
-
-
 }

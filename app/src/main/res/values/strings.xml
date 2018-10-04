@@ -47,5 +47,6 @@
     <string name="search_history">搜索历史</string>
     <string name="clear_edit">清空输入框</string>
     <string name="not_search_result">无搜索结果</string>
+    <string name="scanner_music">扫描本地音乐</string>
 
 </resources>

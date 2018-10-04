@@ -1,5 +1,6 @@
 package com.yibao.music.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,11 +11,13 @@ import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
+import com.yibao.music.activity.SplashActivity;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
+import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
@@ -55,6 +58,8 @@ public class AboutMusicFragment extends BaseMusicFragment {
     TextView mTvBackupsFavorite;
     @BindView(R.id.tv_recover_favorite)
     TextView mTvRecoverFavorite;
+    @BindView(R.id.tv_scanner_media)
+    TextView mtScanerMedia;
 
 
     @Nullable
@@ -78,10 +83,19 @@ public class AboutMusicFragment extends BaseMusicFragment {
         mDisposable.add(RxView.clicks(mTvRecoverFavorite)
                 .throttleFirst(3, TimeUnit.SECONDS)
                 .subscribe(o -> recoverFavoriteList()));
+        mDisposable.add(RxView.clicks(mtScanerMedia)
+                .throttleFirst(3, TimeUnit.SECONDS)
+                .subscribe(o -> scannerMedia()));
         mAboutHeaderIv.setOnLongClickListener(view -> {
             RelaxDialogFragment.newInstance().show(mFragmentManager, "girlsDialog");
             return true;
         });
+    }
+
+    private void scannerMedia() {
+        Intent intent = new Intent(mActivity, SplashActivity.class);
+        intent.putExtra(Constants.SCANNER_MEDIA, Constants.SCANNER_MEDIA);
+        startActivity(intent);
     }
 
     private void recoverFavoriteList() {
