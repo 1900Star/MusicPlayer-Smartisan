@@ -7,21 +7,18 @@ import android.support.annotation.Nullable;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.MusicCountBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
-import com.yibao.music.util.ToastUtil;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-
-import io.reactivex.disposables.CompositeDisposable;
 
 
 /**
@@ -31,12 +28,13 @@ import io.reactivex.disposables.CompositeDisposable;
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/1/30 23:38
- * @描述： {TODO}
+ * @描述： {加载音乐的后台Service}
  */
 
 public class LoadMusicDataService extends IntentService {
 
     private MusicBeanDao mMusicDao;
+    // 当前已加载的音乐数量
     private int currentCount = 0;
     private RxBus mBus;
 
@@ -72,6 +70,7 @@ public class LoadMusicDataService extends IntentService {
                 mBus.post(new MusicCountBean(Constants.NUMBER_ZOER, Constants.NUMBER_ZOER));
             }
         } else {
+            // 首次安装自动扫描本地歌曲并创建本地数据库
             if (songSum > 0) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     dataList.forEach((MusicBean bean) -> sendLoadProgress(songSum, bean));
@@ -89,6 +88,12 @@ public class LoadMusicDataService extends IntentService {
         }
     }
 
+    /**
+     * 是否为手动扫描
+     *
+     * @param intent i
+     * @return true 为手动扫描   false 为自动扫描
+     */
     private boolean getIsNeedAgainScaner(Intent intent) {
         if (intent != null) {
             String scanner = intent.getStringExtra(Constants.SCANNER_MEDIA);
@@ -122,6 +127,12 @@ public class LoadMusicDataService extends IntentService {
         }
     }
 
+    /**
+     * 发送本地音乐总数量和当前已加载的音乐数量
+     *
+     * @param songSum 总数量
+     * @param bean    当前MusicBean
+     */
     private void sendLoadProgress(int songSum, MusicBean bean) {
         currentCount++;
         mMusicDao.insert(bean);

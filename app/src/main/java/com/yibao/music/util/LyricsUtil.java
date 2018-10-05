@@ -30,6 +30,7 @@ public class LyricsUtil {
     private static BufferedReader br;
     private static String acturlSongName;
     private static String actualArtist;
+    private static final String UNKNOWN_NAME = "<unknown>";
 
     /**
      * 将歌词封装到list中
@@ -46,7 +47,7 @@ public class LyricsUtil {
             actualArtist = bean.getSongArtist();
         } else {
             acturlSongName = songName;
-            actualArtist = "<unknown>".equals(artist) ? "Smartisan" : artist;
+            actualArtist = UNKNOWN_NAME.equals(artist) ? "Smartisan" : artist;
         }
         ArrayList<MusicLyricBean> lrcList = new ArrayList<>();
         String str = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyric/";
@@ -132,11 +133,11 @@ public class LyricsUtil {
         String content = arr[arr.length - 1];
 
         for (int i = 0; i < arr.length - 1; i++) {
-
-            int startTime = parseTime(arr[i]);
-
-            MusicLyricBean lrcBean = new MusicLyricBean(startTime, content);
-            list.add(lrcBean);
+            if (arr.length > i) {
+                int startTime = parseTime(arr[i]);
+                MusicLyricBean lrcBean = new MusicLyricBean(startTime, content);
+                list.add(lrcBean);
+            }
         }
         return list;
     }

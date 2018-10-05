@@ -40,8 +40,7 @@ public class QqBarPagerAdapter
     private List<MusicBean> mList;
     private ObjectAnimator mAnimator;
     private MyAnimatorUpdateListener mAnimationListener;
-    private boolean urlFlag = true;
-
+    private String unknownName = "<unknown>";
 
     public QqBarPagerAdapter(Context context, List<MusicBean> list) {
         this.mContext = context;
@@ -70,12 +69,7 @@ public class QqBarPagerAdapter
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-//        if (mAnimator != null && mAnimationListener != null) {
-//            mAnimator.cancel();
-//            mAnimationListener.pause();
-//        }
         container.removeView((View) object);
-
     }
 
     @NonNull
@@ -105,16 +99,13 @@ public class QqBarPagerAdapter
         ImageView mAlbulm = view.findViewById(R.id.iv_pager_albulm);
         TextView songName = view.findViewById(R.id.tv_pager_song_name);
         TextView artName = view.findViewById(R.id.tv_pager_art_name);
-
-        if (urlFlag) {
-            urlFlag = true;
-            String albumUri = Objects.requireNonNull(StringUtil.getAlbulm(musicInfo.getAlbumId()));
-            ImageUitl.loadPlaceholder(mContext, albumUri, mAlbulm);
-        }
-//        LogUtil.i("当前的歌词    " + StringUtil.getAlbulm(musicInfo.getAlbumId()));
+        String albumUri = StringUtil.getAlbulm(musicInfo.getAlbumId());
+        ImageUitl.loadPlaceholder(mContext, albumUri, mAlbulm);
         songName.setText(musicInfo.getTitle());
         String currentLyrics = musicInfo.getCurrentLyrics();
-        artName.setText(currentLyrics != null ? currentLyrics : musicInfo.getArtist());
+        String artist = musicInfo.getArtist();
+        String songArtist = unknownName.equals(artist) ? "Smartisan" : artist;
+        artName.setText(currentLyrics != null ? currentLyrics : songArtist);
         if (mAnimator == null || mAnimationListener == null) {
             mAnimator = AnimationUtil.getRotation(mAlbulm);
             mAnimationListener = new MyAnimatorUpdateListener(mAnimator);

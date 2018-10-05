@@ -86,7 +86,7 @@ public class MusicActivity
 
     private int lyricsFlag = 0;
     private ArrayList<MusicLyricBean> mLyricList;
-    private int mTitleResourceId=R.string.music_song;
+    private int mTitleResourceId = R.string.music_song;
     // 切换Tab时更改TiTle的标记,打开详情页面时正确显示Title
     private boolean mIsShowDetail;
     private String mDetailViewTitle;
@@ -296,7 +296,9 @@ public class MusicActivity
                             if (progress > startTime) {
                                 MusicBean musicBean = new MusicBean();
                                 if (mCurrentPosition < mMusicItems.size()) {
-                                    musicBean.setTitle(mMusicItems.get(mCurrentPosition).getTitle());
+                                    MusicBean currentBean = mMusicItems.get(mCurrentPosition);
+                                    musicBean.setTitle(currentBean.getTitle());
+                                    musicBean.setAlbumId(currentBean.getAlbumId());
                                 }
                                 musicBean.setArtist(content);
                                 if (mCurrentPosition < mMusicItems.size()) {

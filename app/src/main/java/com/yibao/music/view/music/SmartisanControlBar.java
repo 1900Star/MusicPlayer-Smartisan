@@ -139,7 +139,9 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
     }
 
     public void setSingerName(String singerName) {
-        mSingerName.setText(singerName);
+        String unknownName = "<unknown>";
+        mSingerName.setText(unknownName.equals(singerName) ? "Smartisan" : singerName);
+
     }
 
     public void setAlbulmUrl(String albulmUrl) {

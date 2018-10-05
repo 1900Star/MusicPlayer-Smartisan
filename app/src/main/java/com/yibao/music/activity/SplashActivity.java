@@ -40,8 +40,6 @@ public class SplashActivity
         extends BaseActivity {
 
 
-    //    @BindView(R.id.iv_splash)
-    ImageView mIvSplash;
     @BindView(R.id.tv_music_count)
     TextView mTvMusicCount;
     @BindView(R.id.music_count_pb)
@@ -85,11 +83,10 @@ public class SplashActivity
     private void initRxbusData() {
 
         if (mScanner == null) {
-            LogUtil.d("============空Scanner");
             mIsFirstScanner = true;
             // 是否是首次安装，本地数据库是否创建，等 8 表示不是首次安装，数据库已经创建，直接进入MusicActivity。
             if (SharePrefrencesUtil.getLoadMusicFlag(this) == Constants.NUMBER_EIGHT) {
-                countDwonOpareton(true);
+                countDownOpareton(true);
             } else {
                 // 首次安装，创建本地数据库。
                 startService(new Intent(this, LoadMusicDataService.class));
@@ -97,7 +94,6 @@ public class SplashActivity
             }
 
         } else {
-            LogUtil.d("============手动Scanner");
             // 手动扫描歌曲
             mIsFirstScanner = false;
             Intent intent = new Intent(this, LoadMusicDataService.class);
@@ -131,19 +127,25 @@ public class SplashActivity
                             if (mIsFirstScanner) {
                                 SharePrefrencesUtil.setLoadMusicFlag(SplashActivity.this, Constants.NUMBER_EIGHT);
                             } else {
+                                // 手动扫描新增歌曲数量
                                 String newSongCount = "新增 " + size + " 首歌曲";
                                 mTvMusicCount.setText(newSongCount);
                             }
-                            countDwonOpareton(mIsFirstScanner);
+                            countDownOpareton(mIsFirstScanner);
                         }
                     } else {
                         mTvMusicCount.setText(mIsFirstScanner ? "本地没有发现音乐,去下载歌曲后再来体验吧!" : "没有新增歌曲!");
-                        countDwonOpareton(mIsFirstScanner);
+                        countDownOpareton(mIsFirstScanner);
                     }
                 }));
     }
 
-    private void countDwonOpareton(boolean b) {
+    /**
+     * 倒计时操作
+     *
+     * @param b ture 表示自动扫描未完成后直接进入MusicActivity 。 false 表示手动扫描，完成后停在SplashActivity页面。
+     */
+    private void countDownOpareton(boolean b) {
         mCompositeDisposable.add(Observable.timer(1500, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -162,16 +164,5 @@ public class SplashActivity
         SplashActivity.this.startActivity(new Intent(SplashActivity.this,
                 MusicActivity.class));
         finish();
-    }
-
-
-    @OnClick(R.id.tv_music_count)
-    public void onClick(View v) {
-        switch (v.getId()) {
-            default:
-                break;
-            case R.id.tv_music_count:
-                break;
-        }
     }
 }
