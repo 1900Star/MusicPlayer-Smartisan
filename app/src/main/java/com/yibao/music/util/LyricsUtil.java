@@ -1,6 +1,7 @@
 package com.yibao.music.util;
 
 import android.os.Environment;
+import android.os.SystemClock;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.model.MusicLyricBean;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @项目名： BigGirl

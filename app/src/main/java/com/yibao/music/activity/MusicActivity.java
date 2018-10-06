@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -220,7 +221,10 @@ public class MusicActivity
             }
         });
         mTvMusicToolbarTitle.setOnClickListener(view -> switchMusicControlBar());
-        mQqControlBar.setOnPagerSelecteListener(this::startMusicService);
+        mQqControlBar.setOnPagerSelecteListener((int position) -> {
+            disposableQqLyric();
+            startMusicService(position);
+        });
     }
 
     /**
@@ -260,63 +264,6 @@ public class MusicActivity
 
 
     /**
-     * 切换音乐控制面板的样式
-     */
-    private void switchMusicControlBar() {
-        if (isShowQqBar) {
-            mQqControlBar.setVisibility(View.INVISIBLE);
-            mSmartisanControlBar.setVisibility(View.VISIBLE);
-            disposableQqLyric();
-        } else {
-            mQqControlBar.setVisibility(View.VISIBLE);
-            mSmartisanControlBar.setVisibility(View.INVISIBLE);
-            //TODO 这里做更新歌词的操作
-            setQqPagerLyric();
-        }
-        isShowQqBar = !isShowQqBar;
-    }
-
-    /**
-     * QQbar时时更新歌词
-     */
-    //TODO
-    private void setQqPagerLyric() {
-        disposableQqLyric();
-        if (mQqLyricsDisposable == null) {
-            mQqLyricsDisposable = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(musicBeanList -> {
-                        if (mLyricList != null && mLyricList.size() > 1 && lyricsFlag < mLyricList.size()) {
-                            //通过集合，播放过的歌词就从集合中删除
-                            MusicLyricBean lyrBean = mLyricList.get(lyricsFlag);
-                            String content = lyrBean.getContent();
-                            int progress = audioBinder.getProgress();
-                            int startTime = lyrBean.getStartTime();
-                            if (progress > startTime) {
-                                MusicBean musicBean = new MusicBean();
-                                if (mCurrentPosition < mMusicItems.size()) {
-                                    MusicBean currentBean = mMusicItems.get(mCurrentPosition);
-                                    musicBean.setTitle(currentBean.getTitle());
-                                    musicBean.setAlbumId(currentBean.getAlbumId());
-                                }
-                                musicBean.setArtist(content);
-                                if (mCurrentPosition < mMusicItems.size()) {
-                                    mMusicItems.set(mCurrentPosition, musicBean);
-                                }
-//                                LogUtil.d("当前的位置 ===  " + mCurrentPosition);
-//                                LogUtil.d("当前的时间和歌词 ===  " + startTime + " ==  " + content);
-
-                                mQqControlBar.updaPagerData(mMusicItems, mCurrentPosition);
-                                lyricsFlag++;
-                            }
-                        }
-                    });
-        }
-    }
-
-
-    /**
      * 在主列表播放音乐
      * 开启服务，播放音乐并且将数据标记传送过去
      *
@@ -324,7 +271,6 @@ public class MusicActivity
      */
     @Override
     public void startMusicService(int position) {
-//        clearDisposableProgresse();
         int spMusicFlag = getSpMusicFlag();
         if (spMusicFlag != Constants.NUMBER_TEN) {
             mCurrentPosition = position;
@@ -389,8 +335,6 @@ public class MusicActivity
     // 接收service发出的数据，时时更新播放歌曲 进度 歌名 歌手信息
     @Override
     protected void updataCurrentPlayInfo(MusicBean musicItem) {
-        //将QQBar的释放掉
-        disposableQqLyric();
         // 将MusicConfig设置为ture
         SharePrefrencesUtil.setMusicConfig(MusicActivity.this);
         mMusicConfig = true;
@@ -406,6 +350,77 @@ public class MusicActivity
         upDataPlayProgress();
         // 打开通知栏
         showNotifycation(mCurrentMusicBean, audioBinder.isPlaying());
+        if (mLyricList != null) {
+            mLyricList.clear();
+        }
+
+        // 获取歌词的List
+        mLyricList = LyricsUtil.getLyricList(musicItem.getTitle(), musicItem.getArtist());
+        if (isShowQqBar) {
+            setQqPagerLyric();
+        }
+    }
+
+    /**
+     * 切换音乐控制面板的样式
+     */
+    private void switchMusicControlBar() {
+        if (isShowQqBar) {
+            mQqControlBar.setVisibility(View.INVISIBLE);
+            mSmartisanControlBar.setVisibility(View.VISIBLE);
+            disposableQqLyric();
+        } else {
+            mQqControlBar.setVisibility(View.VISIBLE);
+            mSmartisanControlBar.setVisibility(View.INVISIBLE);
+            //TODO 这里做更新歌词的操作
+            setQqPagerLyric();
+        }
+        isShowQqBar = !isShowQqBar;
+    }
+
+    /**
+     * QQbar时时更新歌词
+     */
+    //TODO
+    private void setQqPagerLyric() {
+//        mLyricList = LyricsUtil.getLyricList(mCurrentMusicBean.getTitle(), mCurrentMusicBean.getArtist());
+        disposableQqLyric();
+//        if (mLyricList != null && mLyricList.size() > 1 && lyricsFlag < mLyricList.size()) {
+        if (mQqLyricsDisposable == null) {
+            mQqLyricsDisposable = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
+//                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(musicBeanList -> {
+                        if (mLyricList != null && mLyricList.size() > 1 && lyricsFlag < mLyricList.size()) {
+                            //通过集合，播放过的歌词就从集合中删除
+                            LogUtil.d("歌曲的长度    ==  " + mLyricList.size());
+                            MusicLyricBean lyrBean = mLyricList.get(lyricsFlag);
+                            String content = lyrBean.getContent();
+                            int progress = audioBinder.getProgress();
+                            int startTime = lyrBean.getStartTime();
+                            if (progress > startTime) {
+                                MusicBean musicBean = new MusicBean();
+                                if (mCurrentPosition < mMusicItems.size()) {
+                                    MusicBean currentBean = mMusicItems.get(mCurrentPosition);
+                                    musicBean.setTitle(currentBean.getTitle());
+                                    musicBean.setAlbumId(currentBean.getAlbumId());
+                                }
+                                musicBean.setArtist(content);
+                                if (mCurrentPosition < mMusicItems.size()) {
+                                    mMusicItems.set(mCurrentPosition, musicBean);
+                                }
+                                LogUtil.d("当前的位置 ===  " + mCurrentPosition);
+                                LogUtil.d("当前的时间和歌词 ===  " + startTime + " ==  " + content);
+                                mQqControlBar.updaPagerData(mMusicItems, mCurrentPosition);
+                                lyricsFlag++;
+                            }
+                        }
+                    });
+        } else {
+            LogUtil.d("=============没有时间和歌词 ");
+            mQqControlBar.updaPagerData(mMusicItems, mCurrentPosition);
+        }
+
     }
 
     private void setDuration() {
@@ -443,11 +458,6 @@ public class MusicActivity
         mSmartisanControlBar.setAlbulmUrl(albumUri);
         mQqControlBar.setPagerData(mMusicItems);
         mQqControlBar.setPagerCurrentItem(mCurrentMusicBean.getCureetPosition());
-        // 加载歌词的List，
-        mLyricList = LyricsUtil.getLyricList(mCurrentMusicBean.getTitle(), mCurrentMusicBean.getArtist());
-        if (isShowQqBar) {
-            setQqPagerLyric();
-        }
     }
 
     @Override
@@ -520,8 +530,9 @@ public class MusicActivity
             updatePlayBtnStatus();
             updataCurrentPlayProgress();
             setDuration();
+            LogUtil.d("kkkkkkk  ==   " + isShowQqBar);
             if (isShowQqBar) {
-                setQqPagerLyric();
+//                setQqPagerLyric();
             }
         }
         initRxBusData();

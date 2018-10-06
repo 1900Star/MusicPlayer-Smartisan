@@ -15,7 +15,7 @@ import java.util.Random;
 public class RandomUtil {
     public static int getRandomPostion(int listSize) {
         Random random = new Random();
-        return random.nextInt(listSize);
+        return Math.abs(random.nextInt(listSize));
 
     }
 

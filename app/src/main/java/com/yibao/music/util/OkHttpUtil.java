@@ -2,7 +2,9 @@ package com.yibao.music.util;
 
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Callback;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 /**
  * @ Author: Luoshipeng
@@ -11,10 +13,10 @@ import okhttp3.OkHttpClient;
  * @ Time:   2018/10/3/ 21:08
  * @ Des:    TODO
  */
-public class OkHttpUtil {
+class OkHttpUtil {
     private static OkHttpClient okHttpClient;
 
-    public static OkHttpClient getClient() {
+    private static OkHttpClient getClient() {
         if (okHttpClient == null) {
             synchronized ("OkHttpUtil") {
                 if (okHttpClient == null) {
@@ -27,6 +29,14 @@ public class OkHttpUtil {
             }
         }
         return okHttpClient;
+
+    }
+
+    static void downFile(String url, Callback callback) {
+        Request request = new Request.Builder().url(url).addHeader("Accept-Encoding", "identity")
+                .build();
+        OkHttpUtil.getClient()
+                .newCall(request).enqueue(callback);
 
     }
 }
