@@ -81,19 +81,18 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
     public void switchMusicTabbar(int flag) {
         switch (flag) {
             case Constants.NUMBER_ZOER:
-                SharePrefrencesUtil.getMusicDataListFlag(getContext());
                 setAllTabbarNotPressed(flag, R.string.play_list);
                 mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_selector);
                 mMusicBarPlaylistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarPlaylist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
-                isContainDetailFragment(Constants.FRAGMENT_PLAYLIST, Constants.NUMBER_EIGHT);
+                setDetailFragmentFlag(Constants.FRAGMENT_PLAYLIST, Constants.NUMBER_EIGHT);
                 break;
             case Constants.NUMBER_ONE:
                 setAllTabbarNotPressed(flag, R.string.music_artisan);
                 mMusicBarArtisanlistIv.setBackgroundResource(R.drawable.tabbar_artisanlist_selector);
                 mMusicBarArtisanlistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarArtisanlist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
-                isContainDetailFragment(Constants.FRAGMENT_ARTIST, Constants.NUMBER_NINE);
+                setDetailFragmentFlag(Constants.FRAGMENT_ARTIST, Constants.NUMBER_NINE);
                 break;
             case Constants.NUMBER_TWO:
                 setAllTabbarNotPressed(flag, R.string.music_song);
@@ -109,7 +108,7 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
                 mMusicBarAlbumlistIv.setBackgroundResource(R.drawable.tabbar_albumlist_selector);
                 mMusicBarAlbumlist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 mMusicBarAlbumlistTv.setTextColor(ColorUtil.musicbarTvDown);
-                isContainDetailFragment(Constants.FRAGMENT_ALBUM, Constants.NUMBER_TEN);
+                setDetailFragmentFlag(Constants.FRAGMENT_ALBUM, Constants.NUMBER_TEN);
                 break;
             case Constants.NUMBER_FOUR:
                 setAllTabbarNotPressed(flag, R.string.about);
@@ -132,7 +131,7 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
      * @param detailsViewKey 这个Key必须为 8 (PlayListMusicFragment)、9 (ArtistanListMusicFragment)、10 (AlbumMusicFragment)
      *                       这三个整数，这样展示详情的Fragment就能自己处理返回事件。
      */
-    private void isContainDetailFragment(String className, int detailsViewKey) {
+    private void setDetailFragmentFlag(String className, int detailsViewKey) {
         if (BaseMusicFragment.mDetailsViewMap.containsKey(className)) {
             SharePrefrencesUtil.setDetailsFlag(getContext(), detailsViewKey);
         }

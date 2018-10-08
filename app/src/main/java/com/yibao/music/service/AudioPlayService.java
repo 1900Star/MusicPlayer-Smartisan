@@ -14,7 +14,6 @@ import android.os.IBinder;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
-import com.yibao.music.model.QqBarUpdataBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
@@ -115,7 +114,7 @@ public class AudioPlayService
         int sortFlag = sortListFlag == Constants.NUMBER_ZOER ? Constants.NUMBER_ONE : sortListFlag;
         LogUtil.d(" position  ==" + enterPosition + "   sortListFlag  ==" + sortFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
         // 更新QQBar
-        mBus.post(new QqBarUpdataBean(mMusicDao, mMusicBean, sortFlag, dataFlag, queryFlag));
+//        mBus.post(new QqBarUpdataBean(mMusicDao, mMusicBean, sortFlag, dataFlag, queryFlag));
         mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao, mMusicBean, sortFlag, dataFlag, queryFlag);
         if (enterPosition != position && enterPosition != -1) {
             position = enterPosition;
@@ -133,10 +132,11 @@ public class AudioPlayService
      * 通知播放界面更新
      */
     private void sendCureentMusicInfo() {
-        LogUtil.d("  发送的postion  " + position);
-        MusicBean musicBean = mMusicDataList.get(position);
-        musicBean.setCureetPosition(position);
-        mBus.post(musicBean);
+        if (position < mMusicDataList.size()) {
+            MusicBean musicBean = mMusicDataList.get(position);
+            musicBean.setCureetPosition(position);
+            mBus.post(musicBean);
+        }
     }
 
 
@@ -164,39 +164,39 @@ public class AudioPlayService
         public MusicBean getMusicBean() {
             return mMusicInfo;
         }
-        //准备完成回调
+        // 准备完成回调
 
         @Override
         public void onPrepared(MediaPlayer mediaPlayer) {
-            //开启播放
+            // 开启播放
             mediaPlayer.start();
-            //通知播放界面更新
+            // 通知播放界面更新
             sendCureentMusicInfo();
         }
 
 
-        //获取当前播放进度
+        // 获取当前播放进度
 
         public int getProgress() {
             return mediaPlayer.getCurrentPosition();
         }
 
-        //获取音乐总时长
+        // 获取音乐总时长
 
         public int getDuration() {
             return mediaPlayer.getDuration();
         }
 
-        //音乐播放完成监听
+        // 音乐播放完成监听
 
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
-            //自动播放下一首歌曲
+            // 自动播放下一首歌曲
             autoPlayNext();
         }
 
 
-        //自动播放下一曲
+        // 自动播放下一曲
 
         private void autoPlayNext() {
             switch (PLAY_MODE) {
@@ -204,7 +204,6 @@ public class AudioPlayService
                     position = (position + 1) % mMusicDataList.size();
                     break;
                 case PLAY_MODE_SINGLE:
-
                     break;
                 case PLAY_MODE_RANDOM:
                     position = new Random().nextInt(mMusicDataList.size());
@@ -212,6 +211,7 @@ public class AudioPlayService
                 default:
                     break;
             }
+            LogUtil.d("=====自动播放Positon " + position);
             play();
         }
 
@@ -282,6 +282,14 @@ public class AudioPlayService
 
         public void seekTo(int progress) {
             mediaPlayer.seekTo(progress);
+        }
+
+        public List<MusicBean> getMusicList() {
+            return mMusicDataList;
+        }
+
+        public int getPosition() {
+            return position;
         }
     }
 

@@ -67,6 +67,7 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
             public void onPageSelected(int position) {
                 if (mSelecteListener != null) {
                     mSelecteListener.selectePosition(position);
+                    setPagerCurrentItem(position);
                 }
             }
         });
@@ -96,7 +97,6 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
 
     public void setPagerData(List<MusicBean> musicItems) {
         mPagerAdapter.setData(musicItems);
-
     }
 
     public void setPagerCurrentItem(int cureetPosition) {

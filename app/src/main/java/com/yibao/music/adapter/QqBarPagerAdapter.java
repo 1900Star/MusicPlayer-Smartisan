@@ -40,7 +40,6 @@ public class QqBarPagerAdapter
     private List<MusicBean> mList;
     private ObjectAnimator mAnimator;
     private MyAnimatorUpdateListener mAnimationListener;
-    private String unknownName = "<unknown>";
 
     public QqBarPagerAdapter(Context context, List<MusicBean> list) {
         this.mContext = context;
@@ -104,6 +103,7 @@ public class QqBarPagerAdapter
         songName.setText(musicInfo.getTitle());
         String currentLyrics = musicInfo.getCurrentLyrics();
         String artist = musicInfo.getArtist();
+        String unknownName = "<unknown>";
         String songArtist = unknownName.equals(artist) ? "Smartisan" : artist;
         artName.setText(currentLyrics != null ? currentLyrics : songArtist);
         if (mAnimator == null || mAnimationListener == null) {

@@ -114,8 +114,8 @@ public class MusicBottomSheetDialog
             mList.addAll(musicBeanList);
             String sheetTitle = StringUtil.getBottomSheetTitle(musicBeanList.size());
             mBottomListTitleSize.setText(sheetTitle);
-            List<MusicBean> addTime = MusicListUtil.sortMusicAddTime(musicBeanList, Constants.NUMBER_TWO);
-            mAdapter = new BottomSheetAdapter(addTime);
+            List<MusicBean> beanList = MusicListUtil.sortMusicAddTime(musicBeanList, Constants.NUMBER_TWO);
+            mAdapter = new BottomSheetAdapter(beanList);
             mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
             mBottomListContent.addView(mRecyclerView);
         }));
@@ -209,7 +209,7 @@ public class MusicBottomSheetDialog
         AudioServiceConnection connection = new AudioServiceConnection();
         mContext.bindService(intent, connection, Service.BIND_AUTO_CREATE);
         mContext.startService(intent);
-        SharePrefrencesUtil.setMusicDataListFlag(mContext, Constants.NUMBER_EIGHT);
+        SharePrefrencesUtil.setDetailsFlag(mContext, Constants.NUMBER_EIGHT);
     }
 
 

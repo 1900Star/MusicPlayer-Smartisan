@@ -16,7 +16,6 @@ public class RandomUtil {
     public static int getRandomPostion(int listSize) {
         Random random = new Random();
         return Math.abs(random.nextInt(listSize));
-
     }
 
     public static String getRandomUrl() {

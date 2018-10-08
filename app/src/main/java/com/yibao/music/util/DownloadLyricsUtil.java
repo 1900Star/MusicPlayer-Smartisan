@@ -2,8 +2,9 @@ package com.yibao.music.util;
 
 import android.support.annotation.NonNull;
 
-import com.google.gson.Gson;
-import com.yibao.music.model.OnlineLyricBean;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -12,7 +13,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.List;
+import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -57,15 +58,17 @@ public class DownloadLyricsUtil {
                     while ((temp = in.readLine()) != null) {
                         sb.append(temp);
                     }
-                    Gson gson = new Gson();
-                    OnlineLyricBean o = gson.fromJson(sb.toString(), OnlineLyricBean.class);
-                    int count1 = o.getCount();
-                    int randomPostion = RandomUtil.getRandomPostion(count1);
-                    int index = count1 == 0 ? 0 : randomPostion;
-                    List<OnlineLyricBean.ResultBean> result = o.getResult();
-                    lyricsUrl = result.get(index).getLrc();
+                    try {
+                        JSONObject jObject = new JSONObject(sb.toString());
+                        int count = jObject.getInt("count");
+                        int index = count == 0 ? 0 : new Random().nextInt() % count;
+                        JSONArray jArray = jObject.getJSONArray("result");
+                        JSONObject obj = jArray.getJSONObject(index);
+                        lyricsUrl = obj.getString("lrc");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-
             }
         });
         return lyricsUrl;
