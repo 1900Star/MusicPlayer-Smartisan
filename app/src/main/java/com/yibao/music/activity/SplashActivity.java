@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yibao.music.R;
@@ -15,8 +14,7 @@ import com.yibao.music.model.MusicCountBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.service.LoadMusicDataService;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.SharePrefrencesUtil;
+import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.SystemUiVisibilityUtil;
 import com.yibao.music.view.ProgressBtn;
 
@@ -24,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -85,7 +82,7 @@ public class SplashActivity
         if (mScanner == null) {
             mIsFirstScanner = true;
             // 是否是首次安装，本地数据库是否创建，等 8 表示不是首次安装，数据库已经创建，直接进入MusicActivity。
-            if (SharePrefrencesUtil.getLoadMusicFlag(this) == Constants.NUMBER_EIGHT) {
+            if (SpUtil.getLoadMusicFlag(this) == Constants.NUMBER_EIGHT) {
                 countDownOpareton(true);
             } else {
                 // 首次安装，创建本地数据库。
@@ -125,11 +122,13 @@ public class SplashActivity
                             mTvMusicCount.setText("本地音乐加载完成 -_-");
                             // 初次扫描完成后进入MusicActivity
                             if (mIsFirstScanner) {
-                                SharePrefrencesUtil.setLoadMusicFlag(SplashActivity.this, Constants.NUMBER_EIGHT);
+                                // 初次加载的标记
+                                SpUtil.setLoadMusicFlag(SplashActivity.this, Constants.NUMBER_EIGHT);
                             } else {
                                 // 手动扫描新增歌曲数量
                                 String newSongCount = "新增 " + size + " 首歌曲";
                                 mTvMusicCount.setText(newSongCount);
+                                SpUtil.setNewMusicFlag(this, size);
                             }
                             countDownOpareton(mIsFirstScanner);
                         }
@@ -143,7 +142,7 @@ public class SplashActivity
     /**
      * 倒计时操作
      *
-     * @param b ture 表示自动扫描未完成后直接进入MusicActivity 。 false 表示手动扫描，完成后停在SplashActivity页面。
+     * @param b ture 表示初次安装，自动扫描完成后直接进入MusicActivity 。 false 表示手动扫描，完成后停在SplashActivity页面。
      */
     private void countDownOpareton(boolean b) {
         mCompositeDisposable.add(Observable.timer(1500, TimeUnit.MILLISECONDS)

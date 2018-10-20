@@ -24,6 +24,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.SearchHistoryBean;
+import com.yibao.music.model.TitleAndArtistBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
@@ -31,6 +32,7 @@ import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.MusicDaoUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.StringUtil;
+import com.yibao.music.util.TitleArtistUtil;
 import com.yibao.music.view.FlowLayoutView;
 import com.yibao.music.view.music.SmartisanControlBar;
 
@@ -127,6 +129,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
             SearchActivity.this.checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
             mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
             showNotifycation(mMusicBean, audioBinder.isPlaying());
+            updataLyric();
         }
     }
 
@@ -143,6 +146,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     private void setMusicInfo(MusicBean musicItem) {
         if (musicItem != null) {
             mSmartisanControlBar.setVisibility(View.VISIBLE);
+            musicItem = TitleArtistUtil.getMusicBean(musicItem);
             mSmartisanControlBar.setSongName(musicItem.getTitle());
             mSmartisanControlBar.setSingerName(musicItem.getArtist());
             mSmartisanControlBar.setAlbulmUrl(StringUtil.getAlbulm(musicItem.getAlbumId()));
@@ -321,7 +325,6 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         AudioServiceConnection serviceConnection = new AudioServiceConnection();
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         startService(intent);
-        updataLyric();
     }
 
     @Override

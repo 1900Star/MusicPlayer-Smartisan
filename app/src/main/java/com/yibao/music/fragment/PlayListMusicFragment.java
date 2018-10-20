@@ -20,7 +20,7 @@ import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicInfo;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.MusicListUtil;
-import com.yibao.music.util.SharePrefrencesUtil;
+import com.yibao.music.util.SpUtil;
 
 import java.util.List;
 
@@ -82,9 +82,7 @@ public class PlayListMusicFragment extends BaseMusicFragment {
                     }
                     return MusicListUtil.sortFavoriteTime(mMusicInfoDao.queryBuilder().list());
                 })
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(newPlayList -> {
-                    mAdapter.setNewData(newPlayList);
-                })
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(newPlayList -> mAdapter.setNewData(newPlayList))
         );
     }
 
@@ -106,7 +104,7 @@ public class PlayListMusicFragment extends BaseMusicFragment {
         } else {
             mLlAddNewPlayList.setVisibility(View.INVISIBLE);
             mDetailsView.setVisibility(View.VISIBLE);
-            SharePrefrencesUtil.setDetailsFlag(mActivity, Constants.NUMBER_EIGHT);
+            SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_EIGHT);
             if (!mDetailsViewMap.containsKey(mClassName)) {
                 mDetailsViewMap.put(mClassName, this);
             }
@@ -141,9 +139,7 @@ public class PlayListMusicFragment extends BaseMusicFragment {
         if (detailFlag == Constants.NUMBER_EIGHT) {
             mDetailsView.setVisibility(View.GONE);
             mLlAddNewPlayList.setVisibility(View.VISIBLE);
-            if (mDetailsViewMap.containsKey(mClassName)) {
-                mDetailsViewMap.remove(mClassName);
-            }
+            mDetailsViewMap.remove(mClassName);
             isShowDetailsView = !isShowDetailsView;
 
         }

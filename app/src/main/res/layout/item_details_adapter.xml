@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/text_singer_selector"
-            android:textSize="@dimen/music_loating_name" />
+            android:textSize="@dimen/music_artist" />
 
         <ImageView
             android:id="@+id/iv_details_menu"

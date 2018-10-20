@@ -1,32 +1,17 @@
 package com.yibao.music.base;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 
-import com.yibao.music.MusicApplication;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
-import com.yibao.music.model.AlbumInfo;
-import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.DetailsFlagBean;
-import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.model.greendao.MusicInfoDao;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RandomUtil;
-import com.yibao.music.util.RxBus;
-import com.yibao.music.util.SharePrefrencesUtil;
+import com.yibao.music.util.SpUtil;
 
 import java.util.HashMap;
-import java.util.List;
 
-import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -66,7 +51,7 @@ public abstract class BaseMusicFragment extends BaseFragment {
     // 有详情页面的子类重写这个方法，让自己处理返回事件的，只要这个方法一调用，按返回键就会将详情页面隐藏。
     protected void handleDetailsBack(int detailFlag) {
         // 详情页面关闭后，将标记置为0，将返回事件交给Activity处理，这样就能正常返回。
-        SharePrefrencesUtil.setDetailsFlag(mActivity, Constants.NUMBER_ZOER);
+        SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_ZOER);
     }
 
 

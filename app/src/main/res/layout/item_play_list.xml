@@ -38,7 +38,7 @@
             android:layout_marginTop="6dp"
             android:maxLength="18"
             android:maxLines="1"
-            android:textSize="@dimen/music_loating_name" />
+            android:textSize="@dimen/music_artist" />
 
 
     </LinearLayout>

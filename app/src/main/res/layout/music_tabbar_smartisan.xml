@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/smartisan_music_bar"
     android:layout_width="match_parent"
+    android:background="@drawable/tabbar_bg_shadow"
     android:layout_height="58dp"
     android:visibility="visible">
 
@@ -10,7 +11,6 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentStart="true"
-
         android:layout_margin="4dp"
         android:adjustViewBounds="true"
         android:contentDescription="@null"
@@ -54,7 +54,7 @@
                 android:maxLength="25"
                 android:singleLine="true"
                 android:textColor="@color/textName"
-                android:textSize="@dimen/music_loating_name" />
+                android:textSize="@dimen/music_artist" />
 
         </LinearLayout>
 
@@ -100,7 +100,7 @@
     <com.yibao.music.view.ProgressBtn
         android:id="@+id/smartisan_bar_progress"
         android:layout_width="match_parent"
-        android:layout_height="1.5dp"
+        android:layout_height="1dp"
         android:layout_alignParentBottom="true"
         android:background="@android:color/transparent" />
 </RelativeLayout>

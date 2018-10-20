@@ -19,7 +19,7 @@ import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.QueryMusicFlagListUtil;
 import com.yibao.music.util.RxBus;
-import com.yibao.music.util.SharePrefrencesUtil;
+import com.yibao.music.util.SpUtil;
 
 import java.util.List;
 import java.util.Random;
@@ -93,7 +93,7 @@ public class AudioPlayService
         mMusicBean = new MusicBean();
         initBroadcast();
         //初始化播放模式
-        PLAY_MODE = SharePrefrencesUtil.getMusicMode(this);
+        PLAY_MODE = SpUtil.getMusicMode(this);
     }
 
 
@@ -152,13 +152,14 @@ public class AudioPlayService
                 mediaPlayer.release();
                 mediaPlayer = null;
             }
+            position = position > mMusicDataList.size() ? 0 : position;
             mMusicInfo = mMusicDataList.get(position);
             mediaPlayer = MediaPlayer.create(AudioPlayService.this,
                     Uri.parse(mMusicInfo.getSongUrl()));
 
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.setOnCompletionListener(this);
-            SharePrefrencesUtil.setMusicPosition(AudioPlayService.this, position);
+            SpUtil.setMusicPosition(AudioPlayService.this, position);
         }
 
         public MusicBean getMusicBean() {
@@ -227,7 +228,7 @@ public class AudioPlayService
             PLAY_MODE = playmode;
             //保存播放模式
 
-            SharePrefrencesUtil.setMusicMode(AudioPlayService.this, PLAY_MODE);
+            SpUtil.setMusicMode(AudioPlayService.this, PLAY_MODE);
         }
 
         //手动播放上一曲

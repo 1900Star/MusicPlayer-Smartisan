@@ -1,6 +1,7 @@
 package com.yibao.music.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -8,6 +9,7 @@ import android.os.Environment;
 import android.os.Process;
 
 import com.yibao.music.MusicApplication;
+import com.yibao.music.activity.SplashActivity;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -34,7 +36,6 @@ public class CrashHandler
     private static CrashHandler sInstane = new CrashHandler();
     private Context mContext;
     private Thread.UncaughtExceptionHandler mDefaultCrashHandler;
-
 
 
     public static CrashHandler getInstance() {
@@ -71,7 +72,7 @@ public class CrashHandler
 
     private void dumpExceptionToSdCard(Throwable ex)
             throws PackageManager.NameNotFoundException {
-        SharePrefrencesUtil.setMusicPlayState(mContext, 1);
+        SpUtil.setMusicPlayState(mContext, 1);
         if (!Environment.getExternalStorageState()
                 .equals(Environment.MEDIA_MOUNTED)) {
             if (MusicApplication.isShowLog) {
@@ -122,7 +123,7 @@ public class CrashHandler
         pw.println(Build.MODEL);
         //CPU架构
         pw.print("CPU ABI: ");
-//        pw.print(Build.CPU_ABI);
+        pw.print(Build.CPU_ABI);
 
 
     }

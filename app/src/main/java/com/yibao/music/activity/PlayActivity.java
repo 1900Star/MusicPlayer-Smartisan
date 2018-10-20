@@ -25,13 +25,14 @@ import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.MusicStatusBean;
+import com.yibao.music.model.TitleAndArtistBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.ImageUitl;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
-import com.yibao.music.util.SharePrefrencesUtil;
+import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
+import com.yibao.music.util.TitleArtistUtil;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.LyricsView;
@@ -133,13 +134,14 @@ public class PlayActivity extends BasePlayActivity {
     private void initSongInfo() {
         mCurrenMusicInfo = getIntent().getParcelableExtra("currentBean");
         if (mCurrenMusicInfo != null) {
-            mPlaySongName.setText(mCurrenMusicInfo.getTitle());
-            mPlayArtistName.setText(mCurrenMusicInfo.getArtist());
+            setTitleAndArtist(mCurrenMusicInfo);
             ArrayList<MusicLyricBean> musicLyricBeans = LyricsUtil.getLyricList(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
             mTvLyrics.setLrcFile(musicLyricBeans);
             mAlbumUrl = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId());
             setAlbulm(mAlbumUrl);
-            showNotifycation(mCurrenMusicInfo, audioBinder.isPlaying());
+            if (audioBinder != null) {
+                showNotifycation(mCurrenMusicInfo, audioBinder.isPlaying());
+            }
         }
     }
 
@@ -155,7 +157,7 @@ public class PlayActivity extends BasePlayActivity {
             }
             setSongDuration();
             //设置播放模式图片
-            int mode = SharePrefrencesUtil.getMusicMode(this);
+            int mode = SpUtil.getMusicMode(this);
             updatePlayModeImage(mode, mMusicPlayerMode);
             //音量设置
             mSbVolume.setMax(mMaxVolume);
@@ -178,8 +180,7 @@ public class PlayActivity extends BasePlayActivity {
         mCurrenMusicInfo = musicBean;
         checkCurrentIsFavorite(mCurrenMusicInfo.isFavorite());
         initAnimation();
-        mPlaySongName.setText(musicBean.getTitle());
-        mPlayArtistName.setText(musicBean.getArtist());
+        setTitleAndArtist(musicBean);
         mAlbumUrl = StringUtil.getAlbulm(musicBean.getAlbumId());
         setAlbulm(mAlbumUrl);
         setSongDuration();
@@ -191,6 +192,12 @@ public class PlayActivity extends BasePlayActivity {
             closeLyricsView(lyricList);
         }
         showNotifycation(musicBean, audioBinder.isPlaying());
+    }
+
+    private void setTitleAndArtist(MusicBean bean) {
+        MusicBean musicBean = TitleArtistUtil.getMusicBean(bean);
+        mPlaySongName.setText(musicBean.getTitle());
+        mPlayArtistName.setText(musicBean.getArtist());
     }
 
     /**
@@ -388,6 +395,7 @@ public class PlayActivity extends BasePlayActivity {
             animation.start();
             mTvLyrics.setVisibility(View.GONE);
             mIvLyricsMask.setVisibility(View.GONE);
+            mIvSecreenSunSwitch.setVisibility(View.GONE);
             clearDisposableLyric();
             disPosableLyricsView();
         } else {

@@ -16,11 +16,12 @@ import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.MusicPagerListener;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.SharePrefrencesUtil;
+import com.yibao.music.util.SpUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 
 /**
  * @项目名： ArtisanMusic
@@ -45,7 +46,7 @@ public class SongMusicFragment extends BaseMusicFragment {
     TextView mMusicCategoryAddtime;
     @BindView(R.id.vp_song_fag)
     ViewPager mViewPager;
-    private int curentIndex=0;
+    private int curentIndex = 0;
 
     @Nullable
     @Override
@@ -143,7 +144,7 @@ public class SongMusicFragment extends BaseMusicFragment {
         mMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_selector);
         mMusicCategoryAddtime.setTextColor(ColorUtil.textName);
         mMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_selector);
-        SharePrefrencesUtil.setMusicDataListFlag(mActivity, playListFlag);
+        SpUtil.setMusicDataListFlag(mActivity, playListFlag);
     }
 
 

@@ -44,7 +44,7 @@ public abstract class BasePlayActivity extends BaseActivity implements OnCheckFa
     protected int mMaxVolume;
     protected AudioPlayService.AudioBinder audioBinder;
     private PowerManager.WakeLock mWakeLock;
-    private boolean isScreenAlwaysOn;
+    protected boolean isScreenAlwaysOn;
     private VolumeReceiver mVolumeReceiver;
     protected Disposable mDisposableLyrics;
     protected int mVolume;

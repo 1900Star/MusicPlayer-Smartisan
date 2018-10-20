@@ -13,7 +13,7 @@ import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.SharePrefrencesUtil;
+import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
 
 import java.util.List;
@@ -61,7 +61,7 @@ public class SearchDetailsAdapter extends BaseRvAdapter<MusicBean> {
             detailsHolder.mTvSongDuration.setText(StringUtil.parseDuration(duration));
             detailsHolder.itemView.setOnClickListener(view -> {
                 if (mContext instanceof OnMusicItemClickListener) {
-                    SharePrefrencesUtil.setMusicDataListFlag(mContext, Constants.NUMBER_TEN);
+                    SpUtil.setMusicDataListFlag(mContext, Constants.NUMBER_TEN);
                     ((OnMusicItemClickListener) mContext).startMusicServiceFlag(detailsHolder.getAdapterPosition(), mDataFlag, getQueryFlag(info));
                 }
 

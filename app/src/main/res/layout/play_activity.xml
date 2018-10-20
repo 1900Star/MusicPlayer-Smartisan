@@ -57,7 +57,7 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/aboutSign"
-                android:textSize="@dimen/music_loating_name" />
+                android:textSize="@dimen/music_artist" />
         </LinearLayout>
 
         <ImageView
@@ -211,7 +211,6 @@
             android:src="@drawable/sun_always_of_selector"
             android:visibility="gone"
             tools:ignore="RtlHardcoded" />
-
 
     </FrameLayout>
 

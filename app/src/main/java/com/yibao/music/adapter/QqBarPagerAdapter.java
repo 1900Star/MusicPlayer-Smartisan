@@ -17,15 +17,19 @@ import com.yibao.music.R;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.TitleAndArtistBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
+import com.yibao.music.util.TitleArtistUtil;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
+import io.reactivex.disposables.Disposable;
 
 /**
  * 作者：Stran on 2017/3/23 03:31
@@ -46,7 +50,6 @@ public class QqBarPagerAdapter
         this.mList = list;
 
     }
-
     public void setData(List<MusicBean> list) {
         if (mList != null) {
             mList.clear();
@@ -96,25 +99,32 @@ public class QqBarPagerAdapter
 
     private void initView(MusicBean musicInfo, View view) {
         ImageView mAlbulm = view.findViewById(R.id.iv_pager_albulm);
-        TextView songName = view.findViewById(R.id.tv_pager_song_name);
-        TextView artName = view.findViewById(R.id.tv_pager_art_name);
+        TextView tvSongName = view.findViewById(R.id.tv_pager_song_name);
+        TextView tvArtist = view.findViewById(R.id.tv_pager_art_name);
         String albumUri = StringUtil.getAlbulm(musicInfo.getAlbumId());
         ImageUitl.loadPlaceholder(mContext, albumUri, mAlbulm);
-        songName.setText(musicInfo.getTitle());
+        String musicTitle = musicInfo.getTitle();
+        String musicArtist = musicInfo.getArtist();
         String currentLyrics = musicInfo.getCurrentLyrics();
-        String artist = musicInfo.getArtist();
-        String unknownName = "<unknown>";
-        String songArtist = unknownName.equals(artist) ? "Smartisan" : artist;
-        artName.setText(currentLyrics != null ? currentLyrics : songArtist);
-        if (mAnimator == null || mAnimationListener == null) {
-            mAnimator = AnimationUtil.getRotation(mAlbulm);
-            mAnimationListener = new MyAnimatorUpdateListener(mAnimator);
-            mAnimator.start();
-            mAnimationListener.play();
+        if (musicTitle.contains("[mqms2]")) {
+            TitleAndArtistBean bean = TitleArtistUtil.getBean(musicTitle);
+            tvSongName.setText(bean.getSongName());
+            tvArtist.setText(bean.getSongArtist());
         } else {
-            mAnimator.resume();
+            tvSongName.setText(musicTitle);
+            String songArtist = "<unknown>".equals(musicArtist) ? "Smartisan" : musicArtist;
+            tvArtist.setText(currentLyrics != null ? currentLyrics : songArtist);
         }
-
+//        if (currentLyrics != null) {
+//            if (mAnimator == null || mAnimationListener == null) {
+//                mAnimator = AnimationUtil.getRotation(mAlbulm);
+//                mAnimationListener = new MyAnimatorUpdateListener(mAnimator);
+//                mAnimator.start();
+//                mAnimationListener.play();
+//            } else {
+//                mAnimator.resume();
+//            }
+//        }
     }
 
 

@@ -44,7 +44,7 @@ public class ImageUitl {
     }
 
     // 加载图片
-    public static void loadPic(Context context, String url, ImageView view,RequestListener listener) {
+    public static void loadPic(Context context, String url, ImageView view, RequestListener listener) {
         RequestOptions options = new RequestOptions();
         options.diskCacheStrategy(DiskCacheStrategy.NONE);
         Glide.with(context).load(url).listener(listener).apply(options).into(view);
@@ -63,6 +63,7 @@ public class ImageUitl {
     public static void customLoadPic(Context context, String url, int placeId, ImageView view) {
         RequestOptions options = new RequestOptions();
         options.placeholder(placeId);
+        options.error(placeId);
         options.diskCacheStrategy(DiskCacheStrategy.NONE);
         Glide.with(context).load(url)
                 .apply(options)

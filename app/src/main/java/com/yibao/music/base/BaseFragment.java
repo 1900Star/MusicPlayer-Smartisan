@@ -8,26 +8,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.yibao.music.MusicApplication;
-import com.yibao.music.base.listener.OnMusicItemClickListener;
-import com.yibao.music.model.AlbumInfo;
-import com.yibao.music.model.ArtistInfo;
-import com.yibao.music.model.DetailsFlagBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.MusicInfoDao;
-import com.yibao.music.util.Constants;
-import com.yibao.music.util.MusicListUtil;
-import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.RxBus;
-import com.yibao.music.util.SharePrefrencesUtil;
 
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Unbinder;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author Stran

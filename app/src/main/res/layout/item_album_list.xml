@@ -68,7 +68,7 @@
                     android:maxLength="18"
                     android:maxLines="1"
                     android:textColor="@color/text_singer_selector"
-                    android:textSize="@dimen/music_loating_name" />
+                    android:textSize="@dimen/music_artist" />
 
                 <TextView
                     android:id="@+id/tv_album_list_song_count"
@@ -79,7 +79,7 @@
                     android:maxLength="6"
                     android:maxLines="1"
                     android:textColor="@color/text_singer_selector"
-                    android:textSize="@dimen/music_loating_name" />
+                    android:textSize="@dimen/music_artist" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

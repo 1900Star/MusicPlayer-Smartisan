@@ -44,7 +44,7 @@
             android:maxLength="54"
             android:singleLine="true"
             android:textColor="@color/textName"
-            android:textSize="@dimen/music_loating_name" />
+            android:textSize="@dimen/music_artist" />
     </LinearLayout>
 
 

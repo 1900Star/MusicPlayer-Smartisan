@@ -31,7 +31,7 @@ import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RxBus;
-import com.yibao.music.util.SharePrefrencesUtil;
+import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.StringUtil;
 
@@ -209,7 +209,7 @@ public class MusicBottomSheetDialog
         AudioServiceConnection connection = new AudioServiceConnection();
         mContext.bindService(intent, connection, Service.BIND_AUTO_CREATE);
         mContext.startService(intent);
-        SharePrefrencesUtil.setDetailsFlag(mContext, Constants.NUMBER_EIGHT);
+        SpUtil.setMusicDataListFlag(mContext, Constants.NUMBER_EIGHT);
     }
 
 

@@ -14,6 +14,7 @@ import com.yibao.music.fragment.dialogfrag.MusicBottomSheetDialog;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.MusicListUtil;
+import com.yibao.music.util.SpUtil;
 import com.yibao.music.view.music.MusicView;
 
 import java.util.List;
@@ -54,6 +55,17 @@ public class SongCategoryFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mPosition == 1 || mPosition == 3) {
+            int newMusicFlag = SpUtil.getNewMusicFlag(mActivity);
+            if (newMusicFlag == 1) {
+                initData();
+                SpUtil.setNewMusicFlag(mActivity, 0);
+            }
+        }
+    }
 
     @Nullable
     @Override

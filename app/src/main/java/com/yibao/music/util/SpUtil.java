@@ -6,13 +6,13 @@ import android.content.SharedPreferences;
 /**
  * @项目名： BigGirl
  * @包名： com.yibao.biggirl.util
- * @文件名: SharePrefrencesUtil
+ * @文件名: SpUtil
  * @author: Stran
  * @创建时间: 2018/1/6 23:28
  * @描述： TODO
  */
 
-public class SharePrefrencesUtil {
+public class SpUtil {
 
     /**
      * 用于标记详情页面是否打开
@@ -48,6 +48,24 @@ public class SharePrefrencesUtil {
     public static int getMusicMode(Context context) {
         SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_MODE, Constants.MODE_KEY);
         return sp.getInt(Constants.PLAY_MODE_KEY, Constants.MODE_KEY);
+    }
+
+    /**
+     * 用于存储手动扫描后是否有新增歌曲的标记
+     *
+     * @param context c
+     * @param value 0 表示没有新增歌曲，1：表示有新增歌曲
+     */
+    public static void setNewMusicFlag(Context context, int value) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.NEW_MUSIC, Constants.MODE_KEY);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(Constants.NEW_MUSIC_FLAG, value);
+        editor.apply();
+    }
+
+    public static int getNewMusicFlag(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.NEW_MUSIC, Constants.MODE_KEY);
+        return sp.getInt(Constants.NEW_MUSIC_FLAG, Constants.MODE_KEY);
     }
 
     /**

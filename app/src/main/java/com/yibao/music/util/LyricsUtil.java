@@ -1,11 +1,8 @@
 package com.yibao.music.util;
 
 import android.os.Environment;
-import android.os.SystemClock;
 
-import com.yibao.music.MusicApplication;
 import com.yibao.music.model.MusicLyricBean;
-import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.model.TitleAndArtistBean;
 
 import java.io.BufferedReader;
@@ -15,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @项目名： BigGirl
@@ -163,7 +159,8 @@ public class LyricsUtil {
                 min = "00";
             }
             String sec = arr[1];
-            return (int) (Integer.parseInt(min) * 60 * 1000 + Float.parseFloat(sec) * 1000);
+            boolean b = isContainsEnglishAndChinese(sec);
+            return (int) (Integer.parseInt(min) * 60 * 1000 + Float.parseFloat(b ? "1" : sec) * 1000);
         }
 
     }

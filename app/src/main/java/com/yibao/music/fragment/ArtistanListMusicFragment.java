@@ -17,7 +17,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.MusicListUtil;
-import com.yibao.music.util.SharePrefrencesUtil;
+import com.yibao.music.util.SpUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicView;
 
@@ -85,7 +85,7 @@ public class ArtistanListMusicFragment extends BaseMusicFragment {
             mDetailsView.setDataFlag(mFragmentManager, list.size(), bean.getArtist(), Constants.NUMBER_ONE);
             SearchDetailsAdapter adapter = new SearchDetailsAdapter(getActivity(), list, Constants.NUMBER_ONE);
             mDetailsView.setAdapter(getActivity(), Constants.NUMBER_ONE, bean, adapter);
-            SharePrefrencesUtil.setDetailsFlag(mActivity, Constants.NUMBER_NINE);
+            SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_NINE);
             if (!mDetailsViewMap.containsKey(mClassName)) {
                 mDetailsViewMap.put(mClassName, this);
             }
@@ -102,7 +102,7 @@ public class ArtistanListMusicFragment extends BaseMusicFragment {
         super.onResume();
         if (isShowDetailsView) {
             if (mContext instanceof UpdataTitleListener) {
-                ((UpdataTitleListener) mContext).updataTitle(mAlbumName, isShowDetailsView);
+                ((UpdataTitleListener) mContext).updataTitle(mAlbumName, true);
             }
         }
 
@@ -114,9 +114,7 @@ public class ArtistanListMusicFragment extends BaseMusicFragment {
         if (detailFlag == Constants.NUMBER_NINE) {
             mMusicView.setVisibility(View.VISIBLE);
             mDetailsView.setVisibility(View.GONE);
-            if (mDetailsViewMap.containsKey(mClassName)) {
-                mDetailsViewMap.remove(mClassName);
-            }
+            mDetailsViewMap.remove(mClassName);
             isShowDetailsView = !isShowDetailsView;
         }
     }

@@ -42,7 +42,7 @@
                     android:maxLength="15"
                     android:singleLine="true"
                     android:textColor="#37383D"
-                    android:textSize="@dimen/bigLyrics"
+                    android:textSize="@dimen/smallLyrics"
                     android:textStyle="bold" />
 
                 <TextView
@@ -55,7 +55,7 @@
                     android:gravity="center_vertical|start"
                     android:singleLine="true"
                     android:textColor="@color/tabbarTv"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/music_artist" />
 
             </LinearLayout>
 

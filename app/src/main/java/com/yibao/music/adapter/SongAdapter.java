@@ -18,6 +18,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.StringUtil;
+import com.yibao.music.util.TitleArtistUtil;
 
 import java.util.List;
 
@@ -72,11 +73,10 @@ public class SongAdapter
     @Override
     protected void bindView(RecyclerView.ViewHolder holder, MusicBean info) {
         if (holder instanceof SongListViewHolder) {
-
             SongListViewHolder songListViewHolder = (SongListViewHolder) holder;
             int position = holder.getAdapterPosition();
-            songListViewHolder.mSongArtistName.setText(info.getArtist());
             ImageUitl.customLoadPic(mContext, StringUtil.getAlbulm(info.getAlbumId()), R.drawable.noalbumcover_120, songListViewHolder.mSongAlbum);
+            songListViewHolder.mSongArtistName.setText(info.getArtist());
             songListViewHolder.mSongName.setText(info.getTitle());
             if (mIsShowStickyView == Constants.NUMBER_ZOER) {
                 String firstTv = info.getFirstChar();

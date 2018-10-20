@@ -14,7 +14,7 @@ import com.yibao.music.R;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.SharePrefrencesUtil;
+import com.yibao.music.util.SpUtil;
 
 
 /**
@@ -100,7 +100,7 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
                 mMusicBarSonglistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarSonglist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 // 没有详情页面，直接返回桌面。
-                SharePrefrencesUtil.setDetailsFlag(getContext(), Constants.NUMBER_ZOER);
+                SpUtil.setDetailsFlag(getContext(), Constants.NUMBER_ZOER);
 
                 break;
             case Constants.NUMBER_THRRE:
@@ -116,7 +116,7 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
                 mMusicBarStylelistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarAboutLl.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 // 没有详情页面，直接返回桌面。
-                SharePrefrencesUtil.setDetailsFlag(getContext(), Constants.NUMBER_ZOER);
+                SpUtil.setDetailsFlag(getContext(), Constants.NUMBER_ZOER);
                 break;
             default:
                 break;
@@ -133,7 +133,7 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
      */
     private void setDetailFragmentFlag(String className, int detailsViewKey) {
         if (BaseMusicFragment.mDetailsViewMap.containsKey(className)) {
-            SharePrefrencesUtil.setDetailsFlag(getContext(), detailsViewKey);
+            SpUtil.setDetailsFlag(getContext(), detailsViewKey);
         }
     }
 
@@ -168,14 +168,12 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
         mMusicBarStylelistTv.setTextColor(mNormalTabbarColor);
     }
 
-
     private void initListener() {
         mMusicBarAboutLl.setOnClickListener(this);
         mMusicBarPlaylist.setOnClickListener(this);
         mMusicBarSonglist.setOnClickListener(this);
         mMusicBarAlbumlist.setOnClickListener(this);
         mMusicBarArtisanlist.setOnClickListener(this);
-
     }
 
     private void initView() {

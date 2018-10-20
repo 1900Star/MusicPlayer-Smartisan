@@ -60,7 +60,7 @@
                 android:maxLength="18"
                 android:maxLines="1"
                 android:textColor="@color/text_singer_selector"
-                android:textSize="@dimen/music_loating_name" />
+                android:textSize="@dimen/music_artist" />
         </LinearLayout>
     </LinearLayout>
 

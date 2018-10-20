@@ -24,7 +24,7 @@ import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
-import com.yibao.music.util.SharePrefrencesUtil;
+import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
 
 /**
@@ -96,8 +96,7 @@ public class DetailsView
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_artist_albumm_details:
-                String albumUrl = StringUtil.getAlbulm(mAlbumId)
-                        .toString();
+                String albumUrl = StringUtil.getAlbulm(mAlbumId);
                 PreviewBigPicDialogFragment.newInstance(albumUrl)
                         .show(mFragmentManager, "album");
                 break;
@@ -121,7 +120,7 @@ public class DetailsView
 
     private void startMusic(int startPosition) {
         if (getContext() instanceof OnMusicItemClickListener) {
-            SharePrefrencesUtil.setMusicDataListFlag(getContext(), Constants.NUMBER_TEN);
+            SpUtil.setMusicDataListFlag(getContext(), Constants.NUMBER_TEN);
             ((OnMusicItemClickListener) getContext()).startMusicServiceFlag(startPosition, mDataFlag, mQueryFlag);
         }
     }

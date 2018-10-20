@@ -74,7 +74,7 @@
                 android:maxLength="18"
                 android:maxLines="1"
                 android:textColor="@color/text_singer_selector"
-                android:textSize="@dimen/music_loating_name" />
+                android:textSize="@dimen/music_artist" />
 
 
         </LinearLayout>
@@ -101,7 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="13dp"
             android:textColor="@color/text_singer_selector"
-            android:textSize="@dimen/music_loating_name"
+            android:textSize="@dimen/music_artist"
             android:textStyle="bold"
             android:visibility="gone" />
 

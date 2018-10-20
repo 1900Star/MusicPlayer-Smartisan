@@ -25,40 +25,47 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:maxLines="1"
-                android:textStyle="bold"
                 android:text="@string/music_song"
                 android:textColor="@color/music_activity_title_selector"
-                android:textSize="@dimen/big_tv" />
+                android:textSize="@dimen/big_tv"
+                android:textStyle="bold" />
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
-    <com.yibao.music.view.MainViewPager
-        android:id="@+id/music_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+    <!--<FrameLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="1">-->
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.2dp"
-        android:background="@color/listBg" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="58dp">
-
-        <com.yibao.music.view.music.SmartisanControlBar
-            android:id="@+id/smartisan_control_bar"
+        <com.yibao.music.view.MainViewPager
+            android:id="@+id/music_viewpager"
             android:layout_width="match_parent"
-            android:layout_height="58dp" />
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
-        <com.yibao.music.view.music.QqControlBar
-            android:id="@+id/qq_control_bar"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:visibility="gone" />
+            android:layout_height="0.2dp"
+            android:background="@color/listBg" />
 
-    </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_gravity="bottom"
+            android:layout_height="wrap_content">
+
+            <com.yibao.music.view.music.SmartisanControlBar
+                android:id="@+id/smartisan_control_bar"
+                android:layout_width="match_parent"
+                android:layout_height="58dp" />
+
+            <com.yibao.music.view.music.QqControlBar
+                android:id="@+id/qq_control_bar"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+    <!--</FrameLayout>-->
 
     <View
         android:layout_width="match_parent"
