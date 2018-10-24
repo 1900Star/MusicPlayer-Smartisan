@@ -35,11 +35,11 @@
 
                 <TextView
                     android:id="@+id/play_notify_name"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
                     android:gravity="center_vertical|start"
-                    android:maxLength="15"
+                    android:maxLength="18"
                     android:singleLine="true"
                     android:textColor="#37383D"
                     android:textSize="@dimen/smallLyrics"
@@ -47,7 +47,7 @@
 
                 <TextView
                     android:id="@+id/play_notify_arts"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:ellipsize="marquee"

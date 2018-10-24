@@ -59,7 +59,7 @@ public class LyricsUtil {
                     if (lyricsUrl != null) {
                         loadLtyrics(acturlSongName, actualArtist, lrcList, file, lyricsUrl);
                     } else {
-                        // 只用歌名搜索歌词
+                        // 二次搜索，只用歌名搜索歌词
                         String lastUrl = DownloadLyricsUtil.getLyricsUrl(acturlSongName, null);
                         if (lastUrl != null) {
                             loadLtyrics(acturlSongName, actualArtist, lrcList, file, lastUrl);
