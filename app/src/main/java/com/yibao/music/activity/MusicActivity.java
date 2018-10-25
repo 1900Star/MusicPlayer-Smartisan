@@ -359,7 +359,7 @@ public class MusicActivity
         MusicActivity.this.perpareItem(musicItem);
         // 设置歌曲最大进度
         setDuration();
-        // 更新播放状态按钮
+        // 更新播放按钮状态
         MusicActivity.this.updatePlayBtnStatus();
         // 初始化动画
         mSmartisanControlBar.initAnimation();
@@ -557,6 +557,7 @@ public class MusicActivity
         openMusicPlayDialogFag();
 
     }
+
     @Override
     protected void headsetPullOut() {
         super.headsetPullOut();

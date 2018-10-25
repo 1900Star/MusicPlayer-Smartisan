@@ -28,6 +28,7 @@ import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.ImageUitl;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
@@ -131,7 +132,7 @@ public class PlayActivity extends BasePlayActivity {
 
 
     private void initSongInfo() {
-        mCurrenMusicInfo = getIntent().getParcelableExtra("currentBean");
+        mCurrenMusicInfo = audioBinder != null ? audioBinder.getMusicBean() : getIntent().getParcelableExtra("currentBean");
         if (mCurrenMusicInfo != null) {
             setTitleAndArtist(mCurrenMusicInfo);
             ArrayList<MusicLyricBean> musicLyricBeans = LyricsUtil.getLyricList(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
@@ -394,7 +395,7 @@ public class PlayActivity extends BasePlayActivity {
             if (audioBinder.isPlaying()) {
                 startRollPlayLyrics(mTvLyrics);
             }
-            ArrayList<MusicLyricBean> lyricList = LyricsUtil.getLyricList(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
+            ArrayList<MusicLyricBean> lyricList = LyricsUtil.getLyricList(audioBinder.getMusicBean().getTitle(), audioBinder.getMusicBean().getArtist());
             closeLyricsView(lyricList);
 
         }
