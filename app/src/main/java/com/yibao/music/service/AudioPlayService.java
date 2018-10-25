@@ -1,5 +1,6 @@
 package com.yibao.music.service;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
+import android.widget.Toast;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.model.MusicBean;
@@ -18,11 +20,17 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.QueryMusicFlagListUtil;
+import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
+import com.yibao.music.util.StringUtil;
+import com.yibao.music.view.music.MusicNotifyManager;
 
 import java.util.List;
 import java.util.Random;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 
 /**
@@ -63,6 +71,7 @@ public class AudioPlayService
     private MusicBeanDao mMusicDao;
     private MusicBean mMusicBean;
     private RxBus mBus;
+    private Disposable mDisposable;
 
     public void setData(List<MusicBean> list) {
         mMusicDataList = list;
@@ -113,8 +122,6 @@ public class AudioPlayService
         String queryFlag = intent.getStringExtra("queryFlag");
         int sortFlag = sortListFlag == Constants.NUMBER_ZOER ? Constants.NUMBER_ONE : sortListFlag;
         LogUtil.d(" position  ==" + enterPosition + "   sortListFlag  ==" + sortFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
-        // 更新QQBar
-//        mBus.post(new QqBarUpdataBean(mMusicDao, mMusicBean, sortFlag, dataFlag, queryFlag));
         mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao, mMusicBean, sortFlag, dataFlag, queryFlag);
         if (enterPosition != position && enterPosition != -1) {
             position = enterPosition;
@@ -144,6 +151,7 @@ public class AudioPlayService
             extends Binder
             implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
         private MusicBean mMusicInfo;
+        private MusicNotifyManager mNotifyManager;
 
         private void play() {
 
@@ -160,6 +168,27 @@ public class AudioPlayService
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.setOnCompletionListener(this);
             SpUtil.setMusicPosition(AudioPlayService.this, position);
+            showNotifycation(true);
+        }
+
+        private void showNotifycation(boolean b) {
+            mNotifyManager = new MusicNotifyManager(getApplication(), mMusicInfo, b);
+            mNotifyManager.show();
+        }
+
+        public void updataFavorite() {
+            MusicBean musicBean = mMusicDataList.get(position);
+            boolean favorite = mMusicDao.load(musicBean.getId()).getIsFavorite();
+            mNotifyManager.updataFavoriteBtn(favorite);
+            new Thread(() -> {
+                refreshFavorite(musicBean, favorite);
+                // 更新本地收藏文件
+                updataFavoritefile(musicBean, favorite);
+            }).start();
+        }
+
+        private void hintNotifycation() {
+            mNotifyManager.hide();
         }
 
         public MusicBean getMusicBean() {
@@ -271,12 +300,14 @@ public class AudioPlayService
 
         public void start() {
             mediaPlayer.start();
+            showNotifycation(true);
         }
 
         //暂停播放
 
         public void pause() {
             mediaPlayer.pause();
+            showNotifycation(false);
         }
 
         //跳转到指定位置进行播放
@@ -294,6 +325,31 @@ public class AudioPlayService
         }
     }
 
+    private void refreshFavorite(MusicBean currentMusicBean, boolean mCurrentIsFavorite) {
+        // 数据更新
+        currentMusicBean.setIsFavorite(!mCurrentIsFavorite);
+        if (!mCurrentIsFavorite) {
+            currentMusicBean.setTime(StringUtil.getCurrentTime());
+        }
+        mMusicDao.update(currentMusicBean);
+    }
+
+    private void updataFavoritefile(MusicBean musicBean, boolean currentIsFavorite) {
+        if (currentIsFavorite) {
+            mDisposable = ReadFavoriteFileUtil.deleteFavorite(musicBean.getTitle()).observeOn(AndroidSchedulers.mainThread()).subscribe(aBoolean -> {
+                if (!aBoolean) {
+                    Toast.makeText(this, "该歌曲还没有添加到收藏文件", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            //更新收藏文件  将歌名和收藏时间拼接储存，恢复的时候，歌名和时间以“T”为标记进行截取
+            String songInfo = musicBean.getTitle() + "T" + musicBean.getTime();
+            ReadFavoriteFileUtil.writeFile(songInfo);
+
+        }
+
+    }
+
     // 控制通知栏的广播
     private class MusicBroacastReceiver
             extends BroadcastReceiver {
@@ -305,9 +361,12 @@ public class AudioPlayService
                     int id = intent.getIntExtra(BUTTON_ID, 0);
                     switch (id) {
                         case FAVORITE:
+                            mAudioBinder.updataFavorite();
                             mBus.post(new MusicStatusBean(1));
                             break;
                         case CLOSE:
+                            mAudioBinder.pause();
+                            mAudioBinder.hintNotifycation();
                             mBus.post(new MusicStatusBean(2));
                             break;
                         case PREV:
@@ -341,6 +400,10 @@ public class AudioPlayService
         }
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
+        }
+        if (mDisposable != null) {
+            mDisposable.dispose();
+            mDisposable = null;
         }
         stopSelf();
     }

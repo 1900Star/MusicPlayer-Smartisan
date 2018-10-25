@@ -8,7 +8,6 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
@@ -17,11 +16,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
-import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
-import com.yibao.music.util.StringUtil;
-import com.yibao.music.view.music.MusicNotifyManager;
 import com.yibao.music.view.music.QqControlBar;
 import com.yibao.music.view.music.SmartisanControlBar;
 
@@ -55,13 +50,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Disposable mQqLyricsDisposable;
     protected Unbinder mBind;
     protected Disposable mRxViewDisposable;
-    protected MusicNotifyManager mNotifyManager;
-    protected boolean isNotifyShow;
-    /**
-     * 广播匹配
-     */
-    protected final static String BUTTON_ID = "ButtonId";
-    protected final static String ACTION_MUSIC = "MUSIC";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,13 +61,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     }
 
-    protected void updataNotifyFavorite(boolean isFavore) {
-        mNotifyManager.updataFavoriteBtn(isFavore);
-    }
-
-    protected void updataNotifyPlayBtn(boolean isPlaying) {
-        mNotifyManager.updataPlayBtn(isPlaying);
-    }
 
     @Override
     protected void onResume() {
@@ -137,57 +118,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (qqControlBar != null) {
             qqControlBar.setFavoriteButtonState(favorite);
         }
-    }
-
-
-    protected void setSongfavoriteState(MusicBean currentMusicBean, QqControlBar qqControlBar, SmartisanControlBar smartisanControlBar) {
-        boolean mCurrentIsFavorite = getFavoriteState(currentMusicBean);
-        updataNotifyFavorite(mCurrentIsFavorite);
-        // Ui更新
-        smartisanControlBar.setFavoriteButtonState(!mCurrentIsFavorite);
-        if (qqControlBar != null) {
-            qqControlBar.setFavoriteButtonState(!mCurrentIsFavorite);
-        }
-        updataFavorite(currentMusicBean, mCurrentIsFavorite);
-    }
-
-    protected void updataFavorite(MusicBean currentMusicBean, boolean mCurrentIsFavorite) {
-        new Thread(() -> {
-            refreshFavorite(currentMusicBean, mCurrentIsFavorite);
-            // 更新本地收藏文件
-            updataFavoriteSong(currentMusicBean, mCurrentIsFavorite);
-        }).start();
-    }
-
-    protected void refreshFavorite(MusicBean currentMusicBean, boolean mCurrentIsFavorite) {
-        // 数据更新
-        currentMusicBean.setIsFavorite(!mCurrentIsFavorite);
-        if (!mCurrentIsFavorite) {
-            currentMusicBean.setTime(StringUtil.getCurrentTime());
-        }
-        mMusicDao.update(currentMusicBean);
-    }
-
-    protected void showNotifycation(MusicBean musicBean, boolean isPlaying) {
-        mNotifyManager = new MusicNotifyManager(this, musicBean, isPlaying);
-        mNotifyManager.show();
-        isNotifyShow = true;
-    }
-
-    private void updataFavoriteSong(MusicBean musicBean, boolean currentIsFavorite) {
-        if (currentIsFavorite) {
-            mCompositeDisposable.add(ReadFavoriteFileUtil.deleteFavorite(musicBean.getTitle()).observeOn(AndroidSchedulers.mainThread()).subscribe(aBoolean -> {
-                if (!aBoolean) {
-                    Toast.makeText(BaseActivity.this, "该歌曲还没有添加到收藏文件", Toast.LENGTH_SHORT).show();
-                }
-            }));
-        } else {
-            //更新收藏文件  将歌名和收藏时间拼接储存，恢复的时候，歌名和时间以“T”为标记进行截取
-            String songInfo = musicBean.getTitle() + "T" + musicBean.getTime();
-            ReadFavoriteFileUtil.writeFile(songInfo);
-
-        }
-
     }
 
     protected boolean getFavoriteState(MusicBean musicBean) {

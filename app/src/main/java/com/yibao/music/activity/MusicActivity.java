@@ -1,10 +1,8 @@
 package com.yibao.music.activity;
 
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -89,7 +87,6 @@ public class MusicActivity
     // 切换Tab时更改TiTle的标记,打开详情页面时正确显示Title
     private boolean mIsShowDetail;
     private String mDetailViewTitle;
-    private NotifyBroacastReceiver mReceiver;
     private MusicBean mQqBarBean;
 
 
@@ -154,20 +151,16 @@ public class MusicActivity
     @Override
     protected void refreshBtnAndNotify(MusicStatusBean bean) {
         switch (bean.getType()) {
-            case 0:
+            case Constants.NUMBER_ZOER:
                 mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
-                updataNotifyPlayBtn(audioBinder.isPlaying());
                 updatePlayBtnStatus();
                 break;
-            case 1:
-                setSongfavoriteState(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
+            case Constants.NUMBER_ONE:
+                checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
                 break;
-            case 2:
-                mNotifyManager.hide();
-                audioBinder.pause();
+            case Constants.NUMBER_TWO:
                 updatePlayBtnStatus();
                 mSmartisanControlBar.animatorOnPause();
-                isNotifyShow = false;
                 break;
             default:
                 break;
@@ -184,7 +177,8 @@ public class MusicActivity
             if (mMusicConfig) {
                 switch (clickFlag) {
                     case Constants.NUMBER_ONE:
-                        setSongfavoriteState(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
+                        audioBinder.updataFavorite();
+                        checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
                         break;
                     case Constants.NUMBER_TWO:
                         clearDisposableProgresse();
@@ -213,7 +207,8 @@ public class MusicActivity
                         switchPlayState();
                         break;
                     case Constants.NUMBER_TWO:
-                        setSongfavoriteState(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
+                        audioBinder.updataFavorite();
+                        checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
                     default:
                         break;
                 }
@@ -282,7 +277,6 @@ public class MusicActivity
             mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
             //更新播放状态按钮
             updatePlayBtnStatus();
-            showNotifycation(mCurrentMusicBean, audioBinder.isPlaying());
         }
     }
 
@@ -372,7 +366,6 @@ public class MusicActivity
         //更新歌曲的进度
         upDataPlayProgress();
         // 打开通知栏
-        showNotifycation(mCurrentMusicBean, audioBinder.isPlaying());
         if (mLyricList != null) {
             mLyricList.clear();
         }
@@ -564,15 +557,6 @@ public class MusicActivity
         openMusicPlayDialogFag();
 
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (mReceiver != null) {
-            unregisterReceiver(mReceiver);
-        }
-    }
-
     @Override
     protected void headsetPullOut() {
         super.headsetPullOut();
@@ -625,64 +609,8 @@ public class MusicActivity
             mPlayState = audioBinder.isPlaying() ? Constants.NUMBER_TWO : Constants.NUMBER_ONE;
             SpUtil.setMusicPlayState(this, mPlayState);
         }
-        mNotifyManager.hide();
         unbindAudioService();
 //        stopService(new Intent(this, AudioPlayService.class));
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        LogUtil.d("lsp", "========onStop");
-//        initBroadcast();
-    }
-
-    private void initBroadcast() {
-        mReceiver = new NotifyBroacastReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(AudioPlayService.ACTION_MUSIC);
-        registerReceiver(mReceiver, filter);
-
-    }
-
-    // 在程序处于后台时（此时Activity的onPause已经执行了，所有的订阅者都被清除，无法接收Service中RxBus发出的事件，
-    // 也无法更新通知栏的信息），在MusicActivity的onStop中注册这个广播，仅仅用来更新通知栏，在onResume中将广播解除注册。
-    private class NotifyBroacastReceiver
-            extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action != null) {
-                if (action.equals(ACTION_MUSIC)) {
-                    int id = intent.getIntExtra(BUTTON_ID, 0);
-                    LogUtil.d("lsp", "=======收藏广播");
-                    switch (id) {
-                        // favorite
-                        case Constants.NUMBER_ZOER:
-                            updataNotifyFavorite(mCurrentMusicBean.getIsFavorite());
-                            refreshFavorite(mCurrentMusicBean, getFavoriteState(mCurrentMusicBean));
-                            break;
-                        // close
-                        case Constants.NUMBER_FOUR:
-                            mNotifyManager.hide();
-                            audioBinder.pause();
-                            break;
-                        // pre
-                        case Constants.NUMBER_ONE:
-                            break;
-                        // play
-                        case Constants.NUMBER_TWO:
-                            updataNotifyPlayBtn(audioBinder.isPlaying());
-                            break;
-                        // next
-                        case Constants.NUMBER_THRRE:
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
     }
 
 

@@ -24,7 +24,6 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.SearchHistoryBean;
-import com.yibao.music.model.TitleAndArtistBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
@@ -91,7 +90,6 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         audioBinder = MusicActivity.getAudioBinder();
         mMusicBean = getIntent().getParcelableExtra("musicBean");
         mSmartisanControlBar.setPbolorAndPreBtnGone();
-        showNotifycation(mMusicBean, audioBinder.isPlaying());
         setMusicInfo(mMusicBean);
         if (audioBinder != null) {
             mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
@@ -128,7 +126,6 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
             setDuration();
             SearchActivity.this.checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
             mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
-            showNotifycation(mMusicBean, audioBinder.isPlaying());
             updataLyric();
         }
     }
@@ -173,19 +170,15 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     protected void refreshBtnAndNotify(MusicStatusBean musicStatusBean) {
         switch (musicStatusBean.getType()) {
             case 0:
-                updataNotifyPlayBtn(audioBinder.isPlaying());
                 mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
                 mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
                 break;
             case 1:
-                setSongfavoriteState(mMusicBean, null, mSmartisanControlBar);
+                checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
                 break;
             case 2:
-                mNotifyManager.hide();
-                audioBinder.pause();
                 mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
                 mSmartisanControlBar.animatorOnPause();
-                isNotifyShow = false;
                 break;
             default:
                 break;
@@ -212,7 +205,8 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         mSmartisanControlBar.setClickListener(clickFlag -> {
             switch (clickFlag) {
                 case Constants.NUMBER_ONE:
-                    setSongfavoriteState(mMusicBean, null, mSmartisanControlBar);
+                    audioBinder.updataFavorite();
+                    checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
                     break;
                 case Constants.NUMBER_TWO:
                     audioBinder.playPre();
@@ -235,7 +229,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         } else {
             audioBinder.start();
         }
-        mNotifyManager.updataPlayBtn(audioBinder.isPlaying());
+//        mNotifyManager.updataPlayBtn(audioBinder.isPlaying());
         mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
         mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
     }

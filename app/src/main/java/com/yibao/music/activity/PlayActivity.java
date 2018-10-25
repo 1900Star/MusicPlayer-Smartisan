@@ -25,7 +25,6 @@ import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.MusicStatusBean;
-import com.yibao.music.model.TitleAndArtistBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.ImageUitl;
@@ -139,9 +138,6 @@ public class PlayActivity extends BasePlayActivity {
             mTvLyrics.setLrcFile(musicLyricBeans);
             mAlbumUrl = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId());
             setAlbulm(mAlbumUrl);
-            if (audioBinder != null) {
-                showNotifycation(mCurrenMusicInfo, audioBinder.isPlaying());
-            }
         }
     }
 
@@ -191,7 +187,6 @@ public class PlayActivity extends BasePlayActivity {
         if (isShowLyrics) {
             closeLyricsView(lyricList);
         }
-        showNotifycation(musicBean, audioBinder.isPlaying());
     }
 
     private void setTitleAndArtist(MusicBean bean) {
@@ -263,7 +258,6 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     private void switchPlayState(boolean isPlaying) {
-        mNotifyManager.updataPlayBtn(audioBinder.isPlaying());
         // 更新播放状态按钮
         updatePlayBtnStatus();
         playBtnState(isPlaying);
@@ -317,18 +311,11 @@ public class PlayActivity extends BasePlayActivity {
                 switchPlayState(!audioBinder.isPlaying());
                 break;
             case 1:
-                boolean favorite = getFavoriteState(mCurrenMusicInfo);
-                updataNotifyFavorite(favorite);
-                checkCurrentIsFavorite(!favorite);
-
-                updataFavorite(mCurrenMusicInfo, favorite);
+                checkCurrentIsFavorite(audioBinder.getMusicBean().isFavorite());
                 break;
             case 2:
-                mNotifyManager.hide();
-                audioBinder.pause();
                 mAnimator.pause();
                 updatePlayBtnStatus();
-                isNotifyShow = false;
                 break;
             default:
                 break;
@@ -364,7 +351,6 @@ public class PlayActivity extends BasePlayActivity {
                 audioBinder.playPre();
                 break;
             case R.id.music_play:
-                mNotifyManager.updataPlayBtn(!audioBinder.isPlaying());
                 playBtnState(audioBinder.isPlaying());
                 updatePlayBtnStatus();
                 break;
@@ -374,9 +360,8 @@ public class PlayActivity extends BasePlayActivity {
                 break;
             case R.id.iv_favorite_music:
                 boolean favoriteState = getFavoriteState(mCurrenMusicInfo);
+                audioBinder.updataFavorite();
                 checkCurrentIsFavorite(!favoriteState);
-                updataNotifyFavorite(favoriteState);
-                updataFavorite(mCurrenMusicInfo, favoriteState);
                 break;
             default:
                 break;

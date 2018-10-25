@@ -49,15 +49,15 @@ public class MusicNotifyManager implements
     private static final int CLOSE = 4;
 
     private static final int PLAY_NOTIFY_ID = 0x1213;
-    private final Activity activity;
+    private final Context activity;
     private final NotificationManager manager;
 
     private boolean isPlay;
     private boolean isFavorite = false;
     private MusicBean mMusicBean;
-    private final String channelId="music";
+    private final String channelId = "music";
 
-    public MusicNotifyManager(Activity activity, MusicBean musicBean, boolean isPlay) {
+    public MusicNotifyManager(Context activity, MusicBean musicBean, boolean isPlay) {
         this.activity = activity;
         this.mMusicBean = musicBean;
         this.isPlay = isPlay;
