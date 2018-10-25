@@ -81,11 +81,11 @@ public class SplashActivity
 
         if (mScanner == null) {
             mIsFirstScanner = true;
-            // 是否是首次安装，本地数据库是否创建，等 8 表示不是首次安装，数据库已经创建，直接进入MusicActivity。
+            // 是否是首次安装，本地数据库是否创建，等于 8 表示不是首次安装，数据库已经创建，直接进入MusicActivity。
             if (SpUtil.getLoadMusicFlag(this) == Constants.NUMBER_EIGHT) {
                 countDownOpareton(true);
             } else {
-                // 首次安装，创建本地数据库。
+                // 首次安装，开启服务加载本地音乐，创建本地数据库。
                 startService(new Intent(this, LoadMusicDataService.class));
                 updataLoadProgress();
             }
