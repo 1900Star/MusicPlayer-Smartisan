@@ -70,7 +70,6 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     @BindView(R.id.smartisan_control_bar)
     SmartisanControlBar mSmartisanControlBar;
     private SearchDetailsAdapter mSearchDetailAdapter;
-    private List<SearchHistoryBean> mSearchList;
     private MusicBean mMusicBean;
     private AudioPlayService.AudioBinder audioBinder;
     private ArrayList<MusicLyricBean> mLyricList;
@@ -132,7 +131,9 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
 
     @Override
     protected void updataCurrentPlayProgress() {
-        mSmartisanControlBar.setSongProgress(audioBinder.getProgress());
+        if (audioBinder != null) {
+            mSmartisanControlBar.setSongProgress(audioBinder.getProgress());
+        }
     }
 
     private void setDuration() {
@@ -154,15 +155,15 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
 
     private void initData() {
 //        mSearchList = MusicListUtil.sortSearchHistory(mSearchDao.queryBuilder().list());
-        mSearchList = mSearchDao.queryBuilder().list();
+        List<SearchHistoryBean> searchList = mSearchDao.queryBuilder().list();
 //        Collections.sort(mSearchList);
-        if (mSearchList != null && mSearchList.size() > 0) {
+        if (searchList != null && searchList.size() > 0) {
             mLayoutHistory.setVisibility(View.VISIBLE);
         }
         mSearchDetailAdapter = new SearchDetailsAdapter(SearchActivity.this, null, Constants.NUMBER_THRRE);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(1, mSearchDetailAdapter);
         mLinearDetail.addView(recyclerView);
-        mFlowLayoutView.setData(mSearchList);
+        mFlowLayoutView.setData(searchList);
 
     }
 
@@ -195,7 +196,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
                     mIvEditClear.setVisibility(View.VISIBLE);
                 } else {
                     historyViewVisibility();
-                    mLinearDetail.setVisibility(View.GONE);
+                    mLinearDetail.setVisibility(View.INVISIBLE);
                     mTvNoSearchResult.setVisibility(View.GONE);
                     mIvEditClear.setVisibility(View.GONE);
                 }
@@ -319,6 +320,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         AudioServiceConnection serviceConnection = new AudioServiceConnection();
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         startService(intent);
+
     }
 
     @Override

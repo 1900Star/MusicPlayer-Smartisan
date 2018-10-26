@@ -49,6 +49,7 @@ public class SearchDetailsAdapter extends BaseRvAdapter<MusicBean> {
 
     @Override
     protected String getLastItemDes() {
+//        return mDataFlag == 1 ? " 名歌手" : mDataFlag == 2 ? " 张专辑" : " 首歌";
         return " 首歌";
     }
 

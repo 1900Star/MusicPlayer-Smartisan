@@ -1,7 +1,5 @@
 package com.yibao.music.util;
 
-import android.content.Context;
-
 import com.yibao.music.base.listener.OnSearchFlagListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.SearchHistoryBean;
@@ -9,6 +7,7 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -34,32 +33,39 @@ public class MusicDaoUtil {
     public static Observable<List<MusicBean>> getSearchResult(OnSearchFlagListener listener, MusicBeanDao musicBeanDao, SearchHistoryBeanDao searchBeanDao, String queryConditions) {
 
         return Observable.create((ObservableOnSubscribe<List<MusicBean>>) emitter -> {
-            List<MusicBean> songList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Title.eq(queryConditions)).build().list();
-            if (songList != null && songList.size() > 0) {
-                listener.setSearchFlag(3);
+            List<MusicBean> artistList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(queryConditions)).build().list();
+            if (artistList != null && artistList.size() > 0) {
+                listener.setSearchFlag(1);
                 insertSearchBean(searchBeanDao, queryConditions);
-                emitter.onNext(songList);
+                emitter.onNext(artistList);
                 emitter.onComplete();
             } else {
-                List<MusicBean> artistList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(queryConditions)).build().list();
-                if (artistList != null && artistList.size() > 0) {
-                    listener.setSearchFlag(1);
+                List<MusicBean> albumList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(queryConditions)).build().list();
+                if (albumList != null && albumList.size() > 0) {
+                    listener.setSearchFlag(2);
                     insertSearchBean(searchBeanDao, queryConditions);
-                    emitter.onNext(artistList);
+                    emitter.onNext(albumList);
                     emitter.onComplete();
                 } else {
-                    List<MusicBean> albumList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(queryConditions)).build().list();
-                    if (albumList != null && albumList.size() > 0) {
-                        listener.setSearchFlag(2);
-                        insertSearchBean(searchBeanDao, queryConditions);
-                        emitter.onNext(albumList);
-                        emitter.onComplete();
-                    } else {
-                        emitter.onError(new FileNotFoundException());
+                    List<MusicBean> searchSongList = new ArrayList<>();
+                    List<MusicBean> beanList = musicBeanDao.queryBuilder().build().list();
+                    for (MusicBean musicBean : beanList) {
+                        if (musicBean.getTitle().contains(queryConditions)) {
+                            searchSongList.add(musicBean);
+                        }
                     }
-                }
+                    if (searchSongList.size() == 0) {
+                        emitter.onError(new FileNotFoundException());
+                    } else {
+                        listener.setSearchFlag(3);
+                        insertSearchBean(searchBeanDao, queryConditions);
+                        emitter.onNext(searchSongList);
+                        emitter.onComplete();
+                    }
 
+                }
             }
+
 
         }).subscribeOn(Schedulers.io());
 

@@ -71,7 +71,6 @@ public class MusicActivity
     QqControlBar mQqControlBar;
 
 
-    private List<MusicBean> mMusicItems;
 
     private static AudioPlayService.AudioBinder audioBinder;
     private AudioServiceConnection mConnection;

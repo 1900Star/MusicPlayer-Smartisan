@@ -79,7 +79,13 @@ public class DownloadLyricsUtil {
         return artist == null ? str : str + "/" + Encode(artist);
     }
 
-    // 歌词文件网络地址，将歌词文件本地缓冲地址
+    /**
+     * 歌词文件网络地址，将歌词文件本地缓冲地址
+     * @param url 歌词地址
+     * @param songName name
+     * @param artist artist
+     * @return 是否下载成功
+     */
     public static boolean getLyricsFile(String url, final String songName, String artist) {
         OkHttpUtil.downFile(url, new Callback() {
             @Override
@@ -107,6 +113,7 @@ public class DownloadLyricsUtil {
                         isDownloadSucssce = true;
                     } catch (IOException e) {
                         e.printStackTrace();
+                        isDownloadSucssce = false;
                     }
                 }
             }
