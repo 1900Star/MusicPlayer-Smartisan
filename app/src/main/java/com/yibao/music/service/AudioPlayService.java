@@ -121,8 +121,9 @@ public class AudioPlayService
         int dataFlag = intent.getIntExtra("dataFlag", 0);
         String queryFlag = intent.getStringExtra("queryFlag");
         int sortFlag = sortListFlag == Constants.NUMBER_ZOER ? Constants.NUMBER_ONE : sortListFlag;
-        LogUtil.d(" position  ==" + enterPosition + "   sortListFlag  ==" + sortFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
+        LogUtil.c(AudioPlayService.class, " position  ==" + enterPosition + "   sortListFlag  ==" + sortFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
         mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao, mMusicBean, sortFlag, dataFlag, queryFlag);
+        LogUtil.c(this.getClass(), "    ==  "+mMusicDataList.size());
         if (enterPosition != position && enterPosition != -1) {
             position = enterPosition;
             //执行播放
@@ -160,7 +161,8 @@ public class AudioPlayService
                 mediaPlayer.release();
                 mediaPlayer = null;
             }
-            position = position > mMusicDataList.size() ? 0 : position;
+            // “>=” 确保模糊搜索时播放时不出现索引越界
+            position = position >= mMusicDataList.size() ? 0 : position;
             mMusicInfo = mMusicDataList.get(position);
             mediaPlayer = MediaPlayer.create(AudioPlayService.this,
                     Uri.parse(mMusicInfo.getSongUrl()));

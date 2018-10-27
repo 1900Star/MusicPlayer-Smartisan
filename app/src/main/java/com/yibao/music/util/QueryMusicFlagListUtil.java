@@ -3,6 +3,7 @@ package com.yibao.music.util;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,8 +19,8 @@ public class QueryMusicFlagListUtil {
      * @param musicBeanDao dao
      * @param musicBean    实体
      * @param sortListFlag 列表类型,  按歌ABC、评分、播放次数、添加时间、收藏列表、按条件查询(1:艺术家、2：专辑、3：曲名 )
-     * @param dataFlag  1:艺术家、2：专辑、3：曲名
-     * @param queryFlag  查询关键字：1：艺术家、2：专辑、3：曲名
+     * @param dataFlag     1:艺术家、2：专辑、3：曲名
+     * @param queryFlag    查询关键字：1：艺术家、2：专辑、3：曲名
      * @return List
      */
     public static List<MusicBean> getMusicDataList(MusicBeanDao musicBeanDao, MusicBean musicBean, int sortListFlag, int dataFlag, String queryFlag) {
@@ -54,7 +55,6 @@ public class QueryMusicFlagListUtil {
                 musicBean.setTitle(queryFlag);
                 return musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Title.eq(musicBean.getTitle())).build().list();
             }
-
         }
         return MusicListUtil.sortMusicAbc(musicBeanDao.queryBuilder().list());
 

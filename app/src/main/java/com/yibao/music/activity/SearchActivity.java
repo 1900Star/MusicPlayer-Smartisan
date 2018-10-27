@@ -19,11 +19,13 @@ import com.yibao.music.base.BaseActivity;
 import com.yibao.music.base.BaseObserver;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
+import com.yibao.music.base.listener.OnSearchFlagListener;
 import com.yibao.music.base.listener.TextChangedListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.SearchHistoryBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
@@ -60,6 +62,8 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     EditText mEditSearch;
     @BindView(R.id.tv_no_search_result)
     TextView mTvNoSearchResult;
+    @BindView(R.id.sticky_view_search)
+    TextView mtvStickyView;
     @BindView(R.id.ll_list_view)
     LinearLayout mLinearDetail;
     @BindView(R.id.ll_history)
@@ -230,7 +234,6 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         } else {
             audioBinder.start();
         }
-//        mNotifyManager.updataPlayBtn(audioBinder.isPlaying());
         mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
         mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
     }
@@ -263,7 +266,10 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
      * @param searchconditions 搜索关键字
      */
     private void searchMusic(String searchconditions) {
-        MusicDaoUtil.getSearchResult(flag -> mSearchDetailAdapter.setDataFlag(flag), mMusicDao, mSearchDao, searchconditions)
+        MusicDaoUtil.getSearchResult(flag -> {
+            mSearchDetailAdapter.setDataFlag(flag);
+            mtvStickyView.setText(flag == 1 ? "艺术家" : flag == 2 ? "专辑" : "歌曲");
+        }, mMusicDao, mSearchDao, searchconditions)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseObserver<List<MusicBean>>() {
                     @Override
