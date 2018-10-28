@@ -32,7 +32,7 @@ public class MusicDaoUtil {
      * @return 查询结果以集合的类型返回
      */
     public static Observable<List<MusicBean>> getSearchResult(OnSearchFlagListener listener, MusicBeanDao musicBeanDao, SearchHistoryBeanDao searchBeanDao, String queryConditions) {
-        LogUtil.c(MusicDaoUtil.class, " ====  时时查询关键字  "+queryConditions);
+        LogUtil.c(MusicDaoUtil.class, " ====  时时查询关键字  " + queryConditions);
         return Observable.create((ObservableOnSubscribe<List<MusicBean>>) emitter -> {
             List<MusicBean> artistList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(queryConditions)).build().list();
             if (artistList != null && artistList.size() > 0) {
@@ -44,11 +44,13 @@ public class MusicDaoUtil {
                     listener.setSearchFlag(2);
                     insertSearchBean(emitter, albumList, searchBeanDao, queryConditions);
                 } else {
+                    // 根据歌名精确搜索
                     List<MusicBean> songList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Title.eq(queryConditions)).build().list();
                     if (songList != null && songList.size() > 0) {
                         listener.setSearchFlag(3);
                         insertSearchBean(emitter, songList, searchBeanDao, queryConditions);
                     } else {
+                        // 模糊匹配搜索
                         List<MusicBean> searchSongList = new ArrayList<>();
                         List<MusicBean> beanList = musicBeanDao.queryBuilder().build().list();
                         for (MusicBean musicBean : beanList) {
@@ -75,10 +77,6 @@ public class MusicDaoUtil {
 
     }
 
-    private static void b() {
-
-    }
-
     /**
      * 将一个搜索结果保存到本地，同时做了重复保存的判断。
      *
@@ -90,6 +88,7 @@ public class MusicDaoUtil {
         if (historyList.size() < 1) {
             searchBeanDao.insert(new SearchHistoryBean(queryConditions, Long.toString(System.currentTimeMillis())));
         }
+        LogUtil.c(MusicDaoUtil.class, " ====  时时查询关键字  " + queryConditions + "  == list" + beanList.size());
         emitter.onNext(beanList);
         emitter.onComplete();
     }

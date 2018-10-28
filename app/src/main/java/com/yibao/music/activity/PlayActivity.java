@@ -458,14 +458,6 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     @Override
-    protected void headsetPullOut() {
-        super.headsetPullOut();
-        if (audioBinder != null && audioBinder.isPlaying()) {
-            switchPlayState(audioBinder.isPlaying());
-        }
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         boolean allSwitch = mAnimator != null && mAnimatorListener != null;

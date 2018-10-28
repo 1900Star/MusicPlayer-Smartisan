@@ -116,7 +116,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         }
         mCompositeDisposable.add(RxView.clicks(mSmartisanControlBar)
                 .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> startPlayActivity(mMusicBean)));
+                .subscribe(o -> startPlayActivity()));
     }
 
 

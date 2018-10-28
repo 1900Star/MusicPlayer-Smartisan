@@ -342,7 +342,7 @@ public class MusicActivity
 
     private void readyMusic() {
         if (mMusicConfig) {
-            startPlayActivity(mCurrentMusicBean);
+            startPlayActivity();
         } else {
             ToastUtil.showNoMusic(MusicActivity.this);
         }
@@ -473,8 +473,6 @@ public class MusicActivity
 
     private void updataQqBar() {
         if (isShowQqBar) {
-//            mQqControlBar.setPagerData(audioBinder.getMusicList());
-//            mQqControlBar.setPagerCurrentItem(audioBinder.getPosition());
             mQqControlBar.updaPagerData(audioBinder.getMusicList(), audioBinder.getPosition());
             setQqPagerLyric();
         }
@@ -555,14 +553,6 @@ public class MusicActivity
         }
         openMusicPlayDialogFag();
 
-    }
-
-    @Override
-    protected void headsetPullOut() {
-        super.headsetPullOut();
-        if (audioBinder != null && audioBinder.isPlaying()) {
-            switchPlayState();
-        }
     }
 
     @Override

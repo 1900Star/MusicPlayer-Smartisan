@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
@@ -67,7 +68,7 @@ public class AudioPlayService
 
     private int position = -2;
     private List<MusicBean> mMusicDataList;
-    private MusicBroacastReceiver mReceiver;
+    private MusicBroacastReceiver mMusicReceiver;
     private MusicBeanDao mMusicDao;
     private MusicBean mMusicBean;
     private RxBus mBus;
@@ -101,17 +102,9 @@ public class AudioPlayService
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mMusicBean = new MusicBean();
         initBroadcast();
+        registerHeadsetReceiver();
         //初始化播放模式
         PLAY_MODE = SpUtil.getMusicMode(this);
-    }
-
-
-    private void initBroadcast() {
-        mReceiver = new MusicBroacastReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_MUSIC);
-        registerReceiver(mReceiver, filter);
-
     }
 
     @Override
@@ -123,7 +116,7 @@ public class AudioPlayService
         int sortFlag = sortListFlag == Constants.NUMBER_ZOER ? Constants.NUMBER_ONE : sortListFlag;
         LogUtil.c(AudioPlayService.class, " position  ==" + enterPosition + "   sortListFlag  ==" + sortFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
         mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao, mMusicBean, sortFlag, dataFlag, queryFlag);
-        LogUtil.c(this.getClass(), "    ==  "+mMusicDataList.size());
+        LogUtil.c(this.getClass(), "    ==  " + mMusicDataList.size());
         if (enterPosition != position && enterPosition != -1) {
             position = enterPosition;
             //执行播放
@@ -352,7 +345,17 @@ public class AudioPlayService
 
     }
 
-    // 控制通知栏的广播
+    /**
+     * 控制通知栏的广播
+     */
+    private void initBroadcast() {
+        mMusicReceiver = new MusicBroacastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_MUSIC);
+        registerReceiver(mMusicReceiver, filter);
+
+    }
+
     private class MusicBroacastReceiver
             extends BroadcastReceiver {
         @Override
@@ -393,6 +396,24 @@ public class AudioPlayService
         }
     }
 
+    /**
+     * 耳机插入和拔出监听广播
+     */
+    private void registerHeadsetReceiver() {
+        IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        registerReceiver(headsetReciver, intentFilter);
+    }
+
+    BroadcastReceiver headsetReciver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (mAudioBinder != null && mAudioBinder.isPlaying()) {
+                mAudioBinder.pause();
+                mBus.post(new MusicStatusBean(0));
+            }
+        }
+    };
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -400,8 +421,11 @@ public class AudioPlayService
             mediaPlayer.release();
             mediaPlayer = null;
         }
-        if (mReceiver != null) {
-            unregisterReceiver(mReceiver);
+        if (mMusicReceiver != null) {
+            unregisterReceiver(mMusicReceiver);
+        }
+        if (headsetReciver != null) {
+            unregisterReceiver(headsetReciver);
         }
         if (mDisposable != null) {
             mDisposable.dispose();

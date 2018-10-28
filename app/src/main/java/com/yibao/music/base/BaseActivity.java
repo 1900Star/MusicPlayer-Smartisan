@@ -1,10 +1,6 @@
 package com.yibao.music.base;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -57,7 +53,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .bus();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mSearchDao = MusicApplication.getIntstance().getSearchDao();
-        registerHeadsetReceiver();
+//        registerHeadsetReceiver();
 
     }
 
@@ -105,10 +101,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         upDataPlayProgress();
     }
 
-    protected void startPlayActivity(MusicBean musicBean) {
-        Intent intent = new Intent(this, PlayActivity.class);
-//        intent.putExtra("currentBean", musicBean);
-        startActivity(intent);
+    protected void startPlayActivity() {
+        startActivity(new Intent(this, PlayActivity.class));
         overridePendingTransition(R.anim.dialog_push_in, 0);
     }
 
@@ -124,24 +118,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         return mMusicDao.load(musicBean.getId()).isFavorite();
     }
 
-    /**
-     * 耳机插入和拔出监听
-     */
-    private void registerHeadsetReceiver() {
-        IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-        registerReceiver(headsetReciver, intentFilter);
-    }
 
-    BroadcastReceiver headsetReciver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            headsetPullOut();
-        }
-    };
-
-    // 需要监听耳机拔出的页面重写这个方法
-    protected void headsetPullOut() {
-    }
 
     protected void disposableQqLyric() {
         if (mQqLyricsDisposable != null) {
@@ -173,7 +150,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mBind.unbind();
-        unregisterReceiver(headsetReciver);
+//        unregisterReceiver(headsetReciver);
         if (mRxViewDisposable != null) {
             mRxViewDisposable.dispose();
         }
