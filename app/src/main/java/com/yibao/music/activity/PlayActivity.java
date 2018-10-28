@@ -28,7 +28,6 @@ import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.ImageUitl;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;

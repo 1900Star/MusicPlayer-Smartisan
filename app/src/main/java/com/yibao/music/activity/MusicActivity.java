@@ -71,7 +71,6 @@ public class MusicActivity
     QqControlBar mQqControlBar;
 
 
-
     private static AudioPlayService.AudioBinder audioBinder;
     private AudioServiceConnection mConnection;
     private MusicBean mCurrentMusicBean;
@@ -369,8 +368,8 @@ public class MusicActivity
             mLyricList.clear();
         }
         // 获取歌词的List
-        mLyricList = LyricsUtil.getLyricList(musicItem.getTitle(), musicItem.getArtist());
         if (isShowQqBar) {
+            mLyricList = LyricsUtil.getLyricList(musicItem.getTitle(), musicItem.getArtist());
             mQqControlBar.setPagerData(audioBinder.getMusicList());
             mQqControlBar.setPagerCurrentItem(audioBinder.getPosition());
             setQqPagerLyric();
@@ -467,8 +466,6 @@ public class MusicActivity
         // 设置专辑
         String albumUri = StringUtil.getAlbulm(mCurrentMusicBean.getAlbumId());
         mSmartisanControlBar.setAlbulmUrl(albumUri);
-        // 更新QqBar
-//        updataQqBar();
     }
 
     private void updataQqBar() {

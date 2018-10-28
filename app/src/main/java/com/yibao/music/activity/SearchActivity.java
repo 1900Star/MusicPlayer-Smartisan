@@ -19,13 +19,11 @@ import com.yibao.music.base.BaseActivity;
 import com.yibao.music.base.BaseObserver;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
-import com.yibao.music.base.listener.OnSearchFlagListener;
 import com.yibao.music.base.listener.TextChangedListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.model.SearchHistoryBean;
-import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
@@ -38,6 +36,7 @@ import com.yibao.music.view.FlowLayoutView;
 import com.yibao.music.view.music.SmartisanControlBar;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -158,16 +157,17 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
 
 
     private void initData() {
-//        mSearchList = MusicListUtil.sortSearchHistory(mSearchDao.queryBuilder().list());
+        // 搜索记录
         List<SearchHistoryBean> searchList = mSearchDao.queryBuilder().list();
-//        Collections.sort(mSearchList);
         if (searchList != null && searchList.size() > 0) {
             mLayoutHistory.setVisibility(View.VISIBLE);
+            Collections.sort(searchList);
+            mFlowLayoutView.setData(searchList);
         }
+        // 列表数据
         mSearchDetailAdapter = new SearchDetailsAdapter(SearchActivity.this, null, Constants.NUMBER_THRRE);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(1, mSearchDetailAdapter);
         mLinearDetail.addView(recyclerView);
-        mFlowLayoutView.setData(searchList);
 
     }
 
@@ -250,11 +250,12 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     }
 
     private void historyViewVisibility() {
-        List<SearchHistoryBean> historyList = MusicListUtil.sortSearchHistory(mSearchDao.queryBuilder().list());
+        List<SearchHistoryBean> historyList = mSearchDao.queryBuilder().list();
         if (historyList != null && historyList.size() > 0) {
             mLayoutHistory.setVisibility(View.VISIBLE);
-            mFlowLayoutView.clearView(historyList);
             mTvNoSearchResult.setVisibility(View.GONE);
+            Collections.sort(historyList);
+            mFlowLayoutView.clearView(historyList);
         } else {
             mLayoutHistory.setVisibility(View.GONE);
         }
@@ -269,7 +270,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         MusicDaoUtil.getSearchResult(flag -> {
             mSearchDetailAdapter.setDataFlag(flag);
             mtvStickyView.setText(flag == 1 ? "艺术家" : flag == 2 ? "专辑" : "歌曲");
-        }, mMusicDao, mSearchDao, searchconditions)
+        }, mMusicDao, searchconditions)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseObserver<List<MusicBean>>() {
                     @Override

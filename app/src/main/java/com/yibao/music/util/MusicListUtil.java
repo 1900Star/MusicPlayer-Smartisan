@@ -151,15 +151,6 @@ public class MusicListUtil {
         return m1.hashCode() - m2.hashCode();
     }
 
-    public static List<SearchHistoryBean> sortSearchHistory(List<SearchHistoryBean> musicList) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            musicList.sort(MusicListUtil::sortSearchTime);
-        } else {
-            Collections.sort(musicList, MusicListUtil::sortSearchTime);
-        }
-        return musicList;
-    }
-
     private static int sortSearchTime(SearchHistoryBean m1, SearchHistoryBean m2) {
         int value;
         if (m1 == m2) {

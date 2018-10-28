@@ -39,8 +39,9 @@ public class DownloadLyricsUtil {
      * @param artist   歌手
      * @return 返回下载地址
      */
-    public static String getLyricsUrl(String songName, String artist) {
+    public static synchronized String getLyricsUrl(String songName, String artist) {
         String queryLrcURL = getQueryLrcURL(songName, artist);
+        LogUtil.d("     查询歌词地址    ====    " + queryLrcURL);
         OkHttpUtil.downFile(queryLrcURL, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -80,13 +81,15 @@ public class DownloadLyricsUtil {
     }
 
     /**
-     * 歌词文件网络地址，将歌词文件本地缓冲地址
-     * @param url 歌词地址
+     * 将网络歌词文件本地缓冲地址
+     *
+     * @param url      歌词地址
      * @param songName name
-     * @param artist artist
+     * @param artist   artist
      * @return 是否下载成功
      */
     public static boolean getLyricsFile(String url, final String songName, String artist) {
+        LogUtil.d("     歌词下载地址url    ====    " + url);
         OkHttpUtil.downFile(url, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {

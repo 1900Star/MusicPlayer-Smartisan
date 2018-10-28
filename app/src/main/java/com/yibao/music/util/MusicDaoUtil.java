@@ -2,7 +2,6 @@ package com.yibao.music.util;
 
 import com.yibao.music.base.listener.OnSearchFlagListener;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 
@@ -27,28 +26,27 @@ public class MusicDaoUtil {
      * 获取音乐搜索结果
      *
      * @param musicBeanDao    查询音乐的Dao
-     * @param searchBeanDao   保存搜索记录的Dao
      * @param queryConditions 查询的关键字
      * @return 查询结果以集合的类型返回
      */
-    public static Observable<List<MusicBean>> getSearchResult(OnSearchFlagListener listener, MusicBeanDao musicBeanDao, SearchHistoryBeanDao searchBeanDao, String queryConditions) {
-        LogUtil.c(MusicDaoUtil.class, " ====  时时查询关键字  " + queryConditions);
+    public static Observable<List<MusicBean>> getSearchResult(OnSearchFlagListener listener, MusicBeanDao musicBeanDao, String queryConditions) {
+        LogUtil.d(" ====  时时查询关键字  " + queryConditions);
         return Observable.create((ObservableOnSubscribe<List<MusicBean>>) emitter -> {
             List<MusicBean> artistList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(queryConditions)).build().list();
             if (artistList != null && artistList.size() > 0) {
                 listener.setSearchFlag(1);
-                insertSearchBean(emitter, artistList, searchBeanDao, queryConditions);
+                insertSearchBean(emitter, artistList);
             } else {
                 List<MusicBean> albumList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(queryConditions)).build().list();
                 if (albumList != null && albumList.size() > 0) {
                     listener.setSearchFlag(2);
-                    insertSearchBean(emitter, albumList, searchBeanDao, queryConditions);
+                    insertSearchBean(emitter, albumList);
                 } else {
                     // 根据歌名精确搜索
                     List<MusicBean> songList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Title.eq(queryConditions)).build().list();
                     if (songList != null && songList.size() > 0) {
                         listener.setSearchFlag(3);
-                        insertSearchBean(emitter, songList, searchBeanDao, queryConditions);
+                        insertSearchBean(emitter, songList);
                     } else {
                         // 模糊匹配搜索
                         List<MusicBean> searchSongList = new ArrayList<>();
@@ -62,15 +60,13 @@ public class MusicDaoUtil {
                             emitter.onError(new FileNotFoundException());
                         } else {
                             listener.setSearchFlag(3);
-                            insertSearchBean(emitter, searchSongList, searchBeanDao, queryConditions);
+                            insertSearchBean(emitter, searchSongList);
                         }
-
                     }
 
 
                 }
             }
-
 
         }).subscribeOn(Schedulers.io());
 
@@ -79,16 +75,8 @@ public class MusicDaoUtil {
 
     /**
      * 将一个搜索结果保存到本地，同时做了重复保存的判断。
-     *
-     * @param searchBeanDao   搜索音乐的Dao
-     * @param queryConditions 查询条件
      */
-    private static void insertSearchBean(ObservableEmitter<List<MusicBean>> emitter, List<MusicBean> beanList, SearchHistoryBeanDao searchBeanDao, String queryConditions) {
-        List<SearchHistoryBean> historyList = searchBeanDao.queryBuilder().where(SearchHistoryBeanDao.Properties.SearchContent.eq(queryConditions)).build().list();
-        if (historyList.size() < 1) {
-            searchBeanDao.insert(new SearchHistoryBean(queryConditions, Long.toString(System.currentTimeMillis())));
-        }
-        LogUtil.c(MusicDaoUtil.class, " ====  时时查询关键字  " + queryConditions + "  == list" + beanList.size());
+    private static void insertSearchBean(ObservableEmitter<List<MusicBean>> emitter, List<MusicBean> beanList) {
         emitter.onNext(beanList);
         emitter.onComplete();
     }

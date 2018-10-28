@@ -54,12 +54,6 @@ public class LogUtil {
         }
     }
 
-    public static void c(Class c, String msg) {
-        if (isDebug) {
-            Log.d(c.getSimpleName(), msg);
-        }
-    }
-
     public static void d(String tag, String msg) {
         if (isDebug) {
             Log.d(tag, msg);

@@ -8,10 +8,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.SearchHistoryBean;
+import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
@@ -20,6 +23,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.ObservableEmitter;
 
 
 /**
@@ -63,6 +67,7 @@ public class SearchDetailsAdapter extends BaseRvAdapter<MusicBean> {
             detailsHolder.itemView.setOnClickListener(view -> {
                 if (mContext instanceof OnMusicItemClickListener) {
                     SpUtil.setMusicDataListFlag(mContext, Constants.NUMBER_TEN);
+                    insertSearchBean(info.getTitle());
                     ((OnMusicItemClickListener) mContext).startMusicServiceFlag(detailsHolder.getAdapterPosition(), mDataFlag, getQueryFlag(info));
                 }
 
@@ -70,6 +75,23 @@ public class SearchDetailsAdapter extends BaseRvAdapter<MusicBean> {
 
         }
 
+    }
+
+    /**
+     * 搜索并播放过的歌曲
+     *
+     * @param queryConditions 搜索的歌名
+     */
+    private static void insertSearchBean(String queryConditions) {
+        SearchHistoryBeanDao searchDao = MusicApplication.getIntstance().getSearchDao();
+        List<SearchHistoryBean> historyList = searchDao.queryBuilder().where(SearchHistoryBeanDao.Properties.SearchContent.eq(queryConditions)).build().list();
+        if (historyList.size() < 1) {
+            searchDao.insert(new SearchHistoryBean(queryConditions, Long.toString(System.currentTimeMillis())));
+        } else {
+            SearchHistoryBean searchHistoryBean = historyList.get(0);
+            searchHistoryBean.setSearchTime(Long.toString(System.currentTimeMillis()));
+            searchDao.update(searchHistoryBean);
+        }
     }
 
     @Nullable
