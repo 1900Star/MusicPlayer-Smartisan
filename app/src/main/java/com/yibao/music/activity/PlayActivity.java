@@ -20,7 +20,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.base.BasePlayActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
-import com.yibao.music.fragment.dialogfrag.MusicBottomSheetDialog;
+import com.yibao.music.fragment.dialogfrag.FavoriteBottomSheetDialog;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
@@ -28,6 +28,7 @@ import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.ImageUitl;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
@@ -405,7 +406,7 @@ public class PlayActivity extends BasePlayActivity {
     private void rxViewClick() {
         mCompositeDisposable.add(RxView.clicks(mTitlebarPlayList)
                 .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> MusicBottomSheetDialog.newInstance()
+                .subscribe(o -> FavoriteBottomSheetDialog.newInstance()
                         .getBottomDialog(this)));
     }
 
@@ -445,6 +446,7 @@ public class PlayActivity extends BasePlayActivity {
     @Override
     public void updataFavoriteStatus() {
         boolean updataFavorite = mMusicDao.load(mCurrenMusicInfo.getId()).isFavorite();
+        LogUtil.d("==   清除了所有");
         checkCurrentIsFavorite(updataFavorite);
     }
 

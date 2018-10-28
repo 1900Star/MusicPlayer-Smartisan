@@ -103,7 +103,7 @@ public class MusicListUtil {
             cursor.close();
             Collections.sort(musicInfos);
         }
-        LogUtil.d("musicUtil ========== " + musicInfos.size());
+        LogUtil.d("歌曲数量 ========== " + musicInfos.size());
         return musicInfos;
     }
 
@@ -143,31 +143,6 @@ public class MusicListUtil {
             value = Float.compare(StringUtil.stringToLong(m2.getTime()), StringUtil.stringToLong(m1.getTime()));
 
         }
-        if (value != 0) {
-            return value;
-        }
-        // https://stackoverflow.com/questions/28004269/java-collections-sort-comparison-method-violates-its-general-contract#
-        // Warning, this line is not fool proof as unequal objects can have identical hash codes.
-        return m1.hashCode() - m2.hashCode();
-    }
-
-    private static int sortSearchTime(SearchHistoryBean m1, SearchHistoryBean m2) {
-        int value;
-        if (m1 == m2) {
-            return 0;
-        }
-        if (m1 == null) {
-            return -1;
-        }
-        if (m2 == null) {
-            return 1;
-        }
-        if (m1.equals(m2)) {
-            return 0;
-        }
-        Long m1T = StringUtil.stringToLong(m1.getSearchTime());
-        Long m2T = StringUtil.stringToLong(m2.getSearchTime());
-        value = Float.compare(m2T, m1T);
         if (value != 0) {
             return value;
         }

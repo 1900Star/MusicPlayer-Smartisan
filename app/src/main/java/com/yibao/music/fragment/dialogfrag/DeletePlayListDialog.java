@@ -16,6 +16,7 @@ import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicInfo;
+import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicInfoDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.MusicListUtil;
@@ -40,13 +41,14 @@ public class DeletePlayListDialog
 
     private TextView mTvDelete;
     private TextView mTvCancelDelete;
-    private MusicInfoDao mMusicInfoDao;
-    private MusicInfo mMusicInfo;
+    private PlayListBean mPlayListBean;
     private RxBus mBus;
+    private int mPageType;
 
-    public static DeletePlayListDialog newInstance(MusicInfo musicInfo) {
+    public static DeletePlayListDialog newInstance(PlayListBean musicInfo, int pageType) {
         Bundle bundle = new Bundle();
         bundle.putParcelable("musicInfo", musicInfo);
+        bundle.putInt("pageType", pageType);
         DeletePlayListDialog deletePlayListDialog = new DeletePlayListDialog();
         deletePlayListDialog.setArguments(bundle);
         return deletePlayListDialog;
@@ -84,10 +86,10 @@ public class DeletePlayListDialog
         mTvCancelDelete = mView.findViewById(R.id.tv_delete_list_cancel);
         mTvDelete = mView.findViewById(R.id.tv_delete_list_continue);
         mBus = MusicApplication.getIntstance().bus();
-        mMusicInfoDao = MusicApplication.getIntstance().getMusicInfoDao();
-        mMusicInfo = getArguments().getParcelable("musicInfo");
-        if (mMusicInfo != null) {
-            String deleteTitle = "确定要删除 “ " + mMusicInfo.getTitle() + " ” 歌曲列表吗？";
+        mPlayListBean = getArguments().getParcelable("musicInfo");
+        mPageType = getArguments().getInt("pageType");
+        if (mPlayListBean != null) {
+            String deleteTitle = "确定要删除 “ " + mPlayListBean.getTitle() + " ” 歌曲列表吗？";
             tvDeleteTitle.setText(deleteTitle);
         }
     }
@@ -109,10 +111,10 @@ public class DeletePlayListDialog
 
 
     private void deletePlayList() {
-        if (mMusicInfo.getPlayStatus() == Constants.NUMBER_TWO) {
-            mMusicInfoDao.delete(mMusicInfo);
+        if (mPageType == Constants.NUMBER_TWO) {
+            MusicApplication.getIntstance().getPlayListDao().delete(mPlayListBean);
         }
-        mBus.post(new AddAndDeleteListBean(mMusicInfo.getPlayStatus()));
+        mBus.post(new AddAndDeleteListBean(mPageType));
     }
 
 

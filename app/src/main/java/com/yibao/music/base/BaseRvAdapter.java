@@ -12,7 +12,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.yibao.music.R;
-import com.yibao.music.model.MusicInfo;
+import com.yibao.music.model.PlayListBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 
@@ -250,7 +250,7 @@ public abstract class BaseRvAdapter<T>
      */
 
     public interface ItemLongClickListener {
-        void deleteItemList(MusicInfo musicInfo, int currentPosition);
+        void deleteItemList(PlayListBean musicInfo, int currentPosition);
     }
 
 
@@ -258,7 +258,7 @@ public abstract class BaseRvAdapter<T>
         this.mLongClickListener = longClickListener;
     }
 
-    protected void deletePlaylist(MusicInfo musicInfo, int itemPosition) {
+    protected void deletePlaylist(PlayListBean musicInfo, int itemPosition) {
         if (mLongClickListener != null) {
             mLongClickListener.deleteItemList(musicInfo, itemPosition);
         }

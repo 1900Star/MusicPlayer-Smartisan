@@ -22,6 +22,7 @@ import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicInfo;
+import com.yibao.music.model.PlayListBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SoftKeybordUtil;
@@ -104,8 +105,7 @@ public class AddListDialog
         String listTitle = mEditAddList.getText().toString().trim();
 
         if (!listTitle.isEmpty()) {
-            String addTime = String.valueOf(System.currentTimeMillis());
-            MusicApplication.getIntstance().getMusicInfoDao().insert(new MusicInfo(listTitle, addTime));
+            MusicApplication.getIntstance().getPlayListDao().insert(new PlayListBean(listTitle, System.currentTimeMillis()));
             dismiss();
             MusicApplication.getIntstance().bus().post(new AddAndDeleteListBean(Constants.NUMBER_ONE));
         }

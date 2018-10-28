@@ -27,12 +27,6 @@ public class MusicInfo
     private String songUrl;
     private int playStatus;
 
-    public MusicInfo(String title,String tiem) {
-        this.title = title;
-        this.time = tiem;
-    }
-
-
     private MusicInfo(Parcel in) {
         if (in.readByte() == 0) {
             id = null;

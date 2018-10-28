@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import com.yibao.music.R;
 import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.base.BaseFragment;
-import com.yibao.music.fragment.dialogfrag.MusicBottomSheetDialog;
+import com.yibao.music.fragment.dialogfrag.FavoriteBottomSheetDialog;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.MusicListUtil;
@@ -78,7 +78,7 @@ public class SongCategoryFragment extends BaseFragment {
     }
 
     private void initListener() {
-        mSongAdapter.setOnItemMenuListener(() -> MusicBottomSheetDialog.newInstance().getBottomDialog(getActivity()));
+        mSongAdapter.setOnItemMenuListener(() -> FavoriteBottomSheetDialog.newInstance().getBottomDialog(getActivity()));
     }
 
     private void initData() {

@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.model.MusicInfo;
+import com.yibao.music.model.PlayListBean;
 
 import java.util.List;
 
@@ -25,20 +26,20 @@ import butterknife.ButterKnife;
  * @描述： {TODO}
  */
 
-public class PlayListAdapter extends BaseRvAdapter<MusicInfo> {
+public class PlayListAdapter extends BaseRvAdapter<PlayListBean> {
 
-    public PlayListAdapter(List<MusicInfo> list) {
+    public PlayListAdapter(List<PlayListBean> list) {
         super(list);
     }
 
 
     @Override
-    protected void bindView(RecyclerView.ViewHolder holder, MusicInfo musicInfo) {
+    protected void bindView(RecyclerView.ViewHolder holder, PlayListBean musicInfo) {
 
         if (holder instanceof PlayViewHolder) {
             PlayViewHolder playViewHolder = (PlayViewHolder) holder;
             playViewHolder.mTvPlayListName.setText(musicInfo.getTitle());
-            String count = musicInfo.getPlayStatus() + " 首歌曲";
+            String count = musicInfo.getSongCount() + " 首歌曲";
             playViewHolder.mTvPlayListCount.setText(count);
             playViewHolder.itemView.setOnClickListener(view -> PlayListAdapter.this.openDetails(null));
             playViewHolder.itemView.setOnLongClickListener(v -> { deletePlaylist(musicInfo, holder.getAdapterPosition());

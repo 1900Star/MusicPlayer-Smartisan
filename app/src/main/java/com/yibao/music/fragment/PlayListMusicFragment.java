@@ -18,10 +18,12 @@ import com.yibao.music.fragment.dialogfrag.AddListDialog;
 import com.yibao.music.fragment.dialogfrag.DeletePlayListDialog;
 import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicInfo;
+import com.yibao.music.model.PlayListBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SpUtil;
 
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -65,7 +67,9 @@ public class PlayListMusicFragment extends BaseMusicFragment {
     }
 
     private void initData() {
-        List<MusicInfo> playList = MusicListUtil.sortFavoriteTime(mMusicInfoDao.queryBuilder().list());
+//        List<MusicInfo> playList = MusicListUtil.sortFavoriteTime(mMusicInfoDao.queryBuilder().list());
+        List<PlayListBean> playList = mPlayListDao.queryBuilder().list();
+        Collections.sort(playList);
         mAdapter = new PlayListAdapter(playList);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
         mPlayListContent.addView(recyclerView);
@@ -80,7 +84,9 @@ public class PlayListMusicFragment extends BaseMusicFragment {
                     if (addAndDeleteListBean.getOperationType() == Constants.NUMBER_TWO) {
                         mAdapter.removeItem(mDeletePosition);
                     }
-                    return MusicListUtil.sortFavoriteTime(mMusicInfoDao.queryBuilder().list());
+                    List<PlayListBean> playListBeans = mPlayListDao.queryBuilder().list();
+                    Collections.sort(playListBeans);
+                    return playListBeans;
                 })
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(newPlayList -> mAdapter.setNewData(newPlayList))
         );
@@ -91,8 +97,7 @@ public class PlayListMusicFragment extends BaseMusicFragment {
         // 长按删除
         mAdapter.setItemLongClickListener((musicInfo, currentPosition) -> {
             mDeletePosition = currentPosition;
-            musicInfo.setPlayStatus(Constants.NUMBER_TWO);
-            DeletePlayListDialog.newInstance(musicInfo).show(mActivity.getFragmentManager(), "deleteList");
+            DeletePlayListDialog.newInstance(musicInfo, Constants.NUMBER_TWO).show(mActivity.getFragmentManager(), "deleteList");
         });
     }
 

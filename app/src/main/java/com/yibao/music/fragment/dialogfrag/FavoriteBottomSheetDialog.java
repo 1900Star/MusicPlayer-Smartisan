@@ -25,6 +25,7 @@ import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.BottomSheetStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicInfo;
+import com.yibao.music.model.PlayListBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
@@ -51,7 +52,7 @@ import io.reactivex.schedulers.Schedulers;
  *
  * @author Stran
  */
-public class MusicBottomSheetDialog
+public class FavoriteBottomSheetDialog
         implements View.OnClickListener, ViewPager.OnPageChangeListener {
     private LinearLayout mBottomListContent;
     private TextView mBottomListColection;
@@ -71,9 +72,9 @@ public class MusicBottomSheetDialog
     private List<List<MusicBean>> mListList = new ArrayList<>();
     private BottomSheetAdapter mAdapter;
 
-    public static MusicBottomSheetDialog newInstance() {
+    public static FavoriteBottomSheetDialog newInstance() {
 
-        return new MusicBottomSheetDialog();
+        return new FavoriteBottomSheetDialog();
     }
 
     public void getBottomDialog(Context context) {
@@ -123,7 +124,7 @@ public class MusicBottomSheetDialog
         mDisposable.add(mBus.toObserverable(BottomSheetStatus.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(bean -> MusicBottomSheetDialog.this.playMusic(bean.getPosition())));
+                .subscribe(bean -> FavoriteBottomSheetDialog.this.playMusic(bean.getPosition())));
         // 清空收藏列表
         mDisposable.add(mBus.toObserverable(AddAndDeleteListBean.class)
                 .subscribeOn(Schedulers.io())
@@ -163,11 +164,9 @@ public class MusicBottomSheetDialog
                 break;
             case R.id.bottom_sheet_bar_clear:
                 if (mList != null && mList.size() > 0) {
-                    MusicInfo musicInfo = new MusicInfo();
                     // playstatus 在这里暂时用来做删除播放列表和收藏列表的标识，2 为播放列表PlayActivity界面 ，3 为收藏列表MusicBottomDialog界面。
-                    musicInfo.setPlayStatus(Constants.NUMBER_THRRE);
-                    musicInfo.setTitle("收藏的所有");
-                    DeletePlayListDialog.newInstance(musicInfo).show(((Activity) mContext).getFragmentManager(), "favoriteList");
+                    PlayListBean bean = new PlayListBean("收藏的所有", (long) Constants.NUMBER_THRRE);
+                    DeletePlayListDialog.newInstance(bean,Constants.NUMBER_THRRE).show(((Activity) mContext).getFragmentManager(), "favoriteList");
                 } else {
                     SnakbarUtil.noFavoriteMusic(mBottomListClear);
                 }
