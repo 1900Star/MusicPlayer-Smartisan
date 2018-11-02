@@ -46,6 +46,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Disposable mQqLyricsDisposable;
     protected Unbinder mBind;
     protected Disposable mRxViewDisposable;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +54,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .bus();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mSearchDao = MusicApplication.getIntstance().getSearchDao();
-//        registerHeadsetReceiver();
-
     }
 
 
@@ -119,7 +118,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-
     protected void disposableQqLyric() {
         if (mQqLyricsDisposable != null) {
             mQqLyricsDisposable.dispose();
@@ -150,7 +148,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mBind.unbind();
-//        unregisterReceiver(headsetReciver);
         if (mRxViewDisposable != null) {
             mRxViewDisposable.dispose();
         }

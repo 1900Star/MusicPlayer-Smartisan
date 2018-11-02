@@ -79,7 +79,7 @@ public class LoadMusicDataService extends IntentService {
                         sendLoadProgress(songSum, musicInfo);
                     }
                 }
-                LogUtil.d("lsp", "LoadMusicDataServices===== 加载数据完成");
+                LogUtil.d("LoadMusicDataServices===== 加载数据完成");
                 recoverFavoriteMusic(dataList);
             } else {
                 // 本地没有发现歌曲
@@ -102,6 +102,12 @@ public class LoadMusicDataService extends IntentService {
         return false;
     }
 
+    /**
+     * 收藏歌曲的时候，会将歌曲的名字和收藏时间以字符串的形式储存在本地的一个文件中（favorite.txt），
+     * 这样即使程序卸载重新安装也能恢复之前收藏过的歌曲,只要收藏了歌曲这个文件就会创建。
+     *
+     * @param musicBeanList 收藏List
+     */
     private void recoverFavoriteMusic(List<MusicBean> musicBeanList) {
         if (FileUtil.getFavoriteFile()) {
             HashMap<String, String> songInfoMap = new HashMap<>();

@@ -1,6 +1,5 @@
 package com.yibao.music.service;
 
-import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -101,7 +100,7 @@ public class AudioPlayService
                 .bus();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mMusicBean = new MusicBean();
-        initBroadcast();
+        initNotifyBroadcast();
         registerHeadsetReceiver();
         //初始化播放模式
         PLAY_MODE = SpUtil.getMusicMode(this);
@@ -347,7 +346,7 @@ public class AudioPlayService
     /**
      * 控制通知栏的广播
      */
-    private void initBroadcast() {
+    private void initNotifyBroadcast() {
         mMusicReceiver = new MusicBroacastReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_MUSIC);
@@ -416,6 +415,9 @@ public class AudioPlayService
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (mAudioBinder != null) {
+            mAudioBinder.hintNotifycation();
+        }
         if (mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;

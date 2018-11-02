@@ -56,7 +56,7 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"MUSIC_BEAN\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ," + // 0: id
                 "\"TITLE\" TEXT," + // 1: title
                 "\"ARTIST\" TEXT," + // 2: artist
                 "\"ALBUM\" TEXT," + // 3: album

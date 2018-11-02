@@ -25,6 +25,10 @@ public class ToastUtil {
         Toast.makeText(context, "当前没有歌曲播放 -_-", Toast.LENGTH_SHORT).show();
     }
 
+    public static void showNoReadExternalStoragePermissions(Context context) {
+        Toast.makeText(context, "没SD卡读取权限! -_-", Toast.LENGTH_SHORT).show();
+    }
+
     public static void showLoadMusicComplete(Context context) {
         Toast.makeText(context, "本地音乐加载完成 -_-", Toast.LENGTH_SHORT).show();
 

@@ -8,6 +8,7 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Transient;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Unique;
 
 /**
  * Author：Sid
@@ -20,6 +21,7 @@ import org.greenrobot.greendao.annotation.Generated;
 public class MusicBean
         implements Parcelable, Comparable<MusicBean> {
     @Id(autoincrement = true)
+    @Unique
     private Long id;
     private String title;
     private String artist;

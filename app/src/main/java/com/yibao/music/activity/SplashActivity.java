@@ -6,18 +6,22 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
 
+import com.yanzhenjie.permission.Action;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
 import com.yibao.music.R;
-
 import com.yibao.music.adapter.SplashPagerAdapter;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.model.MusicCountBean;
 import com.yibao.music.model.MusicStatusBean;
 import com.yibao.music.service.LoadMusicDataService;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.SystemUiVisibilityUtil;
 import com.yibao.music.view.ProgressBtn;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -27,11 +31,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Author：Sid
+ * @author Stran
  * Des：${TODO}
  * Time:2017/4/22 02:00
- *
- * @author Stran
  */
 public class SplashActivity
         extends BaseActivity {
@@ -64,7 +66,12 @@ public class SplashActivity
     @Override
     protected void onResume() {
         super.onResume();
-        initRxbusData();
+        AndPermission.with(this)
+                .runtime()
+                .permission(Permission.Group.STORAGE)
+                .onGranted(permissions -> initRxbusData())
+                .onDenied(permissions -> LogUtil.d("没有读取和写入的权限!"))
+                .start();
     }
 
     @Override

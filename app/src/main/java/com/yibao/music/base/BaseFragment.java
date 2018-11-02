@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.model.greendao.MusicInfoDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.RxBus;
 
