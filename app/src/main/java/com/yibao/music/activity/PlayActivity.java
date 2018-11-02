@@ -147,7 +147,6 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     private void init() {
-        if (audioBinder != null) {
             if (audioBinder.isPlaying()) {
                 initAnimation();
                 updatePlayBtnStatus();
@@ -159,10 +158,6 @@ public class PlayActivity extends BasePlayActivity {
             //音量设置
             mSbVolume.setMax(mMaxVolume);
             updateMusicVolume(mVolume);
-        } else {
-            ToastUtil.initPlayState(this);
-        }
-
     }
 
     private void updateMusicVolume(int volume) {
