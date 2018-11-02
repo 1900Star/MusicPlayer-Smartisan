@@ -453,8 +453,10 @@ public class PlayActivity extends BasePlayActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        checkCurrentIsFavorite(mMusicDao.load(mCurrenMusicInfo.getId()).isFavorite());
-        updataCurrentPlayInfo(audioBinder.getMusicBean());
+        if (mCurrenMusicInfo != null && audioBinder != null) {
+            checkCurrentIsFavorite(mMusicDao.load(mCurrenMusicInfo.getId()).isFavorite());
+            updataCurrentPlayInfo(audioBinder.getMusicBean());
+        }
         rxViewClick();
     }
 

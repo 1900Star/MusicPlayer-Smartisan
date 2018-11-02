@@ -15,4 +15,5 @@
     <dimen name="smallLyrics">14sp</dimen>
     <dimen name="line_height">40dp</dimen>
     <dimen name="album_height">110dp</dimen>
+    <dimen name="circle_album_height">160dp</dimen>
 </resources>

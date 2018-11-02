@@ -42,18 +42,18 @@
                 android:ellipsize="end"
                 android:maxLength="20"
                 android:maxLines="1"
-                android:textStyle="bold"
                 android:singleLine="true"
                 android:textColor="@color/textDes"
-                android:textSize="@dimen/bigLyrics" />
+                android:textSize="@dimen/bigLyrics"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/play_artist_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:maxLength="18"
-                android:layout_marginTop="2dp"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/aboutSign"
@@ -64,8 +64,8 @@
             android:id="@+id/titlebar_play_list"
             android:layout_width="52dp"
             android:layout_height="45dp"
-            android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/titlebar_down"
+            android:layout_alignParentEnd="true"
             android:layout_centerInParent="true"
             android:layout_marginEnd="4dp"
             android:adjustViewBounds="true"
@@ -156,12 +156,10 @@
 
             <com.yibao.music.view.CircleImageView
                 android:id="@+id/playing_song_album"
-                android:layout_width="135dp"
-                android:layout_height="135dp"
-
+                android:layout_width="@dimen/circle_album_height"
+                android:layout_height="@dimen/circle_album_height"
                 android:layout_centerInParent="true"
                 android:contentDescription="@null"
-                android:maxHeight="130dp"
                 android:visibility="gone" />
         </RelativeLayout>
 
@@ -177,8 +175,8 @@
             android:id="@+id/iv_lyrics_mask"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorWhite"
             android:layout_gravity="center"
+            android:background="@color/colorWhite"
             android:contentDescription="@null"
             android:src="@drawable/mask"
             android:visibility="gone" />
@@ -205,8 +203,8 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="right"
-            android:layout_marginEnd="8dp"
             android:layout_marginTop="40dp"
+            android:layout_marginEnd="8dp"
             android:contentDescription="@null"
             android:src="@drawable/sun_always_of_selector"
             android:visibility="gone"
@@ -274,8 +272,8 @@
         android:id="@+id/sb_volume"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"
         android:layout_marginTop="15dp"
+        android:layout_marginBottom="14dp"
         android:maxHeight="8dp"
         android:minHeight="8dp"
         android:progressDrawable="@drawable/seek_bar"

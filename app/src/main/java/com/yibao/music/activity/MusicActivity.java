@@ -27,6 +27,7 @@ import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.QueryMusicFlagListUtil;
+import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.TitleArtistUtil;
@@ -173,26 +174,31 @@ public class MusicActivity
         });
         mSmartisanControlBar.setClickListener(clickFlag -> {
             if (mMusicConfig) {
-                switch (clickFlag) {
-                    case Constants.NUMBER_ONE:
-                        audioBinder.updataFavorite();
-                        checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
-                        break;
-                    case Constants.NUMBER_TWO:
-                        clearDisposableProgresse();
-                        audioBinder.playPre();
+                if (clickFlag == Constants.NUMBER_THRRE) {
+                    switchPlayState();
+                } else {
+                    if (audioBinder != null) {
+                        switch (clickFlag) {
+                            case Constants.NUMBER_ONE:
+                                audioBinder.updataFavorite();
+                                checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
+                                break;
+                            case Constants.NUMBER_TWO:
+                                clearDisposableProgresse();
+                                audioBinder.playPre();
 //                        restoreMuiscBean(mCurrentPosition + 1);
-                        break;
-                    case Constants.NUMBER_THRRE:
-                        switchPlayState();
-                        break;
-                    case Constants.NUMBER_FOUR:
-                        clearDisposableProgresse();
-                        audioBinder.playNext();
+                                break;
+                            case Constants.NUMBER_FOUR:
+                                clearDisposableProgresse();
+                                audioBinder.playNext();
 //                        restoreMuiscBean(mCurrentPosition - 1);
-                        break;
-                    default:
-                        break;
+                                break;
+                            default:
+                                break;
+                        }
+                    } else {
+                        SnakbarUtil.favoriteSuccessView(mSmartisanControlBar, "请先播放音乐!");
+                    }
                 }
             } else {
                 ToastUtil.showNoMusic(MusicActivity.this);
@@ -205,8 +211,12 @@ public class MusicActivity
                         switchPlayState();
                         break;
                     case Constants.NUMBER_TWO:
-                        audioBinder.updataFavorite();
-                        checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
+                        if (audioBinder != null) {
+                            audioBinder.updataFavorite();
+                            checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
+                        } else {
+                            SnakbarUtil.favoriteSuccessView(mSmartisanControlBar, "请先播放音乐!");
+                        }
                     default:
                         break;
                 }
@@ -340,10 +350,14 @@ public class MusicActivity
     }
 
     private void readyMusic() {
-        if (mMusicConfig) {
-            startPlayActivity();
+        if (audioBinder != null) {
+            if (mMusicConfig) {
+                startPlayActivity();
+            } else {
+                ToastUtil.showNoMusic(MusicActivity.this);
+            }
         } else {
-            ToastUtil.showNoMusic(MusicActivity.this);
+            SnakbarUtil.favoriteSuccessView(mSmartisanControlBar, "请先播放音乐!");
         }
     }
 
