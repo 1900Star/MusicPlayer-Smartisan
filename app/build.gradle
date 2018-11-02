@@ -14,11 +14,8 @@ android {
 
 
         greendao {
-            //数据库schema版本，也可以理解为数据库版本号
-            schemaVersion 1
-            //设置DaoMaster 、DaoSession、Dao包名
+            schemaVersion 2
             daoPackage 'com.yibao.music.model.greendao'
-            //设置DaoMaster 、DaoSession、Dao目录
             targetGenDir 'src/main/java/'
 
 
