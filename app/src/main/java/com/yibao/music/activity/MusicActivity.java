@@ -84,8 +84,6 @@ public class MusicActivity
     private ArrayList<MusicLyricBean> mLyricList;
     private int mTitleResourceId = R.string.music_song;
     // 切换Tab时更改TiTle的标记,打开详情页面时正确显示Title
-    private boolean mIsShowDetail;
-    private String mDetailViewTitle;
     private MusicBean mQqBarBean;
 
 
@@ -452,11 +450,6 @@ public class MusicActivity
 
     }
 
-    private void restoreMuiscBean(int currentPosition) {
-        List<MusicBean> musicList = audioBinder.getMusicList();
-        musicList.set(currentPosition, musicList.get(currentPosition));
-    }
-
     private void setDuration() {
         int duration = audioBinder.getDuration();
         mSmartisanControlBar.setMaxProgress(duration);
@@ -568,9 +561,7 @@ public class MusicActivity
 
     @Override
     public void updataTitle(String toolbarTitle, boolean isShowDetail) {
-        mDetailViewTitle = toolbarTitle;
         mTvMusicToolbarTitle.setText(toolbarTitle);
-        mIsShowDetail = isShowDetail;
     }
 
 
@@ -580,7 +571,6 @@ public class MusicActivity
         if (detailFlag > Constants.NUMBER_ZOER) {
             mBus.post(new DetailsFlagBean(detailFlag));
             mTvMusicToolbarTitle.setText(mTitleResourceId);
-            mIsShowDetail = false;
         } else {
             super.onBackPressed();
         }

@@ -48,13 +48,13 @@ public class AddListDialog
     private TextView mTvAddListContinue;
     private InputMethodManager mInputMethodManager;
     private Disposable mSubscribe;
+    private TextView mNoEdit;
 
     public static AddListDialog newInstance() {
         return new AddListDialog();
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -68,6 +68,7 @@ public class AddListDialog
             window.setWindowAnimations(R.style.Theme_AppCompat_Dialog_Alert);
         }
         initView();
+        initData();
         initListener();
         return dialog;
     }
@@ -82,9 +83,7 @@ public class AddListDialog
         mEditAddList = mView.findViewById(R.id.edit_add_list);
         mTvAddListCancle = mView.findViewById(R.id.tv_add_list_cancle);
         mTvAddListContinue = mView.findViewById(R.id.tv_add_list_continue);
-        TextView noEdit = mView.findViewById(R.id.tv_add_list_cancel);
-        // 主动弹出键盘
-        handSoftInput(noEdit);
+        mNoEdit = mView.findViewById(R.id.tv_add_list_cancel);
     }
 
     @Override
@@ -112,7 +111,8 @@ public class AddListDialog
     }
 
 
-    private void handSoftInput(TextView noEdit) {
+    private void initData() {
+        // 主动弹出键盘
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mInputMethodManager = (InputMethodManager) getContext()
                     .getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -125,13 +125,14 @@ public class AddListDialog
                     }
                     return TextUtils.isEmpty((textViewTextChangeEvent.text()));
                 }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(aBoolean -> {
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aBoolean -> {
                     if (aBoolean) {
-                        noEdit.setVisibility(View.VISIBLE);
+                        mNoEdit.setVisibility(View.VISIBLE);
                         mTvAddListContinue.setVisibility(View.INVISIBLE);
                         mTvAddListContinue.setOnClickListener(null);
                     } else {
-                        noEdit.setVisibility(View.INVISIBLE);
+                        mNoEdit.setVisibility(View.INVISIBLE);
                         mTvAddListContinue.setVisibility(View.VISIBLE);
                         mTvAddListContinue.setOnClickListener(this);
                     }

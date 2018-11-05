@@ -14,7 +14,6 @@ public class SoftKeybordUtil {
         if (manager != null) {
             manager.toggleSoftInput(i,
                     resultUnchangedShown);
-
         }
     }
 }

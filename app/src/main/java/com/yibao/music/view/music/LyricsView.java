@@ -13,7 +13,6 @@ import com.yibao.music.model.MusicLyricBean;
 import java.util.ArrayList;
 
 /**
- * Author：Sid
  * Des：${自定义歌词View}
  * Time:2017/9/14 01:16
  *
@@ -118,7 +117,6 @@ public class LyricsView
         //          中间行歌词
         String centerLrc = musicLyrList.get(centerLine)
                 .getContent();
-        // 将当前歌词传送给QqPagerBar,时时更新歌词。
         // 歌词绘制的边界
         mPaint.getTextBounds(centerLrc, 0, centerLrc.length(), mBounds);
         //          中间行 y view 高度一半 + text高度一半

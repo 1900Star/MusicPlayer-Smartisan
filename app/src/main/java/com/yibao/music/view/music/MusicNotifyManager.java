@@ -20,8 +20,10 @@ import com.yibao.music.R;
 import com.yibao.music.activity.MusicActivity;
 import com.yibao.music.base.listener.NotifycationChangeListener;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.TitleAndArtistBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.StringUtil;
+import com.yibao.music.util.TitleArtistUtil;
 
 
 /**
@@ -115,14 +117,25 @@ public class MusicNotifyManager implements
 
     // 图片，歌名，艺术家，播放按钮
     private void setCommonView(RemoteViews view) {
-        final String name = mMusicBean.getTitle();
-        final String arts = mMusicBean.getArtist();
+        String musicName;
+        String musicArtist;
+        String musicTitle = mMusicBean.getTitle();
+
+        if (musicTitle.contains("[mqms2]")) {
+            TitleAndArtistBean bean = TitleArtistUtil.getBean(musicTitle);
+            musicName = bean.getSongName();
+            musicArtist = bean.getSongArtist();
+        } else {
+            musicName = musicTitle;
+            String artist = mMusicBean.getArtist();
+            musicArtist = "<unknown>".equals(artist) ? "Smartisan" : artist;
+        }
         String albumArtPath = StringUtil.getAlbumArtPath(activity, String.valueOf(mMusicBean.getAlbumId()));
         final Bitmap cover = createCover(albumArtPath);
         isFavorite = mMusicBean.getIsFavorite();
         view.setImageViewBitmap(R.id.play_notify_cover, cover);
-        view.setTextViewText(R.id.play_notify_name, name);
-        view.setTextViewText(R.id.play_notify_arts, arts);
+        view.setTextViewText(R.id.play_notify_name, musicName);
+        view.setTextViewText(R.id.play_notify_arts, musicArtist);
         view.setImageViewResource(R.id.play_notify_play,
                 isPlay ? R.drawable.ic_pause
                         : R.drawable.ic_play_arrow);

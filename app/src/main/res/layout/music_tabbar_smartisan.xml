@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/smartisan_music_bar"
     android:layout_width="match_parent"
-    android:background="@drawable/tabbar_bg_shadow"
     android:layout_height="58dp"
+    android:background="@drawable/tabbar_bg_shadow"
     android:visibility="visible">
 
     <com.yibao.music.view.CircleImageView
@@ -51,6 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
                 android:maxLength="25"
                 android:singleLine="true"
                 android:textColor="@color/textName"

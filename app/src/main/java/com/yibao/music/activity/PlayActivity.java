@@ -108,6 +108,7 @@ public class PlayActivity extends BasePlayActivity {
     private ObjectAnimator mAnimator;
     private MyAnimatorUpdateListener mAnimatorListener;
     private Disposable mCloseLyrDisposable;
+    private ArrayList<MusicLyricBean> mLyricList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -147,17 +148,17 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     private void init() {
-            if (audioBinder.isPlaying()) {
-                initAnimation();
-                updatePlayBtnStatus();
-            }
-            setSongDuration();
-            //设置播放模式图片
-            int mode = SpUtil.getMusicMode(this);
-            updatePlayModeImage(mode, mMusicPlayerMode);
-            //音量设置
-            mSbVolume.setMax(mMaxVolume);
-            updateMusicVolume(mVolume);
+        if (audioBinder.isPlaying()) {
+            initAnimation();
+            updatePlayBtnStatus();
+        }
+        setSongDuration();
+        //设置播放模式图片
+        int mode = SpUtil.getMusicMode(this);
+        updatePlayModeImage(mode, mMusicPlayerMode);
+        //音量设置
+        mSbVolume.setMax(mMaxVolume);
+        updateMusicVolume(mVolume);
     }
 
     private void updateMusicVolume(int volume) {
@@ -178,10 +179,10 @@ public class PlayActivity extends BasePlayActivity {
         setSongDuration();
         updatePlayBtnStatus();
 //        初始化歌词
-        ArrayList<MusicLyricBean> lyricList = LyricsUtil.getLyricList(musicBean.getTitle(), musicBean.getArtist());
-        mTvLyrics.setLrcFile(lyricList);
+        mLyricList = LyricsUtil.getLyricList(musicBean.getTitle(), musicBean.getArtist());
+        mTvLyrics.setLrcFile(mLyricList);
         if (isShowLyrics) {
-            closeLyricsView(lyricList);
+            closeLyricsView(mLyricList);
         }
     }
 
@@ -390,8 +391,7 @@ public class PlayActivity extends BasePlayActivity {
             if (audioBinder.isPlaying()) {
                 startRollPlayLyrics(mTvLyrics);
             }
-            ArrayList<MusicLyricBean> lyricList = LyricsUtil.getLyricList(audioBinder.getMusicBean().getTitle(), audioBinder.getMusicBean().getArtist());
-            closeLyricsView(lyricList);
+            closeLyricsView(mLyricList);
 
         }
         isShowLyrics = !isShowLyrics;
@@ -465,6 +465,10 @@ public class PlayActivity extends BasePlayActivity {
         }
     }
 
+    /**
+     * size 小于2表示没有歌词，5秒后自动关闭歌词画面。
+     * @param lyricList list
+     */
     public void closeLyricsView(ArrayList<MusicLyricBean> lyricList) {
         if (lyricList.size() < 2) {
             if (mCloseLyrDisposable == null) {

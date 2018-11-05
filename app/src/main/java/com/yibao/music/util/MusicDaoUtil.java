@@ -32,11 +32,13 @@ public class MusicDaoUtil {
     public static Observable<List<MusicBean>> getSearchResult(OnSearchFlagListener listener, MusicBeanDao musicBeanDao, String queryConditions) {
         LogUtil.d(" ====  时时查询关键字  " + queryConditions);
         return Observable.create((ObservableOnSubscribe<List<MusicBean>>) emitter -> {
+            // 歌手搜索
             List<MusicBean> artistList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(queryConditions)).build().list();
             if (artistList != null && artistList.size() > 0) {
                 listener.setSearchFlag(1);
                 insertSearchBean(emitter, artistList);
             } else {
+                // 专辑搜索
                 List<MusicBean> albumList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(queryConditions)).build().list();
                 if (albumList != null && albumList.size() > 0) {
                     listener.setSearchFlag(2);
@@ -69,8 +71,6 @@ public class MusicDaoUtil {
             }
 
         }).subscribeOn(Schedulers.io());
-
-
     }
 
     /**

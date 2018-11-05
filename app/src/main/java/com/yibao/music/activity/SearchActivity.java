@@ -2,11 +2,13 @@ package com.yibao.music.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,7 +31,7 @@ import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.MusicDaoUtil;
-import com.yibao.music.util.MusicListUtil;
+import com.yibao.music.util.SoftKeybordUtil;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.TitleArtistUtil;
 import com.yibao.music.view.FlowLayoutView;
@@ -77,6 +79,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     private AudioPlayService.AudioBinder audioBinder;
     private ArrayList<MusicLyricBean> mLyricList;
     private int lyricsFlag;
+    private InputMethodManager mInputMethodManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,6 +102,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         } else {
             mSmartisanControlBar.setVisibility(View.GONE);
         }
+        mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
@@ -116,6 +120,8 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         mCompositeDisposable.add(RxView.clicks(mSmartisanControlBar)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribe(o -> startPlayActivity()));
+// 主动弹出键盘
+        SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED);
     }
 
 
@@ -327,7 +333,6 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         AudioServiceConnection serviceConnection = new AudioServiceConnection();
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         startService(intent);
-
     }
 
     @Override
@@ -344,6 +349,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     protected void onPause() {
         super.onPause();
         mSmartisanControlBar.animatorOnPause();
+        SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 1, InputMethodManager.RESULT_UNCHANGED_SHOWN);
     }
 
     private void updataLyric() {
