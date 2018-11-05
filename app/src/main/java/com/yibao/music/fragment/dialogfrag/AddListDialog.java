@@ -154,14 +154,6 @@ public class AddListDialog
         dismiss();
     }
 
-    private void showAndHintSoftInput(int i, int resultUnchangedShown) {
-        if (mInputMethodManager != null) {
-            mInputMethodManager.toggleSoftInput(i,
-                    resultUnchangedShown);
-
-        }
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();

@@ -79,7 +79,6 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     private AudioPlayService.AudioBinder audioBinder;
     private ArrayList<MusicLyricBean> mLyricList;
     private int lyricsFlag;
-    private InputMethodManager mInputMethodManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,7 +101,9 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         } else {
             mSmartisanControlBar.setVisibility(View.GONE);
         }
-        mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        // 主动弹出键盘
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        SoftKeybordUtil.showAndHintSoftInput(inputMethodManager, 2, InputMethodManager.SHOW_FORCED);
     }
 
     @Override
@@ -120,8 +121,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         mCompositeDisposable.add(RxView.clicks(mSmartisanControlBar)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribe(o -> startPlayActivity()));
-// 主动弹出键盘
-        SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED);
+
     }
 
 
@@ -349,7 +349,6 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     protected void onPause() {
         super.onPause();
         mSmartisanControlBar.animatorOnPause();
-        SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 1, InputMethodManager.RESULT_UNCHANGED_SHOWN);
     }
 
     private void updataLyric() {
