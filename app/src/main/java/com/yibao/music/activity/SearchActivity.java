@@ -2,7 +2,6 @@ package com.yibao.music.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +28,7 @@ import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.MusicDaoUtil;
 import com.yibao.music.util.SoftKeybordUtil;
@@ -47,6 +47,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -79,6 +81,8 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     private AudioPlayService.AudioBinder audioBinder;
     private ArrayList<MusicLyricBean> mLyricList;
     private int lyricsFlag;
+    private InputMethodManager mInputMethodManager;
+    private Disposable mDisposableSoft;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,8 +106,9 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
             mSmartisanControlBar.setVisibility(View.GONE);
         }
         // 主动弹出键盘
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        SoftKeybordUtil.showAndHintSoftInput(inputMethodManager, 2, InputMethodManager.SHOW_FORCED);
+        mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        mDisposableSoft = Observable.timer(500, TimeUnit.MILLISECONDS)
+                .subscribe(aLong -> SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED));
     }
 
     @Override
@@ -117,6 +122,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
             mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
             updataLyric();
             setDuration();
+
         }
         mCompositeDisposable.add(RxView.clicks(mSmartisanControlBar)
                 .throttleFirst(1, TimeUnit.SECONDS)
@@ -349,6 +355,16 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     protected void onPause() {
         super.onPause();
         mSmartisanControlBar.animatorOnPause();
+        SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 1, InputMethodManager.RESULT_UNCHANGED_SHOWN);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mDisposableSoft != null) {
+            mDisposableSoft.dispose();
+            mDisposableSoft = null;
+        }
     }
 
     private void updataLyric() {

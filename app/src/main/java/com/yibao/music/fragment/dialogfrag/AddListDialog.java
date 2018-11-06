@@ -27,8 +27,12 @@ import com.yibao.music.util.Constants;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SoftKeybordUtil;
 
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -49,6 +53,7 @@ public class AddListDialog
     private InputMethodManager mInputMethodManager;
     private Disposable mSubscribe;
     private TextView mNoEdit;
+    private Disposable mDisposableSoft;
 
     public static AddListDialog newInstance() {
         return new AddListDialog();
@@ -112,12 +117,18 @@ public class AddListDialog
 
 
     private void initData() {
+
         // 主动弹出键盘
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mInputMethodManager = (InputMethodManager) getContext()
-                    .getSystemService(Context.INPUT_METHOD_SERVICE);
-            SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED);
-        }
+        mDisposableSoft = Observable.timer(500, TimeUnit.MILLISECONDS)
+                .subscribe(aLong -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        mInputMethodManager = (InputMethodManager) getContext()
+                                .getSystemService(Context.INPUT_METHOD_SERVICE);
+                        SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED);
+                    }
+                });
+
+
         mSubscribe = RxTextView.textChangeEvents(mEditAddList)
                 .map(textViewTextChangeEvent -> {
                     if (textViewTextChangeEvent.text().length() == 21) {
@@ -145,7 +156,10 @@ public class AddListDialog
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
         SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 1, InputMethodManager.RESULT_UNCHANGED_SHOWN);
-
+        if (mDisposableSoft != null) {
+            mDisposableSoft.dispose();
+            mDisposableSoft = null;
+        }
     }
 
     @Override
