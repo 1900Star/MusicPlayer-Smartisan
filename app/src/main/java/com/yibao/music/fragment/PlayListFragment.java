@@ -12,16 +12,13 @@ import android.widget.LinearLayout;
 import com.yibao.music.R;
 import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.BaseMusicFragment;
-import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
 import com.yibao.music.fragment.dialogfrag.DeletePlayListDialog;
 import com.yibao.music.model.AddAndDeleteListBean;
-import com.yibao.music.model.MusicInfo;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SpUtil;
 
 import java.util.Collections;
@@ -37,14 +34,14 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * @项目名： ArtisanMusic
  * @包名： com.yibao.music.playlist
- * @文件名: PlayListMusicFragment
+ * @文件名: PlayListFragment
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.strangermy98@gmail.com
  * @创建时间: 2018/2/9 16:07
  * @描述： {个人播放列表}
  */
 
-public class PlayListMusicFragment extends BaseMusicFragment {
+public class PlayListFragment extends BaseMusicFragment {
     @BindView(R.id.ll_add_new_play_list)
     LinearLayout mLlAddNewPlayList;
     @BindView(R.id.play_list_content)
@@ -52,8 +49,9 @@ public class PlayListMusicFragment extends BaseMusicFragment {
     @BindView(R.id.album_details_head_content)
     LinearLayout mDetailsView;
     private PlayListAdapter mAdapter;
-
+    public static boolean isShowDetailsView = false;
     private int mDeletePosition;
+    public static String detailsViewTitle;
 
     @Nullable
     @Override
@@ -94,7 +92,7 @@ public class PlayListMusicFragment extends BaseMusicFragment {
     }
 
     private void initListener() {
-        mAdapter.setItemListener(playListBean -> PlayListMusicFragment.this.switchShowDetailsView(playListBean.getTitle()));
+        mAdapter.setItemListener(playListBean -> PlayListFragment.this.switchShowDetailsView(playListBean.getTitle()));
         // 长按删除
         mAdapter.setItemLongClickListener((musicInfo, currentPosition) -> {
             mDeletePosition = currentPosition;
@@ -106,7 +104,7 @@ public class PlayListMusicFragment extends BaseMusicFragment {
         if (isShowDetailsView) {
             mLlAddNewPlayList.setVisibility(View.VISIBLE);
             mDetailsView.setVisibility(View.GONE);
-
+            detailsViewTitle = null;
         } else {
             mLlAddNewPlayList.setVisibility(View.INVISIBLE);
             mDetailsView.setVisibility(View.VISIBLE);
@@ -116,6 +114,7 @@ public class PlayListMusicFragment extends BaseMusicFragment {
             }
 
             if (mContext instanceof UpdataTitleListener) {
+                detailsViewTitle = title;
                 ((UpdataTitleListener) mContext).updataTitle(title, isShowDetailsView);
             }
         }
@@ -135,8 +134,8 @@ public class PlayListMusicFragment extends BaseMusicFragment {
         }
     }
 
-    public static PlayListMusicFragment newInstance() {
-        return new PlayListMusicFragment();
+    public static PlayListFragment newInstance() {
+        return new PlayListFragment();
     }
 
     @Override

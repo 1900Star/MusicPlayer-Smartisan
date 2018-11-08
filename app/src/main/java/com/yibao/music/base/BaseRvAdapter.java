@@ -227,7 +227,6 @@ public abstract class BaseRvAdapter<T>
      * Item的点击事件
      */
     protected void openDetails(T t) {
-        LogUtil.d("Listener " + mListener.toString());
         if (mListener != null) {
             mListener.showDetailsView(t);
         }

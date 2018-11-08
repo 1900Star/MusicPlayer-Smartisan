@@ -353,7 +353,6 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     protected void onPause() {
         super.onPause();
         mSmartisanControlBar.animatorOnPause();
-        SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 1, InputMethodManager.RESULT_UNCHANGED_SHOWN);
     }
 
     @Override

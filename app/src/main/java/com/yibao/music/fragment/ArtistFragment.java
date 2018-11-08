@@ -30,22 +30,23 @@ import butterknife.ButterKnife;
 /**
  * @项目名： ArtisanMusic
  * @包名： com.yibao.music.artisanlist
- * @文件名: ArtistMusicFragment
+ * @文件名: ArtistFragment
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/4 23:49
  * @描述： {TODO}
  */
 
-public class ArtistMusicFragment extends BaseMusicFragment {
+public class ArtistFragment extends BaseMusicFragment {
 
     @BindView(R.id.artist_music_view)
     MusicView mMusicView;
     @BindView(R.id.details_view)
     DetailsView mDetailsView;
     private ArtistAdapter mAdapter;
-    private String mAlbumName;
+    public static String detailsViewTitle;
     private List<ArtistInfo> mArtistList;
+    public static boolean isShowDetailsView = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class ArtistMusicFragment extends BaseMusicFragment {
     }
 
     private void initListener() {
-        mAdapter.setItemListener(ArtistMusicFragment.this::openDetailsView);
+        mAdapter.setItemListener(ArtistFragment.this::openDetailsView);
     }
 
 
@@ -78,6 +79,7 @@ public class ArtistMusicFragment extends BaseMusicFragment {
     private void openDetailsView(ArtistInfo bean) {
         if (isShowDetailsView) {
             mDetailsView.setVisibility(View.GONE);
+            detailsViewTitle = null;
         } else {
             mDetailsView.setVisibility(View.VISIBLE);
             List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(bean.getArtist())).build().list();
@@ -90,12 +92,13 @@ public class ArtistMusicFragment extends BaseMusicFragment {
                 mDetailsViewMap.put(mClassName, this);
             }
             if (mContext instanceof UpdataTitleListener) {
-                mAlbumName = bean.getAlbumName();
-                ((UpdataTitleListener) mContext).updataTitle(mAlbumName, isShowDetailsView);
+                detailsViewTitle = bean.getAlbumName();
+                ((UpdataTitleListener) mContext).updataTitle(detailsViewTitle, isShowDetailsView);
             }
         }
         isShowDetailsView = !isShowDetailsView;
     }
+
     @Override
     protected void handleDetailsBack(int detailFlag) {
         super.handleDetailsBack(detailFlag);
@@ -108,7 +111,7 @@ public class ArtistMusicFragment extends BaseMusicFragment {
     }
 
 
-    public static ArtistMusicFragment newInstance() {
-        return new ArtistMusicFragment();
+    public static ArtistFragment newInstance() {
+        return new ArtistFragment();
     }
 }

@@ -41,14 +41,14 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * @项目名： ArtisanMusic
  * @包名： com.yibao.music.folder
- * @文件名: AboutMusicFragment
+ * @文件名: AboutFragment
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.strangermy98@gmail.com
  * @创建时间: 2018/2/9 20:51
  * @描述： {TODO}
  */
 
-public class AboutMusicFragment extends BaseMusicFragment {
+public class AboutFragment extends BaseMusicFragment {
 
 
     @BindView(R.id.about_header_iv)
@@ -142,9 +142,9 @@ public class AboutMusicFragment extends BaseMusicFragment {
         ToastUtil.showFavoriteListBackupsDown(mActivity);
     }
 
-    public static AboutMusicFragment newInstance() {
+    public static AboutFragment newInstance() {
 
-        return new AboutMusicFragment();
+        return new AboutFragment();
     }
 
 }

@@ -128,7 +128,7 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
      * 判断mDetailsMap中是否包含当前的Fragment页面,如果有，就说明有详情页面打开。
      *
      * @param className      展示详情的Fragment
-     * @param detailsViewKey 这个Key必须为 8 (PlayListMusicFragment)、9 (ArtistMusicFragment)、10 (AlbumMusicFragment)
+     * @param detailsViewKey 这个Key必须为 8 (PlayListFragment)、9 (ArtistFragment)、10 (AlbumFragment)
      *                       这三个整数，这样展示详情的Fragment就能自己处理返回事件。
      */
     private void setDetailFragmentFlag(String className, int detailsViewKey) {

@@ -18,6 +18,9 @@ import com.yibao.music.adapter.MusicPagerAdapter;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.UpdataTitleListener;
+import com.yibao.music.fragment.AlbumFragment;
+import com.yibao.music.fragment.ArtistFragment;
+import com.yibao.music.fragment.PlayListFragment;
 import com.yibao.music.model.DetailsFlagBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
@@ -166,8 +169,13 @@ public class MusicActivity
 
     private void initListener() {
         mMusicNavigationBar.setOnNavigationbarListener((currentSelecteFlag, titleResourceId) -> {
+            LogUtil.d("==== 当前选中  " + currentSelecteFlag);
             mTitleResourceId = titleResourceId;
-            mTvMusicToolbarTitle.setText(titleResourceId);
+            if (currentSelecteFlag == 2 || currentSelecteFlag == 4) {
+                mTvMusicToolbarTitle.setText(titleResourceId);
+            } else {
+                artistAndAlbumTabChangeTitle(currentSelecteFlag);
+            }
             mMusicViewPager.setCurrentItem(currentSelecteFlag, false);
         });
         mSmartisanControlBar.setClickListener(clickFlag -> {
@@ -249,6 +257,32 @@ public class MusicActivity
 //                restoreMuiscBean(position);
         });
 
+    }
+
+    private void artistAndAlbumTabChangeTitle(int currentSelecteFlag) {
+        switch (currentSelecteFlag) {
+            case Constants.NUMBER_ZOER:
+                setToolBarTitle(PlayListFragment.isShowDetailsView, PlayListFragment.detailsViewTitle);
+                break;
+            case Constants.NUMBER_ONE:
+                setToolBarTitle(ArtistFragment.isShowDetailsView, ArtistFragment.detailsViewTitle);
+                break;
+            case Constants.NUMBER_THRRE:
+                setToolBarTitle(AlbumFragment.isShowDetailsView, AlbumFragment.detailsViewTitle);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void setToolBarTitle(boolean isShowDetailsView, String detailsViewTitle) {
+        if (isShowDetailsView) {
+            if (detailsViewTitle != null) {
+                mTvMusicToolbarTitle.setText(detailsViewTitle);
+            }
+        } else {
+            mTvMusicToolbarTitle.setText(mTitleResourceId);
+        }
     }
 
 

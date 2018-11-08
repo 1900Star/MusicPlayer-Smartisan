@@ -38,14 +38,14 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * @项目名： ArtisanMusic
  * @包名： com.yibao.music.album
- * @文件名: AlbumMusicFragment
+ * @文件名: AlbumFragment
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/8 20:01
  * @描述： {TODO}
  */
 
-public class AlbumMusicFragment extends BaseMusicFragment {
+public class AlbumFragment extends BaseMusicFragment {
     @BindView(R.id.iv_album_category_random_paly)
     ImageView mIvAlbumCategoryRandomPaly;
     @BindView(R.id.iv_album_category_list)
@@ -71,8 +71,8 @@ public class AlbumMusicFragment extends BaseMusicFragment {
     DetailsView mDetailsView;
     @BindView(R.id.album_content_view)
     LinearLayout mAlbumContentView;
-    private String mAlbumName;
-
+    public static String detailsViewTitle;
+    public static boolean isShowDetailsView = false;
 
     @Nullable
     @Override
@@ -124,6 +124,9 @@ public class AlbumMusicFragment extends BaseMusicFragment {
 
     private void openDetailsView(AlbumInfo bean) {
         if (isShowDetailsView) {
+            mDetailsView.setVisibility(View.GONE);
+            detailsViewTitle = null;
+        } else {
             mDetailsView.setVisibility(View.VISIBLE);
             List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(bean.getAlbumName())).build().list();
             // DetailsView播放音乐需要的参数
@@ -135,14 +138,9 @@ public class AlbumMusicFragment extends BaseMusicFragment {
                 mDetailsViewMap.put(mClassName, this);
             }
             if (mContext instanceof UpdataTitleListener) {
-                mAlbumName = bean.getAlbumName();
-                ((UpdataTitleListener) mContext).updataTitle(mAlbumName, true);
+                detailsViewTitle = bean.getAlbumName();
+                ((UpdataTitleListener) mContext).updataTitle(detailsViewTitle, true);
             }
-
-
-        } else {
-            mDetailsView.setVisibility(View.GONE);
-
         }
         isShowDetailsView = !isShowDetailsView;
     }
@@ -192,8 +190,8 @@ public class AlbumMusicFragment extends BaseMusicFragment {
 
     }
 
-    public static AlbumMusicFragment newInstance() {
-        return new AlbumMusicFragment();
+    public static AlbumFragment newInstance() {
+        return new AlbumFragment();
     }
 
 

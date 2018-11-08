@@ -25,14 +25,14 @@ import butterknife.OnClick;
 /**
  * @项目名： ArtisanMusic
  * @包名： com.yibao.music.artisanlist
- * @文件名: MusicFragment
+ * @文件名: SongFragment
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/4 21:45
  * @描述： {显示当前音乐列表}
  */
 
-public class MusicFragment extends BaseMusicFragment {
+public class SongFragment extends BaseMusicFragment {
     @BindView(R.id.iv_music_category_paly)
     ImageView mIvMusicCategoryPaly;
     @BindView(R.id.tv_music_category_songname)
@@ -147,9 +147,9 @@ public class MusicFragment extends BaseMusicFragment {
     }
 
 
-    public static MusicFragment newInstance() {
+    public static SongFragment newInstance() {
 
-        return new MusicFragment();
+        return new SongFragment();
     }
 
 }

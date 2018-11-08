@@ -4,11 +4,11 @@ package com.yibao.music.base.factory;
 import android.util.SparseArray;
 
 import com.yibao.music.base.BaseMusicFragment;
-import com.yibao.music.fragment.AboutMusicFragment;
-import com.yibao.music.fragment.AlbumMusicFragment;
-import com.yibao.music.fragment.ArtistMusicFragment;
-import com.yibao.music.fragment.PlayListMusicFragment;
-import com.yibao.music.fragment.MusicFragment;
+import com.yibao.music.fragment.AboutFragment;
+import com.yibao.music.fragment.AlbumFragment;
+import com.yibao.music.fragment.ArtistFragment;
+import com.yibao.music.fragment.PlayListFragment;
+import com.yibao.music.fragment.SongFragment;
 
 /**
  * Author：Sid
@@ -34,19 +34,19 @@ public class FragmentFactory {
 
         switch (position) {
             case 0:
-                fragment = PlayListMusicFragment.newInstance();
+                fragment = PlayListFragment.newInstance();
                 break;
             case 1:
-                fragment = ArtistMusicFragment.newInstance();
+                fragment = ArtistFragment.newInstance();
                 break;
             case 2:
-                fragment = MusicFragment.newInstance();
+                fragment = SongFragment.newInstance();
                 break;
             case 3:
-                fragment = AlbumMusicFragment.newInstance();
+                fragment = AlbumFragment.newInstance();
                 break;
             case 4:
-                fragment = AboutMusicFragment.newInstance();
+                fragment = AboutFragment.newInstance();
                 break;
             default:
                 break;

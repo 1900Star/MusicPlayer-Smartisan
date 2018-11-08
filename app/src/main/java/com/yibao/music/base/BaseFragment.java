@@ -31,11 +31,8 @@ public abstract class BaseFragment extends Fragment {
     protected Activity mActivity;
     protected RxBus mBus;
     protected MusicBeanDao mMusicBeanDao;
-//    protected MusicInfoDao mMusicInfoDao;
     protected final PlayListBeanDao mPlayListDao;
-    protected boolean isShowDetailsView = false;
     protected CompositeDisposable mDisposable;
-
     protected String mClassName;
     protected FragmentManager mFragmentManager;
     protected Context mContext;
@@ -44,7 +41,6 @@ public abstract class BaseFragment extends Fragment {
 
     protected BaseFragment() {
         mMusicBeanDao = MusicApplication.getIntstance().getMusicDao();
-//        mMusicInfoDao = MusicApplication.getIntstance().getMusicInfoDao();
         mPlayListDao = MusicApplication.getIntstance().getPlayListDao();
 
 

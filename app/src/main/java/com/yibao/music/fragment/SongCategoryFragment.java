@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 /**
  * @项目名： ArtisanMusic
  * @包名： com.yibao.music.artisanlist
- * @文件名: MusicFragment
+ * @文件名: SongFragment
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/4 21:45
