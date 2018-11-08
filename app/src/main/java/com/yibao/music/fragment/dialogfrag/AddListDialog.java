@@ -119,7 +119,7 @@ public class AddListDialog
     private void initData() {
 
         // 主动弹出键盘
-        mDisposableSoft = Observable.timer(500, TimeUnit.MILLISECONDS)
+        mDisposableSoft = Observable.timer(200, TimeUnit.MILLISECONDS)
                 .subscribe(aLong -> {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         mInputMethodManager = (InputMethodManager) getContext()

@@ -329,7 +329,9 @@ public class AudioPlayService
 
     private void updataFavoritefile(MusicBean musicBean, boolean currentIsFavorite) {
         if (currentIsFavorite) {
-            mDisposable = ReadFavoriteFileUtil.deleteFavorite(musicBean.getTitle()).observeOn(AndroidSchedulers.mainThread()).subscribe(aBoolean -> {
+            mDisposable = ReadFavoriteFileUtil.deleteFavorite(musicBean.getTitle())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(aBoolean -> {
                 if (!aBoolean) {
                     Toast.makeText(this, "该歌曲还没有添加到收藏文件", Toast.LENGTH_SHORT).show();
                 }

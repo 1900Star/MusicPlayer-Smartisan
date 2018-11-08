@@ -148,17 +148,6 @@ public class AlbumMusicFragment extends BaseMusicFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (isShowDetailsView) {
-            if (mContext instanceof UpdataTitleListener) {
-                ((UpdataTitleListener) mContext).updataTitle(mAlbumName, isShowDetailsView);
-            }
-        }
-
-    }
-
-    @Override
     protected void handleDetailsBack(int detailFlag) {
         super.handleDetailsBack(detailFlag);
         if (detailFlag == Constants.NUMBER_TEN) {
@@ -173,7 +162,7 @@ public class AlbumMusicFragment extends BaseMusicFragment {
 
 
     private void switchCategory(int showType) {
-        mViewPager.setCurrentItem(showType,false);
+        mViewPager.setCurrentItem(showType, false);
         if (showType == Constants.NUMBER_ZOER) {
 
             mAlbumCategoryListLl.setBackgroundResource(R.drawable.btn_category_songname_down_selector);

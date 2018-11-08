@@ -30,14 +30,14 @@ import butterknife.ButterKnife;
 /**
  * @项目名： ArtisanMusic
  * @包名： com.yibao.music.artisanlist
- * @文件名: ArtistanListMusicFragment
+ * @文件名: ArtistMusicFragment
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/4 23:49
  * @描述： {TODO}
  */
 
-public class ArtistanListMusicFragment extends BaseMusicFragment {
+public class ArtistMusicFragment extends BaseMusicFragment {
 
     @BindView(R.id.artist_music_view)
     MusicView mMusicView;
@@ -65,7 +65,7 @@ public class ArtistanListMusicFragment extends BaseMusicFragment {
     }
 
     private void initListener() {
-        mAdapter.setItemListener(ArtistanListMusicFragment.this::openDetailsView);
+        mAdapter.setItemListener(ArtistMusicFragment.this::openDetailsView);
     }
 
 
@@ -108,7 +108,7 @@ public class ArtistanListMusicFragment extends BaseMusicFragment {
     }
 
 
-    public static ArtistanListMusicFragment newInstance() {
-        return new ArtistanListMusicFragment();
+    public static ArtistMusicFragment newInstance() {
+        return new ArtistMusicFragment();
     }
 }

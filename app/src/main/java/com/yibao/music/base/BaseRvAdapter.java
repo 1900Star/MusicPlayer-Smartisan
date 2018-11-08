@@ -199,7 +199,7 @@ public abstract class BaseRvAdapter<T>
     public void onViewAttachedToWindow(@NonNull RecyclerView.ViewHolder holder) {
         super.onViewAttachedToWindow(holder);
         ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
-        if (params != null && params instanceof StaggeredGridLayoutManager.LayoutParams) {
+        if (params instanceof StaggeredGridLayoutManager.LayoutParams) {
             StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) params;
             p.setFullSpan(holder.getLayoutPosition() == getItemCount() - 1);
         }

@@ -24,13 +24,13 @@
             android:layout_height="0dp"
             android:layout_marginStart="6dp"
             android:layout_weight="7.5"
-            android:gravity="center_vertical">
+           >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
                 android:gravity="center_vertical"
+                android:layout_marginStart="10dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -38,7 +38,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
-                    android:gravity="center_vertical|start"
                     android:maxLength="18"
                     android:singleLine="true"
                     android:textColor="#37383D"
@@ -52,7 +51,6 @@
                     android:layout_marginTop="5dp"
                     android:ellipsize="marquee"
                     android:maxLength="15"
-                    android:gravity="center_vertical|start"
                     android:singleLine="true"
                     android:textColor="@color/tabbarTv"
                     android:textSize="@dimen/music_artist" />
@@ -62,11 +60,10 @@
             <ImageButton
                 android:id="@+id/play_notify_close"
                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="10dp"
+                android:layout_alignParentTop="true"
                 android:src="@drawable/ic_clear_gray_24dp"
                 android:tint="@color/bg_hint" />
         </RelativeLayout>

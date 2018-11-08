@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import com.yibao.music.R;
 import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.BaseMusicFragment;
+import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
@@ -93,7 +94,7 @@ public class PlayListMusicFragment extends BaseMusicFragment {
     }
 
     private void initListener() {
-        mAdapter.setItemListener(str -> PlayListMusicFragment.this.switchShowDetailsView());
+        mAdapter.setItemListener(playListBean -> PlayListMusicFragment.this.switchShowDetailsView(playListBean.getTitle()));
         // 长按删除
         mAdapter.setItemLongClickListener((musicInfo, currentPosition) -> {
             mDeletePosition = currentPosition;
@@ -101,7 +102,7 @@ public class PlayListMusicFragment extends BaseMusicFragment {
         });
     }
 
-    private void switchShowDetailsView() {
+    private void switchShowDetailsView(String title) {
         if (isShowDetailsView) {
             mLlAddNewPlayList.setVisibility(View.VISIBLE);
             mDetailsView.setVisibility(View.GONE);
@@ -115,7 +116,7 @@ public class PlayListMusicFragment extends BaseMusicFragment {
             }
 
             if (mContext instanceof UpdataTitleListener) {
-                ((UpdataTitleListener) mContext).updataTitle("列表", isShowDetailsView);
+                ((UpdataTitleListener) mContext).updataTitle(title, isShowDetailsView);
             }
         }
         isShowDetailsView = !isShowDetailsView;

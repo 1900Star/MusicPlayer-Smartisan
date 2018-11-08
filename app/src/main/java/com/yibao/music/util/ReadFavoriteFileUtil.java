@@ -1,6 +1,5 @@
 package com.yibao.music.util;
 
-import android.annotation.SuppressLint;
 import android.os.Environment;
 
 import java.io.BufferedReader;
@@ -17,10 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -41,14 +36,8 @@ public class ReadFavoriteFileUtil {
      */
     public static synchronized Observable<Boolean> deleteFavorite(final String content) {
 
-        return Observable.just(stringToSet())
-                .map(strings -> strings.contains(content))
-                .map(aBoolean -> {
-                    Set<String> stringSet = stringToSet();
-                    stringSet.remove(content);
-                    return stringSet;
-                })
-                .map(list -> againWrite(FAVORITE_FILE, list))
+        return Observable.just(stringToSet(content))
+                .map(ReadFavoriteFileUtil::againWrite)
                 .subscribeOn(Schedulers.io());
     }
 
@@ -79,12 +68,45 @@ public class ReadFavoriteFileUtil {
 
     }
 
+    /**
+     * 取消收藏时，将本地文件(favorite.txt)中的歌名也删除。
+     *
+     * @param str 要删除的歌名
+     * @return list
+     */
+    private static Set<String> stringToSet(String str) {
+        Set<String> stringSet = new HashSet<>();
+
+        File file = new File(FAVORITE_FILE);
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"));
+            for (; ; ) {
+                String text = reader.readLine();
+                if (text == null) {
+                    break;
+                } else {
+                    if (text.startsWith(str) || text.contains(str)) {
+                        continue;
+                    }
+                    stringSet.add(text);
+                }
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stringSet;
+
+
+    }
+
     // 不同版本之间对收藏文件兼容处理
     public static void backFile() {
         String time = StringUtil.getCurrentTime();
         String currentTime = "T" + time;
         Set<String> stringSet = backStringToSet(currentTime, true);
-        againWrite(FAVORITE_FILE, stringSet);
+        againWrite(stringSet);
 
 
     }
@@ -120,32 +142,31 @@ public class ReadFavoriteFileUtil {
 
     }
 
-    private static boolean againWrite(String filePath, Set<String> list) {
-        boolean a = false;
+    private static boolean againWrite(Set<String> list) {
         String nullString = "";
         FileOutputStream outputStream;
         try {
-            File file = new File(filePath);
+            File file = new File(ReadFavoriteFileUtil.FAVORITE_FILE);
             outputStream = new FileOutputStream(file, false);
             if (!file.exists()) {
-                a = false;
+                return false;
             } else if (list == null || list.size() < 1) {
                 outputStream.write(nullString.getBytes());
-                a = false;
+                return false;
             } else {
                 for (String s : list) {
                     outputStream.write(s.getBytes());
                     outputStream.write("\n".getBytes());
                 }
                 outputStream.close();
-                a = true;
+                return true;
 
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return a;
+        return false;
     }
 
     public static synchronized void writeFile(String s) {

@@ -48,7 +48,7 @@ public class Constants {
     static final String MUSIC_CONFIG = "music_config";
     static final String MUSIC_REMENBER_FLAG = "music_remenber_flag";
     public static final String FRAGMENT_PLAYLIST = "PlayListMusicFragment";
-    public static final String FRAGMENT_ARTIST = "ArtistanListMusicFragment";
+    public static final String FRAGMENT_ARTIST = "ArtistMusicFragment";
     public static final String FRAGMENT_ALBUM = "AlbumMusicFragment";
     public static final String SCANNER_MEDIA = "scanner";
 

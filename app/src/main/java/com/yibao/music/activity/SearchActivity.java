@@ -28,7 +28,6 @@ import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.MusicDaoUtil;
 import com.yibao.music.util.SoftKeybordUtil;
@@ -48,7 +47,6 @@ import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -107,7 +105,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         }
         // 主动弹出键盘
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        mDisposableSoft = Observable.timer(500, TimeUnit.MILLISECONDS)
+        mDisposableSoft = Observable.timer(300, TimeUnit.MILLISECONDS)
                 .subscribe(aLong -> SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED));
     }
 

@@ -6,7 +6,7 @@ import android.util.SparseArray;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.fragment.AboutMusicFragment;
 import com.yibao.music.fragment.AlbumMusicFragment;
-import com.yibao.music.fragment.ArtistanListMusicFragment;
+import com.yibao.music.fragment.ArtistMusicFragment;
 import com.yibao.music.fragment.PlayListMusicFragment;
 import com.yibao.music.fragment.MusicFragment;
 
@@ -37,7 +37,7 @@ public class FragmentFactory {
                 fragment = PlayListMusicFragment.newInstance();
                 break;
             case 1:
-                fragment = ArtistanListMusicFragment.newInstance();
+                fragment = ArtistMusicFragment.newInstance();
                 break;
             case 2:
                 fragment = MusicFragment.newInstance();

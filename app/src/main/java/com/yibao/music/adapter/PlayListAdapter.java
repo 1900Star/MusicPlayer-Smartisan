@@ -41,7 +41,7 @@ public class PlayListAdapter extends BaseRvAdapter<PlayListBean> {
             playViewHolder.mTvPlayListName.setText(musicInfo.getTitle());
             String count = musicInfo.getSongCount() + " 首歌曲";
             playViewHolder.mTvPlayListCount.setText(count);
-            playViewHolder.itemView.setOnClickListener(view -> PlayListAdapter.this.openDetails(null));
+            playViewHolder.itemView.setOnClickListener(view -> PlayListAdapter.this.openDetails(musicInfo));
             playViewHolder.itemView.setOnLongClickListener(v -> { deletePlaylist(musicInfo, holder.getAdapterPosition());
                 return true;
             });
