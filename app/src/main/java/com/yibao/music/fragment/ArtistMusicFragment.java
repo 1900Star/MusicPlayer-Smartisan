@@ -96,18 +96,6 @@ public class ArtistanListMusicFragment extends BaseMusicFragment {
         }
         isShowDetailsView = !isShowDetailsView;
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (isShowDetailsView) {
-            if (mContext instanceof UpdataTitleListener) {
-                ((UpdataTitleListener) mContext).updataTitle(mAlbumName, true);
-            }
-        }
-
-    }
-
     @Override
     protected void handleDetailsBack(int detailFlag) {
         super.handleDetailsBack(detailFlag);
