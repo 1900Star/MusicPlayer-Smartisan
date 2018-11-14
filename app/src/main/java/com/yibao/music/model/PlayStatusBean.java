@@ -7,7 +7,7 @@ package com.yibao.music.model;
  *
  * @author Stran
  */
-public class MusicStatusBean {
+public class PlayStatusBean {
     /**
      * 0 表示是通知栏控制播放和暂停
      * 1 表示在通知栏收藏音乐
@@ -16,7 +16,7 @@ public class MusicStatusBean {
 
     public int type;
 
-    public MusicStatusBean(int type) {
+    public PlayStatusBean(int type) {
         this.type = type;
     }
 

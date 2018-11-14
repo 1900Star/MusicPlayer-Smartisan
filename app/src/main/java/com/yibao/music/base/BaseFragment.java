@@ -53,7 +53,7 @@ public abstract class BaseFragment extends Fragment {
         mActivity = getActivity();
         mContext = getActivity();
         mDisposable = new CompositeDisposable();
-        mBus = MusicApplication.getIntstance().bus();
+        mBus =RxBus.getInstance();
         mClassName = getClass().getSimpleName();
         mFragmentManager = mActivity.getFragmentManager();
 
@@ -74,6 +74,12 @@ public abstract class BaseFragment extends Fragment {
             mDisposable.clear();
             mDisposable = null;
 
+        }
+        if (mActivity != null) {
+            mActivity = null;
+        }
+        if (mContext != null) {
+            mContext = null;
         }
     }
 }

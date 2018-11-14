@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicStatusBean;
+import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
@@ -96,8 +96,7 @@ public class AudioPlayService
     public void onCreate() {
         super.onCreate();
         mAudioBinder = new AudioBinder();
-        mBus = MusicApplication.getIntstance()
-                .bus();
+        mBus = RxBus.getInstance();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mMusicBean = new MusicBean();
         initNotifyBroadcast();
@@ -153,7 +152,7 @@ public class AudioPlayService
                 mediaPlayer.release();
                 mediaPlayer = null;
             }
-            // “>=” 确保模糊搜索时播放时不出现索引越界
+            // “>=” 确保模糊搜索时播放不出现索引越界
             position = position >= mMusicDataList.size() ? 0 : position;
             mMusicInfo = mMusicDataList.get(position);
             mediaPlayer = MediaPlayer.create(AudioPlayService.this,
@@ -367,12 +366,12 @@ public class AudioPlayService
                     switch (id) {
                         case FAVORITE:
                             mAudioBinder.updataFavorite();
-                            mBus.post(new MusicStatusBean(1));
+                            mBus.post(new PlayStatusBean(1));
                             break;
                         case CLOSE:
                             mAudioBinder.pause();
                             mAudioBinder.hintNotifycation();
-                            mBus.post(new MusicStatusBean(2));
+                            mBus.post(new PlayStatusBean(2));
                             break;
                         case PREV:
                             mAudioBinder.playPre();
@@ -383,7 +382,7 @@ public class AudioPlayService
                             } else {
                                 mAudioBinder.start();
                             }
-                            mBus.post(new MusicStatusBean(0));
+                            mBus.post(new PlayStatusBean(0));
                             break;
                         case NEXT:
                             mAudioBinder.playNext();
@@ -409,7 +408,7 @@ public class AudioPlayService
         public void onReceive(Context context, Intent intent) {
             if (mAudioBinder != null && mAudioBinder.isPlaying()) {
                 mAudioBinder.pause();
-                mBus.post(new MusicStatusBean(0));
+                mBus.post(new PlayStatusBean(0));
             }
         }
     };

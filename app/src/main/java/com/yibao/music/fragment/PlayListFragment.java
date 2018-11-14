@@ -61,12 +61,10 @@ public class PlayListFragment extends BaseMusicFragment {
         initData();
         receiveRxbuData();
         initListener();
-
         return view;
     }
 
     private void initData() {
-//        List<MusicInfo> playList = MusicListUtil.sortFavoriteTime(mMusicInfoDao.queryBuilder().list());
         List<PlayListBean> playList = mPlayListDao.queryBuilder().list();
         Collections.sort(playList);
         mAdapter = new PlayListAdapter(playList);
@@ -146,10 +144,7 @@ public class PlayListFragment extends BaseMusicFragment {
             mLlAddNewPlayList.setVisibility(View.VISIBLE);
             mDetailsViewMap.remove(mClassName);
             isShowDetailsView = !isShowDetailsView;
-
         }
-
-
     }
 
 }

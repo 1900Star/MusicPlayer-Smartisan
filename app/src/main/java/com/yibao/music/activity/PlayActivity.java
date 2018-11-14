@@ -24,7 +24,7 @@ import com.yibao.music.fragment.dialogfrag.FavoriteBottomSheetDialog;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
-import com.yibao.music.model.MusicStatusBean;
+import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.ImageUitl;
@@ -33,7 +33,6 @@ import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.TitleArtistUtil;
-import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.LyricsView;
 
@@ -302,7 +301,7 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     @Override
-    protected void refreshBtnAndNotify(MusicStatusBean bean) {
+    protected void refreshBtnAndNotify(PlayStatusBean bean) {
         switch (bean.getType()) {
             case 0:
                 switchPlayState(!audioBinder.isPlaying());

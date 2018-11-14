@@ -121,7 +121,6 @@ public class AboutFragment extends BaseMusicFragment {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(musicBean -> {
-//                                LogUtil.d(musicBean.getTitle());
                     }));
         } else {
             ToastUtil.showNotFoundFavoriteFile(mActivity);

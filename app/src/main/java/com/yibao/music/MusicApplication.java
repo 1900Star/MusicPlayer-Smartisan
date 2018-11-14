@@ -28,7 +28,6 @@ public class MusicApplication
     private static MusicApplication appContext;
     public static boolean isShowLog = true;
 
-    private RxBus mRxBus;
 
     private DaoSession mDaoSession;
     private static MusicBeanDao musicBeanDao;
@@ -52,7 +51,6 @@ public class MusicApplication
         CrashHandler.getInstance()
                 .init(this);
         setUpDataBase();
-        mRxBus = new RxBus();
     }
 
     private void setUpDataBase() {
@@ -60,7 +58,6 @@ public class MusicApplication
         SQLiteDatabase db = mHelper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);
         mDaoSession = daoMaster.newSession();
-
 
     }
 
@@ -87,10 +84,4 @@ public class MusicApplication
     public PlayListBeanDao getPlayListDao() {
         return mDaoSession.getPlayListBeanDao();
     }
-
-    public RxBus bus() {
-        return mRxBus;
-    }
-
-
 }

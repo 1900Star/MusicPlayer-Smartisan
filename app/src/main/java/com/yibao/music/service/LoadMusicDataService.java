@@ -42,7 +42,7 @@ public class LoadMusicDataService extends IntentService {
     public void onCreate() {
         super.onCreate();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
-        mBus = MusicApplication.getIntstance().bus();
+        mBus = RxBus.getInstance();
     }
 
     public LoadMusicDataService() {

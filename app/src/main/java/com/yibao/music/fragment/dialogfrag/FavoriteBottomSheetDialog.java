@@ -43,6 +43,7 @@ import java.util.Random;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -65,8 +66,7 @@ public class FavoriteBottomSheetDialog
     private CompositeDisposable
             mDisposable = new CompositeDisposable();
     private RxBus
-            mBus = MusicApplication.getIntstance()
-            .bus();
+            mBus = RxBus.getInstance();
     private ViewPager mBottomViewPager;
     // ViewPager使用
     private List<List<MusicBean>> mListList = new ArrayList<>();
@@ -166,7 +166,7 @@ public class FavoriteBottomSheetDialog
                 if (mList != null && mList.size() > 0) {
                     // playstatus 在这里暂时用来做删除播放列表和收藏列表的标识，2 为播放列表PlayActivity界面 ，3 为收藏列表MusicBottomDialog界面。
                     PlayListBean bean = new PlayListBean("收藏的所有", (long) Constants.NUMBER_THRRE);
-                    DeletePlayListDialog.newInstance(bean,Constants.NUMBER_THRRE).show(((Activity) mContext).getFragmentManager(), "favoriteList");
+                    DeletePlayListDialog.newInstance(bean, Constants.NUMBER_THRRE).show(((Activity) mContext).getFragmentManager(), "favoriteList");
                 } else {
                     SnakbarUtil.noFavoriteMusic(mBottomListClear);
                 }

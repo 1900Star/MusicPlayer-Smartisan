@@ -48,10 +48,8 @@ public class BottomSheetAdapter
             musicHolder.mMusicSinger.setText(musicItem.getArtist());
             musicHolder.mFavoriteTime.setText(musicItem.getTime());
             int position = musicHolder.getAdapterPosition();
-            RxBus bus = MusicApplication.getIntstance()
-                    .bus();
 //            MusicBottomSheetDialog页面接收,用于播放收藏列表中点击Position的音乐
-            musicHolder.mRootBottomSheet.setOnClickListener(view -> bus.post(new BottomSheetStatus(
+            musicHolder.mRootBottomSheet.setOnClickListener(view -> RxBus.getInstance().post(new BottomSheetStatus(
                     position)));
         }
     }

@@ -55,7 +55,6 @@ public class DeletePlayListDialog
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -85,7 +84,7 @@ public class DeletePlayListDialog
         TextView tvDeleteTitle = mView.findViewById(R.id.tv_delete_list_title);
         mTvCancelDelete = mView.findViewById(R.id.tv_delete_list_cancel);
         mTvDelete = mView.findViewById(R.id.tv_delete_list_continue);
-        mBus = MusicApplication.getIntstance().bus();
+        mBus = RxBus.getInstance();
         mPlayListBean = getArguments().getParcelable("musicInfo");
         mPageType = getArguments().getInt("pageType");
         if (mPlayListBean != null) {

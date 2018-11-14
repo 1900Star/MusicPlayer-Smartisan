@@ -23,7 +23,7 @@ import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.TextChangedListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
-import com.yibao.music.model.MusicStatusBean;
+import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
@@ -182,8 +182,8 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
     }
 
     @Override
-    protected void refreshBtnAndNotify(MusicStatusBean musicStatusBean) {
-        switch (musicStatusBean.getType()) {
+    protected void refreshBtnAndNotify(PlayStatusBean playStatusBean) {
+        switch (playStatusBean.getType()) {
             case 0:
                 mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
                 mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());

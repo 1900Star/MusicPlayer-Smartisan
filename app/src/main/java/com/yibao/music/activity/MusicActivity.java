@@ -24,7 +24,7 @@ import com.yibao.music.fragment.PlayListFragment;
 import com.yibao.music.model.DetailsFlagBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
-import com.yibao.music.model.MusicStatusBean;
+import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
@@ -149,7 +149,7 @@ public class MusicActivity
     }
 
     @Override
-    protected void refreshBtnAndNotify(MusicStatusBean bean) {
+    protected void refreshBtnAndNotify(PlayStatusBean bean) {
         switch (bean.getType()) {
             case Constants.NUMBER_ZOER:
                 mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
@@ -169,12 +169,11 @@ public class MusicActivity
 
     private void initListener() {
         mMusicNavigationBar.setOnNavigationbarListener((currentSelecteFlag, titleResourceId) -> {
-            LogUtil.d("==== 当前选中  " + currentSelecteFlag);
             mTitleResourceId = titleResourceId;
             if (currentSelecteFlag == 2 || currentSelecteFlag == 4) {
                 mTvMusicToolbarTitle.setText(titleResourceId);
             } else {
-                artistAndAlbumTabChangeTitle(currentSelecteFlag);
+                changeToolBarTitle(currentSelecteFlag);
             }
             mMusicViewPager.setCurrentItem(currentSelecteFlag, false);
         });
@@ -256,10 +255,9 @@ public class MusicActivity
             }
 //                restoreMuiscBean(position);
         });
-
     }
 
-    private void artistAndAlbumTabChangeTitle(int currentSelecteFlag) {
+    private void changeToolBarTitle(int currentSelecteFlag) {
         switch (currentSelecteFlag) {
             case Constants.NUMBER_ZOER:
                 setToolBarTitle(PlayListFragment.isShowDetailsView, PlayListFragment.detailsViewTitle);

@@ -9,7 +9,7 @@ import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayActivity;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicStatusBean;
+import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.RxBus;
@@ -50,8 +50,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBus = MusicApplication.getIntstance()
-                .bus();
+        mBus = RxBus.getInstance();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mSearchDao = MusicApplication.getIntstance().getSearchDao();
     }
@@ -72,13 +71,13 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updataCurrentPlayInfo));
         upDataPlayProgress();
-        mCompositeDisposable.add(mBus.toObserverable(MusicStatusBean.class)
+        mCompositeDisposable.add(mBus.toObserverable(PlayStatusBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::refreshBtnAndNotify));
     }
 
-    protected abstract void refreshBtnAndNotify(MusicStatusBean musicStatusBean);
+    protected abstract void refreshBtnAndNotify(PlayStatusBean playStatusBean);
 
     protected void upDataPlayProgress() {
         if (mDisposableProgresse == null) {

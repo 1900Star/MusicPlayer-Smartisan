@@ -6,14 +6,13 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
 
-import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 import com.yibao.music.R;
 import com.yibao.music.adapter.SplashPagerAdapter;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.model.MusicCountBean;
-import com.yibao.music.model.MusicStatusBean;
+import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.service.LoadMusicDataService;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
@@ -21,7 +20,6 @@ import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.SystemUiVisibilityUtil;
 import com.yibao.music.view.ProgressBtn;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -75,7 +73,7 @@ public class SplashActivity
     }
 
     @Override
-    protected void refreshBtnAndNotify(MusicStatusBean musicStatusBean) {
+    protected void refreshBtnAndNotify(PlayStatusBean playStatusBean) {
 
     }
 
