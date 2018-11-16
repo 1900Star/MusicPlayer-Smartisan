@@ -16,8 +16,8 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.adapter.SearchDetailsAdapter;
-import com.yibao.music.base.BaseActivity;
 import com.yibao.music.base.BaseObserver;
+import com.yibao.music.base.BaseTansitionActivity;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.TextChangedListener;
@@ -52,7 +52,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * @author Stran
  */
-public class SearchActivity extends BaseActivity implements OnMusicItemClickListener {
+public class SearchActivity extends BaseTansitionActivity implements OnMusicItemClickListener {
     @BindView(R.id.tv_search_cancel)
     TextView mTvSearchCancel;
     @BindView(R.id.iv_search_clear)
@@ -105,7 +105,7 @@ public class SearchActivity extends BaseActivity implements OnMusicItemClickList
         }
         // 主动弹出键盘
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        mDisposableSoft = Observable.timer(300, TimeUnit.MILLISECONDS)
+        mDisposableSoft = Observable.timer(50, TimeUnit.MILLISECONDS)
                 .subscribe(aLong -> SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED));
     }
 

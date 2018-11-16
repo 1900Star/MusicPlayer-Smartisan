@@ -16,6 +16,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.adapter.MusicPagerAdapter;
 import com.yibao.music.base.BaseActivity;
+import com.yibao.music.base.BaseTansitionActivity;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.fragment.AlbumFragment;
@@ -56,7 +57,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  * Time:2017/5/30 13:27
  */
 public class MusicActivity
-        extends BaseActivity
+        extends BaseTansitionActivity
         implements OnMusicItemClickListener, UpdataTitleListener {
 
     @BindView(R.id.tv_music_toolbar_title)

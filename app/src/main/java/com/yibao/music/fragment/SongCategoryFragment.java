@@ -78,7 +78,7 @@ public class SongCategoryFragment extends BaseFragment {
     }
 
     private void initListener() {
-        mSongAdapter.setOnItemMenuListener(() -> FavoriteBottomSheetDialog.newInstance().getBottomDialog(getActivity()));
+        mSongAdapter.setOnItemMenuListener(() -> FavoriteBottomSheetDialog.newInstance().getBottomDialog(mActivity));
     }
 
     private void initData() {

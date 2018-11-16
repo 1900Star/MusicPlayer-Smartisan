@@ -52,6 +52,7 @@ public abstract class BaseRvAdapter<T>
         } else if (viewType == TYPE_FOOTER) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.load_more_footview, parent, false);
+            LogUtil.d("=============== 显示最后555555");
             return new LoadMoreHolder(view);
         }
 
@@ -67,6 +68,7 @@ public abstract class BaseRvAdapter<T>
     @Override
     public int getItemViewType(int position) {
         if (position == getItemCount() - 1) {
+            LogUtil.d("=============== 显示最后");
             return TYPE_FOOTER;
         }
         return TYPE_ITEM;

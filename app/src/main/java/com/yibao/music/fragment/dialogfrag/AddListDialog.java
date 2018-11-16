@@ -23,11 +23,13 @@ import com.yibao.music.R;
 import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicInfo;
 import com.yibao.music.model.PlayListBean;
+import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SoftKeybordUtil;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -109,11 +111,16 @@ public class AddListDialog
 
     private void addNewPlayList() {
         String listTitle = mEditAddList.getText().toString().trim();
-
+        PlayListBeanDao dao = MusicApplication.getIntstance().getPlayListDao();
         if (!listTitle.isEmpty()) {
-            MusicApplication.getIntstance().getPlayListDao().insert(new PlayListBean(listTitle, System.currentTimeMillis()));
-            dismiss();
-            RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_ONE));
+            List<PlayListBean> beanList = dao.queryBuilder().where(PlayListBeanDao.Properties.Title.eq(listTitle)).list();
+            if (beanList.size() > 0) {
+                SnakbarUtil.favoriteSuccessView(mEditAddList, "播放列表已存在");
+            } else {
+                dao.insert(new PlayListBean(listTitle, System.currentTimeMillis()));
+                dismiss();
+                RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_ONE));
+            }
         }
     }
 
@@ -121,7 +128,7 @@ public class AddListDialog
     private void initData() {
 
         // 主动弹出键盘
-        mCompositeDisposable.add(Observable.timer(200, TimeUnit.MILLISECONDS)
+        mCompositeDisposable.add(Observable.timer(50, TimeUnit.MILLISECONDS)
                 .subscribe(aLong -> {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         mInputMethodManager = (InputMethodManager) getContext()

@@ -18,7 +18,6 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.StringUtil;
-import com.yibao.music.util.TitleArtistUtil;
 
 import java.util.List;
 
@@ -41,12 +40,12 @@ public class SongAdapter
 
 {
     private Context mContext;
-    private int mIsShowStickyView = 0;
+    private int mIsShowStickyView;
     private OnOpenItemMoerMenuListener mListener;
 
     /**
-     * @param context
-     * @param list
+     * @param context c
+     * @param list l
      * @param isShowStickyView 控制列表的StickyView是否显示，0 显示 ，1 ：不显示
      *                         parm isArtistList     用来控制音乐列表和艺术家列表的显示
      */
@@ -122,12 +121,6 @@ public class SongAdapter
     protected int getLayoutId() {
 
         return R.layout.item_music_list;
-    }
-
-    @Override
-    public int getItemCount() {
-
-        return mList == null ? Constants.NUMBER_ZOER : mList.size();
     }
 
     @Override

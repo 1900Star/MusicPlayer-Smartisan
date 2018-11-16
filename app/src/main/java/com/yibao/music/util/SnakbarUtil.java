@@ -20,7 +20,7 @@ public class SnakbarUtil {
      * 收藏成功提示
      */
     public static void favoriteSuccessView(View view, String str) {
-        Snackbar snackbar = make(view, str, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = make(view, str, Snackbar.LENGTH_SHORT);
         snackbar.getView()
                 .setBackgroundColor(ColorUtil.successColor);
         snackbar.show();

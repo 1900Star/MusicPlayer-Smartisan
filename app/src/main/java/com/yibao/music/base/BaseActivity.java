@@ -151,10 +151,4 @@ public abstract class BaseActivity extends AppCompatActivity {
             mRxViewDisposable.dispose();
         }
     }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(0, R.anim.dialog_push_out);
-    }
 }

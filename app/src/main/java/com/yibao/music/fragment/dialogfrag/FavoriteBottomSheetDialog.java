@@ -131,9 +131,6 @@ public class FavoriteBottomSheetDialog
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(bean -> {
                     if (bean.getOperationType() == Constants.NUMBER_THRRE) {
                         clearAllFavoriteMusic();
-                        if (mContext != null) {
-                            mContext = null;
-                        }
                     }
                 }));
 
