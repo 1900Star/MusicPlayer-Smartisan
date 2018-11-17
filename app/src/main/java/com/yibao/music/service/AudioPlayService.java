@@ -321,7 +321,7 @@ public class AudioPlayService
         // 数据更新
         currentMusicBean.setIsFavorite(!mCurrentIsFavorite);
         if (!mCurrentIsFavorite) {
-            currentMusicBean.setTime(StringUtil.getCurrentTime());
+            currentMusicBean.setTime(String.valueOf(System.currentTimeMillis()));
         }
         mMusicDao.update(currentMusicBean);
     }
@@ -331,10 +331,10 @@ public class AudioPlayService
             mDisposable = ReadFavoriteFileUtil.deleteFavorite(musicBean.getTitle())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(aBoolean -> {
-                if (!aBoolean) {
-                    Toast.makeText(this, "该歌曲还没有添加到收藏文件", Toast.LENGTH_SHORT).show();
-                }
-            });
+                        if (!aBoolean) {
+                            Toast.makeText(this, "该歌曲还没有添加到收藏文件", Toast.LENGTH_SHORT).show();
+                        }
+                    });
         } else {
             //更新收藏文件  将歌名和收藏时间拼接储存，恢复的时候，歌名和时间以“T”为标记进行截取
             String songInfo = musicBean.getTitle() + "T" + musicBean.getTime();

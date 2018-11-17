@@ -61,7 +61,7 @@ public class LoadMusicDataService extends IntentService {
             // newSong新增歌曲的数量，大于0表示有新的歌曲。
             if (newSong > 0) {
                 // 对集合按添加时间排序，这样新增的歌曲就会排在最前面，通过循环将前面新增的歌曲添加到本地数据库
-                List<MusicBean> newList = MusicListUtil.sortMusicAddTime(dataList, 1);
+                List<MusicBean> newList = MusicListUtil.sortTime(dataList, 1);
                 for (int i = 0; i < newSong; i++) {
                     sendLoadProgress(newSong, newList.get(i));
                 }

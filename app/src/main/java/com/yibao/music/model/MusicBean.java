@@ -27,8 +27,10 @@ public class MusicBean
     private String artist;
     private String album;
     private long albumId;
+    // 添加时间
     private long addTime;
     private long duration;
+    // 收藏时间
     private String time;
     private String songUrl;
     private String firstChar;
@@ -297,7 +299,7 @@ public class MusicBean
 
     @Override
     public int compareTo(@NonNull MusicBean o) {
-        return 0;
+        return Long.compare(Long.parseLong(o.getTime()), Long.parseLong(this.getTime()));
     }
 
     public boolean getIsFavorite() {

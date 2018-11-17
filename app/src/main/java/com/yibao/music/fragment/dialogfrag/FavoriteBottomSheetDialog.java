@@ -37,6 +37,7 @@ import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -92,7 +93,7 @@ public class FavoriteBottomSheetDialog
     }
 
     private void initData(BottomSheetDialog dialog, View view) {
-//        mListList.add(MusicListUtil.sortMusicAddTime(mList, Constants.NUMBER_TWO));
+//        mListList.add(MusicListUtil.sortTime(mList, Constants.NUMBER_TWO));
         // ViewPager 显示多个列表
 //        BottomPagerAdapter bottomPagerAdapter = new BottomPagerAdapter(mContext, mListList);
 //        mBottomViewPager.setAdapter(bottomPagerAdapter);
@@ -111,15 +112,17 @@ public class FavoriteBottomSheetDialog
     //    接收BottomSheetAdapter发过来的当前点击Item的Position
 
     private void rxData() {
-        mDisposable.add(MusicListUtil.getFavoriteList().observeOn(AndroidSchedulers.mainThread()).subscribe(musicBeanList -> {
-            mList.addAll(musicBeanList);
-            String sheetTitle = StringUtil.getBottomSheetTitle(musicBeanList.size());
-            mBottomListTitleSize.setText(sheetTitle);
-            List<MusicBean> beanList = MusicListUtil.sortMusicAddTime(musicBeanList, Constants.NUMBER_TWO);
-            mAdapter = new BottomSheetAdapter(beanList);
-            mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
-            mBottomListContent.addView(mRecyclerView);
-        }));
+        mDisposable.add(MusicListUtil.getFavoriteList()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(musicBeanList -> {
+                    Collections.sort(musicBeanList);
+                    mList.addAll(musicBeanList);
+                    String sheetTitle = StringUtil.getBottomSheetTitle(musicBeanList.size());
+                    mBottomListTitleSize.setText(sheetTitle);
+                    mAdapter = new BottomSheetAdapter(musicBeanList);
+                    mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
+                    mBottomListContent.addView(mRecyclerView);
+                }));
 
         mDisposable.add(mBus.toObserverable(BottomSheetStatus.class)
                 .subscribeOn(Schedulers.io())

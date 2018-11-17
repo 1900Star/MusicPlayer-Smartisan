@@ -51,7 +51,7 @@ public class SongCategoryFragment extends BaseFragment {
             mPosition = arguments.getInt("position");
         }
         mAbcList = MusicListUtil.sortMusicAbc(mMusicBeanDao.queryBuilder().list());
-        mAddTimeList = MusicListUtil.sortMusicAddTime(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
+        mAddTimeList = MusicListUtil.sortTime(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
 
     }
 

@@ -3,7 +3,6 @@ package com.yibao.music.util;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,10 +34,10 @@ public class QueryMusicFlagListUtil {
             LogUtil.d("");
             // 按添加时间
         } else if (sortListFlag == Constants.NUMBER_FOUR) {
-            return MusicListUtil.sortMusicAddTime(musicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
+            return MusicListUtil.sortTime(musicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
             // 收藏列表
         } else if (sortListFlag == Constants.NUMBER_EIGHT) {
-            return MusicListUtil.sortMusicAddTime(musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list(), Constants.NUMBER_TWO);
+            return MusicListUtil.sortTime(musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list(), Constants.NUMBER_TWO);
             // 10表示按条件查询
         } else if (sortListFlag == Constants.NUMBER_TEN) {
 
@@ -69,7 +68,7 @@ public class QueryMusicFlagListUtil {
      */
     public static List<MusicBean> getDataList(int spMusicFlag, MusicBeanDao musicBeanDao) {
         if (spMusicFlag == Constants.NUMBER_THRRE) {
-            return MusicListUtil.sortMusicAddTime(musicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
+            return MusicListUtil.sortTime(musicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
         } else if (spMusicFlag == Constants.NUMBER_ONE) {
             return musicBeanDao.queryBuilder().list();
         } else if (spMusicFlag == Constants.NUMBER_TEN) {

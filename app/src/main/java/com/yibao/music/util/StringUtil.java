@@ -102,8 +102,8 @@ public class StringUtil {
 
     }
 
-    public static String getCurrentTime(Long l) {
-        SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
+    public static String getFormatDate(Long l) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date date = new Date(l);
         return format.format(date);
 

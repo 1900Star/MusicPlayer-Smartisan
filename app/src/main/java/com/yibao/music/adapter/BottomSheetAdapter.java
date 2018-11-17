@@ -12,6 +12,7 @@ import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.model.BottomSheetStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.RxBus;
+import com.yibao.music.util.StringUtil;
 
 import java.util.List;
 
@@ -44,9 +45,9 @@ public class BottomSheetAdapter
         if (holder instanceof MusicHolder) {
             MusicHolder musicHolder = (MusicHolder) holder;
             musicHolder.mMusicName.setText(musicItem.getTitle());
-            musicHolder.mMusicName.setText(musicItem.getTitle());
-            musicHolder.mMusicSinger.setText(musicItem.getArtist());
-            musicHolder.mFavoriteTime.setText(musicItem.getTime());
+            String unknownName = "<unknown>";
+            musicHolder.mMusicSinger.setText(unknownName.equals(musicItem.getArtist()) ? "Smartisan" : musicItem.getArtist());
+            musicHolder.mFavoriteTime.setText(StringUtil.getFormatDate(Long.valueOf(musicItem.getTime())));
             int position = musicHolder.getAdapterPosition();
 //            MusicBottomSheetDialog页面接收,用于播放收藏列表中点击Position的音乐
             musicHolder.mRootBottomSheet.setOnClickListener(view -> RxBus.getInstance().post(new BottomSheetStatus(

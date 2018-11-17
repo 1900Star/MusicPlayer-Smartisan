@@ -75,11 +75,11 @@ public abstract class BaseFragment extends Fragment {
             mDisposable = null;
 
         }
-        if (mActivity != null) {
-            mActivity = null;
-        }
-        if (mContext != null) {
-            mContext = null;
-        }
+//        if (mActivity != null) {
+//            mActivity = null;
+//        }
+//        if (mContext != null) {
+//            mContext = null;
+//        }
     }
 }

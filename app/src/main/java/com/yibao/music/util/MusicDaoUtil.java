@@ -50,14 +50,8 @@ public class MusicDaoUtil {
                         listener.setSearchFlag(3);
                         insertSearchBean(emitter, songList);
                     } else {
-                        // 模糊匹配搜索
-                        List<MusicBean> searchSongList = new ArrayList<>();
-                        List<MusicBean> beanList = musicBeanDao.queryBuilder().build().list();
-                        for (MusicBean musicBean : beanList) {
-                            if (musicBean.getTitle().startsWith(queryConditions)) {
-                                searchSongList.add(musicBean);
-                            }
-                        }
+                        // 模糊匹配搜索, % 加在前面为包含queryConditions，加在后面查询的结果是以 queryConditions 开头的数据。
+                        List<MusicBean> searchSongList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Title.like(queryConditions + "%")).list();
                         if (searchSongList.size() == 0) {
                             emitter.onError(new FileNotFoundException());
                         } else {
