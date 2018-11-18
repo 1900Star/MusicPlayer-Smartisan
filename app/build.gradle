@@ -17,8 +17,6 @@ android {
             schemaVersion 2
             daoPackage 'com.yibao.music.model.greendao'
             targetGenDir 'src/main/java/'
-
-
         }
 
         buildTypes {

@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 import com.yibao.music.MusicApplication;
+import com.yibao.music.manager.MediaSessionManager;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
@@ -72,6 +73,7 @@ public class AudioPlayService
     private RxBus mBus;
     private Disposable mDisposable;
     private AudioManager mAudioManager;
+    private MediaSessionManager mSessionManager;
 
     public void setData(List<MusicBean> list) {
         mMusicDataList = list;
@@ -95,15 +97,20 @@ public class AudioPlayService
     @Override
     public void onCreate() {
         super.onCreate();
+        init();
+        initNotifyBroadcast();
+        registerHeadsetReceiver();
+        //初始化播放模式
+    }
+
+    private void init() {
         mAudioBinder = new AudioBinder();
         mBus = RxBus.getInstance();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mMusicBean = new MusicBean();
-        initNotifyBroadcast();
-        registerHeadsetReceiver();
-        initAudioFocus();
-        //初始化播放模式
         PLAY_MODE = SpUtil.getMusicMode(this);
+        mSessionManager = new MediaSessionManager(this, mAudioBinder);
     }
 
     @Override
@@ -163,6 +170,9 @@ public class AudioPlayService
             mediaPlayer.setOnCompletionListener(this);
             SpUtil.setMusicPosition(AudioPlayService.this, position);
             showNotifycation(true);
+            mSessionManager.updatePlaybackState(true);
+            mSessionManager.updateLocMsg();
+
         }
 
         private void showNotifycation(boolean b) {
@@ -293,13 +303,16 @@ public class AudioPlayService
 
         public void start() {
             mediaPlayer.start();
+            mSessionManager.updatePlaybackState(true);
             showNotifycation(true);
+            initAudioFocus();
         }
 
         //暂停播放
 
         public void pause() {
             mediaPlayer.pause();
+            mSessionManager.updatePlaybackState(false);
             showNotifycation(false);
         }
 
@@ -416,7 +429,6 @@ public class AudioPlayService
 
     // 音频焦点
     private void initAudioFocus() {
-        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         // 申请焦点
         if (mAudioManager != null) {
             mAudioManager.requestAudioFocus(mAudioFocusChange, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
@@ -461,6 +473,12 @@ public class AudioPlayService
         mBus.post(new PlayStatusBean(0));
     }
 
+    public void abandonAudioFocus() {
+        if (mAudioManager != null) {
+            mAudioManager.abandonAudioFocus(mAudioFocusChange);
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -481,6 +499,8 @@ public class AudioPlayService
             mDisposable.dispose();
             mDisposable = null;
         }
+        abandonAudioFocus();
+        mSessionManager.release();
         stopSelf();
     }
 }

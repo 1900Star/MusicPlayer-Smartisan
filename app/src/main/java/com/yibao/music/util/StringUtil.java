@@ -65,7 +65,13 @@ public class StringUtil {
 
     }
 
-    //根据专辑 id 获得专辑图片保存路径,通知栏使用。
+
+    /**
+     *
+     * @param context c
+     * @param albumId id
+     * @return  根据专辑 id 获得专辑图片保存路径,通知栏使用。
+     */
     public static synchronized String getAlbumArtPath(Context context, String albumId) {
 
         if (!StringUtil.isReal(albumId)) {
