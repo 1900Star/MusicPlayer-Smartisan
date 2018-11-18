@@ -14,14 +14,14 @@
         android:visibility="visible" />
 
     <LinearLayout
-        android:focusable="true"
-        android:clickable="true"
-        android:background="@drawable/list_item_selector"
         android:id="@+id/ll_music_item"
         android:layout_width="match_parent"
         android:layout_height="62dp"
         android:layout_below="@id/item_sticky_view"
         android:layout_marginTop="0.5dp"
+        android:background="@drawable/list_item_selector"
+        android:clickable="true"
+        android:focusable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -60,9 +60,9 @@
                 <ImageView
                     android:id="@+id/song_item_play_flag"
                     android:layout_width="38dp"
-                    android:visibility="gone"
                     android:layout_height="18dp"
-                    android:src="@drawable/playing_blueplay2" />
+                    android:src="@drawable/playing_blueplay2"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -84,10 +84,12 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/item_sticky_view"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:gravity="center_vertical"
+        android:layout_marginTop="0.5dp"
         android:layout_marginEnd="25dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
@@ -110,7 +112,7 @@
             android:layout_width="50dp"
             android:layout_height="40dp"
             android:layout_margin="8dp"
-            android:src="@drawable/album_more_selector"/>
+            android:src="@drawable/album_more_selector" />
 
     </LinearLayout>
 

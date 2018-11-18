@@ -76,7 +76,7 @@ public class SongFragment extends BaseMusicFragment {
 
 
     @OnClick({R.id.iv_music_category_paly,
-            R.id.tv_music_category_songname, R.id.tv_music_category_score, R.id.tv_music_category_frequency, R.id.tv_music_category_addtime, R.id.musci_view})
+            R.id.tv_music_category_songname, R.id.tv_music_category_score, R.id.tv_music_category_frequency, R.id.tv_music_category_addtime})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_music_category_paly:
@@ -93,8 +93,6 @@ public class SongFragment extends BaseMusicFragment {
                 break;
             case R.id.tv_music_category_addtime:
                 switchListCategory(3);
-                break;
-            case R.id.musci_view:
                 break;
             default:
                 break;

@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.model.SearchHistoryBean;
+import com.yibao.music.model.TitleAndArtistBean;
+import com.yibao.music.util.TitleArtistUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -212,7 +214,12 @@ public class FlowLayoutView extends ViewGroup {
                     .inflate(R.layout.search_histoty_item, this, false);
             TextView tv = childView.findViewById(R.id.tv_search_history);
             SearchHistoryBean historyBean = searchList.get(i);
-            tv.setText(historyBean.getSearchContent());
+            if (historyBean.getSearchContent().contains("[mqms2]")) {
+                TitleAndArtistBean bean = TitleArtistUtil.getBean(historyBean.getSearchContent());
+                tv.setText(bean.getSongName());
+            } else {
+                tv.setText(historyBean.getSearchContent());
+            }
             tv.setTag(i);
             int finalPosition = i;
             childView.setOnClickListener(v -> {
