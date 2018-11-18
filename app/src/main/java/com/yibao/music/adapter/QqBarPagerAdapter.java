@@ -50,6 +50,7 @@ public class QqBarPagerAdapter
         this.mList = list;
 
     }
+
     public void setData(List<MusicBean> list) {
         if (mList != null) {
             mList.clear();
@@ -103,18 +104,9 @@ public class QqBarPagerAdapter
         TextView tvArtist = view.findViewById(R.id.tv_pager_art_name);
         String albumUri = StringUtil.getAlbulm(musicInfo.getAlbumId());
         ImageUitl.loadPlaceholder(mContext, albumUri, mAlbulm);
-        String musicTitle = musicInfo.getTitle();
-        String musicArtist = musicInfo.getArtist();
         String currentLyrics = musicInfo.getCurrentLyrics();
-        if (musicTitle.contains("[mqms2]")) {
-            TitleAndArtistBean bean = TitleArtistUtil.getBean(musicTitle);
-            tvSongName.setText(bean.getSongName());
-            tvArtist.setText(bean.getSongArtist());
-        } else {
-            tvSongName.setText(musicTitle);
-            String songArtist = "<unknown>".equals(musicArtist) ? "Smartisan" : musicArtist;
-            tvArtist.setText(currentLyrics != null ? currentLyrics : songArtist);
-        }
+        tvSongName.setText(StringUtil.getTitle(musicInfo));
+        tvArtist.setText(currentLyrics != null ? currentLyrics : StringUtil.getArtist(musicInfo));
 //        if (currentLyrics != null) {
 //            if (mAnimator == null || mAnimationListener == null) {
 //                mAnimator = AnimationUtil.getRotation(mAlbulm);

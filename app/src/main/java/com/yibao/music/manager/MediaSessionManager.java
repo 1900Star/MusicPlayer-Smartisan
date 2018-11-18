@@ -10,9 +10,11 @@ import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.yibao.music.R;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.TitleAndArtistBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
+import com.yibao.music.util.TitleArtistUtil;
 
 /**
  * @ Author: Luoshipeng
@@ -63,8 +65,8 @@ public class MediaSessionManager {
     public void updateLocMsg() {
         MusicBean info = mAudioBinder.getMusicBean();
         MediaMetadataCompat.Builder metaData = new MediaMetadataCompat.Builder()
-                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, info.getTitle())
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, info.getArtist())
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, StringUtil.getTitle(info))
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, StringUtil.getArtist(info))
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, info.getAlbum())
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, info.getArtist())
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, info.getDuration())
@@ -76,6 +78,7 @@ public class MediaSessionManager {
 
         mMediaSession.setMetadata(metaData.build());
     }
+
 
     private MediaSessionCompat.Callback sessionCb = new MediaSessionCompat.Callback() {
         @Override
@@ -107,10 +110,9 @@ public class MediaSessionManager {
     private Bitmap getCoverBitmap(MusicBean musicBean) {
         String albumArtPath = StringUtil.getAlbumArtPath(mContext, String.valueOf(musicBean.getAlbumId()));
         if (StringUtil.isReal(albumArtPath)) {
-            LogUtil.d("==== Path  " + albumArtPath);
             return BitmapFactory.decodeFile(albumArtPath);
         } else {
-            return BitmapFactory.decodeResource(mContext.getResources(), R.drawable.noalbumcover_120);
+            return BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.nina);
         }
     }
 

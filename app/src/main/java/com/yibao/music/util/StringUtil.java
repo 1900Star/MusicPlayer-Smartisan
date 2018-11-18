@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import com.yibao.music.model.MusicBean;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -67,10 +69,9 @@ public class StringUtil {
 
 
     /**
-     *
      * @param context c
      * @param albumId id
-     * @return  根据专辑 id 获得专辑图片保存路径,通知栏使用。
+     * @return 根据专辑 id 获得专辑图片保存路径,通知栏使用。
      */
     public static synchronized String getAlbumArtPath(Context context, String albumId) {
 
@@ -115,11 +116,20 @@ public class StringUtil {
 
     }
 
-    public static String getSongName(String songName) {
-        LogUtil.d("===========SongName====  " + songName);
-        String underLine = "_";
-//        return songName.contains(underLine) ? songName.substring(songName.indexOf(underLine) + 1, songName.length()) : songName;
-        return songName;
+    public static String getTitle(MusicBean musicBean) {
+        String musicTitle = musicBean.getTitle();
+        return musicTitle.contains("[mqms2]")
+                ? TitleArtistUtil.getBean(musicTitle).getSongName()
+                : musicTitle;
+    }
+
+    public static String getArtist(MusicBean musicBean) {
+        String musicTitle = musicBean.getTitle();
+        String musicArtist = musicBean.getArtist();
+        return musicTitle.contains("[mqms2]")
+                ? TitleArtistUtil.getBean(musicTitle).getSongArtist()
+                : "<unknown>".equals(musicArtist)
+                ? "Smartisan" : musicArtist;
     }
 
     public static String getBottomSheetTitle(int size) {
