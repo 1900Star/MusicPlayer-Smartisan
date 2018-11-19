@@ -4,12 +4,14 @@
     <item android:id="@android:id/background">
         <shape>
             <solid android:color="@color/seekBarN" />
+            <corners android:radius="2dip" />
         </shape>
     </item>
     <item android:id="@android:id/secondaryProgress">
         <clip>
             <shape>
                 <solid android:color="#FFFFFFFF" />
+                <corners android:radius="2dip" />
             </shape>
         </clip>
     </item>
@@ -17,6 +19,7 @@
         <clip>
             <shape>
                 <solid android:color="@color/seekBarP" />
+                <corners android:radius="2dip" />
             </shape>
         </clip>
     </item>

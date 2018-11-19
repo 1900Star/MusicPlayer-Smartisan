@@ -96,7 +96,7 @@
             android:layout_weight="1"
             android:maxHeight="6dp"
             android:minHeight="6dp"
-            android:progressDrawable="@drawable/seek_bar"
+            android:progressDrawable="@drawable/seek_bar_time"
             android:thumb="@drawable/playing_control_time" />
 
         <TextView
@@ -265,18 +265,16 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginTop="5dp"
-        android:background="@color/about" />
-
+        android:layout_marginTop="10dp"
+        android:background="@color/about"
+        android:visibility="visible" />
     <SeekBar
         android:id="@+id/sb_volume"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="14dp"
+        android:layout_margin="14dp"
         android:maxHeight="8dp"
-        android:minHeight="8dp"
-        android:progressDrawable="@drawable/seek_bar"
-        android:thumb="@drawable/playing_control_time" />
+        android:progressDrawable="@drawable/seek_bar_volume"
+        android:thumb="@drawable/playing_control_volume" />
 
 </LinearLayout>
