@@ -135,7 +135,7 @@ public class MusicListUtil {
             value = Float.compare(m2.getAddTime(), m1.getAddTime());
 
         } else {
-            value = Float.compare(Integer.valueOf(m2.getTime()), Integer.valueOf(m1.getTime()));
+            value = Float.compare(Long.parseLong(m2.getTime()), Long.parseLong(m1.getTime()));
 
         }
         if (value != 0) {

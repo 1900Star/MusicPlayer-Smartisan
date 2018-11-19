@@ -81,6 +81,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     private int lyricsFlag;
     private InputMethodManager mInputMethodManager;
     private Disposable mDisposableSoft;
+    private AudioServiceConnection mServiceConnection;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -334,8 +335,8 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         intent.putExtra("dataFlag", dataFlag);
         intent.putExtra("queryFlag", queryFlag);
         intent.putExtra("position", position);
-        AudioServiceConnection serviceConnection = new AudioServiceConnection();
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        mServiceConnection = new AudioServiceConnection();
+        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
         startService(intent);
     }
 
@@ -362,6 +363,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             mDisposableSoft.dispose();
             mDisposableSoft = null;
         }
+        unbindService(mServiceConnection);
     }
 
     private void updataLyric() {
