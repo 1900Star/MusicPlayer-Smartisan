@@ -10,70 +10,84 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_music"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@drawable/tabbar_bg"
-            app:navigationIcon="@drawable/btn_edit_selector">
+            android:background="@drawable/tabbar_bg">
 
-            <TextView
-                android:id="@+id/tv_music_toolbar_titles"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:maxLines="1"
-                android:text="@string/music_song"
-                android:textColor="@color/music_activity_title_selector"
-                android:textSize="@dimen/big_tv"
-                android:textStyle="bold" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:background="@drawable/btn_edit_selector"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_edit"
+                        android:layout_width="66dp"
+                        android:layout_height="48dp"
+                        android:gravity="center"
+                        android:text="@string/tv_edit"
+                        android:textColor="@color/textDes"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_music_toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:maxLines="1"
+                    android:text="@string/music_song"
+                    android:textColor="@color/music_activity_title_selector"
+                    android:textSize="@dimen/big_tv"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="3dp"
+                    android:background="@drawable/btn_edit_selector"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/iv_search"
+                        android:layout_width="66dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/btn_edit_selector"
+                        android:scaleType="center"
+                        android:src="@drawable/iv_title_search_"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/tv_edit_delete"
+                        android:layout_width="80dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/tv_title_delete_selector"
+                        android:gravity="center"
+                        android:text="@string/tv_delete"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </RelativeLayout>
+
+
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_gravity="center_vertical"
-        android:background="@drawable/tabbar_bg"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:id="@+id/tv_edit"
-            android:layout_width="66dp"
-            android:layout_height="48dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="2dp"
-            android:background="@drawable/btn_edit_selector"
-            android:gravity="center"
-            android:text="@string/tv_edit"
-            android:textColor="@color/textDes"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv_music_toolbar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:maxLines="1"
-            android:text="@string/music_song"
-            android:textColor="@color/music_activity_title_selector"
-            android:textSize="@dimen/big_tv"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:id="@+id/iv_search"
-            android:layout_width="66dp"
-            android:layout_height="48dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="3dp"
-            android:background="@drawable/btn_edit_selector"
-            android:src="@drawable/music_title_bar_search_selector" />
-    </RelativeLayout>
 
     <com.yibao.music.view.MainViewPager
         android:id="@+id/music_viewpager"

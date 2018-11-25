@@ -112,6 +112,9 @@ public class ArtistFragment extends BaseMusicFragment {
         }
     }
 
+    @Override
+    protected void changeEditStatus(int currentIndex) {
+    }
 
     public static ArtistFragment newInstance() {
         return new ArtistFragment();

@@ -71,7 +71,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="4dp"
-                    android:background="@drawable/cancel_btn_selector"
+                    android:background="@drawable/btn_edit_selector"
                     android:gravity="center"
                     android:text="@string/cancel"
                     android:textColor="@color/textDes"

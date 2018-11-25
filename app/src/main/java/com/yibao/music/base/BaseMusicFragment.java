@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.DetailsFlagBean;
+import com.yibao.music.model.EditBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.SpUtil;
@@ -12,6 +13,7 @@ import com.yibao.music.util.SpUtil;
 import java.util.HashMap;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -34,6 +36,18 @@ public abstract class BaseMusicFragment extends BaseFragment {
 
         initDetailsFlag();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mDisposable.add(mBus.toObserverable(EditBean.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(editBean -> changeEditStatus(editBean.getCurrentIndex()))
+        );
+    }
+
+    protected abstract void changeEditStatus(int currentIndex);
 
     // 根据detailFlag处理具体详情页面的返回事件
     private void initDetailsFlag() {

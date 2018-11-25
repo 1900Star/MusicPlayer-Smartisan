@@ -137,11 +137,20 @@ public class PlayListFragment extends BaseMusicFragment {
                 AddListDialog.newInstance(2, currentTitle).show(mActivity.getFragmentManager(), "addList");
             }
         });
-        mLlAddNewPlayList.setOnLongClickListener(v -> {
+
+//        mLlAddNewPlayList.setOnLongClickListener(v -> {
+//            mAdapter.setItemSelectStatus(isItemSelectStatus);
+//            isItemSelectStatus = !isItemSelectStatus;
+//            return true;
+//        });
+    }
+
+    @Override
+    protected void changeEditStatus(int currentIndex) {
+        if (currentIndex == Constants.NUMBER_ZOER) {
             mAdapter.setItemSelectStatus(isItemSelectStatus);
             isItemSelectStatus = !isItemSelectStatus;
-            return true;
-        });
+        }
     }
 
     private void switchShowDetailsView(String title) {

@@ -16,6 +16,7 @@ import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.MusicPagerListener;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SpUtil;
 
 import butterknife.BindView;
@@ -142,6 +143,12 @@ public class SongFragment extends BaseMusicFragment {
         mMusicCategoryAddtime.setTextColor(ColorUtil.textName);
         mMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_selector);
         SpUtil.setMusicDataListFlag(mActivity, playListFlag);
+    }
+    @Override
+    protected void changeEditStatus(int currentIndex) {
+        if (currentIndex == Constants.NUMBER_TWO) {
+            LogUtil.d("=======  编辑歌曲");
+        }
     }
 
 

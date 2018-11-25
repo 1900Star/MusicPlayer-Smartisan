@@ -23,6 +23,7 @@ import com.yibao.music.fragment.AlbumFragment;
 import com.yibao.music.fragment.ArtistFragment;
 import com.yibao.music.fragment.PlayListFragment;
 import com.yibao.music.model.DetailsFlagBean;
+import com.yibao.music.model.EditBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.PlayStatusBean;
@@ -94,6 +95,7 @@ public class MusicActivity
     private int mTitleResourceId = R.string.music_song;
     // 切换Tab时更改TiTle的标记,打开详情页面时正确显示Title
     private MusicBean mQqBarBean;
+    private int mCurrentIndex;
 
 
     @Override
@@ -112,14 +114,6 @@ public class MusicActivity
         Toolbar toolbar = findViewById(R.id.toolbar_music);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
-//        toolbar.setNavigationIcon(R.drawable.music_titlebar_back_selector);
-        toolbar.setNavigationContentDescription("编辑");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MusicActivity.this.onBackPressed();
-            }
-        });
     }
 
 
@@ -182,6 +176,7 @@ public class MusicActivity
     private void initListener() {
         mMusicNavigationBar.setOnNavigationbarListener((currentSelecteFlag, titleResourceId) -> {
             mTitleResourceId = titleResourceId;
+            mCurrentIndex = currentSelecteFlag;
             if (currentSelecteFlag == 2 || currentSelecteFlag == 4) {
                 mTvMusicToolbarTitle.setText(titleResourceId);
             } else {
@@ -539,29 +534,6 @@ public class MusicActivity
         mQqControlBar.updatePlayButtonState(audioBinder.isPlaying());
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.music_title_bar, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_titlebar_search:
-                Intent intent = new Intent(this, SearchActivity.class);
-                intent.putExtra("musicBean", mCurrentMusicBean);
-                startActivity(intent);
-                overridePendingTransition(R.anim.dialog_push_in, 0);
-                break;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
     public static AudioPlayService.AudioBinder getAudioBinder() {
         return audioBinder;
     }
@@ -573,7 +545,7 @@ public class MusicActivity
             default:
                 break;
             case R.id.tv_edit:
-                
+                mBus.post(new EditBean(mCurrentIndex));
                 break;
             case R.id.tv_music_toolbar_title:
                 switchMusicControlBar();

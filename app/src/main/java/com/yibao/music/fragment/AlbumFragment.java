@@ -22,6 +22,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicView;
@@ -188,6 +189,13 @@ public class AlbumFragment extends BaseMusicFragment {
         }
 
 
+    }
+
+    @Override
+    protected void changeEditStatus(int currentIndex) {
+        if (currentIndex == Constants.NUMBER_THRRE) {
+            LogUtil.d("=======  编辑专辑");
+        }
     }
 
     public static AlbumFragment newInstance() {

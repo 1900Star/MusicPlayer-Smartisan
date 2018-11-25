@@ -140,6 +140,9 @@ public class AboutFragment extends BaseMusicFragment {
         LogUtil.d("lsp", "收藏列表备份完成");
         ToastUtil.showFavoriteListBackupsDown(mActivity);
     }
+    @Override
+    protected void changeEditStatus(int currentIndex) {
+    }
 
     public static AboutFragment newInstance() {
 
