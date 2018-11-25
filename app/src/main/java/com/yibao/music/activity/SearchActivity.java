@@ -363,7 +363,10 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             mDisposableSoft.dispose();
             mDisposableSoft = null;
         }
-        unbindService(mServiceConnection);
+        if (mServiceConnection != null) {
+            unbindService(mServiceConnection);
+            mServiceConnection = null;
+        }
     }
 
     private void updataLyric() {

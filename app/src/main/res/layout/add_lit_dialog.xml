@@ -10,9 +10,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="52dp"
+        android:id="@+id/tv_title"
         android:background="@drawable/tabbar_bg"
         android:gravity="center"
-        android:text="@string/add_new_play_list"
         android:textColor="@color/textDes"
         android:textSize="@dimen/bigLyrics"
         android:textStyle="bold" />
@@ -33,7 +33,6 @@
             android:id="@+id/edit_add_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/not_name_hint"
             android:maxLength="21"
             android:textColor="@color/colorBlack"
             android:textColorHint="@color/tabbarTv"

@@ -24,7 +24,7 @@ import com.yibao.music.util.QueryMusicFlagListUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
-import com.yibao.music.view.music.MusicNotifyManager;
+import com.yibao.music.manager.MusicNotifyManager;
 
 import java.util.List;
 import java.util.Random;
@@ -170,8 +170,8 @@ public class AudioPlayService
             mediaPlayer.setOnCompletionListener(this);
             SpUtil.setMusicPosition(AudioPlayService.this, position);
             showNotifycation(true);
-            mSessionManager.updatePlaybackState(true);
-            mSessionManager.updateLocMsg();
+//            mSessionManager.updatePlaybackState(true);
+//            mSessionManager.updateLocMsg();
 
         }
 

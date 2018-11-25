@@ -20,8 +20,9 @@ public class RandomUtil {
 
     public static String getRandomUrl() {
         Random random = new Random();
-        int position = random.nextInt(Api.picUrlArr.length) + 1;
-        return Api.picUrlArr[position];
+        int picUrlLength = Api.picUrlArr.length;
+        int position = random.nextInt(picUrlLength) + 1;
+        return Api.picUrlArr[position >= picUrlLength ? picUrlLength - 1 : position];
 
     }
 

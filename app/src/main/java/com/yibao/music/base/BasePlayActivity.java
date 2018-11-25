@@ -210,7 +210,7 @@ public abstract class BasePlayActivity extends BaseTansitionActivity implements 
     /**
      * 系统音量发生变化时更新音量的Seekbar
      *
-     * @param currVolume
+     * @param currVolume c
      */
     public abstract void updataVolumeProgresse(int currVolume);
 
@@ -230,9 +230,9 @@ public abstract class BasePlayActivity extends BaseTansitionActivity implements 
     /**
      * 更新音乐进度条和音量条，子类去具体操作。
      *
-     * @param seekBar
-     * @param progress
-     * @param b
+     * @param seekBar  s
+     * @param progress p
+     * @param b        b
      */
     protected abstract void updataMusicBarAndVolumeBar(SeekBar seekBar, int progress, boolean b);
 }

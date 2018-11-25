@@ -33,10 +33,12 @@ public abstract class BaseRvAdapter<T>
 
 {
     protected List<T> mList;
+    protected boolean isSelectStatus = false;
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_FOOTER = 1;
     private OnItemListener<T> mListener;
     private ItemLongClickListener mLongClickListener;
+    private ItemEditClickListener mEditClickListener;
 
     public BaseRvAdapter(List<T> list) {
         mList = list;
@@ -128,6 +130,10 @@ public abstract class BaseRvAdapter<T>
         }
     }
 
+    public void setItemSelectStatus(boolean selectStatus) {
+        isSelectStatus = selectStatus;
+        notifyDataSetChanged();
+    }
 
     public void addHeader(List<T> list) {
         mList.addAll(list);
@@ -262,6 +268,25 @@ public abstract class BaseRvAdapter<T>
     protected void deletePlaylist(PlayListBean musicInfo, int itemPosition) {
         if (mLongClickListener != null) {
             mLongClickListener.deleteItemList(musicInfo, itemPosition);
+        }
+    }
+
+    /**
+     * Item长按的点击事件
+     */
+
+    public interface ItemEditClickListener {
+        void deleteItemList(int currentPosition);
+    }
+
+
+    public void setItemEditClickListener(ItemEditClickListener editClickListener) {
+        this.mEditClickListener = editClickListener;
+    }
+
+    protected void editItmeTitle(int itemPosition) {
+        if (mEditClickListener != null) {
+            mEditClickListener.deleteItemList(itemPosition);
         }
     }
 

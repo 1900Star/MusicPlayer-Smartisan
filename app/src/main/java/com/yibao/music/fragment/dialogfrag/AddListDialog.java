@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.text.Selection;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.yibao.music.model.MusicInfo;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SoftKeybordUtil;
@@ -50,6 +52,7 @@ public class AddListDialog
         extends DialogFragment implements View.OnClickListener {
 
 
+    private static int mOperationType = 1;
     private View mView;
     private EditText mEditAddList;
     private TextView mTvAddListCancle;
@@ -57,8 +60,12 @@ public class AddListDialog
     private InputMethodManager mInputMethodManager;
     private TextView mNoEdit;
     private CompositeDisposable mCompositeDisposable;
+    private TextView mTitle;
+    private static String mEditHint;
 
-    public static AddListDialog newInstance() {
+    public static AddListDialog newInstance(int operationType, String editHint) {
+        mOperationType = operationType;
+        mEditHint = editHint;
         return new AddListDialog();
     }
 
@@ -69,6 +76,7 @@ public class AddListDialog
         mCompositeDisposable = new CompositeDisposable();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         mView = getActivity().getLayoutInflater().inflate(R.layout.add_lit_dialog, null);
+
         builder.setView(mView);
         AlertDialog dialog = builder.create();
         Window window = dialog.getWindow();
@@ -89,10 +97,15 @@ public class AddListDialog
 
 
     private void initView() {
+        mTitle = mView.findViewById(R.id.tv_title);
         mEditAddList = mView.findViewById(R.id.edit_add_list);
         mTvAddListCancle = mView.findViewById(R.id.tv_add_list_cancle);
         mTvAddListContinue = mView.findViewById(R.id.tv_add_list_continue);
         mNoEdit = mView.findViewById(R.id.tv_add_list_cancel);
+        mTitle.setText(mOperationType == Constants.NUMBER_ONE ? R.string.add_new_play_list : R.string.rename_tile);
+        LogUtil.d("=======  "+mEditHint);
+        mEditAddList.setHint(mEditHint);
+//        Selection.selectAll(mEditAddList.getText());
     }
 
     @Override
@@ -117,10 +130,16 @@ public class AddListDialog
             if (beanList.size() > 0) {
                 SnakbarUtil.favoriteSuccessView(mEditAddList, "播放列表已存在");
             } else {
-                dao.insert(new PlayListBean(listTitle, System.currentTimeMillis()));
-                dismiss();
-                RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_ONE));
+                if (mOperationType == Constants.NUMBER_ONE) {
+                    dao.insert(new PlayListBean(listTitle, System.currentTimeMillis()));
+                    dismiss();
+                    RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_ONE));
+                } else {
+                    dismiss();
+                    RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_FOUR, listTitle));
+                }
             }
+
         }
     }
 
