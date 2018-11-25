@@ -88,6 +88,7 @@ public class PlayListFragment extends BaseMusicFragment {
                     } else if (operationType == Constants.NUMBER_FOUR) {
                         PlayListBean playListBean = mPlayList.get(mEditPosition);
                         playListBean.setTitle(bean.getListTitle());
+//                        mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.Title.eq("")).build().unique();
                         mPlayListDao.update(playListBean);
                     }
                     List<PlayListBean> playListBeans = mPlayListDao.queryBuilder().list();
