@@ -4,13 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.yibao.music.util.LogUtil;
-
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Transient;
-import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Unique;
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Author：Sid
@@ -21,7 +19,7 @@ import org.greenrobot.greendao.annotation.Unique;
  */
 @Entity
 public class MusicBean
-        implements Parcelable, Comparable<MusicBean> {
+        implements Parcelable,Comparable<MusicBean> {
     @Id(autoincrement = true)
     @Unique
     private Long id;
@@ -42,6 +40,8 @@ public class MusicBean
     private int playStatus;
     private int issueYear;
     private int musicQualityType;
+    @Transient
+    private boolean isSelected;
     /**
      * QQ bar上需要时时更新的歌词
      */
@@ -55,6 +55,68 @@ public class MusicBean
 
     public MusicBean() {
     }
+
+    protected MusicBean(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readLong();
+        }
+        title = in.readString();
+        artist = in.readString();
+        album = in.readString();
+        albumId = in.readLong();
+        addTime = in.readLong();
+        duration = in.readLong();
+        time = in.readString();
+        songUrl = in.readString();
+        firstChar = in.readString();
+        isFavorite = in.readByte() != 0;
+        playFrequency = in.readInt();
+        songScore = in.readInt();
+        playStatus = in.readInt();
+        issueYear = in.readInt();
+        musicQualityType = in.readInt();
+        isSelected = in.readByte() != 0;
+        currentLyrics = in.readString();
+        cureetPosition = in.readInt();
+    }
+
+    @Generated(hash = 1772482409)
+    public MusicBean(Long id, String title, String artist, String album, long albumId,
+            long addTime, long duration, String time, String songUrl, String firstChar,
+            boolean isFavorite, int playFrequency, int songScore, int playStatus,
+            int issueYear, int musicQualityType, String currentLyrics) {
+        this.id = id;
+        this.title = title;
+        this.artist = artist;
+        this.album = album;
+        this.albumId = albumId;
+        this.addTime = addTime;
+        this.duration = duration;
+        this.time = time;
+        this.songUrl = songUrl;
+        this.firstChar = firstChar;
+        this.isFavorite = isFavorite;
+        this.playFrequency = playFrequency;
+        this.songScore = songScore;
+        this.playStatus = playStatus;
+        this.issueYear = issueYear;
+        this.musicQualityType = musicQualityType;
+        this.currentLyrics = currentLyrics;
+    }
+
+    public static final Creator<MusicBean> CREATOR = new Creator<MusicBean>() {
+        @Override
+        public MusicBean createFromParcel(Parcel in) {
+            return new MusicBean(in);
+        }
+
+        @Override
+        public MusicBean[] newArray(int size) {
+            return new MusicBean[size];
+        }
+    };
 
     public Long getId() {
         return id;
@@ -200,72 +262,26 @@ public class MusicBean
         this.cureetPosition = cureetPosition;
     }
 
-    public static Creator<MusicBean> getCREATOR() {
-        return CREATOR;
+    public boolean isSelected() {
+        return isSelected;
     }
 
-    protected MusicBean(Parcel in) {
-        if (in.readByte() == 0) {
-            id = null;
-        } else {
-            id = in.readLong();
-        }
-        title = in.readString();
-        artist = in.readString();
-        album = in.readString();
-        albumId = in.readLong();
-        addTime = in.readLong();
-        duration = in.readLong();
-        time = in.readString();
-        songUrl = in.readString();
-        firstChar = in.readString();
-        isFavorite = in.readByte() != 0;
-        playFrequency = in.readInt();
-        songScore = in.readInt();
-        playStatus = in.readInt();
-        issueYear = in.readInt();
-        musicQualityType = in.readInt();
-        currentLyrics = in.readString();
-        cureetPosition = in.readInt();
+    public void setSelected(boolean selected) {
+        this.isSelected = selected;
     }
 
+    @Override
+    public int compareTo(@NonNull MusicBean o) {
+        return Long.compare(Long.parseLong(o.getTime()), Long.parseLong(this.getTime()));
+    }
 
-    @Generated(hash = 1772482409)
-    public MusicBean(Long id, String title, String artist, String album,
-                     long albumId, long addTime, long duration, String time, String songUrl,
-                     String firstChar, boolean isFavorite, int playFrequency, int songScore,
-                     int playStatus, int issueYear, int musicQualityType,
-                     String currentLyrics) {
-        this.id = id;
-        this.title = title;
-        this.artist = artist;
-        this.album = album;
-        this.albumId = albumId;
-        this.addTime = addTime;
-        this.duration = duration;
-        this.time = time;
-        this.songUrl = songUrl;
-        this.firstChar = firstChar;
+    public boolean getIsFavorite() {
+        return this.isFavorite;
+    }
+
+    public void setIsFavorite(boolean isFavorite) {
         this.isFavorite = isFavorite;
-        this.playFrequency = playFrequency;
-        this.songScore = songScore;
-        this.playStatus = playStatus;
-        this.issueYear = issueYear;
-        this.musicQualityType = musicQualityType;
-        this.currentLyrics = currentLyrics;
     }
-
-    public static final Creator<MusicBean> CREATOR = new Creator<MusicBean>() {
-        @Override
-        public MusicBean createFromParcel(Parcel in) {
-            return new MusicBean(in);
-        }
-
-        @Override
-        public MusicBean[] newArray(int size) {
-            return new MusicBean[size];
-        }
-    };
 
     @Override
     public int describeContents() {
@@ -295,21 +311,8 @@ public class MusicBean
         dest.writeInt(playStatus);
         dest.writeInt(issueYear);
         dest.writeInt(musicQualityType);
+        dest.writeByte((byte) (isSelected ? 1 : 0));
         dest.writeString(currentLyrics);
         dest.writeInt(cureetPosition);
     }
-
-    @Override
-    public int compareTo(@NonNull MusicBean o) {
-        return Long.compare(Long.parseLong(o.getTime()), Long.parseLong(this.getTime()));
-    }
-
-    public boolean getIsFavorite() {
-        return this.isFavorite;
-    }
-
-    public void setIsFavorite(boolean isFavorite) {
-        this.isFavorite = isFavorite;
-    }
-
 }

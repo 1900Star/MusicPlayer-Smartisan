@@ -100,8 +100,7 @@ public class AlbumAdapter
 
         //            Item点击监听
         albumlistHolder.mLlAlbumListItem.setOnClickListener(view -> {
-            LogUtil.d("======mIvAlbumTileAlbum===   ", "列表显示");
-            AlbumAdapter.this.openDetails(info);
+            AlbumAdapter.this.openDetails(info,false);
         });
     }
 
@@ -114,8 +113,7 @@ public class AlbumAdapter
 
         holder.mIvAlbumTileAlbum.setOnClickListener(view1 -> {
 
-            LogUtil.d("======mIvAlbumTileAlbum===   ", "平铺显示");
-            AlbumAdapter.this.openDetails(albumInfo);
+            AlbumAdapter.this.openDetails(albumInfo,false);
 //            holder.mAlbumCoverShadowMask.setVisibility(View.VISIBLE);
         });
 

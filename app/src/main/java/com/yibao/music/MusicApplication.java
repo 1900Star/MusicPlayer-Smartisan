@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.squareup.leakcanary.LeakCanary;
 import com.yibao.music.model.greendao.DaoMaster;
 import com.yibao.music.model.greendao.DaoSession;
+import com.yibao.music.model.greendao.DaoUpgradeHelper;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.MusicInfoDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
@@ -54,8 +55,8 @@ public class MusicApplication
     }
 
     private void setUpDataBase() {
-        DaoMaster.DevOpenHelper mHelper = new DaoMaster.DevOpenHelper(this, "favorite-db", null);
-        SQLiteDatabase db = mHelper.getWritableDatabase();
+        DaoUpgradeHelper helper = new DaoUpgradeHelper(this, "favorite-db", null);
+        SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);
         mDaoSession = daoMaster.newSession();
 

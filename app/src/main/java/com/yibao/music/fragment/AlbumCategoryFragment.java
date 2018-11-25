@@ -58,7 +58,12 @@ public class AlbumCategoryFragment extends BaseFragment {
     private void initData() {
         AlbumAdapter adapter = new AlbumAdapter(mActivity, mAlbumList, mPosition);
         mMusicView.setAdapter(mActivity, mPosition == 0 ? 3 : 4, mPosition==0, adapter);
-        adapter.setItemListener(bean -> mBus.post(bean));
+        adapter.setItemListener(new BaseRvAdapter.OnItemListener<AlbumInfo>() {
+            @Override
+            public void showDetailsView(AlbumInfo bean, boolean isEditStatus) {
+                mBus.post(bean);
+            }
+        });
     }
 
     public static AlbumCategoryFragment newInstance(int position) {

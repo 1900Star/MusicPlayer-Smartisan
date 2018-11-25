@@ -60,7 +60,6 @@ public class AddListDialog
     private InputMethodManager mInputMethodManager;
     private TextView mNoEdit;
     private CompositeDisposable mCompositeDisposable;
-    private TextView mTitle;
     private static String mEditHint;
 
     public static AddListDialog newInstance(int operationType, String editHint) {
@@ -97,13 +96,12 @@ public class AddListDialog
 
 
     private void initView() {
-        mTitle = mView.findViewById(R.id.tv_title);
+        TextView title = mView.findViewById(R.id.tv_title);
         mEditAddList = mView.findViewById(R.id.edit_add_list);
         mTvAddListCancle = mView.findViewById(R.id.tv_add_list_cancle);
         mTvAddListContinue = mView.findViewById(R.id.tv_add_list_continue);
         mNoEdit = mView.findViewById(R.id.tv_add_list_cancel);
-        mTitle.setText(mOperationType == Constants.NUMBER_ONE ? R.string.add_new_play_list : R.string.rename_tile);
-        LogUtil.d("=======  "+mEditHint);
+        title.setText(mOperationType == Constants.NUMBER_ONE ? R.string.add_new_play_list : R.string.rename_tile);
         mEditAddList.setHint(mEditHint);
 //        Selection.selectAll(mEditAddList.getText());
     }

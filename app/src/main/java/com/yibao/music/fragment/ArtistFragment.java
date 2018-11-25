@@ -11,6 +11,7 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.ArtistAdapter;
 import com.yibao.music.adapter.SearchDetailsAdapter;
 import com.yibao.music.base.BaseMusicFragment;
+import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
@@ -66,7 +67,7 @@ public class ArtistFragment extends BaseMusicFragment {
     }
 
     private void initListener() {
-        mAdapter.setItemListener(ArtistFragment.this::openDetailsView);
+        mAdapter.setItemListener((bean, bean2) -> ArtistFragment.this.openDetailsView(bean));
     }
 
 

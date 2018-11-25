@@ -14,7 +14,7 @@ android {
 
 
         greendao {
-            schemaVersion 2
+            schemaVersion 4
             daoPackage 'com.yibao.music.model.greendao'
             targetGenDir 'src/main/java/'
         }
@@ -60,6 +60,7 @@ android {
         implementation 'com.android.support:appcompat-v7:27.1.1'
         annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
         annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+        implementation 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.1.0'
         debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
         testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
         releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'

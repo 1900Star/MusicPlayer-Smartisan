@@ -54,7 +54,6 @@ public abstract class BaseRvAdapter<T>
         } else if (viewType == TYPE_FOOTER) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.load_more_footview, parent, false);
-            LogUtil.d("=============== 显示最后555555");
             return new LoadMoreHolder(view);
         }
 
@@ -70,7 +69,6 @@ public abstract class BaseRvAdapter<T>
     @Override
     public int getItemViewType(int position) {
         if (position == getItemCount() - 1) {
-            LogUtil.d("=============== 显示最后");
             return TYPE_FOOTER;
         }
         return TYPE_ITEM;
@@ -231,12 +229,21 @@ public abstract class BaseRvAdapter<T>
         }
     }
 
+//    /**
+//     * Item的点击事件
+//     */
+//    protected void openDetails(T t) {
+//        if (mListener != null) {
+//            mListener.showDetailsView(t);
+//        }
+//    }
+
     /**
-     * Item的点击事件
+     * Item的点击事件  多状态  (正常和编辑选中状态)
      */
-    protected void openDetails(T t) {
+    protected void openDetails(T t, boolean isEditStatus) {
         if (mListener != null) {
-            mListener.showDetailsView(t);
+            mListener.showDetailsView(t, isEditStatus);
         }
     }
 
@@ -248,7 +255,9 @@ public abstract class BaseRvAdapter<T>
 
     public interface OnItemListener<T> {
         // T 子类的数据类型
-        void showDetailsView(T bean);
+//        void showDetailsView(T bean);
+
+        void showDetailsView(T bean, boolean isEditStatus);
     }
 
 

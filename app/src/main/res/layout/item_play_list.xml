@@ -70,7 +70,7 @@
         android:layout_centerVertical="true"
         android:layout_margin="8dp"
         android:contentDescription="@null"
-        android:src="@drawable/item_edit"
+        android:src="@drawable/iv_edit_selector"
         android:visibility="gone" />
 
 

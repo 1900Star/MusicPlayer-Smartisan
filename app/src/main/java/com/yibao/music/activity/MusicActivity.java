@@ -10,12 +10,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.adapter.MusicPagerAdapter;
-import com.yibao.music.base.BaseActivity;
 import com.yibao.music.base.BaseTansitionActivity;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.UpdataTitleListener;
@@ -48,6 +48,7 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -62,6 +63,10 @@ public class MusicActivity
 
     @BindView(R.id.tv_music_toolbar_title)
     TextView mTvMusicToolbarTitle;
+    @BindView(R.id.tv_edit)
+    TextView mTvEdit;
+    @BindView(R.id.iv_search)
+    ImageView mIvSearch;
 
     @BindView(R.id.music_navigation_bar)
     MusicNavigationBar mMusicNavigationBar;
@@ -107,8 +112,14 @@ public class MusicActivity
         Toolbar toolbar = findViewById(R.id.toolbar_music);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
-        toolbar.setNavigationIcon(R.drawable.music_titlebar_back_selector);
-        toolbar.setNavigationOnClickListener(v -> MusicActivity.this.onBackPressed());
+//        toolbar.setNavigationIcon(R.drawable.music_titlebar_back_selector);
+        toolbar.setNavigationContentDescription("编辑");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MusicActivity.this.onBackPressed();
+            }
+        });
     }
 
 
@@ -230,7 +241,6 @@ public class MusicActivity
                 ToastUtil.showNoMusic(MusicActivity.this);
             }
         });
-        mTvMusicToolbarTitle.setOnClickListener(view -> switchMusicControlBar());
         mQqControlBar.setOnPagerSelecteListener(position -> {
             MusicActivity.this.disposableQqLyric();
             int detailFlag = SpUtil.getDetailFlag(MusicActivity.this);
@@ -554,6 +564,27 @@ public class MusicActivity
 
     public static AudioPlayService.AudioBinder getAudioBinder() {
         return audioBinder;
+    }
+
+    //TODO
+    @OnClick({R.id.tv_edit, R.id.tv_music_toolbar_title, R.id.iv_search})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            default:
+                break;
+            case R.id.tv_edit:
+                
+                break;
+            case R.id.tv_music_toolbar_title:
+                switchMusicControlBar();
+                break;
+            case R.id.iv_search:
+                Intent intent = new Intent(this, SearchActivity.class);
+                intent.putExtra("musicBean", mCurrentMusicBean);
+                startActivity(intent);
+                overridePendingTransition(R.anim.dialog_push_in, 0);
+                break;
+        }
     }
 
     private class AudioServiceConnection

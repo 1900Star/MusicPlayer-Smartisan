@@ -9,13 +9,13 @@ import org.greenrobot.greendao.database.Database;
 
 /**
  * @ Author: Luoshipeng
- * @ Name:   DaoUpdateHelper
+ * @ Name:   DaoUpgradeHelper
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/11/25/ 20:57
- * @ Des:    TODO
+ * @ Des:    GreenDao数据库升级辅助类
  */
-public class DaoUpdateHelper extends DaoMaster.OpenHelper {
-    public DaoUpdateHelper(Context context, String name, SQLiteDatabase.CursorFactory factory) {
+public class DaoUpgradeHelper extends DaoMaster.OpenHelper {
+    public DaoUpgradeHelper(Context context, String name, SQLiteDatabase.CursorFactory factory) {
         super(context, name, factory);
     }
 
@@ -33,6 +33,6 @@ public class DaoUpdateHelper extends DaoMaster.OpenHelper {
             public void onDropAllTables(Database db, boolean ifExists) {
                 DaoMaster.dropAllTables(db, ifExists);
             }
-        });
+        }, MusicBeanDao.class, MusicInfoDao.class, SearchHistoryBeanDao.class);
     }
 }

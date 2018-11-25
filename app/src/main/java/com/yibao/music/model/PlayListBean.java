@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Transient;
 
 /**
  * @ Author: Luoshipeng
@@ -22,23 +23,13 @@ public class PlayListBean implements Parcelable, Comparable<PlayListBean>{
     private String title;
     private Long addTime;
     private int songCount;
-
+    @Transient
+    private boolean isSelected;
     public PlayListBean(String title, Long addTime) {
         this.title = title;
         this.addTime = addTime;
     }
 
-    @Generated(hash = 743043273)
-    public PlayListBean(Long id, String title, Long addTime, int songCount) {
-        this.id = id;
-        this.title = title;
-        this.addTime = addTime;
-        this.songCount = songCount;
-    }
-
-    @Generated(hash = 1039443864)
-    public PlayListBean() {
-    }
 
     protected PlayListBean(Parcel in) {
         if (in.readByte() == 0) {
@@ -53,6 +44,21 @@ public class PlayListBean implements Parcelable, Comparable<PlayListBean>{
             addTime = in.readLong();
         }
         songCount = in.readInt();
+        isSelected = in.readByte() != 0;
+    }
+
+
+    @Generated(hash = 743043273)
+    public PlayListBean(Long id, String title, Long addTime, int songCount) {
+        this.id = id;
+        this.title = title;
+        this.addTime = addTime;
+        this.songCount = songCount;
+    }
+
+
+    @Generated(hash = 1039443864)
+    public PlayListBean() {
     }
 
     public static final Creator<PlayListBean> CREATOR = new Creator<PlayListBean>() {
@@ -99,6 +105,14 @@ public class PlayListBean implements Parcelable, Comparable<PlayListBean>{
         this.songCount = songCount;
     }
 
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
     @Override
     public int compareTo(@NonNull PlayListBean o) {
         return Long.compare(o.getAddTime(), this.getAddTime());
@@ -125,5 +139,6 @@ public class PlayListBean implements Parcelable, Comparable<PlayListBean>{
             dest.writeLong(addTime);
         }
         dest.writeInt(songCount);
+        dest.writeByte((byte) (isSelected ? 1 : 0));
     }
 }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +20,11 @@ import com.yibao.music.fragment.dialogfrag.AddListDialog;
 import com.yibao.music.fragment.dialogfrag.DeletePlayListDialog;
 import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.PlayListBean;
+import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SpUtil;
+import com.yibao.music.util.StringUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -56,6 +60,7 @@ public class PlayListFragment extends BaseMusicFragment {
     private boolean isItemSelectStatus = true;
     private List<PlayListBean> mPlayList;
     private int mEditPosition;
+    private int mSelectCount;
 
     @Nullable
     @Override
@@ -81,26 +86,42 @@ public class PlayListFragment extends BaseMusicFragment {
      */
     private void receiveRxbuData() {
         mDisposable.add(mBus.toObserverable(AddAndDeleteListBean.class)
-                .subscribeOn(Schedulers.io()).map(bean -> {
-                    int operationType = bean.getOperationType();
-                    if (operationType == Constants.NUMBER_TWO) {
-                        mAdapter.removeItem(mDeletePosition);
-                    } else if (operationType == Constants.NUMBER_FOUR) {
-                        PlayListBean playListBean = mPlayList.get(mEditPosition);
-                        playListBean.setTitle(bean.getListTitle());
+                        .subscribeOn(Schedulers.io()).map(bean -> {
+                            int operationType = bean.getOperationType();
+                            if (operationType == Constants.NUMBER_TWO) {
+                                mAdapter.removeItem(mDeletePosition);
+                            } else if (operationType == Constants.NUMBER_FOUR) {
+                                PlayListBean playListBean = mPlayList.get(mEditPosition);
+                                playListBean.setTitle(bean.getListTitle());
 //                        mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.Title.eq("")).build().unique();
-                        mPlayListDao.update(playListBean);
-                    }
-                    List<PlayListBean> playListBeans = mPlayListDao.queryBuilder().list();
-                    Collections.sort(playListBeans);
-                    return playListBeans;
-                })
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(newPlayList -> mAdapter.setNewData(newPlayList))
+                                mPlayListDao.update(playListBean);
+                            }
+                            List<PlayListBean> playListBeans = mPlayListDao.queryBuilder().list();
+                            Collections.sort(playListBeans);
+                            return playListBeans;
+                        })
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(newPlayList -> mAdapter.setNewData(newPlayList))
         );
     }
 
     private void initListener() {
-        mAdapter.setItemListener(playListBean -> PlayListFragment.this.switchShowDetailsView(playListBean.getTitle()));
+        mAdapter.setItemListener((playListBean, isEditStatus) -> {
+            if (isEditStatus) {
+                if (playListBean.isSelected()) {
+                    mSelectCount--;
+                    playListBean.setSelected(false);
+                } else {
+                    mSelectCount++;
+                    playListBean.setSelected(true);
+                }
+                LogUtil.d("===========选中  " + mSelectCount);
+                mLlAddNewPlayList.setEnabled(false);
+                mAdapter.notifyDataSetChanged();
+            } else {
+                mLlAddNewPlayList.setEnabled(true);
+                PlayListFragment.this.switchShowDetailsView(playListBean.getTitle());
+            }
+        });
         // 长按删除
         mAdapter.setItemLongClickListener((musicInfo, currentPosition) -> {
             mDeletePosition = currentPosition;
@@ -109,8 +130,12 @@ public class PlayListFragment extends BaseMusicFragment {
         // 编辑按钮
         mAdapter.setItemEditClickListener(currentPosition -> {
             mEditPosition = currentPosition;
-            String currentTitle = mPlayList.get(currentPosition).getTitle();
-            AddListDialog.newInstance(2, currentTitle).show(mActivity.getFragmentManager(), "addList");
+            List<PlayListBean> listBeans = mPlayListDao.queryBuilder().list();
+            Collections.sort(listBeans);
+            if (listBeans.size() > 0) {
+                String currentTitle = listBeans.get(currentPosition).getTitle();
+                AddListDialog.newInstance(2, currentTitle).show(mActivity.getFragmentManager(), "addList");
+            }
         });
         mLlAddNewPlayList.setOnLongClickListener(v -> {
             mAdapter.setItemSelectStatus(isItemSelectStatus);

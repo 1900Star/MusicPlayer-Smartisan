@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Transient;
 
 import java.util.Comparator;
 
@@ -21,6 +22,8 @@ public class SearchHistoryBean implements Comparable<SearchHistoryBean> {
     private Long id;
     private String searchContent;
     private String searchTime;
+    @Transient
+    private boolean isSelected;
 
     public SearchHistoryBean(String searchContent, String searchTime) {
         this.searchContent = searchContent;
@@ -39,6 +42,7 @@ public class SearchHistoryBean implements Comparable<SearchHistoryBean> {
     @Generated(hash = 1570282321)
     public SearchHistoryBean() {
     }
+
 
     public Long getId() {
         return id;
@@ -66,12 +70,18 @@ public class SearchHistoryBean implements Comparable<SearchHistoryBean> {
         this.searchTime = searchTime;
     }
 
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
 
     @Override
     public int compareTo(@NonNull SearchHistoryBean o) {
         return Long.compare(Long.parseLong(o.getSearchTime()), Long.parseLong(this.getSearchTime()));
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -80,6 +90,7 @@ public class SearchHistoryBean implements Comparable<SearchHistoryBean> {
 
         SearchHistoryBean that = (SearchHistoryBean) o;
 
+        if (isSelected != that.isSelected) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (searchContent != null ? !searchContent.equals(that.searchContent) : that.searchContent != null)
             return false;
@@ -91,6 +102,7 @@ public class SearchHistoryBean implements Comparable<SearchHistoryBean> {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (searchContent != null ? searchContent.hashCode() : 0);
         result = 31 * result + (searchTime != null ? searchTime.hashCode() : 0);
+        result = 31 * result + (isSelected ? 1 : 0);
         return result;
     }
 }
