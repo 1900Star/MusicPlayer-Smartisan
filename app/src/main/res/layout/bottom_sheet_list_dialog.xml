@@ -41,7 +41,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginEnd="12dp"
             android:layout_marginRight="12dp"
-            android:text="@string/clearAllFavorite"
+            android:text="@string/clear_all_favorite"
             android:textColor="@color/text_bottom_dialog_selector"
             android:textSize="@dimen/bigLyrics"
             tools:ignore="RtlHardcoded" />

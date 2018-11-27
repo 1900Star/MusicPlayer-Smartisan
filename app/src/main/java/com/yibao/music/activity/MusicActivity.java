@@ -101,6 +101,8 @@ public class MusicActivity
     private MusicBean mQqBarBean;
     private int mCurrentIndex;
     private boolean mIsEditStatus = false;
+    // 详情页面打开标识，打开之后点击编辑按钮需要做返回操作。
+    private boolean mIsTvEditBack = false;
 
 
     @Override
@@ -181,6 +183,7 @@ public class MusicActivity
     private void initListener() {
         mMusicNavigationBar.setOnNavigationbarListener((currentSelecteFlag, titleResourceId) -> {
             mTitleResourceId = titleResourceId;
+            mTvEdit.setVisibility(currentSelecteFlag == 1 || currentSelecteFlag == 4 ? View.GONE : View.VISIBLE);
             mCurrentIndex = currentSelecteFlag;
             if (currentSelecteFlag == 2 || currentSelecteFlag == 4) {
                 mTvMusicToolbarTitle.setText(titleResourceId);
@@ -550,13 +553,27 @@ public class MusicActivity
             default:
                 break;
             case R.id.tv_edit:
-                mBus.post(new EditBean(mCurrentIndex));
-                mIvSearch.setVisibility(mIsEditStatus ? View.VISIBLE : View.GONE);
-                mTvEditDelete.setVisibility(mIsEditStatus ? View.GONE : View.VISIBLE);
-                mIsEditStatus = !mIsEditStatus;
-                // mCurrentIndex + 20  (20 、22、33)表示有编辑状态被打开，返回时需要先关闭编辑状态。
-                // SpUtil.setDetailsFlag(this, mCurrentIndex + 20);  处理编辑状态返回的另一种方案,
-                // 和详情状态分开处理，在handleDetailsBack()加一个判断就可以了。
+                if (mIsTvEditBack) {
+                    // 有详情页面被打开，需要做返回操作
+                    int detailFlag = SpUtil.getDetailFlag(this);
+                    if (detailFlag > Constants.NUMBER_ZOER) {
+                        mBus.post(new DetailsFlagBean(detailFlag));
+                        mTvMusicToolbarTitle.setText(mTitleResourceId);
+                        // 搜索和编辑
+                        mTvEditDelete.setVisibility(View.GONE);
+                        mIvSearch.setVisibility(View.VISIBLE);
+                        mIsEditStatus = !mIsEditStatus;
+                        mIsTvEditBack = false;
+                    }
+                } else {
+                    mBus.post(new EditBean(mCurrentIndex));
+                    mIvSearch.setVisibility(mIsEditStatus ? View.VISIBLE : View.GONE);
+                    mTvEditDelete.setVisibility(mIsEditStatus ? View.GONE : View.VISIBLE);
+                    mIsEditStatus = !mIsEditStatus;
+                    // mCurrentIndex + 20  (20 、22、33)表示有编辑状态被打开，返回时需要先关闭编辑状态。
+                    // SpUtil.setDetailsFlag(this, mCurrentIndex + 20);  处理编辑状态返回的另一种方案,
+                    // 和详情状态分开处理，在handleDetailsBack()加一个判断就可以了。
+                }
                 break;
             case R.id.tv_edit_delete:
                 // 删除所选的条目
@@ -617,7 +634,13 @@ public class MusicActivity
 
     @Override
     public void updataTitle(String toolbarTitle, boolean isShowDetail) {
+        mIsTvEditBack = true;
         mTvMusicToolbarTitle.setText(toolbarTitle);
+    }
+
+    @Override
+    public void changeTvEdit(String tvEdit) {
+        mTvEdit.setText(tvEdit);
     }
 
 
@@ -631,6 +654,7 @@ public class MusicActivity
             mTvEditDelete.setVisibility(View.GONE);
             mIvSearch.setVisibility(View.VISIBLE);
             mIsEditStatus = !mIsEditStatus;
+            mIsTvEditBack = false;
         } else {
             super.onBackPressed();
         }

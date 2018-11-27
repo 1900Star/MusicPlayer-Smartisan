@@ -186,6 +186,7 @@ public class PlayListFragment extends BaseMusicFragment {
                 ((UpdataTitleListener) mContext).updataTitle(title, isShowDetailsView);
             }
         }
+        changeTvEditText(getResources().getString(isShowDetailsView ? R.string.tv_edit : R.string.back_play_list));
         isShowDetailsView = !isShowDetailsView;
     }
 
@@ -212,6 +213,7 @@ public class PlayListFragment extends BaseMusicFragment {
     @Override
     protected void handleDetailsBack(int detailFlag) {
         super.handleDetailsBack(detailFlag);
+        changeTvEditText(getResources().getString(R.string.tv_edit));
         if (detailFlag == Constants.NUMBER_EIGHT) {
             if (!isItemSelectStatus) {
                 if (!isShowDetailsView) {
@@ -224,8 +226,6 @@ public class PlayListFragment extends BaseMusicFragment {
                 isShowDetailsView = !isShowDetailsView;
             }
 
-        } else if (detailFlag == 20) {
-//            closeEditStatus();
         }
     }
 
@@ -237,6 +237,7 @@ public class PlayListFragment extends BaseMusicFragment {
             mDetailsViewMap.remove(mClassName);
             mAdapter.setItemSelectStatus(isItemSelectStatus);
         }
+        changeTvEditText(getResources().getString(isItemSelectStatus ? R.string.complete : R.string.tv_edit));
         mAdapter.setItemSelectStatus(isItemSelectStatus);
         isItemSelectStatus = !isItemSelectStatus;
         if (!isItemSelectStatus && mSelectCount > 0) {

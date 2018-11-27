@@ -9,4 +9,5 @@ package com.yibao.music.base.listener;
  */
 public interface UpdataTitleListener {
     void updataTitle(String toolbarTitle,boolean isShowDetail);
+    void changeTvEdit(String tvEdit);
 }

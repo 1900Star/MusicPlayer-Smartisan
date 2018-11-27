@@ -17,7 +17,7 @@
 
     //*********音乐
     <string name="short_line">-</string>
-    <string name="clearAllFavorite">清空</string>
+    <string name="clear_all_favorite">清空</string>
     <string name="play_all">播放全部</string>
     <string name="save_pic">保存</string>
 
@@ -29,6 +29,7 @@
     <string name="music_score">评分</string>
     <string name="song_name">歌曲名</string>
     <string name="play_list">播放列表</string>
+    <string name="back_play_list">返回播放列表</string>
     <string name="music_artisan">艺术家</string>
     <string name="music_song">歌曲</string>
     <string name="music_album">专辑</string>
@@ -41,6 +42,8 @@
     <string name="not_name_hint">新建播放列表</string>
     <string name="cancel">取消</string>
     <string name="continues">继续</string>
+    <string name="complete">完成</string>
+    <string name="back">返回</string>
     <string name="sure">确定</string>
     <string name="about">关于</string>
     <string name="backups_favorite_song">备份收藏歌曲</string>

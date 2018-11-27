@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.yibao.music.base.listener.OnMusicItemClickListener;
+import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.model.DetailsFlagBean;
 import com.yibao.music.model.EditBean;
 import com.yibao.music.util.Constants;
@@ -71,6 +72,14 @@ public abstract class BaseMusicFragment extends BaseFragment {
         SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_ZOER);
     }
 
+    /**
+     * @param tvEdit 编辑按钮、返回列表按钮  显示Text
+     */
+    protected void changeTvEditText(String tvEdit) {
+        if (mContext instanceof UpdataTitleListener) {
+            ((UpdataTitleListener) mContext).changeTvEdit(tvEdit);
+        }
+    }
 
     protected void randomPlayMusic() {
         int position = RandomUtil.getRandomPostion(mSongList.size());
