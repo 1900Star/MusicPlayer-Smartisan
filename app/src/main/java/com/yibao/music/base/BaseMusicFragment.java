@@ -81,6 +81,15 @@ public abstract class BaseMusicFragment extends BaseFragment {
         }
     }
 
+    /**
+     * @param tvEdit 编辑按钮、返回列表按钮  显示Text
+     */
+    protected void changeToolBarTitle(String tvEdit,boolean isShowDetail) {
+        if (mContext instanceof UpdataTitleListener) {
+            ((UpdataTitleListener) mContext).updataTitle(tvEdit, isShowDetail);
+        }
+    }
+
     protected void randomPlayMusic() {
         int position = RandomUtil.getRandomPostion(mSongList.size());
         if (getActivity() instanceof OnMusicItemClickListener) {

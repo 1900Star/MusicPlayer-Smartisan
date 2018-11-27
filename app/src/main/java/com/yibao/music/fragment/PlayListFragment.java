@@ -30,6 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -82,10 +83,12 @@ public class PlayListFragment extends BaseMusicFragment {
         mDisposable.add(mBus.toObserverable(AddAndDeleteListBean.class)
                 .subscribeOn(Schedulers.io()).map(bean -> {
                     int operationType = bean.getOperationType();
+                    // 删除列表
                     if (operationType == Constants.NUMBER_TWO) {
                         mAdapter.removeItem(mDeletePosition);
+                        changeTvEditVisibility();
                     } else if (operationType == Constants.NUMBER_FOUR) {
-
+                        // 更新列表名
                         PlayListBean playListBean = getPlayList().get(mEditPosition);
                         playListBean.setTitle(bean.getListTitle());
                         mPlayListDao.update(playListBean);
@@ -93,8 +96,19 @@ public class PlayListFragment extends BaseMusicFragment {
                     return getPlayList();
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(newPlayList -> mAdapter.setNewData(newPlayList))
+                .subscribe(newPlayList -> {
+                    mAdapter.setNewData(newPlayList);
+                    changeTvEditVisibility();
+                })
         );
+    }
+
+    private void changeTvEditVisibility() {
+        if (mContext instanceof UpdataTitleListener) {
+            ((UpdataTitleListener) mContext).setEditVisibility(getPlayList().size() > 0 ? View.VISIBLE :
+                    View.GONE);
+        }
+
     }
 
     private List<PlayListBean> getPlayList() {
@@ -149,12 +163,13 @@ public class PlayListFragment extends BaseMusicFragment {
             mAdapter.setItemSelectStatus(false);
             mAdapter.setNewData(getPlayList());
             mLlAddNewPlayList.setEnabled(true);
+            changeTvEditVisibility();
 
         }
     }
 
-    private void putFragToMap(int detailsFlag) {
-        SpUtil.setDetailsFlag(mActivity, detailsFlag);
+    private void putFragToMap() {
+        SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_EIGHT);
         if (!mDetailsViewMap.containsKey(mClassName)) {
             mDetailsViewMap.put(mClassName, this);
         }
@@ -180,11 +195,9 @@ public class PlayListFragment extends BaseMusicFragment {
         } else {
             mLlAddNewPlayList.setVisibility(View.INVISIBLE);
             mDetailsView.setVisibility(View.VISIBLE);
-            putFragToMap(Constants.NUMBER_EIGHT);
-            if (mContext instanceof UpdataTitleListener) {
-                detailsViewTitle = title;
-                ((UpdataTitleListener) mContext).updataTitle(title, isShowDetailsView);
-            }
+            putFragToMap();
+            detailsViewTitle = title;
+            changeToolBarTitle(title, isShowDetailsView);
         }
         changeTvEditText(getResources().getString(isShowDetailsView ? R.string.tv_edit : R.string.back_play_list));
         isShowDetailsView = !isShowDetailsView;
@@ -232,7 +245,7 @@ public class PlayListFragment extends BaseMusicFragment {
     private void closeEditStatus() {
         LogUtil.d("============ 测试--------  " + isItemSelectStatus);
         if (isItemSelectStatus) {
-            putFragToMap(Constants.NUMBER_EIGHT);
+            putFragToMap();
         } else {
             mDetailsViewMap.remove(mClassName);
             mAdapter.setItemSelectStatus(isItemSelectStatus);

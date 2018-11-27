@@ -138,10 +138,8 @@ public class AlbumFragment extends BaseMusicFragment {
             if (!mDetailsViewMap.containsKey(mClassName)) {
                 mDetailsViewMap.put(mClassName, this);
             }
-            if (mContext instanceof UpdataTitleListener) {
-                detailsViewTitle = bean.getAlbumName();
-                ((UpdataTitleListener) mContext).updataTitle(detailsViewTitle, true);
-            }
+            detailsViewTitle = bean.getAlbumName();
+            changeToolBarTitle(bean.getAlbumName(), true);
         }
         isShowDetailsView = !isShowDetailsView;
     }

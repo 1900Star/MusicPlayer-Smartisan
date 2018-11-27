@@ -187,6 +187,8 @@ public class MusicActivity
             mCurrentIndex = currentSelecteFlag;
             if (currentSelecteFlag == 2 || currentSelecteFlag == 4) {
                 mTvMusicToolbarTitle.setText(titleResourceId);
+            } else if (currentSelecteFlag == 0 && getPlayList().size() == 0) {
+                mTvEdit.setVisibility(View.GONE);
             } else {
                 changeToolBarTitle(currentSelecteFlag);
             }
@@ -583,6 +585,7 @@ public class MusicActivity
                     mIvSearch.setVisibility(View.VISIBLE);
                     mTvEditDelete.setVisibility(View.GONE);
                 }
+                mTvEdit.setText(getResources().getString(R.string.tv_edit));
                 break;
             case R.id.tv_music_toolbar_title:
                 switchMusicControlBar();
@@ -643,6 +646,14 @@ public class MusicActivity
         mTvEdit.setText(tvEdit);
     }
 
+    @Override
+    public void setEditVisibility(int editVisibility) {
+        mTvEdit.setVisibility(editVisibility);
+    }
+
+    private List<PlayListBean> getPlayList() {
+        return mPlayListDao.queryBuilder().list();
+    }
 
     @Override
     public void onBackPressed() {
