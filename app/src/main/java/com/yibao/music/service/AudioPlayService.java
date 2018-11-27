@@ -170,8 +170,8 @@ public class AudioPlayService
             mediaPlayer.setOnCompletionListener(this);
             SpUtil.setMusicPosition(AudioPlayService.this, position);
             showNotifycation(true);
-//            mSessionManager.updatePlaybackState(true);
-//            mSessionManager.updateLocMsg();
+            mSessionManager.updatePlaybackState(true);
+            mSessionManager.updateLocMsg();
 
         }
 

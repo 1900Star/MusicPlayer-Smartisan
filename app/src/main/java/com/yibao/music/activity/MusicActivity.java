@@ -7,8 +7,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -183,15 +181,29 @@ public class MusicActivity
     private void initListener() {
         mMusicNavigationBar.setOnNavigationbarListener((currentSelecteFlag, titleResourceId) -> {
             mTitleResourceId = titleResourceId;
-            mTvEdit.setVisibility(currentSelecteFlag == 1 || currentSelecteFlag == 4 ? View.GONE : View.VISIBLE);
-            mCurrentIndex = currentSelecteFlag;
-            if (currentSelecteFlag == 2 || currentSelecteFlag == 4) {
-                mTvMusicToolbarTitle.setText(titleResourceId);
-            } else if (currentSelecteFlag == 0 && getPlayList().size() == 0) {
-                mTvEdit.setVisibility(View.GONE);
-            } else {
-                changeToolBarTitle(currentSelecteFlag);
+            switch (currentSelecteFlag) {
+                case Constants.NUMBER_ZOER:
+                    mTvEdit.setVisibility(getPlayList().size() > 0 ? View.VISIBLE : View.GONE);
+                    break;
+                case Constants.NUMBER_ONE:
+                    mTvEdit.setVisibility(View.GONE);
+                    mTvEditDelete.setVisibility(View.GONE);
+                    mIvSearch.setVisibility(View.VISIBLE);
+                    break;
+                case Constants.NUMBER_TWO:
+                    mTvMusicToolbarTitle.setText(titleResourceId);
+                    break;
+                case Constants.NUMBER_FOUR:
+                    mTvEdit.setVisibility(View.GONE);
+                    mTvEditDelete.setVisibility(View.GONE);
+                    mTvMusicToolbarTitle.setText(titleResourceId);
+                    break;
+                default:
+                    mTvEdit.setVisibility(View.VISIBLE);
+                    changeToolBarTitle(currentSelecteFlag);
+                    break;
             }
+            mCurrentIndex = currentSelecteFlag;
             mMusicViewPager.setCurrentItem(currentSelecteFlag, false);
         });
         mSmartisanControlBar.setClickListener(clickFlag -> {
