@@ -154,6 +154,8 @@ public class AlbumFragment extends BaseMusicFragment {
             mDetailsView.setVisibility(View.GONE);
             mDetailsViewMap.remove(mClassName);
             isShowDetailsView = !isShowDetailsView;
+        } else if (detailFlag == 23) {
+            LogUtil.d("=======  编辑专辑状态");
         }
 
 

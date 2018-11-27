@@ -11,8 +11,8 @@
 
     <ImageView
         android:id="@+id/iv_item_select"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginStart="8dp"

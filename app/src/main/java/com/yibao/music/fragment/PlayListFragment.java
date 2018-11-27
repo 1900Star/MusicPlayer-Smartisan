@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import android.widget.LinearLayout;
 import com.yibao.music.R;
 import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.BaseMusicFragment;
-import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
@@ -24,7 +22,6 @@ import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SpUtil;
-import com.yibao.music.util.StringUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -58,7 +55,6 @@ public class PlayListFragment extends BaseMusicFragment {
     private int mDeletePosition;
     public static String detailsViewTitle;
     private boolean isItemSelectStatus = true;
-    private List<PlayListBean> mPlayList;
     private int mEditPosition;
     private int mSelectCount;
 
@@ -74,9 +70,7 @@ public class PlayListFragment extends BaseMusicFragment {
     }
 
     private void initData() {
-        mPlayList = mPlayListDao.queryBuilder().list();
-        Collections.sort(mPlayList);
-        mAdapter = new PlayListAdapter(mPlayList);
+        mAdapter = new PlayListAdapter(getPlayList());
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
         mPlayListContent.addView(recyclerView);
     }
@@ -86,22 +80,27 @@ public class PlayListFragment extends BaseMusicFragment {
      */
     private void receiveRxbuData() {
         mDisposable.add(mBus.toObserverable(AddAndDeleteListBean.class)
-                        .subscribeOn(Schedulers.io()).map(bean -> {
-                            int operationType = bean.getOperationType();
-                            if (operationType == Constants.NUMBER_TWO) {
-                                mAdapter.removeItem(mDeletePosition);
-                            } else if (operationType == Constants.NUMBER_FOUR) {
-                                PlayListBean playListBean = mPlayList.get(mEditPosition);
-                                playListBean.setTitle(bean.getListTitle());
-//                        mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.Title.eq("")).build().unique();
-                                mPlayListDao.update(playListBean);
-                            }
-                            List<PlayListBean> playListBeans = mPlayListDao.queryBuilder().list();
-                            Collections.sort(playListBeans);
-                            return playListBeans;
-                        })
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(newPlayList -> mAdapter.setNewData(newPlayList))
+                .subscribeOn(Schedulers.io()).map(bean -> {
+                    int operationType = bean.getOperationType();
+                    if (operationType == Constants.NUMBER_TWO) {
+                        mAdapter.removeItem(mDeletePosition);
+                    } else if (operationType == Constants.NUMBER_FOUR) {
+
+                        PlayListBean playListBean = getPlayList().get(mEditPosition);
+                        playListBean.setTitle(bean.getListTitle());
+                        mPlayListDao.update(playListBean);
+                    }
+                    return getPlayList();
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(newPlayList -> mAdapter.setNewData(newPlayList))
         );
+    }
+
+    private List<PlayListBean> getPlayList() {
+        List<PlayListBean> playListBeans = mPlayListDao.queryBuilder().list();
+        Collections.sort(playListBeans);
+        return playListBeans;
     }
 
     private void initListener() {
@@ -110,15 +109,15 @@ public class PlayListFragment extends BaseMusicFragment {
                 if (playListBean.isSelected()) {
                     mSelectCount--;
                     playListBean.setSelected(false);
+                    mPlayListDao.update(playListBean);
                 } else {
                     mSelectCount++;
                     playListBean.setSelected(true);
+                    mPlayListDao.update(playListBean);
                 }
                 LogUtil.d("===========选中  " + mSelectCount);
-                mLlAddNewPlayList.setEnabled(false);
                 mAdapter.notifyDataSetChanged();
             } else {
-                mLlAddNewPlayList.setEnabled(true);
                 PlayListFragment.this.switchShowDetailsView(playListBean.getTitle());
             }
         });
@@ -130,27 +129,47 @@ public class PlayListFragment extends BaseMusicFragment {
         // 编辑按钮
         mAdapter.setItemEditClickListener(currentPosition -> {
             mEditPosition = currentPosition;
-            List<PlayListBean> listBeans = mPlayListDao.queryBuilder().list();
-            Collections.sort(listBeans);
-            if (listBeans.size() > 0) {
-                String currentTitle = listBeans.get(currentPosition).getTitle();
+            if (getPlayList().size() > 0) {
+                String currentTitle = getPlayList().get(currentPosition).getTitle();
                 AddListDialog.newInstance(2, currentTitle).show(mActivity.getFragmentManager(), "addList");
             }
         });
-
-//        mLlAddNewPlayList.setOnLongClickListener(v -> {
-//            mAdapter.setItemSelectStatus(isItemSelectStatus);
-//            isItemSelectStatus = !isItemSelectStatus;
-//            return true;
-//        });
     }
 
     @Override
     protected void changeEditStatus(int currentIndex) {
         if (currentIndex == Constants.NUMBER_ZOER) {
-            mAdapter.setItemSelectStatus(isItemSelectStatus);
-            isItemSelectStatus = !isItemSelectStatus;
+            closeEditStatus();
+        } else if (currentIndex == 10) {
+            // 删除已选择的条目
+            List<PlayListBean> beanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).build().list();
+            for (PlayListBean playListBean : beanList) {
+                mPlayListDao.delete(playListBean);
+            }
+            mAdapter.setItemSelectStatus(false);
+            mAdapter.setNewData(getPlayList());
+            mLlAddNewPlayList.setEnabled(true);
+
         }
+    }
+
+    private void putFragToMap(int detailsFlag) {
+        SpUtil.setDetailsFlag(mActivity, detailsFlag);
+        if (!mDetailsViewMap.containsKey(mClassName)) {
+            mDetailsViewMap.put(mClassName, this);
+        }
+    }
+
+    // 取消所有已选
+    private void cancelAllSelected() {
+        List<PlayListBean> playListBeanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).build().list();
+        Collections.sort(playListBeanList);
+        for (PlayListBean playListBean : playListBeanList) {
+            playListBean.setSelected(false);
+            mPlayListDao.update(playListBean);
+        }
+        mSelectCount = 0;
+        mAdapter.setNewData(getPlayList());
     }
 
     private void switchShowDetailsView(String title) {
@@ -161,11 +180,7 @@ public class PlayListFragment extends BaseMusicFragment {
         } else {
             mLlAddNewPlayList.setVisibility(View.INVISIBLE);
             mDetailsView.setVisibility(View.VISIBLE);
-            SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_EIGHT);
-            if (!mDetailsViewMap.containsKey(mClassName)) {
-                mDetailsViewMap.put(mClassName, this);
-            }
-
+            putFragToMap(Constants.NUMBER_EIGHT);
             if (mContext instanceof UpdataTitleListener) {
                 detailsViewTitle = title;
                 ((UpdataTitleListener) mContext).updataTitle(title, isShowDetailsView);
@@ -182,6 +197,8 @@ public class PlayListFragment extends BaseMusicFragment {
             case R.id.ll_add_new_play_list:
                 String tvHint = getResources().getString(R.string.not_name_hint);
                 AddListDialog.newInstance(1, tvHint).show(mActivity.getFragmentManager(), "addList");
+//                LogUtil.d("====== 选中长度   " + mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).build().list().size());
+//                LogUtil.d("====== 总长度   " + getPlayList().size());
                 break;
             default:
                 break;
@@ -196,11 +213,37 @@ public class PlayListFragment extends BaseMusicFragment {
     protected void handleDetailsBack(int detailFlag) {
         super.handleDetailsBack(detailFlag);
         if (detailFlag == Constants.NUMBER_EIGHT) {
-            mDetailsView.setVisibility(View.GONE);
-            mLlAddNewPlayList.setVisibility(View.VISIBLE);
-            mDetailsViewMap.remove(mClassName);
-            isShowDetailsView = !isShowDetailsView;
+            if (!isItemSelectStatus) {
+                if (!isShowDetailsView) {
+                    closeEditStatus();
+                }
+            } else {
+                mDetailsView.setVisibility(View.GONE);
+                mLlAddNewPlayList.setVisibility(View.VISIBLE);
+                mDetailsViewMap.remove(mClassName);
+                isShowDetailsView = !isShowDetailsView;
+            }
+
+        } else if (detailFlag == 20) {
+//            closeEditStatus();
         }
+    }
+
+    private void closeEditStatus() {
+        LogUtil.d("============ 测试--------  " + isItemSelectStatus);
+        if (isItemSelectStatus) {
+            putFragToMap(Constants.NUMBER_EIGHT);
+        } else {
+            mDetailsViewMap.remove(mClassName);
+            mAdapter.setItemSelectStatus(isItemSelectStatus);
+        }
+        mAdapter.setItemSelectStatus(isItemSelectStatus);
+        isItemSelectStatus = !isItemSelectStatus;
+        if (!isItemSelectStatus && mSelectCount > 0) {
+            LogUtil.d("========== status    " + mSelectCount);
+            cancelAllSelected();
+        }
+        mLlAddNewPlayList.setEnabled(isItemSelectStatus);
     }
 
 }

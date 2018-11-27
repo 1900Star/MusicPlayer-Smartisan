@@ -22,7 +22,6 @@ public class SearchHistoryBean implements Comparable<SearchHistoryBean> {
     private Long id;
     private String searchContent;
     private String searchTime;
-    @Transient
     private boolean isSelected;
 
     public SearchHistoryBean(String searchContent, String searchTime) {
@@ -30,19 +29,17 @@ public class SearchHistoryBean implements Comparable<SearchHistoryBean> {
         this.searchTime = searchTime;
     }
 
-
-    @Generated(hash = 632630831)
-    public SearchHistoryBean(Long id, String searchContent, String searchTime) {
+    @Generated(hash = 102597726)
+    public SearchHistoryBean(Long id, String searchContent, String searchTime, boolean isSelected) {
         this.id = id;
         this.searchContent = searchContent;
         this.searchTime = searchTime;
+        this.isSelected = isSelected;
     }
-
 
     @Generated(hash = 1570282321)
     public SearchHistoryBean() {
     }
-
 
     public Long getId() {
         return id;
@@ -104,5 +101,13 @@ public class SearchHistoryBean implements Comparable<SearchHistoryBean> {
         result = 31 * result + (searchTime != null ? searchTime.hashCode() : 0);
         result = 31 * result + (isSelected ? 1 : 0);
         return result;
+    }
+
+    public boolean getIsSelected() {
+        return this.isSelected;
+    }
+
+    public void setIsSelected(boolean isSelected) {
+        this.isSelected = isSelected;
     }
 }

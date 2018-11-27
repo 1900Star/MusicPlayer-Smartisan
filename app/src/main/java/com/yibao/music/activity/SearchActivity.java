@@ -309,7 +309,9 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             default:
                 break;
             case R.id.tv_search_cancel:
+                SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 1, InputMethodManager.RESULT_UNCHANGED_SHOWN);
                 finish();
+
                 break;
             case R.id.iv_edit_clear:
                 mEditSearch.setText(null);

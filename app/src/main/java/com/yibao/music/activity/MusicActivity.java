@@ -26,7 +26,9 @@ import com.yibao.music.model.DetailsFlagBean;
 import com.yibao.music.model.EditBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
+import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.PlayStatusBean;
+import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
@@ -66,6 +68,8 @@ public class MusicActivity
     TextView mTvMusicToolbarTitle;
     @BindView(R.id.tv_edit)
     TextView mTvEdit;
+    @BindView(R.id.tv_edit_delete)
+    TextView mTvEditDelete;
     @BindView(R.id.iv_search)
     ImageView mIvSearch;
 
@@ -96,6 +100,7 @@ public class MusicActivity
     // 切换Tab时更改TiTle的标记,打开详情页面时正确显示Title
     private MusicBean mQqBarBean;
     private int mCurrentIndex;
+    private boolean mIsEditStatus = false;
 
 
     @Override
@@ -539,13 +544,28 @@ public class MusicActivity
     }
 
     //TODO
-    @OnClick({R.id.tv_edit, R.id.tv_music_toolbar_title, R.id.iv_search})
+    @OnClick({R.id.tv_edit, R.id.tv_music_toolbar_title, R.id.iv_search, R.id.tv_edit_delete})
     public void onClick(View v) {
         switch (v.getId()) {
             default:
                 break;
             case R.id.tv_edit:
                 mBus.post(new EditBean(mCurrentIndex));
+                mIvSearch.setVisibility(mIsEditStatus ? View.VISIBLE : View.GONE);
+                mTvEditDelete.setVisibility(mIsEditStatus ? View.GONE : View.VISIBLE);
+                mIsEditStatus = !mIsEditStatus;
+                // mCurrentIndex + 20  (20 、22、33)表示有编辑状态被打开，返回时需要先关闭编辑状态。
+                // SpUtil.setDetailsFlag(this, mCurrentIndex + 20);  处理编辑状态返回的另一种方案,
+                // 和详情状态分开处理，在handleDetailsBack()加一个判断就可以了。
+                break;
+            case R.id.tv_edit_delete:
+                // 删除所选的条目
+                List<PlayListBean> beanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).list();
+                if (beanList.size() > 0) {
+                    mBus.post(new EditBean(mCurrentIndex + 10));
+                    mIvSearch.setVisibility(View.VISIBLE);
+                    mTvEditDelete.setVisibility(View.GONE);
+                }
                 break;
             case R.id.tv_music_toolbar_title:
                 switchMusicControlBar();
@@ -607,6 +627,10 @@ public class MusicActivity
         if (detailFlag > Constants.NUMBER_ZOER) {
             mBus.post(new DetailsFlagBean(detailFlag));
             mTvMusicToolbarTitle.setText(mTitleResourceId);
+            // 搜索和编辑
+            mTvEditDelete.setVisibility(View.GONE);
+            mIvSearch.setVisibility(View.VISIBLE);
+            mIsEditStatus = !mIsEditStatus;
         } else {
             super.onBackPressed();
         }

@@ -28,6 +28,7 @@ public class PlayListBeanDao extends AbstractDao<PlayListBean, Long> {
         public final static Property Title = new Property(1, String.class, "title", false, "TITLE");
         public final static Property AddTime = new Property(2, Long.class, "addTime", false, "ADD_TIME");
         public final static Property SongCount = new Property(3, int.class, "songCount", false, "SONG_COUNT");
+        public final static Property IsSelected = new Property(4, boolean.class, "isSelected", false, "IS_SELECTED");
     }
 
 
@@ -46,7 +47,8 @@ public class PlayListBeanDao extends AbstractDao<PlayListBean, Long> {
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"TITLE\" TEXT," + // 1: title
                 "\"ADD_TIME\" INTEGER," + // 2: addTime
-                "\"SONG_COUNT\" INTEGER NOT NULL );"); // 3: songCount
+                "\"SONG_COUNT\" INTEGER NOT NULL ," + // 3: songCount
+                "\"IS_SELECTED\" INTEGER NOT NULL );"); // 4: isSelected
     }
 
     /** Drops the underlying database table. */
@@ -74,6 +76,7 @@ public class PlayListBeanDao extends AbstractDao<PlayListBean, Long> {
             stmt.bindLong(3, addTime);
         }
         stmt.bindLong(4, entity.getSongCount());
+        stmt.bindLong(5, entity.getIsSelected() ? 1L: 0L);
     }
 
     @Override
@@ -95,6 +98,7 @@ public class PlayListBeanDao extends AbstractDao<PlayListBean, Long> {
             stmt.bindLong(3, addTime);
         }
         stmt.bindLong(4, entity.getSongCount());
+        stmt.bindLong(5, entity.getIsSelected() ? 1L: 0L);
     }
 
     @Override
@@ -108,7 +112,8 @@ public class PlayListBeanDao extends AbstractDao<PlayListBean, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // title
             cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // addTime
-            cursor.getInt(offset + 3) // songCount
+            cursor.getInt(offset + 3), // songCount
+            cursor.getShort(offset + 4) != 0 // isSelected
         );
         return entity;
     }
@@ -119,6 +124,7 @@ public class PlayListBeanDao extends AbstractDao<PlayListBean, Long> {
         entity.setTitle(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setAddTime(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
         entity.setSongCount(cursor.getInt(offset + 3));
+        entity.setIsSelected(cursor.getShort(offset + 4) != 0);
      }
     
     @Override

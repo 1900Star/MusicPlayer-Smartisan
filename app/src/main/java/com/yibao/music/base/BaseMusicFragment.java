@@ -7,12 +7,14 @@ import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.DetailsFlagBean;
 import com.yibao.music.model.EditBean;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.SpUtil;
 
 import java.util.HashMap;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -26,13 +28,13 @@ import io.reactivex.schedulers.Schedulers;
  */
 public abstract class BaseMusicFragment extends BaseFragment {
     public static HashMap<String, BaseFragment> mDetailsViewMap;
-
+    private Disposable mEditDisposable;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDetailsViewMap = new HashMap<>(3);
+        mDetailsViewMap = new HashMap<>(6);
 
         initDetailsFlag();
     }
@@ -40,11 +42,12 @@ public abstract class BaseMusicFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mDisposable.add(mBus.toObserverable(EditBean.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(editBean -> changeEditStatus(editBean.getCurrentIndex()))
-        );
+        if (mEditDisposable == null) {
+            mEditDisposable = mBus.toObserverable(EditBean.class)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(editBean -> changeEditStatus(editBean.getCurrentIndex()));
+        }
     }
 
     protected abstract void changeEditStatus(int currentIndex);
@@ -82,6 +85,16 @@ public abstract class BaseMusicFragment extends BaseFragment {
         if (mDetailsViewMap != null) {
             mDetailsViewMap.clear();
             mDetailsViewMap = null;
+        }
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mEditDisposable != null) {
+            mEditDisposable.dispose();
+            mEditDisposable = null;
         }
     }
 }

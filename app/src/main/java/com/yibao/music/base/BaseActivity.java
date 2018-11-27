@@ -11,6 +11,7 @@ import com.yibao.music.activity.PlayActivity;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
+import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.view.music.QqControlBar;
@@ -46,6 +47,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Disposable mQqLyricsDisposable;
     protected Unbinder mBind;
     protected Disposable mRxViewDisposable;
+    protected PlayListBeanDao mPlayListDao;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         mBus = RxBus.getInstance();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mSearchDao = MusicApplication.getIntstance().getSearchDao();
+        mPlayListDao = MusicApplication.getIntstance().getPlayListDao();
     }
 
 

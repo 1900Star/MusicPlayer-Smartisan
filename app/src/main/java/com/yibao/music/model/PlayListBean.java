@@ -23,7 +23,6 @@ public class PlayListBean implements Parcelable, Comparable<PlayListBean>{
     private String title;
     private Long addTime;
     private int songCount;
-    @Transient
     private boolean isSelected;
     public PlayListBean(String title, Long addTime) {
         this.title = title;
@@ -48,12 +47,14 @@ public class PlayListBean implements Parcelable, Comparable<PlayListBean>{
     }
 
 
-    @Generated(hash = 743043273)
-    public PlayListBean(Long id, String title, Long addTime, int songCount) {
+    @Generated(hash = 1098116397)
+    public PlayListBean(Long id, String title, Long addTime, int songCount,
+            boolean isSelected) {
         this.id = id;
         this.title = title;
         this.addTime = addTime;
         this.songCount = songCount;
+        this.isSelected = isSelected;
     }
 
 
@@ -140,5 +141,15 @@ public class PlayListBean implements Parcelable, Comparable<PlayListBean>{
         }
         dest.writeInt(songCount);
         dest.writeByte((byte) (isSelected ? 1 : 0));
+    }
+
+
+    public boolean getIsSelected() {
+        return this.isSelected;
+    }
+
+
+    public void setIsSelected(boolean isSelected) {
+        this.isSelected = isSelected;
     }
 }

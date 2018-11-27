@@ -27,6 +27,7 @@ public class SearchHistoryBeanDao extends AbstractDao<SearchHistoryBean, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property SearchContent = new Property(1, String.class, "searchContent", false, "SEARCH_CONTENT");
         public final static Property SearchTime = new Property(2, String.class, "searchTime", false, "SEARCH_TIME");
+        public final static Property IsSelected = new Property(3, boolean.class, "isSelected", false, "IS_SELECTED");
     }
 
 
@@ -44,7 +45,8 @@ public class SearchHistoryBeanDao extends AbstractDao<SearchHistoryBean, Long> {
         db.execSQL("CREATE TABLE " + constraint + "\"SEARCH_HISTORY_BEAN\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"SEARCH_CONTENT\" TEXT," + // 1: searchContent
-                "\"SEARCH_TIME\" TEXT);"); // 2: searchTime
+                "\"SEARCH_TIME\" TEXT," + // 2: searchTime
+                "\"IS_SELECTED\" INTEGER NOT NULL );"); // 3: isSelected
     }
 
     /** Drops the underlying database table. */
@@ -71,6 +73,7 @@ public class SearchHistoryBeanDao extends AbstractDao<SearchHistoryBean, Long> {
         if (searchTime != null) {
             stmt.bindString(3, searchTime);
         }
+        stmt.bindLong(4, entity.getIsSelected() ? 1L: 0L);
     }
 
     @Override
@@ -91,6 +94,7 @@ public class SearchHistoryBeanDao extends AbstractDao<SearchHistoryBean, Long> {
         if (searchTime != null) {
             stmt.bindString(3, searchTime);
         }
+        stmt.bindLong(4, entity.getIsSelected() ? 1L: 0L);
     }
 
     @Override
@@ -103,7 +107,8 @@ public class SearchHistoryBeanDao extends AbstractDao<SearchHistoryBean, Long> {
         SearchHistoryBean entity = new SearchHistoryBean( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // searchContent
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // searchTime
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // searchTime
+            cursor.getShort(offset + 3) != 0 // isSelected
         );
         return entity;
     }
@@ -113,6 +118,7 @@ public class SearchHistoryBeanDao extends AbstractDao<SearchHistoryBean, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setSearchContent(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setSearchTime(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setIsSelected(cursor.getShort(offset + 3) != 0);
      }
     
     @Override

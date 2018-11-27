@@ -40,7 +40,6 @@ public class MusicBean
     private int playStatus;
     private int issueYear;
     private int musicQualityType;
-    @Transient
     private boolean isSelected;
     /**
      * QQ bar上需要时时更新的歌词
@@ -82,11 +81,11 @@ public class MusicBean
         cureetPosition = in.readInt();
     }
 
-    @Generated(hash = 1772482409)
+    @Generated(hash = 1939175451)
     public MusicBean(Long id, String title, String artist, String album, long albumId,
             long addTime, long duration, String time, String songUrl, String firstChar,
             boolean isFavorite, int playFrequency, int songScore, int playStatus,
-            int issueYear, int musicQualityType, String currentLyrics) {
+            int issueYear, int musicQualityType, boolean isSelected, String currentLyrics) {
         this.id = id;
         this.title = title;
         this.artist = artist;
@@ -103,6 +102,7 @@ public class MusicBean
         this.playStatus = playStatus;
         this.issueYear = issueYear;
         this.musicQualityType = musicQualityType;
+        this.isSelected = isSelected;
         this.currentLyrics = currentLyrics;
     }
 
@@ -314,5 +314,13 @@ public class MusicBean
         dest.writeByte((byte) (isSelected ? 1 : 0));
         dest.writeString(currentLyrics);
         dest.writeInt(cureetPosition);
+    }
+
+    public boolean getIsSelected() {
+        return this.isSelected;
+    }
+
+    public void setIsSelected(boolean isSelected) {
+        this.isSelected = isSelected;
     }
 }

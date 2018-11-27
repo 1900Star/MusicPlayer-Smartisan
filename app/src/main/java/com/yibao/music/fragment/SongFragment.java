@@ -151,6 +151,13 @@ public class SongFragment extends BaseMusicFragment {
         }
     }
 
+    @Override
+    protected void handleDetailsBack(int detailFlag) {
+        super.handleDetailsBack(detailFlag);
+        if (detailFlag == 22) {
+            LogUtil.d("=======  编辑歌曲状态");
+        }
+    }
 
     public static SongFragment newInstance() {
 
