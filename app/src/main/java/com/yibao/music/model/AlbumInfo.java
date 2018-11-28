@@ -22,6 +22,7 @@ public class AlbumInfo implements Parcelable, Comparable<AlbumInfo> {
     private String firstChar;
     private String songName;
     private int year;
+    private boolean mSelected;
 
     private AlbumInfo(Parcel in) {
         albumName = in.readString();
@@ -176,5 +177,13 @@ public class AlbumInfo implements Parcelable, Comparable<AlbumInfo> {
         result = 31 * result + (songName != null ? songName.hashCode() : 0);
         result = 31 * result + year;
         return result;
+    }
+
+    public boolean isSelected() {
+        return mSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        mSelected = selected;
     }
 }

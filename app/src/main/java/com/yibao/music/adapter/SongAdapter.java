@@ -15,6 +15,7 @@ import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.PlayListBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.StringUtil;
@@ -44,8 +45,8 @@ public class SongAdapter
     private OnOpenItemMoerMenuListener mListener;
 
     /**
-     * @param context c
-     * @param list l
+     * @param context          c
+     * @param list             l
      * @param isShowStickyView 控制列表的StickyView是否显示，0 显示 ，1 ：不显示
      *                         parm isArtistList     用来控制音乐列表和艺术家列表的显示
      */
@@ -70,15 +71,16 @@ public class SongAdapter
     }
 
     @Override
-    protected void bindView(RecyclerView.ViewHolder holder, MusicBean info) {
+    protected void bindView(RecyclerView.ViewHolder holder, MusicBean musicBean) {
         if (holder instanceof SongListViewHolder) {
             SongListViewHolder songListViewHolder = (SongListViewHolder) holder;
             int position = holder.getAdapterPosition();
-            ImageUitl.customLoadPic(mContext, StringUtil.getAlbulm(info.getAlbumId()), R.drawable.noalbumcover_120, songListViewHolder.mSongAlbum);
-            songListViewHolder.mSongArtistName.setText(info.getArtist());
-            songListViewHolder.mSongName.setText(info.getTitle());
+            songListViewHolder.mItemSelect.setVisibility(isSelectStatus ? View.VISIBLE : View.GONE);
+            ImageUitl.customLoadPic(mContext, StringUtil.getAlbulm(musicBean.getAlbumId()), R.drawable.noalbumcover_120, songListViewHolder.mSongAlbum);
+            songListViewHolder.mSongArtistName.setText(musicBean.getArtist());
+            songListViewHolder.mSongName.setText(musicBean.getTitle());
             if (mIsShowStickyView == Constants.NUMBER_ZOER) {
-                String firstTv = info.getFirstChar();
+                String firstTv = musicBean.getFirstChar();
                 songListViewHolder.mTvStickyView.setText(firstTv);
                 if (position == 0) {
                     songListViewHolder.mTvStickyView.setVisibility(View.VISIBLE);
@@ -99,16 +101,25 @@ public class SongAdapter
                     mListener.openClickMoerMenu();
                 }
             });
-
+            songListViewHolder.mItemSelect.setOnClickListener(v -> selectStatus(musicBean, songListViewHolder));
             //  Item点击监听
             songListViewHolder.mLlMusicItem.setOnClickListener(view -> {
-                if (mContext instanceof OnMusicItemClickListener) {
-                    ((OnMusicItemClickListener) mContext).startMusicService(position);
+                if (isSelectStatus) {
+                    selectStatus(musicBean, songListViewHolder);
+                } else {
+                    if (mContext instanceof OnMusicItemClickListener) {
+                        ((OnMusicItemClickListener) mContext).startMusicService(position);
+                    }
                 }
             });
 
         }
 
+    }
+
+    private void selectStatus(MusicBean musicBean, SongAdapter.SongListViewHolder playViewHolder) {
+        playViewHolder.mItemSelect.setImageResource(musicBean.isSelected() ? R.drawable.item_selected_normal : R.drawable.item_selected);
+        openDetails(musicBean, true);
     }
 
     @Override
@@ -153,6 +164,8 @@ public class SongAdapter
         TextView mTvStickyView;
         @BindView(R.id.song_album)
         ImageView mSongAlbum;
+        @BindView(R.id.iv_song_item_select)
+        ImageView mItemSelect;
         @BindView(R.id.song_item_play_flag)
         ImageView mSongPlayFlag;
         @BindView(R.id.song_name)

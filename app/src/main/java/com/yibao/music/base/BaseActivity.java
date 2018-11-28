@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayActivity;
+import com.yibao.music.activity.SearchActivity;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
@@ -106,7 +107,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         startActivity(new Intent(this, PlayActivity.class));
         overridePendingTransition(R.anim.dialog_push_in, 0);
     }
-
+    protected void startSearchActivity(MusicBean currentMusicBean) {
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra("musicBean", currentMusicBean);
+        startActivity(intent);
+        overridePendingTransition(R.anim.dialog_push_in, 0);
+    }
     protected void checkCurrentSongIsFavorite(MusicBean currentMusicBean, QqControlBar qqControlBar, SmartisanControlBar smartisanControlBar) {
         boolean favorite = mMusicDao.load(currentMusicBean.getId()).getIsFavorite();
         smartisanControlBar.setFavoriteButtonState(favorite);

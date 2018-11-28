@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.model.AlbumInfo;
+import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
@@ -42,8 +43,8 @@ public class AlbumAdapter
     private int mIsShowStickyView;
 
     /**
-     * @param context
-     * @param list
+     * @param context          c
+     * @param list             l
      * @param isShowStickyView 控制列表的StickyView是否显示，0 显示 ，1 ：不显示
      *                         parm isArtistList     用来控制音乐列表和艺术家列表的显示
      */
@@ -88,6 +89,7 @@ public class AlbumAdapter
         String songCount = info.getSongCount() + "首";
         albumlistHolder.mTvAlbumListSongCount.setText(songCount);
         String firstTv = info.getFirstChar();
+        albumlistHolder.mIvListSelect.setVisibility(isSelectStatus? View.VISIBLE : View.GONE);
         albumlistHolder.mTvAlbumItemStickyView.setText(firstTv);
         if (position == 0) {
             albumlistHolder.mTvAlbumItemStickyView.setVisibility(View.VISIBLE);
@@ -97,15 +99,23 @@ public class AlbumAdapter
         } else {
             albumlistHolder.mTvAlbumItemStickyView.setVisibility(View.VISIBLE);
         }
-
+        albumlistHolder.mIvListSelect.setOnClickListener(v -> selectStatus(info, albumlistHolder));
         //            Item点击监听
         albumlistHolder.mLlAlbumListItem.setOnClickListener(view -> {
-            AlbumAdapter.this.openDetails(info,false);
+            if (isSelectStatus) {
+                selectStatus(info, albumlistHolder);
+            } else {
+                AlbumAdapter.this.openDetails(info, false);
+            }
         });
     }
 
-    private void setDataAlbumTile(AlbumTileHolder holder, AlbumInfo albumInfo) {
+    private void selectStatus(AlbumInfo musicBean, AlbumAdapter.AlbumlistHolder playViewHolder) {
+        playViewHolder.mIvListSelect.setImageResource(musicBean.isSelected() ? R.drawable.item_selected_normal : R.drawable.item_selected);
+        openDetails(musicBean, true);
+    }
 
+    private void setDataAlbumTile(AlbumTileHolder holder, AlbumInfo albumInfo) {
 
 
         ImageUitl.customLoadPic(mContext, StringUtil.getAlbulm(albumInfo.getAlbumId()), R.drawable.noalbumcover_120, holder.mIvAlbumTileAlbum);
@@ -113,8 +123,7 @@ public class AlbumAdapter
 
         holder.mIvAlbumTileAlbum.setOnClickListener(view1 -> {
 
-            AlbumAdapter.this.openDetails(albumInfo,false);
-//            holder.mAlbumCoverShadowMask.setVisibility(View.VISIBLE);
+            AlbumAdapter.this.openDetails(albumInfo, false);
         });
 
     }
@@ -143,6 +152,8 @@ public class AlbumAdapter
         TextView mTvAlbumItemStickyView;
         @BindView(R.id.iv_item_album_list)
         ImageView mIvItemAlbumList;
+        @BindView(R.id.iv_album_list_item_select)
+        ImageView mIvListSelect;
         @BindView(R.id.tv_album_list_song_name)
         TextView mTvAlbumListSongName;
         @BindView(R.id.tv_album_list_song_artist)

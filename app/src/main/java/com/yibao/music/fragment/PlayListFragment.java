@@ -164,7 +164,6 @@ public class PlayListFragment extends BaseMusicFragment {
             mAdapter.setNewData(getPlayList());
             mLlAddNewPlayList.setEnabled(true);
             changeTvEditVisibility();
-//            SpUtil.setDetailsFlag(mContext,Constants.NUMBER_ZOER);
 
         }
     }
@@ -244,7 +243,6 @@ public class PlayListFragment extends BaseMusicFragment {
     }
 
     private void closeEditStatus() {
-        LogUtil.d("============ 测试--------  " + isItemSelectStatus);
         if (isItemSelectStatus) {
             putFragToMap();
         } else {

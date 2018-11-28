@@ -16,7 +16,6 @@ import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.MusicPagerListener;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SpUtil;
 
 import butterknife.BindView;
@@ -47,7 +46,6 @@ public class SongFragment extends BaseMusicFragment {
     @BindView(R.id.vp_song_fag)
     ViewPager mViewPager;
     private int curentIndex = 0;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -146,17 +144,6 @@ public class SongFragment extends BaseMusicFragment {
     }
     @Override
     protected void changeEditStatus(int currentIndex) {
-        if (currentIndex == Constants.NUMBER_TWO) {
-            LogUtil.d("=======  编辑歌曲");
-        }
-    }
-
-    @Override
-    protected void handleDetailsBack(int detailFlag) {
-        super.handleDetailsBack(detailFlag);
-        if (detailFlag == 22) {
-            LogUtil.d("=======  编辑歌曲状态");
-        }
     }
 
     public static SongFragment newInstance() {

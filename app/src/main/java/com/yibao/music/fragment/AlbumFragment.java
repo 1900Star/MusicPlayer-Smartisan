@@ -134,29 +134,28 @@ public class AlbumFragment extends BaseMusicFragment {
             mDetailsView.setDataFlag(mFragmentManager, list.size(), bean.getAlbumName(), Constants.NUMBER_TWO);
             SearchDetailsAdapter adapter = new SearchDetailsAdapter(getActivity(), list, Constants.NUMBER_TWO);
             mDetailsView.setAdapter(getActivity(), Constants.NUMBER_TWO, bean, adapter);
-            SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_TEN);
             if (!mDetailsViewMap.containsKey(mClassName)) {
                 mDetailsViewMap.put(mClassName, this);
             }
             detailsViewTitle = bean.getAlbumName();
             changeToolBarTitle(bean.getAlbumName(), true);
         }
+        SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_TEN);
+        changeTvEditText(getResources().getString(isShowDetailsView ? R.string.tv_edit : R.string.back));
         isShowDetailsView = !isShowDetailsView;
     }
 
     @Override
     protected void handleDetailsBack(int detailFlag) {
-        super.handleDetailsBack(detailFlag);
         if (detailFlag == Constants.NUMBER_TEN) {
+            SpUtil.setDetailsFlag(mContext, Constants.NUMBER_TEN);
             mAlbumContentView.setVisibility(View.VISIBLE);
             mDetailsView.setVisibility(View.GONE);
             mDetailsViewMap.remove(mClassName);
             isShowDetailsView = !isShowDetailsView;
-        } else if (detailFlag == 23) {
-            LogUtil.d("=======  编辑专辑状态");
+            LogUtil.d("======= album mian 编辑专辑状态");
         }
-
-
+//        super.handleDetailsBack(detailFlag);
     }
 
 
@@ -193,9 +192,6 @@ public class AlbumFragment extends BaseMusicFragment {
 
     @Override
     protected void changeEditStatus(int currentIndex) {
-        if (currentIndex == Constants.NUMBER_THRRE) {
-            LogUtil.d("=======  编辑专辑");
-        }
     }
 
     public static AlbumFragment newInstance() {
