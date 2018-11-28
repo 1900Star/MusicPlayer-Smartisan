@@ -164,6 +164,7 @@ public class PlayListFragment extends BaseMusicFragment {
             mAdapter.setNewData(getPlayList());
             mLlAddNewPlayList.setEnabled(true);
             changeTvEditVisibility();
+//            SpUtil.setDetailsFlag(mContext,Constants.NUMBER_ZOER);
 
         }
     }

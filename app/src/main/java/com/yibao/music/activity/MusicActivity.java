@@ -98,7 +98,6 @@ public class MusicActivity
     // 切换Tab时更改TiTle的标记,打开详情页面时正确显示Title
     private MusicBean mQqBarBean;
     private int mCurrentIndex;
-    private boolean mIsEditStatus = false;
     // 详情页面打开标识，打开之后点击编辑按钮需要做返回操作。
     private boolean mIsTvEditBack = false;
 
@@ -112,8 +111,8 @@ public class MusicActivity
         initData();
         initMusicConfig();
         initListener();
+        deleteSelected();
     }
-
 
     private void initView() {
         Toolbar toolbar = findViewById(R.id.toolbar_music);
@@ -178,6 +177,59 @@ public class MusicActivity
         }
     }
 
+    //TODO
+    @OnClick({R.id.tv_edit, R.id.tv_music_toolbar_title, R.id.iv_search, R.id.tv_edit_delete})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            default:
+                break;
+            case R.id.tv_edit:
+                if (mCurrentIndex == 0) {
+                    if (mIsTvEditBack) {
+                        // 有详情页面被打开，需要做返回操作
+                        int detailFlag = SpUtil.getDetailFlag(this);
+                        if (detailFlag > Constants.NUMBER_ZOER) {
+                            mBus.post(new DetailsFlagBean(detailFlag));
+                            mTvMusicToolbarTitle.setText(mTitleResourceId);
+                            // 搜索和编辑
+                            mTvEditDelete.setVisibility(mIsTvEditBack ? View.GONE : View.VISIBLE);
+                            mIvSearch.setVisibility(mIsTvEditBack ? View.VISIBLE : View.GONE);
+                            mIsTvEditBack = !mIsTvEditBack;
+                        }
+                    } else {
+                        mBus.post(new EditBean(mCurrentIndex));
+                        mTvEditDelete.setVisibility(mIsTvEditBack ? View.GONE : View.VISIBLE);
+                        mIvSearch.setVisibility(mIsTvEditBack ? View.VISIBLE : View.GONE);
+                        mIsTvEditBack = !mIsTvEditBack;
+                        // mCurrentIndex + 20  (20 、22、33)表示有编辑状态被打开，返回时需要先关闭编辑状态。
+                        // SpUtil.setDetailsFlag(this, mCurrentIndex + 20);  处理编辑状态返回的另一种方案,
+                        // 和详情状态分开处理，在handleDetailsBack()加一个判断就可以了。
+                    }
+                }
+                break;
+            case R.id.tv_edit_delete:
+                // 删除所选的条目 mCurrentIndex + 10  (10 、12 、13  有编辑的页面)
+                List<PlayListBean> beanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).list();
+                if (beanList.size() > 0) {
+                    mBus.post(new EditBean(mCurrentIndex + 10));
+                    mIvSearch.setVisibility(View.VISIBLE);
+                    mTvEditDelete.setVisibility(View.GONE);
+//                    SpUtil.setDetailsFlag(this,Constants.NUMBER_ZOER);
+                    mTvEdit.setText(getResources().getString(R.string.tv_edit));
+                }
+                break;
+            case R.id.tv_music_toolbar_title:
+                switchMusicControlBar();
+                break;
+            case R.id.iv_search:
+                Intent intent = new Intent(this, SearchActivity.class);
+                intent.putExtra("musicBean", mCurrentMusicBean);
+                startActivity(intent);
+                overridePendingTransition(R.anim.dialog_push_in, 0);
+                break;
+        }
+    }
+
     private void initListener() {
         mMusicNavigationBar.setOnNavigationbarListener((currentSelecteFlag, titleResourceId) -> {
             mTitleResourceId = titleResourceId;
@@ -192,17 +244,19 @@ public class MusicActivity
                     break;
                 case Constants.NUMBER_TWO:
                     mTvMusicToolbarTitle.setText(titleResourceId);
+                    mTvEdit.setVisibility(View.VISIBLE);
                     break;
                 case Constants.NUMBER_FOUR:
                     mTvEdit.setVisibility(View.GONE);
                     mTvEditDelete.setVisibility(View.GONE);
                     mTvMusicToolbarTitle.setText(titleResourceId);
+                    mIvSearch.setVisibility(View.VISIBLE);
                     break;
                 default:
                     mTvEdit.setVisibility(View.VISIBLE);
-                    changeToolBarTitle(currentSelecteFlag);
                     break;
             }
+            changeToolBarTitle(currentSelecteFlag);
             mCurrentIndex = currentSelecteFlag;
             mMusicViewPager.setCurrentItem(currentSelecteFlag, false);
         });
@@ -560,57 +614,6 @@ public class MusicActivity
         return audioBinder;
     }
 
-    //TODO
-    @OnClick({R.id.tv_edit, R.id.tv_music_toolbar_title, R.id.iv_search, R.id.tv_edit_delete})
-    public void onClick(View v) {
-        switch (v.getId()) {
-            default:
-                break;
-            case R.id.tv_edit:
-                if (mIsTvEditBack) {
-                    // 有详情页面被打开，需要做返回操作
-                    int detailFlag = SpUtil.getDetailFlag(this);
-                    if (detailFlag > Constants.NUMBER_ZOER) {
-                        mBus.post(new DetailsFlagBean(detailFlag));
-                        mTvMusicToolbarTitle.setText(mTitleResourceId);
-                        // 搜索和编辑
-                        mTvEditDelete.setVisibility(View.GONE);
-                        mIvSearch.setVisibility(View.VISIBLE);
-                        mIsEditStatus = !mIsEditStatus;
-                        mIsTvEditBack = false;
-                    }
-                } else {
-                    mBus.post(new EditBean(mCurrentIndex));
-                    mIvSearch.setVisibility(mIsEditStatus ? View.VISIBLE : View.GONE);
-                    mTvEditDelete.setVisibility(mIsEditStatus ? View.GONE : View.VISIBLE);
-                    mIsEditStatus = !mIsEditStatus;
-                    // mCurrentIndex + 20  (20 、22、33)表示有编辑状态被打开，返回时需要先关闭编辑状态。
-                    // SpUtil.setDetailsFlag(this, mCurrentIndex + 20);  处理编辑状态返回的另一种方案,
-                    // 和详情状态分开处理，在handleDetailsBack()加一个判断就可以了。
-                }
-                break;
-            case R.id.tv_edit_delete:
-                // 删除所选的条目
-                List<PlayListBean> beanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).list();
-                if (beanList.size() > 0) {
-                    mBus.post(new EditBean(mCurrentIndex + 10));
-                    mIvSearch.setVisibility(View.VISIBLE);
-                    mTvEditDelete.setVisibility(View.GONE);
-                }
-                mTvEdit.setText(getResources().getString(R.string.tv_edit));
-                break;
-            case R.id.tv_music_toolbar_title:
-                switchMusicControlBar();
-                break;
-            case R.id.iv_search:
-                Intent intent = new Intent(this, SearchActivity.class);
-                intent.putExtra("musicBean", mCurrentMusicBean);
-                startActivity(intent);
-                overridePendingTransition(R.anim.dialog_push_in, 0);
-                break;
-        }
-    }
-
     private class AudioServiceConnection
             implements ServiceConnection {
         @Override
@@ -676,11 +679,20 @@ public class MusicActivity
             // 搜索和编辑
             mTvEditDelete.setVisibility(View.GONE);
             mIvSearch.setVisibility(View.VISIBLE);
-            mIsEditStatus = !mIsEditStatus;
             mIsTvEditBack = false;
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void deleteSelected() {
+        new Thread(() -> {
+            List<PlayListBean> beanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).build().list();
+            for (PlayListBean playListBean : beanList) {
+                playListBean.setSelected(false);
+                mPlayListDao.update(playListBean);
+            }
+        }).start();
     }
 
     @Override
@@ -708,7 +720,6 @@ public class MusicActivity
             SpUtil.setMusicPlayState(this, mPlayState);
         }
         unbindAudioService();
-//        stopService(new Intent(this, AudioPlayService.class));
     }
 
 
