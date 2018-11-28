@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import com.squareup.leakcanary.LeakCanary;
+import com.yibao.music.model.greendao.AlbumInfoDao;
 import com.yibao.music.model.greendao.DaoMaster;
 import com.yibao.music.model.greendao.DaoSession;
 import com.yibao.music.model.greendao.DaoUpgradeHelper;
@@ -84,5 +85,9 @@ public class MusicApplication
 
     public PlayListBeanDao getPlayListDao() {
         return mDaoSession.getPlayListBeanDao();
+    }
+
+    public AlbumInfoDao getAlbumDao() {
+        return mDaoSession.getAlbumInfoDao();
     }
 }

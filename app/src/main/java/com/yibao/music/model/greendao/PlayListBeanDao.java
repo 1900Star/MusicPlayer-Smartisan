@@ -44,7 +44,7 @@ public class PlayListBeanDao extends AbstractDao<PlayListBean, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"PLAY_LIST_BEAN\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ," + // 0: id
                 "\"TITLE\" TEXT," + // 1: title
                 "\"ADD_TIME\" INTEGER," + // 2: addTime
                 "\"SONG_COUNT\" INTEGER NOT NULL ," + // 3: songCount

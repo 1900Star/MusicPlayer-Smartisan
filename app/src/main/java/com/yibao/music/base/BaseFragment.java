@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.greendao.AlbumInfoDao;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.RxBus;
@@ -30,7 +31,7 @@ public abstract class BaseFragment extends Fragment {
     protected String tag;
     protected Activity mActivity;
     protected RxBus mBus;
-    protected MusicBeanDao mMusicBeanDao;
+    protected final MusicBeanDao mMusicBeanDao;
     protected final PlayListBeanDao mPlayListDao;
     protected CompositeDisposable mDisposable;
     protected String mClassName;
@@ -38,12 +39,12 @@ public abstract class BaseFragment extends Fragment {
     protected Context mContext;
     protected Unbinder unbinder;
     protected List<MusicBean> mSongList;
+    protected final AlbumInfoDao mAlbumDao;
 
     protected BaseFragment() {
         mMusicBeanDao = MusicApplication.getIntstance().getMusicDao();
         mPlayListDao = MusicApplication.getIntstance().getPlayListDao();
-
-
+        mAlbumDao = MusicApplication.getIntstance().getAlbumDao();
     }
 
     @Override

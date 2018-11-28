@@ -4,6 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Unique;
+import org.greenrobot.greendao.annotation.Generated;
+
 /**
  * @项目名： ArtisanMusic
  * @包名： com.yibao.music.model
@@ -13,8 +18,11 @@ import android.support.annotation.NonNull;
  * @创建时间: 2018/2/8 18:13
  * @描述： {TODO}
  */
-
+@Entity
 public class AlbumInfo implements Parcelable, Comparable<AlbumInfo> {
+    @Id(autoincrement = true)
+    @Unique
+    private Long id;
     private String albumName;
     private String artist;
     private Long albumId;
@@ -24,7 +32,13 @@ public class AlbumInfo implements Parcelable, Comparable<AlbumInfo> {
     private int year;
     private boolean mSelected;
 
-    private AlbumInfo(Parcel in) {
+
+    protected AlbumInfo(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readLong();
+        }
         albumName = in.readString();
         artist = in.readString();
         if (in.readByte() == 0) {
@@ -36,6 +50,7 @@ public class AlbumInfo implements Parcelable, Comparable<AlbumInfo> {
         firstChar = in.readString();
         songName = in.readString();
         year = in.readInt();
+        mSelected = in.readByte() != 0;
     }
 
     public static final Creator<AlbumInfo> CREATOR = new Creator<AlbumInfo>() {
@@ -67,6 +82,21 @@ public class AlbumInfo implements Parcelable, Comparable<AlbumInfo> {
     }
 
     public AlbumInfo() {
+    }
+
+    @Generated(hash = 643847150)
+    public AlbumInfo(Long id, String albumName, String artist, Long albumId,
+            int songCount, String firstChar, String songName, int year,
+            boolean mSelected) {
+        this.id = id;
+        this.albumName = albumName;
+        this.artist = artist;
+        this.albumId = albumId;
+        this.songCount = songCount;
+        this.firstChar = firstChar;
+        this.songName = songName;
+        this.year = year;
+        this.mSelected = mSelected;
     }
 
     public String getAlbumName() {
@@ -125,6 +155,13 @@ public class AlbumInfo implements Parcelable, Comparable<AlbumInfo> {
 
     }
 
+    public boolean isSelected() {
+        return mSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        mSelected = selected;
+    }
 
     @Override
     public int describeContents() {
@@ -132,58 +169,41 @@ public class AlbumInfo implements Parcelable, Comparable<AlbumInfo> {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(albumName);
-        parcel.writeString(artist);
-        if (albumId == null) {
-            parcel.writeByte((byte) 0);
+    public void writeToParcel(Parcel dest, int flags) {
+        if (id == null) {
+            dest.writeByte((byte) 0);
         } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeLong(albumId);
+            dest.writeByte((byte) 1);
+            dest.writeLong(id);
         }
-        parcel.writeInt(songCount);
-        parcel.writeString(firstChar);
-        parcel.writeString(songName);
-        parcel.writeInt(year);
+        dest.writeString(albumName);
+        dest.writeString(artist);
+        if (albumId == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(albumId);
+        }
+        dest.writeInt(songCount);
+        dest.writeString(firstChar);
+        dest.writeString(songName);
+        dest.writeInt(year);
+        dest.writeByte((byte) (mSelected ? 1 : 0));
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        AlbumInfo albumInfo = (AlbumInfo) o;
-
-        if (songCount != albumInfo.songCount) return false;
-        if (year != albumInfo.year) return false;
-        if (albumName != null ? !albumName.equals(albumInfo.albumName) : albumInfo.albumName != null)
-            return false;
-        if (artist != null ? !artist.equals(albumInfo.artist) : albumInfo.artist != null)
-            return false;
-        if (albumId != null ? !albumId.equals(albumInfo.albumId) : albumInfo.albumId != null)
-            return false;
-        if (firstChar != null ? !firstChar.equals(albumInfo.firstChar) : albumInfo.firstChar != null)
-            return false;
-        return songName != null ? songName.equals(albumInfo.songName) : albumInfo.songName == null;
+    public Long getId() {
+        return this.id;
     }
 
-    @Override
-    public int hashCode() {
-        int result = albumName != null ? albumName.hashCode() : 0;
-        result = 31 * result + (artist != null ? artist.hashCode() : 0);
-        result = 31 * result + (albumId != null ? albumId.hashCode() : 0);
-        result = 31 * result + songCount;
-        result = 31 * result + (firstChar != null ? firstChar.hashCode() : 0);
-        result = 31 * result + (songName != null ? songName.hashCode() : 0);
-        result = 31 * result + year;
-        return result;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public boolean isSelected() {
-        return mSelected;
+    public boolean getMSelected() {
+        return this.mSelected;
     }
 
-    public void setSelected(boolean selected) {
-        mSelected = selected;
+    public void setMSelected(boolean mSelected) {
+        this.mSelected = mSelected;
     }
 }

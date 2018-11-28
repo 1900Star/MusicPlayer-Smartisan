@@ -8,6 +8,7 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Transient;
+import org.greenrobot.greendao.annotation.Unique;
 
 /**
  * @ Author: Luoshipeng
@@ -19,6 +20,7 @@ import org.greenrobot.greendao.annotation.Transient;
 @Entity
 public class PlayListBean implements Parcelable, Comparable<PlayListBean>{
     @Id(autoincrement = true)
+    @Unique
     private Long id;
     private String title;
     private Long addTime;

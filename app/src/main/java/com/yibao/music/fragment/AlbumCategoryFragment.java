@@ -129,13 +129,18 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
 
     // 取消所有已选
     private void cancelAllSelected() {
-        List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).build().list();
-        Collections.sort(musicBeanList);
-        for (MusicBean musicBean : musicBeanList) {
-            mMusicBeanDao.delete(musicBean);
+        List<AlbumInfo> albumInfoList = mAlbumDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).build().list();
+        Collections.sort(albumInfoList);
+        for (AlbumInfo albumInfo : albumInfoList) {
+            mAlbumDao.delete(albumInfo);
         }
         mSelectCount = 0;
-//        mAlbumAdapter.setNewData(getPlayList());
+        mAlbumAdapter.setNewData(getAlbumList());
+    }
+
+    private List<AlbumInfo> getAlbumList() {
+        return mAlbumDao.queryBuilder().list();
+
     }
 
     private void putFragToMap() {
