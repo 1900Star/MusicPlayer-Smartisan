@@ -21,7 +21,6 @@ import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.SpUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +29,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -168,12 +166,12 @@ public class PlayListFragment extends BaseMusicFragment {
         }
     }
 
-    private void putFragToMap() {
-        SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_EIGHT);
-        if (!mDetailsViewMap.containsKey(mClassName)) {
-            mDetailsViewMap.put(mClassName, this);
-        }
-    }
+//    private void putFragToMap() {
+//        SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_EIGHT);
+//        if (!mDetailsViewMap.containsKey(mClassName)) {
+//            mDetailsViewMap.put(mClassName, this);
+//        }
+//    }
 
     // 取消所有已选
     private void cancelAllSelected() {
@@ -196,7 +194,7 @@ public class PlayListFragment extends BaseMusicFragment {
         } else {
             mLlAddNewPlayList.setVisibility(View.INVISIBLE);
             mDetailsView.setVisibility(View.VISIBLE);
-            putFragToMap();
+            putFragToMap(Constants.NUMBER_EIGHT,mClassName);
             detailsViewTitle = title;
             changeToolBarTitle(title, isShowDetailsView);
         }
@@ -240,7 +238,7 @@ public class PlayListFragment extends BaseMusicFragment {
 
     private void closeEditStatus() {
         if (isItemSelectStatus) {
-            putFragToMap();
+            putFragToMap(Constants.NUMBER_EIGHT,mClassName);
         } else {
             mDetailsViewMap.remove(mClassName);
             mAdapter.setItemSelectStatus(isItemSelectStatus);

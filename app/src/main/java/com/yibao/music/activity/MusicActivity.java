@@ -190,8 +190,29 @@ public class MusicActivity
                 break;
             case R.id.tv_edit:
                 if (mCurrentIndex == 0) {
-                    changeEditAndSearch(mIsPlayListBack);
-                    mIsPlayListBack = !mIsPlayListBack;
+//                    changeEditAndSearch(mIsPlayListBack);
+//                    mIsPlayListBack = !mIsPlayListBack;
+                    if (mIsPlayListBack) {
+                        // 有详情页面被打开，需要做返回操作
+                        int detailFlag = SpUtil.getDetailFlag(this);
+                        if (detailFlag > Constants.NUMBER_ZOER) {
+                            mBus.post(new DetailsFlagBean(detailFlag));
+                            mTvMusicToolbarTitle.setText(mTitleResourceId);
+                            // 搜索和编辑
+                            mTvEditDelete.setVisibility(mIsPlayListBack ? View.GONE : View.VISIBLE);
+                            mIvSearch.setVisibility(mIsPlayListBack ? View.VISIBLE : View.GONE);
+                            mIsPlayListBack = !mIsPlayListBack;
+                        }
+                    } else {
+                        mBus.post(new EditBean(mCurrentIndex));
+                        mTvEditDelete.setVisibility(mIsPlayListBack ? View.GONE : View.VISIBLE);
+                        mIvSearch.setVisibility(mIsPlayListBack ? View.VISIBLE : View.GONE);
+                        mIsPlayListBack = !mIsPlayListBack;
+                        // mCurrentIndex + 20  (20 、22、33)表示有编辑状态被打开，返回时需要先关闭编辑状态。
+                        // SpUtil.setDetailsFlag(this, mCurrentIndex + 20);  处理编辑状态返回的另一种方案,
+                        // 和详情状态分开处理，在handleDetailsBack()加一个判断就可以了。
+                    }
+
                 } else if (mCurrentIndex == 2) {
                     LogUtil.d("=========== AppBar 歌曲编辑  " + SpUtil.getDetailFlag(this));
                     if (mIsSongPageBack) {

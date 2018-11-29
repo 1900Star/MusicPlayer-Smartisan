@@ -142,7 +142,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
 
     private void closeEditStatus() {
         if (isItemSelectStatus) {
-            putFragToMap();
+            putFragToMap(Constants.NUMBER_ELEVEN, mClassName);
         } else {
             mDetailsViewMap.remove(mClassName);
             mSongAdapter.setItemSelectStatus(isItemSelectStatus);
@@ -183,16 +183,8 @@ public class SongCategoryFragment extends BaseMusicFragment {
         mSongAdapter.setNewData(getSongList());
     }
 
-    private void putFragToMap() {
-        SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_ELEVEN);
-        if (!mDetailsViewMap.containsKey(mClassName)) {
-            mDetailsViewMap.put(mClassName, this);
-        }
-    }
-
     private List<MusicBean> getSongList() {
         List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().list();
-//        Collections.sort(musicBeanList);
         return MusicListUtil.sortMusicAbc(musicBeanList);
     }
 

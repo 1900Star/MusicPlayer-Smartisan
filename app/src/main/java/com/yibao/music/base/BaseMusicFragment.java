@@ -95,6 +95,12 @@ public abstract class BaseMusicFragment extends BaseFragment {
             ((OnMusicItemClickListener) getActivity()).startMusicService(position);
         }
     }
+    protected void putFragToMap(int detailFlag,String fragmentName) {
+        SpUtil.setDetailsFlag(mActivity, detailFlag);
+        if (!mDetailsViewMap.containsKey(fragmentName)) {
+            mDetailsViewMap.put(fragmentName, this);
+        }
+    }
 
     @Override
     public void onDestroyView() {
