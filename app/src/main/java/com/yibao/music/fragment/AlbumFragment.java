@@ -74,6 +74,7 @@ public class AlbumFragment extends BaseMusicFragment {
     LinearLayout mAlbumContentView;
     public static String detailsViewTitle;
     public static boolean isShowDetailsView = false;
+    private AlbumInfo mAlbumInfo;
 
     @Nullable
     @Override
@@ -101,7 +102,7 @@ public class AlbumFragment extends BaseMusicFragment {
         mDisposable.add(mBus.toObserverable(AlbumInfo.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::openDetailsView));
+                .subscribe(this::showDetailsView));
     }
 
     @OnClick({R.id.iv_album_category_random_paly,
@@ -123,22 +124,23 @@ public class AlbumFragment extends BaseMusicFragment {
         }
     }
 
-    private void openDetailsView(AlbumInfo bean) {
+    private void showDetailsView(AlbumInfo albumInfo) {
+        mAlbumInfo = albumInfo;
         if (isShowDetailsView) {
             mDetailsView.setVisibility(View.GONE);
             detailsViewTitle = null;
         } else {
             mDetailsView.setVisibility(View.VISIBLE);
-            List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(bean.getAlbumName())).build().list();
+            List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(albumInfo.getAlbumName())).build().list();
             // DetailsView播放音乐需要的参数
-            mDetailsView.setDataFlag(mFragmentManager, list.size(), bean.getAlbumName(), Constants.NUMBER_TWO);
+            mDetailsView.setDataFlag(mFragmentManager, list.size(), albumInfo.getAlbumName(), Constants.NUMBER_TWO);
             SearchDetailsAdapter adapter = new SearchDetailsAdapter(getActivity(), list, Constants.NUMBER_TWO);
-            mDetailsView.setAdapter(getActivity(), Constants.NUMBER_TWO, bean, adapter);
+            mDetailsView.setAdapter(getActivity(), Constants.NUMBER_TWO, albumInfo, adapter);
             if (!mDetailsViewMap.containsKey(mClassName)) {
                 mDetailsViewMap.put(mClassName, this);
             }
-            detailsViewTitle = bean.getAlbumName();
-            changeToolBarTitle(bean.getAlbumName(), true);
+            detailsViewTitle = albumInfo.getAlbumName();
+            changeToolBarTitle(albumInfo.getAlbumName(), true);
         }
         SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_TEN);
         changeTvEditText(getResources().getString(isShowDetailsView ? R.string.tv_edit : R.string.back));
@@ -148,7 +150,7 @@ public class AlbumFragment extends BaseMusicFragment {
     @Override
     protected void handleDetailsBack(int detailFlag) {
         if (detailFlag == Constants.NUMBER_TEN) {
-            SpUtil.setDetailsFlag(mContext, Constants.NUMBER_TEN);
+            SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_TEN);
             mAlbumContentView.setVisibility(View.VISIBLE);
             mDetailsView.setVisibility(View.GONE);
             mDetailsViewMap.remove(mClassName);

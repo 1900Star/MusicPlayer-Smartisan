@@ -11,10 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yibao.music.R;
+import com.yibao.music.base.BaseFragment;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.SpUtil;
+
+import java.util.HashMap;
 
 
 /**
@@ -117,7 +120,7 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
                 mMusicBarStylelistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarAboutLl.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 // 没有详情页面，直接返回桌面。
-                SpUtil.setDetailsFlag(getContext(), Constants.NUMBER_ZOER);
+                SpUtil.setDetailsFlag(getContext(), 12);
                 break;
             default:
                 break;
@@ -135,8 +138,11 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
      *                       0 表示交返回事件还给Activity处理
      */
     private void setDetailFragmentFlag(String className, int detailsViewKey) {
-        if (BaseMusicFragment.mDetailsViewMap.containsKey(className)) {
-            SpUtil.setDetailsFlag(getContext(), detailsViewKey);
+        HashMap<String, BaseFragment> detailsViewMap = BaseMusicFragment.mDetailsViewMap;
+        if (detailsViewMap != null) {
+            if (detailsViewMap.containsKey(className) || detailsViewMap.containsKey(Constants.FRAGMENT_ALBUM)) {
+                SpUtil.setDetailsFlag(getContext(), detailsViewKey);
+            }
         }
     }
 

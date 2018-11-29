@@ -48,6 +48,7 @@ public class ArtistFragment extends BaseMusicFragment {
     public static String detailsViewTitle;
     private List<ArtistInfo> mArtistList;
     public static boolean isShowDetailsView = false;
+    private ArtistInfo mArtistInfo;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,24 +78,27 @@ public class ArtistFragment extends BaseMusicFragment {
 
     }
 
-    private void openDetailsView(ArtistInfo bean) {
+    private void openDetailsView(ArtistInfo artistInfo) {
+        mArtistInfo = artistInfo;
         if (isShowDetailsView) {
+            mDetailsViewMap.remove(mClassName);
             mDetailsView.setVisibility(View.GONE);
+            mMusicView.setVisibility(View.VISIBLE);
             detailsViewTitle = null;
         } else {
             mDetailsView.setVisibility(View.VISIBLE);
 
-            List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(bean.getArtist())).build().list();
+            List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(artistInfo.getArtist())).build().list();
             // DetailsView播放音乐需要的参数
-            mDetailsView.setDataFlag(mFragmentManager, list.size(), bean.getArtist(), Constants.NUMBER_ONE);
+            mDetailsView.setDataFlag(mFragmentManager, list.size(), artistInfo.getArtist(), Constants.NUMBER_ONE);
             SearchDetailsAdapter adapter = new SearchDetailsAdapter(getActivity(), list, Constants.NUMBER_ONE);
-            mDetailsView.setAdapter(getActivity(), Constants.NUMBER_ONE, bean, adapter);
+            mDetailsView.setAdapter(getActivity(), Constants.NUMBER_ONE, artistInfo, adapter);
             SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_NINE);
             if (!mDetailsViewMap.containsKey(mClassName)) {
                 mDetailsViewMap.put(mClassName, this);
             }
-            detailsViewTitle = bean.getAlbumName();
-            changeToolBarTitle(bean.getAlbumName(), isShowDetailsView);
+            detailsViewTitle = artistInfo.getAlbumName();
+            changeToolBarTitle(artistInfo.getAlbumName(), isShowDetailsView);
         }
         isShowDetailsView = !isShowDetailsView;
     }
@@ -103,10 +107,7 @@ public class ArtistFragment extends BaseMusicFragment {
     protected void handleDetailsBack(int detailFlag) {
         super.handleDetailsBack(detailFlag);
         if (detailFlag == Constants.NUMBER_NINE) {
-            mMusicView.setVisibility(View.VISIBLE);
-            mDetailsView.setVisibility(View.GONE);
-            mDetailsViewMap.remove(mClassName);
-            isShowDetailsView = !isShowDetailsView;
+            openDetailsView(mArtistInfo);
         }
     }
 

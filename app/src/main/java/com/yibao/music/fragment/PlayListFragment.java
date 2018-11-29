@@ -132,7 +132,7 @@ public class PlayListFragment extends BaseMusicFragment {
                 LogUtil.d("===========选中  " + mSelectCount);
                 mAdapter.notifyDataSetChanged();
             } else {
-                PlayListFragment.this.switchShowDetailsView(playListBean.getTitle());
+                PlayListFragment.this.showDetailsView(playListBean.getTitle());
             }
         });
         // 长按删除
@@ -187,8 +187,9 @@ public class PlayListFragment extends BaseMusicFragment {
         mAdapter.setNewData(getPlayList());
     }
 
-    private void switchShowDetailsView(String title) {
+    private void showDetailsView(String title) {
         if (isShowDetailsView) {
+            mDetailsViewMap.remove(mClassName);
             mLlAddNewPlayList.setVisibility(View.VISIBLE);
             mDetailsView.setVisibility(View.GONE);
             detailsViewTitle = null;
@@ -211,8 +212,6 @@ public class PlayListFragment extends BaseMusicFragment {
             case R.id.ll_add_new_play_list:
                 String tvHint = getResources().getString(R.string.not_name_hint);
                 AddListDialog.newInstance(1, tvHint).show(mActivity.getFragmentManager(), "addList");
-//                LogUtil.d("====== 选中长度   " + mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).build().list().size());
-//                LogUtil.d("====== 总长度   " + getPlayList().size());
                 break;
             default:
                 break;
@@ -225,7 +224,6 @@ public class PlayListFragment extends BaseMusicFragment {
 
     @Override
     protected void handleDetailsBack(int detailFlag) {
-        super.handleDetailsBack(detailFlag);
         changeTvEditText(getResources().getString(R.string.tv_edit));
         if (detailFlag == Constants.NUMBER_EIGHT) {
             if (!isItemSelectStatus) {
@@ -233,13 +231,11 @@ public class PlayListFragment extends BaseMusicFragment {
                     closeEditStatus();
                 }
             } else {
-                mDetailsView.setVisibility(View.GONE);
-                mLlAddNewPlayList.setVisibility(View.VISIBLE);
-                mDetailsViewMap.remove(mClassName);
-                isShowDetailsView = !isShowDetailsView;
+                showDetailsView(detailsViewTitle);
             }
 
         }
+        super.handleDetailsBack(detailFlag);
     }
 
     private void closeEditStatus() {

@@ -10,9 +10,11 @@ import android.view.ViewGroup;
 import com.yibao.music.R;
 import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.base.BaseMusicFragment;
+import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.FavoriteBottomSheetDialog;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
@@ -125,6 +127,15 @@ public class SongCategoryFragment extends BaseMusicFragment {
     protected void changeEditStatus(int currentIndex) {
         if (currentIndex == Constants.NUMBER_TWO) {
             closeEditStatus();
+        } else if (currentIndex == 12) {
+            // 删除已选择的条目
+            List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsSelected.eq(true)).build().list();
+            for (MusicBean musicBean : musicBeanList) {
+                mMusicBeanDao.delete(musicBean);
+            }
+            mSongAdapter.setItemSelectStatus(false);
+            mSongAdapter.setNewData(getSongList());
+            changeTvEditVisibility();
         }
     }
 
@@ -144,6 +155,13 @@ public class SongCategoryFragment extends BaseMusicFragment {
         }
     }
 
+    private void changeTvEditVisibility() {
+        if (mContext instanceof UpdataTitleListener) {
+            ((UpdataTitleListener) mContext).updataTitle(getResources().getString(R.string.tv_edit), false);
+        }
+
+    }
+
     @Override
     protected void handleDetailsBack(int detailFlag) {
         if (detailFlag == 11) {
@@ -156,13 +174,13 @@ public class SongCategoryFragment extends BaseMusicFragment {
 
     // 取消所有已选
     private void cancelAllSelected() {
-        List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).build().list();
+        List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsSelected.eq(true)).build().list();
         Collections.sort(musicBeanList);
         for (MusicBean musicBean : musicBeanList) {
             mMusicBeanDao.delete(musicBean);
         }
         mSelectCount = 0;
-        mSongAdapter.setNewData(getPlayList());
+        mSongAdapter.setNewData(getSongList());
     }
 
     private void putFragToMap() {
@@ -172,10 +190,10 @@ public class SongCategoryFragment extends BaseMusicFragment {
         }
     }
 
-    private List<MusicBean> getPlayList() {
+    private List<MusicBean> getSongList() {
         List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().list();
-        Collections.sort(musicBeanList);
-        return musicBeanList;
+//        Collections.sort(musicBeanList);
+        return MusicListUtil.sortMusicAbc(musicBeanList);
     }
 
     public static SongFragment newInstance() {

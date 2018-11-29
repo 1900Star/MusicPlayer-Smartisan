@@ -36,7 +36,6 @@ public abstract class BaseMusicFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDetailsViewMap = new HashMap<>(6);
-
         initDetailsFlag();
     }
 
@@ -84,7 +83,7 @@ public abstract class BaseMusicFragment extends BaseFragment {
     /**
      * @param tvEdit 编辑按钮、返回列表按钮  显示Text
      */
-    protected void changeToolBarTitle(String tvEdit,boolean isShowDetail) {
+    protected void changeToolBarTitle(String tvEdit, boolean isShowDetail) {
         if (mContext instanceof UpdataTitleListener) {
             ((UpdataTitleListener) mContext).updataTitle(tvEdit, isShowDetail);
         }

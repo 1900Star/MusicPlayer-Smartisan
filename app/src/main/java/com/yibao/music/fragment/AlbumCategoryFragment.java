@@ -13,6 +13,7 @@ import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.greendao.AlbumInfoDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
@@ -129,13 +130,13 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
 
     // 取消所有已选
     private void cancelAllSelected() {
-        List<AlbumInfo> albumInfoList = mAlbumDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).build().list();
-        Collections.sort(albumInfoList);
-        for (AlbumInfo albumInfo : albumInfoList) {
-            mAlbumDao.delete(albumInfo);
-        }
-        mSelectCount = 0;
-        mAlbumAdapter.setNewData(getAlbumList());
+//        List<AlbumInfo> albumInfoList = mAlbumDao.queryBuilder().where(AlbumInfoDao.Properties.Id.eq(true)).build().list();
+//        Collections.sort(albumInfoList);
+//        for (AlbumInfo albumInfo : albumInfoList) {
+//            mAlbumDao.delete(albumInfo);
+//        }
+//        mSelectCount = 0;
+//        mAlbumAdapter.setNewData(getAlbumList());
     }
 
     private List<AlbumInfo> getAlbumList() {
