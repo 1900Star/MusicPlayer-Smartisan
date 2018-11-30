@@ -166,13 +166,6 @@ public class PlayListFragment extends BaseMusicFragment {
         }
     }
 
-//    private void putFragToMap() {
-//        SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_EIGHT);
-//        if (!mDetailsViewMap.containsKey(mClassName)) {
-//            mDetailsViewMap.put(mClassName, this);
-//        }
-//    }
-
     // 取消所有已选
     private void cancelAllSelected() {
         List<PlayListBean> playListBeanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).build().list();
