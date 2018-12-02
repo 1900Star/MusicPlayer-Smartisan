@@ -93,7 +93,6 @@ public class MusicView
             GridLayoutManager manager = new GridLayoutManager(context, Constants.NUMBER_THRRE);
             manager.setOrientation(GridLayoutManager.VERTICAL);
             mRecyclerView.setLayoutManager(manager);
-            mRecyclerView.setLayoutManager(manager);
         } else {
             mRecyclerView.setBackgroundColor(ColorUtil.rvBg);
             LinearLayoutManager manager = new LinearLayoutManager(context);

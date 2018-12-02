@@ -93,7 +93,7 @@
                         android:layout_marginStart="12dp"
                         android:layout_marginLeft="12dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/add_pla_list_selector"
+                        android:src="@drawable/add_play_list_selector"
                         tools:ignore="RtlHardcoded" />
 
                 </LinearLayout>

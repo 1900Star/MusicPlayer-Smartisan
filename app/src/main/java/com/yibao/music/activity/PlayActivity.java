@@ -21,6 +21,7 @@ import com.yibao.music.R;
 import com.yibao.music.base.BasePlayActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.fragment.dialogfrag.FavoriteBottomSheetDialog;
+import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
@@ -333,8 +334,10 @@ public class PlayActivity extends BasePlayActivity {
             case R.id.playing_song_album:
             case R.id.album_cover:
             case R.id.tv_lyrics:
-            case R.id.iv_lyrics_switch:
                 showLyrics();
+                break;
+            case R.id.iv_lyrics_switch:
+                MoreMenuBottomDialog.newInstance(mCurrenMusicInfo).getBottomDialog(this);
                 break;
             case R.id.iv_secreen_sun_switch:
                 screenAlwaysOnSwitch(mIvSecreenSunSwitch);
@@ -466,6 +469,7 @@ public class PlayActivity extends BasePlayActivity {
 
     /**
      * size 小于2表示没有歌词，5秒后自动关闭歌词画面。
+     *
      * @param lyricList list
      */
     public void closeLyricsView(ArrayList<MusicLyricBean> lyricList) {

@@ -1,5 +1,6 @@
 package com.yibao.music.base.factory;
 
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -7,6 +8,7 @@ import android.widget.LinearLayout;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.base.BaseRvAdapter;
+import com.yibao.music.util.Constants;
 
 /**
  * @项目名： BigGirl
@@ -38,14 +40,18 @@ public class RecyclerFactory {
 
         } else {
 
-            StaggeredGridLayoutManager.LayoutParams params = new StaggeredGridLayoutManager.LayoutParams(
-                    RecyclerView.LayoutParams.MATCH_PARENT,
-                    RecyclerView.LayoutParams.MATCH_PARENT);
-            StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(type,
-                    StaggeredGridLayoutManager.VERTICAL);
-            manager.setOrientation(StaggeredGridLayoutManager.VERTICAL);
+//            StaggeredGridLayoutManager.LayoutParams params = new StaggeredGridLayoutManager.LayoutParams(
+//                    RecyclerView.LayoutParams.MATCH_PARENT,
+//                    RecyclerView.LayoutParams.MATCH_PARENT);
+//            StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(type,
+//                    StaggeredGridLayoutManager.VERTICAL);
+//            manager.setOrientation(StaggeredGridLayoutManager.VERTICAL);
+//            recyclerView.setLayoutManager(manager);
+//            recyclerView.setLayoutParams(params);
+
+            GridLayoutManager manager = new GridLayoutManager(recyclerView.getContext(), type);
+            manager.setOrientation(GridLayoutManager.VERTICAL);
             recyclerView.setLayoutManager(manager);
-            recyclerView.setLayoutParams(params);
         }
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);

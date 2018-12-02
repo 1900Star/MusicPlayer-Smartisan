@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_bottom_sheet"
+    android:layout_width="90dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/more_menu_selector"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_more_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/favorite_yes" />
+
+    <TextView
+        android:id="@+id/tv_more_menu_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@color/tabbarTv"
+        android:textSize="@dimen/music_tabbar" />
+</LinearLayout>

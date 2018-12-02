@@ -23,6 +23,7 @@ import com.yibao.music.fragment.ArtistFragment;
 import com.yibao.music.fragment.PlayListFragment;
 import com.yibao.music.model.DetailsFlagBean;
 import com.yibao.music.model.EditBean;
+import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.PlayListBean;
@@ -54,6 +55,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author Stran
@@ -416,11 +418,9 @@ public class MusicActivity
         mQqControlBar.setOnPagerSelecteListener(position -> {
             MusicActivity.this.disposableQqLyric();
             int detailFlag = SpUtil.getDetailFlag(MusicActivity.this);
-            LogUtil.d("datailsFlag ===== " + detailFlag);
             if (detailFlag > 0) {
                 // 播放列表
                 if (detailFlag == Constants.NUMBER_EIGHT) {
-                    LogUtil.d("QqBar  PlayMusicFragment 页面");
                     // 艺术家
                 } else if (detailFlag == Constants.NUMBER_NINE) {
                     MusicActivity.this.startMusicServiceFlag(position, Constants.NUMBER_ONE, audioBinder.getMusicList().get(position).getArtist());
@@ -748,7 +748,37 @@ public class MusicActivity
 
         }
         openMusicPlayDialogFag();
+        moreMenu();
+    }
 
+    private void moreMenu() {
+        mCompositeDisposable.add(mBus.toObserverable(MoreMenuStatus.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(moreMenuStatus -> {
+                    MusicBean musicBean = moreMenuStatus.getMusicBean();
+                    switch (moreMenuStatus.getPosition()) {
+                        case Constants.NUMBER_ZOER:
+                            LogUtil.d("=============添加到播放列表");
+                            break;
+                        case Constants.NUMBER_ONE:
+                            LogUtil.d("=============加到播放队列");
+                            break;
+                        case Constants.NUMBER_TWO:
+                            LogUtil.d("=============喜欢");
+                            audioBinder.updataFavorite();
+                            checkCurrentSongIsFavorite(musicBean, mQqControlBar, mSmartisanControlBar);
+                            break;
+                        case Constants.NUMBER_THRRE:
+                            LogUtil.d("=============编辑");
+                            break;
+                        case Constants.NUMBER_FOUR:
+                            LogUtil.d("=============删除");
+                            break;
+                        default:
+                            break;
+                    }
+                }));
     }
 
     @Override

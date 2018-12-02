@@ -15,7 +15,6 @@ import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.PlayListBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.StringUtil;
@@ -98,7 +97,7 @@ public class SongAdapter
 
             songListViewHolder.mIvSongItemMenu.setOnClickListener(view -> {
                 if (mListener != null) {
-                    mListener.openClickMoerMenu();
+                    mListener.openClickMoerMenu(position,musicBean);
                 }
             });
             songListViewHolder.mItemSelect.setOnClickListener(v -> selectStatus(musicBean, songListViewHolder));
@@ -193,8 +192,10 @@ public class SongAdapter
     public interface OnOpenItemMoerMenuListener {
         /**
          * 更多菜单
+         * @param position
+         * @param musicBean
          */
-        void openClickMoerMenu();
+        void openClickMoerMenu(int position, MusicBean musicBean);
     }
 
 }

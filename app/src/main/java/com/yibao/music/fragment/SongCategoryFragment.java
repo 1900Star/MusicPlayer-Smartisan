@@ -11,11 +11,11 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.UpdataTitleListener;
-import com.yibao.music.fragment.dialogfrag.FavoriteBottomSheetDialog;
+import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
+import com.yibao.music.model.EditBean;
+import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
@@ -27,6 +27,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @项目名： ArtisanMusic
@@ -72,7 +75,9 @@ public class SongCategoryFragment extends BaseMusicFragment {
                 SpUtil.setNewMusicFlag(mActivity, 0);
             }
         }
+
     }
+
 
 
     @Nullable
@@ -86,7 +91,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
     }
 
     private void initListener() {
-        mSongAdapter.setOnItemMenuListener(() -> FavoriteBottomSheetDialog.newInstance().getBottomDialog(mActivity));
+        mSongAdapter.setOnItemMenuListener((int position, MusicBean musicBean) -> MoreMenuBottomDialog.newInstance(musicBean).getBottomDialog(mActivity));
         mSongAdapter.setItemListener((bean, isEditStatus) -> {
             if (isEditStatus) {
                 if (bean.isSelected()) {
