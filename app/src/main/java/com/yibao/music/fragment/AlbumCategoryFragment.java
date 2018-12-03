@@ -66,13 +66,8 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
         mMusicView.setAdapter(mActivity, mPosition == 0 ? 3 : 4, mPosition == 0, mAlbumAdapter);
         mAlbumAdapter.setItemListener((bean, isEditStatus) -> {
             if (isEditStatus) {
-                if (bean.isSelected()) {
-                    mSelectCount--;
-                    bean.setSelected(false);
-                } else {
-                    mSelectCount++;
-                    bean.setSelected(true);
-                }
+                mSelectCount = bean.isSelected() ? mSelectCount-- : mSelectCount++;
+                bean.setSelected(!bean.isSelected());
                 LogUtil.d("=========== album list 选中  " + mSelectCount);
                 mAlbumAdapter.notifyDataSetChanged();
             } else {

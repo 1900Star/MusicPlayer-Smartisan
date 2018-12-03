@@ -12,6 +12,7 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +102,38 @@ public class MusicListUtil {
         LogUtil.d("歌曲数量 ========== " + musicInfos.size());
         return musicInfos;
     }
+
+    /**
+     * 按添加时间排序
+     *
+     * @param musicList c
+     */
+    public static List<MusicBean> sortFrequency(List<MusicBean> musicList) {
+        Collections.sort(musicList, MusicListUtil::getCompareFlag);
+        return musicList;
+    }
+
+    private static int getCompareFlag(MusicBean m1, MusicBean m2) {
+        int value;
+        if (m1 == m2) {
+            return 0;
+        }
+        if (m1 == null) {
+            return -1;
+        }
+        if (m2 == null) {
+            return 1;
+        }
+        if (m1.equals(m2)) {
+            return 0;
+        }
+        value = Float.compare(m2.getPlayFrequency(), m1.getPlayFrequency());
+        if (value != 0) {
+            return value;
+        }
+        return m1.hashCode() - m2.hashCode();
+    }
+
 
     /**
      * 按添加时间排序

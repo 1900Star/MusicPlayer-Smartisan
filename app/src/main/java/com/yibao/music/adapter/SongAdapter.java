@@ -41,18 +41,21 @@ public class SongAdapter
 {
     private Context mContext;
     private int mIsShowStickyView;
+    private int mScroeAndfrequnecyFlag;
     private OnOpenItemMoerMenuListener mListener;
 
     /**
-     * @param context          c
-     * @param list             l
-     * @param isShowStickyView 控制列表的StickyView是否显示，0 显示 ，1 ：不显示
-     *                         parm isArtistList     用来控制音乐列表和艺术家列表的显示
+     * @param context               c
+     * @param list                  l
+     * @param isShowStickyView      控制列表的StickyView是否显示，0 显示 ，1 ：不显示
+     *                              parm isArtistList     用来控制音乐列表和艺术家列表的显示
+     * @param scroeAndfrequnecyFlag 显示评分和播放次数 0 都不显示 ，1显示评分 ，2 显示播放次数
      */
-    public SongAdapter(Context context, List<MusicBean> list, int isShowStickyView) {
+    public SongAdapter(Context context, List<MusicBean> list, int isShowStickyView, int scroeAndfrequnecyFlag) {
         super(list);
         this.mContext = context;
         this.mIsShowStickyView = isShowStickyView;
+        this.mScroeAndfrequnecyFlag = scroeAndfrequnecyFlag;
     }
 
 
@@ -74,6 +77,10 @@ public class SongAdapter
         if (holder instanceof SongListViewHolder) {
             SongListViewHolder songListViewHolder = (SongListViewHolder) holder;
             int position = holder.getAdapterPosition();
+            if (mScroeAndfrequnecyFlag == Constants.NUMBER_TWO) {
+                songListViewHolder.mTvFrequency.setVisibility(View.VISIBLE);
+                songListViewHolder.mTvFrequency.setText(String.valueOf(musicBean.getPlayFrequency()));
+            }
             songListViewHolder.mItemSelect.setVisibility(isSelectStatus ? View.VISIBLE : View.GONE);
             ImageUitl.customLoadPic(mContext, StringUtil.getAlbulm(musicBean.getAlbumId()), R.drawable.noalbumcover_120, songListViewHolder.mSongAlbum);
             songListViewHolder.mSongArtistName.setText(musicBean.getArtist());
@@ -91,13 +98,12 @@ public class SongAdapter
                     songListViewHolder.mTvStickyView.setVisibility(View.VISIBLE);
                 }
             } else {
-
                 songListViewHolder.mTvStickyView.setVisibility(View.GONE);
             }
 
             songListViewHolder.mIvSongItemMenu.setOnClickListener(view -> {
                 if (mListener != null) {
-                    mListener.openClickMoerMenu(position,musicBean);
+                    mListener.openClickMoerMenu(position, musicBean);
                 }
             });
             songListViewHolder.mItemSelect.setOnClickListener(v -> selectStatus(musicBean, songListViewHolder));
@@ -169,6 +175,10 @@ public class SongAdapter
         ImageView mSongPlayFlag;
         @BindView(R.id.song_name)
         TextView mSongName;
+        @BindView(R.id.iv_star)
+        ImageView mMusicStar;
+        @BindView(R.id.tv_frequency)
+        TextView mTvFrequency;
         @BindView(R.id.song_artist_name)
         TextView mSongArtistName;
         @BindView(R.id.ll_music_item)
@@ -192,6 +202,7 @@ public class SongAdapter
     public interface OnOpenItemMoerMenuListener {
         /**
          * 更多菜单
+         *
          * @param position
          * @param musicBean
          */

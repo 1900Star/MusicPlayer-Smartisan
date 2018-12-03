@@ -118,16 +118,9 @@ public class PlayListFragment extends BaseMusicFragment {
     private void initListener() {
         mAdapter.setItemListener((playListBean, isEditStatus) -> {
             if (isEditStatus) {
-                if (playListBean.isSelected()) {
-                    mSelectCount--;
-                    playListBean.setSelected(false);
-                    mPlayListDao.update(playListBean);
-                } else {
-                    mSelectCount++;
-                    playListBean.setSelected(true);
-                    mPlayListDao.update(playListBean);
-                }
-                LogUtil.d("===========选中  " + mSelectCount);
+                mSelectCount = playListBean.isSelected() ? mSelectCount-- : mSelectCount++;
+                playListBean.setIsSelected(!playListBean.isSelected());
+                mPlayListDao.update(playListBean);
                 mAdapter.notifyDataSetChanged();
             } else {
                 PlayListFragment.this.showDetailsView(playListBean.getTitle());
@@ -187,7 +180,7 @@ public class PlayListFragment extends BaseMusicFragment {
         } else {
             mLlAddNewPlayList.setVisibility(View.INVISIBLE);
             mDetailsView.setVisibility(View.VISIBLE);
-            putFragToMap(Constants.NUMBER_EIGHT,mClassName);
+            putFragToMap(Constants.NUMBER_EIGHT, mClassName);
             detailsViewTitle = title;
             changeToolBarTitle(title, isShowDetailsView);
         }
@@ -231,7 +224,7 @@ public class PlayListFragment extends BaseMusicFragment {
 
     private void closeEditStatus() {
         if (isItemSelectStatus) {
-            putFragToMap(Constants.NUMBER_EIGHT,mClassName);
+            putFragToMap(Constants.NUMBER_EIGHT, mClassName);
         } else {
             mDetailsViewMap.remove(mClassName);
             mAdapter.setItemSelectStatus(isItemSelectStatus);

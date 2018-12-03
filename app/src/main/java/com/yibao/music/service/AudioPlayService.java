@@ -131,6 +131,9 @@ public class AudioPlayService
             //通知播放界面更新
             sendCureentMusicInfo();
         }
+        MusicBean musicBean = mMusicDataList.get(position);
+        musicBean.setPlayFrequency(musicBean.getPlayFrequency() + 1);
+        mMusicDao.update(musicBean);
         return START_NOT_STICKY;
     }
 

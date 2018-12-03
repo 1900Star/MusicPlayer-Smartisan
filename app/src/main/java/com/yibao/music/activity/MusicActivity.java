@@ -361,7 +361,6 @@ public class MusicActivity
             changeToolBarTitle(currentSelecteFlag);
             mCurrentIndex = currentSelecteFlag;
             mMusicViewPager.setCurrentItem(currentSelecteFlag, false);
-            LogUtil.d("=======  Map  " + BaseMusicFragment.mDetailsViewMap.size() + "    ==   " + SpUtil.getDetailFlag(this));
         });
         mSmartisanControlBar.setClickListener(clickFlag -> {
             if (mMusicConfig) {

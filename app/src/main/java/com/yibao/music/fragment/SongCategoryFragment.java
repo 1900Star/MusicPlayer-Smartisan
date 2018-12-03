@@ -48,11 +48,12 @@ public class SongCategoryFragment extends BaseMusicFragment {
     MusicView mMusciView;
     private SongAdapter mSongAdapter;
     private int mPosition;
-    private boolean isShowSlidebar;
+    private boolean isShowSlidebar = false;
     private List<MusicBean> mAbcList;
     private List<MusicBean> mAddTimeList;
     private boolean isItemSelectStatus = true;
     private int mSelectCount;
+    private List<MusicBean> mPlayFrequencyList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,16 +63,19 @@ public class SongCategoryFragment extends BaseMusicFragment {
             mPosition = arguments.getInt("position");
         }
         mAbcList = MusicListUtil.sortMusicAbc(mMusicBeanDao.queryBuilder().list());
+        mPlayFrequencyList = MusicListUtil.sortFrequency(mMusicBeanDao.queryBuilder().list());
         mAddTimeList = MusicListUtil.sortTime(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
-        SpUtil.setDetailsFlag(mContext, Constants.NUMBER_ELEVEN);
+//        SpUtil.setDetailsFlag(mContext, Constants.NUMBER_ELEVEN);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (mPosition == 1 || mPosition == 3) {
+        LogUtil.d("GGGGGGGGGGGGG===================GGGGGGGGGGGGg");
+        if (mPosition == Constants.NUMBER_THRRE) {
+            // 新增歌曲刷新列表
             int newMusicFlag = SpUtil.getNewMusicFlag(mActivity);
-            if (newMusicFlag == 1) {
+            if (newMusicFlag == 1 || newMusicFlag == 2) {
                 initData();
                 SpUtil.setNewMusicFlag(mActivity, 0);
             }
@@ -100,18 +104,13 @@ public class SongCategoryFragment extends BaseMusicFragment {
     }
 
     private void initListener() {
-        mSongAdapter.setOnItemMenuListener((int position, MusicBean musicBean) -> MoreMenuBottomDialog.newInstance(musicBean, position).getBottomDialog(mActivity));
+        mSongAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
+                MoreMenuBottomDialog.newInstance(musicBean, position).getBottomDialog(mActivity));
         mSongAdapter.setItemListener((bean, isEditStatus) -> {
             if (isEditStatus) {
-                if (bean.isSelected()) {
-                    mSelectCount--;
-                    bean.setSelected(false);
-                    mMusicBeanDao.update(bean);
-                } else {
-                    mSelectCount++;
-                    bean.setSelected(true);
-                    mMusicBeanDao.update(bean);
-                }
+                mSelectCount = bean.isSelected() ? mSelectCount-- : mSelectCount++;
+                bean.setIsSelected(!bean.isSelected());
+                mMusicBeanDao.update(bean);
                 LogUtil.d("===========选中  " + mSelectCount);
                 mSongAdapter.notifyDataSetChanged();
             }
@@ -121,14 +120,15 @@ public class SongCategoryFragment extends BaseMusicFragment {
     private void initData() {
         switch (mPosition) {
             case 0:
-            case 2:
-                isShowSlidebar = true;
-                mSongAdapter = new SongAdapter(mActivity, mAbcList, Constants.NUMBER_ZOER);
-                break;
             case 1:
+                isShowSlidebar = true;
+                mSongAdapter = new SongAdapter(mActivity, mAbcList, Constants.NUMBER_ZOER, Constants.NUMBER_ZOER);
+                break;
+            case 2:
+                mSongAdapter = new SongAdapter(mActivity, mPlayFrequencyList, Constants.NUMBER_ONE, Constants.NUMBER_TWO);
+                break;
             case 3:
-                isShowSlidebar = false;
-                mSongAdapter = new SongAdapter(mActivity, mAddTimeList, Constants.NUMBER_ONE);
+                mSongAdapter = new SongAdapter(mActivity, mAddTimeList, Constants.NUMBER_ONE, Constants.NUMBER_ZOER);
                 break;
             default:
                 break;
