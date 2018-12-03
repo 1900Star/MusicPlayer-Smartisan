@@ -121,9 +121,9 @@ public class SongCategoryFragment extends BaseMusicFragment {
     private void initData() {
         switch (mPosition) {
             case 0:
+            case 2:
                 isShowSlidebar = true;
                 mSongAdapter = new SongAdapter(mActivity, mAbcList, Constants.NUMBER_ZOER);
-            case 2:
                 break;
             case 1:
             case 3:
