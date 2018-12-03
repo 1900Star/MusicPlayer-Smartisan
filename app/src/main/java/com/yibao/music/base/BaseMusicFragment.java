@@ -30,6 +30,7 @@ import io.reactivex.schedulers.Schedulers;
 public abstract class BaseMusicFragment extends BaseFragment {
     public static HashMap<String, BaseFragment> mDetailsViewMap;
     private Disposable mEditDisposable;
+    protected Disposable mMenuDisposable;
 
 
     @Override
@@ -95,7 +96,8 @@ public abstract class BaseMusicFragment extends BaseFragment {
             ((OnMusicItemClickListener) getActivity()).startMusicService(position);
         }
     }
-    protected void putFragToMap(int detailFlag,String fragmentName) {
+
+    protected void putFragToMap(int detailFlag, String fragmentName) {
         SpUtil.setDetailsFlag(mActivity, detailFlag);
         if (!mDetailsViewMap.containsKey(fragmentName)) {
             mDetailsViewMap.put(fragmentName, this);
@@ -118,6 +120,10 @@ public abstract class BaseMusicFragment extends BaseFragment {
         if (mEditDisposable != null) {
             mEditDisposable.dispose();
             mEditDisposable = null;
+        }
+        if (mMenuDisposable != null) {
+            mMenuDisposable.dispose();
+            mMenuDisposable = null;
         }
     }
 }

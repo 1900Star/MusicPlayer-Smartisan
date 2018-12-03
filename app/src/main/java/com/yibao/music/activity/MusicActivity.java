@@ -388,7 +388,7 @@ public class MusicActivity
                                 break;
                         }
                     } else {
-                        SnakbarUtil.favoriteSuccessView(mSmartisanControlBar, "请先播放音乐!");
+                        SnakbarUtil.firstPlayMusic(mSmartisanControlBar);
                     }
                 }
             } else {
@@ -406,7 +406,7 @@ public class MusicActivity
                             audioBinder.updataFavorite();
                             checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
                         } else {
-                            SnakbarUtil.favoriteSuccessView(mSmartisanControlBar, "请先播放音乐!");
+                            SnakbarUtil.firstPlayMusic(mSmartisanControlBar);
                         }
                     default:
                         break;
@@ -748,38 +748,46 @@ public class MusicActivity
 
         }
         openMusicPlayDialogFag();
-        moreMenu();
     }
 
-    private void moreMenu() {
-        mCompositeDisposable.add(mBus.toObserverable(MoreMenuStatus.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(moreMenuStatus -> {
-                    MusicBean musicBean = moreMenuStatus.getMusicBean();
-                    switch (moreMenuStatus.getPosition()) {
-                        case Constants.NUMBER_ZOER:
-                            LogUtil.d("=============添加到播放列表");
-                            break;
-                        case Constants.NUMBER_ONE:
-                            LogUtil.d("=============加到播放队列");
-                            break;
-                        case Constants.NUMBER_TWO:
-                            LogUtil.d("=============喜欢");
-                            audioBinder.updataFavorite();
-                            checkCurrentSongIsFavorite(musicBean, mQqControlBar, mSmartisanControlBar);
-                            break;
-                        case Constants.NUMBER_THRRE:
-                            LogUtil.d("=============编辑");
-                            break;
-                        case Constants.NUMBER_FOUR:
-                            LogUtil.d("=============删除");
-                            break;
-                        default:
-                            break;
+    @Override
+    protected void moreMenu(MoreMenuStatus moreMenuStatus) {
+        super.moreMenu(moreMenuStatus);
+        MusicBean musicBean = moreMenuStatus.getMusicBean();
+        switch (moreMenuStatus.getPosition()) {
+            case Constants.NUMBER_ZOER:
+                SnakbarUtil.keepGoing(mSmartisanControlBar);
+                break;
+            case Constants.NUMBER_ONE:
+                SnakbarUtil.keepGoing(mSmartisanControlBar);
+                break;
+            case Constants.NUMBER_TWO:
+                if (audioBinder != null) {
+                    if (audioBinder.getPosition() == moreMenuStatus.getMusicPosition()) {
+                        audioBinder.updataFavorite();
+                        checkCurrentSongIsFavorite(musicBean, mQqControlBar, mSmartisanControlBar);
+                    } else {
+                        MusicBean bean = moreMenuStatus.getMusicBean();
+                        bean.setIsFavorite(!bean.isFavorite());
+                        mMusicDao.update(bean);
                     }
-                }));
+                } else {
+                    SnakbarUtil.firstPlayMusic(mSmartisanControlBar);
+                }
+
+                break;
+            case Constants.NUMBER_THRRE:
+                SnakbarUtil.keepGoing(mSmartisanControlBar);
+                break;
+            case Constants.NUMBER_FOUR:
+                mBus.post(Constants.NUMBER_ONE, moreMenuStatus);
+                mMusicDao.delete(moreMenuStatus.getMusicBean());
+                break;
+            default:
+                break;
+        }
     }
+
 
     @Override
     public void updataTitle(String toolbarTitle, boolean isShowDetail) {

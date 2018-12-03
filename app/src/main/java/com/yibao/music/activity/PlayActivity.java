@@ -23,14 +23,17 @@ import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.fragment.dialogfrag.FavoriteBottomSheetDialog;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
+import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
+import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
+import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.TitleArtistUtil;
@@ -165,6 +168,39 @@ public class PlayActivity extends BasePlayActivity {
         mSbVolume.setProgress(volume);
         // 更新音量值  flag 0 默认不显示系统控制栏  1 显示系统音量控制
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
+    }
+
+    @Override
+    protected void moreMenu(MoreMenuStatus moreMenuStatus) {
+        super.moreMenu(moreMenuStatus);
+        switch (moreMenuStatus.getPosition()) {
+            case Constants.NUMBER_ZOER:
+                SnakbarUtil.keepGoing(mAlbumCover);
+                break;
+            case Constants.NUMBER_ONE:
+                SnakbarUtil.keepGoing(mAlbumCover);
+                break;
+            case Constants.NUMBER_TWO:
+                if (audioBinder != null) {
+                    if (audioBinder.getPosition() == moreMenuStatus.getMusicPosition()) {
+                        audioBinder.updataFavorite();
+                        checkCurrentIsFavorite(getFavoriteState(mCurrenMusicInfo));
+                    }
+                } else {
+                    SnakbarUtil.firstPlayMusic(mPlayingSongAlbum);
+                }
+
+                break;
+            case Constants.NUMBER_THRRE:
+                showLyrics();
+                break;
+            case Constants.NUMBER_FOUR:
+                mBus.post(Constants.NUMBER_ONE, moreMenuStatus);
+                mMusicDao.delete(moreMenuStatus.getMusicBean());
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -337,7 +373,7 @@ public class PlayActivity extends BasePlayActivity {
                 showLyrics();
                 break;
             case R.id.iv_lyrics_switch:
-                MoreMenuBottomDialog.newInstance(mCurrenMusicInfo).getBottomDialog(this);
+                MoreMenuBottomDialog.newInstance(mCurrenMusicInfo, audioBinder.getPosition()).getBottomDialog(this);
                 break;
             case R.id.iv_secreen_sun_switch:
                 screenAlwaysOnSwitch(mIvSecreenSunSwitch);
@@ -442,9 +478,7 @@ public class PlayActivity extends BasePlayActivity {
     // 清空收藏列表中所有音乐后的回调，
     @Override
     public void updataFavoriteStatus() {
-        boolean updataFavorite = mMusicDao.load(mCurrenMusicInfo.getId()).isFavorite();
-        LogUtil.d("==   清除了所有");
-        checkCurrentIsFavorite(updataFavorite);
+        checkCurrentIsFavorite(getFavoriteState(mCurrenMusicInfo));
     }
 
     @Override

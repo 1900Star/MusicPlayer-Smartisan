@@ -8,12 +8,18 @@ package com.yibao.music.model;
  * @ Des:    TODO
  */
 public class MoreMenuStatus {
+    private int musicPosition;
     private int position;
     private MusicBean musicBean;
 
-    public MoreMenuStatus(int position, MusicBean musicBean) {
+    public MoreMenuStatus(int musicPosition, int position, MusicBean musicBean) {
+        this.musicPosition = musicPosition;
         this.position = position;
         this.musicBean = musicBean;
+    }
+
+    public int getMusicPosition() {
+        return musicPosition;
     }
 
     public int getPosition() {

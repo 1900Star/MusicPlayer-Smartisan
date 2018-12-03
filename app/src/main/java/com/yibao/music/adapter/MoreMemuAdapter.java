@@ -33,11 +33,12 @@ public class MoreMemuAdapter
         extends BaseRvAdapter<MoreMenuBean> {
     private OnMenuItemClickListener mListener;
     private static MusicBean mMusicBean;
+    private static int mMusicPosition;
 
-    public MoreMemuAdapter(List<MoreMenuBean> list, MusicBean musicBean) {
+    public MoreMemuAdapter(List<MoreMenuBean> list, MusicBean musicBean, int musicPosition) {
         super(list);
         mMusicBean = musicBean;
-
+        mMusicPosition = musicPosition;
     }
 
     @Override
@@ -54,7 +55,7 @@ public class MoreMemuAdapter
             menuHolder.mTvMoreMenu.setText(menuBean.getNameId());
             menuHolder.itemView.setOnClickListener(v -> {
                 if (mListener != null) {
-                    mListener.itemClick(position, mMusicBean);
+                    mListener.itemClick(mMusicPosition,position, mMusicBean);
                 }
             });
         }
@@ -114,7 +115,7 @@ public class MoreMemuAdapter
     }
 
     public interface OnMenuItemClickListener {
-        void itemClick(int position, MusicBean musicBean);
+        void itemClick(int musicPosition,int position, MusicBean musicBean);
     }
 
 }

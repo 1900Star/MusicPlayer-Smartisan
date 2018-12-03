@@ -34,9 +34,11 @@ public class MoreMenuBottomDialog {
     private static MusicBean mMusicBean;
     private TextView mBottomCancel;
     private MoreMemuAdapter mMemuAdapter;
+    private static int mMusicPosition;
 
-    public static MoreMenuBottomDialog newInstance(MusicBean musicBean) {
+    public static MoreMenuBottomDialog newInstance(MusicBean musicBean, int musicPosition) {
         mMusicBean = musicBean;
+        mMusicPosition = musicPosition;
         return new MoreMenuBottomDialog();
     }
 
@@ -55,10 +57,10 @@ public class MoreMenuBottomDialog {
 
     private void initListener() {
         mBottomCancel.setOnClickListener(v -> mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
-        mMemuAdapter.setClickLiseter((position, musicBean) -> {
-            RxBus.getInstance().post(new MoreMenuStatus(position, musicBean));
+        mMemuAdapter.setClickLiseter(((musicPosition, position, musicBean) -> {
+            RxBus.getInstance().post(new MoreMenuStatus(mMusicPosition, position, musicBean));
             mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        });
+        }));
     }
 
     private void init(BottomSheetDialog dialog, View view) {
@@ -78,7 +80,7 @@ public class MoreMenuBottomDialog {
 
 
     private void initData() {
-        mMemuAdapter = new MoreMemuAdapter(MenuListUtil.getMenuData(mMusicBean.isFavorite()), mMusicBean);
+        mMemuAdapter = new MoreMemuAdapter(MenuListUtil.getMenuData(mMusicBean.isFavorite()), mMusicBean, mMusicPosition);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(4, mMemuAdapter);
         mBottomListContent.addView(recyclerView);
     }

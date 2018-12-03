@@ -83,7 +83,7 @@ public class PlayListFragment extends BaseMusicFragment {
                     int operationType = bean.getOperationType();
                     // 删除列表
                     if (operationType == Constants.NUMBER_TWO) {
-                        mAdapter.removeItem(mDeletePosition);
+                        mAdapter.notifyItemRemoved(mDeletePosition);
                         changeTvEditVisibility();
                     } else if (operationType == Constants.NUMBER_FOUR) {
                         // 更新列表名

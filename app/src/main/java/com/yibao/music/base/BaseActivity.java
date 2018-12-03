@@ -9,6 +9,7 @@ import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayActivity;
 import com.yibao.music.activity.SearchActivity;
+import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
@@ -79,6 +80,15 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::refreshBtnAndNotify));
+        mCompositeDisposable.add(mBus.toObserverable(MoreMenuStatus.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::moreMenu));
+
+    }
+
+    protected void moreMenu(MoreMenuStatus moreMenuStatus) {
+
     }
 
     protected abstract void refreshBtnAndNotify(PlayStatusBean playStatusBean);

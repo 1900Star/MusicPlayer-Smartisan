@@ -28,6 +28,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -75,9 +76,17 @@ public class SongCategoryFragment extends BaseMusicFragment {
                 SpUtil.setNewMusicFlag(mActivity, 0);
             }
         }
-
+        menuDelete();
     }
 
+    private void menuDelete() {
+        if (mMenuDisposable == null) {
+            mMenuDisposable = mBus.toObservableType(Constants.NUMBER_ONE, MoreMenuStatus.class)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(moreMenuStatus -> mSongAdapter.notifyItemRemoved(moreMenuStatus.getMusicPosition()));
+        }
+    }
 
 
     @Nullable
@@ -91,7 +100,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
     }
 
     private void initListener() {
-        mSongAdapter.setOnItemMenuListener((int position, MusicBean musicBean) -> MoreMenuBottomDialog.newInstance(musicBean).getBottomDialog(mActivity));
+        mSongAdapter.setOnItemMenuListener((int position, MusicBean musicBean) -> MoreMenuBottomDialog.newInstance(musicBean, position).getBottomDialog(mActivity));
         mSongAdapter.setItemListener((bean, isEditStatus) -> {
             if (isEditStatus) {
                 if (bean.isSelected()) {
@@ -112,9 +121,9 @@ public class SongCategoryFragment extends BaseMusicFragment {
     private void initData() {
         switch (mPosition) {
             case 0:
-            case 2:
                 isShowSlidebar = true;
                 mSongAdapter = new SongAdapter(mActivity, mAbcList, Constants.NUMBER_ZOER);
+            case 2:
                 break;
             case 1:
             case 3:
