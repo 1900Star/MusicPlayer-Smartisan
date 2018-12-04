@@ -72,18 +72,14 @@ public class MusicListUtil {
                 long duration = cursor.getInt(mDuration);
                 // 添加时间
                 int addTime = (int) cursor.getLong(addDed);
-                // 音质类型
-                int musicQualityType = cursor.getInt(qualityType);
                 // 文件大小
                 long size = cursor.getLong(mSize);
-                //发行时间
-                int year = cursor.getInt(issueYear);
                 // 文件路径
                 String url = cursor.getString(mUrl);
                 //过滤掉小于2分钟的音乐,后续可以通过SharePreference让用户在UI界面自行选择。
                 if (size > 21600) {
                     String firstChar = String.valueOf(HanziToPinyins.stringToPinyinSpecial(title));
-                    info.setMusicQualityType(musicQualityType);
+                    info.setMusicQualityType(qualityType);
                     info.setFirstChar(firstChar);
                     info.setId(mId);
                     info.setTitle(title);
@@ -93,7 +89,7 @@ public class MusicListUtil {
                     info.setDuration(duration);
                     info.setAddTime(addTime);
                     info.setSongUrl(url);
-                    info.setIssueYear(year);
+                    info.setIssueYear(issueYear);
                     musicInfos.add(info);
                 }
             }
@@ -103,28 +99,9 @@ public class MusicListUtil {
         return musicInfos;
     }
 
-    /**
-     * 按添播放次数排序
-     *
-     * @param musicList c
-     */
-    public static List<MusicBean> sortFrequency(List<MusicBean> musicList) {
-        Collections.sort(musicList, (m1, m2) -> getSortResult(Constants.NUMBER_THRRE, m1, m2));
-        return musicList;
-    }
 
     /**
-     * 按添评分排序
-     *
-     * @param musicList c
-     */
-    public static List<MusicBean> sortSongScroe(List<MusicBean> musicList) {
-        Collections.sort(musicList, (m1, m2) -> getSortResult(Constants.NUMBER_FOUR, m1, m2));
-        return musicList;
-    }
-
-    /**
-     * 按添加时间排序
+     * 音乐列表排序
      *
      * @param musicList c
      * @param sortFlag  1 按照歌曲下载时间 ，2 按照歌曲收藏时间 , 3 按照播放次数 ，4 按照评分 。

@@ -73,7 +73,7 @@
                     android:layout_width="38dp"
                     android:layout_height="18dp"
                     android:src="@drawable/playing_blueplay2"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
             </LinearLayout>
 
