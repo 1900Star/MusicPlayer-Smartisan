@@ -435,7 +435,6 @@ public class MusicActivity
             } else {
                 MusicActivity.this.startMusicService(position);
             }
-//                restoreMuiscBean(position);
         });
     }
 
