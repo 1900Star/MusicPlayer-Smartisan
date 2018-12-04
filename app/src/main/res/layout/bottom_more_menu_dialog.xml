@@ -15,23 +15,35 @@
             android:id="@+id/bottom_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
             android:text="@string/select_operation"
             android:textColor="@color/aboutSign"
-            android:textSize="@dimen/about_content" />
+            android:textSize="@dimen/about_content"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <RatingBar
+            android:id="@+id/rating_bar"
+            style="@style/ratingbarstyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:numStars="5"
+            android:rating="0"
+            android:stepSize="1" />
 
         <TextView
             android:id="@+id/bottom_sheet_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/btn_edit_selector"
             android:layout_marginEnd="12dp"
             android:layout_marginRight="12dp"
+            android:background="@drawable/btn_edit_selector"
+            android:gravity="center"
             android:text="@string/cancel"
             android:textColor="@color/aboutSign"
             android:textSize="@dimen/about_content"

@@ -1,0 +1,12 @@
+<resources>
+
+    <style name="ratingbarstyle" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">
+            @drawable/score_star
+        </item>
+        <item name="android:maxHeight">32dp</item>
+        <item name="android:minHeight">12dp</item>
+    </style>
+
+
+</resources>

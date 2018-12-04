@@ -104,44 +104,32 @@ public class MusicListUtil {
     }
 
     /**
-     * 按添加时间排序
+     * 按添播放次数排序
      *
      * @param musicList c
      */
     public static List<MusicBean> sortFrequency(List<MusicBean> musicList) {
-        Collections.sort(musicList, MusicListUtil::getCompareFlag);
+        Collections.sort(musicList, (m1, m2) -> getSortResult(Constants.NUMBER_THRRE, m1, m2));
         return musicList;
     }
 
-    private static int getCompareFlag(MusicBean m1, MusicBean m2) {
-        int value;
-        if (m1 == m2) {
-            return 0;
-        }
-        if (m1 == null) {
-            return -1;
-        }
-        if (m2 == null) {
-            return 1;
-        }
-        if (m1.equals(m2)) {
-            return 0;
-        }
-        value = Float.compare(m2.getPlayFrequency(), m1.getPlayFrequency());
-        if (value != 0) {
-            return value;
-        }
-        return m1.hashCode() - m2.hashCode();
+    /**
+     * 按添评分排序
+     *
+     * @param musicList c
+     */
+    public static List<MusicBean> sortSongScroe(List<MusicBean> musicList) {
+        Collections.sort(musicList, (m1, m2) -> getSortResult(Constants.NUMBER_FOUR, m1, m2));
+        return musicList;
     }
-
 
     /**
      * 按添加时间排序
      *
      * @param musicList c
-     * @param sortFlag  1按照歌曲下载时间，2按照歌曲收藏时间
+     * @param sortFlag  1 按照歌曲下载时间 ，2 按照歌曲收藏时间 , 3 按照播放次数 ，4 按照评分 。
      */
-    public static List<MusicBean> sortTime(List<MusicBean> musicList, int sortFlag) {
+    public static List<MusicBean> sortMusicList(List<MusicBean> musicList, int sortFlag) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             musicList.sort((m1, m2) -> getSortResult(sortFlag, m1, m2));
         } else {
@@ -151,7 +139,7 @@ public class MusicListUtil {
     }
 
     private static int getSortResult(int sortFlag, MusicBean m1, MusicBean m2) {
-        int value;
+        int value = 0;
         if (m1 == m2) {
             return 0;
         }
@@ -166,10 +154,12 @@ public class MusicListUtil {
         }
         if (sortFlag == Constants.NUMBER_ONE) {
             value = Float.compare(m2.getAddTime(), m1.getAddTime());
-
-        } else {
+        } else if (sortFlag == Constants.NUMBER_TWO) {
             value = Float.compare(Long.parseLong(m2.getTime()), Long.parseLong(m1.getTime()));
-
+        } else if (sortFlag == Constants.NUMBER_THRRE) {
+            value = Float.compare(m2.getPlayFrequency(), m1.getPlayFrequency());
+        } else if (sortFlag == Constants.NUMBER_FOUR) {
+            value = Float.compare(m2.getSongScore(), m1.getSongScore());
         }
         if (value != 0) {
             return value;

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.yibao.music.R;
@@ -77,14 +78,17 @@ public class SongAdapter
         if (holder instanceof SongListViewHolder) {
             SongListViewHolder songListViewHolder = (SongListViewHolder) holder;
             int position = holder.getAdapterPosition();
-            if (mScroeAndfrequnecyFlag == Constants.NUMBER_TWO) {
+            if (mScroeAndfrequnecyFlag == Constants.NUMBER_ONE) {
+                songListViewHolder.mRatingBar.setVisibility(View.VISIBLE);
+                songListViewHolder.mRatingBar.setRating(musicBean.getSongScore());
+            } else if (mScroeAndfrequnecyFlag == Constants.NUMBER_TWO) {
                 songListViewHolder.mTvFrequency.setVisibility(View.VISIBLE);
                 songListViewHolder.mTvFrequency.setText(String.valueOf(musicBean.getPlayFrequency()));
             }
             songListViewHolder.mItemSelect.setVisibility(isSelectStatus ? View.VISIBLE : View.GONE);
             ImageUitl.customLoadPic(mContext, StringUtil.getAlbulm(musicBean.getAlbumId()), R.drawable.noalbumcover_120, songListViewHolder.mSongAlbum);
-            songListViewHolder.mSongArtistName.setText(musicBean.getArtist());
-            songListViewHolder.mSongName.setText(musicBean.getTitle());
+            songListViewHolder.mSongArtistName.setText(StringUtil.getArtist(musicBean));
+            songListViewHolder.mSongName.setText(StringUtil.getTitle(musicBean));
             if (mIsShowStickyView == Constants.NUMBER_ZOER) {
                 String firstTv = musicBean.getFirstChar();
                 songListViewHolder.mTvStickyView.setText(firstTv);
@@ -175,8 +179,8 @@ public class SongAdapter
         ImageView mSongPlayFlag;
         @BindView(R.id.song_name)
         TextView mSongName;
-        @BindView(R.id.iv_star)
-        ImageView mMusicStar;
+        @BindView(R.id.menu_rating_bar)
+        RatingBar mRatingBar;
         @BindView(R.id.tv_frequency)
         TextView mTvFrequency;
         @BindView(R.id.song_artist_name)
@@ -203,8 +207,8 @@ public class SongAdapter
         /**
          * 更多菜单
          *
-         * @param position
-         * @param musicBean
+         * @param position p
+         * @param musicBean m
          */
         void openClickMoerMenu(int position, MusicBean musicBean);
     }

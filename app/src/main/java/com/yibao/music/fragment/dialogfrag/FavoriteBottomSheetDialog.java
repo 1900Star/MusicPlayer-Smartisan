@@ -93,7 +93,7 @@ public class FavoriteBottomSheetDialog
     }
 
     private void initData(BottomSheetDialog dialog, View view) {
-//        mListList.add(MusicListUtil.sortTime(mList, Constants.NUMBER_TWO));
+//        mListList.add(MusicListUtil.sortMusicList(mList, Constants.NUMBER_TWO));
         // ViewPager 显示多个列表
 //        BottomPagerAdapter bottomPagerAdapter = new BottomPagerAdapter(mContext, mListList);
 //        mBottomViewPager.setAdapter(bottomPagerAdapter);
@@ -116,7 +116,7 @@ public class FavoriteBottomSheetDialog
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(musicBeanList -> {
                     Collections.sort(musicBeanList);
-                    mList.addAll(musicBeanList);
+//                    mList.addAll(MusicListUtil.sortMusicList(musicBeanList,Constants.NUMBER_TWO));
                     String sheetTitle = StringUtil.getBottomSheetTitle(musicBeanList.size());
                     mBottomListTitleSize.setText(sheetTitle);
                     mAdapter = new BottomSheetAdapter(musicBeanList);

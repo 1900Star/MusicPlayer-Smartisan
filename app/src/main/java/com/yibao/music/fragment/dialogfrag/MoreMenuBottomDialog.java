@@ -9,13 +9,16 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.adapter.MoreMemuAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.MenuListUtil;
 import com.yibao.music.util.RxBus;
 
@@ -27,24 +30,23 @@ import com.yibao.music.util.RxBus;
  * @author Stran
  */
 public class MoreMenuBottomDialog {
+    private static MusicBeanDao musicDao;
     private LinearLayout mBottomListContent;
-    private TextView mBottomTitle;
-    private Context mContext;
     private BottomSheetBehavior<View> mBehavior;
     private static MusicBean mMusicBean;
     private TextView mBottomCancel;
     private MoreMemuAdapter mMemuAdapter;
     private static int mMusicPosition;
+    private RatingBar mRatingBar;
 
     public static MoreMenuBottomDialog newInstance(MusicBean musicBean, int musicPosition) {
         mMusicBean = musicBean;
         mMusicPosition = musicPosition;
+        musicDao = MusicApplication.getIntstance().getMusicDao();
         return new MoreMenuBottomDialog();
     }
 
     public void getBottomDialog(Context context) {
-        this.mContext = context;
-
         BottomSheetDialog dialog = new BottomSheetDialog(context);
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.bottom_more_menu_dialog, null);
@@ -61,12 +63,16 @@ public class MoreMenuBottomDialog {
             RxBus.getInstance().post(new MoreMenuStatus(mMusicPosition, position, musicBean));
             mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }));
+        mRatingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
+            mMusicBean.setSongScore((int) rating);
+            musicDao.update(mMusicBean);
+        });
     }
 
     private void init(BottomSheetDialog dialog, View view) {
+        mRatingBar = view.findViewById(R.id.rating_bar);
         mBottomListContent = view.findViewById(R.id.bottom_list_content);
         mBottomCancel = view.findViewById(R.id.bottom_sheet_cancel);
-        mBottomTitle = view.findViewById(R.id.bottom_title);
         dialog.setContentView(view);
         dialog.setCancelable(true);
         Window window = dialog.getWindow();
@@ -80,6 +86,7 @@ public class MoreMenuBottomDialog {
 
 
     private void initData() {
+        mRatingBar.setRating(mMusicBean.getSongScore());
         mMemuAdapter = new MoreMemuAdapter(MenuListUtil.getMenuData(mMusicBean.isFavorite()), mMusicBean, mMusicPosition);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(4, mMemuAdapter);
         mBottomListContent.addView(recyclerView);

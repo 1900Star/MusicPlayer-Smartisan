@@ -29,7 +29,7 @@ import butterknife.OnClick;
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/4 21:45
- * @描述： {显示当前音乐列表}
+ * @描述： {歌曲TAB}
  */
 
 public class SongFragment extends BaseMusicFragment {

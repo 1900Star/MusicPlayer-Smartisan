@@ -28,16 +28,16 @@ public class QueryMusicFlagListUtil {
             return MusicListUtil.sortMusicAbc(musicBeanDao.queryBuilder().list());
             // 按评分
         } else if (sortListFlag == Constants.NUMBER_TWO) {
-            LogUtil.d("");
+            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(),Constants.NUMBER_FOUR);
             // 按播放次数
         } else if (sortListFlag == Constants.NUMBER_THRRE) {
-            LogUtil.d("");
+            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(),Constants.NUMBER_THRRE);
             // 按添加时间
         } else if (sortListFlag == Constants.NUMBER_FOUR) {
-            return MusicListUtil.sortTime(musicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
+            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
             // 收藏列表
         } else if (sortListFlag == Constants.NUMBER_EIGHT) {
-            return MusicListUtil.sortTime(musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list(), Constants.NUMBER_TWO);
+            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list(), Constants.NUMBER_TWO);
             // 10表示按条件查询
         } else if (sortListFlag == Constants.NUMBER_TEN) {
 
@@ -68,7 +68,7 @@ public class QueryMusicFlagListUtil {
      */
     public static List<MusicBean> getDataList(int spMusicFlag, MusicBeanDao musicBeanDao) {
         if (spMusicFlag == Constants.NUMBER_THRRE) {
-            return MusicListUtil.sortTime(musicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
+            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
         } else if (spMusicFlag == Constants.NUMBER_ONE) {
             return musicBeanDao.queryBuilder().list();
         } else if (spMusicFlag == Constants.NUMBER_TEN) {

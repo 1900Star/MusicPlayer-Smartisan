@@ -57,7 +57,7 @@ public class MusicListUtilTest {
 
     @Test
     public void sortAddTimeList() {
-//        List<MusicBean> abcList = MusicListUtil.sortTime(mMusicDataList);
+//        List<MusicBean> abcList = MusicListUtil.sortMusicList(mMusicDataList);
 //        assertNotNull(abcList);
     }
 

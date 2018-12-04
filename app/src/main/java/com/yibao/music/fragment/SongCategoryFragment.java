@@ -12,7 +12,6 @@ import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
-import com.yibao.music.model.EditBean;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
@@ -28,8 +27,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -39,7 +36,7 @@ import io.reactivex.schedulers.Schedulers;
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/4 21:45
- * @描述： {显示当前音乐列表}
+ * @描述： {显示当前音乐分类列表}
  */
 
 public class SongCategoryFragment extends BaseMusicFragment {
@@ -54,6 +51,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
     private boolean isItemSelectStatus = true;
     private int mSelectCount;
     private List<MusicBean> mPlayFrequencyList;
+    private List<MusicBean> mScoreList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,23 +61,20 @@ public class SongCategoryFragment extends BaseMusicFragment {
             mPosition = arguments.getInt("position");
         }
         mAbcList = MusicListUtil.sortMusicAbc(mMusicBeanDao.queryBuilder().list());
-        mPlayFrequencyList = MusicListUtil.sortFrequency(mMusicBeanDao.queryBuilder().list());
-        mAddTimeList = MusicListUtil.sortTime(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
 //        SpUtil.setDetailsFlag(mContext, Constants.NUMBER_ELEVEN);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        LogUtil.d("GGGGGGGGGGGGG===================GGGGGGGGGGGGg");
-        if (mPosition == Constants.NUMBER_THRRE) {
+        if (mPosition != Constants.NUMBER_ZOER) {
+            mPlayFrequencyList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_THRRE);
+            mAddTimeList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
+            mScoreList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_FOUR);
             // 新增歌曲刷新列表
-            int newMusicFlag = SpUtil.getNewMusicFlag(mActivity);
-            if (newMusicFlag == 1 || newMusicFlag == 2) {
-                initData();
-                SpUtil.setNewMusicFlag(mActivity, 0);
-            }
+            initData();
         }
+        initListener();
         menuDelete();
     }
 
@@ -99,7 +94,6 @@ public class SongCategoryFragment extends BaseMusicFragment {
         View view = inflater.inflate(R.layout.category_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         initData();
-        initListener();
         return view;
     }
 
@@ -120,9 +114,11 @@ public class SongCategoryFragment extends BaseMusicFragment {
     private void initData() {
         switch (mPosition) {
             case 0:
-            case 1:
                 isShowSlidebar = true;
                 mSongAdapter = new SongAdapter(mActivity, mAbcList, Constants.NUMBER_ZOER, Constants.NUMBER_ZOER);
+                break;
+            case 1:
+                mSongAdapter = new SongAdapter(mActivity, mScoreList, Constants.NUMBER_ONE, Constants.NUMBER_ONE);
                 break;
             case 2:
                 mSongAdapter = new SongAdapter(mActivity, mPlayFrequencyList, Constants.NUMBER_ONE, Constants.NUMBER_TWO);
