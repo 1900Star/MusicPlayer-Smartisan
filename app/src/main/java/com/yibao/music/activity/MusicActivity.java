@@ -126,7 +126,6 @@ public class MusicActivity
 
 
     private void initData() {
-        LogUtil.d("DetailsFlag  ==      " + SpUtil.getDetailFlag(this));
         List<MusicBean> initMusicList = audioBinder != null ? audioBinder.getMusicList() : QueryMusicFlagListUtil.getDataList(getSpMusicFlag(), mMusicDao);
         mCurrentPosition = SpUtil.getMusicPosition(this);
         mCurrentMusicBean = initMusicList.get(mCurrentPosition > initMusicList.size() ? 0 : mCurrentPosition);
