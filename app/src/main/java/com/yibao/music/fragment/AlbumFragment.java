@@ -16,13 +16,12 @@ import com.yibao.music.adapter.AlbumCategoryPagerAdapter;
 import com.yibao.music.adapter.SearchDetailsAdapter;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.MusicPagerListener;
-import com.yibao.music.base.listener.UpdataTitleListener;
+import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicView;
@@ -74,7 +73,8 @@ public class AlbumFragment extends BaseMusicFragment {
     LinearLayout mAlbumContentView;
     public static String detailsViewTitle;
     public static boolean isShowDetailsView = false;
-    private AlbumInfo mAlbumInfo;
+    private SearchDetailsAdapter mDetailsAdapter;
+    private List<MusicBean> mDetailList;
 
     @Nullable
     @Override
@@ -99,7 +99,7 @@ public class AlbumFragment extends BaseMusicFragment {
     }
 
     private void initRxbusData() {
-        mDisposable.add(mBus.toObserverable(AlbumInfo.class)
+        mCompositeDisposable.add(mBus.toObserverable(AlbumInfo.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::showDetailsView));
@@ -125,17 +125,19 @@ public class AlbumFragment extends BaseMusicFragment {
     }
 
     private void showDetailsView(AlbumInfo albumInfo) {
-        mAlbumInfo = albumInfo;
         if (isShowDetailsView) {
             mDetailsView.setVisibility(View.GONE);
             detailsViewTitle = null;
         } else {
             mDetailsView.setVisibility(View.VISIBLE);
-            List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(albumInfo.getAlbumName())).build().list();
+            mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(albumInfo.getAlbumName())).build().list();
             // DetailsView播放音乐需要的参数
-            mDetailsView.setDataFlag(mFragmentManager, list.size(), albumInfo.getAlbumName(), Constants.NUMBER_TWO);
-            SearchDetailsAdapter adapter = new SearchDetailsAdapter(getActivity(), list, Constants.NUMBER_TWO);
-            mDetailsView.setAdapter(getActivity(), Constants.NUMBER_TWO, albumInfo, adapter);
+            mDetailsView.setDataFlag(mFragmentManager, mDetailList.size(), albumInfo.getAlbumName(), Constants.NUMBER_TWO);
+            mDetailsAdapter = new SearchDetailsAdapter(getActivity(), mDetailList, Constants.NUMBER_TWO);
+
+            mDetailsView.setAdapter(getActivity(), Constants.NUMBER_TWO, albumInfo, mDetailsAdapter);
+            mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
+                    MoreMenuBottomDialog.newInstance(musicBean, position).getBottomDialog(mActivity));
             if (!mDetailsViewMap.containsKey(mClassName)) {
                 mDetailsViewMap.put(mClassName, this);
             }
@@ -148,6 +150,15 @@ public class AlbumFragment extends BaseMusicFragment {
     }
 
     @Override
+    protected void deleteItem(int musicPosition) {
+        super.deleteItem(musicPosition);
+        if (mDetailList != null && mDetailsAdapter != null) {
+            mDetailList.remove(musicPosition);
+            mDetailsAdapter.setData(mDetailList);
+        }
+    }
+
+    @Override
     protected void handleDetailsBack(int detailFlag) {
         if (detailFlag == Constants.NUMBER_TEN) {
             SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_TEN);
@@ -155,7 +166,6 @@ public class AlbumFragment extends BaseMusicFragment {
             mDetailsView.setVisibility(View.GONE);
             mDetailsViewMap.remove(mClassName);
             isShowDetailsView = !isShowDetailsView;
-            LogUtil.d("======= album mian 编辑专辑状态");
         }
 //        super.handleDetailsBack(detailFlag);
     }

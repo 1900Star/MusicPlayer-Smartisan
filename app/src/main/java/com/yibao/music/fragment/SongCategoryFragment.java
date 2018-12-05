@@ -75,16 +75,12 @@ public class SongCategoryFragment extends BaseMusicFragment {
             initData();
         }
         initListener();
-        menuDelete();
     }
 
-    private void menuDelete() {
-        if (mMenuDisposable == null) {
-            mMenuDisposable = mBus.toObservableType(Constants.NUMBER_ONE, MoreMenuStatus.class)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(moreMenuStatus -> mSongAdapter.notifyItemRemoved(moreMenuStatus.getMusicPosition()));
-        }
+    @Override
+    protected void deleteItem(int musicPosition) {
+        super.deleteItem(musicPosition);
+        mSongAdapter.notifyItemRemoved(musicPosition);
     }
 
 

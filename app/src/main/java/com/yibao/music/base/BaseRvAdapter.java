@@ -12,6 +12,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.yibao.music.R;
+import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
@@ -39,6 +40,7 @@ public abstract class BaseRvAdapter<T>
     private OnItemListener<T> mListener;
     private ItemLongClickListener mLongClickListener;
     private ItemEditClickListener mEditClickListener;
+    private OnOpenItemMoerMenuListener mMenuListener;
 
     public BaseRvAdapter(List<T> list) {
         mList = list;
@@ -299,5 +301,26 @@ public abstract class BaseRvAdapter<T>
         }
     }
 
+    /**
+     * Item更多菜单
+     */
+    public interface OnOpenItemMoerMenuListener {
+        /**
+         * 更多菜单
+         *
+         * @param position  p
+         * @param musicBean m
+         */
+        void openClickMoerMenu(int position, MusicBean musicBean);
+    }
 
+    public void setOnItemMenuListener(OnOpenItemMoerMenuListener listener) {
+        mMenuListener = listener;
+    }
+
+    protected void openItemMenu(MusicBean musicBean, int position) {
+        if (mMenuListener != null) {
+            mMenuListener.openClickMoerMenu(position, musicBean);
+        }
+    }
 }

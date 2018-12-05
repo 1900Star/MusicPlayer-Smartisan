@@ -2,6 +2,7 @@ package com.yibao.music.view.music;
 
 import android.app.FragmentManager;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -65,6 +66,12 @@ public class DetailsView
         super(context);
         initView();
         initListener();
+    }
+
+    @Override
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+        LogUtil.d("==========++== 详情显示  " + visibility);
     }
 
     public DetailsView(Context context, AttributeSet attrs) {

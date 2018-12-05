@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import com.yibao.music.R;
 import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.BaseMusicFragment;
+import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
@@ -78,7 +79,7 @@ public class PlayListFragment extends BaseMusicFragment {
      * 新增和删除列表
      */
     private void receiveRxbuData() {
-        mDisposable.add(mBus.toObserverable(AddAndDeleteListBean.class)
+        mCompositeDisposable.add(mBus.toObserverable(AddAndDeleteListBean.class)
                 .subscribeOn(Schedulers.io()).map(bean -> {
                     int operationType = bean.getOperationType();
                     // 删除列表

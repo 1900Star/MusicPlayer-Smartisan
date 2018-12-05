@@ -76,6 +76,7 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
         });
     }
 
+
     public static AlbumCategoryFragment newInstance(int position) {
         Bundle args = new Bundle();
         AlbumCategoryFragment fragment = new AlbumCategoryFragment();
@@ -89,7 +90,6 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
     protected void handleDetailsBack(int detailFlag) {
         if (detailFlag == Constants.NUMBER_TEN) {
             SpUtil.setDetailsFlag(mContext, Constants.NUMBER_TEN);
-            LogUtil.d("======= album category 编辑歌曲状态");
             mAlbumAdapter.setItemSelectStatus(false);
             isItemSelectStatus = !isItemSelectStatus;
         }
@@ -99,7 +99,6 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
     @Override
     protected void changeEditStatus(int currentIndex) {
         if (currentIndex == Constants.NUMBER_THRRE) {
-            LogUtil.d("=======  编辑专辑");
             closeEditStatus();
         }
     }

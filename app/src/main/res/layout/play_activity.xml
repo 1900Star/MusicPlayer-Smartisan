@@ -40,8 +40,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:ellipsize="marquee"
-                android:maxLength="20"
+                android:marqueeRepeatLimit="marquee_forever"
                 android:singleLine="true"
+                android:maxLength="22"
                 android:textColor="@color/textDes"
                 android:textSize="@dimen/bigLyrics"
                 android:textStyle="bold" />

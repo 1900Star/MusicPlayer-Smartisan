@@ -7,8 +7,8 @@ import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.model.DetailsFlagBean;
 import com.yibao.music.model.EditBean;
+import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.SpUtil;
 
@@ -30,7 +30,7 @@ import io.reactivex.schedulers.Schedulers;
 public abstract class BaseMusicFragment extends BaseFragment {
     public static HashMap<String, BaseFragment> mDetailsViewMap;
     private Disposable mEditDisposable;
-    protected Disposable mMenuDisposable;
+    private Disposable mMenuDisposable;
 
 
     @Override
@@ -43,19 +43,33 @@ public abstract class BaseMusicFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        changeTitleAndDeleteItem();
+    }
+
+    private void changeTitleAndDeleteItem() {
         if (mEditDisposable == null) {
             mEditDisposable = mBus.toObserverable(EditBean.class)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(editBean -> changeEditStatus(editBean.getCurrentIndex()));
         }
+        if (mMenuDisposable == null) {
+            mMenuDisposable = mBus.toObservableType(Constants.NUMBER_ONE, MoreMenuStatus.class)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(moreMenuStatus -> deleteItem(moreMenuStatus.getMusicPosition()));
+        }
     }
+
+    protected void deleteItem(int musicPosition) {
+    }
+
 
     protected abstract void changeEditStatus(int currentIndex);
 
     // 根据detailFlag处理具体详情页面的返回事件
     private void initDetailsFlag() {
-        mDisposable.add(mBus.toObserverable(DetailsFlagBean.class)
+        mCompositeDisposable.add(mBus.toObserverable(DetailsFlagBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(detailsFlagBean -> {
                     int detailFlag = detailsFlagBean.getDetailFlag();

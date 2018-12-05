@@ -64,6 +64,7 @@ public class SearchDetailsAdapter extends BaseRvAdapter<MusicBean> {
             detailsHolder.mTvDetailsSongName.setText(info.getTitle());
             int duration = (int) info.getDuration();
             detailsHolder.mTvSongDuration.setText(StringUtil.parseDuration(duration));
+            detailsHolder.mIvDetailsMenu.setOnClickListener(v -> openItemMenu(info, detailsHolder.getAdapterPosition()));
             detailsHolder.itemView.setOnClickListener(view -> {
                 if (mContext instanceof OnMusicItemClickListener) {
                     SpUtil.setMusicDataListFlag(mContext, Constants.NUMBER_TEN);
@@ -119,6 +120,11 @@ public class SearchDetailsAdapter extends BaseRvAdapter<MusicBean> {
     @Override
     protected int getLayoutId() {
         return R.layout.item_details_adapter;
+    }
+
+    public void setData(List<MusicBean> detailList) {
+        mList = detailList;
+        notifyDataSetChanged();
     }
 
     static class DetailsHolder extends RecyclerView.ViewHolder {

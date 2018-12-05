@@ -43,7 +43,6 @@ public class SongAdapter
     private Context mContext;
     private int mIsShowStickyView;
     private int mScroeAndfrequnecyFlag;
-    private OnOpenItemMoerMenuListener mListener;
 
     /**
      * @param context               c
@@ -106,9 +105,7 @@ public class SongAdapter
             }
 
             songListViewHolder.mIvSongItemMenu.setOnClickListener(view -> {
-                if (mListener != null) {
-                    mListener.openClickMoerMenu(position, musicBean);
-                }
+                openItemMenu(musicBean, position);
             });
             songListViewHolder.mItemSelect.setOnClickListener(v -> selectStatus(musicBean, songListViewHolder));
             //  Item点击监听
@@ -125,6 +122,7 @@ public class SongAdapter
         }
 
     }
+
 
     private void selectStatus(MusicBean musicBean, SongAdapter.SongListViewHolder playViewHolder) {
         playViewHolder.mItemSelect.setImageResource(musicBean.isSelected() ? R.drawable.item_selected_normal : R.drawable.item_selected);
@@ -198,19 +196,5 @@ public class SongAdapter
 
     }
 
-
-    public void setOnItemMenuListener(OnOpenItemMoerMenuListener listener) {
-        mListener = listener;
-    }
-
-    public interface OnOpenItemMoerMenuListener {
-        /**
-         * 更多菜单
-         *
-         * @param position p
-         * @param musicBean m
-         */
-        void openClickMoerMenu(int position, MusicBean musicBean);
-    }
 
 }

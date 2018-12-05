@@ -73,17 +73,17 @@ public class AboutFragment extends BaseMusicFragment {
     }
 
     private void initListener() {
-        mDisposable.add(RxView.clicks(mAboutHeaderIv)
+        mCompositeDisposable.add(RxView.clicks(mAboutHeaderIv)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribe(o -> PreviewBigPicDialogFragment.newInstance("")
                         .show(mFragmentManager, "album")));
-        mDisposable.add(RxView.clicks(mTvBackupsFavorite)
+        mCompositeDisposable.add(RxView.clicks(mTvBackupsFavorite)
                 .throttleFirst(3, TimeUnit.SECONDS)
                 .subscribe(o -> backupsFavoriteList()));
-        mDisposable.add(RxView.clicks(mTvRecoverFavorite)
+        mCompositeDisposable.add(RxView.clicks(mTvRecoverFavorite)
                 .throttleFirst(3, TimeUnit.SECONDS)
                 .subscribe(o -> recoverFavoriteList()));
-        mDisposable.add(RxView.clicks(mtScanerMedia)
+        mCompositeDisposable.add(RxView.clicks(mtScanerMedia)
                 .throttleFirst(3, TimeUnit.SECONDS)
                 .subscribe(o -> scannerMedia()));
         mAboutHeaderIv.setOnLongClickListener(view -> {
@@ -107,7 +107,7 @@ public class AboutFragment extends BaseMusicFragment {
                 String favoriteTime = s.substring(s.lastIndexOf("T") + 1);
                 songInfoMap.put(songName, favoriteTime);
             }
-            mDisposable.add(Observable.just(mSongList)
+            mCompositeDisposable.add(Observable.just(mSongList)
                     .flatMap((Function<List<MusicBean>, ObservableSource<MusicBean>>) Observable::fromIterable).map(musicBean -> {
                         //将歌名截取出来进行比较
                         String favoriteTime = songInfoMap.get(musicBean.getTitle());
@@ -129,7 +129,7 @@ public class AboutFragment extends BaseMusicFragment {
 
     private void backupsFavoriteList() {
         List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
-        mDisposable.add(Observable.just(list)
+        mCompositeDisposable.add(Observable.just(list)
                 .flatMap((Function<List<MusicBean>, ObservableSource<MusicBean>>) Observable::fromIterable)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -137,7 +137,6 @@ public class AboutFragment extends BaseMusicFragment {
                     String songInfo = musicBean.getTitle() + "T" + musicBean.getAddTime();
                     ReadFavoriteFileUtil.writeFile(songInfo);
                 }));
-        LogUtil.d("lsp", "收藏列表备份完成");
         ToastUtil.showFavoriteListBackupsDown(mActivity);
     }
     @Override

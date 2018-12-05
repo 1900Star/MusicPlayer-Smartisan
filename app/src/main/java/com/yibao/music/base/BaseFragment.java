@@ -33,7 +33,7 @@ public abstract class BaseFragment extends Fragment {
     protected RxBus mBus;
     protected final MusicBeanDao mMusicBeanDao;
     protected final PlayListBeanDao mPlayListDao;
-    protected CompositeDisposable mDisposable;
+    protected CompositeDisposable mCompositeDisposable;
     protected String mClassName;
     protected FragmentManager mFragmentManager;
     protected Context mContext;
@@ -53,7 +53,7 @@ public abstract class BaseFragment extends Fragment {
         tag = this.getClass().getSimpleName();
         mActivity = getActivity();
         mContext = getActivity();
-        mDisposable = new CompositeDisposable();
+        mCompositeDisposable = new CompositeDisposable();
         mBus =RxBus.getInstance();
         mClassName = getClass().getSimpleName();
         mFragmentManager = mActivity.getFragmentManager();
@@ -70,10 +70,10 @@ public abstract class BaseFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        if (mDisposable != null) {
-            mDisposable.dispose();
-            mDisposable.clear();
-            mDisposable = null;
+        if (mCompositeDisposable != null) {
+            mCompositeDisposable.dispose();
+            mCompositeDisposable.clear();
+            mCompositeDisposable = null;
 
         }
 //        if (mActivity != null) {

@@ -27,10 +27,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxLength="22"
-            android:scrollbars="horizontal"
+            android:maxLength="25"
             android:singleLine="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollbars="horizontal"
             android:textColor="@color/textDes"
             android:textSize="@dimen/music_loating_title" />
 

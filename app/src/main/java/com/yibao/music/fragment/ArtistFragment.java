@@ -12,7 +12,7 @@ import com.yibao.music.adapter.ArtistAdapter;
 import com.yibao.music.adapter.SearchDetailsAdapter;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.BaseRvAdapter;
-import com.yibao.music.base.listener.UpdataTitleListener;
+import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
@@ -49,6 +49,8 @@ public class ArtistFragment extends BaseMusicFragment {
     private List<ArtistInfo> mArtistList;
     public static boolean isShowDetailsView = false;
     private ArtistInfo mArtistInfo;
+    private SearchDetailsAdapter mDetailsAdapter;
+    private List<MusicBean> mDetailList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,13 +89,14 @@ public class ArtistFragment extends BaseMusicFragment {
             detailsViewTitle = null;
         } else {
             mDetailsView.setVisibility(View.VISIBLE);
-
-            List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(artistInfo.getArtist())).build().list();
+            mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(artistInfo.getArtist())).build().list();
             // DetailsView播放音乐需要的参数
-            mDetailsView.setDataFlag(mFragmentManager, list.size(), artistInfo.getArtist(), Constants.NUMBER_ONE);
-            SearchDetailsAdapter adapter = new SearchDetailsAdapter(getActivity(), list, Constants.NUMBER_ONE);
-            mDetailsView.setAdapter(getActivity(), Constants.NUMBER_ONE, artistInfo, adapter);
+            mDetailsView.setDataFlag(mFragmentManager, mDetailList.size(), artistInfo.getArtist(), Constants.NUMBER_ONE);
+            mDetailsAdapter = new SearchDetailsAdapter(getActivity(), mDetailList, Constants.NUMBER_ONE);
+            mDetailsView.setAdapter(getActivity(), Constants.NUMBER_ONE, artistInfo, mDetailsAdapter);
             SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_NINE);
+            mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
+                    MoreMenuBottomDialog.newInstance(musicBean, position).getBottomDialog(mActivity));
             if (!mDetailsViewMap.containsKey(mClassName)) {
                 mDetailsViewMap.put(mClassName, this);
             }
@@ -101,6 +104,15 @@ public class ArtistFragment extends BaseMusicFragment {
             changeToolBarTitle(artistInfo.getAlbumName(), isShowDetailsView);
         }
         isShowDetailsView = !isShowDetailsView;
+    }
+
+    @Override
+    protected void deleteItem(int musicPosition) {
+        super.deleteItem(musicPosition);
+        if (mDetailList != null && mDetailsAdapter != null) {
+            mDetailList.remove(musicPosition);
+            mDetailsAdapter.setData(mDetailList);
+        }
     }
 
     @Override
