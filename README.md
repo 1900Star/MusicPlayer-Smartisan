@@ -4,6 +4,7 @@
 ![image](https://github.com/1900Star/ShareFile/blob/master/pic/Details.jpg)
 ![image](https://github.com/1900Star/SmartisanMusicPlayer/blob/master/screenshot/a.jpg)
 ![image](https://github.com/1900Star/SmartisanMusicPlayer/blob/master/screenshot/b.jpg)
+![image](https://github.com/1900Star/ShareFile/blob/master/pic/detailsBack.gif)
 ![image](https://github.com/1900Star/SmartisanMusicPlayer/blob/master/screenshot/artisanMusic.gif)
 
 ArtisanMusic
