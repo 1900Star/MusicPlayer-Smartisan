@@ -42,6 +42,10 @@ public class MusicBean
     private int musicQualityType;
     private boolean isSelected;
     /**
+     * 歌曲所在的播放列表名字
+     */
+    private String playListFlag;
+    /**
      * QQ bar上需要时时更新的歌词
      */
     private String currentLyrics;
@@ -54,6 +58,7 @@ public class MusicBean
 
     public MusicBean() {
     }
+
 
     protected MusicBean(Parcel in) {
         if (in.readByte() == 0) {
@@ -77,15 +82,18 @@ public class MusicBean
         issueYear = in.readInt();
         musicQualityType = in.readInt();
         isSelected = in.readByte() != 0;
+        playListFlag = in.readString();
         currentLyrics = in.readString();
         cureetPosition = in.readInt();
     }
 
-    @Generated(hash = 1939175451)
+
+    @Generated(hash = 2071429796)
     public MusicBean(Long id, String title, String artist, String album, long albumId,
             long addTime, long duration, String time, String songUrl, String firstChar,
             boolean isFavorite, int playFrequency, int songScore, int playStatus,
-            int issueYear, int musicQualityType, boolean isSelected, String currentLyrics) {
+            int issueYear, int musicQualityType, boolean isSelected, String playListFlag,
+            String currentLyrics) {
         this.id = id;
         this.title = title;
         this.artist = artist;
@@ -103,6 +111,7 @@ public class MusicBean
         this.issueYear = issueYear;
         this.musicQualityType = musicQualityType;
         this.isSelected = isSelected;
+        this.playListFlag = playListFlag;
         this.currentLyrics = currentLyrics;
     }
 
@@ -283,6 +292,16 @@ public class MusicBean
         this.isFavorite = isFavorite;
     }
 
+
+
+    public boolean getIsSelected() {
+        return this.isSelected;
+    }
+
+    public void setIsSelected(boolean isSelected) {
+        this.isSelected = isSelected;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -312,15 +331,18 @@ public class MusicBean
         dest.writeInt(issueYear);
         dest.writeInt(musicQualityType);
         dest.writeByte((byte) (isSelected ? 1 : 0));
+        dest.writeString(playListFlag);
         dest.writeString(currentLyrics);
         dest.writeInt(cureetPosition);
     }
 
-    public boolean getIsSelected() {
-        return this.isSelected;
+
+    public String getPlayListFlag() {
+        return this.playListFlag;
     }
 
-    public void setIsSelected(boolean isSelected) {
-        this.isSelected = isSelected;
+
+    public void setPlayListFlag(String playListFlag) {
+        this.playListFlag = playListFlag;
     }
 }

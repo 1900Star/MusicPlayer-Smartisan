@@ -14,7 +14,7 @@ android {
 
 
         greendao {
-            schemaVersion 6
+            schemaVersion 7
             daoPackage 'com.yibao.music.model.greendao'
             targetGenDir 'src/main/java/'
         }
@@ -71,4 +71,8 @@ android {
         // 权限申请
         implementation 'com.yanzhenjie:permission:2.0.0-rc12'
     }
+}
+
+dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:+'
 }

@@ -751,7 +751,7 @@ public class MusicActivity
         MusicBean musicBean = moreMenuStatus.getMusicBean();
         switch (moreMenuStatus.getPosition()) {
             case Constants.NUMBER_ZOER:
-                SnakbarUtil.keepGoing(mSmartisanControlBar);
+                startPlayListActivity(musicBean.getTitle());
                 break;
             case Constants.NUMBER_ONE:
                 SnakbarUtil.keepGoing(mSmartisanControlBar);

@@ -41,7 +41,8 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
         public final static Property IssueYear = new Property(14, int.class, "issueYear", false, "ISSUE_YEAR");
         public final static Property MusicQualityType = new Property(15, int.class, "musicQualityType", false, "MUSIC_QUALITY_TYPE");
         public final static Property IsSelected = new Property(16, boolean.class, "isSelected", false, "IS_SELECTED");
-        public final static Property CurrentLyrics = new Property(17, String.class, "currentLyrics", false, "CURRENT_LYRICS");
+        public final static Property PlayListFlag = new Property(17, String.class, "playListFlag", false, "PLAY_LIST_FLAG");
+        public final static Property CurrentLyrics = new Property(18, String.class, "currentLyrics", false, "CURRENT_LYRICS");
     }
 
 
@@ -74,7 +75,8 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
                 "\"ISSUE_YEAR\" INTEGER NOT NULL ," + // 14: issueYear
                 "\"MUSIC_QUALITY_TYPE\" INTEGER NOT NULL ," + // 15: musicQualityType
                 "\"IS_SELECTED\" INTEGER NOT NULL ," + // 16: isSelected
-                "\"CURRENT_LYRICS\" TEXT);"); // 17: currentLyrics
+                "\"PLAY_LIST_FLAG\" TEXT," + // 17: playListFlag
+                "\"CURRENT_LYRICS\" TEXT);"); // 18: currentLyrics
     }
 
     /** Drops the underlying database table. */
@@ -132,9 +134,14 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
         stmt.bindLong(16, entity.getMusicQualityType());
         stmt.bindLong(17, entity.getIsSelected() ? 1L: 0L);
  
+        String playListFlag = entity.getPlayListFlag();
+        if (playListFlag != null) {
+            stmt.bindString(18, playListFlag);
+        }
+ 
         String currentLyrics = entity.getCurrentLyrics();
         if (currentLyrics != null) {
-            stmt.bindString(18, currentLyrics);
+            stmt.bindString(19, currentLyrics);
         }
     }
 
@@ -187,9 +194,14 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
         stmt.bindLong(16, entity.getMusicQualityType());
         stmt.bindLong(17, entity.getIsSelected() ? 1L: 0L);
  
+        String playListFlag = entity.getPlayListFlag();
+        if (playListFlag != null) {
+            stmt.bindString(18, playListFlag);
+        }
+ 
         String currentLyrics = entity.getCurrentLyrics();
         if (currentLyrics != null) {
-            stmt.bindString(18, currentLyrics);
+            stmt.bindString(19, currentLyrics);
         }
     }
 
@@ -218,7 +230,8 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
             cursor.getInt(offset + 14), // issueYear
             cursor.getInt(offset + 15), // musicQualityType
             cursor.getShort(offset + 16) != 0, // isSelected
-            cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17) // currentLyrics
+            cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17), // playListFlag
+            cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18) // currentLyrics
         );
         return entity;
     }
@@ -242,7 +255,8 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
         entity.setIssueYear(cursor.getInt(offset + 14));
         entity.setMusicQualityType(cursor.getInt(offset + 15));
         entity.setIsSelected(cursor.getShort(offset + 16) != 0);
-        entity.setCurrentLyrics(cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17));
+        entity.setPlayListFlag(cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17));
+        entity.setCurrentLyrics(cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18));
      }
     
     @Override

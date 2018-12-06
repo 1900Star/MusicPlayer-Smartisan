@@ -83,7 +83,7 @@ public class ArtistFragment extends BaseMusicFragment {
     private void openDetailsView(ArtistInfo artistInfo) {
         mArtistInfo = artistInfo;
         if (isShowDetailsView) {
-            mDetailsViewMap.remove(mClassName);
+           removeFrag(mClassName);
             mDetailsView.setVisibility(View.GONE);
             mMusicView.setVisibility(View.VISIBLE);
             detailsViewTitle = null;
@@ -97,9 +97,7 @@ public class ArtistFragment extends BaseMusicFragment {
             SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_NINE);
             mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
                     MoreMenuBottomDialog.newInstance(musicBean, position).getBottomDialog(mActivity));
-            if (!mDetailsViewMap.containsKey(mClassName)) {
-                mDetailsViewMap.put(mClassName, this);
-            }
+           putFragToMap(mClassName);
             detailsViewTitle = artistInfo.getAlbumName();
             changeToolBarTitle(artistInfo.getAlbumName(), isShowDetailsView);
         }

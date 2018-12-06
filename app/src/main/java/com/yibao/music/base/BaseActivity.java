@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayActivity;
+import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.activity.SearchActivity;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
@@ -15,6 +16,7 @@ import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
+import com.yibao.music.util.Constants;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.view.music.QqControlBar;
 import com.yibao.music.view.music.SmartisanControlBar;
@@ -117,12 +119,21 @@ public abstract class BaseActivity extends AppCompatActivity {
         startActivity(new Intent(this, PlayActivity.class));
         overridePendingTransition(R.anim.dialog_push_in, 0);
     }
+
+    protected void startPlayListActivity(String songName) {
+        Intent intent = new Intent(this, PlayListActivity.class);
+        intent.putExtra(Constants.SONG_NAME, songName);
+        startActivity(intent);
+        overridePendingTransition(R.anim.dialog_push_in, 0);
+    }
+
     protected void startSearchActivity(MusicBean currentMusicBean) {
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra("musicBean", currentMusicBean);
         startActivity(intent);
         overridePendingTransition(R.anim.dialog_push_in, 0);
     }
+
     protected void checkCurrentSongIsFavorite(MusicBean currentMusicBean, QqControlBar qqControlBar, SmartisanControlBar smartisanControlBar) {
         boolean favorite = mMusicDao.load(currentMusicBean.getId()).getIsFavorite();
         smartisanControlBar.setFavoriteButtonState(favorite);

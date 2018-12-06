@@ -10,18 +10,22 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.yibao.music.R;
+import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.BaseMusicFragment;
-import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
+import com.yibao.music.base.listener.OnFinishActivityListener;
 import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
 import com.yibao.music.fragment.dialogfrag.DeletePlayListDialog;
 import com.yibao.music.model.AddAndDeleteListBean;
+import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.SpUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -57,19 +61,27 @@ public class PlayListFragment extends BaseMusicFragment {
     private boolean isItemSelectStatus = true;
     private int mEditPosition;
     private int mSelectCount;
+    private static int mFlag;
+    private static String mSongName;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.play_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
-        initData();
         receiveRxbuData();
         initListener();
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+    }
+
     private void initData() {
+        SpUtil.setAddToPlayListFlag(mActivity, mFlag);
         mAdapter = new PlayListAdapter(getPlayList());
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
         mPlayListContent.addView(recyclerView);
@@ -118,19 +130,32 @@ public class PlayListFragment extends BaseMusicFragment {
 
     private void initListener() {
         mAdapter.setItemListener((playListBean, isEditStatus) -> {
-            if (isEditStatus) {
-                mSelectCount = playListBean.isSelected() ? mSelectCount-- : mSelectCount++;
-                playListBean.setIsSelected(!playListBean.isSelected());
-                mPlayListDao.update(playListBean);
-                mAdapter.notifyDataSetChanged();
+            if (SpUtil.getAddToPlayListFlag(mActivity) == Constants.NUMBER_ONE) {
+                if (mContext instanceof PlayListActivity) {
+                    MusicBean musicBean = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Title.eq(mSongName)).build().unique();
+                    musicBean.setPlayListFlag(playListBean.getTitle());
+                    mMusicBeanDao.update(musicBean);
+                    playListBean.setSongCount(playListBean.getSongCount() + 1);
+                    mPlayListDao.update(playListBean);
+                    ((OnFinishActivityListener) mContext).finishActivity();
+                }
             } else {
-                PlayListFragment.this.showDetailsView(playListBean.getTitle());
+                if (isEditStatus) {
+                    mSelectCount = playListBean.isSelected() ? mSelectCount-- : mSelectCount++;
+                    playListBean.setIsSelected(!playListBean.isSelected());
+                    mPlayListDao.update(playListBean);
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    PlayListFragment.this.showDetailsView(playListBean.getTitle());
+                }
             }
         });
         // 长按删除
         mAdapter.setItemLongClickListener((musicInfo, currentPosition) -> {
-            mDeletePosition = currentPosition;
-            DeletePlayListDialog.newInstance(musicInfo, Constants.NUMBER_TWO).show(mActivity.getFragmentManager(), "deleteList");
+            if (SpUtil.getAddToPlayListFlag(mActivity) != Constants.NUMBER_ONE) {
+                mDeletePosition = currentPosition;
+                DeletePlayListDialog.newInstance(musicInfo, Constants.NUMBER_TWO).show(mActivity.getFragmentManager(), "deleteList");
+            }
         });
         // 编辑按钮
         mAdapter.setItemEditClickListener(currentPosition -> {
@@ -174,13 +199,15 @@ public class PlayListFragment extends BaseMusicFragment {
 
     private void showDetailsView(String title) {
         if (isShowDetailsView) {
-            mDetailsViewMap.remove(mClassName);
+            removeFrag(mClassName);
             mLlAddNewPlayList.setVisibility(View.VISIBLE);
             mDetailsView.setVisibility(View.GONE);
             detailsViewTitle = null;
         } else {
             mLlAddNewPlayList.setVisibility(View.INVISIBLE);
             mDetailsView.setVisibility(View.VISIBLE);
+            List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(title)).build().list();
+            LogUtil.d("==========  播放列表     " + list.size());
             putFragToMap(Constants.NUMBER_EIGHT, mClassName);
             detailsViewTitle = title;
             changeToolBarTitle(title, isShowDetailsView);
@@ -203,7 +230,9 @@ public class PlayListFragment extends BaseMusicFragment {
         }
     }
 
-    public static PlayListFragment newInstance() {
+    public static PlayListFragment newInstance(int flag, String songName) {
+        mFlag = flag;
+        mSongName = songName;
         return new PlayListFragment();
     }
 
@@ -227,7 +256,7 @@ public class PlayListFragment extends BaseMusicFragment {
         if (isItemSelectStatus) {
             putFragToMap(Constants.NUMBER_EIGHT, mClassName);
         } else {
-            mDetailsViewMap.remove(mClassName);
+            removeFrag(mClassName);
             mAdapter.setItemSelectStatus(isItemSelectStatus);
         }
         changeTvEditText(getResources().getString(isItemSelectStatus ? R.string.complete : R.string.tv_edit));

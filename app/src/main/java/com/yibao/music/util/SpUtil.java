@@ -33,6 +33,24 @@ public class SpUtil {
     }
 
     /**
+     * 用于标记详情页面是否打开
+     *
+     * @param context
+     * @param value
+     */
+    public static void setAddToPlayListFlag(Context context, int value) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.ADD_TO_PLAY_LIST_FLAG, Constants.MODE_KEY);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(Constants.ADD_TO_PLAY_LIST_FLAG_KEY, value);
+        editor.apply();
+    }
+
+    public static int getAddToPlayListFlag(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.ADD_TO_PLAY_LIST_FLAG, Constants.MODE_KEY);
+        return sp.getInt(Constants.ADD_TO_PLAY_LIST_FLAG_KEY, Constants.MODE_KEY);
+    }
+
+    /**
      * 用于存储和获取音乐的播放模式
      *
      * @param context

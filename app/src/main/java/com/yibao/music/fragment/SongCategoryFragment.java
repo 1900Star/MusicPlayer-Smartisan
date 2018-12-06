@@ -150,7 +150,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
         if (isItemSelectStatus) {
             putFragToMap(Constants.NUMBER_ELEVEN, mClassName);
         } else {
-            mDetailsViewMap.remove(mClassName);
+           removeFrag(mClassName);
             mSongAdapter.setItemSelectStatus(isItemSelectStatus);
         }
         changeTvEditText(getResources().getString(isItemSelectStatus ? R.string.complete : R.string.tv_edit));

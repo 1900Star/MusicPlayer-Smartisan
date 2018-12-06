@@ -24,6 +24,7 @@ public class Constants {
     public static final char LETTER_A = 'A';
     public static final char LETTER_Z = 'Z';
     public static final char LETTER_HASH = '#';
+    public static final String SONG_NAME = "song_name";
     static final int MODE_KEY = 0;
     static final String MUSIC_LOAD = "music_load";
 
@@ -36,6 +37,9 @@ public class Constants {
 
     static final String DETAIL_FLAG = "detail_flag";
     static final String DETAIL_FLAG_KEY = "detail_flag_key";
+
+    static final String ADD_TO_PLAY_LIST_FLAG = "detail_flag";
+    static final String ADD_TO_PLAY_LIST_FLAG_KEY = "detail_flag_key";
 
     static final String MUSIC_DATA_FLAG = "music_data_flag";
     static final String MUSIC_DATA_LIST_FLAG = "music_data_list_flag";

@@ -16,7 +16,6 @@ import java.util.HashMap;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -113,8 +112,24 @@ public abstract class BaseMusicFragment extends BaseFragment {
 
     protected void putFragToMap(int detailFlag, String fragmentName) {
         SpUtil.setDetailsFlag(mActivity, detailFlag);
-        if (!mDetailsViewMap.containsKey(fragmentName)) {
-            mDetailsViewMap.put(fragmentName, this);
+        if (mDetailsViewMap != null) {
+            if (!mDetailsViewMap.containsKey(fragmentName)) {
+                mDetailsViewMap.put(fragmentName, this);
+            }
+        }
+    }
+
+    protected void putFragToMap(String fragmentName) {
+        if (mDetailsViewMap != null) {
+            if (!mDetailsViewMap.containsKey(fragmentName)) {
+                mDetailsViewMap.put(fragmentName, this);
+            }
+        }
+    }
+
+    protected void removeFrag(String fragmentName) {
+        if (mDetailsViewMap != null) {
+            mDetailsViewMap.remove(fragmentName);
         }
     }
 

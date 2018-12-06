@@ -107,7 +107,7 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
         if (isItemSelectStatus) {
             putFragToMap(Constants.NUMBER_TEN, mClassName);
         } else {
-            mDetailsViewMap.remove(mClassName);
+            removeFrag(mClassName);
             mAlbumAdapter.setItemSelectStatus(isItemSelectStatus);
         }
         changeTvEditText(getResources().getString(isItemSelectStatus ? R.string.complete : R.string.tv_edit));

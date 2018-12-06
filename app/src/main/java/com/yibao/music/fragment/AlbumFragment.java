@@ -138,9 +138,7 @@ public class AlbumFragment extends BaseMusicFragment {
             mDetailsView.setAdapter(getActivity(), Constants.NUMBER_TWO, albumInfo, mDetailsAdapter);
             mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
                     MoreMenuBottomDialog.newInstance(musicBean, position).getBottomDialog(mActivity));
-            if (!mDetailsViewMap.containsKey(mClassName)) {
-                mDetailsViewMap.put(mClassName, this);
-            }
+            putFragToMap(mClassName);
             detailsViewTitle = albumInfo.getAlbumName();
             changeToolBarTitle(albumInfo.getAlbumName(), true);
         }
@@ -164,7 +162,7 @@ public class AlbumFragment extends BaseMusicFragment {
             SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_TEN);
             mAlbumContentView.setVisibility(View.VISIBLE);
             mDetailsView.setVisibility(View.GONE);
-            mDetailsViewMap.remove(mClassName);
+           removeFrag(mClassName);
             isShowDetailsView = !isShowDetailsView;
         }
 //        super.handleDetailsBack(detailFlag);

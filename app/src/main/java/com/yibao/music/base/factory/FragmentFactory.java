@@ -9,6 +9,7 @@ import com.yibao.music.fragment.AlbumFragment;
 import com.yibao.music.fragment.ArtistFragment;
 import com.yibao.music.fragment.PlayListFragment;
 import com.yibao.music.fragment.SongFragment;
+import com.yibao.music.util.Constants;
 
 /**
  * Author：Sid
@@ -34,7 +35,7 @@ public class FragmentFactory {
 
         switch (position) {
             case 0:
-                fragment = PlayListFragment.newInstance();
+                fragment = PlayListFragment.newInstance(Constants.NUMBER_ZOER,"lsp");
                 break;
             case 1:
                 fragment = ArtistFragment.newInstance();
