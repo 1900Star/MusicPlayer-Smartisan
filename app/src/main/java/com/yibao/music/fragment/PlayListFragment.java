@@ -152,11 +152,14 @@ public class PlayListFragment extends BaseMusicFragment {
                     if (beanList.size() > 0) {
                         ToastUtil.songalreadyExist(mActivity);
                     } else {
-                        MusicBean musicBean = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Title.eq(mSongName)).build().unique();
-                        musicBean.setPlayListFlag(playListBean.getTitle());
-                        mMusicBeanDao.update(musicBean);
-                        playListBean.setSongCount(playListBean.getSongCount() + 1);
-                        mPlayListDao.update(playListBean);
+                        List<MusicBean> musicBeans = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Title.eq(mSongName)).build().list();
+                        if (musicBeans.size() > 0) {
+                            MusicBean musicBean = musicBeans.get(0);
+                            musicBean.setPlayListFlag(playListBean.getTitle());
+                            mMusicBeanDao.update(musicBean);
+                            playListBean.setSongCount(playListBean.getSongCount() + 1);
+                            mPlayListDao.update(playListBean);
+                        }
                     }
                     ((OnFinishActivityListener) mContext).finishActivity();
                 }
