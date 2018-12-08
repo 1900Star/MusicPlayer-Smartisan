@@ -15,12 +15,17 @@ import android.widget.TextView;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.model.AddAndDeleteListBean;
+import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicInfo;
 import com.yibao.music.model.PlayListBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.MusicInfoDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RxBus;
+
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -44,6 +49,7 @@ public class DeletePlayListDialog
     private PlayListBean mPlayListBean;
     private RxBus mBus;
     private int mPageType;
+    private MusicBeanDao mMusicDao;
 
     public static DeletePlayListDialog newInstance(PlayListBean musicInfo, int pageType) {
         Bundle bundle = new Bundle();
@@ -85,6 +91,7 @@ public class DeletePlayListDialog
         mTvCancelDelete = mView.findViewById(R.id.tv_delete_list_cancel);
         mTvDelete = mView.findViewById(R.id.tv_delete_list_continue);
         mBus = RxBus.getInstance();
+        mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mPlayListBean = getArguments().getParcelable("musicInfo");
         mPageType = getArguments().getInt("pageType");
         if (mPlayListBean != null) {
@@ -111,6 +118,13 @@ public class DeletePlayListDialog
 
     private void deletePlayList() {
         if (mPageType == Constants.NUMBER_TWO) {
+            // 同步更新列表中，的歌曲的列表标识 (更新为“LSP_98”)
+            List<MusicBean> musicBeanList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(mPlayListBean.getTitle())).build().list();
+            for (MusicBean musicBean : musicBeanList) {
+                musicBean.setPlayListFlag(Constants.PLAY_LIST_BACK_FLAG);
+                mMusicDao.update(musicBean);
+            }
+
             MusicApplication.getIntstance().getPlayListDao().delete(mPlayListBean);
         }
         mBus.post(new AddAndDeleteListBean(mPageType));

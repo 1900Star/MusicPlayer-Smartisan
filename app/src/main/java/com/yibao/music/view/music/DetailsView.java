@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.yibao.music.R;
-import com.yibao.music.adapter.SearchDetailsAdapter;
+import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
@@ -68,16 +68,16 @@ public class DetailsView
         initListener();
     }
 
-    @Override
-    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
-        super.onVisibilityChanged(changedView, visibility);
-        LogUtil.d("==========++== 详情显示  " + visibility);
-    }
 
     public DetailsView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
         initListener();
+    }
+    @Override
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+        LogUtil.d("==========++== 详情显示  " + visibility);
     }
 
     /**
@@ -88,7 +88,7 @@ public class DetailsView
      * @param bean     d
      * @param adapter  d
      */
-    public void setAdapter(Context context, int dataType, Object bean, SearchDetailsAdapter adapter) {
+    public void setAdapter(Context context, int dataType, Object bean, DetailsViewAdapter adapter) {
         initData(dataType, bean);
         LinearLayoutManager manager = new LinearLayoutManager(context);
         manager.setOrientation(LinearLayoutManager.VERTICAL);

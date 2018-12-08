@@ -72,7 +72,3 @@ android {
         implementation 'com.yanzhenjie:permission:2.0.0-rc12'
     }
 }
-
-dependencies {
-    implementation 'com.android.support.constraint:constraint-layout:+'
-}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_window_focused="false">
+        <shape android:shape="rectangle">
+            <corners android:radius="4dp" />
+            <!--填充颜色-->
+            <solid android:color="@color/deleteNorma" />
+            <!--描边-->
+            <stroke android:width="1.5px" android:color="@color/seekBarN" />
+        </shape>
+    </item>
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="4dp" />
+            <solid android:color="@color/deleteDown" />
+            <stroke android:width="1.5px" android:color="@color/seekBarX" />
+        </shape>
+    </item>
+</selector>

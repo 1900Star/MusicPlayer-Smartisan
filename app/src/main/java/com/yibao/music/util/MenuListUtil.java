@@ -14,7 +14,7 @@ import java.util.List;
  * @ Des:    TODO
  */
 public class MenuListUtil {
-    private static final int[] nameArr = {R.string.add_new_play_list, R.string.add_to_play_queue,
+    private static final int[] nameArr = {R.string.add_to_play_list, R.string.add_to_play_queue,
             R.string.favorite, R.string.lyrics, R.string.tv_delete};
     private static final int[] picArr = {R.drawable.more_select_icon_addlist_down,
             R.drawable.more_select_icon_addplay_down, R.drawable.more_favorite_normal,

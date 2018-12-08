@@ -53,6 +53,10 @@ public class QueryMusicFlagListUtil {
             } else if (dataFlag == Constants.NUMBER_THRRE) {
                 musicBean.setTitle(queryFlag);
                 return musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Title.eq(musicBean.getTitle())).build().list();
+                // 按播放列表查询
+            } else if (dataFlag == Constants.NUMBER_FOUR) {
+                musicBean.setPlayListFlag(queryFlag);
+                return musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(musicBean.getPlayListFlag())).build().list();
             }
         }
         return MusicListUtil.sortMusicAbc(musicBeanDao.queryBuilder().list());

@@ -71,7 +71,7 @@
             android:adjustViewBounds="true"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
-            android:src="@drawable/btn_playing_list" />
+            android:src="@drawable/title_bar_favorite_selector" />
     </RelativeLayout>
 
     <LinearLayout

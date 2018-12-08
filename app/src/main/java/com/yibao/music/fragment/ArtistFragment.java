@@ -9,9 +9,8 @@ import android.view.ViewGroup;
 
 import com.yibao.music.R;
 import com.yibao.music.adapter.ArtistAdapter;
-import com.yibao.music.adapter.SearchDetailsAdapter;
+import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.base.BaseMusicFragment;
-import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
@@ -49,7 +48,7 @@ public class ArtistFragment extends BaseMusicFragment {
     private List<ArtistInfo> mArtistList;
     public static boolean isShowDetailsView = false;
     private ArtistInfo mArtistInfo;
-    private SearchDetailsAdapter mDetailsAdapter;
+    private DetailsViewAdapter mDetailsAdapter;
     private List<MusicBean> mDetailList;
 
     @Override
@@ -92,11 +91,11 @@ public class ArtistFragment extends BaseMusicFragment {
             mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(artistInfo.getArtist())).build().list();
             // DetailsView播放音乐需要的参数
             mDetailsView.setDataFlag(mFragmentManager, mDetailList.size(), artistInfo.getArtist(), Constants.NUMBER_ONE);
-            mDetailsAdapter = new SearchDetailsAdapter(getActivity(), mDetailList, Constants.NUMBER_ONE);
+            mDetailsAdapter = new DetailsViewAdapter(getActivity(), mDetailList, Constants.NUMBER_ONE);
             mDetailsView.setAdapter(getActivity(), Constants.NUMBER_ONE, artistInfo, mDetailsAdapter);
             SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_NINE);
             mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
-                    MoreMenuBottomDialog.newInstance(musicBean, position).getBottomDialog(mActivity));
+                    MoreMenuBottomDialog.newInstance(musicBean, position,false).getBottomDialog(mActivity));
            putFragToMap(mClassName);
             detailsViewTitle = artistInfo.getAlbumName();
             changeToolBarTitle(artistInfo.getAlbumName(), isShowDetailsView);

@@ -62,6 +62,12 @@ public class AddListDialog
     private CompositeDisposable mCompositeDisposable;
     private static String mEditHint;
 
+    /**
+     *
+     * @param operationType  1 新建列表  2 列表改名
+     * @param editHint e
+     * @return
+     */
     public static AddListDialog newInstance(int operationType, String editHint) {
         mOperationType = operationType;
         mEditHint = editHint;

@@ -10,7 +10,6 @@ import com.yibao.music.R;
 import com.yibao.music.base.listener.OnFinishActivityListener;
 import com.yibao.music.fragment.PlayListFragment;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SpUtil;
 
 public class PlayListActivity extends AppCompatActivity implements OnFinishActivityListener {

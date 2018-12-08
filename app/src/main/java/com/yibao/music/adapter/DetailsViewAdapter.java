@@ -33,15 +33,15 @@ import io.reactivex.ObservableEmitter;
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/9 16:22
- * @描述： { 1 ArtistFragment 、 2 AlbumFragment、 3 SearchActivity 会使用这个Adapter，dataFlag ( 1 、2、 3)作为使用页面的标识}
+ * @描述： { 1 ArtistFragment 、 2 AlbumFragment、 3 SearchActivity 、4 PlayListDetailView 会使用这个Adapter，dataFlag ( 1 、2、3、4)作为使用页面的标识}
  */
 
-public class SearchDetailsAdapter extends BaseRvAdapter<MusicBean> {
+public class DetailsViewAdapter extends BaseRvAdapter<MusicBean> {
     private Context mContext;
     // 用来区分搜索的标识：1 Artist 、 2 Album 、  3 SongName(目前只按歌名搜索)
     private int mDataFlag;
 
-    public SearchDetailsAdapter(Context context, List<MusicBean> list, int dataFlag) {
+    public DetailsViewAdapter(Context context, List<MusicBean> list, int dataFlag) {
         super(list);
         this.mContext = context;
         this.mDataFlag = dataFlag;
@@ -106,6 +106,8 @@ public class SearchDetailsAdapter extends BaseRvAdapter<MusicBean> {
             queryFlag = info.getAlbum();
         } else if (mDataFlag == Constants.NUMBER_THRRE) {
             queryFlag = info.getTitle();
+        } else if (mDataFlag == Constants.NUMBER_FOUR) {
+            queryFlag = info.getPlayListFlag();
         }
         return queryFlag;
     }

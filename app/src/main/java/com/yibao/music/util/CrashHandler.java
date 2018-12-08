@@ -1,7 +1,7 @@
 package com.yibao.music.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -9,7 +9,6 @@ import android.os.Environment;
 import android.os.Process;
 
 import com.yibao.music.MusicApplication;
-import com.yibao.music.activity.SplashActivity;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -33,19 +32,18 @@ public class CrashHandler
     private static final String TAG = "CrashHandler";
     private static final String FILE_NAME = "crash";
     private static final String FILE_NAME_SUFFIX = ".txt";
-    private static CrashHandler sInstane = new CrashHandler();
     private Context mContext;
     private Thread.UncaughtExceptionHandler mDefaultCrashHandler;
 
 
     public static CrashHandler getInstance() {
-        return sInstane;
+        return new CrashHandler();
     }
 
-    public void init(Context context) {
+    public void init() {
         mDefaultCrashHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
-        mContext = context.getApplicationContext();
+        mContext = MusicApplication.getIntstance().getApplicationContext();
     }
 
     @Override
@@ -85,7 +83,7 @@ public class CrashHandler
             dir.mkdirs();
         }
         long current = System.currentTimeMillis();
-        String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").format(new Date(current));
+        @SuppressLint("SimpleDateFormat") String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").format(new Date(current));
         File file = new File(CRASH_LOG_PATH + FILE_NAME + time + FILE_NAME_SUFFIX);
         try {
             PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));

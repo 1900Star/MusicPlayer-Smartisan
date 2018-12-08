@@ -9,6 +9,10 @@
     <color name="listBg">#ededed</color>
     <color name="slidBg">#e6e4e4</color>
     <color name="colorGreen">#59e130</color>
+    <color name="deleteDisable">#F8D0CD</color>
+    <color name="deleteDisableDown">#dfbab7</color>
+    <color name="deleteNorma">#f7817a</color>
+    <color name="deleteDown">#E65D54</color>
 
     //about
     <color name="aboutTitle">#ff000000</color>
@@ -23,6 +27,8 @@
     <!--BottomSheetDialogList-->
     <!--SeekBar-->
     <color name="seekBarP">#8e8e8f</color>
+    <color name="seekBarO">#c1c1c2</color>
+    <color name="seekBarX">#d0d0d2</color>
     <color name="seekBarN">#ccdcdbdb</color>
     <color name="bg_hint">#a1a1a1</color>
     <!-- 透明 -->

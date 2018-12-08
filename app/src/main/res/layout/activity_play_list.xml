@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     android:orientation="vertical"
     tools:context=".activity.PlayListActivity">
 
@@ -37,6 +38,7 @@
                     android:layout_centerVertical="true"
                     android:background="@drawable/btn_edit_selector"
                     android:enabled="true"
+                    android:textStyle="bold"
                     android:gravity="center"
                     android:text="@string/cancel"
                     android:textColor="@color/aboutSign" />
@@ -45,13 +47,6 @@
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
-
-
-    <fragment
-        android:id="@+id/fragment_playlist"
-        android:name="com.yibao.music.fragment.PlayListFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
     <FrameLayout
         android:id="@+id/fl_content"

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/seekBarN"
@@ -9,18 +8,20 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_gravity="center"
         android:background="@drawable/titlebar_playing_bg">
 
         <TextView
             android:id="@+id/bottom_sheet_bar_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="78dp"
+            android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
+            android:layout_margin="12dp"
+            android:background="@drawable/shape_btn_edit_selector"
+            android:gravity="center"
             android:text="@string/play_all"
             android:textColor="@color/text_bottom_dialog_selector"
-            android:textSize="@dimen/bigLyrics" />
+            android:textSize="@dimen/bigLyrics"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/bottom_list_title_size"
@@ -29,22 +30,22 @@
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
             android:textColor="@color/text_bottom_dialog_selector"
-            android:textSize="@dimen/bigLyrics" />
+            android:textSize="@dimen/bigLyrics"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/bottom_sheet_bar_clear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/bottom_sheet_bar_play"
-            android:layout_alignBottom="@+id/bottom_sheet_bar_play"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginEnd="12dp"
-            android:layout_marginRight="12dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="12dp"
+            android:background="@drawable/shape_btn_edit_selector"
+            android:gravity="center"
             android:text="@string/clear_all_favorite"
             android:textColor="@color/text_bottom_dialog_selector"
             android:textSize="@dimen/bigLyrics"
-            tools:ignore="RtlHardcoded" />
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <LinearLayout

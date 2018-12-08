@@ -9,11 +9,13 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-9dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_music"
-            android:layout_width="match_parent"
+            android:layout_marginEnd="8dp"
+            android:layout_width="wrap_content"
             android:layout_height="48dp">
 
             <RelativeLayout
@@ -22,10 +24,10 @@
 
                 <TextView
                     android:id="@+id/tv_edit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:background="@drawable/btn_edit_selector"
+                    android:layout_width="48dp"
+                    android:layout_height="30dp"
                     android:layout_centerVertical="true"
+                    android:background="@drawable/shape_btn_edit_selector"
                     android:gravity="center"
                     android:text="@string/tv_edit"
                     android:textColor="@color/textDes"
@@ -35,51 +37,44 @@
                     android:id="@+id/tv_music_toolbar_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="@string/music_song"
                     android:ellipsize="marquee"
+                    android:layout_centerInParent="true"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:maxLength="25"
                     android:singleLine="true"
+                    android:text="@string/music_song"
                     android:textColor="@color/music_activity_title_selector"
                     android:textSize="@dimen/big_tv"
                     android:textStyle="bold" />
 
-                <LinearLayout
-                    android:layout_width="66dp"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:id="@+id/iv_search"
+                    android:layout_width="48dp"
+                    android:layout_height="28dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="3dp"
-                    android:background="@drawable/btn_edit_selector"
+                    android:layout_gravity="center"
+                    android:background="@drawable/shape_btn_edit_selector"
+                    android:scaleType="center"
+                    android:src="@drawable/iv_title_search_"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tv_edit_delete"
+                    android:layout_width="48dp"
+                    android:layout_height="28dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:textStyle="bold"
+                    android:background="@drawable/shape_btn_delete_selector"
                     android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/iv_search"
-                        android:layout_width="66dp"
-                        android:layout_height="48dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/btn_edit_selector"
-                        android:scaleType="center"
-                        android:src="@drawable/iv_title_search_"
-                        android:visibility="visible" />
-
-                    <TextView
-                        android:id="@+id/tv_edit_delete"
-                        android:layout_width="75dp"
-                        android:layout_height="38dp"
-                        android:background="@drawable/title_bar_delete_selector"
-                        android:gravity="center"
-                        android:text="@string/tv_delete"
-                        android:visibility="gone" />
-                </LinearLayout>
+                    android:text="@string/tv_delete"
+                    android:visibility="gone" />
             </RelativeLayout>
 
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
-
 
     <com.yibao.music.view.MainViewPager
         android:id="@+id/music_viewpager"

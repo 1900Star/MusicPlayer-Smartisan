@@ -30,7 +30,8 @@
             android:layout_height="wrap_content"
             android:text="@string/play_list"
             android:textColor="@color/tabbarTv"
-            android:textSize="@dimen/music_tabbar" />
+            android:textSize="@dimen/music_tabbar"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -57,7 +58,8 @@
             android:layout_height="wrap_content"
             android:text="@string/music_artisan"
             android:textColor="@color/tabbarTv"
-            android:textSize="@dimen/music_tabbar" />
+            android:textSize="@dimen/music_tabbar"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -85,7 +87,8 @@
             android:layout_height="wrap_content"
             android:text="@string/music_song"
             android:textColor="@color/tabbarDownTv"
-            android:textSize="@dimen/music_tabbar" />
+            android:textSize="@dimen/music_tabbar"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -112,7 +115,8 @@
             android:layout_height="wrap_content"
             android:text="@string/music_album"
             android:textColor="@color/tabbarTv"
-            android:textSize="@dimen/music_tabbar" />
+            android:textSize="@dimen/music_tabbar"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -139,7 +143,8 @@
             android:layout_height="wrap_content"
             android:text="@string/about"
             android:textColor="@color/tabbarTv"
-            android:textSize="@dimen/music_tabbar" />
+            android:textSize="@dimen/music_tabbar"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

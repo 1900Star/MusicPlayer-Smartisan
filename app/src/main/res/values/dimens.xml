@@ -9,6 +9,7 @@
     <dimen name="music_loating_title">15sp</dimen>
     <dimen name="music_eighteen">18sp</dimen>
     <dimen name="music_artist">12sp</dimen>
+    <dimen name="dp_six">6dp</dimen>
 
     <dimen name="big_tv">20sp</dimen>
     <dimen name="bigLyrics">16sp</dimen>

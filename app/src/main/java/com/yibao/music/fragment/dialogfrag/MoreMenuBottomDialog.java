@@ -38,10 +38,12 @@ public class MoreMenuBottomDialog {
     private MoreMemuAdapter mMemuAdapter;
     private static int mMusicPosition;
     private RatingBar mRatingBar;
+    private static boolean mIsNeedScore;
 
-    public static MoreMenuBottomDialog newInstance(MusicBean musicBean, int musicPosition) {
+    public static MoreMenuBottomDialog newInstance(MusicBean musicBean, int musicPosition, boolean isNeedScore) {
         mMusicBean = musicBean;
         mMusicPosition = musicPosition;
+        mIsNeedScore = isNeedScore;
         musicDao = MusicApplication.getIntstance().getMusicDao();
         return new MoreMenuBottomDialog();
     }
@@ -73,6 +75,9 @@ public class MoreMenuBottomDialog {
         mRatingBar = view.findViewById(R.id.rating_bar);
         mBottomListContent = view.findViewById(R.id.bottom_list_content);
         mBottomCancel = view.findViewById(R.id.bottom_sheet_cancel);
+        TextView tvTitle = view.findViewById(R.id.bottom_title);
+        mRatingBar.setVisibility(mIsNeedScore ? View.VISIBLE : View.GONE);
+        tvTitle.setVisibility(mIsNeedScore ? View.GONE : View.VISIBLE);
         dialog.setContentView(view);
         dialog.setCancelable(true);
         Window window = dialog.getWindow();

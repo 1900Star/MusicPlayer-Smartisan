@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
-import com.yibao.music.adapter.SearchDetailsAdapter;
+import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.base.BaseObserver;
 import com.yibao.music.base.BaseTansitionActivity;
 import com.yibao.music.base.factory.RecyclerFactory;
@@ -74,7 +74,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
 
     @BindView(R.id.smartisan_control_bar)
     SmartisanControlBar mSmartisanControlBar;
-    private SearchDetailsAdapter mSearchDetailAdapter;
+    private DetailsViewAdapter mSearchDetailAdapter;
     private MusicBean mMusicBean;
     private AudioPlayService.AudioBinder audioBinder;
     private ArrayList<MusicLyricBean> mLyricList;
@@ -176,7 +176,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             mFlowLayoutView.setData(searchList);
         }
         // 列表数据
-        mSearchDetailAdapter = new SearchDetailsAdapter(SearchActivity.this, null, Constants.NUMBER_THRRE);
+        mSearchDetailAdapter = new DetailsViewAdapter(SearchActivity.this, null, Constants.NUMBER_THRRE);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(1, mSearchDetailAdapter);
         mLinearDetail.addView(recyclerView);
 

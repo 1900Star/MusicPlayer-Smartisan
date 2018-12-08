@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/listBg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="@dimen/dp_six"
+        android:layout_marginEnd="@dimen/dp_six"
+        android:layout_marginBottom="@dimen/dp_six"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_random_play"
+            android:layout_width="0dp"
+            android:layout_height="28dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_btn_selector"
+            android:enabled="true"
+            android:gravity="center"
+            android:text="@string/random_play"
+            android:textColor="@color/tabbarTv"
+            android:textSize="@dimen/music_artist"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_delete_play_list"
+            android:layout_width="0dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="@dimen/dp_six"
+            android:layout_marginEnd="@dimen/dp_six"
+            android:layout_weight="1"
+            android:background="@drawable/shape_btn_selector"
+            android:enabled="true"
+            android:gravity="center"
+            android:text="@string/delelet_play_list"
+            android:textColor="@color/tabbarTv"
+            android:textSize="@dimen/music_artist"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_edit_play_list"
+            android:layout_width="0dp"
+            android:layout_height="28dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_btn_selector"
+            android:enabled="true"
+            android:gravity="center"
+            android:text="@string/edit_play_list"
+            android:textColor="@color/tabbarTv"
+            android:textSize="@dimen/music_artist"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" />
+
+</LinearLayout>

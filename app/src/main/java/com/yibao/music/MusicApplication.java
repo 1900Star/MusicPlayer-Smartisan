@@ -51,7 +51,7 @@ public class MusicApplication
         LeakCanary.install(this);
         appContext = this;
         CrashHandler.getInstance()
-                .init(this);
+                .init();
         setUpDataBase();
     }
 

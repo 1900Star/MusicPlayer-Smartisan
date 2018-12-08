@@ -31,7 +31,6 @@ import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
@@ -373,7 +372,7 @@ public class PlayActivity extends BasePlayActivity {
                 showLyrics();
                 break;
             case R.id.iv_lyrics_switch:
-                MoreMenuBottomDialog.newInstance(mCurrenMusicInfo, audioBinder.getPosition()).getBottomDialog(this);
+                MoreMenuBottomDialog.newInstance(mCurrenMusicInfo, audioBinder.getPosition(),true).getBottomDialog(this);
                 break;
             case R.id.iv_secreen_sun_switch:
                 screenAlwaysOnSwitch(mIvSecreenSunSwitch);
