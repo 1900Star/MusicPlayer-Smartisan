@@ -92,6 +92,7 @@ public class PlayListFragment extends BaseMusicFragment {
         mAdapter = new PlayListAdapter(getPlayList());
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
         mPlayListContent.addView(recyclerView);
+        mDetailsAdapter = new DetailsViewAdapter(mActivity, null, Constants.NUMBER_FOUR);
     }
 
     /**
@@ -234,7 +235,7 @@ public class PlayListFragment extends BaseMusicFragment {
             mDetailView.setVisibility(View.VISIBLE);
             mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(title)).build().list();
             mDetailView.setQureyFlag(title, mDetailList.size());
-            mDetailsAdapter = new DetailsViewAdapter(mActivity, mDetailList, Constants.NUMBER_FOUR);
+            mDetailsAdapter.setNewData(mDetailList);
             mDetailView.setAdapter(mDetailsAdapter);
             mDetailsAdapter.setOnItemMenuListener((position, musicBean) -> MoreMenuBottomDialog.newInstance(musicBean, position, false).getBottomDialog(mActivity));
             putFragToMap(Constants.NUMBER_EIGHT, mClassName);

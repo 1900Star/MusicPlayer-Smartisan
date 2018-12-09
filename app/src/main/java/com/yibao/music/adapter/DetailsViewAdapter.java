@@ -38,7 +38,7 @@ import io.reactivex.ObservableEmitter;
 
 public class DetailsViewAdapter extends BaseRvAdapter<MusicBean> {
     private Context mContext;
-    // 用来区分搜索的标识：1 Artist 、 2 Album 、  3 SongName(目前只按歌名搜索)
+    // 用来区分搜索的标识：1 Artist 、 2 Album 、  3 SongName(目前只按歌名搜索) 、   4 PlayList (播放列表)
     private int mDataFlag;
 
     public DetailsViewAdapter(Context context, List<MusicBean> list, int dataFlag) {

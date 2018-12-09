@@ -174,7 +174,7 @@ public class PlayActivity extends BasePlayActivity {
         super.moreMenu(moreMenuStatus);
         switch (moreMenuStatus.getPosition()) {
             case Constants.NUMBER_ZOER:
-                SnakbarUtil.keepGoing(mAlbumCover);
+                startPlayListActivity(mCurrenMusicInfo.getTitle());
                 break;
             case Constants.NUMBER_ONE:
                 SnakbarUtil.keepGoing(mAlbumCover);

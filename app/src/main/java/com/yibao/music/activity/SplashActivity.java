@@ -124,7 +124,8 @@ public class SplashActivity
                         mMusicLoadProgressBar.setProgress(currentCount);
                         if (currentCount == size) {
                             mTvMusicCount.setTextColor(getResources().getColor(R.color.lyricsSelected));
-                            mTvMusicCount.setText("本地音乐加载完成 -_-");
+                            String s1 = "本地音乐加载完成 -_-  共" + size + "首歌";
+                            mTvMusicCount.setText(s1);
                             // 初次扫描完成后进入MusicActivity
                             if (mIsFirstScanner) {
                                 // 初次加载的标记

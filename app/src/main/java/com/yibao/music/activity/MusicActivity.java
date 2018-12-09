@@ -417,6 +417,7 @@ public class MusicActivity
             if (detailFlag > 0) {
                 // 播放列表
                 if (detailFlag == Constants.NUMBER_EIGHT) {
+                    MusicActivity.this.startMusicService(position);
                     // 艺术家
                 } else if (detailFlag == Constants.NUMBER_NINE) {
                     MusicActivity.this.startMusicServiceFlag(position, Constants.NUMBER_ONE, audioBinder.getMusicList().get(position).getArtist());
