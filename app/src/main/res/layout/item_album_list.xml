@@ -1,8 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_list"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/listBg">
+   >
 
     <TextView
         android:id="@+id/tv_album_item_sticky_view"
@@ -19,7 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="62dp"
         android:layout_below="@id/tv_album_item_sticky_view"
-        android:layout_marginTop="0.5dp"
         android:background="@drawable/list_item_selector"
         android:clickable="true"
         android:focusable="true"
@@ -88,7 +88,8 @@
                     android:maxLength="6"
                     android:maxLines="1"
                     android:textColor="@color/text_singer_selector"
-                    android:textSize="@dimen/music_artist" />
+                    android:textSize="@dimen/music_artist"
+                    tools:ignore="RtlHardcoded" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

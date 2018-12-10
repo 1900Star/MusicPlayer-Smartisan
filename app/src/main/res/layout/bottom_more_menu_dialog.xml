@@ -47,6 +47,7 @@
             android:text="@string/cancel"
             android:textColor="@color/aboutSign"
             android:textSize="@dimen/about_content"
+            android:textStyle="bold"
             tools:ignore="RtlHardcoded" />
     </RelativeLayout>
 

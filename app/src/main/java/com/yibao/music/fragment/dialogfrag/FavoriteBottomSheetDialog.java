@@ -3,6 +3,7 @@ package com.yibao.music.fragment.dialogfrag;
 import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
@@ -63,9 +64,8 @@ public class FavoriteBottomSheetDialog
     private Context mContext;
     private RecyclerView mRecyclerView;
     private BottomSheetBehavior<View> mBehavior;
-    private List<MusicBean> mList = new ArrayList<>();
-    private CompositeDisposable
-            mDisposable = new CompositeDisposable();
+    private List<MusicBean> mList;
+    private CompositeDisposable mCompositeDisposable;
     private RxBus
             mBus = RxBus.getInstance();
     private ViewPager mBottomViewPager;
@@ -80,11 +80,10 @@ public class FavoriteBottomSheetDialog
 
     public void getBottomDialog(Context context) {
         this.mContext = context;
-
-//        this.mList = musicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
         BottomSheetDialog dialog = new BottomSheetDialog(context);
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.bottom_sheet_list_dialog, null);
+        mCompositeDisposable = new CompositeDisposable();
         initView(view);
         initListener();
         rxData();
@@ -107,16 +106,28 @@ public class FavoriteBottomSheetDialog
 
         dialog.setCanceledOnTouchOutside(true);
         mBehavior = BottomSheetBehavior.from((View) view.getParent());
+        disposableClear(dialog);
+
+    }
+
+    private void disposableClear(BottomSheetDialog dialog) {
+        dialog.setOnCancelListener(dialog12 -> {
+            if (mCompositeDisposable != null) {
+                mCompositeDisposable.dispose();
+                mCompositeDisposable.clear();
+                mCompositeDisposable = null;
+            }
+        });
     }
 
     //    接收BottomSheetAdapter发过来的当前点击Item的Position
 
     private void rxData() {
-        mDisposable.add(MusicListUtil.getFavoriteList()
+        mCompositeDisposable.add(MusicListUtil.getFavoriteList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(musicBeanList -> {
                     Collections.sort(musicBeanList);
-//                    mList.addAll(MusicListUtil.sortMusicList(musicBeanList,Constants.NUMBER_TWO));
+                    mList = MusicListUtil.sortMusicList(musicBeanList, Constants.NUMBER_TWO);
                     String sheetTitle = StringUtil.getBottomSheetTitle(musicBeanList.size());
                     mBottomListTitleSize.setText(sheetTitle);
                     mAdapter = new BottomSheetAdapter(musicBeanList);
@@ -124,12 +135,12 @@ public class FavoriteBottomSheetDialog
                     mBottomListContent.addView(mRecyclerView);
                 }));
 
-        mDisposable.add(mBus.toObserverable(BottomSheetStatus.class)
+        mCompositeDisposable.add(mBus.toObserverable(BottomSheetStatus.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bean -> FavoriteBottomSheetDialog.this.playMusic(bean.getPosition())));
         // 清空收藏列表
-        mDisposable.add(mBus.toObserverable(AddAndDeleteListBean.class)
+        mCompositeDisposable.add(mBus.toObserverable(AddAndDeleteListBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(bean -> {
                     if (bean.getOperationType() == Constants.NUMBER_THRRE) {
@@ -179,7 +190,7 @@ public class FavoriteBottomSheetDialog
 
     private void clearAllFavoriteMusic() {
         mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        mDisposable.add(Observable.fromIterable(mList)
+        mCompositeDisposable.add(Observable.fromIterable(mList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(musicBean -> {

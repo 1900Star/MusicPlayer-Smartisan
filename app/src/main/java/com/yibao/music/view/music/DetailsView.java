@@ -3,6 +3,8 @@ package com.yibao.music.view.music;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -27,6 +29,8 @@ import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
+
+import java.util.Objects;
 
 /**
  * Author：Sid
@@ -94,6 +98,9 @@ public class DetailsView
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setHasFixedSize(true);
+        DividerItemDecoration divider = new DividerItemDecoration(context,DividerItemDecoration.VERTICAL);
+        divider.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(context, R.drawable.shape_item_decoration)));
+        mRecyclerView.addItemDecoration(divider);
         mRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 

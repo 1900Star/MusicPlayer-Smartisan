@@ -18,7 +18,6 @@
         android:layout_width="match_parent"
         android:layout_height="62dp"
         android:layout_below="@id/artist_item_sticky_view"
-        android:layout_marginTop="0.5dp"
         android:background="@drawable/list_item_selector"
         android:clickable="true"
         android:focusable="true"

@@ -1,7 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/listBg">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/item_sticky_view"
@@ -18,7 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="62dp"
         android:layout_below="@id/item_sticky_view"
-        android:layout_marginTop="0.5dp"
         android:background="@drawable/list_item_selector"
         android:clickable="true"
         android:focusable="true"
@@ -63,6 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
+                    android:maxLength="22"
                     android:singleLine="true"
                     android:textColor="@color/text_song_name_selector"
                     android:textSize="@dimen/music_loating_title" />

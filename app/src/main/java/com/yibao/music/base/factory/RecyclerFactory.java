@@ -1,5 +1,7 @@
 package com.yibao.music.base.factory;
 
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -7,8 +9,11 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.widget.LinearLayout;
 
 import com.yibao.music.MusicApplication;
+import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.util.Constants;
+
+import java.util.Objects;
 
 /**
  * @项目名： BigGirl
@@ -37,6 +42,9 @@ public class RecyclerFactory {
             recyclerView.setVerticalScrollBarEnabled(true);
             recyclerView.setLayoutManager(manager);
             recyclerView.setLayoutParams(params);
+            DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+            divider.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(recyclerView.getContext(), R.drawable.shape_item_decoration)));
+            recyclerView.addItemDecoration(divider);
 
         } else {
 
@@ -65,11 +73,11 @@ public class RecyclerFactory {
         if (type == RECYCLERVIEW_NORMAL) {
             LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
             manager.scrollToPositionWithOffset(position, 0);
-        } else if (type==RECYCLERVIEW_STAGGERED){
+        } else if (type == RECYCLERVIEW_STAGGERED) {
             StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(type,
                     StaggeredGridLayoutManager.VERTICAL);
 
-            manager.scrollToPositionWithOffset(position,0);
+            manager.scrollToPositionWithOffset(position, 0);
         }
 
     }

@@ -2,16 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/listBg"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="@dimen/dp_six"
-        android:layout_marginEnd="@dimen/dp_six"
+        android:layout_height="40dp"
         android:layout_marginBottom="@dimen/dp_six"
+        android:background="@drawable/titlebar_playing_bg"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -19,6 +16,7 @@
             android:id="@+id/tv_random_play"
             android:layout_width="0dp"
             android:layout_height="28dp"
+            android:layout_marginStart="@dimen/dp_six"
             android:layout_weight="1"
             android:background="@drawable/shape_btn_selector"
             android:enabled="true"
@@ -32,8 +30,8 @@
             android:id="@+id/tv_delete_play_list"
             android:layout_width="0dp"
             android:layout_height="28dp"
-            android:layout_marginStart="@dimen/dp_six"
             android:layout_marginEnd="@dimen/dp_six"
+            android:layout_marginStart="@dimen/dp_six"
             android:layout_weight="1"
             android:background="@drawable/shape_btn_selector"
             android:enabled="true"
@@ -47,6 +45,7 @@
             android:id="@+id/tv_edit_play_list"
             android:layout_width="0dp"
             android:layout_height="28dp"
+            android:layout_marginEnd="@dimen/dp_six"
             android:layout_weight="1"
             android:background="@drawable/shape_btn_selector"
             android:enabled="true"

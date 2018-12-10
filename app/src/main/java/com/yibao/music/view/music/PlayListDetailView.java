@@ -13,7 +13,6 @@ import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.SpUtil;
 
