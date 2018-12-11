@@ -135,7 +135,7 @@ public abstract class BaseRvAdapter<T>
         notifyDataSetChanged();
     }
 
-    public void addHeader(List<T> list) {
+    public void setData(List<T> list) {
         mList.addAll(list);
         notifyDataSetChanged();
     }

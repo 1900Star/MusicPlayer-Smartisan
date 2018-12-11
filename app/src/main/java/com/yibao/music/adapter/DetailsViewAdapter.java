@@ -123,12 +123,6 @@ public class DetailsViewAdapter extends BaseRvAdapter<MusicBean> {
     protected int getLayoutId() {
         return R.layout.item_details_adapter;
     }
-
-    public void setData(List<MusicBean> detailList) {
-        mList = detailList;
-        notifyDataSetChanged();
-    }
-
     static class DetailsHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_details_song_name)
         TextView mTvDetailsSongName;

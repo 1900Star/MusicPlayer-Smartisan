@@ -98,18 +98,16 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     }
 
     private void init() {
+        mSearchDetailAdapter = new DetailsViewAdapter(SearchActivity.this, null, Constants.NUMBER_THRRE);
         mMusicBean = getIntent().getParcelableExtra("musicBean");
         int pageType = getIntent().getIntExtra("pageType", 0);
         audioBinder = MusicActivity.getAudioBinder();
         mSmartisanControlBar.setPbColorAndPreBtnGone();
         setMusicInfo(mMusicBean);
         if (pageType > Constants.NUMBER_ZOER) {
-            searchMusic(mMusicBean.getArtist());
-            mEditSearch.setText(mMusicBean.getArtist());
-            mEditSearch.setSelection(mMusicBean.getArtist().length());
+            initSearch(mMusicBean.getArtist());
             mIvEditClear.setVisibility(View.VISIBLE);
         } else {
-
             // 主动弹出键盘
             mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             mDisposableSoft = Observable.timer(50, TimeUnit.MILLISECONDS)
@@ -128,7 +126,6 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
             updataLyric();
             setDuration();
-
         }
         mCompositeDisposable.add(RxView.clicks(mSmartisanControlBar)
                 .throttleFirst(1, TimeUnit.SECONDS)
@@ -171,7 +168,6 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             mSmartisanControlBar.setAlbulmUrl(StringUtil.getAlbulm(musicItem.getAlbumId()));
             mLyricList = LyricsUtil.getLyricList(musicItem.getTitle(), musicItem.getArtist());
         }
-        mSearchDetailAdapter = new DetailsViewAdapter(SearchActivity.this, null, Constants.NUMBER_THRRE);
         if (audioBinder != null) {
             mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
             mSmartisanControlBar.initAnimation();
@@ -259,7 +255,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             @Override
             public void afterTextChanged(Editable s) {
                 String searchContent = s.toString();
-                if (!"".equals(searchContent) && searchContent.length() > 0) {
+                if (!Constants.NULL_STRING.equals(searchContent) && searchContent.length() > 0) {
                     searchMusic(searchContent);
                     mIvEditClear.setVisibility(View.VISIBLE);
                 } else {
@@ -339,7 +335,6 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
                 .subscribe(new BaseObserver<List<MusicBean>>() {
                     @Override
                     public void onNext(List<MusicBean> musicBeanList) {
-                        LogUtil.d("AAAAAAAAAAAAAAAAAAAAA======= onNext");
                         mSearchDetailAdapter.setNewData(musicBeanList);
                         mLayoutHistory.setVisibility(View.GONE);
                         mTvNoSearchResult.setVisibility(View.GONE);
@@ -348,7 +343,6 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
 
                     @Override
                     public void onError(Throwable e) {
-                        LogUtil.d("AAAAAAA======= onError     " + e.toString());
                         mLayoutHistory.setVisibility(View.GONE);
                         mLinearDetail.setVisibility(View.GONE);
                         mTvNoSearchResult.setVisibility(View.VISIBLE);
