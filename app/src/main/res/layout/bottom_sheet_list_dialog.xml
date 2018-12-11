@@ -35,7 +35,7 @@
         <TextView
             android:id="@+id/bottom_sheet_bar_clear"
             android:layout_width="60dp"
-            android:layout_height="30dp"
+            android:layout_height="28dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_margin="12dp"

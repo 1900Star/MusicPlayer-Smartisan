@@ -106,18 +106,16 @@ public class FavoriteBottomSheetDialog
 
         dialog.setCanceledOnTouchOutside(true);
         mBehavior = BottomSheetBehavior.from((View) view.getParent());
-        disposableClear(dialog);
+        dialog.setOnCancelListener(dialog12 -> clearDisposable());
 
     }
 
-    private void disposableClear(BottomSheetDialog dialog) {
-        dialog.setOnCancelListener(dialog12 -> {
-            if (mCompositeDisposable != null) {
-                mCompositeDisposable.dispose();
-                mCompositeDisposable.clear();
-                mCompositeDisposable = null;
-            }
-        });
+    private void clearDisposable() {
+        if (mCompositeDisposable != null) {
+            mCompositeDisposable.dispose();
+            mCompositeDisposable.clear();
+            mCompositeDisposable = null;
+        }
     }
 
     //    接收BottomSheetAdapter发过来的当前点击Item的Position

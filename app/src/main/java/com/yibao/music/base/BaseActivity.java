@@ -127,9 +127,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.dialog_push_in, 0);
     }
 
-    protected void startSearchActivity(MusicBean currentMusicBean) {
+    protected void startSearchActivity(MusicBean currentMusicBean, int pageType) {
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra("musicBean", currentMusicBean);
+        intent.putExtra("pageType", pageType);
         startActivity(intent);
         overridePendingTransition(R.anim.dialog_push_in, 0);
     }

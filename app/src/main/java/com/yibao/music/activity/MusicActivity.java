@@ -290,7 +290,7 @@ public class MusicActivity
                 switchMusicControlBar();
                 break;
             case R.id.iv_search:
-                startSearchActivity(mCurrentMusicBean);
+                startSearchActivity(mCurrentMusicBean,Constants.NUMBER_ZOER);
                 break;
         }
     }

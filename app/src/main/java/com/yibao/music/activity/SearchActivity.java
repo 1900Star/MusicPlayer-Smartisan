@@ -21,6 +21,8 @@ import com.yibao.music.base.BaseTansitionActivity;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.TextChangedListener;
+import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
+import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.PlayStatusBean;
@@ -28,8 +30,10 @@ import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.MusicDaoUtil;
+import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SoftKeybordUtil;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.TitleArtistUtil;
@@ -94,20 +98,23 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     }
 
     private void init() {
-        audioBinder = MusicActivity.getAudioBinder();
         mMusicBean = getIntent().getParcelableExtra("musicBean");
-        mSmartisanControlBar.setPbolorAndPreBtnGone();
+        int pageType = getIntent().getIntExtra("pageType", 0);
+        audioBinder = MusicActivity.getAudioBinder();
+        mSmartisanControlBar.setPbColorAndPreBtnGone();
         setMusicInfo(mMusicBean);
-        if (audioBinder != null) {
-            mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
-            mSmartisanControlBar.initAnimation();
+        if (pageType > Constants.NUMBER_ZOER) {
+            searchMusic(mMusicBean.getArtist());
+            mEditSearch.setText(mMusicBean.getArtist());
+            mEditSearch.setSelection(mMusicBean.getArtist().length());
+            mIvEditClear.setVisibility(View.VISIBLE);
         } else {
-            mSmartisanControlBar.setVisibility(View.GONE);
+
+            // 主动弹出键盘
+            mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            mDisposableSoft = Observable.timer(50, TimeUnit.MILLISECONDS)
+                    .subscribe(aLong -> SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED));
         }
-        // 主动弹出键盘
-        mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        mDisposableSoft = Observable.timer(50, TimeUnit.MILLISECONDS)
-                .subscribe(aLong -> SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED));
     }
 
     @Override
@@ -164,6 +171,13 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             mSmartisanControlBar.setAlbulmUrl(StringUtil.getAlbulm(musicItem.getAlbumId()));
             mLyricList = LyricsUtil.getLyricList(musicItem.getTitle(), musicItem.getArtist());
         }
+        mSearchDetailAdapter = new DetailsViewAdapter(SearchActivity.this, null, Constants.NUMBER_THRRE);
+        if (audioBinder != null) {
+            mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+            mSmartisanControlBar.initAnimation();
+        } else {
+            mSmartisanControlBar.setVisibility(View.GONE);
+        }
     }
 
 
@@ -176,10 +190,47 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             mFlowLayoutView.setData(searchList);
         }
         // 列表数据
-        mSearchDetailAdapter = new DetailsViewAdapter(SearchActivity.this, null, Constants.NUMBER_THRRE);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(1, mSearchDetailAdapter);
         mLinearDetail.addView(recyclerView);
 
+    }
+
+    @Override
+    protected void moreMenu(MoreMenuStatus moreMenuStatus) {
+        super.moreMenu(moreMenuStatus);
+        MusicBean musicBean = moreMenuStatus.getMusicBean();
+        switch (moreMenuStatus.getPosition()) {
+            case Constants.NUMBER_ZOER:
+                startPlayListActivity(musicBean.getTitle());
+                break;
+            case Constants.NUMBER_ONE:
+                SnakbarUtil.keepGoing(mSmartisanControlBar);
+                break;
+            case Constants.NUMBER_TWO:
+                if (audioBinder != null) {
+                    if (audioBinder.getPosition() == moreMenuStatus.getMusicPosition()) {
+                        audioBinder.updataFavorite();
+                        checkCurrentSongIsFavorite(musicBean, null, mSmartisanControlBar);
+                    } else {
+                        MusicBean bean = moreMenuStatus.getMusicBean();
+                        bean.setIsFavorite(!bean.isFavorite());
+                        mMusicDao.update(bean);
+                    }
+                } else {
+                    SnakbarUtil.firstPlayMusic(mSmartisanControlBar);
+                }
+
+                break;
+            case Constants.NUMBER_THRRE:
+                SnakbarUtil.keepGoing(mSmartisanControlBar);
+                break;
+            case Constants.NUMBER_FOUR:
+                mBus.post(Constants.NUMBER_ONE, moreMenuStatus);
+                mMusicDao.delete(moreMenuStatus.getMusicBean());
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -202,6 +253,8 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     }
 
     private void initListener() {
+        mSearchDetailAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
+                MoreMenuBottomDialog.newInstance(musicBean, position, false).getBottomDialog(this));
         mEditSearch.addTextChangedListener(new TextChangedListener() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -286,6 +339,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
                 .subscribe(new BaseObserver<List<MusicBean>>() {
                     @Override
                     public void onNext(List<MusicBean> musicBeanList) {
+                        LogUtil.d("AAAAAAAAAAAAAAAAAAAAA======= onNext");
                         mSearchDetailAdapter.setNewData(musicBeanList);
                         mLayoutHistory.setVisibility(View.GONE);
                         mTvNoSearchResult.setVisibility(View.GONE);
@@ -294,6 +348,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
 
                     @Override
                     public void onError(Throwable e) {
+                        LogUtil.d("AAAAAAA======= onError     " + e.toString());
                         mLayoutHistory.setVisibility(View.GONE);
                         mLinearDetail.setVisibility(View.GONE);
                         mTvNoSearchResult.setVisibility(View.VISIBLE);

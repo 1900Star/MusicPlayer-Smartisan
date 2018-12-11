@@ -1,6 +1,5 @@
 package com.yibao.music.adapter;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
@@ -9,10 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yibao.music.base.factory.RecyclerFactory;
-import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.MusicListUtil;
 
 import java.util.List;
 
