@@ -27,6 +27,7 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.PlayListDetailView;
@@ -92,7 +93,6 @@ public class PlayListFragment extends BaseMusicFragment {
         mAdapter = new PlayListAdapter(getPlayList());
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
         mPlayListContent.addView(recyclerView);
-        mDetailsAdapter = new DetailsViewAdapter(mActivity, null, Constants.NUMBER_FOUR);
     }
 
     /**
@@ -105,6 +105,7 @@ public class PlayListFragment extends BaseMusicFragment {
                             // 删除列表
                             if (operationType == Constants.NUMBER_TWO) {
                                 mAdapter.notifyItemRemoved(mDeletePosition);
+
                                 changeTvEditVisibility();
                             } else if (operationType == Constants.NUMBER_FOUR) {
                                 // 更新列表名,同步更新列表中的歌曲的列表标识
@@ -157,7 +158,9 @@ public class PlayListFragment extends BaseMusicFragment {
                         if (musicBeans.size() > 0) {
                             MusicBean musicBean = musicBeans.get(0);
                             musicBean.setPlayListFlag(playListBean.getTitle());
+                            musicBean.setAddListTime(System.currentTimeMillis());
                             mMusicBeanDao.update(musicBean);
+                            // 更新列表的歌曲数量
                             playListBean.setSongCount(playListBean.getSongCount() + 1);
                             mPlayListDao.update(playListBean);
                         }
@@ -235,7 +238,8 @@ public class PlayListFragment extends BaseMusicFragment {
             mDetailView.setVisibility(View.VISIBLE);
             mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(title)).build().list();
             mDetailView.setQureyFlag(title, mDetailList.size());
-            mDetailsAdapter.setNewData(mDetailList);
+            List<MusicBean> musicBeanList = MusicListUtil.sortMusicList(mDetailList, Constants.NUMBER_FIEV);
+            mDetailsAdapter = new DetailsViewAdapter(mActivity, musicBeanList, Constants.NUMBER_FOUR);
             mDetailView.setAdapter(mDetailsAdapter);
             mDetailsAdapter.setOnItemMenuListener((position, musicBean) -> MoreMenuBottomDialog.newInstance(musicBean, position, false).getBottomDialog(mActivity));
             putFragToMap(Constants.NUMBER_EIGHT, mClassName);

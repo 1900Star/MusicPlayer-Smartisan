@@ -122,6 +122,7 @@ public class DeletePlayListDialog
             List<MusicBean> musicBeanList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(mPlayListBean.getTitle())).build().list();
             for (MusicBean musicBean : musicBeanList) {
                 musicBean.setPlayListFlag(Constants.PLAY_LIST_BACK_FLAG);
+                musicBean.setAddListTime(Constants.NUMBER_ZOER);
                 mMusicDao.update(musicBean);
             }
 

@@ -14,7 +14,7 @@ android {
 
 
         greendao {
-            schemaVersion 7
+            schemaVersion 9
             daoPackage 'com.yibao.music.model.greendao'
             targetGenDir 'src/main/java/'
         }

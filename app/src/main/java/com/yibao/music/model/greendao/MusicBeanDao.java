@@ -30,19 +30,20 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
         public final static Property Album = new Property(3, String.class, "album", false, "ALBUM");
         public final static Property AlbumId = new Property(4, long.class, "albumId", false, "ALBUM_ID");
         public final static Property AddTime = new Property(5, long.class, "addTime", false, "ADD_TIME");
-        public final static Property Duration = new Property(6, long.class, "duration", false, "DURATION");
-        public final static Property Time = new Property(7, String.class, "time", false, "TIME");
-        public final static Property SongUrl = new Property(8, String.class, "songUrl", false, "SONG_URL");
-        public final static Property FirstChar = new Property(9, String.class, "firstChar", false, "FIRST_CHAR");
-        public final static Property IsFavorite = new Property(10, boolean.class, "isFavorite", false, "IS_FAVORITE");
-        public final static Property PlayFrequency = new Property(11, int.class, "playFrequency", false, "PLAY_FREQUENCY");
-        public final static Property SongScore = new Property(12, int.class, "songScore", false, "SONG_SCORE");
-        public final static Property PlayStatus = new Property(13, int.class, "playStatus", false, "PLAY_STATUS");
-        public final static Property IssueYear = new Property(14, int.class, "issueYear", false, "ISSUE_YEAR");
-        public final static Property MusicQualityType = new Property(15, int.class, "musicQualityType", false, "MUSIC_QUALITY_TYPE");
-        public final static Property IsSelected = new Property(16, boolean.class, "isSelected", false, "IS_SELECTED");
-        public final static Property PlayListFlag = new Property(17, String.class, "playListFlag", false, "PLAY_LIST_FLAG");
-        public final static Property CurrentLyrics = new Property(18, String.class, "currentLyrics", false, "CURRENT_LYRICS");
+        public final static Property AddListTime = new Property(6, long.class, "addListTime", false, "ADD_LIST_TIME");
+        public final static Property Duration = new Property(7, long.class, "duration", false, "DURATION");
+        public final static Property Time = new Property(8, String.class, "time", false, "TIME");
+        public final static Property SongUrl = new Property(9, String.class, "songUrl", false, "SONG_URL");
+        public final static Property FirstChar = new Property(10, String.class, "firstChar", false, "FIRST_CHAR");
+        public final static Property IsFavorite = new Property(11, boolean.class, "isFavorite", false, "IS_FAVORITE");
+        public final static Property PlayFrequency = new Property(12, int.class, "playFrequency", false, "PLAY_FREQUENCY");
+        public final static Property SongScore = new Property(13, int.class, "songScore", false, "SONG_SCORE");
+        public final static Property PlayStatus = new Property(14, int.class, "playStatus", false, "PLAY_STATUS");
+        public final static Property IssueYear = new Property(15, int.class, "issueYear", false, "ISSUE_YEAR");
+        public final static Property MusicQualityType = new Property(16, int.class, "musicQualityType", false, "MUSIC_QUALITY_TYPE");
+        public final static Property IsSelected = new Property(17, boolean.class, "isSelected", false, "IS_SELECTED");
+        public final static Property PlayListFlag = new Property(18, String.class, "playListFlag", false, "PLAY_LIST_FLAG");
+        public final static Property CurrentLyrics = new Property(19, String.class, "currentLyrics", false, "CURRENT_LYRICS");
     }
 
 
@@ -64,19 +65,20 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
                 "\"ALBUM\" TEXT," + // 3: album
                 "\"ALBUM_ID\" INTEGER NOT NULL ," + // 4: albumId
                 "\"ADD_TIME\" INTEGER NOT NULL ," + // 5: addTime
-                "\"DURATION\" INTEGER NOT NULL ," + // 6: duration
-                "\"TIME\" TEXT," + // 7: time
-                "\"SONG_URL\" TEXT," + // 8: songUrl
-                "\"FIRST_CHAR\" TEXT," + // 9: firstChar
-                "\"IS_FAVORITE\" INTEGER NOT NULL ," + // 10: isFavorite
-                "\"PLAY_FREQUENCY\" INTEGER NOT NULL ," + // 11: playFrequency
-                "\"SONG_SCORE\" INTEGER NOT NULL ," + // 12: songScore
-                "\"PLAY_STATUS\" INTEGER NOT NULL ," + // 13: playStatus
-                "\"ISSUE_YEAR\" INTEGER NOT NULL ," + // 14: issueYear
-                "\"MUSIC_QUALITY_TYPE\" INTEGER NOT NULL ," + // 15: musicQualityType
-                "\"IS_SELECTED\" INTEGER NOT NULL ," + // 16: isSelected
-                "\"PLAY_LIST_FLAG\" TEXT," + // 17: playListFlag
-                "\"CURRENT_LYRICS\" TEXT);"); // 18: currentLyrics
+                "\"ADD_LIST_TIME\" INTEGER NOT NULL ," + // 6: addListTime
+                "\"DURATION\" INTEGER NOT NULL ," + // 7: duration
+                "\"TIME\" TEXT," + // 8: time
+                "\"SONG_URL\" TEXT," + // 9: songUrl
+                "\"FIRST_CHAR\" TEXT," + // 10: firstChar
+                "\"IS_FAVORITE\" INTEGER NOT NULL ," + // 11: isFavorite
+                "\"PLAY_FREQUENCY\" INTEGER NOT NULL ," + // 12: playFrequency
+                "\"SONG_SCORE\" INTEGER NOT NULL ," + // 13: songScore
+                "\"PLAY_STATUS\" INTEGER NOT NULL ," + // 14: playStatus
+                "\"ISSUE_YEAR\" INTEGER NOT NULL ," + // 15: issueYear
+                "\"MUSIC_QUALITY_TYPE\" INTEGER NOT NULL ," + // 16: musicQualityType
+                "\"IS_SELECTED\" INTEGER NOT NULL ," + // 17: isSelected
+                "\"PLAY_LIST_FLAG\" TEXT," + // 18: playListFlag
+                "\"CURRENT_LYRICS\" TEXT);"); // 19: currentLyrics
     }
 
     /** Drops the underlying database table. */
@@ -110,38 +112,39 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
         }
         stmt.bindLong(5, entity.getAlbumId());
         stmt.bindLong(6, entity.getAddTime());
-        stmt.bindLong(7, entity.getDuration());
+        stmt.bindLong(7, entity.getAddListTime());
+        stmt.bindLong(8, entity.getDuration());
  
         String time = entity.getTime();
         if (time != null) {
-            stmt.bindString(8, time);
+            stmt.bindString(9, time);
         }
  
         String songUrl = entity.getSongUrl();
         if (songUrl != null) {
-            stmt.bindString(9, songUrl);
+            stmt.bindString(10, songUrl);
         }
  
         String firstChar = entity.getFirstChar();
         if (firstChar != null) {
-            stmt.bindString(10, firstChar);
+            stmt.bindString(11, firstChar);
         }
-        stmt.bindLong(11, entity.getIsFavorite() ? 1L: 0L);
-        stmt.bindLong(12, entity.getPlayFrequency());
-        stmt.bindLong(13, entity.getSongScore());
-        stmt.bindLong(14, entity.getPlayStatus());
-        stmt.bindLong(15, entity.getIssueYear());
-        stmt.bindLong(16, entity.getMusicQualityType());
-        stmt.bindLong(17, entity.getIsSelected() ? 1L: 0L);
+        stmt.bindLong(12, entity.getIsFavorite() ? 1L: 0L);
+        stmt.bindLong(13, entity.getPlayFrequency());
+        stmt.bindLong(14, entity.getSongScore());
+        stmt.bindLong(15, entity.getPlayStatus());
+        stmt.bindLong(16, entity.getIssueYear());
+        stmt.bindLong(17, entity.getMusicQualityType());
+        stmt.bindLong(18, entity.getIsSelected() ? 1L: 0L);
  
         String playListFlag = entity.getPlayListFlag();
         if (playListFlag != null) {
-            stmt.bindString(18, playListFlag);
+            stmt.bindString(19, playListFlag);
         }
  
         String currentLyrics = entity.getCurrentLyrics();
         if (currentLyrics != null) {
-            stmt.bindString(19, currentLyrics);
+            stmt.bindString(20, currentLyrics);
         }
     }
 
@@ -170,38 +173,39 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
         }
         stmt.bindLong(5, entity.getAlbumId());
         stmt.bindLong(6, entity.getAddTime());
-        stmt.bindLong(7, entity.getDuration());
+        stmt.bindLong(7, entity.getAddListTime());
+        stmt.bindLong(8, entity.getDuration());
  
         String time = entity.getTime();
         if (time != null) {
-            stmt.bindString(8, time);
+            stmt.bindString(9, time);
         }
  
         String songUrl = entity.getSongUrl();
         if (songUrl != null) {
-            stmt.bindString(9, songUrl);
+            stmt.bindString(10, songUrl);
         }
  
         String firstChar = entity.getFirstChar();
         if (firstChar != null) {
-            stmt.bindString(10, firstChar);
+            stmt.bindString(11, firstChar);
         }
-        stmt.bindLong(11, entity.getIsFavorite() ? 1L: 0L);
-        stmt.bindLong(12, entity.getPlayFrequency());
-        stmt.bindLong(13, entity.getSongScore());
-        stmt.bindLong(14, entity.getPlayStatus());
-        stmt.bindLong(15, entity.getIssueYear());
-        stmt.bindLong(16, entity.getMusicQualityType());
-        stmt.bindLong(17, entity.getIsSelected() ? 1L: 0L);
+        stmt.bindLong(12, entity.getIsFavorite() ? 1L: 0L);
+        stmt.bindLong(13, entity.getPlayFrequency());
+        stmt.bindLong(14, entity.getSongScore());
+        stmt.bindLong(15, entity.getPlayStatus());
+        stmt.bindLong(16, entity.getIssueYear());
+        stmt.bindLong(17, entity.getMusicQualityType());
+        stmt.bindLong(18, entity.getIsSelected() ? 1L: 0L);
  
         String playListFlag = entity.getPlayListFlag();
         if (playListFlag != null) {
-            stmt.bindString(18, playListFlag);
+            stmt.bindString(19, playListFlag);
         }
  
         String currentLyrics = entity.getCurrentLyrics();
         if (currentLyrics != null) {
-            stmt.bindString(19, currentLyrics);
+            stmt.bindString(20, currentLyrics);
         }
     }
 
@@ -219,19 +223,20 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // album
             cursor.getLong(offset + 4), // albumId
             cursor.getLong(offset + 5), // addTime
-            cursor.getLong(offset + 6), // duration
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // time
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // songUrl
-            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // firstChar
-            cursor.getShort(offset + 10) != 0, // isFavorite
-            cursor.getInt(offset + 11), // playFrequency
-            cursor.getInt(offset + 12), // songScore
-            cursor.getInt(offset + 13), // playStatus
-            cursor.getInt(offset + 14), // issueYear
-            cursor.getInt(offset + 15), // musicQualityType
-            cursor.getShort(offset + 16) != 0, // isSelected
-            cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17), // playListFlag
-            cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18) // currentLyrics
+            cursor.getLong(offset + 6), // addListTime
+            cursor.getLong(offset + 7), // duration
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // time
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // songUrl
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // firstChar
+            cursor.getShort(offset + 11) != 0, // isFavorite
+            cursor.getInt(offset + 12), // playFrequency
+            cursor.getInt(offset + 13), // songScore
+            cursor.getInt(offset + 14), // playStatus
+            cursor.getInt(offset + 15), // issueYear
+            cursor.getInt(offset + 16), // musicQualityType
+            cursor.getShort(offset + 17) != 0, // isSelected
+            cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18), // playListFlag
+            cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19) // currentLyrics
         );
         return entity;
     }
@@ -244,19 +249,20 @@ public class MusicBeanDao extends AbstractDao<MusicBean, Long> {
         entity.setAlbum(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setAlbumId(cursor.getLong(offset + 4));
         entity.setAddTime(cursor.getLong(offset + 5));
-        entity.setDuration(cursor.getLong(offset + 6));
-        entity.setTime(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setSongUrl(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setFirstChar(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
-        entity.setIsFavorite(cursor.getShort(offset + 10) != 0);
-        entity.setPlayFrequency(cursor.getInt(offset + 11));
-        entity.setSongScore(cursor.getInt(offset + 12));
-        entity.setPlayStatus(cursor.getInt(offset + 13));
-        entity.setIssueYear(cursor.getInt(offset + 14));
-        entity.setMusicQualityType(cursor.getInt(offset + 15));
-        entity.setIsSelected(cursor.getShort(offset + 16) != 0);
-        entity.setPlayListFlag(cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17));
-        entity.setCurrentLyrics(cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18));
+        entity.setAddListTime(cursor.getLong(offset + 6));
+        entity.setDuration(cursor.getLong(offset + 7));
+        entity.setTime(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setSongUrl(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setFirstChar(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setIsFavorite(cursor.getShort(offset + 11) != 0);
+        entity.setPlayFrequency(cursor.getInt(offset + 12));
+        entity.setSongScore(cursor.getInt(offset + 13));
+        entity.setPlayStatus(cursor.getInt(offset + 14));
+        entity.setIssueYear(cursor.getInt(offset + 15));
+        entity.setMusicQualityType(cursor.getInt(offset + 16));
+        entity.setIsSelected(cursor.getShort(offset + 17) != 0);
+        entity.setPlayListFlag(cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18));
+        entity.setCurrentLyrics(cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19));
      }
     
     @Override

@@ -19,7 +19,7 @@ import org.greenrobot.greendao.annotation.Generated;
  */
 @Entity
 public class MusicBean
-        implements Parcelable,Comparable<MusicBean> {
+        implements Parcelable, Comparable<MusicBean> {
     @Id(autoincrement = true)
     @Unique
     private Long id;
@@ -29,6 +29,8 @@ public class MusicBean
     private long albumId;
     // 添加时间
     private long addTime;
+    // 添加到列表的时间
+    private long addListTime;
     private long duration;
     // 收藏时间
     private String time;
@@ -71,6 +73,7 @@ public class MusicBean
         album = in.readString();
         albumId = in.readLong();
         addTime = in.readLong();
+        addListTime = in.readLong();
         duration = in.readLong();
         time = in.readString();
         songUrl = in.readString();
@@ -88,18 +91,19 @@ public class MusicBean
     }
 
 
-    @Generated(hash = 2071429796)
+    @Generated(hash = 1580233346)
     public MusicBean(Long id, String title, String artist, String album, long albumId,
-            long addTime, long duration, String time, String songUrl, String firstChar,
-            boolean isFavorite, int playFrequency, int songScore, int playStatus,
-            int issueYear, int musicQualityType, boolean isSelected, String playListFlag,
-            String currentLyrics) {
+            long addTime, long addListTime, long duration, String time, String songUrl,
+            String firstChar, boolean isFavorite, int playFrequency, int songScore,
+            int playStatus, int issueYear, int musicQualityType, boolean isSelected,
+            String playListFlag, String currentLyrics) {
         this.id = id;
         this.title = title;
         this.artist = artist;
         this.album = album;
         this.albumId = albumId;
         this.addTime = addTime;
+        this.addListTime = addListTime;
         this.duration = duration;
         this.time = time;
         this.songUrl = songUrl;
@@ -279,11 +283,6 @@ public class MusicBean
         this.isSelected = selected;
     }
 
-    @Override
-    public int compareTo(@NonNull MusicBean o) {
-        return Long.compare(Long.parseLong(o.getTime()), Long.parseLong(this.getTime()));
-    }
-
     public boolean getIsFavorite() {
         return this.isFavorite;
     }
@@ -293,7 +292,6 @@ public class MusicBean
     }
 
 
-
     public boolean getIsSelected() {
         return this.isSelected;
     }
@@ -301,6 +299,22 @@ public class MusicBean
     public void setIsSelected(boolean isSelected) {
         this.isSelected = isSelected;
     }
+
+
+    public String getPlayListFlag() {
+        return this.playListFlag;
+    }
+
+
+    public void setPlayListFlag(String playListFlag) {
+        this.playListFlag = playListFlag;
+    }
+
+    @Override
+    public int compareTo(@NonNull MusicBean o) {
+        return Long.compare(Long.parseLong(o.getTime()), Long.parseLong(this.getTime()));
+    }
+
 
     @Override
     public int describeContents() {
@@ -320,6 +334,7 @@ public class MusicBean
         dest.writeString(album);
         dest.writeLong(albumId);
         dest.writeLong(addTime);
+        dest.writeLong(addListTime);
         dest.writeLong(duration);
         dest.writeString(time);
         dest.writeString(songUrl);
@@ -337,12 +352,12 @@ public class MusicBean
     }
 
 
-    public String getPlayListFlag() {
-        return this.playListFlag;
+    public long getAddListTime() {
+        return this.addListTime;
     }
 
 
-    public void setPlayListFlag(String playListFlag) {
-        this.playListFlag = playListFlag;
+    public void setAddListTime(long addListTime) {
+        this.addListTime = addListTime;
     }
 }

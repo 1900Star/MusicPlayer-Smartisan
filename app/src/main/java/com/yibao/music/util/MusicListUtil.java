@@ -104,7 +104,7 @@ public class MusicListUtil {
      * 音乐列表排序
      *
      * @param musicList c
-     * @param sortFlag  1 按照歌曲下载时间 ，2 按照歌曲收藏时间 , 3 按照播放次数 ，4 按照评分 。
+     * @param sortFlag  1 按照歌曲下载时间 ，2 按照歌曲收藏时间 , 3 按照播放次数 ，4 按照评分 ，5 按添加到列表的赶时间。
      */
     public static List<MusicBean> sortMusicList(List<MusicBean> musicList, int sortFlag) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -137,6 +137,8 @@ public class MusicListUtil {
             value = Float.compare(m2.getPlayFrequency(), m1.getPlayFrequency());
         } else if (sortFlag == Constants.NUMBER_FOUR) {
             value = Float.compare(m2.getSongScore(), m1.getSongScore());
+        } else if (sortFlag == Constants.NUMBER_FIEV) {
+            value = Float.compare(m1.getAddListTime(), m2.getAddListTime());
         }
         if (value != 0) {
             return value;
