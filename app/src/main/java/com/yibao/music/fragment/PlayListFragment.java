@@ -93,6 +93,7 @@ public class PlayListFragment extends BaseMusicFragment {
         mAdapter = new PlayListAdapter(getPlayList());
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
         mPlayListContent.addView(recyclerView);
+        mDetailsAdapter = new DetailsViewAdapter(mActivity, null, Constants.NUMBER_FOUR);
     }
 
     /**
@@ -105,7 +106,6 @@ public class PlayListFragment extends BaseMusicFragment {
                             // 删除列表
                             if (operationType == Constants.NUMBER_TWO) {
                                 mAdapter.notifyItemRemoved(mDeletePosition);
-
                                 changeTvEditVisibility();
                             } else if (operationType == Constants.NUMBER_FOUR) {
                                 // 更新列表名,同步更新列表中的歌曲的列表标识
@@ -239,7 +239,7 @@ public class PlayListFragment extends BaseMusicFragment {
             mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(title)).build().list();
             mDetailView.setQureyFlag(title, mDetailList.size());
             List<MusicBean> musicBeanList = MusicListUtil.sortMusicList(mDetailList, Constants.NUMBER_FIEV);
-            mDetailsAdapter = new DetailsViewAdapter(mActivity, musicBeanList, Constants.NUMBER_FOUR);
+            mDetailsAdapter.setNewData(musicBeanList);
             mDetailView.setAdapter(mDetailsAdapter);
             mDetailsAdapter.setOnItemMenuListener((position, musicBean) -> MoreMenuBottomDialog.newInstance(musicBean, position, false).getBottomDialog(mActivity));
             putFragToMap(Constants.NUMBER_EIGHT, mClassName);
