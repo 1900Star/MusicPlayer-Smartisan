@@ -43,6 +43,7 @@ public class MusicBean
     private int issueYear;
     private int musicQualityType;
     private boolean isSelected;
+    private boolean isPlayFlag;
     /**
      * 歌曲所在的播放列表名字
      */
@@ -85,18 +86,19 @@ public class MusicBean
         issueYear = in.readInt();
         musicQualityType = in.readInt();
         isSelected = in.readByte() != 0;
+        isPlayFlag = in.readByte() != 0;
         playListFlag = in.readString();
         currentLyrics = in.readString();
         cureetPosition = in.readInt();
     }
 
 
-    @Generated(hash = 1580233346)
+    @Generated(hash = 886988323)
     public MusicBean(Long id, String title, String artist, String album, long albumId,
             long addTime, long addListTime, long duration, String time, String songUrl,
             String firstChar, boolean isFavorite, int playFrequency, int songScore,
             int playStatus, int issueYear, int musicQualityType, boolean isSelected,
-            String playListFlag, String currentLyrics) {
+            boolean isPlayFlag, String playListFlag, String currentLyrics) {
         this.id = id;
         this.title = title;
         this.artist = artist;
@@ -115,6 +117,7 @@ public class MusicBean
         this.issueYear = issueYear;
         this.musicQualityType = musicQualityType;
         this.isSelected = isSelected;
+        this.isPlayFlag = isPlayFlag;
         this.playListFlag = playListFlag;
         this.currentLyrics = currentLyrics;
     }
@@ -315,6 +318,22 @@ public class MusicBean
         return Long.compare(Long.parseLong(o.getTime()), Long.parseLong(this.getTime()));
     }
 
+    public long getAddListTime() {
+        return this.addListTime;
+    }
+
+
+    public void setAddListTime(long addListTime) {
+        this.addListTime = addListTime;
+    }
+
+    public boolean isPlayFlag() {
+        return isPlayFlag;
+    }
+
+    public void setPlayFlag(boolean playFlag) {
+        isPlayFlag = playFlag;
+    }
 
     @Override
     public int describeContents() {
@@ -346,18 +365,19 @@ public class MusicBean
         dest.writeInt(issueYear);
         dest.writeInt(musicQualityType);
         dest.writeByte((byte) (isSelected ? 1 : 0));
+        dest.writeByte((byte) (isPlayFlag ? 1 : 0));
         dest.writeString(playListFlag);
         dest.writeString(currentLyrics);
         dest.writeInt(cureetPosition);
     }
 
 
-    public long getAddListTime() {
-        return this.addListTime;
+    public boolean getIsPlayFlag() {
+        return this.isPlayFlag;
     }
 
 
-    public void setAddListTime(long addListTime) {
-        this.addListTime = addListTime;
+    public void setIsPlayFlag(boolean isPlayFlag) {
+        this.isPlayFlag = isPlayFlag;
     }
 }

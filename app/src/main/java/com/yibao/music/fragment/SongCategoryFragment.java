@@ -12,7 +12,6 @@ import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
-import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
@@ -26,8 +25,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * @项目名： ArtisanMusic
@@ -101,8 +98,8 @@ public class SongCategoryFragment extends BaseMusicFragment {
                 mSelectCount = bean.isSelected() ? mSelectCount-- : mSelectCount++;
                 bean.setIsSelected(!bean.isSelected());
                 mMusicBeanDao.update(bean);
-                LogUtil.d("===========选中  " + mSelectCount);
                 mSongAdapter.notifyDataSetChanged();
+                LogUtil.d("===========选中  " + mSelectCount);
             }
         });
     }
