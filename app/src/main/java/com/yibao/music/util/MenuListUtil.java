@@ -18,7 +18,7 @@ public class MenuListUtil {
             R.string.favorite, R.string.lyrics, R.string.tv_delete};
     private static final int[] picArr = {R.drawable.more_select_icon_addlist_down,
             R.drawable.more_select_icon_addplay_down, R.drawable.more_favorite_normal,
-            R.drawable.more_select_icon_edit, R.drawable.more_select_icon_delete};
+            R.drawable.more_select_icon_lyric, R.drawable.more_select_icon_delete};
 
     public static List<MoreMenuBean> getMenuData(boolean isFavorite) {
         ArrayList<MoreMenuBean> beanArrayList = new ArrayList<>();

@@ -103,8 +103,6 @@ public class PlayActivity extends BasePlayActivity {
     ImageView mIvLyricsMask;
     @BindView(R.id.sb_volume)
     SeekBar mSbVolume;
-    @BindView(R.id.ll_song_and_artist)
-    LinearLayout mLayoutSongAndArtist;
     private int mDuration;
     private String mAlbumUrl;
     private MusicBean mCurrenMusicInfo;
@@ -357,14 +355,17 @@ public class PlayActivity extends BasePlayActivity {
     }
 
 
-    @OnClick({R.id.titlebar_down, R.id.ll_song_and_artist,
-            R.id.playing_song_album, R.id.album_cover, R.id.rotate_rl, R.id.tv_lyrics, R.id.iv_lyrics_switch, R.id.iv_secreen_sun_switch, R.id.music_player_mode, R.id.music_player_pre, R.id.music_play, R.id.music_player_next, R.id.iv_favorite_music})
+    @OnClick({R.id.titlebar_down, R.id.play_song_name,
+            R.id.playing_song_album, R.id.album_cover, R.id.rotate_rl, R.id.tv_lyrics,
+            R.id.iv_lyrics_switch, R.id.iv_secreen_sun_switch, R.id.music_player_mode,
+            R.id.music_player_pre, R.id.music_play, R.id.music_player_next, R.id.iv_favorite_music})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.titlebar_down:
                 finish();
                 break;
-            case R.id.ll_song_and_artist:
+            case R.id.play_song_name:
+//            case R.id.song_artist_name:
                 startSearchActivity(mCurrenMusicInfo, Constants.NUMBER_ONE);
                 break;
             case R.id.rotate_rl:

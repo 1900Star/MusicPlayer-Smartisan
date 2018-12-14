@@ -1,6 +1,7 @@
 package com.yibao.music.util;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -44,20 +45,39 @@ public class ImageUitl {
     }
 
     // 加载图片
-    public static void loadPic(Context context, String url, ImageView view, RequestListener listener) {
-        RequestOptions options = new RequestOptions();
-        options.diskCacheStrategy(DiskCacheStrategy.NONE);
-        Glide.with(context).load(url).listener(listener).apply(options).into(view);
+    public static void loadPic(Activity activity, String url, ImageView view, RequestListener listener) {
+        if (!activity.isDestroyed()) {
+            RequestOptions options = new RequestOptions();
+            options.diskCacheStrategy(DiskCacheStrategy.NONE);
+            Glide.with(activity).load(url).listener(listener).apply(options).into(view);
+        } else {
+            LogUtil.i(activity.getPackageName(), "Picture loading failed,context is null");
+        }
 
     }
 
+    public static void loadPlaceholder(Activity activity, String url, ImageView view) {
+        if (!activity.isDestroyed()) {
+            RequestOptions options = new RequestOptions();
+            options.placeholder(R.mipmap.nina);
+            options.error(R.mipmap.nina);
+            options.diskCacheStrategy(DiskCacheStrategy.ALL);
+            Glide.with(activity).load(url).apply(options).into(view);
+        } else {
+            LogUtil.i("Picture loading failed,context is null");
+        }
+    }
 
     public static void loadPlaceholder(Context context, String url, ImageView view) {
-        RequestOptions options = new RequestOptions();
-        options.placeholder(R.mipmap.nina);
-        options.error(R.mipmap.nina);
-        options.diskCacheStrategy(DiskCacheStrategy.ALL);
-        Glide.with(context).load(url).apply(options).into(view);
+        if (context != null) {
+            RequestOptions options = new RequestOptions();
+            options.placeholder(R.mipmap.nina);
+            options.error(R.mipmap.nina);
+            options.diskCacheStrategy(DiskCacheStrategy.ALL);
+            Glide.with(context).load(url).apply(options).into(view);
+        } else {
+            LogUtil.i("Picture loading failed,context is null");
+        }
     }
 
     public static void customLoadPic(Context context, String url, int placeId, ImageView view) {
