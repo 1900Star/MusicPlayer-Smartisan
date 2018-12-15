@@ -30,7 +30,6 @@ public class MusicDaoUtil {
      * @return 查询结果以集合的类型返回
      */
     public static Observable<List<MusicBean>> getSearchResult(OnSearchFlagListener listener, MusicBeanDao musicBeanDao, String queryConditions) {
-        LogUtil.d(" ====  时时查询关键字  " + queryConditions);
         return Observable.create((ObservableOnSubscribe<List<MusicBean>>) emitter -> {
             // 歌手搜索
             List<MusicBean> artistList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(queryConditions)).build().list();

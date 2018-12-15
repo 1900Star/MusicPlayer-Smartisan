@@ -38,6 +38,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -70,6 +71,7 @@ public class PlayListFragment extends BaseMusicFragment {
     private List<MusicBean> mDetailList;
     private DetailsViewAdapter mDetailsAdapter;
     private PlayListBean mPlayListBean;
+    private Disposable mAddDeleteListDisposable;
 
     @Nullable
     @Override
@@ -100,35 +102,37 @@ public class PlayListFragment extends BaseMusicFragment {
      * 新增和删除列表
      */
     private void receiveRxbuData() {
-        mCompositeDisposable.add(mBus.toObserverable(AddAndDeleteListBean.class)
-                        .subscribeOn(Schedulers.io()).map(bean -> {
-                            int operationType = bean.getOperationType();
-                            // 删除列表
-                            if (operationType == Constants.NUMBER_TWO) {
-                                mAdapter.notifyItemRemoved(mDeletePosition);
-                                changeTvEditVisibility();
-                            } else if (operationType == Constants.NUMBER_FOUR) {
-                                // 更新列表名,同步更新列表中的歌曲的列表标识
-                                PlayListBean updataTitleBean = getPlayList().get(mEditPosition);
-//                        PlayListBean newPlayListBean = getPlayList().get(mEditPosition);
-                                List<MusicBean> beanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(updataTitleBean.getTitle())).build().list();
-                                for (MusicBean musicBean : beanList) {
-                                    musicBean.setPlayListFlag(bean.getListTitle());
-                                    mMusicBeanDao.update(musicBean);
-                                }
-                                // 更新列表名
-                                updataTitleBean.setTitle(bean.getListTitle());
-                                mPlayListDao.update(updataTitleBean);
-
-                            }
-                            return getPlayList();
-                        })
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(newPlayList -> {
-                            mAdapter.setNewData(newPlayList);
+        if (mAddDeleteListDisposable == null) {
+            mAddDeleteListDisposable = mBus.toObserverable(AddAndDeleteListBean.class)
+                    .subscribeOn(Schedulers.io()).map(bean -> {
+                        int operationType = bean.getOperationType();
+                        // 删除列表
+                        if (operationType == Constants.NUMBER_TWO) {
+                            mAdapter.notifyItemRemoved(mDeletePosition);
                             changeTvEditVisibility();
-                        })
-        );
+                        } else if (operationType == Constants.NUMBER_FOUR) {
+                            // 更新列表名,同步更新列表中的歌曲的列表标识
+                            PlayListBean updataTitleBean = getPlayList().get(mEditPosition);
+//                        PlayListBean newPlayListBean = getPlayList().get(mEditPosition);
+                            List<MusicBean> beanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(updataTitleBean.getTitle())).build().list();
+                            for (MusicBean musicBean : beanList) {
+                                musicBean.setPlayListFlag(bean.getListTitle());
+                                mMusicBeanDao.update(musicBean);
+                            }
+                            // 更新列表名
+                            updataTitleBean.setTitle(bean.getListTitle());
+                            mPlayListDao.update(updataTitleBean);
+
+                        }
+                        return getPlayList();
+                    })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(newPlayList -> {
+                                mAdapter.setNewData(newPlayList);
+                                changeTvEditVisibility();
+                            }
+                    );
+        }
     }
 
     private void changeTvEditVisibility() {
@@ -270,6 +274,15 @@ public class PlayListFragment extends BaseMusicFragment {
         mFlag = flag;
         mSongName = songName;
         return new PlayListFragment();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mAddDeleteListDisposable != null) {
+            mAddDeleteListDisposable.dispose();
+            mAddDeleteListDisposable = null;
+        }
     }
 
     @Override
