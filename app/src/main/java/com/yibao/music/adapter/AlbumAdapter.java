@@ -1,6 +1,7 @@
 package com.yibao.music.adapter;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -39,7 +40,7 @@ public class AlbumAdapter
 
 
 {
-    private Context mContext;
+    private Activity mContext;
     private int mIsShowStickyView;
 
     /**
@@ -48,7 +49,7 @@ public class AlbumAdapter
      * @param isShowStickyView 控制列表的StickyView是否显示，0 显示 ，1 ：不显示
      *                         parm isArtistList     用来控制音乐列表和艺术家列表的显示
      */
-    public AlbumAdapter(Context context, List<AlbumInfo> list, int isShowStickyView) {
+    public AlbumAdapter(Activity context, List<AlbumInfo> list, int isShowStickyView) {
         super(list);
         this.mContext = context;
         this.mIsShowStickyView = isShowStickyView;

@@ -1,6 +1,7 @@
 package com.yibao.music.adapter;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -40,7 +41,7 @@ public class SongAdapter
 
 
 {
-    private Context mContext;
+    private Activity mContext;
     private int mIsShowStickyView;
     private int mScroeAndfrequnecyFlag;
 
@@ -51,7 +52,7 @@ public class SongAdapter
      *                              parm isArtistList     用来控制音乐列表和艺术家列表的显示
      * @param scroeAndfrequnecyFlag 显示评分和播放次数 0 都不显示 ，1显示评分 ，2 显示播放次数
      */
-    public SongAdapter(Context context, List<MusicBean> list, int isShowStickyView, int scroeAndfrequnecyFlag) {
+    public SongAdapter(Activity context, List<MusicBean> list, int isShowStickyView, int scroeAndfrequnecyFlag) {
         super(list);
         this.mContext = context;
         this.mIsShowStickyView = isShowStickyView;

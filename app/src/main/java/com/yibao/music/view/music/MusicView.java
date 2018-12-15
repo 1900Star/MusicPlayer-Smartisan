@@ -1,5 +1,6 @@
 package com.yibao.music.view.music;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
@@ -35,40 +36,12 @@ public class MusicView
     public MusicView(Context context) {
         super(context);
         initView();
-        initListener(context);
     }
 
     public MusicView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
-        initListener(context);
     }
-
-    private void initListener(Context context) {
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                switch (newState) {
-                    case RecyclerView.SCROLL_STATE_IDLE:
-                        Glide.with(context).resumeRequests();
-                        break;
-                    // 加载图片
-                    case RecyclerView.SCROLL_STATE_DRAGGING:
-                    case RecyclerView.SCROLL_STATE_SETTLING:
-                        Glide.with(context).pauseRequests();
-                        break;
-
-                    default:
-                        break;
-                }
-
-
-            }
-
-
-        });
-    }
-
 
     private void initView() {
         //自定义组合控件将第三个参数设置为true  解析之后直接添加到当前view中

@@ -51,7 +51,7 @@ public class ImageUitl {
             options.diskCacheStrategy(DiskCacheStrategy.NONE);
             Glide.with(activity).load(url).listener(listener).apply(options).into(view);
         } else {
-            LogUtil.i(activity.getPackageName(), "Picture loading failed,context is null");
+            LogUtil.d("Picture loading failed,context is null");
         }
 
     }
@@ -64,7 +64,7 @@ public class ImageUitl {
             options.diskCacheStrategy(DiskCacheStrategy.ALL);
             Glide.with(activity).load(url).apply(options).into(view);
         } else {
-            LogUtil.i("Picture loading failed,context is null");
+            LogUtil.d("Picture loading failed,context is null");
         }
     }
 
@@ -76,18 +76,38 @@ public class ImageUitl {
             options.diskCacheStrategy(DiskCacheStrategy.ALL);
             Glide.with(context).load(url).apply(options).into(view);
         } else {
-            LogUtil.i("Picture loading failed,context is null");
+            LogUtil.d("Picture loading failed,context is null");
         }
     }
 
+    public static void customLoadPic(Activity activity, String url, int placeId, ImageView view) {
+        if (!activity.isDestroyed()) {
+            RequestOptions options = new RequestOptions();
+            options.placeholder(placeId);
+            options.error(placeId);
+            options.diskCacheStrategy(DiskCacheStrategy.NONE);
+            Glide.with(activity).load(url)
+                    .apply(options)
+                    .into(view);
+        } else {
+            LogUtil.d("Picture loading failed,context is null");
+        }
+
+
+    }
+
     public static void customLoadPic(Context context, String url, int placeId, ImageView view) {
-        RequestOptions options = new RequestOptions();
-        options.placeholder(placeId);
-        options.error(placeId);
-        options.diskCacheStrategy(DiskCacheStrategy.NONE);
-        Glide.with(context).load(url)
-                .apply(options)
-                .into(view);
+        if (context != null) {
+            RequestOptions options = new RequestOptions();
+            options.placeholder(placeId);
+            options.error(placeId);
+            options.diskCacheStrategy(DiskCacheStrategy.NONE);
+            Glide.with(context).load(url)
+                    .apply(options)
+                    .into(view);
+        } else {
+            LogUtil.d("Picture loading failed,context is null");
+        }
 
 
     }
