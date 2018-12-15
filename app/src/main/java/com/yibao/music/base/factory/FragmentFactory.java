@@ -12,7 +12,6 @@ import com.yibao.music.fragment.SongFragment;
 import com.yibao.music.util.Constants;
 
 /**
- * Author：Sid
  * Des：${TODO}
  * Time:2017/5/7 14:55
  *

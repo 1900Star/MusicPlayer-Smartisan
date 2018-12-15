@@ -1,12 +1,8 @@
 package com.yibao.music.util;
 
-import com.yibao.music.model.MusicBean;
-
-import java.util.List;
 import java.util.Random;
 
 /**
- * Author：Sid
  * Des：${TODO}
  * Time:2017/8/14 05:01
  *

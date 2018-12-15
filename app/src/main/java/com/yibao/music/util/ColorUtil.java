@@ -3,7 +3,7 @@ package com.yibao.music.util;
 import android.graphics.Color;
 
 /**
- * Author：Sid
+ * @ Author: Luoshipeng
  * Des：${TODO}
  * Time:2017/4/6 01:01
  */

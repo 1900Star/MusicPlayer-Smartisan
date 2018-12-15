@@ -49,7 +49,6 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Author：Sid
  * Des：${TODO}
  * Time:2017/8/22 14:11
  *

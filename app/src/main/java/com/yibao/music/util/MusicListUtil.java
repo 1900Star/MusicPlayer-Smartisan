@@ -22,7 +22,6 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Author：Sid
  * Des：${ 获取手机音乐数据 }
  * Time:2017/9/3 14:38
  *

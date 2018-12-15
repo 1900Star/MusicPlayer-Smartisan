@@ -11,7 +11,6 @@ import org.greenrobot.greendao.annotation.Unique;
 import org.greenrobot.greendao.annotation.Generated;
 
 /**
- * Author：Sid
  * Des：${音乐实体类,收藏 删除等}
  * Time:2017/9/3 14:31
  *

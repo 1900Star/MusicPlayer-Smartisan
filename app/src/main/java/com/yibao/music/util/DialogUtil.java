@@ -12,7 +12,6 @@ import com.yibao.music.R;
 
 
 /**
- * Author：Sid
  * Des：${为DialogFragmnet创建Dialog}
  * Time:2017/8/13 20:38
  * @author Stran

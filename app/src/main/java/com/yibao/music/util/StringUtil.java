@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Author：Sid
  * Des：${歌曲的时间格式处理}
  * Time:2017/8/12 18:39
  *

@@ -3,7 +3,6 @@ package com.yibao.music.base.listener;
 import android.widget.SeekBar;
 
 /**
- * Author：Sid
  * Des：${音乐播放界面的进度条监听器}
  * Time:2017/9/2 04:02
  * @author Stran

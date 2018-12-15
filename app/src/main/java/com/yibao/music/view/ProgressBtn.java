@@ -10,7 +10,6 @@ import android.widget.Button;
 import com.yibao.music.util.ColorUtil;
 
 /**
- * Author：Sid
  * Des：${TODO}
  * Time:2017/8/12 21:32
  *

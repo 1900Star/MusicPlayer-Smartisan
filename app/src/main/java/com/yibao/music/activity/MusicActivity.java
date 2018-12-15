@@ -280,7 +280,6 @@ public class MusicActivity
                         break;
                     case Constants.NUMBER_THRRE:
                         LogUtil.d("=================== 删除专辑");
-
                         break;
                     default:
                         break;

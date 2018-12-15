@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 /**
- * Author：Sid
+ * @ Author: Luoshipeng
  * Des：${添加一个Fragment到Activity}
  * Time:2017/4/22 13:26
  */

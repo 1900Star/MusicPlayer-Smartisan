@@ -17,7 +17,7 @@ import io.reactivex.subjects.PublishSubject;
 
 
 /**
- * Author：Sid
+ * @ Author: Luoshipeng
  * Des：${TODO}
  * Time:2017/4/29 10:35
  */

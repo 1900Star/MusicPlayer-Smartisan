@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 /**
- * Author：Sid
  * Des：${TODO}
  * Time:2017/5/31 18:50
  *

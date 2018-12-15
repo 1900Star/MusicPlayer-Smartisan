@@ -19,7 +19,6 @@ import com.yibao.music.R;
 
 
 /**
- * Author：Sid
  * Des：${TODO}
  * Time:2016/11/5 00:25
  * @author Stran

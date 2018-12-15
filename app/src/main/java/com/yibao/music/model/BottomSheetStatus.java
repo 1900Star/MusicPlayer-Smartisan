@@ -1,7 +1,6 @@
 package com.yibao.music.model;
 
 /**
- * Author：Sid
  * Des：${用于BottomSheetAdapter中,点击item播放音乐}
  * Time:2017/8/13 06:53
  * @author Stran

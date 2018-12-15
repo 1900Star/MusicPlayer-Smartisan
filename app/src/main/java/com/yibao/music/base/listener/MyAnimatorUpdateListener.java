@@ -5,7 +5,6 @@ import android.animation.ValueAnimator;
 import android.os.CountDownTimer;
 
 /**
- * Author：Sid
  * Des：${动画监听器}
  * Time:2017/7/23 20:40
  * @author Stran

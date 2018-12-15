@@ -33,7 +33,6 @@ import com.yibao.music.util.StringUtil;
 import java.util.Objects;
 
 /**
- * Author：Sid
  * Des：${将详情页面封装到一个Viwe里面，方便多个页面使用}
  * Time:2017/9/10 00:43
  *

@@ -20,7 +20,7 @@ import com.yibao.music.R;
 
 
 /**
- * Author：Sid
+ * @ Author: Luoshipeng
  * Des：${圆角图片}
  * Time:2017/4/6 17:57
  */

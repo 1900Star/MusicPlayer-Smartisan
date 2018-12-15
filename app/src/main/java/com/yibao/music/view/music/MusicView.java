@@ -1,6 +1,5 @@
 package com.yibao.music.view.music;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
@@ -11,16 +10,12 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
-import com.bumptech.glide.Glide;
 import com.yibao.music.R;
-import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 
 import java.util.Objects;
 
 /**
- * Author：Sid
  * Des：${将音乐列表(RecyclerView) ,StickyView, SlideBar导航栏 封装到一个Viwe里面，方便多个页面使用}
  * Time:2017/9/10 00:43
  *

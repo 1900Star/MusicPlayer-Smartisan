@@ -7,7 +7,7 @@ import android.net.NetworkInfo;
 import com.yibao.music.MusicApplication;
 
 /**
- * Author：Sid
+ * @ Author: Luoshipeng
  * Des：${TODO}
  * Time:2017/4/7 15:52
  */

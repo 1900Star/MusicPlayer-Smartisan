@@ -23,7 +23,6 @@ import com.yibao.music.util.MenuListUtil;
 import com.yibao.music.util.RxBus;
 
 /**
- * Author：Sid
  * Des：${TODO}
  * Time:2017/8/22 14:11
  *

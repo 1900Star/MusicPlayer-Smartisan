@@ -1,9 +1,7 @@
 package com.yibao.music;
 
-import android.app.Activity;
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.yibao.music.model.greendao.AlbumInfoDao;
@@ -15,8 +13,6 @@ import com.yibao.music.model.greendao.MusicInfoDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.CrashHandler;
-import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.RxBus;
 
 /**
  * 作者：Stran on 2017/3/23 15:12

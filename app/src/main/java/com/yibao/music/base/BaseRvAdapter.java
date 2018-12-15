@@ -23,7 +23,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Author：Sid
  * Des：${BaseAdapter}
  * Time:2017/6/2 13:07
  *
