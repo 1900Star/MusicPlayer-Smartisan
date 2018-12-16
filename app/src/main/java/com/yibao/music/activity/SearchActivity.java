@@ -81,7 +81,6 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     private DetailsViewAdapter mSearchDetailAdapter;
     private MusicBean mMusicBean;
     private AudioPlayService.AudioBinder audioBinder;
-//    private ArrayList<MusicLyricBean> mLyricList;
     private int lyricsFlag;
     private InputMethodManager mInputMethodManager;
     private Disposable mDisposableSoft;
@@ -166,7 +165,6 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             mSmartisanControlBar.setSongName(musicItem.getTitle());
             mSmartisanControlBar.setSingerName(musicItem.getArtist());
             mSmartisanControlBar.setAlbulmUrl(StringUtil.getAlbulm(musicItem.getAlbumId()));
-//            mLyricList = LyricsUtil.getLyricList(musicItem.getTitle(), musicItem.getArtist());
         }
         if (audioBinder != null) {
             mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());

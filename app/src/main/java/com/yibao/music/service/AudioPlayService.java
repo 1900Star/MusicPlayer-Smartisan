@@ -28,7 +28,6 @@ import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.manager.MusicNotifyManager;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 

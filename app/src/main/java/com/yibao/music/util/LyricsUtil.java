@@ -38,7 +38,7 @@ public class LyricsUtil {
      * @param artist   歌手
      * @return 返回歌词list
      */
-    public static List<MusicLyricBean> getLyricList(String songName, String artist) {
+    public static synchronized List<MusicLyricBean> getLyricList(String songName, String artist) {
         // 通过QQ音乐下载的歌曲名会带有这个字符串，需要将正确的歌名截取出来，才能用于网络歌词的匹配。
         if (songName.contains("[mqms2]")) {
             TitleAndArtistBean bean = TitleArtistUtil.getBean(songName);

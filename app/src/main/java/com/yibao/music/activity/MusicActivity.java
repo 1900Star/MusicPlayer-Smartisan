@@ -585,12 +585,7 @@ public class MusicActivity
         mSmartisanControlBar.initAnimation();
         //更新歌曲的进度
         upDataPlayProgress();
-//        if (mLyricList != null) {
-//            mLyricList.clear();
-//        }
-        // 获取歌词的List
         if (isShowQqBar) {
-//            mLyricList = LyricsUtil.getLyricList(musicItem.getTitle(), musicItem.getArtist());
             mQqControlBar.setPagerData(audioBinder.getMusicList());
             mQqControlBar.setPagerCurrentItem(audioBinder.getPosition());
             setQqPagerLyric();
