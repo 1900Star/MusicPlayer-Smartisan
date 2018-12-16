@@ -81,7 +81,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     private DetailsViewAdapter mSearchDetailAdapter;
     private MusicBean mMusicBean;
     private AudioPlayService.AudioBinder audioBinder;
-    private ArrayList<MusicLyricBean> mLyricList;
+//    private ArrayList<MusicLyricBean> mLyricList;
     private int lyricsFlag;
     private InputMethodManager mInputMethodManager;
     private Disposable mDisposableSoft;
@@ -166,7 +166,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             mSmartisanControlBar.setSongName(musicItem.getTitle());
             mSmartisanControlBar.setSingerName(musicItem.getArtist());
             mSmartisanControlBar.setAlbulmUrl(StringUtil.getAlbulm(musicItem.getAlbumId()));
-            mLyricList = LyricsUtil.getLyricList(musicItem.getTitle(), musicItem.getArtist());
+//            mLyricList = LyricsUtil.getLyricList(musicItem.getTitle(), musicItem.getArtist());
         }
         if (audioBinder != null) {
             mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
@@ -427,9 +427,10 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(musicBeanList -> {
-                        if (mLyricList != null && mLyricList.size() > 1 && lyricsFlag < mLyricList.size()) {
+                        List<MusicLyricBean> lyricList = audioBinder.getLyricList();
+                        if (lyricList != null && lyricList.size() > 1 && lyricsFlag < lyricList.size()) {
                             //通过集合，播放过的歌词就从集合中删除
-                            MusicLyricBean lyrBean = mLyricList.get(lyricsFlag);
+                            MusicLyricBean lyrBean = lyricList.get(lyricsFlag);
                             String content = lyrBean.getContent();
                             int progress = audioBinder.getProgress();
                             int startTime = lyrBean.getStartTime();

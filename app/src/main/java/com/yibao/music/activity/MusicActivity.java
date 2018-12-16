@@ -95,7 +95,7 @@ public class MusicActivity
     private int mPlayState;
 
     private int lyricsFlag = 0;
-    private ArrayList<MusicLyricBean> mLyricList;
+    //    private List<MusicLyricBean> mLyricList;
     private int mTitleResourceId = R.string.music_song;
     // 切换Tab时更改TiTle的标记,打开详情页面时正确显示Title
     private MusicBean mQqBarBean;
@@ -289,7 +289,7 @@ public class MusicActivity
                 switchMusicControlBar();
                 break;
             case R.id.iv_search:
-                startSearchActivity(mCurrentMusicBean,Constants.NUMBER_ZOER);
+                startSearchActivity(mCurrentMusicBean, Constants.NUMBER_ZOER);
                 break;
         }
     }
@@ -585,13 +585,12 @@ public class MusicActivity
         mSmartisanControlBar.initAnimation();
         //更新歌曲的进度
         upDataPlayProgress();
-        // 打开通知栏
-        if (mLyricList != null) {
-            mLyricList.clear();
-        }
+//        if (mLyricList != null) {
+//            mLyricList.clear();
+//        }
         // 获取歌词的List
         if (isShowQqBar) {
-            mLyricList = LyricsUtil.getLyricList(musicItem.getTitle(), musicItem.getArtist());
+//            mLyricList = LyricsUtil.getLyricList(musicItem.getTitle(), musicItem.getArtist());
             mQqControlBar.setPagerData(audioBinder.getMusicList());
             mQqControlBar.setPagerCurrentItem(audioBinder.getPosition());
             setQqPagerLyric();
@@ -627,19 +626,21 @@ public class MusicActivity
     private void setQqPagerLyric() {
         disposableQqLyric();
         if (mQqLyricsDisposable == null) {
-            mQqLyricsDisposable = Observable.interval(0, 1600, TimeUnit.MICROSECONDS)
+            // 刚开始延时100 确保歌词下载完成。
+            mQqLyricsDisposable = Observable.interval(100, 1600, TimeUnit.MICROSECONDS)
 //                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(musicBeanList -> {
-                        if (mLyricList != null && mLyricList.size() > 1 && lyricsFlag < mLyricList.size()) {
+                        List<MusicLyricBean> lyricList = audioBinder.getLyricList();
+                        if (lyricList != null && lyricList.size() > 1 && lyricsFlag < lyricList.size()) {
                             //通过集合，播放过的歌词就从集合中删除
-                            MusicLyricBean lyrBean = mLyricList.get(lyricsFlag);
+                            MusicLyricBean lyrBean = lyricList.get(lyricsFlag);
                             String lyrics = lyrBean.getContent();
                             int progress = audioBinder.getProgress();
                             int startTime = lyrBean.getStartTime();
                             List<MusicBean> musicList = audioBinder.getMusicList();
                             if (progress > startTime) {
-                                LogUtil.d("歌词List的长度    ==  " + mLyricList.size());
+                                LogUtil.d("歌词List的长度    ==  " + lyricList.size());
                                 if (mCurrentPosition < musicList.size()) {
                                     mQqBarBean = musicList.get(mCurrentPosition);
                                     mQqBarBean.setCurrentLyrics(lyrics);

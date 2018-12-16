@@ -16,16 +16,19 @@ import android.widget.Toast;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.manager.MediaSessionManager;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.QueryMusicFlagListUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.manager.MusicNotifyManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -74,6 +77,7 @@ public class AudioPlayService
     private Disposable mDisposable;
     private AudioManager mAudioManager;
     private MediaSessionManager mSessionManager;
+    private List<MusicLyricBean> mLyricList;
 
     public void setData(List<MusicBean> list) {
         mMusicDataList = list;
@@ -168,7 +172,7 @@ public class AudioPlayService
             mMusicInfo = mMusicDataList.get(position);
             mediaPlayer = MediaPlayer.create(AudioPlayService.this,
                     Uri.parse(mMusicInfo.getSongUrl()));
-
+            mLyricList = LyricsUtil.getLyricList(mMusicInfo.getTitle(), mMusicInfo.getArtist());
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.setOnCompletionListener(this);
             SpUtil.setMusicPosition(AudioPlayService.this, position);
@@ -176,6 +180,10 @@ public class AudioPlayService
             mSessionManager.updatePlaybackState(true);
             mSessionManager.updateLocMsg();
 
+        }
+
+        public List<MusicLyricBean> getLyricList() {
+            return mLyricList;
         }
 
         private void showNotifycation(boolean b) {

@@ -92,7 +92,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
 
     private void initListener() {
         mSongAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
-                MoreMenuBottomDialog.newInstance(musicBean, position,false).getBottomDialog(mActivity));
+                MoreMenuBottomDialog.newInstance(musicBean, position, false).getBottomDialog(mActivity));
         mSongAdapter.setItemListener((bean, isEditStatus) -> {
             if (isEditStatus) {
                 mSelectCount = bean.isSelected() ? mSelectCount-- : mSelectCount++;
@@ -123,7 +123,6 @@ public class SongCategoryFragment extends BaseMusicFragment {
                 break;
         }
         mMusciView.setAdapter(mActivity, Constants.NUMBER_ONE, isShowSlidebar, mSongAdapter);
-
     }
 
     @Override
@@ -147,7 +146,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
         if (isItemSelectStatus) {
             putFragToMap(Constants.NUMBER_ELEVEN, mClassName);
         } else {
-           removeFrag(mClassName);
+            removeFrag(mClassName);
             mSongAdapter.setItemSelectStatus(isItemSelectStatus);
         }
         changeTvEditText(getResources().getString(isItemSelectStatus ? R.string.complete : R.string.tv_edit));

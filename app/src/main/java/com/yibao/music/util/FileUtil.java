@@ -3,6 +3,7 @@ package com.yibao.music.util;
 import android.os.Environment;
 
 import java.io.File;
+import java.io.IOException;
 
 
 /**
@@ -12,7 +13,7 @@ import java.io.File;
  */
 
 public class FileUtil {
-    private static String MUSIC_LYRICS_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyric/";
+    private static String MUSIC_LYRICS_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyrics/";
 
 
     public static boolean getFavoriteFile() {
@@ -20,15 +21,25 @@ public class FileUtil {
         return file.exists();
     }
 
-    public static File getLyricsFile(String songName,String songArtisa) {
+    public static File getLyricsFile(String songName, String songArtisa) {
 
         File file = new File(MUSIC_LYRICS_ROOT);
         if (!file.exists()) {
-            if (!file.mkdirs()) {
-                LogUtil.d("===创建失败");
+            file.mkdirs();
+//            if (!file.mkdirs()) {
+//                LogUtil.d("===创建失败");
+//            }
+        }
+        File lyricFile = new File(file + "/", songName + "$$" + songArtisa + ".lrc");
+        if (!lyricFile.exists()) {
+            try {
+                lyricFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        return new File(file + "/", songName + "$$" + songArtisa + ".lrc");
+        LogUtil.d("路径   ====    " + lyricFile.getAbsolutePath());
+        return lyricFile;
     }
 
 

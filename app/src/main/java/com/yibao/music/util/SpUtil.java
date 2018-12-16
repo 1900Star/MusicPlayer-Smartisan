@@ -52,7 +52,7 @@ public class SpUtil {
 
     /**
      * 用于存储和获取音乐的播放模式
-     *
+     * 0 全部  1 单曲   2 随机
      * @param context
      * @param value
      */
@@ -124,7 +124,7 @@ public class SpUtil {
 
     /**
      * 用于存储程序退出或关闭音乐界面时，音乐列表的分类标记，。
-     * 1 歌曲名   2  评分   3  播放次数        4  添加时间
+     * 1 歌曲名   2  评分   3  播放次数        4  添加时间    8  其它正常情况
      *
      * @param context
      * @param value

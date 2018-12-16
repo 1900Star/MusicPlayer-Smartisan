@@ -41,6 +41,7 @@ import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.LyricsView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -110,7 +111,7 @@ public class PlayActivity extends BasePlayActivity {
     private ObjectAnimator mAnimator;
     private MyAnimatorUpdateListener mAnimatorListener;
     private Disposable mCloseLyrDisposable;
-    private ArrayList<MusicLyricBean> mLyricList;
+    private List<MusicLyricBean> mLyricList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,8 +139,8 @@ public class PlayActivity extends BasePlayActivity {
         mCurrenMusicInfo = audioBinder != null ? audioBinder.getMusicBean() : getIntent().getParcelableExtra("currentBean");
         if (mCurrenMusicInfo != null) {
             setTitleAndArtist(mCurrenMusicInfo);
-            ArrayList<MusicLyricBean> musicLyricBeans = LyricsUtil.getLyricList(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
-            mTvLyrics.setLrcFile(musicLyricBeans);
+//            List<MusicLyricBean> musicLyricBeans = LyricsUtil.getLyricList(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
+//            mTvLyrics.setLrcFile(musicLyricBeans);
             mAlbumUrl = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId());
             setAlbulm(mAlbumUrl);
         }
@@ -214,7 +215,7 @@ public class PlayActivity extends BasePlayActivity {
         setSongDuration();
         updatePlayBtnStatus();
 //        初始化歌词
-        mLyricList = LyricsUtil.getLyricList(musicBean.getTitle(), musicBean.getArtist());
+        mLyricList = audioBinder.getLyricList();
         mTvLyrics.setLrcFile(mLyricList);
         if (isShowLyrics) {
             closeLyricsView(mLyricList);
@@ -511,7 +512,7 @@ public class PlayActivity extends BasePlayActivity {
      *
      * @param lyricList list
      */
-    public void closeLyricsView(ArrayList<MusicLyricBean> lyricList) {
+    public void closeLyricsView(List<MusicLyricBean> lyricList) {
         if (lyricList.size() < 2) {
             if (mCloseLyrDisposable == null) {
                 mCloseLyrDisposable = Observable.timer(5, TimeUnit.SECONDS)

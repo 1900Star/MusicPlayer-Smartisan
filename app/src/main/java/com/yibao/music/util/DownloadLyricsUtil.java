@@ -39,12 +39,13 @@ public class DownloadLyricsUtil {
      * @param artist   歌手
      * @return 返回下载地址
      */
-    public static synchronized String getLyricsUrl(String songName, String artist) {
+    public static synchronized String getLyricsDownUrl(String songName, String artist) {
         String queryLrcURL = getQueryLrcURL(songName, artist);
         LogUtil.d("     查询歌词地址    ====    " + queryLrcURL);
         OkHttpUtil.downFile(queryLrcURL, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                LogUtil.d("歌词下载失败   ==  " + e.toString());
                 lyricsUrl = null;
             }
 
@@ -66,12 +67,14 @@ public class DownloadLyricsUtil {
                         JSONArray jArray = jObject.getJSONArray("result");
                         JSONObject obj = jArray.getJSONObject(index);
                         lyricsUrl = obj.getString("lrc");
+                        LogUtil.d("CCCCCCCCCCCCCCCCCC   ==  "+lyricsUrl);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             }
         });
+        LogUtil.d("歌词下载地址   ====  AA  " + lyricsUrl);
         return lyricsUrl;
     }
 
@@ -81,14 +84,15 @@ public class DownloadLyricsUtil {
     }
 
     /**
-     * 将网络歌词文件本地缓冲地址
+     * 将网络歌词文件本地
      *
-     * @param url      歌词地址
+     * @param url      歌词缓冲地址
      * @param songName name
      * @param artist   artist
      * @return 是否下载成功
      */
-    public static boolean getLyricsFile(String url, final String songName, String artist) {
+    public static boolean getLyricsFile(final String url, final String songName, final String artist) {
+        LogUtil.d(" 歌词下载信息  " + songName + " $$ " + artist);
         LogUtil.d("     歌词下载地址url    ====    " + url);
         OkHttpUtil.downFile(url, new Callback() {
             @Override

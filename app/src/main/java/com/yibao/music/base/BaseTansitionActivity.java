@@ -1,6 +1,8 @@
 package com.yibao.music.base;
 
+import com.bumptech.glide.Glide;
 import com.yibao.music.R;
+import com.yibao.music.base.listener.OnGlideLoadListener;
 
 
 /**
@@ -13,10 +15,24 @@ import com.yibao.music.R;
  * @描述： {TODO}
  */
 
-public abstract class BaseTansitionActivity extends BaseActivity {
+public abstract class BaseTansitionActivity extends BaseActivity implements OnGlideLoadListener {
     @Override
     public void finish() {
         super.finish();
         overridePendingTransition(0, R.anim.dialog_push_out);
     }
+    @Override
+    public void resumeRequests() {
+        if (!isDestroyed()) {
+            Glide.with(this).resumeRequests();
+        }
+    }
+
+    @Override
+    public void pauseRequests() {
+        if (!isDestroyed()) {
+            Glide.with(this).pauseRequests();
+        }
+    }
+
 }

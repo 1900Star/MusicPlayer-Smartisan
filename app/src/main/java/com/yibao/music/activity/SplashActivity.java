@@ -116,24 +116,25 @@ public class SplashActivity
                 .subscribe(musicCountBean -> {
                     // 初次启动时size为所有音乐的数量，当手动扫描时为新增歌曲的数量。
                     int size = musicCountBean.getSize();
+                    String str;
                     int currentCount = musicCountBean.getCurrentCount();
                     if (size > 0) {
                         mMusicLoadProgressBar.setMax(size);
-                        String s = "已经加载  " + currentCount + " 首本地音乐";
-                        mTvMusicCount.setText(s);
+                        str = "已经加载  " + currentCount + " 首本地音乐";
+                        mTvMusicCount.setText(str);
                         mMusicLoadProgressBar.setProgress(currentCount);
                         if (currentCount == size) {
                             mTvMusicCount.setTextColor(getResources().getColor(R.color.lyricsSelected));
-                            String s1 = "本地音乐加载完成 -_-  共" + size + "首歌";
-                            mTvMusicCount.setText(s1);
+                            str = "本地音乐加载完成 -_-  共" + size + "首歌";
+                            mTvMusicCount.setText(str);
                             // 初次扫描完成后进入MusicActivity
                             if (mIsFirstScanner) {
                                 // 初次加载的标记
                                 SpUtil.setLoadMusicFlag(SplashActivity.this, Constants.NUMBER_EIGHT);
                             } else {
                                 // 手动扫描新增歌曲数量
-                                String newSongCount = "新增 " + size + " 首歌曲";
-                                mTvMusicCount.setText(newSongCount);
+                                str = "新增 " + size + " 首歌曲";
+                                mTvMusicCount.setText(str);
                                 SpUtil.setNewMusicFlag(this, size);
                             }
                             countDownOpareton(mIsFirstScanner);
@@ -151,7 +152,7 @@ public class SplashActivity
      * @param b ture 表示初次安装，自动扫描完成后直接进入MusicActivity 。 false 表示手动扫描，完成后停在SplashActivity页面。
      */
     private void countDownOpareton(boolean b) {
-        mCompositeDisposable.add(Observable.timer(1500, TimeUnit.MILLISECONDS)
+        mCompositeDisposable.add(Observable.timer(1000, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {

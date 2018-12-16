@@ -10,8 +10,11 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
 import com.yibao.music.R;
+import com.yibao.music.base.listener.OnGlideLoadListener;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 
 import java.util.Objects;
 
@@ -31,11 +34,13 @@ public class MusicView
     public MusicView(Context context) {
         super(context);
         initView();
+        initListener(context);
     }
 
     public MusicView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
+        initListener(context);
     }
 
     private void initView() {
@@ -48,11 +53,33 @@ public class MusicView
 
     }
 
+    private void initListener(Context context) {
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (context instanceof OnGlideLoadListener) {
+                    switch (newState) {
+                        case RecyclerView.SCROLL_STATE_IDLE:
+                            ((OnGlideLoadListener) context).resumeRequests();
+                            break;
+                        // 加载图片
+                        case RecyclerView.SCROLL_STATE_DRAGGING:
+                        case RecyclerView.SCROLL_STATE_SETTLING:
+                            ((OnGlideLoadListener) context).pauseRequests();
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+            }
+        });
+    }
 
     /**
      * //设置列表的适配器
      *
-     * @param context
+     * @param context        c
      * @param adapterType    1 : SongListAdapter  、 2  ：ArtistAdapter  、
      *                       3  ： AlbumAdapter  普通视图  、 4  ： AlbumAdapter  平铺视图 GridView 3列
      * @param isShowSlideBar 只有按歌曲名排列时，Slidebar才显示 。

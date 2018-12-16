@@ -11,6 +11,7 @@ import com.yibao.music.R;
 import com.yibao.music.model.MusicLyricBean;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Des：${自定义歌词View}
@@ -25,7 +26,7 @@ public class LyricsView
     private int mViewW;
     private int mViewH;
     private String mCurrentLrc;
-    private static ArrayList<MusicLyricBean> musicLyrList;
+    private static List<MusicLyricBean> musicLyrList;
     private static int centerLine;
     private float mBigText;
     private int mLyricsSelected;
@@ -184,7 +185,7 @@ public class LyricsView
      *
      * @param lrcList s
      */
-    public void setLrcFile(ArrayList<MusicLyricBean> lrcList) {
+    public void setLrcFile(List<MusicLyricBean> lrcList) {
 
         musicLyrList = lrcList;
         //默认剧中行=0
