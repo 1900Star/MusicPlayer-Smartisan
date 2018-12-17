@@ -136,7 +136,7 @@
 
         </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -146,31 +146,34 @@
 
             <TextView
                 android:id="@+id/tv_backups_favorite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
                 android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_btn_delete_selector"
+                android:gravity="center"
                 android:text="@string/backups_favorite_song"
-                android:textColor="@color/tabbarDownTv"
+                android:textColor="@color/text_cancel_selector"
                 android:textSize="@dimen/about_title"
                 android:textStyle="bold"
                 android:typeface="serif" />
 
             <TextView
                 android:id="@+id/tv_recover_favorite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
                 android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_btn_delete_selector"
+                android:gravity="center"
                 android:text="@string/recovery_favorite_song"
-                android:textColor="@color/tabbarDownTv"
+                android:textColor="@color/text_cancel_selector"
                 android:textSize="@dimen/about_title"
                 android:textStyle="bold"
-                android:typeface="serif"
-                tools:ignore="RelativeOverlap" />
+                android:typeface="serif" />
 
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -181,27 +184,29 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
                 android:id="@+id/tv_scanner_media"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
                 android:layout_margin="10dp"
-                android:gravity="center"
                 android:layout_weight="1"
+                android:background="@drawable/shape_btn_edit_selector"
+                android:gravity="center"
                 android:text="@string/scanner_music"
                 android:textColor="@color/music_activity_title_selector"
                 android:textSize="@dimen/about_title"
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_width="0dp"
                 android:id="@+id/tv_share"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:gravity="center"
+                android:layout_margin="10dp"
                 android:layout_weight="1"
+                android:background="@drawable/shape_btn_edit_selector"
+                android:gravity="center"
                 android:text="@string/share_me"
-                android:textColor="@color/tabbarDownTv"
+                android:textColor="@color/music_activity_title_selector"
                 android:textSize="@dimen/about_title"
                 android:textStyle="bold" />
 
