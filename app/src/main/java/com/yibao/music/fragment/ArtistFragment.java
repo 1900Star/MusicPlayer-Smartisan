@@ -91,8 +91,8 @@ public class ArtistFragment extends BaseMusicFragment {
             mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(artistInfo.getArtist())).build().list();
             // DetailsView播放音乐需要的参数
             mDetailsView.setDataFlag(mFragmentManager, mDetailList.size(), artistInfo.getArtist(), Constants.NUMBER_ONE);
-            mDetailsAdapter = new DetailsViewAdapter(getActivity(), mDetailList, Constants.NUMBER_ONE);
-            mDetailsView.setAdapter(getActivity(), Constants.NUMBER_ONE, artistInfo, mDetailsAdapter);
+            mDetailsAdapter = new DetailsViewAdapter(mActivity, mDetailList, Constants.NUMBER_ONE);
+            mDetailsView.setAdapter( Constants.NUMBER_ONE, artistInfo, mDetailsAdapter);
             SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_NINE);
             mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
                     MoreMenuBottomDialog.newInstance(musicBean, position,false).getBottomDialog(mActivity));

@@ -133,9 +133,9 @@ public class AlbumFragment extends BaseMusicFragment {
             mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(albumInfo.getAlbumName())).build().list();
             // DetailsView播放音乐需要的参数
             mDetailsView.setDataFlag(mFragmentManager, mDetailList.size(), albumInfo.getAlbumName(), Constants.NUMBER_TWO);
-            mDetailsAdapter = new DetailsViewAdapter(getActivity(), mDetailList, Constants.NUMBER_TWO);
+            mDetailsAdapter = new DetailsViewAdapter(mActivity, mDetailList, Constants.NUMBER_TWO);
 
-            mDetailsView.setAdapter(getActivity(), Constants.NUMBER_TWO, albumInfo, mDetailsAdapter);
+            mDetailsView.setAdapter(Constants.NUMBER_TWO, albumInfo, mDetailsAdapter);
             mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
                     MoreMenuBottomDialog.newInstance(musicBean, position,false).getBottomDialog(mActivity));
             putFragToMap(mClassName);

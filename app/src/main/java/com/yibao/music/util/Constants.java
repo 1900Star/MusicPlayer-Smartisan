@@ -59,6 +59,7 @@ public class Constants {
     public static final String FRAGMENT_SONG_CATEGORY = "SongCategoryFragment";
     public static final String FRAGMENT_ALBUM = "AlbumFragment";
     public static final String SCANNER_MEDIA = "scanner";
+    public static final String ADD_TO_LIST = "add2list";
 
     public static final String FAVORITE_FILE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/favorite.txt/";
 

@@ -2,6 +2,8 @@ package com.yibao.music.view.music;
 
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
@@ -17,12 +19,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.yibao.music.R;
+import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
+import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
@@ -30,6 +34,8 @@ import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -57,6 +63,7 @@ public class DetailsView
     private LinearLayout mHeadView;
     private FragmentManager mFragmentManager;
     private Long mAlbumId;
+    private List<MusicBean> mMusicList;
 
     public void setDataFlag(FragmentManager fragmentManager, int listSize, String queryFlag, int dataFlag) {
         this.mFragmentManager = fragmentManager;
@@ -77,6 +84,7 @@ public class DetailsView
         initView();
         initListener();
     }
+
     @Override
     protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
@@ -86,19 +94,19 @@ public class DetailsView
     /**
      * //设置列表的适配器
      *
-     * @param context  d
      * @param dataType 将数据 强转成指定的类型  1 ： ArtistInfo   2 ： AlbumInfo
      * @param bean     d
      * @param adapter  d
      */
-    public void setAdapter(Context context, int dataType, Object bean, DetailsViewAdapter adapter) {
+    public void setAdapter( int dataType, Object bean, DetailsViewAdapter adapter) {
         initData(dataType, bean);
-        LinearLayoutManager manager = new LinearLayoutManager(context);
+        mMusicList = adapter.getData();
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setHasFixedSize(true);
-        DividerItemDecoration divider = new DividerItemDecoration(context,DividerItemDecoration.VERTICAL);
-        divider.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(context, R.drawable.shape_item_decoration)));
+        DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        divider.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(getContext(), R.drawable.shape_item_decoration)));
         mRecyclerView.addItemDecoration(divider);
         mRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -114,7 +122,7 @@ public class DetailsView
                         .show(mFragmentManager, "album");
                 break;
             case R.id.iv_details_add_to_list:
-                LogUtil.d("=================添加到个人列表");
+                startPlayListActivity();
                 break;
             case R.id.iv_details_add_to_play_list:
                 LogUtil.d("=================添加到当前播放列表");
@@ -129,6 +137,16 @@ public class DetailsView
                 break;
 
         }
+    }
+
+    protected void startPlayListActivity() {
+        ArrayList<String> arrayList = new ArrayList<>();
+        for (MusicBean musicBean : mMusicList) {
+            arrayList.add(musicBean.getTitle());
+        }
+        Intent intent = new Intent(getContext(), PlayListActivity.class);
+        intent.putStringArrayListExtra(Constants.ADD_TO_LIST, arrayList);
+        getContext().startActivity(intent);
     }
 
     private void startMusic(int startPosition) {

@@ -12,6 +12,8 @@ import com.yibao.music.fragment.PlayListFragment;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.SpUtil;
 
+import java.util.ArrayList;
+
 public class PlayListActivity extends AppCompatActivity implements OnFinishActivityListener {
 
     @Override
@@ -24,9 +26,10 @@ public class PlayListActivity extends AppCompatActivity implements OnFinishActiv
 
     private void initData() {
         String songName = getIntent().getStringExtra(Constants.SONG_NAME);
+        ArrayList<String> arrayList = getIntent().getStringArrayListExtra(Constants.ADD_TO_LIST);
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        PlayListFragment playListFragment = PlayListFragment.newInstance(Constants.NUMBER_ONE, songName);
+        PlayListFragment playListFragment = PlayListFragment.newInstance(Constants.NUMBER_ONE, songName,arrayList);
         transaction.replace(R.id.fl_content, playListFragment);
         transaction.commit();
     }

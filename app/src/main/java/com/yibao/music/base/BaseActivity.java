@@ -21,6 +21,8 @@ import com.yibao.music.util.RxBus;
 import com.yibao.music.view.music.QqControlBar;
 import com.yibao.music.view.music.SmartisanControlBar;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.Unbinder;
@@ -121,7 +123,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void startPlayListActivity(String songName) {
+        ArrayList<String> arr = new ArrayList<>();
         Intent intent = new Intent(this, PlayListActivity.class);
+        intent.putStringArrayListExtra("aar", arr);
         intent.putExtra(Constants.SONG_NAME, songName);
         startActivity(intent);
         overridePendingTransition(R.anim.dialog_push_in, 0);

@@ -6,10 +6,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
+import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicInfo;
 import com.yibao.music.model.PlayListBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 
@@ -45,7 +48,9 @@ public class PlayListAdapter extends BaseRvAdapter<PlayListBean> {
             playViewHolder.mIvItemEdit.setVisibility(isSelectStatus ? View.VISIBLE : View.GONE);
             playViewHolder.mIvItemArrow.setVisibility(isSelectStatus ? View.GONE : View.VISIBLE);
             playViewHolder.mTvPlayListName.setText(playListBean.getTitle());
-            String count = playListBean.getSongCount() + " 首歌曲";
+            List<MusicBean> musicBeans = MusicApplication.getIntstance().getMusicDao().queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle())).build().list();
+            String count = musicBeans.size() + " 首歌曲";
+//            String count = playListBean.getSongCount() + " 首歌曲";
             playViewHolder.mTvPlayListCount.setText(count);
             playViewHolder.itemView.setOnClickListener(view -> {
                 if (isSelectStatus) {

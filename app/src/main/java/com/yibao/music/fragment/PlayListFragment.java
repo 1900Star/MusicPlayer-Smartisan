@@ -32,6 +32,7 @@ import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.PlayListDetailView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -72,6 +73,7 @@ public class PlayListFragment extends BaseMusicFragment {
     private DetailsViewAdapter mDetailsAdapter;
     private PlayListBean mPlayListBean;
     private Disposable mAddDeleteListDisposable;
+    private static ArrayList<String> mArrayList;
 
     @Nullable
     @Override
@@ -154,22 +156,28 @@ public class PlayListFragment extends BaseMusicFragment {
         mAdapter.setItemListener((playListBean, isEditStatus) -> {
             if (SpUtil.getAddToPlayListFlag(mActivity) == Constants.NUMBER_ONE) {
                 if (mContext instanceof PlayListActivity) {
-                    List<MusicBean> beanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle()), MusicBeanDao.Properties.Title.eq(mSongName)).build().list();
-                    if (beanList.size() > 0) {
-                        ToastUtil.songalreadyExist(mActivity);
+                    // 批量添加
+                    if (mArrayList != null && mArrayList.size() > 0) {
+                        new Thread(() -> {
+                            for (String songTitle : mArrayList) {
+                                List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle()), MusicBeanDao.Properties.Title.eq(songTitle)).build().list();
+                                if (musicBeanList.size() == 0) {
+                                    insertSongToList(playListBean, songTitle);
+                                }
+                            }
+                        }).start();
+
+                        ((OnFinishActivityListener) mContext).finishActivity();
                     } else {
-                        List<MusicBean> musicBeans = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Title.eq(mSongName)).build().list();
-                        if (musicBeans.size() > 0) {
-                            MusicBean musicBean = musicBeans.get(0);
-                            musicBean.setPlayListFlag(playListBean.getTitle());
-                            musicBean.setAddListTime(System.currentTimeMillis());
-                            mMusicBeanDao.update(musicBean);
-                            // 更新列表的歌曲数量
-                            playListBean.setSongCount(playListBean.getSongCount() + 1);
-                            mPlayListDao.update(playListBean);
+                        // 单曲添加
+                        List<MusicBean> beanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle()), MusicBeanDao.Properties.Title.eq(mSongName)).build().list();
+                        if (beanList.size() > 0) {
+                            ToastUtil.songalreadyExist(mActivity);
+                        } else {
+                            insertSongToList(playListBean, mSongName);
                         }
+                        ((OnFinishActivityListener) mContext).finishActivity();
                     }
-                    ((OnFinishActivityListener) mContext).finishActivity();
                 }
             } else {
                 if (isEditStatus) {
@@ -198,6 +206,19 @@ public class PlayListFragment extends BaseMusicFragment {
                 AddListDialog.newInstance(2, currentTitle).show(mActivity.getFragmentManager(), "addList");
             }
         });
+    }
+
+    private void insertSongToList(PlayListBean playListBean, String songName) {
+        List<MusicBean> musicBeans = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Title.eq(songName)).build().list();
+        if (musicBeans.size() > 0) {
+            MusicBean musicBean = musicBeans.get(0);
+            musicBean.setPlayListFlag(playListBean.getTitle());
+            musicBean.setAddListTime(System.currentTimeMillis());
+            mMusicBeanDao.update(musicBean);
+            // 更新列表的歌曲数量
+            playListBean.setSongCount(playListBean.getSongCount() + 1);
+            mPlayListDao.update(playListBean);
+        }
     }
 
     @Override
@@ -242,8 +263,8 @@ public class PlayListFragment extends BaseMusicFragment {
             mDetailView.setVisibility(View.VISIBLE);
             mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(title)).build().list();
             mDetailView.setQureyFlag(title, mDetailList.size());
-            List<MusicBean> musicBeanList = MusicListUtil.sortMusicList(mDetailList, Constants.NUMBER_FIEV);
-            mDetailsAdapter.setNewData(musicBeanList);
+//            List<MusicBean> musicBeanList = MusicListUtil.sortMusicList(mDetailList, Constants.NUMBER_FIEV);
+            mDetailsAdapter.setNewData(mDetailList);
             mDetailView.setAdapter(mDetailsAdapter);
             mDetailsAdapter.setOnItemMenuListener((position, musicBean) -> MoreMenuBottomDialog.newInstance(musicBean, position, false).getBottomDialog(mActivity));
             putFragToMap(Constants.NUMBER_EIGHT, mClassName);
@@ -270,9 +291,10 @@ public class PlayListFragment extends BaseMusicFragment {
         }
     }
 
-    public static PlayListFragment newInstance(int flag, String songName) {
+    public static PlayListFragment newInstance(int flag, String songName, ArrayList<String> arrayList) {
         mFlag = flag;
         mSongName = songName;
+        mArrayList = arrayList;
         return new PlayListFragment();
     }
 
