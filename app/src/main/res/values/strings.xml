@@ -52,6 +52,7 @@
     <string name="backups_favorite_song">备份收藏歌曲</string>
     <string name="recovery_favorite_song">恢复收藏歌曲</string>
     <string name="search_history">搜索历史</string>
+    <string name="share_me">分享</string>
     <string name="clear_edit">清空输入框</string>
     <string name="not_search_result">无搜索结果</string>
     <string name="scanner_music">扫描本地音乐</string>
@@ -61,5 +62,7 @@
     <string name="select_operation">选择操作</string>
     <string name="delelet_play_list">删除列表</string>
     <string name="edit_play_list">编辑列表</string>
+    <string name="app_info">ArtisanMusicPlayer 仿照锤子音乐播放器写的一个本地音乐播放器。 https://github.com/1900Star/SmartisanMusicPlayer </string>
+
 
 </resources>

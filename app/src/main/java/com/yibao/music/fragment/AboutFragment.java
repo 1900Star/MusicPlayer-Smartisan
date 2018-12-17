@@ -58,6 +58,8 @@ public class AboutFragment extends BaseMusicFragment {
     TextView mTvBackupsFavorite;
     @BindView(R.id.tv_recover_favorite)
     TextView mTvRecoverFavorite;
+    @BindView(R.id.tv_share)
+    TextView mTvShare;
     @BindView(R.id.tv_scanner_media)
     TextView mtScanerMedia;
 
@@ -86,6 +88,9 @@ public class AboutFragment extends BaseMusicFragment {
         mCompositeDisposable.add(RxView.clicks(mtScanerMedia)
                 .throttleFirst(3, TimeUnit.SECONDS)
                 .subscribe(o -> scannerMedia()));
+        mCompositeDisposable.add(RxView.clicks(mTvShare)
+                .throttleFirst(3, TimeUnit.SECONDS)
+                .subscribe(o -> shareMe()));
         mAboutHeaderIv.setOnLongClickListener(view -> {
             RelaxDialogFragment.newInstance().show(mFragmentManager, "girlsDialog");
             return true;
@@ -97,7 +102,13 @@ public class AboutFragment extends BaseMusicFragment {
         intent.putExtra(Constants.SCANNER_MEDIA, Constants.SCANNER_MEDIA);
         startActivity(intent);
     }
-
+    private void shareMe() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, mActivity.getTitle());
+        shareIntent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.app_info));
+        shareIntent.setType("text/plain");
+        startActivity(shareIntent);
+    }
     private void recoverFavoriteList() {
         if (FileUtil.getFavoriteFile()) {
             HashMap<String, String> songInfoMap = new HashMap<>();
