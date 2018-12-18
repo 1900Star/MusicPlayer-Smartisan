@@ -26,6 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
+        android:background="@drawable/shape_btn_edit_selector"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -33,9 +34,9 @@
         <EditText
             android:id="@+id/edit_add_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape_btn_edit_selector"
+            android:layout_height="36dp"
             android:maxLength="21"
+            android:layout_marginStart="4dp"
             android:textColor="@color/colorBlack"
             android:textColorHint="@color/tabbarTv"
             android:textCursorDrawable="@drawable/edittext_cursor_color" />
