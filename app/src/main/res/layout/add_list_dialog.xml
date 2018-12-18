@@ -8,14 +8,15 @@
 
 
     <TextView
+        android:id="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:id="@+id/tv_title"
         android:background="@drawable/tabbar_bg"
         android:gravity="center"
         android:textColor="@color/textDes"
         android:textSize="@dimen/bigLyrics"
         android:textStyle="bold" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.1dp"
@@ -33,6 +34,7 @@
             android:id="@+id/edit_add_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/shape_btn_edit_selector"
             android:maxLength="21"
             android:textColor="@color/colorBlack"
             android:textColorHint="@color/tabbarTv"
@@ -74,7 +76,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/tv_add_list_cancel"
+                android:id="@+id/tv_no_input_cancel"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:gravity="center"

@@ -114,16 +114,17 @@ public class PlayListFragment extends BaseMusicFragment {
                             changeTvEditVisibility();
                         } else if (operationType == Constants.NUMBER_FOUR) {
                             // 更新列表名,同步更新列表中的歌曲的列表标识
-                            PlayListBean updataTitleBean = getPlayList().get(mEditPosition);
+                            mPlayListBean = getPlayList().get(mEditPosition);
 //                        PlayListBean newPlayListBean = getPlayList().get(mEditPosition);
-                            List<MusicBean> beanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(updataTitleBean.getTitle())).build().list();
+                            List<MusicBean> beanList = mMusicBeanDao.queryBuilder()
+                                    .where(MusicBeanDao.Properties.PlayListFlag.eq(mPlayListBean.getTitle())).build().list();
                             for (MusicBean musicBean : beanList) {
                                 musicBean.setPlayListFlag(bean.getListTitle());
                                 mMusicBeanDao.update(musicBean);
                             }
                             // 更新列表名
-                            updataTitleBean.setTitle(bean.getListTitle());
-                            mPlayListDao.update(updataTitleBean);
+                            mPlayListBean.setTitle(bean.getListTitle());
+                            mPlayListDao.update(mPlayListBean);
 
                         }
                         return getPlayList();
@@ -132,6 +133,9 @@ public class PlayListFragment extends BaseMusicFragment {
                     .subscribe(newPlayList -> {
                                 mAdapter.setNewData(newPlayList);
                                 changeTvEditVisibility();
+                                if (SpUtil.getAddToPlayListFlag(mActivity) == Constants.NUMBER_ONE) {
+                                    addToList(getPlayList().get(mEditPosition));
+                                }
                             }
                     );
         }
@@ -154,31 +158,9 @@ public class PlayListFragment extends BaseMusicFragment {
     private void initListener() {
         mLlAddNewPlayList.setOnClickListener(v -> AddListDialog.newInstance(1, "").show(mActivity.getFragmentManager(), "addList"));
         mAdapter.setItemListener((playListBean, isEditStatus) -> {
+            // 从PlayListActivity过来的
             if (SpUtil.getAddToPlayListFlag(mActivity) == Constants.NUMBER_ONE) {
-                if (mContext instanceof PlayListActivity) {
-                    // 批量添加
-                    if (mArrayList != null && mArrayList.size() > 0) {
-                        new Thread(() -> {
-                            for (String songTitle : mArrayList) {
-                                List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle()), MusicBeanDao.Properties.Title.eq(songTitle)).build().list();
-                                if (musicBeanList.size() == 0) {
-                                    insertSongToList(playListBean, songTitle);
-                                }
-                            }
-                        }).start();
-
-                        ((OnFinishActivityListener) mContext).finishActivity();
-                    } else {
-                        // 单曲添加
-                        List<MusicBean> beanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle()), MusicBeanDao.Properties.Title.eq(mSongName)).build().list();
-                        if (beanList.size() > 0) {
-                            ToastUtil.songalreadyExist(mActivity);
-                        } else {
-                            insertSongToList(playListBean, mSongName);
-                        }
-                        ((OnFinishActivityListener) mContext).finishActivity();
-                    }
-                }
+                addToList(playListBean);
             } else {
                 if (isEditStatus) {
                     mSelectCount = playListBean.isSelected() ? mSelectCount-- : mSelectCount++;
@@ -206,6 +188,35 @@ public class PlayListFragment extends BaseMusicFragment {
                 AddListDialog.newInstance(2, currentTitle).show(mActivity.getFragmentManager(), "addList");
             }
         });
+    }
+
+    /**
+     * @param playListBean 通过PlayListActivity将选中的歌曲添加到列表中，有批量添加和单曲添加，
+     */
+    private void addToList(PlayListBean playListBean) {
+        if (mContext instanceof PlayListActivity) {
+            // 批量添加
+            if (mArrayList != null && mArrayList.size() > 0) {
+                new Thread(() -> {
+                    for (String songTitle : mArrayList) {
+                        List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle()), MusicBeanDao.Properties.Title.eq(songTitle)).build().list();
+                        if (musicBeanList.size() == 0) {
+                            insertSongToList(playListBean, songTitle);
+                        }
+                    }
+                }).start();
+
+            } else {
+                // 单曲添加
+                List<MusicBean> beanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle()), MusicBeanDao.Properties.Title.eq(mSongName)).build().list();
+                if (beanList.size() > 0) {
+                    ToastUtil.songalreadyExist(mActivity);
+                } else {
+                    insertSongToList(playListBean, mSongName);
+                }
+            }
+            ((OnFinishActivityListener) mContext).finishActivity();
+        }
     }
 
     private void insertSongToList(PlayListBean playListBean, String songName) {

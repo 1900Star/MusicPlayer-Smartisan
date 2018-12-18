@@ -35,8 +35,9 @@ public class SpUtil {
     /**
      * 用于标记详情页面是否打开
      *
-     * @param context
-     * @param value
+     * @param context c
+     * @param value   v   0 在PlayListFragment弹出新建AddListDialog和删除DeleteDialog 时赋值为 0 。
+     *                1  点击MoreMenuDialog-->添加到播放列表-->PlayListActivity弹出新建AddListDialog  时赋值为 1 。
      */
     public static void setAddToPlayListFlag(Context context, int value) {
         SharedPreferences sp = context.getSharedPreferences(Constants.ADD_TO_PLAY_LIST_FLAG, Constants.MODE_KEY);
@@ -53,6 +54,7 @@ public class SpUtil {
     /**
      * 用于存储和获取音乐的播放模式
      * 0 全部  1 单曲   2 随机
+     *
      * @param context
      * @param value
      */
@@ -72,7 +74,7 @@ public class SpUtil {
      * 用于存储手动扫描后是否有新增歌曲的标记
      *
      * @param context c
-     * @param value 0 表示没有新增歌曲，1：表示有新增歌曲
+     * @param value   0 表示没有新增歌曲，1：表示有新增歌曲
      */
     public static void setNewMusicFlag(Context context, int value) {
         SharedPreferences sp = context.getSharedPreferences(Constants.NEW_MUSIC, Constants.MODE_KEY);
@@ -108,7 +110,7 @@ public class SpUtil {
      * 用于存储程序退是否加载过本地音乐。
      *
      * @param context
-     * @param value    Constants.NUMBER_EIGHT
+     * @param value   Constants.NUMBER_EIGHT
      */
     public static void setLoadMusicFlag(Context context, int value) {
         SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_LOAD, Constants.MODE_KEY);
