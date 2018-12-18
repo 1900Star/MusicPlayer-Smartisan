@@ -57,7 +57,7 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/aboutSign"
-                android:textSize="@dimen/music_tabbar" />
+                android:textSize="@dimen/play_bar_name" />
         </LinearLayout>
 
         <ImageView

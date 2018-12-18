@@ -34,9 +34,9 @@
         <EditText
             android:id="@+id/edit_add_list"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:maxLength="21"
+            android:layout_height="40dp"
             android:layout_marginStart="4dp"
+            android:maxLength="21"
             android:textColor="@color/colorBlack"
             android:textColorHint="@color/tabbarTv"
             android:textCursorDrawable="@drawable/edittext_cursor_color" />

@@ -27,10 +27,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:ellipsize="marquee"
-            android:maxLength="25"
-            android:singleLine="true"
             android:marqueeRepeatLimit="marquee_forever"
+            android:maxLength="25"
             android:scrollbars="horizontal"
+            android:singleLine="true"
             android:textColor="@color/textDes"
             android:textSize="@dimen/music_loating_title" />
 
@@ -44,7 +44,8 @@
             android:maxLength="54"
             android:singleLine="true"
             android:textColor="@color/textName"
-            android:textSize="@dimen/music_artist" />
+            android:textSize="@dimen/music_artist"
+            android:textStyle="bold" />
     </LinearLayout>
 
 
