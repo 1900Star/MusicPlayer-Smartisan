@@ -17,8 +17,8 @@ public class SpUtil {
     /**
      * 用于标记详情页面是否打开
      *
-     * @param context
-     * @param value
+     * @param context c
+     * @param value 8 ：playListFragment, 9 : artistListFragmnet, 10 : albumListFragment , 11 songCategoryFragment
      */
     public static void setDetailsFlag(Context context, int value) {
         SharedPreferences sp = context.getSharedPreferences(Constants.DETAIL_FLAG, Constants.MODE_KEY);

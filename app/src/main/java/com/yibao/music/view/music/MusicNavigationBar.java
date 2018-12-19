@@ -133,9 +133,9 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
      *
      * @param className      展示详情的Fragment  Key + 10 表示有编辑状态被打开
      * @param detailsViewKey 这个Key必须为 8 (PlayListFragment)、9 (ArtistFragment)、10 (AlbumFragment)、11 (SongCategoryFragment)
-     *                       这三个整数，这样展示详情的Fragment就能自己处理返回事件。
+     *                       这四个整数，这样展示详情的Fragment就能自己处理返回事件。
      *                       tabBar的index + 20  (20PlayFag 、22SongFrag、23AlbumFag)表示有编辑状态被打开，返回时需要先关闭编辑状态。
-     *                       0 表示交返回事件还给Activity处理
+     *                       0 表示将返回事件还给Activity处理
      */
     private void setDetailFragmentFlag(String className, int detailsViewKey) {
         HashMap<String, BaseFragment> detailsViewMap = BaseMusicFragment.mDetailsViewMap;

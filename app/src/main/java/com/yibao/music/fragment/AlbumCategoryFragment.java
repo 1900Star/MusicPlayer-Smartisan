@@ -91,7 +91,9 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
         if (detailFlag == Constants.NUMBER_TEN) {
             SpUtil.setDetailsFlag(mContext, Constants.NUMBER_TEN);
             mAlbumAdapter.setItemSelectStatus(false);
-            isItemSelectStatus = !isItemSelectStatus;
+            isItemSelectStatus = true;
+            changeToolBarTitle(getResources().getString(R.string.music_album),false);
+            changeSearchVisibility(true);
         }
         super.handleDetailsBack(detailFlag);
     }
@@ -100,28 +102,31 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
     protected void changeEditStatus(int currentIndex) {
         if (currentIndex == Constants.NUMBER_THRRE) {
             closeEditStatus();
+        } else if (currentIndex == Constants.NUMBER_THIRTEEN) {
+            LogUtil.d("============批量删除专辑");
         }
     }
 
     private void closeEditStatus() {
         if (isItemSelectStatus) {
             putFragToMap(Constants.NUMBER_TEN, mClassName);
+            putFragToItemStatusMap(Constants.NUMBER_TEN, mClassName);
         } else {
             removeFrag(mClassName);
-            mAlbumAdapter.setItemSelectStatus(isItemSelectStatus);
+            removeFragItemStatus(mClassName);
         }
         changeTvEditText(getResources().getString(isItemSelectStatus ? R.string.complete : R.string.tv_edit));
         mAlbumAdapter.setItemSelectStatus(isItemSelectStatus);
         isItemSelectStatus = !isItemSelectStatus;
+        changeSearchVisibility(isItemSelectStatus);
         if (!isItemSelectStatus && mSelectCount > 0) {
-            LogUtil.d("========== status    " + mSelectCount);
             cancelAllSelected();
         }
     }
 
     // 取消所有已选
     private void cancelAllSelected() {
-        List<AlbumInfo> albumInfoList = mAlbumDao.queryBuilder().where(AlbumInfoDao.Properties.Id.eq(true)).build().list();
+        List<AlbumInfo> albumInfoList = mAlbumDao.queryBuilder().where(AlbumInfoDao.Properties.MSelected.eq(true)).build().list();
         Collections.sort(albumInfoList);
         for (AlbumInfo albumInfo : albumInfoList) {
             mAlbumDao.delete(albumInfo);

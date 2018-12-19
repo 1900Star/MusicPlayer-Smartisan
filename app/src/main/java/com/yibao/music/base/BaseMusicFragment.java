@@ -2,6 +2,7 @@ package com.yibao.music.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.UpdataTitleListener;
@@ -28,6 +29,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 public abstract class BaseMusicFragment extends BaseFragment {
     public static HashMap<String, BaseFragment> mDetailsViewMap;
+    // 页面列表的选择状态打开时，添加到Map里面
+    public static HashMap<String, BaseFragment> mItemStatusMap;
     private Disposable mEditDisposable;
     private Disposable mMenuDisposable;
 
@@ -35,7 +38,8 @@ public abstract class BaseMusicFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDetailsViewMap = new HashMap<>(6);
+        mDetailsViewMap = new HashMap<>(5);
+        mItemStatusMap = new HashMap<>(5);
         initDetailsFlag();
     }
 
@@ -103,6 +107,21 @@ public abstract class BaseMusicFragment extends BaseFragment {
         }
     }
 
+    protected void changeEditVisibility(boolean isVisibility) {
+        if (mContext instanceof UpdataTitleListener) {
+            ((UpdataTitleListener) mContext).setEditVisibility(isVisibility ? View.VISIBLE :
+                    View.GONE);
+        }
+
+    }
+
+    protected void changeSearchVisibility(boolean isSearchVisibility) {
+        if (mContext instanceof UpdataTitleListener) {
+            ((UpdataTitleListener) mContext).setIvSearchVisibility(isSearchVisibility);
+        }
+
+    }
+
     protected void randomPlayMusic() {
         int position = RandomUtil.getRandomPostion(mSongList.size());
         if (getActivity() instanceof OnMusicItemClickListener) {
@@ -119,6 +138,15 @@ public abstract class BaseMusicFragment extends BaseFragment {
         }
     }
 
+    protected void putFragToItemStatusMap(int detailFlag, String fragmentName) {
+        SpUtil.setDetailsFlag(mActivity, detailFlag);
+        if (mItemStatusMap != null) {
+            if (!mItemStatusMap.containsKey(fragmentName)) {
+                mItemStatusMap.put(fragmentName, this);
+            }
+        }
+    }
+
     protected void putFragToMap(String fragmentName) {
         if (mDetailsViewMap != null) {
             if (!mDetailsViewMap.containsKey(fragmentName)) {
@@ -130,6 +158,12 @@ public abstract class BaseMusicFragment extends BaseFragment {
     protected void removeFrag(String fragmentName) {
         if (mDetailsViewMap != null) {
             mDetailsViewMap.remove(fragmentName);
+        }
+    }
+
+    protected void removeFragItemStatus(String fragmentName) {
+        if (mItemStatusMap != null) {
+            mItemStatusMap.remove(fragmentName);
         }
     }
 

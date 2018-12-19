@@ -122,10 +122,7 @@ public class AlbumAdapter
         ImageUitl.customLoadPic(mContext, StringUtil.getAlbulm(albumInfo.getAlbumId()), R.drawable.noalbumcover_120, holder.mIvAlbumTileAlbum);
         holder.mTvAlbumTileName.setText(albumInfo.getSongName());
 
-        holder.mIvAlbumTileAlbum.setOnClickListener(view1 -> {
-
-            AlbumAdapter.this.openDetails(albumInfo, false);
-        });
+        holder.mIvAlbumTileAlbum.setOnClickListener(view1 -> AlbumAdapter.this.openDetails(albumInfo, false));
 
     }
 

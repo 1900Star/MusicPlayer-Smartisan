@@ -58,7 +58,6 @@ public class SongCategoryFragment extends BaseMusicFragment {
             mPosition = arguments.getInt("position");
         }
         mAbcList = MusicListUtil.sortMusicAbc(mMusicBeanDao.queryBuilder().list());
-//        SpUtil.setDetailsFlag(mContext, Constants.NUMBER_ELEVEN);
     }
 
     @Override
@@ -129,7 +128,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
     protected void changeEditStatus(int currentIndex) {
         if (currentIndex == Constants.NUMBER_TWO) {
             closeEditStatus();
-        } else if (currentIndex == 12) {
+        } else if (currentIndex == Constants.NUMBER_TWELVE) {
             // 删除已选择的条目
             List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsSelected.eq(true)).build().list();
             for (MusicBean musicBean : musicBeanList) {
@@ -144,14 +143,17 @@ public class SongCategoryFragment extends BaseMusicFragment {
 
     private void closeEditStatus() {
         if (isItemSelectStatus) {
+            // 取其中一种就可以
             putFragToMap(Constants.NUMBER_ELEVEN, mClassName);
+            putFragToItemStatusMap(Constants.NUMBER_ELEVEN, mClassName);
         } else {
             removeFrag(mClassName);
-            mSongAdapter.setItemSelectStatus(isItemSelectStatus);
+            removeFragItemStatus(mClassName);
         }
         changeTvEditText(getResources().getString(isItemSelectStatus ? R.string.complete : R.string.tv_edit));
         mSongAdapter.setItemSelectStatus(isItemSelectStatus);
         isItemSelectStatus = !isItemSelectStatus;
+        changeSearchVisibility(isItemSelectStatus);
         if (!isItemSelectStatus && mSelectCount > 0) {
             cancelAllSelected();
         }
@@ -179,7 +181,8 @@ public class SongCategoryFragment extends BaseMusicFragment {
         List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsSelected.eq(true)).build().list();
         Collections.sort(musicBeanList);
         for (MusicBean musicBean : musicBeanList) {
-            mMusicBeanDao.delete(musicBean);
+            musicBean.setSelected(false);
+            mMusicBeanDao.update(musicBean);
         }
         mSelectCount = 0;
         mSongAdapter.setNewData(getSongList());

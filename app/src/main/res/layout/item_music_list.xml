@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/listBg"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/listBg">
 
     <TextView
         android:id="@+id/item_sticky_view"
@@ -104,7 +104,7 @@
 
         <RatingBar
             android:id="@+id/menu_rating_bar"
-            style="@style/ratingbarstyle"
+            style="@style/songstartyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -119,16 +119,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
             android:layout_marginEnd="10dp"
             android:textColor="@color/text_singer_selector"
             android:textSize="@dimen/about_content"
             android:textStyle="bold"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <ImageView
             android:id="@+id/iv_song_item_menu"
             android:layout_width="50dp"
             android:layout_height="40dp"
+            android:clickable="true"
+            android:focusable="true"
             android:src="@drawable/album_more_selector" />
 
     </LinearLayout>

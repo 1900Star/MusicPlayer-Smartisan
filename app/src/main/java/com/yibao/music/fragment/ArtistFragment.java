@@ -82,7 +82,7 @@ public class ArtistFragment extends BaseMusicFragment {
     private void openDetailsView(ArtistInfo artistInfo) {
         mArtistInfo = artistInfo;
         if (isShowDetailsView) {
-           removeFrag(mClassName);
+            removeFrag(mClassName);
             mDetailsView.setVisibility(View.GONE);
             mMusicView.setVisibility(View.VISIBLE);
             detailsViewTitle = null;
@@ -92,14 +92,16 @@ public class ArtistFragment extends BaseMusicFragment {
             // DetailsView播放音乐需要的参数
             mDetailsView.setDataFlag(mFragmentManager, mDetailList.size(), artistInfo.getArtist(), Constants.NUMBER_ONE);
             mDetailsAdapter = new DetailsViewAdapter(mActivity, mDetailList, Constants.NUMBER_ONE);
-            mDetailsView.setAdapter( Constants.NUMBER_ONE, artistInfo, mDetailsAdapter);
+            mDetailsView.setAdapter(Constants.NUMBER_ONE, artistInfo, mDetailsAdapter);
             SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_NINE);
             mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
-                    MoreMenuBottomDialog.newInstance(musicBean, position,false).getBottomDialog(mActivity));
-           putFragToMap(mClassName);
+                    MoreMenuBottomDialog.newInstance(musicBean, position, false).getBottomDialog(mActivity));
+            putFragToMap(mClassName);
             detailsViewTitle = artistInfo.getAlbumName();
             changeToolBarTitle(artistInfo.getAlbumName(), isShowDetailsView);
+            changeEditVisibility(true);
         }
+        changeTvEditText(getResources().getString(isShowDetailsView ? R.string.tv_edit : R.string.music_artisan));
         isShowDetailsView = !isShowDetailsView;
     }
 
@@ -117,6 +119,8 @@ public class ArtistFragment extends BaseMusicFragment {
         super.handleDetailsBack(detailFlag);
         if (detailFlag == Constants.NUMBER_NINE) {
             openDetailsView(mArtistInfo);
+            changeEditVisibility(false);
+            changeToolBarTitle(getResources().getString(R.string.music_artisan), false);
         }
     }
 

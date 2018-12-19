@@ -41,11 +41,11 @@ public class DownloadLyricsUtil {
      */
     public static synchronized String getLyricsDownUrl(String songName, String artist) {
         String queryLrcURL = getQueryLrcURL(songName, artist);
-        LogUtil.d("     查询歌词地址    ====    " + queryLrcURL);
+//        LogUtil.d("     查询歌词地址    ====    " + queryLrcURL);
         OkHttpUtil.downFile(queryLrcURL, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                LogUtil.d("歌词下载失败   ==  " + e.toString());
+//                LogUtil.d("歌词下载失败   ==  " + e.toString());
                 lyricsUrl = null;
             }
 
@@ -67,7 +67,7 @@ public class DownloadLyricsUtil {
                         JSONArray jArray = jObject.getJSONArray("result");
                         JSONObject obj = jArray.getJSONObject(index);
                         lyricsUrl = obj.getString("lrc");
-                        LogUtil.d("CCCCCCCCCCCCCCCCCC   ==  "+lyricsUrl);
+//                        LogUtil.d("CCCCCCCCCCCCCCCCCC   ==  "+lyricsUrl);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -92,8 +92,8 @@ public class DownloadLyricsUtil {
      * @return 是否下载成功
      */
     public static boolean getLyricsFile(final String url, final String songName, final String artist) {
-        LogUtil.d(" 歌词下载信息  " + songName + " $$ " + artist);
-        LogUtil.d("     歌词下载地址url    ====    " + url);
+//        LogUtil.d(" 歌词下载信息  " + songName + " $$ " + artist);
+//        LogUtil.d("     歌词下载地址url    ====    " + url);
         OkHttpUtil.downFile(url, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {

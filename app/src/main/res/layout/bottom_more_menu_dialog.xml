@@ -25,7 +25,7 @@
 
         <RatingBar
             android:id="@+id/rating_bar"
-            style="@style/ratingbarstyle"
+            style="@style/starstyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"

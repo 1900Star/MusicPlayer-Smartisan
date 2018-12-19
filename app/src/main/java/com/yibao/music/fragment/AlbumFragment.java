@@ -22,6 +22,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicView;
@@ -137,13 +138,14 @@ public class AlbumFragment extends BaseMusicFragment {
 
             mDetailsView.setAdapter(Constants.NUMBER_TWO, albumInfo, mDetailsAdapter);
             mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
-                    MoreMenuBottomDialog.newInstance(musicBean, position,false).getBottomDialog(mActivity));
+                    MoreMenuBottomDialog.newInstance(musicBean, position, false).getBottomDialog(mActivity));
             putFragToMap(mClassName);
             detailsViewTitle = albumInfo.getAlbumName();
             changeToolBarTitle(albumInfo.getAlbumName(), true);
         }
         SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_TEN);
         changeTvEditText(getResources().getString(isShowDetailsView ? R.string.tv_edit : R.string.back));
+        changeSearchVisibility(isShowDetailsView);
         isShowDetailsView = !isShowDetailsView;
     }
 
@@ -162,7 +164,8 @@ public class AlbumFragment extends BaseMusicFragment {
             SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_TEN);
             mAlbumContentView.setVisibility(View.VISIBLE);
             mDetailsView.setVisibility(View.GONE);
-           removeFrag(mClassName);
+            removeFrag(mClassName);
+            changeSearchVisibility(isShowDetailsView);
             isShowDetailsView = !isShowDetailsView;
         }
 //        super.handleDetailsBack(detailFlag);
@@ -202,6 +205,8 @@ public class AlbumFragment extends BaseMusicFragment {
 
     @Override
     protected void changeEditStatus(int currentIndex) {
+
+
     }
 
     public static AlbumFragment newInstance() {

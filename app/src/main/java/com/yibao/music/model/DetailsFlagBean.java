@@ -7,7 +7,7 @@ package com.yibao.music.model;
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/25 23:29
- * @描述： {仅作为打开哪个详情页面的标记，8 ：playListFragment, 9 : artistListFragmnet, 10 : albumListFragment}
+ * @描述： {仅作为打开哪个详情页面的标记，8 ：playListFragment, 9 : artistListFragmnet, 10 : albumListFragment , 11 songCategoryFragment}
  */
 
 public class DetailsFlagBean {

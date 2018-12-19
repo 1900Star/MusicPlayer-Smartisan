@@ -21,6 +21,8 @@ public class Constants {
     public static final int NUMBER_NINE = 9;
     public static final int NUMBER_TEN = 10;
     public static final int NUMBER_ELEVEN = 11;
+    public static final int NUMBER_TWELVE = 12;
+    public static final int NUMBER_THIRTEEN= 13;
     public static final char LETTER_A = 'A';
     public static final char LETTER_Z = 'Z';
     public static final char LETTER_HASH = '#';
@@ -58,6 +60,7 @@ public class Constants {
     public static final String FRAGMENT_ARTIST = "ArtistFragment";
     public static final String FRAGMENT_SONG_CATEGORY = "SongCategoryFragment";
     public static final String FRAGMENT_ALBUM = "AlbumFragment";
+    public static final String FRAGMENT_ALBUM_CATEGORY = "AlbumCategoryFragment";
     public static final String SCANNER_MEDIA = "scanner";
     public static final String ADD_TO_LIST = "add2list";
 

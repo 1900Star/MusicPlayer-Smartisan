@@ -16,7 +16,6 @@ import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnFinishActivityListener;
-import com.yibao.music.base.listener.UpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
 import com.yibao.music.fragment.dialogfrag.DeletePlayListDialog;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
@@ -27,7 +26,6 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.PlayListDetailView;
@@ -111,7 +109,7 @@ public class PlayListFragment extends BaseMusicFragment {
                         // 删除列表
                         if (operationType == Constants.NUMBER_TWO) {
                             mAdapter.notifyItemRemoved(mDeletePosition);
-                            changeTvEditVisibility();
+                            changeEditSearchVisibility();
                         } else if (operationType == Constants.NUMBER_FOUR) {
                             // 更新列表名,同步更新列表中的歌曲的列表标识
                             mPlayListBean = getPlayList().get(mEditPosition);
@@ -132,7 +130,7 @@ public class PlayListFragment extends BaseMusicFragment {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(newPlayList -> {
                                 mAdapter.setNewData(newPlayList);
-                                changeTvEditVisibility();
+                                changeEditSearchVisibility();
                                 if (SpUtil.getAddToPlayListFlag(mActivity) == Constants.NUMBER_ONE) {
                                     addToList(getPlayList().get(mEditPosition));
                                 }
@@ -141,13 +139,6 @@ public class PlayListFragment extends BaseMusicFragment {
         }
     }
 
-    private void changeTvEditVisibility() {
-        if (mContext instanceof UpdataTitleListener) {
-            ((UpdataTitleListener) mContext).setEditVisibility(getPlayList().size() > 0 ? View.VISIBLE :
-                    View.GONE);
-        }
-
-    }
 
     private List<PlayListBean> getPlayList() {
         List<PlayListBean> playListBeans = mPlayListDao.queryBuilder().list();
@@ -245,9 +236,14 @@ public class PlayListFragment extends BaseMusicFragment {
             mAdapter.setItemSelectStatus(false);
             mAdapter.setNewData(getPlayList());
             mLlAddNewPlayList.setEnabled(true);
-            changeTvEditVisibility();
+            changeEditSearchVisibility();
 
         }
+    }
+
+    private void changeEditSearchVisibility() {
+        boolean isEditVisibility = getPlayList().size() > Constants.NUMBER_ZOER;
+        changeEditVisibility(isEditVisibility);
     }
 
     // 取消所有已选
@@ -283,6 +279,7 @@ public class PlayListFragment extends BaseMusicFragment {
             changeToolBarTitle(title, isShowDetailsView);
         }
         changeTvEditText(getResources().getString(isShowDetailsView ? R.string.tv_edit : R.string.back_play_list));
+        changeSearchVisibility(isShowDetailsView);
         isShowDetailsView = !isShowDetailsView;
     }
 
@@ -337,15 +334,15 @@ public class PlayListFragment extends BaseMusicFragment {
     private void closeEditStatus() {
         if (isItemSelectStatus) {
             putFragToMap(Constants.NUMBER_EIGHT, mClassName);
+            putFragToItemStatusMap(Constants.NUMBER_EIGHT, mClassName);
         } else {
             removeFrag(mClassName);
-            mAdapter.setItemSelectStatus(isItemSelectStatus);
+            removeFragItemStatus(mClassName);
         }
         changeTvEditText(getResources().getString(isItemSelectStatus ? R.string.complete : R.string.tv_edit));
         mAdapter.setItemSelectStatus(isItemSelectStatus);
         isItemSelectStatus = !isItemSelectStatus;
         if (!isItemSelectStatus && mSelectCount > 0) {
-            LogUtil.d("========== status    " + mSelectCount);
             cancelAllSelected();
         }
         mLlAddNewPlayList.setEnabled(isItemSelectStatus);

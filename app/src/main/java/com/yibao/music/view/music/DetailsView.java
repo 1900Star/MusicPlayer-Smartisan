@@ -88,7 +88,7 @@ public class DetailsView
     @Override
     protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
-        LogUtil.d("==========++== 详情显示  " + visibility);
+//        LogUtil.d("==========++== 详情显示  " + visibility);
     }
 
     /**

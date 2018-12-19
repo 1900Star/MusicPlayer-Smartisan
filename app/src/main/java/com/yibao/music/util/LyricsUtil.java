@@ -53,12 +53,12 @@ public class LyricsUtil {
         String str = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyric/";
         String path = str + acturlSongName + "$$" + actualArtist + ".lrc";
         File file = new File(path);
-        LogUtil.d("FilePath ==      " + (file.exists() ? "AAA" : "BBBBB"));
+//        LogUtil.d("FilePath ==      " + (file.exists() ? "AAA" : "BBBBB"));
         if (!file.exists()) {
             if (NetworkUtil.isNetworkConnected()) {
                 // 本地没有歌词，从网络下载，如果下载失败，返回" 暂无歌词"
                 String lyricsUrl = DownloadLyricsUtil.getLyricsDownUrl(acturlSongName, actualArtist);
-                LogUtil.d("     歌词地址first    ====    " + lyricsUrl);
+//                LogUtil.d("     歌词地址first    ====    " + lyricsUrl);
                 if (lyricsUrl != null) {
                     loadLyrics(acturlSongName, actualArtist, lrcList, file, lyricsUrl);
                 } else {

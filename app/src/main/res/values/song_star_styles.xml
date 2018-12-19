@@ -1,8 +1,8 @@
 <resources>
 
-    <style name="starstyle" parent="@android:style/Widget.RatingBar">
+    <style name="songstartyle" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">
-            @drawable/score_star
+            @drawable/song_score_star
         </item>
         <item name="android:maxHeight">32dp</item>
         <item name="android:minHeight">12dp</item>
