@@ -3,6 +3,7 @@ package com.yibao.music;
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.baidu.mobstat.StatService;
 import com.squareup.leakcanary.LeakCanary;
 import com.yibao.music.model.greendao.AlbumInfoDao;
 import com.yibao.music.model.greendao.DaoMaster;
@@ -46,6 +47,7 @@ public class MusicApplication
         }
         LeakCanary.install(this);
         appContext = this;
+        StatService.setDebugOn(true);
         CrashHandler.getInstance()
                 .init();
         setUpDataBase();

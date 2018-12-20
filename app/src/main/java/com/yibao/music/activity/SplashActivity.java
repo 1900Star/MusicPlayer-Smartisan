@@ -152,7 +152,7 @@ public class SplashActivity
      * @param b ture 表示初次安装，自动扫描完成后直接进入MusicActivity 。 false 表示手动扫描，完成后停在SplashActivity页面。
      */
     private void countDownOpareton(boolean b) {
-        mCompositeDisposable.add(Observable.timer(1000, TimeUnit.MILLISECONDS)
+        mCompositeDisposable.add(Observable.timer(1, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {

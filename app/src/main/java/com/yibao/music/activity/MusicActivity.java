@@ -467,7 +467,9 @@ public class MusicActivity
                 upDataPlayProgress();
 
             }
-            mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+            if (audioBinder != null) {
+                mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+            }
             //更新播放状态按钮
             updatePlayBtnStatus();
         }

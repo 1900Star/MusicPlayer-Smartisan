@@ -57,9 +57,11 @@ public class MediaSessionManager {
     }
 
     public void updatePlaybackState(boolean isPlaying) {
-        int state = isPlaying ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED;
-        stateBuilder.setState(state, mAudioBinder.getPosition(), 1.0f);
-        mMediaSession.setPlaybackState(stateBuilder.build());
+        if (mMediaSession != null) {
+            int state = isPlaying ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED;
+            stateBuilder.setState(state, mAudioBinder.getPosition(), 1.0f);
+            mMediaSession.setPlaybackState(stateBuilder.build());
+        }
     }
 
     public void updateLocMsg() {
@@ -75,8 +77,9 @@ public class MediaSessionManager {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, mAudioBinder.getMusicList().size());
         }
-
-        mMediaSession.setMetadata(metaData.build());
+        if (mMediaSession != null) {
+            mMediaSession.setMetadata(metaData.build());
+        }
     }
 
 

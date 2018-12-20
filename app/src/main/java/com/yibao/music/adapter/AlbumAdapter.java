@@ -90,7 +90,7 @@ public class AlbumAdapter
         String songCount = info.getSongCount() + "首";
         albumlistHolder.mTvAlbumListSongCount.setText(songCount);
         String firstTv = info.getFirstChar();
-        albumlistHolder.mIvListSelect.setVisibility(isSelectStatus? View.VISIBLE : View.GONE);
+        albumlistHolder.mIvListSelect.setVisibility(isSelectStatus ? View.VISIBLE : View.GONE);
         albumlistHolder.mTvAlbumItemStickyView.setText(firstTv);
         if (position == 0) {
             albumlistHolder.mTvAlbumItemStickyView.setVisibility(View.VISIBLE);
@@ -129,12 +129,8 @@ public class AlbumAdapter
     static class AlbumTileHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.iv_album_tile_album)
         ImageView mIvAlbumTileAlbum;
-        @BindView(R.id.album_cover_shadow_mask)
-        ImageView mAlbumCoverShadowMask;
         @BindView(R.id.tv_album_tile_name)
         TextView mTvAlbumTileName;
-        @BindView(R.id.root_tile)
-        RelativeLayout mRootTile;
 
         AlbumTileHolder(View view) {
             super(view);

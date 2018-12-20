@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <corners android:radius="4dp" />
-    <solid android:color="#f7f1f1" />
+    <solid android:color="@color/listBg" />
+    <stroke android:width="0.5px" android:color="@color/seekBarX" />
 </shape>
