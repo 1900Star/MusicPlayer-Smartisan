@@ -29,9 +29,9 @@ ArtisanMusic
   * [GreenDao](https://github.com/greenrobot/greenDAO)
   * [butterknife](https://github.com/JakeWharton/butterknife)
   * [RxBinding](https://github.com/JakeWharton/RxBinding)
-  * [BigGirl](https://github.com/1900Star/BigGirl)
-  
-    我的写的Gank客户端,感兴趣的可以看一下，播放器就是从这个项目中独立出来的。
+  * [AndPermission](https://github.com/yanzhenjie/AndPermission)
+  * [BigGirl](https://github.com/1900Star/BigGirl)
+  * 我的写的Gank客户端,感兴趣的可以看一下，播放器就是从这个项目中独立出来的。
 
 
 # 提示
