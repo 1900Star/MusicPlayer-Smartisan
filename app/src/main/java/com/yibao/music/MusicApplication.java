@@ -47,7 +47,7 @@ public class MusicApplication
         }
         LeakCanary.install(this);
         appContext = this;
-        StatService.setDebugOn(true);
+//        StatService.setDebugOn(true);
         CrashHandler.getInstance()
                 .init();
         setUpDataBase();
