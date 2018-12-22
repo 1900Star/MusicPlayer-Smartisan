@@ -3,7 +3,6 @@ package com.yibao.music.fragment.dialogfrag;
 import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
@@ -25,17 +24,18 @@ import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.BottomSheetStatus;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicInfo;
 import com.yibao.music.model.PlayListBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RxBus;
-import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.SnakbarUtil;
+import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
+import com.yibao.music.view.SwipeItemLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +45,6 @@ import java.util.Random;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -71,9 +70,10 @@ public class FavoriteBottomSheetDialog
     // ViewPager使用
     private List<List<MusicBean>> mListList = new ArrayList<>();
     private BottomSheetAdapter mAdapter;
+    private static String mSongTitle;
 
-    public static FavoriteBottomSheetDialog newInstance() {
-
+    public static FavoriteBottomSheetDialog newInstance(String songTitle) {
+        mSongTitle = songTitle;
         return new FavoriteBottomSheetDialog();
     }
 
@@ -129,6 +129,7 @@ public class FavoriteBottomSheetDialog
                     mBottomListTitleSize.setText(sheetTitle);
                     mAdapter = new BottomSheetAdapter(musicBeanList);
                     mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
+                    mRecyclerView.addOnItemTouchListener(new SwipeItemLayout.OnSwipeItemTouchListener(mContext));
                     mBottomListContent.addView(mRecyclerView);
                 }));
 
@@ -136,15 +137,21 @@ public class FavoriteBottomSheetDialog
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bean -> FavoriteBottomSheetDialog.this.playMusic(bean.getPosition())));
-        // 清空收藏列表
         mCompositeDisposable.add(mBus.toObserverable(AddAndDeleteListBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(bean -> {
                     if (bean.getOperationType() == Constants.NUMBER_THRRE) {
+                        // 清空收藏列表
                         clearAllFavoriteMusic();
+                    } else if (bean.getOperationType() == Constants.NUMBER_FIEV) {
+                        // 侧滑删除收藏歌曲
+                        if (mList.size() == Constants.NUMBER_ONE) {
+                            mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                        }
+                        mAdapter.notifyItemRemoved(bean.getPosition());
+                        checkCurrentFavorite(bean.getSongTitle());
                     }
                 }));
-
     }
 
     private void initListener() {
@@ -172,10 +179,11 @@ public class FavoriteBottomSheetDialog
                 break;
             case R.id.bottom_sheet_bar_clear:
                 if (mList != null && mList.size() > 0) {
-                    // playstatus 在这里暂时用来做删除播放列表和收藏列表的标识，2 为播放列表PlayActivity界面 ，3 为收藏列表MusicBottomDialog界面。
+                    // playstatus 在这里暂时用来做删除播放列表和收藏列表的标识，在DeletePlayListDialog中使用，2 为播放列表PlayActivity界面 ，3 为收藏列表FavoriteBottomDialog界面。
                     PlayListBean bean = new PlayListBean("收藏的所有", (long) Constants.NUMBER_THRRE);
                     DeletePlayListDialog.newInstance(bean, Constants.NUMBER_THRRE).show(((Activity) mContext).getFragmentManager(), "favoriteList");
                 } else {
+                    LogUtil.d("=========    列表为空");
                     SnakbarUtil.noFavoriteMusic(mBottomListClear);
                 }
                 break;
@@ -194,11 +202,16 @@ public class FavoriteBottomSheetDialog
                     musicBean.setIsFavorite(false);
                     MusicApplication.getIntstance().getMusicDao()
                             .update(musicBean);
-
-                    if (mContext instanceof OnCheckFavoriteListener) {
-                        ((OnCheckFavoriteListener) mContext).updataFavoriteStatus();
-                    }
+                    checkCurrentFavorite(musicBean.getTitle());
                 }));
+    }
+
+    private void checkCurrentFavorite(String songTitle) {
+        if (mSongTitle.equals(songTitle)) {
+            if (mContext instanceof OnCheckFavoriteListener) {
+                ((OnCheckFavoriteListener) mContext).updataFavoriteStatus();
+            }
+        }
     }
 
     private void backTop() {

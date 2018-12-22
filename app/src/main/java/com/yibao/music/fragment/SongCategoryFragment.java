@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import com.yibao.music.R;
 import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.base.BaseMusicFragment;
-import com.yibao.music.base.listener.UpdataTitleListener;
+import com.yibao.music.base.listener.OnUpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
@@ -160,8 +160,8 @@ public class SongCategoryFragment extends BaseMusicFragment {
     }
 
     private void changeTvEditVisibility() {
-        if (mContext instanceof UpdataTitleListener) {
-            ((UpdataTitleListener) mContext).updataTitle(getResources().getString(R.string.tv_edit), false);
+        if (mContext instanceof OnUpdataTitleListener) {
+            ((OnUpdataTitleListener) mContext).updataTitle(getResources().getString(R.string.tv_edit), false);
         }
 
     }

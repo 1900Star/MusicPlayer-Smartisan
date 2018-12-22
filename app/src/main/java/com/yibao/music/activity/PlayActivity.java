@@ -139,8 +139,6 @@ public class PlayActivity extends BasePlayActivity {
         mCurrenMusicInfo = audioBinder != null ? audioBinder.getMusicBean() : getIntent().getParcelableExtra("currentBean");
         if (mCurrenMusicInfo != null) {
             setTitleAndArtist(mCurrenMusicInfo);
-//            List<MusicLyricBean> musicLyricBeans = LyricsUtil.getLyricList(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
-//            mTvLyrics.setLrcFile(musicLyricBeans);
             mAlbumUrl = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId());
             setAlbulm(mAlbumUrl);
         }
@@ -445,7 +443,7 @@ public class PlayActivity extends BasePlayActivity {
     private void rxViewClick() {
         mCompositeDisposable.add(RxView.clicks(mTitlebarPlayList)
                 .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> FavoriteBottomSheetDialog.newInstance()
+                .subscribe(o -> FavoriteBottomSheetDialog.newInstance(mCurrenMusicInfo.getTitle())
                         .getBottomDialog(this)));
     }
 

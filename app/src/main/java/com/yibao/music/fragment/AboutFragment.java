@@ -13,6 +13,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.activity.SplashActivity;
 import com.yibao.music.base.BaseMusicFragment;
+import com.yibao.music.base.listener.OnUpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.MusicBean;
@@ -34,6 +35,7 @@ import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -62,6 +64,7 @@ public class AboutFragment extends BaseMusicFragment {
     TextView mTvShare;
     @BindView(R.id.tv_scanner_media)
     TextView mtScanerMedia;
+    private long mCurrentPosition;
 
 
     @Nullable
@@ -102,6 +105,7 @@ public class AboutFragment extends BaseMusicFragment {
         intent.putExtra(Constants.SCANNER_MEDIA, Constants.SCANNER_MEDIA);
         startActivity(intent);
     }
+
     private void shareMe() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, mActivity.getTitle());
@@ -109,6 +113,7 @@ public class AboutFragment extends BaseMusicFragment {
         shareIntent.setType("text/plain");
         startActivity(shareIntent);
     }
+
     private void recoverFavoriteList() {
         if (FileUtil.getFavoriteFile()) {
             HashMap<String, String> songInfoMap = new HashMap<>();
@@ -118,21 +123,24 @@ public class AboutFragment extends BaseMusicFragment {
                 String favoriteTime = s.substring(s.lastIndexOf("T") + 1);
                 songInfoMap.put(songName, favoriteTime);
             }
-            mCompositeDisposable.add(Observable.just(mSongList)
-                    .flatMap((Function<List<MusicBean>, ObservableSource<MusicBean>>) Observable::fromIterable).map(musicBean -> {
-                        //将歌名截取出来进行比较
-                        String favoriteTime = songInfoMap.get(musicBean.getTitle());
-                        if (favoriteTime != null) {
-                            musicBean.setTime(favoriteTime);
-                            musicBean.setIsFavorite(true);
-                            mMusicBeanDao.update(musicBean);
-                        }
-                        return musicBean;
-                    })
-                    .subscribeOn(Schedulers.io())
+            mCompositeDisposable.add(Observable.fromIterable(mSongList).map(musicBean -> {
+                //将歌名截取出来进行比较
+                String favoriteTime = songInfoMap.get(musicBean.getTitle());
+                if (favoriteTime != null) {
+                    musicBean.setTime(favoriteTime);
+                    musicBean.setIsFavorite(true);
+                    mMusicBeanDao.update(musicBean);
+                }
+                return mCurrentPosition++;
+            }).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(musicBean -> {
+                    .subscribe(currentPostion -> {
+                        if (currentPostion == mSongList.size() - 1)
+                            if (mActivity instanceof OnUpdataTitleListener) {
+                                ((OnUpdataTitleListener) mActivity).checkCurrentFavorite();
+                            }
                     }));
+
         } else {
             ToastUtil.showNotFoundFavoriteFile(mActivity);
         }
@@ -140,16 +148,18 @@ public class AboutFragment extends BaseMusicFragment {
 
     private void backupsFavoriteList() {
         List<MusicBean> list = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
-        mCompositeDisposable.add(Observable.just(list)
-                .flatMap((Function<List<MusicBean>, ObservableSource<MusicBean>>) Observable::fromIterable)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(musicBean -> {
+        mCompositeDisposable.add(Observable.fromIterable(list)
+                .map(musicBean -> {
                     String songInfo = musicBean.getTitle() + "T" + musicBean.getAddTime();
                     ReadFavoriteFileUtil.writeFile(songInfo);
-                }));
+                    return songInfo;
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(favoriteName -> LogUtil.d(" 更新本地收藏文件==========   "+favoriteName)));
         ToastUtil.showFavoriteListBackupsDown(mActivity);
     }
+
     @Override
     protected void changeEditStatus(int currentIndex) {
     }

@@ -7,6 +7,7 @@
     <color name="tabbarDownTv">#E64040</color>
     <color name="textDes">#4d4d4d</color>
     <color name="listBg">#ededed</color>
+    <color name="deleteBg">#bfbebe</color>
     <color name="slidBg">#e6e4e4</color>
     <color name="colorGreen">#59e130</color>
     <color name="deleteDisable">#F8D0CD</color>

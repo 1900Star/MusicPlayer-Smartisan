@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.yibao.music.base.listener.OnMusicItemClickListener;
-import com.yibao.music.base.listener.UpdataTitleListener;
+import com.yibao.music.base.listener.OnUpdataTitleListener;
 import com.yibao.music.model.DetailsFlagBean;
 import com.yibao.music.model.EditBean;
 import com.yibao.music.model.MoreMenuStatus;
@@ -93,8 +93,8 @@ public abstract class BaseMusicFragment extends BaseFragment {
      * @param tvEdit 编辑按钮、返回列表按钮  显示Text
      */
     protected void changeTvEditText(String tvEdit) {
-        if (mContext instanceof UpdataTitleListener) {
-            ((UpdataTitleListener) mContext).changeTvEdit(tvEdit);
+        if (mContext instanceof OnUpdataTitleListener) {
+            ((OnUpdataTitleListener) mContext).changeTvEdit(tvEdit);
         }
     }
 
@@ -102,22 +102,22 @@ public abstract class BaseMusicFragment extends BaseFragment {
      * @param tvEdit 编辑按钮、返回列表按钮  显示Text
      */
     protected void changeToolBarTitle(String tvEdit, boolean isShowDetail) {
-        if (mContext instanceof UpdataTitleListener) {
-            ((UpdataTitleListener) mContext).updataTitle(tvEdit, isShowDetail);
+        if (mContext instanceof OnUpdataTitleListener) {
+            ((OnUpdataTitleListener) mContext).updataTitle(tvEdit, isShowDetail);
         }
     }
 
     protected void changeEditVisibility(boolean isVisibility) {
-        if (mContext instanceof UpdataTitleListener) {
-            ((UpdataTitleListener) mContext).setEditVisibility(isVisibility ? View.VISIBLE :
+        if (mContext instanceof OnUpdataTitleListener) {
+            ((OnUpdataTitleListener) mContext).setEditVisibility(isVisibility ? View.VISIBLE :
                     View.GONE);
         }
 
     }
 
     protected void changeSearchVisibility(boolean isSearchVisibility) {
-        if (mContext instanceof UpdataTitleListener) {
-            ((UpdataTitleListener) mContext).setIvSearchVisibility(isSearchVisibility);
+        if (mContext instanceof OnUpdataTitleListener) {
+            ((OnUpdataTitleListener) mContext).setIvSearchVisibility(isSearchVisibility);
         }
 
     }

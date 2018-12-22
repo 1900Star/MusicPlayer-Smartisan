@@ -18,7 +18,7 @@ import com.yibao.music.base.BaseFragment;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.BaseTansitionActivity;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
-import com.yibao.music.base.listener.UpdataTitleListener;
+import com.yibao.music.base.listener.OnUpdataTitleListener;
 import com.yibao.music.fragment.AlbumFragment;
 import com.yibao.music.fragment.ArtistFragment;
 import com.yibao.music.fragment.PlayListFragment;
@@ -63,7 +63,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  */
 public class MusicActivity
         extends BaseTansitionActivity
-        implements OnMusicItemClickListener, UpdataTitleListener {
+        implements OnMusicItemClickListener, OnUpdataTitleListener {
 
     @BindView(R.id.tv_music_toolbar_title)
     TextView mTvMusicToolbarTitle;
@@ -787,6 +787,14 @@ public class MusicActivity
     public void setIvSearchVisibility(boolean searchVisibility) {
         mIvSearch.setVisibility(searchVisibility ? View.VISIBLE : View.GONE);
         mTvEditDelete.setVisibility(searchVisibility ? View.GONE : View.VISIBLE);
+    }
+
+    // AboutFragment 界面恢复收藏歌曲后调用
+    @Override
+    public void checkCurrentFavorite() {
+        LogUtil.d("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
+        MusicBean musicBean = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Id.eq(mCurrentMusicBean.getId())).build().unique();
+        checkCurrentSongIsFavorite(musicBean, mQqControlBar, mSmartisanControlBar);
     }
 
     private List<PlayListBean> getPlayList() {

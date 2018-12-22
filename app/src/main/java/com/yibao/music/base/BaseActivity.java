@@ -81,7 +81,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updataCurrentPlayInfo));
-        upDataPlayProgress();
         mCompositeDisposable.add(mBus.toObserverable(PlayStatusBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -91,6 +90,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::moreMenu));
 
+        upDataPlayProgress();
     }
 
     protected void moreMenu(MoreMenuStatus moreMenuStatus) {

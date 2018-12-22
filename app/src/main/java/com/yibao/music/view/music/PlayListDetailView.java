@@ -14,6 +14,7 @@ import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.RandomUtil;
+import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 
 /**
@@ -71,8 +72,10 @@ public class PlayListDetailView extends LinearLayout implements View.OnClickList
                 }
                 break;
             case R.id.tv_delete_play_list:
+                SnakbarUtil.keepGoing(mLlContent);
                 break;
             case R.id.tv_edit_play_list:
+                SnakbarUtil.keepGoing(mLlContent);
                 break;
             default:
                 break;

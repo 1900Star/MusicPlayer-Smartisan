@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root_bottom_sheet"
+<com.yibao.music.view.SwipeItemLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="62dp"
-    android:layout_marginTop="0.2dp"
-    android:focusable="true"
-    android:clickable="true"
     android:background="@drawable/list_item_selector"
+    android:clickable="true"
+    android:focusable="true"
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/root_favorite_bottom_sheet"
         android:layout_width="match_parent"
-        android:gravity="center_vertical"
-        android:layout_height="60dp">
+        android:layout_height="match_parent"
+        android:background="@drawable/list_item_selector"
+        android:gravity="center_vertical">
 
         <LinearLayout
             android:id="@+id/ll"
@@ -46,21 +46,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ll"
-            android:layout_marginBottom="3dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="3dp"
             android:textColor="@color/text_song_time_selector"
             android:textSize="12sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/delete_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/quick_delete_bg"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/bottom_list_itme_clear"
-            android:layout_width="wrap_content"
+            android:layout_width="62dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="15dp"
+            android:layout_gravity="center"
             android:contentDescription="@null"
-            android:src="@drawable/ic_clear_gray_24dp"
-            android:visibility="gone" />
-    </RelativeLayout>
-</LinearLayout>
+            android:scaleType="centerCrop"
+            android:src="@drawable/slide_delete_selector" />
+
+    </LinearLayout>
+</com.yibao.music.view.SwipeItemLayout>

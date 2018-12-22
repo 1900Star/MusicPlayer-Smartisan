@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="48dp"
         android:background="@drawable/titlebar_playing_bg">
 
         <TextView
@@ -35,7 +35,7 @@
         <TextView
             android:id="@+id/bottom_sheet_bar_clear"
             android:layout_width="60dp"
-            android:layout_height="28dp"
+            android:layout_height="26dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_margin="12dp"

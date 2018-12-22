@@ -38,7 +38,7 @@ public class SnakbarUtil {
     }
 
     public static void keepGoing(View view) {
-        Snackbar snackbar = make(view, "建设中 -_-", Snackbar.LENGTH_LONG);
+        Snackbar snackbar = make(view, "建设中 -_-", Snackbar.LENGTH_SHORT);
         snackbar.getView()
                 .setBackgroundColor(Color.parseColor("#325ab1"));
         snackbar.show();

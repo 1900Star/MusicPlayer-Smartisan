@@ -127,8 +127,9 @@ public class DeletePlayListDialog
             }
 
             MusicApplication.getIntstance().getPlayListDao().delete(mPlayListBean);
+        } else if (mPageType == Constants.NUMBER_THRRE) {
+            mBus.post(new AddAndDeleteListBean(mPageType));
         }
-        mBus.post(new AddAndDeleteListBean(mPageType));
     }
 
 
