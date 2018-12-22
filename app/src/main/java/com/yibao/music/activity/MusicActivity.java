@@ -221,8 +221,7 @@ public class MusicActivity
                     mTvEditDelete.setVisibility(isContainsKey ? View.GONE : View.VISIBLE);
                 }
                 break;
-            // 删除
-//                *******************************************************************************
+            // 删除 *******************************************************************************
             case R.id.tv_edit_delete:
                 // 删除所选的条目 mCurrentIndex + 10  (10 、12 、13  有编辑的页面)
                 switch (mCurrentIndex) {
