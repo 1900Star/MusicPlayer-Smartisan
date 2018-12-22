@@ -5,10 +5,10 @@ import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -25,14 +25,13 @@ import com.yibao.music.fragment.dialogfrag.FavoriteBottomSheetDialog;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.MoreMenuStatus;
-import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicLyricBean;
+import com.yibao.music.aidl.MusicBean;
+import com.yibao.music.aidl.MusicLyricBean;
 import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
-import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
@@ -40,7 +39,6 @@ import com.yibao.music.util.TitleArtistUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.LyricsView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -136,7 +134,11 @@ public class PlayActivity extends BasePlayActivity {
 
 
     private void initSongInfo() {
-        mCurrenMusicInfo = audioBinder != null ? audioBinder.getMusicBean() : getIntent().getParcelableExtra("currentBean");
+        try {
+            mCurrenMusicInfo = audioBinder != null ? audioBinder.getMusicBean() : getIntent().getParcelableExtra("currentBean");
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         if (mCurrenMusicInfo != null) {
             setTitleAndArtist(mCurrenMusicInfo);
 //            List<MusicLyricBean> musicLyricBeans = LyricsUtil.getLyricList(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
@@ -151,9 +153,13 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     private void init() {
-        if (audioBinder.isPlaying()) {
-            initAnimation();
-            updatePlayBtnStatus();
+        try {
+            if (audioBinder.isPlaying()) {
+                initAnimation();
+                updatePlayBtnStatus();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
         setSongDuration();
         //设置播放模式图片
@@ -182,9 +188,13 @@ public class PlayActivity extends BasePlayActivity {
                 break;
             case Constants.NUMBER_TWO:
                 if (audioBinder != null) {
-                    if (audioBinder.getPosition() == moreMenuStatus.getMusicPosition()) {
-                        audioBinder.updataFavorite();
-                        checkCurrentIsFavorite(getFavoriteState(mCurrenMusicInfo));
+                    try {
+                        if (audioBinder.getPosition() == moreMenuStatus.getMusicPosition()) {
+                            audioBinder.updataFavorite();
+                            checkCurrentIsFavorite(getFavoriteState(mCurrenMusicInfo));
+                        }
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
                     }
                 } else {
                     SnakbarUtil.firstPlayMusic(mPlayingSongAlbum);
@@ -215,7 +225,11 @@ public class PlayActivity extends BasePlayActivity {
         setSongDuration();
         updatePlayBtnStatus();
 //        初始化歌词
-        mLyricList = audioBinder.getLyricList();
+        try {
+            mLyricList = audioBinder.getLyricList();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         mTvLyrics.setLrcFile(mLyricList);
         if (isShowLyrics) {
             closeLyricsView(mLyricList);
@@ -233,7 +247,11 @@ public class PlayActivity extends BasePlayActivity {
      */
     @Override
     protected void updataCurrentPlayProgress() {
-        updataMusicProgress(audioBinder.getProgress());
+        try {
+            updataMusicProgress(audioBinder.getProgress());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -257,7 +275,11 @@ public class PlayActivity extends BasePlayActivity {
 
     private void setSongDuration() {
         // 获取并记录总时长
-        mDuration = audioBinder.getDuration();
+        try {
+            mDuration = audioBinder.getDuration();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         // 设置进度条的总进度
         mSbProgress.setMax(mDuration);
         // 设置歌曲总时长
@@ -297,27 +319,36 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     private void playBtnState(boolean isPlaying) {
-        if (isPlaying) {
-            // 当前播放  暂停
-            audioBinder.pause();
-            mAnimator.pause();
-            if (isShowLyrics && mDisposableLyrics != null) {
-                clearDisposableLyric();
+        try {
+            if (isPlaying) {
+                // 当前播放  暂停
+                audioBinder.pause();
+                mAnimator.pause();
+                if (isShowLyrics && mDisposableLyrics != null) {
+                    clearDisposableLyric();
+                }
+            } else {
+                // 当前暂停  播放
+                audioBinder.start();
+                initAnimation();
+                if (isShowLyrics) {
+                    startRollPlayLyrics(mTvLyrics);
+                }
             }
-        } else {
-            // 当前暂停  播放
-            audioBinder.start();
-            initAnimation();
-            if (isShowLyrics) {
-                startRollPlayLyrics(mTvLyrics);
-            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
+
     }
 
     //根据当前播放状态设置图片
 
     private void updatePlayBtnStatus() {
-        mMusicPlay.setImageResource(audioBinder.isPlaying() ? R.drawable.btn_playing_pause_selector : R.drawable.btn_playing_play_selector);
+        try {
+            mMusicPlay.setImageResource(audioBinder.isPlaying() ? R.drawable.btn_playing_pause_selector : R.drawable.btn_playing_play_selector);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -329,10 +360,14 @@ public class PlayActivity extends BasePlayActivity {
             mAnimator.start();
             mMusicPlay.setImageResource(R.drawable.btn_playing_pause);
         }
-        if (audioBinder != null && audioBinder.isPlaying()) {
-            mAnimator.resume();
-        } else {
-            mAnimator.pause();
+        try {
+            if (audioBinder != null && audioBinder.isPlaying()) {
+                mAnimator.resume();
+            } else {
+                mAnimator.pause();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
 
     }
@@ -341,10 +376,18 @@ public class PlayActivity extends BasePlayActivity {
     protected void refreshBtnAndNotify(PlayStatusBean bean) {
         switch (bean.getType()) {
             case 0:
-                switchPlayState(!audioBinder.isPlaying());
+                try {
+                    switchPlayState(!audioBinder.isPlaying());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
                 break;
             case 1:
-                checkCurrentIsFavorite(audioBinder.getMusicBean().isFavorite());
+                try {
+                    checkCurrentIsFavorite(audioBinder.getMusicBean().isFavorite());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
                 break;
             case 2:
                 mAnimator.pause();
@@ -361,52 +404,57 @@ public class PlayActivity extends BasePlayActivity {
             R.id.iv_lyrics_switch, R.id.iv_secreen_sun_switch, R.id.music_player_mode,
             R.id.music_player_pre, R.id.music_play, R.id.music_player_next, R.id.iv_favorite_music})
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.titlebar_down:
-                finish();
-                break;
-            case R.id.play_song_name:
+        try {
+            switch (v.getId()) {
+                case R.id.titlebar_down:
+                    finish();
+                    break;
+                case R.id.play_song_name:
 //            case R.id.song_artist_name:
-                startSearchActivity(mCurrenMusicInfo, Constants.NUMBER_ONE);
-                break;
-            case R.id.rotate_rl:
-                // 按下音乐停止播放  动画停止 ，抬起恢复
+                    startSearchActivity(mCurrenMusicInfo, Constants.NUMBER_ONE);
+                    break;
+                case R.id.rotate_rl:
+                    // 按下音乐停止播放  动画停止 ，抬起恢复
 //                switchPlayState();
-                break;
-            case R.id.playing_song_album:
-            case R.id.album_cover:
-            case R.id.tv_lyrics:
-                showLyrics();
-                break;
-            case R.id.iv_lyrics_switch:
-                MoreMenuBottomDialog.newInstance(mCurrenMusicInfo, audioBinder.getPosition(), true).getBottomDialog(this);
-                break;
-            case R.id.iv_secreen_sun_switch:
-                screenAlwaysOnSwitch(mIvSecreenSunSwitch);
-                break;
-            case R.id.music_player_mode:
-                switchPlayMode(mMusicPlayerMode);
-                break;
-            case R.id.music_player_pre:
-                mAnimator.pause();
-                audioBinder.playPre();
-                break;
-            case R.id.music_play:
-                playBtnState(audioBinder.isPlaying());
-                updatePlayBtnStatus();
-                break;
-            case R.id.music_player_next:
-                mAnimator.pause();
-                audioBinder.playNext();
-                break;
-            case R.id.iv_favorite_music:
-                boolean favoriteState = getFavoriteState(mCurrenMusicInfo);
-                audioBinder.updataFavorite();
-                checkCurrentIsFavorite(!favoriteState);
-                break;
-            default:
-                break;
+                    break;
+                case R.id.playing_song_album:
+                case R.id.album_cover:
+                case R.id.tv_lyrics:
+                    showLyrics();
+                    break;
+                case R.id.iv_lyrics_switch:
+                    MoreMenuBottomDialog.newInstance(mCurrenMusicInfo, audioBinder.getPosition(), true).getBottomDialog(this);
+                    break;
+                case R.id.iv_secreen_sun_switch:
+                    screenAlwaysOnSwitch(mIvSecreenSunSwitch);
+                    break;
+                case R.id.music_player_mode:
+                    switchPlayMode(mMusicPlayerMode);
+                    break;
+                case R.id.music_player_pre:
+                    mAnimator.pause();
+                    audioBinder.playPre();
+                    break;
+                case R.id.music_play:
+                    playBtnState(audioBinder.isPlaying());
+                    updatePlayBtnStatus();
+                    break;
+                case R.id.music_player_next:
+                    mAnimator.pause();
+                    audioBinder.playNext();
+                    break;
+                case R.id.iv_favorite_music:
+                    boolean favoriteState = getFavoriteState(mCurrenMusicInfo);
+                    audioBinder.updataFavorite();
+                    checkCurrentIsFavorite(!favoriteState);
+                    break;
+                default:
+                    break;
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
+
     }
 
 
@@ -432,8 +480,12 @@ public class PlayActivity extends BasePlayActivity {
             mIvLyricsMask.setVisibility(View.GONE);
             mIvSecreenSunSwitch.setVisibility(View.VISIBLE);
             // 开始滚动歌词
-            if (audioBinder.isPlaying()) {
-                startRollPlayLyrics(mTvLyrics);
+            try {
+                if (audioBinder.isPlaying()) {
+                    startRollPlayLyrics(mTvLyrics);
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
             closeLyricsView(mLyricList);
 
@@ -457,7 +509,11 @@ public class PlayActivity extends BasePlayActivity {
                     return;
                 }
                 //拖动音乐进度条播放
-                audioBinder.seekTo(progress);
+                try {
+                    audioBinder.seekTo(progress);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
                 //更新音乐进度数值
                 updataMusicProgress(progress);
                 break;
@@ -492,7 +548,11 @@ public class PlayActivity extends BasePlayActivity {
         super.onResume();
         if (mCurrenMusicInfo != null && audioBinder != null) {
             checkCurrentIsFavorite(mMusicDao.load(mCurrenMusicInfo.getId()).isFavorite());
-            updataCurrentPlayInfo(audioBinder.getMusicBean());
+            try {
+                updataCurrentPlayInfo(audioBinder.getMusicBean());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
         rxViewClick();
     }

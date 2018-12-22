@@ -15,7 +15,6 @@ public class AudioServiceConnection
 {
 
 
-
     @Override
     public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
     }

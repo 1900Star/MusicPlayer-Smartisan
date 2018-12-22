@@ -9,7 +9,7 @@ import android.support.v4.app.Fragment;
 
 import com.baidu.mobstat.StatService;
 import com.yibao.music.MusicApplication;
-import com.yibao.music.model.MusicBean;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.model.greendao.AlbumInfoDao;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;

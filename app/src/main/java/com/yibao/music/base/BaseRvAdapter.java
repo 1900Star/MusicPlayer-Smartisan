@@ -12,10 +12,9 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.yibao.music.R;
-import com.yibao.music.model.MusicBean;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 
 import java.util.List;
 

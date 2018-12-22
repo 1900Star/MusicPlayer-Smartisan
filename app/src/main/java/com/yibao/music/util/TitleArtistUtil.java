@@ -1,6 +1,6 @@
 package com.yibao.music.util;
 
-import com.yibao.music.model.MusicBean;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.model.TitleAndArtistBean;
 
 /**

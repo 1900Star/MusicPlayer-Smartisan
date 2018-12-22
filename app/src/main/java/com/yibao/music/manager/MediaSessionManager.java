@@ -4,17 +4,17 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.os.RemoteException;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.yibao.music.R;
-import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.TitleAndArtistBean;
+import com.yibao.music.aidl.IMusicAidlInterface;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
-import com.yibao.music.util.TitleArtistUtil;
 
 /**
  * @ Author: Luoshipeng
@@ -27,12 +27,12 @@ public class MediaSessionManager {
 
     private static final String TAG = "MediaSessionManager";
 
-    private AudioPlayService.AudioBinder mAudioBinder;
+    private IMusicAidlInterface.Stub mAudioBinder;
     private MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder stateBuilder;
     private Context mContext;
 
-    public MediaSessionManager(Context context, AudioPlayService.AudioBinder audioBinder) {
+    public MediaSessionManager(Context context, IMusicAidlInterface.Stub audioBinder) {
         this.mContext = context;
         this.mAudioBinder = audioBinder;
         initSession();
@@ -59,13 +59,22 @@ public class MediaSessionManager {
     public void updatePlaybackState(boolean isPlaying) {
         if (mMediaSession != null) {
             int state = isPlaying ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED;
-            stateBuilder.setState(state, mAudioBinder.getPosition(), 1.0f);
+            try {
+                stateBuilder.setState(state, mAudioBinder.getPosition(), 1.0f);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
             mMediaSession.setPlaybackState(stateBuilder.build());
         }
     }
 
     public void updateLocMsg() {
-        MusicBean info = mAudioBinder.getMusicBean();
+        MusicBean info = null;
+        try {
+            info = mAudioBinder.getMusicBean();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         MediaMetadataCompat.Builder metaData = new MediaMetadataCompat.Builder()
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, StringUtil.getTitle(info))
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, StringUtil.getArtist(info))
@@ -75,7 +84,11 @@ public class MediaSessionManager {
                 .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, getCoverBitmap(info));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, mAudioBinder.getMusicList().size());
+            try {
+                metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, mAudioBinder.getMusicList().size());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
         if (mMediaSession != null) {
             mMediaSession.setMetadata(metaData.build());
@@ -87,25 +100,41 @@ public class MediaSessionManager {
         @Override
         public void onPlay() {
             super.onPlay();
-            mAudioBinder.start();
+            try {
+                mAudioBinder.start();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public void onPause() {
             super.onPause();
-            mAudioBinder.pause();
+            try {
+                mAudioBinder.pause();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public void onSkipToNext() {
             super.onSkipToNext();
-            mAudioBinder.playNext();
+            try {
+                mAudioBinder.playNext();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public void onSkipToPrevious() {
             super.onSkipToPrevious();
-            mAudioBinder.playPre();
+            try {
+                mAudioBinder.playPre();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
 
     };

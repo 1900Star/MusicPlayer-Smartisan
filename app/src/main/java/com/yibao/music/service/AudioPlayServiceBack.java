@@ -9,6 +9,7 @@ import android.content.ServiceConnection;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.widget.Toast;
@@ -41,7 +42,7 @@ import io.reactivex.disposables.Disposable;
  * Des：${控制音乐的Service}
  * Time:2017/5/30 13:27
  */
-public class AudioPlayService
+public class AudioPlayServiceBack
         extends Service {
 
     private MediaPlayer mediaPlayer;
@@ -85,7 +86,7 @@ public class AudioPlayService
 
     @Override
     public IBinder onBind(Intent intent) {
-        return new AudioBinder();
+        return mAudioBinder;
     }
 
     @Override
@@ -106,7 +107,6 @@ public class AudioPlayService
         registerHeadsetReceiver();
         //初始化播放模式
     }
-
     private void init() {
         mAudioBinder = new AudioBinder();
         mBus = RxBus.getInstance();
@@ -114,7 +114,7 @@ public class AudioPlayService
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mMusicBean = new MusicBean();
         PLAY_MODE = SpUtil.getMusicMode(this);
-        mSessionManager = new MediaSessionManager(this, mAudioBinder);
+        mSessionManager = new MediaSessionManager(this, null);
     }
 
     @Override
@@ -130,11 +130,7 @@ public class AudioPlayService
         if (enterPosition != position && enterPosition != -1) {
             position = enterPosition;
             //执行播放
-            try {
-                mAudioBinder.play();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            mAudioBinder.play();
         } else if (enterPosition != -1) {
             //通知播放界面更新
             sendCureentMusicInfo();
@@ -158,13 +154,12 @@ public class AudioPlayService
     }
 
     public class AudioBinder
-            extends com.yibao.music.aidl.IMusicAidlInterface.Stub
+            extends Binder
             implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
         private MusicBean mMusicInfo;
         private MusicNotifyManager mNotifyManager;
 
-        @Override
-        public void play() throws RemoteException {
+        private void play() {
 
             if (mediaPlayer != null) {
                 mediaPlayer.reset();
@@ -174,38 +169,28 @@ public class AudioPlayService
             // “>=” 确保模糊搜索时播放不出现索引越界
             position = position >= mMusicDataList.size() ? 0 : position;
             mMusicInfo = mMusicDataList.get(position);
-            mediaPlayer = MediaPlayer.create(AudioPlayService.this,
+            mediaPlayer = MediaPlayer.create(AudioPlayServiceBack.this,
                     Uri.parse(mMusicInfo.getSongUrl()));
             mLyricList = LyricsUtil.getLyricList(mMusicInfo.getTitle(), mMusicInfo.getArtist());
-            mediaPlayer.setOnPreparedListener(mp -> {
-                // 开启播放
-                mediaPlayer.start();
-                // 通知播放界面更新
-                sendCureentMusicInfo();
-            });
-            mediaPlayer.setOnCompletionListener(mp -> {
-                autoPlayNext();
-            });
-            SpUtil.setMusicPosition(AudioPlayService.this, position);
+            mediaPlayer.setOnPreparedListener(this);
+            mediaPlayer.setOnCompletionListener(this);
+            SpUtil.setMusicPosition(AudioPlayServiceBack.this, position);
             showNotifycation(true);
             mSessionManager.updatePlaybackState(true);
             mSessionManager.updateLocMsg();
 
         }
 
-        @Override
-        public List<MusicLyricBean> getLyricList() throws RemoteException {
+        public List<MusicLyricBean> getLyricList() {
             return mLyricList;
         }
 
-        @Override
-        public void showNotifycation(boolean b) throws RemoteException {
+        private void showNotifycation(boolean b) {
             mNotifyManager = new MusicNotifyManager(getApplication(), mMusicInfo, b);
             mNotifyManager.show();
         }
 
-        @Override
-        public void updataFavorite() throws RemoteException {
+        public void updataFavorite() {
             MusicBean musicBean = mMusicDataList.get(position);
             boolean favorite = mMusicDao.load(musicBean.getId()).getIsFavorite();
             mNotifyManager.updataFavoriteBtn(favorite);
@@ -216,34 +201,48 @@ public class AudioPlayService
             }).start();
         }
 
-        @Override
-        public void hintNotifycation() throws RemoteException {
+        private void hintNotifycation() {
             mNotifyManager.hide();
         }
 
-        @Override
-        public MusicBean getMusicBean() throws RemoteException {
+        public MusicBean getMusicBean() {
             return mMusicInfo;
         }
         // 准备完成回调
 
+        @Override
+        public void onPrepared(MediaPlayer mediaPlayer) {
+            // 开启播放
+            mediaPlayer.start();
+            // 通知播放界面更新
+            sendCureentMusicInfo();
+        }
+
 
         // 获取当前播放进度
-        @Override
-        public int getProgress() throws RemoteException {
+
+        public int getProgress() {
             return mediaPlayer.getCurrentPosition();
         }
 
         // 获取音乐总时长
-        @Override
-        public int getDuration() throws RemoteException {
+
+        public int getDuration() {
             return mediaPlayer.getDuration();
+        }
+
+        // 音乐播放完成监听
+
+        @Override
+        public void onCompletion(MediaPlayer mediaPlayer) {
+            // 自动播放下一首歌曲
+            autoPlayNext();
         }
 
 
         // 自动播放下一曲
-        @Override
-        public void autoPlayNext() {
+
+        private void autoPlayNext() {
             switch (PLAY_MODE) {
                 case PLAY_MODE_ALL:
                     position = (position + 1) % mMusicDataList.size();
@@ -256,22 +255,27 @@ public class AudioPlayService
                 default:
                     break;
             }
-            try {
-                play();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            play();
         }
 
         // 获取当前的播放模式
-        @Override
-        public int getPalyMode() throws RemoteException {
+
+        public int getPalyMode() {
             return PLAY_MODE;
         }
 
+        //设置播放模式
+
+        public void setPalyMode(int playmode) {
+            PLAY_MODE = playmode;
+            //保存播放模式
+
+            SpUtil.setMusicMode(AudioPlayServiceBack.this, PLAY_MODE);
+        }
+
         //手动播放上一曲
-        @Override
-        public void playPre() throws RemoteException {
+
+        public void playPre() {
             switch (PLAY_MODE) {
                 case PLAY_MODE_RANDOM:
                     position = new Random().nextInt(mMusicDataList.size());
@@ -288,8 +292,8 @@ public class AudioPlayService
         }
 
         // 手动播放下一曲
-        @Override
-        public void playNext() throws RemoteException {
+
+        public void playNext() {
             switch (PLAY_MODE) {
                 case PLAY_MODE_RANDOM:
                     position = new Random().nextInt(mMusicDataList.size());
@@ -302,13 +306,12 @@ public class AudioPlayService
         }
 
         //true 当前正在播放
-        @Override
+
         public boolean isPlaying() {
             return mediaPlayer.isPlaying();
         }
 
-        @Override
-        public void start() throws RemoteException {
+        public void start() {
             mediaPlayer.start();
             mSessionManager.updatePlaybackState(true);
             showNotifycation(true);
@@ -316,48 +319,24 @@ public class AudioPlayService
         }
 
         //暂停播放
-        @Override
-        public void pause() throws RemoteException {
+
+        public void pause() {
             mediaPlayer.pause();
             mSessionManager.updatePlaybackState(false);
             showNotifycation(false);
         }
 
-        @Override
-        public void onCompletion(MediaPlayer mediaPlayer) {
-            // 自动播放下一首歌曲
-            autoPlayNext();
-        }
-
-        @Override
-        public void onPrepared(MediaPlayer mediaPlayer) {
-            // 开启播放
-            mediaPlayer.start();
-            // 通知播放界面更新
-            sendCureentMusicInfo();
-        }
-
         //跳转到指定位置进行播放
-        @Override
-        public void seekTo(int progress) throws RemoteException {
+
+        public void seekTo(int progress) {
             mediaPlayer.seekTo(progress);
         }
 
-        @Override
-        public void setPalyMode(int playmode) throws RemoteException {
-            PLAY_MODE = playmode;
-            //保存播放模式
-
-            SpUtil.setMusicMode(AudioPlayService.this, PLAY_MODE);
-        }
-
-        @Override
-        public List<MusicBean> getMusicList() throws RemoteException {
+        public List<MusicBean> getMusicList() {
             return mMusicDataList;
         }
 
-        @Override
-        public int getPosition() throws RemoteException {
+        public int getPosition() {
             return position;
         }
     }
@@ -377,7 +356,7 @@ public class AudioPlayService
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(aBoolean -> {
                         if (!aBoolean) {
-                            Toast.makeText(AudioPlayService.this, "该歌曲还没有添加到收藏文件", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "该歌曲还没有添加到收藏文件", Toast.LENGTH_SHORT).show();
                         }
                     });
         } else {
@@ -408,36 +387,32 @@ public class AudioPlayService
             if (action != null) {
                 if (action.equals(ACTION_MUSIC)) {
                     int id = intent.getIntExtra(BUTTON_ID, 0);
-                    try {
-                        switch (id) {
-                            case FAVORITE:
-                                mAudioBinder.updataFavorite();
-                                mBus.post(new PlayStatusBean(1));
-                                break;
-                            case CLOSE:
+                    switch (id) {
+                        case FAVORITE:
+                            mAudioBinder.updataFavorite();
+                            mBus.post(new PlayStatusBean(1));
+                            break;
+                        case CLOSE:
+                            mAudioBinder.pause();
+                            mAudioBinder.hintNotifycation();
+                            mBus.post(new PlayStatusBean(2));
+                            break;
+                        case PREV:
+                            mAudioBinder.playPre();
+                            break;
+                        case PLAY:
+                            if (mAudioBinder.isPlaying()) {
                                 mAudioBinder.pause();
-                                mAudioBinder.hintNotifycation();
-                                mBus.post(new PlayStatusBean(2));
-                                break;
-                            case PREV:
-                                mAudioBinder.playPre();
-                                break;
-                            case PLAY:
-                                if (mAudioBinder.isPlaying()) {
-                                    mAudioBinder.pause();
-                                } else {
-                                    mAudioBinder.start();
-                                }
-                                mBus.post(new PlayStatusBean(0));
-                                break;
-                            case NEXT:
-                                mAudioBinder.playNext();
-                                break;
-                            default:
-                                break;
-                        }
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
+                            } else {
+                                mAudioBinder.start();
+                            }
+                            mBus.post(new PlayStatusBean(0));
+                            break;
+                        case NEXT:
+                            mAudioBinder.playNext();
+                            break;
+                        default:
+                            break;
                     }
                 }
             }
@@ -456,11 +431,7 @@ public class AudioPlayService
         @Override
         public void onReceive(Context context, Intent intent) {
             if (mAudioBinder != null && mAudioBinder.isPlaying()) {
-                try {
-                    mAudioBinder.pause();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+                mAudioBinder.pause();
                 mBus.post(new PlayStatusBean(0));
             }
         }
@@ -504,15 +475,10 @@ public class AudioPlayService
      * @param isLossFoucs b
      */
     private void lossAudioFoucs(boolean isLossFoucs) {
-        try {
-            if (isLossFoucs) {
-                mAudioBinder.pause();
-            } else {
-                mAudioBinder.start();
-            }
-
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        if (isLossFoucs) {
+            mAudioBinder.pause();
+        } else {
+            mAudioBinder.start();
         }
         mBus.post(new PlayStatusBean(0));
     }
@@ -527,11 +493,7 @@ public class AudioPlayService
     public void onDestroy() {
         super.onDestroy();
         if (mAudioBinder != null) {
-            try {
-                mAudioBinder.hintNotifycation();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            mAudioBinder.hintNotifycation();
         }
         if (mediaPlayer != null) {
             mediaPlayer.release();

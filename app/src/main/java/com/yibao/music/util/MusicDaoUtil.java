@@ -1,12 +1,10 @@
 package com.yibao.music.util;
 
 import com.yibao.music.base.listener.OnSearchFlagListener;
-import com.yibao.music.model.MusicBean;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;

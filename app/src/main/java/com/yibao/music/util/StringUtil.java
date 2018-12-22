@@ -7,9 +7,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import com.yibao.music.model.MusicBean;
+import com.yibao.music.aidl.MusicBean;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 

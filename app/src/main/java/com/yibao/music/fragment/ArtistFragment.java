@@ -13,7 +13,7 @@ import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.ArtistInfo;
-import com.yibao.music.model.MusicBean;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.MusicListUtil;

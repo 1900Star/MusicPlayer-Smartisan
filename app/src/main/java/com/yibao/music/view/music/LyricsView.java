@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.yibao.music.R;
-import com.yibao.music.model.MusicLyricBean;
+import com.yibao.music.aidl.MusicLyricBean;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -17,7 +17,7 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.MoreMemuAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.model.MoreMenuStatus;
-import com.yibao.music.model.MusicBean;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.MenuListUtil;
 import com.yibao.music.util.RxBus;

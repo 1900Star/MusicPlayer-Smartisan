@@ -8,12 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.adapter.QqBarPagerAdapter;
 import com.yibao.music.base.listener.MusicPagerListener;
-import com.yibao.music.model.MusicBean;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.view.MusicProgressView;
 

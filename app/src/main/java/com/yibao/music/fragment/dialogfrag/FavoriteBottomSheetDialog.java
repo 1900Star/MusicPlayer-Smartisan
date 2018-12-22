@@ -3,7 +3,6 @@ package com.yibao.music.fragment.dialogfrag;
 import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
@@ -24,8 +23,7 @@ import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.BottomSheetStatus;
-import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicInfo;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
@@ -45,7 +43,6 @@ import java.util.Random;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**

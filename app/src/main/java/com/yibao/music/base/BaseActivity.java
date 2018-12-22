@@ -12,7 +12,7 @@ import com.yibao.music.activity.PlayActivity;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.activity.SearchActivity;
 import com.yibao.music.model.MoreMenuStatus;
-import com.yibao.music.model.MusicBean;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
@@ -23,7 +23,6 @@ import com.yibao.music.view.music.QqControlBar;
 import com.yibao.music.view.music.SmartisanControlBar;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.Unbinder;
@@ -142,10 +141,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void checkCurrentSongIsFavorite(MusicBean currentMusicBean, QqControlBar qqControlBar, SmartisanControlBar smartisanControlBar) {
-        boolean favorite = mMusicDao.load(currentMusicBean.getId()).getIsFavorite();
-        smartisanControlBar.setFavoriteButtonState(favorite);
-        if (qqControlBar != null) {
-            qqControlBar.setFavoriteButtonState(favorite);
+        if (currentMusicBean != null) {
+            boolean favorite = mMusicDao.load(currentMusicBean.getId()).getIsFavorite();
+            smartisanControlBar.setFavoriteButtonState(favorite);
+            if (qqControlBar != null) {
+                qqControlBar.setFavoriteButtonState(favorite);
+            }
         }
     }
 

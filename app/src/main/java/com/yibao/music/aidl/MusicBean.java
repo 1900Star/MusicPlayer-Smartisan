@@ -1,4 +1,4 @@
-package com.yibao.music.model;
+package com.yibao.music.aidl;
 
 import android.os.Parcel;
 import android.os.Parcelable;

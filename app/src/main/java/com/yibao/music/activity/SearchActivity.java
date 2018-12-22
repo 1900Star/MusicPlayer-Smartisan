@@ -3,6 +3,7 @@ package com.yibao.music.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.adapter.DetailsViewAdapter;
+import com.yibao.music.aidl.IMusicAidlInterface;
 import com.yibao.music.base.BaseObserver;
 import com.yibao.music.base.BaseTansitionActivity;
 import com.yibao.music.base.factory.RecyclerFactory;
@@ -23,15 +25,13 @@ import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.TextChangedListener;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.MoreMenuStatus;
-import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicLyricBean;
+import com.yibao.music.aidl.MusicBean;
+import com.yibao.music.aidl.MusicLyricBean;
 import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.MusicDaoUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SoftKeybordUtil;
@@ -40,7 +40,6 @@ import com.yibao.music.util.TitleArtistUtil;
 import com.yibao.music.view.FlowLayoutView;
 import com.yibao.music.view.music.SmartisanControlBar;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -80,7 +79,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     SmartisanControlBar mSmartisanControlBar;
     private DetailsViewAdapter mSearchDetailAdapter;
     private MusicBean mMusicBean;
-    private AudioPlayService.AudioBinder audioBinder;
+    private IMusicAidlInterface audioBinder;
     private int lyricsFlag;
     private InputMethodManager mInputMethodManager;
     private Disposable mDisposableSoft;
@@ -118,13 +117,17 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     protected void onResume() {
         super.onResume();
         if (audioBinder != null) {
-            mMusicBean = audioBinder.getMusicBean();
-            setMusicInfo(mMusicBean);
-            checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
-            mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
-            mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
-            updataLyric();
-            setDuration();
+            try {
+                mMusicBean = audioBinder.getMusicBean();
+                setMusicInfo(mMusicBean);
+                checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
+                mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+                mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+                updataLyric();
+                setDuration();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
         mCompositeDisposable.add(RxView.clicks(mSmartisanControlBar)
                 .throttleFirst(1, TimeUnit.SECONDS)
@@ -141,7 +144,11 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         if (audioBinder != null) {
             setDuration();
             SearchActivity.this.checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
-            mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+            try {
+                mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
             updataLyric();
         }
     }
@@ -149,12 +156,21 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     @Override
     protected void updataCurrentPlayProgress() {
         if (audioBinder != null) {
-            mSmartisanControlBar.setSongProgress(audioBinder.getProgress());
+            try {
+                mSmartisanControlBar.setSongProgress(audioBinder.getProgress());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private void setDuration() {
-        int duration = audioBinder.getDuration();
+        int duration = 0;
+        try {
+            duration = audioBinder.getDuration();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         mSmartisanControlBar.setMaxProgress(duration);
     }
 
@@ -167,7 +183,11 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             mSmartisanControlBar.setAlbulmUrl(StringUtil.getAlbulm(musicItem.getAlbumId()));
         }
         if (audioBinder != null) {
-            mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+            try {
+                mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
             mSmartisanControlBar.initAnimation();
         } else {
             mSmartisanControlBar.setVisibility(View.GONE);
@@ -202,13 +222,17 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
                 break;
             case Constants.NUMBER_TWO:
                 if (audioBinder != null) {
-                    if (audioBinder.getPosition() == moreMenuStatus.getMusicPosition()) {
-                        audioBinder.updataFavorite();
-                        checkCurrentSongIsFavorite(musicBean, null, mSmartisanControlBar);
-                    } else {
-                        MusicBean bean = moreMenuStatus.getMusicBean();
-                        bean.setIsFavorite(!bean.isFavorite());
-                        mMusicDao.update(bean);
+                    try {
+                        if (audioBinder.getPosition() == moreMenuStatus.getMusicPosition()) {
+                            audioBinder.updataFavorite();
+                            checkCurrentSongIsFavorite(musicBean, null, mSmartisanControlBar);
+                        } else {
+                            MusicBean bean = moreMenuStatus.getMusicBean();
+                            bean.setIsFavorite(!bean.isFavorite());
+                            mMusicDao.update(bean);
+                        }
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
                     }
                 } else {
                     SnakbarUtil.firstPlayMusic(mSmartisanControlBar);
@@ -229,20 +253,24 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
 
     @Override
     protected void refreshBtnAndNotify(PlayStatusBean playStatusBean) {
-        switch (playStatusBean.getType()) {
-            case 0:
-                mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
-                mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
-                break;
-            case 1:
-                checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
-                break;
-            case 2:
-                mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
-                mSmartisanControlBar.animatorOnPause();
-                break;
-            default:
-                break;
+        try {
+            switch (playStatusBean.getType()) {
+                case 0:
+                    mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+                    mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+                    break;
+                case 1:
+                    checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
+                    break;
+                case 2:
+                    mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+                    mSmartisanControlBar.animatorOnPause();
+                    break;
+                default:
+                    break;
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
     }
 
@@ -266,34 +294,42 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         });
         mFlowLayoutView.setItemClickListener((position, bean) -> initSearch(bean.getSearchContent()));
         mSmartisanControlBar.setClickListener(clickFlag -> {
-            switch (clickFlag) {
-                case Constants.NUMBER_ONE:
-                    audioBinder.updataFavorite();
-                    checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
-                    break;
-                case Constants.NUMBER_TWO:
-                    audioBinder.playPre();
-                    break;
-                case Constants.NUMBER_THRRE:
-                    switchPlayState();
-                    break;
-                case Constants.NUMBER_FOUR:
-                    audioBinder.playNext();
-                    break;
-                default:
-                    break;
+            try {
+                switch (clickFlag) {
+                    case Constants.NUMBER_ONE:
+                        audioBinder.updataFavorite();
+                        checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
+                        break;
+                    case Constants.NUMBER_TWO:
+                        audioBinder.playPre();
+                        break;
+                    case Constants.NUMBER_THRRE:
+                        switchPlayState();
+                        break;
+                    case Constants.NUMBER_FOUR:
+                        audioBinder.playNext();
+                        break;
+                    default:
+                        break;
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
         });
     }
 
     private void switchPlayState() {
-        if (audioBinder.isPlaying()) {
-            audioBinder.pause();
-        } else {
-            audioBinder.start();
+        try {
+            if (audioBinder.isPlaying()) {
+                audioBinder.pause();
+            } else {
+                audioBinder.start();
+            }
+            mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+            mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
-        mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
-        mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
     }
 
     /**

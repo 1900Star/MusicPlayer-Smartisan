@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.adapter.MusicPagerAdapter;
+import com.yibao.music.aidl.IMusicAidlInterface;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.BaseTansitionActivity;
@@ -25,8 +27,8 @@ import com.yibao.music.fragment.PlayListFragment;
 import com.yibao.music.model.DetailsFlagBean;
 import com.yibao.music.model.EditBean;
 import com.yibao.music.model.MoreMenuStatus;
-import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicLyricBean;
+import com.yibao.music.aidl.MusicBean;
+import com.yibao.music.aidl.MusicLyricBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
@@ -87,7 +89,8 @@ public class MusicActivity
     QqControlBar mQqControlBar;
 
 
-    private static AudioPlayService.AudioBinder audioBinder;
+    private static IMusicAidlInterface audioBinder;
+    //    private static AudioPlayService.AudioBinder audioBinder;
     private AudioServiceConnection mConnection;
     private MusicBean mCurrentMusicBean;
     private int mCurrentPosition;
@@ -123,9 +126,14 @@ public class MusicActivity
 
 
     private void initData() {
-        List<MusicBean> initMusicList = audioBinder != null ? audioBinder.getMusicList() : QueryMusicFlagListUtil.getDataList(getSpMusicFlag(), mMusicDao);
-        mCurrentPosition = SpUtil.getMusicPosition(this);
-        mCurrentMusicBean = initMusicList.get(mCurrentPosition > initMusicList.size() ? 0 : mCurrentPosition);
+        List<MusicBean> initMusicList;
+        try {
+            initMusicList = audioBinder != null ? audioBinder.getMusicList() : QueryMusicFlagListUtil.getDataList(getSpMusicFlag(), mMusicDao);
+            mCurrentPosition = SpUtil.getMusicPosition(this);
+            mCurrentMusicBean = initMusicList.get(mCurrentPosition > initMusicList.size() ? 0 : mCurrentPosition);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         // 初始化 MusicPagerAdapter 主页面
         MusicPagerAdapter musicPagerAdapter = new MusicPagerAdapter(getSupportFragmentManager());
         mMusicViewPager.setAdapter(musicPagerAdapter);
@@ -162,7 +170,11 @@ public class MusicActivity
     protected void refreshBtnAndNotify(PlayStatusBean bean) {
         switch (bean.getType()) {
             case Constants.NUMBER_ZOER:
-                mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+                try {
+                    mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
                 updatePlayBtnStatus();
                 break;
             case Constants.NUMBER_ONE:
@@ -252,10 +264,11 @@ public class MusicActivity
                 }
                 break;
             case R.id.tv_music_toolbar_title:
+
                 switchMusicControlBar();
                 break;
             case R.id.iv_search:
-                startSearchActivity(mCurrentMusicBean, Constants.NUMBER_ZOER);
+                    startSearchActivity(mCurrentMusicBean, Constants.NUMBER_ZOER);
                 break;
             default:
                 break;
@@ -343,17 +356,29 @@ public class MusicActivity
                     if (audioBinder != null) {
                         switch (clickFlag) {
                             case Constants.NUMBER_ONE:
-                                audioBinder.updataFavorite();
+                                try {
+                                    audioBinder.updataFavorite();
+                                } catch (RemoteException e) {
+                                    e.printStackTrace();
+                                }
                                 checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
                                 break;
                             case Constants.NUMBER_TWO:
                                 clearDisposableProgresse();
-                                audioBinder.playPre();
+                                try {
+                                    audioBinder.playPre();
+                                } catch (RemoteException e) {
+                                    e.printStackTrace();
+                                }
 //                        restoreMuiscBean(mCurrentPosition + 1);
                                 break;
                             case Constants.NUMBER_FOUR:
                                 clearDisposableProgresse();
-                                audioBinder.playNext();
+                                try {
+                                    audioBinder.playNext();
+                                } catch (RemoteException e) {
+                                    e.printStackTrace();
+                                }
 //                        restoreMuiscBean(mCurrentPosition - 1);
                                 break;
                             default:
@@ -375,7 +400,11 @@ public class MusicActivity
                         break;
                     case Constants.NUMBER_TWO:
                         if (audioBinder != null) {
-                            audioBinder.updataFavorite();
+                            try {
+                                audioBinder.updataFavorite();
+                            } catch (RemoteException e) {
+                                e.printStackTrace();
+                            }
                             checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
                         } else {
                             SnakbarUtil.firstPlayMusic(mSmartisanControlBar);
@@ -391,19 +420,24 @@ public class MusicActivity
             MusicActivity.this.disposableQqLyric();
             int detailFlag = SpUtil.getDetailFlag(MusicActivity.this);
             if (detailFlag > 0) {
-                // 播放列表
-                if (detailFlag == Constants.NUMBER_EIGHT) {
-                    MusicActivity.this.startMusicService(position);
-                    // 艺术家
-                } else if (detailFlag == Constants.NUMBER_NINE) {
-                    MusicActivity.this.startMusicServiceFlag(position, Constants.NUMBER_ONE, audioBinder.getMusicList().get(position).getArtist());
-                    // 专辑
-                } else if (detailFlag == Constants.NUMBER_TEN) {
-                    MusicActivity.this.startMusicServiceFlag(position, Constants.NUMBER_TWO, audioBinder.getMusicList().get(position).getAlbum());
-                    // 歌曲
-                } else {
-                    MusicActivity.this.startMusicServiceFlag(position, Constants.NUMBER_THRRE, audioBinder.getMusicList().get(position).getTitle());
+                try {
+                    // 播放列表
+                    if (detailFlag == Constants.NUMBER_EIGHT) {
+                        MusicActivity.this.startMusicService(position);
+                        // 艺术家
+                    } else if (detailFlag == Constants.NUMBER_NINE) {
+                        MusicActivity.this.startMusicServiceFlag(position, Constants.NUMBER_ONE, audioBinder.getMusicList().get(position).getArtist());
+                        // 专辑
+                    } else if (detailFlag == Constants.NUMBER_TEN) {
+                        MusicActivity.this.startMusicServiceFlag(position, Constants.NUMBER_TWO, audioBinder.getMusicList().get(position).getAlbum());
+                        // 歌曲
+                    } else {
+                        MusicActivity.this.startMusicServiceFlag(position, Constants.NUMBER_THRRE, audioBinder.getMusicList().get(position).getTitle());
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
                 }
+
             } else if (SpUtil.getMusicDataListFlag(MusicActivity.this) == 8) {
                 MusicActivity.this.startMusicService(position);
             } else {
@@ -455,21 +489,26 @@ public class MusicActivity
         } else if (mPlayState == Constants.NUMBER_TWO) {
             mPlayState = Constants.NUMBER_THRRE;
         } else {
-            if (audioBinder == null) {
-                ToastUtil.showNoMusic(this);
-            } else if (audioBinder.isPlaying()) {
-                // 当前播放  暂停
-                audioBinder.pause();
-                clearDisposableProgresse();
-            } else if (!audioBinder.isPlaying()) {
-                // 当前暂停  播放
-                audioBinder.start();
-                upDataPlayProgress();
+            try {
+                if (audioBinder == null) {
+                    ToastUtil.showNoMusic(this);
+                } else if (audioBinder.isPlaying()) {
+                    // 当前播放  暂停
+                    audioBinder.pause();
+                    clearDisposableProgresse();
+                } else if (!audioBinder.isPlaying()) {
+                    // 当前暂停  播放
+                    audioBinder.start();
+                    upDataPlayProgress();
 
+                }
+                if (audioBinder != null) {
+                    mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
-            if (audioBinder != null) {
-                mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
-            }
+
             //更新播放状态按钮
             updatePlayBtnStatus();
         }
@@ -565,8 +604,12 @@ public class MusicActivity
         //更新歌曲的进度
         upDataPlayProgress();
         if (isShowQqBar) {
-            mQqControlBar.setPagerData(audioBinder.getMusicList());
-            mQqControlBar.setPagerCurrentItem(audioBinder.getPosition());
+            try {
+                mQqControlBar.setPagerData(audioBinder.getMusicList());
+                mQqControlBar.setPagerCurrentItem(audioBinder.getPosition());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
             setQqPagerLyric();
         }
     }
@@ -575,25 +618,30 @@ public class MusicActivity
      * 切换音乐控制面板的样式
      */
     private void switchMusicControlBar() {
-        if (audioBinder != null && audioBinder.isPlaying()) {
-            if (isShowQqBar) {
-                mQqControlBar.setVisibility(View.INVISIBLE);
-                mSmartisanControlBar.setVisibility(View.VISIBLE);
-                disposableQqLyric();
-            } else {
-                if (audioBinder != null) {
-                    List<MusicBean> musicList = audioBinder.getMusicList();
-                    mQqControlBar.updaPagerData(musicList, audioBinder.getPosition());
-                }
-                mQqControlBar.setVisibility(View.VISIBLE);
-                mSmartisanControlBar.setVisibility(View.INVISIBLE);
+        try {
+            if (audioBinder != null && audioBinder.isPlaying()) {
+                if (isShowQqBar) {
+                    mQqControlBar.setVisibility(View.INVISIBLE);
+                    mSmartisanControlBar.setVisibility(View.VISIBLE);
+                    disposableQqLyric();
+                } else {
+                    if (audioBinder != null) {
+                        List<MusicBean> musicList = audioBinder.getMusicList();
+                        mQqControlBar.updaPagerData(musicList, audioBinder.getPosition());
+                    }
+                    mQqControlBar.setVisibility(View.VISIBLE);
+                    mSmartisanControlBar.setVisibility(View.INVISIBLE);
 
-                //TODO 这里做更新歌词的操作
-                setQqPagerLyric();
+                    //TODO 这里做更新歌词的操作
+                    setQqPagerLyric();
+                }
+                isShowQqBar = !isShowQqBar;
+            } else {
+                SnakbarUtil.firstPlayMusic(mSmartisanControlBar);
             }
-            isShowQqBar = !isShowQqBar;
-        } else {
-            SnakbarUtil.firstPlayMusic(mSmartisanControlBar);
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
 
     }
@@ -635,13 +683,22 @@ public class MusicActivity
                     });
         } else {
             LogUtil.d("=============没有时间和歌词 ");
-            mQqControlBar.setPagerData(audioBinder.getMusicList());
+            try {
+                mQqControlBar.setPagerData(audioBinder.getMusicList());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
 
     }
 
     private void setDuration() {
-        int duration = audioBinder.getDuration();
+        int duration = 0;
+        try {
+            duration = audioBinder.getDuration();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         mSmartisanControlBar.setMaxProgress(duration);
         mQqControlBar.setMaxProgress(duration);
     }
@@ -653,37 +710,52 @@ public class MusicActivity
      * @param musicItem g
      */
     private void perpareItem(MusicBean musicItem) {
-        mCurrentMusicBean = musicItem;
-        checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
-        // 更新音乐标题
-        musicItem = TitleArtistUtil.getMusicBean(musicItem);
-        mSmartisanControlBar.setSongName(musicItem.getTitle());
-        // 更新歌手名称
-        mSmartisanControlBar.setSingerName(mCurrentMusicBean.getArtist());
-        // 设置专辑
-        String albumUri = StringUtil.getAlbulm(mCurrentMusicBean.getAlbumId());
-        mSmartisanControlBar.setAlbulmUrl(albumUri);
+        if (musicItem != null) {
+            mCurrentMusicBean = musicItem;
+            checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
+            // 更新音乐标题
+            musicItem = TitleArtistUtil.getMusicBean(musicItem);
+            mSmartisanControlBar.setSongName(musicItem.getTitle());
+            // 更新歌手名称
+            mSmartisanControlBar.setSingerName(mCurrentMusicBean.getArtist());
+            // 设置专辑
+            String albumUri = StringUtil.getAlbulm(mCurrentMusicBean.getAlbumId());
+            mSmartisanControlBar.setAlbulmUrl(albumUri);
+        }
+
     }
 
     private void updataQqBar() {
         if (isShowQqBar) {
-            mQqControlBar.updaPagerData(audioBinder.getMusicList(), audioBinder.getPosition());
+            try {
+                mQqControlBar.updaPagerData(audioBinder.getMusicList(), audioBinder.getPosition());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
             setQqPagerLyric();
         }
     }
 
     @Override
     protected void updataCurrentPlayProgress() {
-        if (audioBinder != null && audioBinder.isPlaying()) {
-            mSmartisanControlBar.setSongProgress(audioBinder.getProgress());
-            mQqControlBar.setProgress(audioBinder.getProgress());
+        try {
+            if (audioBinder != null && audioBinder.isPlaying()) {
+                mSmartisanControlBar.setSongProgress(audioBinder.getProgress());
+                mQqControlBar.setProgress(audioBinder.getProgress());
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
     }
 
     private void updatePlayBtnStatus() {
         //根据当前播放状态设置图片
-        mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
-        mQqControlBar.updatePlayButtonState(audioBinder.isPlaying());
+        try {
+            mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+            mQqControlBar.updatePlayButtonState(audioBinder.isPlaying());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -691,7 +763,7 @@ public class MusicActivity
         SpUtil.setDetailsFlag(this, Constants.NUMBER_ZOER);
     }
 
-    public static AudioPlayService.AudioBinder getAudioBinder() {
+    public static IMusicAidlInterface getAudioBinder() {
         return audioBinder;
     }
 
@@ -699,7 +771,7 @@ public class MusicActivity
             implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            audioBinder = (AudioPlayService.AudioBinder) service;
+            audioBinder = IMusicAidlInterface.Stub.asInterface(service);
         }
 
         @Override
@@ -718,8 +790,12 @@ public class MusicActivity
     protected void onResume() {
         super.onResume();
         if (audioBinder != null) {
-            perpareItem(audioBinder.getMusicBean());
-            mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+            try {
+                perpareItem(audioBinder.getMusicBean());
+                mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
             checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
             updatePlayBtnStatus();
             updataCurrentPlayProgress();
@@ -743,13 +819,17 @@ public class MusicActivity
                 break;
             case Constants.NUMBER_TWO:
                 if (audioBinder != null) {
-                    if (audioBinder.getPosition() == moreMenuStatus.getMusicPosition()) {
-                        audioBinder.updataFavorite();
-                        checkCurrentSongIsFavorite(musicBean, mQqControlBar, mSmartisanControlBar);
-                    } else {
-                        MusicBean bean = moreMenuStatus.getMusicBean();
-                        bean.setIsFavorite(!bean.isFavorite());
-                        mMusicDao.update(bean);
+                    try {
+                        if (audioBinder.getPosition() == moreMenuStatus.getMusicPosition()) {
+                            audioBinder.updataFavorite();
+                            checkCurrentSongIsFavorite(musicBean, mQqControlBar, mSmartisanControlBar);
+                        } else {
+                            MusicBean bean = moreMenuStatus.getMusicBean();
+                            bean.setIsFavorite(!bean.isFavorite());
+                            mMusicDao.update(bean);
+                        }
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
                     }
                 } else {
                     SnakbarUtil.firstPlayMusic(mSmartisanControlBar);
@@ -839,7 +919,11 @@ public class MusicActivity
             mSmartisanControlBar.animatorStop();
         }
         if (audioBinder != null) {
-            mPlayState = audioBinder.isPlaying() ? Constants.NUMBER_TWO : Constants.NUMBER_ONE;
+            try {
+                mPlayState = audioBinder.isPlaying() ? Constants.NUMBER_TWO : Constants.NUMBER_ONE;
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
             SpUtil.setMusicPlayState(this, mPlayState);
         }
         unbindAudioService();
