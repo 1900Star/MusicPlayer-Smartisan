@@ -274,9 +274,11 @@ public class MusicListUtil {
 
     public static Observable<List<MusicBean>> getFavoriteList() {
         return Observable.create((ObservableOnSubscribe<List<MusicBean>>) emitter -> {
-            emitter.onNext(MusicApplication.getIntstance()
+            List<MusicBean> musicBeanList = MusicApplication.getIntstance()
                     .getMusicDao().queryBuilder()
-                    .where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list());
+                    .where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
+            Collections.sort(musicBeanList);
+            emitter.onNext(musicBeanList);
             emitter.onComplete();
         }).subscribeOn(Schedulers.io());
     }

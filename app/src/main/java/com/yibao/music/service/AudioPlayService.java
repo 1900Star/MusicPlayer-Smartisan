@@ -124,8 +124,8 @@ public class AudioPlayService
         String queryFlag = intent.getStringExtra("queryFlag");
         int sortFlag = sortListFlag == Constants.NUMBER_ZOER ? Constants.NUMBER_ONE : sortListFlag;
         LogUtil.d(" position  ==" + enterPosition + "   sortListFlag  ==" + sortFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
+        SpUtil.setQueryFlag(AudioPlayService.this, queryFlag);
         mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao, mMusicBean, sortFlag, dataFlag, queryFlag);
-        LogUtil.d("    ==  " + mMusicDataList.size());
         if (enterPosition != position && enterPosition != -1) {
             position = enterPosition;
             //执行播放

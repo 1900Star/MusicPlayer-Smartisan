@@ -134,6 +134,7 @@ public class MusicActivity
     }
 
     private void initMusicConfig() {
+        String queryFlag = SpUtil.getQueryFlag(this);
         mMusicConfig = SpUtil.getMusicConfig(this, false);
         if (mMusicConfig) {
             mPlayState = SpUtil.getMusicPlayState(this);
@@ -792,7 +793,6 @@ public class MusicActivity
     // AboutFragment 界面恢复收藏歌曲后调用
     @Override
     public void checkCurrentFavorite() {
-        LogUtil.d("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
         MusicBean musicBean = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Id.eq(mCurrentMusicBean.getId())).build().unique();
         checkCurrentSongIsFavorite(musicBean, mQqControlBar, mSmartisanControlBar);
     }

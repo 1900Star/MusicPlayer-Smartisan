@@ -36,8 +36,8 @@ public class Constants {
 
     static final String MUSIC_MODE = "music_mode";
     static final String PLAY_MODE_KEY = "play_mode";
-    static final String NEW_MUSIC = "new_music";
-    static final String NEW_MUSIC_FLAG = "new_music_flag";
+    static final String MUSIC_QUERY = "music_query";
+    static final String MUSIC_QUERY_FLAG = "music_query_flag";
 
     static final String DETAIL_FLAG = "detail_flag";
     static final String DETAIL_FLAG_KEY = "detail_flag_key";

@@ -71,6 +71,7 @@ public class FavoriteBottomSheetDialog
     private List<List<MusicBean>> mListList = new ArrayList<>();
     private BottomSheetAdapter mAdapter;
     private static String mSongTitle;
+    private MusicBeanDao mMusicDao;
 
     public static FavoriteBottomSheetDialog newInstance(String songTitle) {
         mSongTitle = songTitle;
@@ -83,6 +84,7 @@ public class FavoriteBottomSheetDialog
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.bottom_sheet_list_dialog, null);
         mCompositeDisposable = new CompositeDisposable();
+        mMusicDao = MusicApplication.getIntstance().getMusicDao();
         initView(view);
         initListener();
         rxData();
@@ -123,8 +125,7 @@ public class FavoriteBottomSheetDialog
         mCompositeDisposable.add(MusicListUtil.getFavoriteList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(musicBeanList -> {
-                    Collections.sort(musicBeanList);
-                    mList = MusicListUtil.sortMusicList(musicBeanList, Constants.NUMBER_TWO);
+                    mList = musicBeanList;
                     String sheetTitle = StringUtil.getBottomSheetTitle(musicBeanList.size());
                     mBottomListTitleSize.setText(sheetTitle);
                     mAdapter = new BottomSheetAdapter(musicBeanList);
@@ -148,10 +149,18 @@ public class FavoriteBottomSheetDialog
                         if (mList.size() == Constants.NUMBER_ONE) {
                             mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
-                        mAdapter.notifyItemRemoved(bean.getPosition());
+                        List<MusicBean> beanList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).list();
+                        Collections.sort(beanList);
+                        mAdapter.setNewData(beanList);
+                        setTitle(beanList);
                         checkCurrentFavorite(bean.getSongTitle());
                     }
                 }));
+    }
+
+    private void setTitle(List<MusicBean> musicBeanList) {
+        String sheetTitle = StringUtil.getBottomSheetTitle(musicBeanList.size());
+        mBottomListTitleSize.setText(sheetTitle);
     }
 
     private void initListener() {
@@ -200,8 +209,7 @@ public class FavoriteBottomSheetDialog
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(musicBean -> {
                     musicBean.setIsFavorite(false);
-                    MusicApplication.getIntstance().getMusicDao()
-                            .update(musicBean);
+                    mMusicDao.update(musicBean);
                     checkCurrentFavorite(musicBean.getTitle());
                 }));
     }

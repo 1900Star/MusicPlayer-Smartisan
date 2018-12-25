@@ -18,9 +18,10 @@ import com.yibao.music.base.listener.OnGlideLoadListener;
 public abstract class BaseTansitionActivity extends BaseActivity implements OnGlideLoadListener {
     @Override
     public void finish() {
-        super.finish();
         overridePendingTransition(0, R.anim.dialog_push_out);
+        super.finish();
     }
+
     @Override
     public void resumeRequests() {
         if (!isDestroyed()) {

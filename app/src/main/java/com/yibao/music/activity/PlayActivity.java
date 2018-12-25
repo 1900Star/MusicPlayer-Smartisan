@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -32,7 +31,6 @@ import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
-import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
@@ -40,7 +38,6 @@ import com.yibao.music.util.TitleArtistUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.LyricsView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -364,7 +361,6 @@ public class PlayActivity extends BasePlayActivity {
                 finish();
                 break;
             case R.id.play_song_name:
-//            case R.id.song_artist_name:
                 startSearchActivity(mCurrenMusicInfo, Constants.NUMBER_ONE);
                 break;
             case R.id.rotate_rl:
@@ -428,7 +424,7 @@ public class PlayActivity extends BasePlayActivity {
             animation.start();
             mTvLyrics.setVisibility(View.VISIBLE);
             mIvLyricsMask.setVisibility(View.GONE);
-            mIvSecreenSunSwitch.setVisibility(View.VISIBLE);
+            mIvSecreenSunSwitch.setVisibility(mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
             // 开始滚动歌词
             if (audioBinder.isPlaying()) {
                 startRollPlayLyrics(mTvLyrics);

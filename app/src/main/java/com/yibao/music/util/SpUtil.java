@@ -18,7 +18,7 @@ public class SpUtil {
      * 用于标记详情页面是否打开
      *
      * @param context c
-     * @param value 8 ：playListFragment, 9 : artistListFragmnet, 10 : albumListFragment , 11 songCategoryFragment
+     * @param value   8 ：playListFragment, 9 : artistListFragmnet, 10 : albumListFragment , 11 songCategoryFragment
      */
     public static void setDetailsFlag(Context context, int value) {
         SharedPreferences sp = context.getSharedPreferences(Constants.DETAIL_FLAG, Constants.MODE_KEY);
@@ -76,16 +76,16 @@ public class SpUtil {
      * @param context c
      * @param value   0 表示没有新增歌曲，1：表示有新增歌曲
      */
-    public static void setNewMusicFlag(Context context, int value) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.NEW_MUSIC, Constants.MODE_KEY);
+    public static void setQueryFlag(Context context, String value) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_QUERY, Constants.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(Constants.NEW_MUSIC_FLAG, value);
+        editor.putString(Constants.MUSIC_QUERY_FLAG, value);
         editor.apply();
     }
 
-    public static int getNewMusicFlag(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.NEW_MUSIC, Constants.MODE_KEY);
-        return sp.getInt(Constants.NEW_MUSIC_FLAG, Constants.MODE_KEY);
+    public static String getQueryFlag(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_QUERY, Constants.MODE_KEY);
+        return sp.getString(Constants.MUSIC_QUERY_FLAG, "defult");
     }
 
     /**

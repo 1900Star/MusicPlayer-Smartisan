@@ -40,7 +40,6 @@ public class QueryMusicFlagListUtil {
             return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list(), Constants.NUMBER_TWO);
             // 10表示按条件查询
         } else if (sortListFlag == Constants.NUMBER_TEN) {
-
             // 按艺术家查询列表
             if (dataFlag == Constants.NUMBER_ONE) {
                 musicBean.setArtist(queryFlag);

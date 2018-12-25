@@ -135,7 +135,6 @@ public class SplashActivity
                                 // 手动扫描新增歌曲数量
                                 str = "新增 " + size + " 首歌曲";
                                 mTvMusicCount.setText(str);
-                                SpUtil.setNewMusicFlag(this, size);
                             }
                             countDownOpareton(mIsFirstScanner);
                         }

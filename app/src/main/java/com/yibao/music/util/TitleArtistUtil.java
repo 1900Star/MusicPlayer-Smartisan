@@ -28,13 +28,14 @@ public class TitleArtistUtil {
     }
 
     public static MusicBean getMusicBean(MusicBean bean) {
-
-        String songName = bean.getTitle();
-        if (songName.contains("[mqms2]")) {
-            String musicName = songName.substring(songName.lastIndexOf("-") + 2, songName.lastIndexOf("[mqms2]") - 1);
-            String artist = songName.substring(0, songName.indexOf("-") - 1);
-            bean.setTitle(musicName);
-            bean.setArtist(artist);
+        if (bean != null) {
+            String songName = bean.getTitle();
+            if (songName.contains("[mqms2]")) {
+                String musicName = songName.substring(songName.lastIndexOf("-") + 2, songName.lastIndexOf("[mqms2]") - 1);
+                String artist = songName.substring(0, songName.indexOf("-") - 1);
+                bean.setTitle(musicName);
+                bean.setArtist(artist);
+            }
         }
         return bean;
     }
