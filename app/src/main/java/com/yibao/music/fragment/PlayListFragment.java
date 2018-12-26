@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
@@ -26,8 +27,10 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.ToastUtil;
+import com.yibao.music.view.SwipeItemLayout;
 import com.yibao.music.view.music.PlayListDetailView;
 
 import java.util.ArrayList;
@@ -113,7 +116,6 @@ public class PlayListFragment extends BaseMusicFragment {
                         } else if (operationType == Constants.NUMBER_FOUR) {
                             // 更新列表名,同步更新列表中的歌曲的列表标识
                             mPlayListBean = getPlayList().get(mEditPosition);
-//                        PlayListBean newPlayListBean = getPlayList().get(mEditPosition);
                             List<MusicBean> beanList = mMusicBeanDao.queryBuilder()
                                     .where(MusicBeanDao.Properties.PlayListFlag.eq(mPlayListBean.getTitle())).build().list();
                             for (MusicBean musicBean : beanList) {
@@ -124,6 +126,12 @@ public class PlayListFragment extends BaseMusicFragment {
                             mPlayListBean.setTitle(bean.getListTitle());
                             mPlayListDao.update(mPlayListBean);
 
+                        } else if (operationType == Constants.NUMBER_SIX) {
+                            mDetailsAdapter.notifyDataSetChanged();
+                            mDetailList.remove(bean.getPosition());
+                            if (mDetailList.size() == Constants.NUMBER_ZOER) {
+                                showDetailsView(detailsViewTitle);
+                            }
                         }
                         return getPlayList();
                     })
@@ -272,8 +280,10 @@ public class PlayListFragment extends BaseMusicFragment {
             mDetailView.setQureyFlag(title, mDetailList.size());
 //            List<MusicBean> musicBeanList = MusicListUtil.sortMusicList(mDetailList, Constants.NUMBER_FIEV);
             mDetailsAdapter.setNewData(mDetailList);
-            mDetailView.setAdapter(mDetailsAdapter);
+            RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mDetailsAdapter);
+            recyclerView.addOnItemTouchListener(new SwipeItemLayout.OnSwipeItemTouchListener(getContext()));
             mDetailsAdapter.setOnItemMenuListener((position, musicBean) -> MoreMenuBottomDialog.newInstance(musicBean, position, false).getBottomDialog(mActivity));
+            mDetailView.setAdapter(recyclerView);
             putFragToMap(Constants.NUMBER_EIGHT, mClassName);
             detailsViewTitle = title;
             changeToolBarTitle(title, isShowDetailsView);

@@ -17,7 +17,7 @@ public class QueryMusicFlagListUtil {
     /**
      * @param musicBeanDao dao
      * @param musicBean    实体
-     * @param sortListFlag 列表类型,  按歌ABC、评分、播放次数、添加时间、收藏列表、按条件查询(1:艺术家、2：专辑、3：曲名 )
+     * @param sortListFlag 列表类型:  按歌ABC、评分、播放次数、添加时间、收藏列表、按条件查询(1:艺术家、2：专辑、3：曲名 )
      * @param dataFlag     1:艺术家、2：专辑、3：曲名
      * @param queryFlag    查询关键字：1：艺术家、2：专辑、3：曲名
      * @return List
@@ -28,10 +28,10 @@ public class QueryMusicFlagListUtil {
             return MusicListUtil.sortMusicAbc(musicBeanDao.queryBuilder().list());
             // 按评分
         } else if (sortListFlag == Constants.NUMBER_TWO) {
-            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(),Constants.NUMBER_FOUR);
+            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.NUMBER_FOUR);
             // 按播放次数
         } else if (sortListFlag == Constants.NUMBER_THRRE) {
-            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(),Constants.NUMBER_THRRE);
+            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.NUMBER_THRRE);
             // 按添加时间
         } else if (sortListFlag == Constants.NUMBER_FOUR) {
             return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);

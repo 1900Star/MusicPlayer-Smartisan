@@ -68,7 +68,7 @@ public class FavoriteBottomSheetDialog
             mBus = RxBus.getInstance();
     private ViewPager mBottomViewPager;
     // ViewPager使用
-    private List<List<MusicBean>> mListList = new ArrayList<>();
+//    private List<List<MusicBean>> mListList = new ArrayList<>();
     private BottomSheetAdapter mAdapter;
     private static String mSongTitle;
     private MusicBeanDao mMusicDao;
@@ -146,14 +146,13 @@ public class FavoriteBottomSheetDialog
                         clearAllFavoriteMusic();
                     } else if (bean.getOperationType() == Constants.NUMBER_FIEV) {
                         // 侧滑删除收藏歌曲
-                        if (mList.size() == Constants.NUMBER_ONE) {
+                        mAdapter.notifyDataSetChanged();
+                        mList.remove(bean.getPosition());
+                        setTitle(mList);
+                        checkCurrentFavorite(bean.getSongTitle());
+                        if (mList.size() == Constants.NUMBER_ZOER) {
                             mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
-                        List<MusicBean> beanList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).list();
-                        Collections.sort(beanList);
-                        mAdapter.setNewData(beanList);
-                        setTitle(beanList);
-                        checkCurrentFavorite(bean.getSongTitle());
                     }
                 }));
     }

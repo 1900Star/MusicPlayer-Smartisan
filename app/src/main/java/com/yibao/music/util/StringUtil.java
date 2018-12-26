@@ -139,4 +139,8 @@ public class StringUtil {
     public static boolean isReal(String string) {
         return string != null && string.length() > 0 && !"null".equals(string);
     }
+
+    public static String getTime() {
+        return String.valueOf(System.currentTimeMillis());
+    }
 }

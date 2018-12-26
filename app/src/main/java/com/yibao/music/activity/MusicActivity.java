@@ -153,6 +153,11 @@ public class MusicActivity
     }
 
     private void executStartServiceAndInitAnimation() {
+//        int musicDataListFlag = SpUtil.getMusicDataListFlag(this);
+//        LogUtil.d("===========  musicDataListFlag   " + musicDataListFlag);
+//        if (musicDataListFlag == Constants.NUMBER_TEN) {
+//        } else {
+//        }
         startMusicService(mCurrentPosition);
         mSmartisanControlBar.setPlayButtonState(R.drawable.btn_playing_pause_selector);
         mQqControlBar.setPlayButtonState(R.mipmap.notifycation_pause);
@@ -266,69 +271,71 @@ public class MusicActivity
         mMusicNavigationBar.setOnNavigationbarListener((currentSelecteFlag, titleResourceId) -> {
             HashMap<String, BaseFragment> detailsViewMap = BaseMusicFragment.mDetailsViewMap;
             HashMap<String, BaseFragment> itemStatusMap = BaseMusicFragment.mItemStatusMap;
-            switch (currentSelecteFlag) {
-                case Constants.NUMBER_ZOER:
-                    // 详情页面已打开 或者 列表处于选择状态 两种情况,当处于选择状态时，删除按钮显示，搜索隐藏。
-                    boolean isContainsKey = itemStatusMap.containsKey(Constants.FRAGMENT_PLAYLIST);
-                    if (detailsViewMap.containsKey(Constants.FRAGMENT_PLAYLIST)) {
-                        mTvEdit.setText(getResources().getString(isContainsKey ? R.string.complete : R.string.back_play_list));
-                        mTvEdit.setVisibility(View.VISIBLE);
-                    } else {
-                        // 正常状态  如果列表长度大于 0 ， 编辑按钮显示， 否则隐藏。
-                        mTvEdit.setText(getResources().getString(R.string.tv_edit));
-                        mTvEdit.setVisibility(getPlayList().size() > 0 ? View.VISIBLE : View.GONE);
-                        setDetailFlagZoer();
-                    }
-                    mTvEditDelete.setVisibility(isContainsKey ? View.VISIBLE : View.GONE);
-                    mIvSearch.setVisibility(isContainsKey ? View.GONE : View.VISIBLE);
-                    break;
-                case Constants.NUMBER_ONE:
-                    if (detailsViewMap.containsKey(Constants.FRAGMENT_ARTIST)) {
-                        mTvEdit.setText(R.string.music_artisan);
-                        mTvEdit.setVisibility(View.VISIBLE);
-                    } else {
-                        mTvEdit.setVisibility(View.GONE);
-                        setDetailFlagZoer();
-                    }
-                    mTvEditDelete.setVisibility(View.GONE);
-                    mIvSearch.setVisibility(View.VISIBLE);
-                    break;
-                case Constants.NUMBER_TWO:
-                    boolean containsKey = itemStatusMap.containsKey(Constants.FRAGMENT_SONG_CATEGORY);
-                    if (detailsViewMap.containsKey(Constants.FRAGMENT_SONG_CATEGORY)) {
-                        mTvEdit.setText(getResources().getString(containsKey ? R.string.complete : R.string.tv_edit));
-                    } else {
-                        mTvEdit.setText(R.string.tv_edit);
-                        setDetailFlagZoer();
-                    }
-                    mTvEdit.setVisibility(View.VISIBLE);
-                    mTvEditDelete.setVisibility(containsKey ? View.VISIBLE : View.GONE);
-                    mIvSearch.setVisibility(containsKey ? View.GONE : View.VISIBLE);
-                    mTvMusicToolbarTitle.setText(titleResourceId);
-                    break;
-                case Constants.NUMBER_THRRE:
-                    // 详情页面已打开 或者 列表处于选择状态 两种情况,当处于选择状态时，删除按钮显示，搜索隐藏。
-                    boolean containsKeyAlbum = itemStatusMap.containsKey(Constants.FRAGMENT_ALBUM_CATEGORY);
-                    if (detailsViewMap.containsKey(Constants.FRAGMENT_ALBUM)) {
-                        mTvEdit.setText(getResources().getString(containsKeyAlbum ? R.string.complete : R.string.back));
-                        mTvEditDelete.setVisibility(containsKeyAlbum ? View.VISIBLE : View.GONE);
-                    } else {
-                        mTvEdit.setText(getResources().getString(R.string.tv_edit));
+            if (detailsViewMap != null && itemStatusMap != null) {
+                switch (currentSelecteFlag) {
+                    case Constants.NUMBER_ZOER:
+                        // 详情页面已打开 或者 列表处于选择状态 两种情况,当处于选择状态时，删除按钮显示，搜索隐藏。
+                        boolean isContainsKey = itemStatusMap.containsKey(Constants.FRAGMENT_PLAYLIST);
+                        if (detailsViewMap.containsKey(Constants.FRAGMENT_PLAYLIST)) {
+                            mTvEdit.setText(getResources().getString(isContainsKey ? R.string.complete : R.string.back_play_list));
+                            mTvEdit.setVisibility(View.VISIBLE);
+                        } else {
+                            // 正常状态  如果列表长度大于 0 ， 编辑按钮显示， 否则隐藏。
+                            mTvEdit.setText(getResources().getString(R.string.tv_edit));
+                            mTvEdit.setVisibility(getPlayList().size() > 0 ? View.VISIBLE : View.GONE);
+                            setDetailFlagZoer();
+                        }
+                        mTvEditDelete.setVisibility(isContainsKey ? View.VISIBLE : View.GONE);
+                        mIvSearch.setVisibility(isContainsKey ? View.GONE : View.VISIBLE);
+                        break;
+                    case Constants.NUMBER_ONE:
+                        if (detailsViewMap.containsKey(Constants.FRAGMENT_ARTIST)) {
+                            mTvEdit.setText(R.string.music_artisan);
+                            mTvEdit.setVisibility(View.VISIBLE);
+                        } else {
+                            mTvEdit.setVisibility(View.GONE);
+                            setDetailFlagZoer();
+                        }
                         mTvEditDelete.setVisibility(View.GONE);
-                        setDetailFlagZoer();
-                    }
-                    mTvEdit.setVisibility(View.VISIBLE);
-                    mIvSearch.setVisibility(containsKeyAlbum ? View.GONE : View.VISIBLE);
-                    mTvMusicToolbarTitle.setText(titleResourceId);
-                    break;
-                case Constants.NUMBER_FOUR:
-                    mTvEdit.setVisibility(View.GONE);
-                    mTvEditDelete.setVisibility(View.GONE);
-                    mTvMusicToolbarTitle.setText(titleResourceId);
-                    mIvSearch.setVisibility(View.VISIBLE);
-                    break;
-                default:
-                    break;
+                        mIvSearch.setVisibility(View.VISIBLE);
+                        break;
+                    case Constants.NUMBER_TWO:
+                        boolean containsKey = itemStatusMap.containsKey(Constants.FRAGMENT_SONG_CATEGORY);
+                        if (detailsViewMap.containsKey(Constants.FRAGMENT_SONG_CATEGORY)) {
+                            mTvEdit.setText(getResources().getString(containsKey ? R.string.complete : R.string.tv_edit));
+                        } else {
+                            mTvEdit.setText(R.string.tv_edit);
+                            setDetailFlagZoer();
+                        }
+                        mTvEdit.setVisibility(View.VISIBLE);
+                        mTvEditDelete.setVisibility(containsKey ? View.VISIBLE : View.GONE);
+                        mIvSearch.setVisibility(containsKey ? View.GONE : View.VISIBLE);
+                        mTvMusicToolbarTitle.setText(titleResourceId);
+                        break;
+                    case Constants.NUMBER_THRRE:
+                        // 详情页面已打开 或者 列表处于选择状态 两种情况,当处于选择状态时，删除按钮显示，搜索隐藏。
+                        boolean containsKeyAlbum = itemStatusMap.containsKey(Constants.FRAGMENT_ALBUM_CATEGORY);
+                        if (detailsViewMap.containsKey(Constants.FRAGMENT_ALBUM)) {
+                            mTvEdit.setText(getResources().getString(containsKeyAlbum ? R.string.complete : R.string.back));
+                            mTvEditDelete.setVisibility(containsKeyAlbum ? View.VISIBLE : View.GONE);
+                        } else {
+                            mTvEdit.setText(getResources().getString(R.string.tv_edit));
+                            mTvEditDelete.setVisibility(View.GONE);
+                            setDetailFlagZoer();
+                        }
+                        mTvEdit.setVisibility(View.VISIBLE);
+                        mIvSearch.setVisibility(containsKeyAlbum ? View.GONE : View.VISIBLE);
+                        mTvMusicToolbarTitle.setText(titleResourceId);
+                        break;
+                    case Constants.NUMBER_FOUR:
+                        mTvEdit.setVisibility(View.GONE);
+                        mTvEditDelete.setVisibility(View.GONE);
+                        mTvMusicToolbarTitle.setText(titleResourceId);
+                        mIvSearch.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        break;
+                }
             }
             mTitleResourceId = titleResourceId;
             changeToolBarTitle(currentSelecteFlag);
@@ -747,9 +754,7 @@ public class MusicActivity
                         audioBinder.updataFavorite();
                         checkCurrentSongIsFavorite(musicBean, mQqControlBar, mSmartisanControlBar);
                     } else {
-                        MusicBean bean = moreMenuStatus.getMusicBean();
-                        bean.setIsFavorite(!bean.isFavorite());
-                        mMusicDao.update(bean);
+                        audioBinder.updataFavorite(moreMenuStatus.getMusicBean());
                     }
                 } else {
                     SnakbarUtil.firstPlayMusic(mSmartisanControlBar);

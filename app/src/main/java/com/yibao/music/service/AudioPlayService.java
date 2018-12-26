@@ -27,6 +27,7 @@ import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.manager.MusicNotifyManager;
+import com.yibao.music.util.StringUtil;
 
 import java.util.List;
 import java.util.Random;
@@ -339,13 +340,19 @@ public class AudioPlayService
         public int getPosition() {
             return position;
         }
+
+        public void updataFavorite(MusicBean bean) {
+            bean.setIsFavorite(!bean.isFavorite());
+            bean.setTime(StringUtil.getTime());
+            mMusicDao.update(bean);
+        }
     }
 
     private void refreshFavorite(MusicBean currentMusicBean, boolean mCurrentIsFavorite) {
         // 数据更新
         currentMusicBean.setIsFavorite(!mCurrentIsFavorite);
         if (!mCurrentIsFavorite) {
-            currentMusicBean.setTime(String.valueOf(System.currentTimeMillis()));
+            currentMusicBean.setTime(StringUtil.getTime());
         }
         mMusicDao.update(currentMusicBean);
     }

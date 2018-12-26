@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -12,12 +13,15 @@ import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
+import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
+import com.yibao.music.view.SwipeItemLayout;
 
 import java.util.List;
 
@@ -61,17 +65,26 @@ public class DetailsViewAdapter extends BaseRvAdapter<MusicBean> {
     protected void bindView(RecyclerView.ViewHolder holder, MusicBean info) {
         if (holder instanceof DetailsHolder) {
             DetailsHolder detailsHolder = (DetailsHolder) holder;
+            int adapterPosition = detailsHolder.getAdapterPosition();
             detailsHolder.mTvDetailsSongName.setText(info.getTitle());
             int duration = (int) info.getDuration();
             detailsHolder.mTvSongDuration.setText(StringUtil.parseDuration(duration));
-            detailsHolder.mIvDetailsMenu.setOnClickListener(v -> openItemMenu(info, detailsHolder.getAdapterPosition()));
+            if (mDataFlag == Constants.NUMBER_FOUR) {
+                // 播放列表的详情列表有侧滑删除
+                detailsHolder.mSlideDeleteView.setOnClickListener(v -> {
+                    info.setPlayListFlag(Constants.PLAY_LIST_BACK_FLAG);
+                    MusicApplication.getIntstance().getMusicDao().update(info);
+                    RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_SIX, adapterPosition, info.getTitle()));
+                });
+            }
+            detailsHolder.mIvDetailsMenu.setOnClickListener(v -> openItemMenu(info, adapterPosition));
             detailsHolder.itemView.setOnClickListener(view -> {
                 if (mContext instanceof OnMusicItemClickListener) {
                     SpUtil.setMusicDataListFlag(mContext, Constants.NUMBER_TEN);
                     if (mDataFlag == Constants.NUMBER_THRRE) {
                         insertSearchBean(info.getTitle());
                     }
-                    ((OnMusicItemClickListener) mContext).startMusicServiceFlag(detailsHolder.getAdapterPosition(), mDataFlag, getQueryFlag(info));
+                    ((OnMusicItemClickListener) mContext).startMusicServiceFlag(adapterPosition, mDataFlag, getQueryFlag(info));
                 }
 
             });
@@ -123,6 +136,7 @@ public class DetailsViewAdapter extends BaseRvAdapter<MusicBean> {
     protected int getLayoutId() {
         return R.layout.item_details_adapter;
     }
+
     static class DetailsHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_details_song_name)
         TextView mTvDetailsSongName;
@@ -132,8 +146,8 @@ public class DetailsViewAdapter extends BaseRvAdapter<MusicBean> {
         ImageView mIvDetailsMenu;
         @BindView(R.id.iv_blueplay)
         ImageView mIvBluePlay;
-        @BindView(R.id.rl_details_item)
-        RelativeLayout mRlDetailsItem;
+        @BindView(R.id.delete_item_detail)
+        LinearLayout mSlideDeleteView;
 
         DetailsHolder(View view) {
             super(view);

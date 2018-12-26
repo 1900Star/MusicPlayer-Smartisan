@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.yibao.music.view.SwipeItemLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="62dp"
+    android:layout_height="55dp"
     android:background="@drawable/list_item_selector"
     android:clickable="true"
     android:focusable="true"
@@ -62,7 +62,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="62dp"
+            android:layout_width="55dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:contentDescription="@null"

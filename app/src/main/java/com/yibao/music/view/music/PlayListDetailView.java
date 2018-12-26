@@ -1,6 +1,7 @@
 package com.yibao.music.view.music;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -9,8 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yibao.music.R;
-import com.yibao.music.adapter.DetailsViewAdapter;
-import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.RandomUtil;
@@ -46,10 +45,16 @@ public class PlayListDetailView extends LinearLayout implements View.OnClickList
         this.mListSize = listSize;
     }
 
-    public void setAdapter(DetailsViewAdapter adapter) {
-        RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, adapter);
+    public void setAdapter(RecyclerView recyclerView) {
         mLlContent.addView(recyclerView);
     }
+
+    @Override
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+    }
+
+
 
     private void initView() {
         LayoutInflater.from(getContext())

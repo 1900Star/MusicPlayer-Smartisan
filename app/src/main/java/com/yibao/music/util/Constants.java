@@ -17,12 +17,13 @@ public class Constants {
     public static final int NUMBER_THRRE = 3;
     public static final int NUMBER_FOUR = 4;
     public static final int NUMBER_FIEV = 5;
+    public static final int NUMBER_SIX = 6;
     public static final int NUMBER_EIGHT = 8;
     public static final int NUMBER_NINE = 9;
     public static final int NUMBER_TEN = 10;
     public static final int NUMBER_ELEVEN = 11;
     public static final int NUMBER_TWELVE = 12;
-    public static final int NUMBER_THIRTEEN= 13;
+    public static final int NUMBER_THIRTEEN = 13;
     public static final char LETTER_A = 'A';
     public static final char LETTER_Z = 'Z';
     public static final char LETTER_HASH = '#';

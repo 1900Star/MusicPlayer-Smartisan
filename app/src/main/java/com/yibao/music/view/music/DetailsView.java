@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,25 +19,35 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
+import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
+import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
+import com.yibao.music.view.SwipeItemLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Des：${将详情页面封装到一个Viwe里面，方便多个页面使用}
@@ -64,6 +75,7 @@ public class DetailsView
     private FragmentManager mFragmentManager;
     private Long mAlbumId;
     private List<MusicBean> mMusicList;
+    private DetailsViewAdapter mAdapter;
 
     public void setDataFlag(FragmentManager fragmentManager, int listSize, String queryFlag, int dataFlag) {
         this.mFragmentManager = fragmentManager;
@@ -98,7 +110,8 @@ public class DetailsView
      * @param bean     d
      * @param adapter  d
      */
-    public void setAdapter( int dataType, Object bean, DetailsViewAdapter adapter) {
+    public void setAdapter(int dataType, Object bean, DetailsViewAdapter adapter) {
+        mAdapter = adapter;
         initData(dataType, bean);
         mMusicList = adapter.getData();
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
@@ -107,6 +120,7 @@ public class DetailsView
         mRecyclerView.setHasFixedSize(true);
         DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         divider.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(getContext(), R.drawable.shape_item_decoration)));
+        mRecyclerView.addOnItemTouchListener(new SwipeItemLayout.OnSwipeItemTouchListener(getContext()));
         mRecyclerView.addItemDecoration(divider);
         mRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();

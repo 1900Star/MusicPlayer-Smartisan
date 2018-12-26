@@ -91,8 +91,8 @@ public class SpUtil {
     /**
      * 用于存储程序退出或关闭音乐界面时，音乐播放的位置。
      *
-     * @param context
-     * @param value
+     * @param context c
+     * @param value v
      */
     public static void setMusicPosition(Context context, int value) {
         SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_POSITION, Constants.MODE_KEY);
@@ -126,10 +126,10 @@ public class SpUtil {
 
     /**
      * 用于存储程序退出或关闭音乐界面时，音乐列表的分类标记，。
-     * 1 歌曲名   2  评分   3  播放次数        4  添加时间    8  其它正常情况
+     * 1 歌曲名   2  评分   3  播放次数    4  添加时间    8 收藏    10:  专辑 歌手等精确条件
      *
-     * @param context
-     * @param value
+     * @param context c
+     * @param value   v
      */
     public static void setMusicDataListFlag(Context context, int value) {
         SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_DATA_FLAG, Constants.MODE_KEY);
