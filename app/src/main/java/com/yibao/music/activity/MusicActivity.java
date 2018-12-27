@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.widget.Toolbar;
@@ -125,7 +126,9 @@ public class MusicActivity
     private void initData() {
         List<MusicBean> initMusicList = audioBinder != null ? audioBinder.getMusicList() : QueryMusicFlagListUtil.getDataList(getSpMusicFlag(), mMusicDao);
         mCurrentPosition = SpUtil.getMusicPosition(this);
-        mCurrentMusicBean = initMusicList.get(mCurrentPosition > initMusicList.size() ? 0 : mCurrentPosition);
+        if (initMusicList.size() > 0) {
+            mCurrentMusicBean = initMusicList.get(mCurrentPosition > initMusicList.size() ? 0 : mCurrentPosition);
+        }
         // 初始化 MusicPagerAdapter 主页面
         MusicPagerAdapter musicPagerAdapter = new MusicPagerAdapter(getSupportFragmentManager());
         mMusicViewPager.setAdapter(musicPagerAdapter);
@@ -141,7 +144,9 @@ public class MusicActivity
             LogUtil.d("======= mPlayStae  " + mPlayState);
             if (mPlayState == Constants.NUMBER_ONE) {
                 // 读取用户的播放记录，设置UI显示，做好播放的准备。(暂停和播放两种状态)
-                perpareItem(mCurrentMusicBean);
+                if (mCurrentMusicBean != null) {
+                    perpareItem(mCurrentMusicBean);
+                }
             } else if (mPlayState == Constants.NUMBER_TWO) {
                 executStartServiceAndInitAnimation();
             }
@@ -498,7 +503,7 @@ public class MusicActivity
         musicIntent.putExtra("sortFlag", sortFlag);
         musicIntent.putExtra("position", mCurrentPosition);
         mConnection = new AudioServiceConnection();
-        startService(musicIntent);
+        startServiceIntent(musicIntent);
         bindService(musicIntent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
@@ -520,8 +525,16 @@ public class MusicActivity
         intent.putExtra("queryFlag", queryFlag);
         intent.putExtra("position", mCurrentPosition);
         mConnection = new AudioServiceConnection();
-        startService(intent);
+        startServiceIntent(intent);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    private void startServiceIntent(Intent intent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        } else {
+            startService(intent);
+        }
     }
 
     private int getSpMusicFlag() {

@@ -2,6 +2,7 @@ package com.yibao.music.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -386,7 +387,11 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         intent.putExtra("position", position);
         mServiceConnection = new AudioServiceConnection();
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-        startService(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        } else {
+            startService(intent);
+        }
     }
 
     @Override

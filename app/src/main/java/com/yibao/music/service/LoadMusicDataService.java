@@ -141,7 +141,7 @@ public class LoadMusicDataService extends IntentService {
      */
     private void sendLoadProgress(int songSum, MusicBean bean) {
         currentCount++;
-        mMusicDao.insert(bean);
+        mMusicDao.insertOrReplace(bean);
         mBus.post(new MusicCountBean(currentCount, songSum));
     }
 
