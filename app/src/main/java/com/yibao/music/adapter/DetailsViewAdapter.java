@@ -78,7 +78,7 @@ public class DetailsViewAdapter extends BaseRvAdapter<MusicBean> {
                 });
             }
             detailsHolder.mIvDetailsMenu.setOnClickListener(v -> openItemMenu(info, adapterPosition));
-            detailsHolder.itemView.setOnClickListener(view -> {
+            detailsHolder.mDetailItem.setOnClickListener(view -> {
                 if (mContext instanceof OnMusicItemClickListener) {
                     SpUtil.setMusicDataListFlag(mContext, Constants.NUMBER_TEN);
                     if (mDataFlag == Constants.NUMBER_THRRE) {
@@ -148,7 +148,8 @@ public class DetailsViewAdapter extends BaseRvAdapter<MusicBean> {
         ImageView mIvBluePlay;
         @BindView(R.id.delete_item_detail)
         LinearLayout mSlideDeleteView;
-
+        @BindView(R.id.detail_item_view)
+        RelativeLayout mDetailItem;
         DetailsHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
