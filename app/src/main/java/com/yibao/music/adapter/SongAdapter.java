@@ -148,9 +148,11 @@ public class SongAdapter
     @Override
     public int getPositionForSection(int section) {
         for (int i = 0; i < getItemCount(); i++) {
-            char firstChar = mList.get(i).getFirstChar().toUpperCase().charAt(0);
-            if (firstChar == section) {
-                return i;
+            if (i < mList.size()) {
+                char firstChar = mList.get(i).getFirstChar().toUpperCase().charAt(0);
+                if (firstChar == section) {
+                    return i;
+                }
             }
         }
         return -1;
