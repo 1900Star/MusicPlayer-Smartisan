@@ -179,4 +179,22 @@ public class SpUtil {
         return sp.getBoolean(Constants.MUSIC_REMENBER_FLAG, b);
     }
 
+    /**
+     *
+     * @param context c
+     * @param isLossFoucs 音频焦点管理
+     */
+    public static void setFoucesFlag(Context context,boolean isLossFoucs) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_FOCUS, Constants.MODE_KEY);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(Constants.MUSIC_FOCUS_KEY, isLossFoucs);
+        editor.apply();
+    }
+
+    public static boolean getFoucsFlag(Context context, boolean isLossFoucs) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_FOCUS, Constants.MODE_KEY);
+
+        return sp.getBoolean(Constants.MUSIC_FOCUS_KEY, isLossFoucs);
+    }
+
 }

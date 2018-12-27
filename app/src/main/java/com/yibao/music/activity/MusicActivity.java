@@ -361,12 +361,10 @@ public class MusicActivity
                             case Constants.NUMBER_TWO:
                                 clearDisposableProgresse();
                                 audioBinder.playPre();
-//                        restoreMuiscBean(mCurrentPosition + 1);
                                 break;
                             case Constants.NUMBER_FOUR:
                                 clearDisposableProgresse();
                                 audioBinder.playNext();
-//                        restoreMuiscBean(mCurrentPosition - 1);
                                 break;
                             default:
                                 break;
@@ -534,7 +532,7 @@ public class MusicActivity
 //            startForegroundService(intent);
 //        } else {
 //        }
-            startService(intent);
+        startService(intent);
     }
 
     private int getSpMusicFlag() {

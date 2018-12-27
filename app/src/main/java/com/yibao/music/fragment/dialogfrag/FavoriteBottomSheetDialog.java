@@ -240,7 +240,7 @@ public class FavoriteBottomSheetDialog
 //            mContext.startForegroundService(intent);
 //        } else {
 //        }
-            mContext.startService(intent);
+        mContext.startService(intent);
         SpUtil.setMusicDataListFlag(mContext, Constants.NUMBER_EIGHT);
     }
 

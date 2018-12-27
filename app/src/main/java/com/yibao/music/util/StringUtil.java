@@ -143,4 +143,8 @@ public class StringUtil {
     public static String getTime() {
         return String.valueOf(System.currentTimeMillis());
     }
+
+    public static String idToString(Context context, int resourcesId) {
+        return context.getResources().getString(resourcesId);
+    }
 }

@@ -54,6 +54,8 @@ public class Constants {
 
     static final String MUSIC_PLAY_STATE = "music_play_state";
     static final String MUSIC_PLAY_STATE_KEY = "music_play_state_key";
+    static final String MUSIC_FOCUS = "music_focus";
+    static final String MUSIC_FOCUS_KEY = "music_FOCUS_key";
 
     static final String MUSIC_CONFIG = "music_config";
     static final String MUSIC_REMENBER_FLAG = "music_remenber_flag";

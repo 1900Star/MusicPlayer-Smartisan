@@ -176,6 +176,7 @@ public class AudioPlayService
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.setOnCompletionListener(this);
             SpUtil.setMusicPosition(AudioPlayService.this, position);
+            SpUtil.setFoucesFlag(AudioPlayService.this, true);
             showNotifycation(true);
             mSessionManager.updatePlaybackState(true);
             mSessionManager.updateLocMsg();
@@ -403,6 +404,7 @@ public class AudioPlayService
                             mAudioBinder.pause();
                             mAudioBinder.hintNotifycation();
                             mBus.post(new PlayStatusBean(2));
+                            SpUtil.setFoucesFlag(AudioPlayService.this, false);
                             break;
                         case PREV:
                             mAudioBinder.playPre();
@@ -479,13 +481,16 @@ public class AudioPlayService
     /**
      * 是否失去焦点
      *
-     * @param isLossFoucs b
+     * @param isLossFocus b
      */
-    private void lossAudioFoucs(boolean isLossFoucs) {
-        if (isLossFoucs) {
+    private void lossAudioFoucs(boolean isLossFocus) {
+        if (isLossFocus) {
             mAudioBinder.pause();
+            SpUtil.setFoucesFlag(this, true);
         } else {
-            mAudioBinder.start();
+                mAudioBinder.start();
+//            if (SpUtil.getFoucsFlag(this, false)) {
+//            }
         }
         mBus.post(new PlayStatusBean(0));
     }

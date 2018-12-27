@@ -29,6 +29,7 @@ import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
+import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.SwipeItemLayout;
 import com.yibao.music.view.music.PlayListDetailView;
@@ -130,7 +131,9 @@ public class PlayListFragment extends BaseMusicFragment {
                             mDetailsAdapter.notifyDataSetChanged();
                             mDetailList.remove(bean.getPosition());
                             if (mDetailList.size() == Constants.NUMBER_ZOER) {
-                                showDetailsView(detailsViewTitle);
+                                String str = getResources().getString(R.string.play_list);
+                                showDetailsView(str);
+                                changeToolBarTitle(str, false);
                             }
                         }
                         return getPlayList();

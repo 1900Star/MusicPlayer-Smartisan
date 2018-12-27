@@ -90,7 +90,7 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
 
     // 搜索界面调用
     public void setPbColorAndPreBtnGone() {
-        mProgressBtn.setPainColor(ColorUtil.textName);
+//        mProgressBtn.setPainColor(ColorUtil.textName);
         mButtonPre.setVisibility(GONE);
     }
 
