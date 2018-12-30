@@ -6,7 +6,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <!--<item name="android:windowAnimationStyle">@style/Animation</item>-->
+        <item name="android:windowAnimationStyle">@style/Animation</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:activityOpenEnterAnimation">@anim/dialog_push_in</item>
