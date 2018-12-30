@@ -55,6 +55,7 @@ public class PlayListAdapter extends BaseRvAdapter<PlayListBean> {
             List<MusicBean> musicBeans = MusicApplication.getIntstance().getMusicDao().queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle())).build().list();
             String count = musicBeans.size() + " 首歌曲";
             playViewHolder.mTvPlayListCount.setText(count);
+            int adapterPosition = playViewHolder.getAdapterPosition();
             playViewHolder.mRlPlayListItem.setOnClickListener(view -> {
                 if (isSelectStatus) {
                     selectStatus(playListBean, playViewHolder);
@@ -63,14 +64,14 @@ public class PlayListAdapter extends BaseRvAdapter<PlayListBean> {
                 }
             });
             playViewHolder.mDeleteView.setOnClickListener(v -> {
-                mList.remove(holder.getAdapterPosition());
+                mList.remove(adapterPosition);
                 MusicDaoUtil.setMusicListFlag(playListBean);
                 RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_TWO));
             });
             playViewHolder.mIvItemSelect.setOnClickListener(v -> selectStatus(playListBean, playViewHolder));
-            playViewHolder.mIvItemEdit.setOnClickListener(v -> editItmeTitle(holder.getAdapterPosition()));
+            playViewHolder.mIvItemEdit.setOnClickListener(v -> editItmeTitle(adapterPosition));
             playViewHolder.mRlPlayListItem.setOnLongClickListener(v -> {
-                deletePlaylist(playListBean, holder.getAdapterPosition());
+                deletePlaylist(playListBean, adapterPosition);
                 return true;
             });
         }
