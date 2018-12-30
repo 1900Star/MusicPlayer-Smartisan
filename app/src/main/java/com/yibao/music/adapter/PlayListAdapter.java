@@ -3,18 +3,22 @@ package com.yibao.music.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
+import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicInfo;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.MusicDaoUtil;
+import com.yibao.music.util.RxBus;
 
 import java.util.List;
 
@@ -50,18 +54,22 @@ public class PlayListAdapter extends BaseRvAdapter<PlayListBean> {
             playViewHolder.mTvPlayListName.setText(playListBean.getTitle());
             List<MusicBean> musicBeans = MusicApplication.getIntstance().getMusicDao().queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle())).build().list();
             String count = musicBeans.size() + " 首歌曲";
-//            String count = playListBean.getSongCount() + " 首歌曲";
             playViewHolder.mTvPlayListCount.setText(count);
-            playViewHolder.itemView.setOnClickListener(view -> {
+            playViewHolder.mRlPlayListItem.setOnClickListener(view -> {
                 if (isSelectStatus) {
                     selectStatus(playListBean, playViewHolder);
                 } else {
                     PlayListAdapter.this.openDetails(playListBean, false);
                 }
             });
+            playViewHolder.mDeleteView.setOnClickListener(v -> {
+                mList.remove(holder.getAdapterPosition());
+                MusicDaoUtil.setMusicListFlag(playListBean);
+                RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_TWO));
+            });
             playViewHolder.mIvItemSelect.setOnClickListener(v -> selectStatus(playListBean, playViewHolder));
             playViewHolder.mIvItemEdit.setOnClickListener(v -> editItmeTitle(holder.getAdapterPosition()));
-            playViewHolder.itemView.setOnLongClickListener(v -> {
+            playViewHolder.mRlPlayListItem.setOnLongClickListener(v -> {
                 deletePlaylist(playListBean, holder.getAdapterPosition());
                 return true;
             });
@@ -71,11 +79,6 @@ public class PlayListAdapter extends BaseRvAdapter<PlayListBean> {
     private void selectStatus(PlayListBean playListBean, PlayViewHolder playViewHolder) {
         playViewHolder.mIvItemSelect.setImageResource(playListBean.isSelected() ? R.drawable.item_selected_normal : R.drawable.item_selected);
         PlayListAdapter.this.openDetails(playListBean, true);
-    }
-
-    public void removeItem(int itemPosition) {
-        mList.remove(itemPosition);
-        notifyDataSetChanged();
     }
 
     @Override
@@ -102,6 +105,8 @@ public class PlayListAdapter extends BaseRvAdapter<PlayListBean> {
         TextView mTvPlayListCount;
         @BindView(R.id.rl_play_list_item)
         RelativeLayout mRlPlayListItem;
+        @BindView(R.id.play_list_item_slide)
+        LinearLayout mDeleteView;
 
         PlayViewHolder(View view) {
             super(view);

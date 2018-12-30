@@ -131,7 +131,6 @@ public class FavoriteBottomSheetDialog
                     mBottomListTitleSize.setText(sheetTitle);
                     mAdapter = new BottomSheetAdapter(musicBeanList);
                     mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
-                    mRecyclerView.addOnItemTouchListener(new SwipeItemLayout.OnSwipeItemTouchListener(mContext));
                     mBottomListContent.addView(mRecyclerView);
                 }));
 

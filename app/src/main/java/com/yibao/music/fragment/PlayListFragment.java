@@ -98,6 +98,7 @@ public class PlayListFragment extends BaseMusicFragment {
         SpUtil.setAddToPlayListFlag(mActivity, mFlag);
         mAdapter = new PlayListAdapter(getPlayList());
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
+
         mPlayListContent.addView(recyclerView);
         mDetailsAdapter = new DetailsViewAdapter(mActivity, null, Constants.NUMBER_FOUR);
     }
@@ -284,7 +285,6 @@ public class PlayListFragment extends BaseMusicFragment {
 //            List<MusicBean> musicBeanList = MusicListUtil.sortMusicList(mDetailList, Constants.NUMBER_FIEV);
             mDetailsAdapter.setNewData(mDetailList);
             RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mDetailsAdapter);
-            recyclerView.addOnItemTouchListener(new SwipeItemLayout.OnSwipeItemTouchListener(getContext()));
             mDetailsAdapter.setOnItemMenuListener((position, musicBean) -> MoreMenuBottomDialog.newInstance(musicBean, position, false).getBottomDialog(mActivity));
             mDetailView.setAdapter(recyclerView);
             putFragToMap(Constants.NUMBER_EIGHT, mClassName);

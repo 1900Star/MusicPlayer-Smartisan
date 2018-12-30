@@ -1,7 +1,9 @@
 package com.yibao.music.util;
 
+import com.yibao.music.MusicApplication;
 import com.yibao.music.base.listener.OnSearchFlagListener;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 
@@ -73,4 +75,20 @@ public class MusicDaoUtil {
         emitter.onNext(beanList);
         emitter.onComplete();
     }
+
+    public static void setMusicListFlag(PlayListBean playListBean) {
+        MusicBeanDao musicDao = MusicApplication.getIntstance().getMusicDao();
+        MusicApplication.getIntstance().getPlayListDao().delete(playListBean);
+        new Thread(() -> {
+            List<MusicBean> musicBeanList = musicDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle())).build().list();
+            for (MusicBean musicBean : musicBeanList) {
+                musicBean.setPlayListFlag(Constants.PLAY_LIST_BACK_FLAG);
+                musicBean.setAddListTime(Constants.NUMBER_ZOER);
+                musicDao.update(musicBean);
+            }
+
+        }).start();
+    }
+
+
 }

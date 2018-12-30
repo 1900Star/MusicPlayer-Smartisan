@@ -22,6 +22,7 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.MusicInfoDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.MusicDaoUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RxBus;
 
@@ -119,17 +120,9 @@ public class DeletePlayListDialog
     private void deletePlayList() {
         if (mPageType == Constants.NUMBER_TWO) {
             // 同步更新列表中，的歌曲的列表标识 (更新为“LSP_98”)
-            List<MusicBean> musicBeanList = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(mPlayListBean.getTitle())).build().list();
-            for (MusicBean musicBean : musicBeanList) {
-                musicBean.setPlayListFlag(Constants.PLAY_LIST_BACK_FLAG);
-                musicBean.setAddListTime(Constants.NUMBER_ZOER);
-                mMusicDao.update(musicBean);
-            }
-
-            MusicApplication.getIntstance().getPlayListDao().delete(mPlayListBean);
-        } else if (mPageType == Constants.NUMBER_THRRE) {
-            mBus.post(new AddAndDeleteListBean(mPageType));
+            MusicDaoUtil.setMusicListFlag(mPlayListBean);
         }
+        mBus.post(new AddAndDeleteListBean(mPageType));
     }
 
 
