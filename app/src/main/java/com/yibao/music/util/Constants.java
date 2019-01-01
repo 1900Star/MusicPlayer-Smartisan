@@ -49,6 +49,9 @@ public class Constants {
     static final String MUSIC_DATA_FLAG = "music_data_flag";
     static final String MUSIC_DATA_LIST_FLAG = "music_data_list_flag";
 
+    static final String MUSIC_DATA_QUERY = "music_data_query";
+    static final String MUSIC_DATA_QUERY_FLAG = "music_data_query_key";
+
     static final String MUSIC_POSITION = "music_position";
     static final String MUSIC_ITEM_POSITION = "music_item_position";
 
@@ -65,7 +68,9 @@ public class Constants {
     public static final String FRAGMENT_ALBUM = "AlbumFragment";
     public static final String FRAGMENT_ALBUM_CATEGORY = "AlbumCategoryFragment";
     public static final String SCANNER_MEDIA = "scanner";
-    public static final String ADD_TO_LIST = "add2list";
+    public static final String ADD_TO_LIST = "add2List";
+    public static final String FAVORITE_FLAG = "favoriteFlag";
+    public static final String NO_NEED_FLAG = "no_need_flag";
 
     public static final String FAVORITE_FILE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/favorite.txt/";
 

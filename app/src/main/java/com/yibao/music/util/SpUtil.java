@@ -53,10 +53,9 @@ public class SpUtil {
 
     /**
      * 用于存储和获取音乐的播放模式
-     * 0 全部  1 单曲   2 随机
      *
-     * @param context
-     * @param value
+     * @param context c
+     * @param value   0 全部  1 单曲   2 随机
      */
     public static void setMusicMode(Context context, int value) {
         SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_MODE, Constants.MODE_KEY);
@@ -70,29 +69,12 @@ public class SpUtil {
         return sp.getInt(Constants.PLAY_MODE_KEY, Constants.MODE_KEY);
     }
 
-    /**
-     * 用于存储手动扫描后是否有新增歌曲的标记
-     *
-     * @param context c
-     * @param value   0 表示没有新增歌曲，1：表示有新增歌曲
-     */
-    public static void setQueryFlag(Context context, String value) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_QUERY, Constants.MODE_KEY);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString(Constants.MUSIC_QUERY_FLAG, value);
-        editor.apply();
-    }
-
-    public static String getQueryFlag(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_QUERY, Constants.MODE_KEY);
-        return sp.getString(Constants.MUSIC_QUERY_FLAG, "defult");
-    }
 
     /**
      * 用于存储程序退出或关闭音乐界面时，音乐播放的位置。
      *
      * @param context c
-     * @param value v
+     * @param value   播放位置
      */
     public static void setMusicPosition(Context context, int value) {
         SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_POSITION, Constants.MODE_KEY);
@@ -107,9 +89,11 @@ public class SpUtil {
     }
 
     /**
-     * 用于存储程序退是否加载过本地音乐。
+     * 是否是首次安装，本地数据库是否创建，
+     * 等于 8 表示不是首次安装，数据库已经创建，直接进入MusicActivity。
+     * 不等于就是首次安装，扫描要本地音乐
      *
-     * @param context
+     * @param context c
      * @param value   Constants.NUMBER_EIGHT
      */
     public static void setLoadMusicFlag(Context context, int value) {
@@ -131,23 +115,59 @@ public class SpUtil {
      * @param context c
      * @param value   v
      */
-    public static void setMusicDataListFlag(Context context, int value) {
+    public static void setSortFlag(Context context, int value) {
         SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_DATA_FLAG, Constants.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(Constants.MUSIC_DATA_LIST_FLAG, value);
         editor.apply();
     }
 
-    public static int getMusicDataListFlag(Context context) {
+    public static int getSortFlag(Context context) {
         SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_DATA_FLAG, Constants.MODE_KEY);
         return sp.getInt(Constants.MUSIC_DATA_LIST_FLAG, Constants.MODE_KEY);
     }
 
     /**
+     * 查询音乐的标识
+     *
+     * @param context c
+     * @param value   v 1 艺术家  2  专辑   3    歌曲   4 播放列表
+     */
+    public static void setDataQueryFlag(Context context, int value) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_DATA_QUERY, Constants.MODE_KEY);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(Constants.MUSIC_DATA_QUERY_FLAG, value);
+        editor.apply();
+    }
+
+    public static int getDataQueryFlag(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_DATA_QUERY, Constants.MODE_KEY);
+        return sp.getInt(Constants.MUSIC_DATA_QUERY_FLAG, Constants.MODE_KEY);
+    }
+
+    /**
+     * 用于存储播放记录的查询标识
+     *
+     * @param context c
+     * @param value   歌曲的具体查询标识
+     */
+    public static void setQueryFlag(Context context, String value) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_QUERY, Constants.MODE_KEY);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(Constants.MUSIC_QUERY_FLAG, value);
+        editor.apply();
+    }
+
+    public static String getQueryFlag(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_QUERY, Constants.MODE_KEY);
+        return sp.getString(Constants.MUSIC_QUERY_FLAG, "defult");
+    }
+
+    /**
      * 用于存储退出程序或关闭音乐界面时，音乐的播放状态 。 1：表示暂停时关闭 ， 2：表示播放时关闭
      *
-     * @param context
-     * @param value
+     * @param context c
+     * @param value   v
      */
     public static void setMusicPlayState(Context context, int value) {
         SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_PLAY_STATE, Constants.MODE_KEY);
@@ -164,7 +184,7 @@ public class SpUtil {
     /**
      * 用于存储和获取用户是否有播放记录
      *
-     * @param context
+     * @param context c
      */
     public static void setMusicConfig(Context context) {
         SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_CONFIG, Constants.MODE_KEY);
@@ -180,11 +200,10 @@ public class SpUtil {
     }
 
     /**
-     *
-     * @param context c
+     * @param context     c
      * @param isLossFoucs 音频焦点管理
      */
-    public static void setFoucesFlag(Context context,boolean isLossFoucs) {
+    public static void setFoucesFlag(Context context, boolean isLossFoucs) {
         SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_FOCUS, Constants.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(Constants.MUSIC_FOCUS_KEY, isLossFoucs);

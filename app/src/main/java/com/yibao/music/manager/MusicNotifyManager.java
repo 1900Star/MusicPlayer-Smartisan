@@ -90,7 +90,7 @@ public class MusicNotifyManager implements
         setCommonClickPending(view);
 
         view.setImageViewResource(R.id.play_notify_favorite,
-                isFavorite ? R.mipmap.favorite_yes :
+                isFavorite ? R.drawable.favorite_yes :
                         R.drawable.favorite_normal);
         // Pre
         Intent pre = new Intent(ACTION_MUSIC);

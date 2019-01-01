@@ -142,7 +142,7 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     public void checkCurrentIsFavorite(boolean cureentMusicIsFavorite) {
-        mIvFavoriteMusic.setImageResource(cureentMusicIsFavorite ? R.mipmap.favorite_yes : R.drawable.music_qqbar_favorite_normal_selector);
+        mIvFavoriteMusic.setImageResource(cureentMusicIsFavorite ? R.drawable.favorite_yes : R.drawable.music_qqbar_favorite_normal_selector);
     }
 
     private void init() {

@@ -55,7 +55,6 @@ public class PlayListDetailView extends LinearLayout implements View.OnClickList
     }
 
 
-
     private void initView() {
         LayoutInflater.from(getContext())
                 .inflate(R.layout.play_list_detail, this, true);
@@ -89,8 +88,8 @@ public class PlayListDetailView extends LinearLayout implements View.OnClickList
 
     private void startMusic(int startPosition) {
         if (getContext() instanceof OnMusicItemClickListener) {
-            SpUtil.setMusicDataListFlag(getContext(), Constants.NUMBER_TEN);
-            ((OnMusicItemClickListener) getContext()).startMusicServiceFlag(startPosition, Constants.NUMBER_FOUR, mQueryFlag);
+            SpUtil.setSortFlag(getContext(), Constants.NUMBER_TEN);
+            ((OnMusicItemClickListener) getContext()).startMusicServiceFlag(startPosition, Constants.NUMBER_TEN, Constants.NUMBER_FOUR, mQueryFlag);
         }
     }
 }

@@ -44,7 +44,7 @@
             android:background="@drawable/mask_albumcover_list"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
-            android:src="@mipmap/nina" />
+            android:src="@drawable/nina" />
 
         <LinearLayout
             android:layout_width="0dp"

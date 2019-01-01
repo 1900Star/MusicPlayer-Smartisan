@@ -79,11 +79,11 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
     }
 
     public void updatePlayButtonState(boolean isPlaying) {
-        mButtonPlay.setIcon(isPlaying ? R.mipmap.notifycation_pause : R.mipmap.notifycation_play);
+        mButtonPlay.setIcon(isPlaying ? R.drawable.notifycation_pause : R.drawable.notifycation_play);
     }
 
     public void setFavoriteButtonState(boolean isFavorite) {
-        mButtonFavorite.setImageResource(isFavorite ? R.mipmap.favorite_yes : R.drawable.music_qqbar_favorite_normal_selector);
+        mButtonFavorite.setImageResource(isFavorite ? R.drawable.favorite_yes : R.drawable.music_qqbar_favorite_normal_selector);
     }
 
     //**************ViewPager数据********************

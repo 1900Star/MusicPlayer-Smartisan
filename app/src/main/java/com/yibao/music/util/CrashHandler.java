@@ -53,7 +53,7 @@ public class CrashHandler
 
             dumpExceptionToSdCard(ex);  //导出异常信息到SD卡中
 
-            uploadExceptionToServer(ex);  //将异常信息上传到服务器
+            uploadExceptionToServer(ex);  //将异常信息上传到百度服务器
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

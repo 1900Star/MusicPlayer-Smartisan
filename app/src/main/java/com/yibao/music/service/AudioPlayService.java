@@ -123,10 +123,14 @@ public class AudioPlayService
         int sortListFlag = intent.getIntExtra("sortFlag", 0);
         int dataFlag = intent.getIntExtra("dataFlag", 0);
         String queryFlag = intent.getStringExtra("queryFlag");
+
         int sortFlag = sortListFlag == Constants.NUMBER_ZOER ? Constants.NUMBER_ONE : sortListFlag;
+        SpUtil.setDataQueryFlag(this, dataFlag);
+        if (queryFlag != null && !queryFlag.equals(Constants.FAVORITE_FLAG) && !queryFlag.equals(Constants.NO_NEED_FLAG)) {
+            SpUtil.setQueryFlag(AudioPlayService.this, queryFlag);
+        }
         LogUtil.d(" position  ==" + enterPosition + "   sortListFlag  ==" + sortFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
-        SpUtil.setQueryFlag(AudioPlayService.this, queryFlag);
-        mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao, mMusicBean, sortFlag, dataFlag, queryFlag);
+        mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao, sortFlag, dataFlag, queryFlag);
         if (enterPosition != position && enterPosition != -1) {
             position = enterPosition;
             //执行播放
@@ -135,9 +139,11 @@ public class AudioPlayService
             //通知播放界面更新
             sendCureentMusicInfo();
         }
-        MusicBean musicBean = mMusicDataList.get(position);
-        musicBean.setPlayFrequency(musicBean.getPlayFrequency() + 1);
-        mMusicDao.update(musicBean);
+        if (mMusicDataList != null) {
+            MusicBean musicBean = mMusicDataList.get(position);
+            musicBean.setPlayFrequency(musicBean.getPlayFrequency() + 1);
+            mMusicDao.update(musicBean);
+        }
         return START_NOT_STICKY;
     }
 
@@ -146,7 +152,7 @@ public class AudioPlayService
      * 通知播放界面更新
      */
     private void sendCureentMusicInfo() {
-        if (position < mMusicDataList.size()) {
+        if (mMusicDataList != null && position < mMusicDataList.size()) {
             MusicBean musicBean = mMusicDataList.get(position);
             musicBean.setCureetPosition(position);
             mBus.post(musicBean);
@@ -488,7 +494,7 @@ public class AudioPlayService
             mAudioBinder.pause();
             SpUtil.setFoucesFlag(this, true);
         } else {
-                mAudioBinder.start();
+            mAudioBinder.start();
 //            if (SpUtil.getFoucsFlag(this, false)) {
 //            }
         }

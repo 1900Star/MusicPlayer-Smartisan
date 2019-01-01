@@ -2,7 +2,6 @@ package com.yibao.music.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -31,8 +30,6 @@ import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.MusicDaoUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SoftKeybordUtil;
@@ -41,7 +38,6 @@ import com.yibao.music.util.TitleArtistUtil;
 import com.yibao.music.view.FlowLayoutView;
 import com.yibao.music.view.music.SmartisanControlBar;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -379,9 +375,9 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     }
 
     @Override
-    public void startMusicServiceFlag(int position, int dataFlag, String queryFlag) {
+    public void startMusicServiceFlag(int position, int sortFlag, int dataFlag, String queryFlag) {
         Intent intent = new Intent(this, AudioPlayService.class);
-        intent.putExtra("sortFlag", Constants.NUMBER_TEN);
+        intent.putExtra("sortFlag", sortFlag);
         intent.putExtra("dataFlag", dataFlag);
         intent.putExtra("queryFlag", queryFlag);
         intent.putExtra("position", position);

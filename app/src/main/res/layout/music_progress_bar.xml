@@ -10,6 +10,6 @@
         android:layout_centerInParent="true"
         android:layout_height="32dp"
         android:contentDescription="@null"
-        android:src="@mipmap/notifycation_play" />
+        android:src="@drawable/notifycation_play" />
 
 </RelativeLayout>

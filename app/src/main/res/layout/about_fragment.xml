@@ -32,7 +32,7 @@
                 android:id="@+id/about_header_iv"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
-                android:src="@mipmap/nina" />
+                android:src="@drawable/nina" />
 
             <TextView
                 android:id="@+id/tv_name"

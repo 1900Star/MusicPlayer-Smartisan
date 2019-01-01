@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.view.ViewPager;
@@ -36,10 +35,7 @@ import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
-import com.yibao.music.view.SwipeItemLayout;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -240,7 +236,7 @@ public class FavoriteBottomSheetDialog
 //        } else {
 //        }
         mContext.startService(intent);
-        SpUtil.setMusicDataListFlag(mContext, Constants.NUMBER_EIGHT);
+        SpUtil.setSortFlag(mContext, Constants.NUMBER_EIGHT);
     }
 
 

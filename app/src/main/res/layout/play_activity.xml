@@ -137,14 +137,14 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:contentDescription="@null"
-                android:src="@mipmap/playing_lp" />
+                android:src="@drawable/playing_lp" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:contentDescription="@null"
-                android:src="@mipmap/playing_veins_lp" />
+                android:src="@drawable/playing_veins_lp" />
 
             <ImageView
                 android:id="@+id/album_cover"
@@ -153,7 +153,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:contentDescription="@null"
-                android:src="@mipmap/playing_cover_lp" />
+                android:src="@drawable/playing_cover_lp" />
 
             <com.yibao.music.view.CircleImageView
                 android:id="@+id/playing_song_album"
@@ -187,7 +187,7 @@
             android:layout_height="32dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="40dp"
-            android:background="@mipmap/lyrics_bm">
+            android:background="@drawable/lyrics_bm">
 
             <ImageView
                 android:id="@+id/iv_lyrics_switch"

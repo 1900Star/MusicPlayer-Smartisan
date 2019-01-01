@@ -13,7 +13,7 @@
         android:id="@+id/iv_more_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/favorite_yes" />
+        android:src="@drawable/favorite_yes" />
 
     <TextView
         android:id="@+id/tv_more_menu_name"

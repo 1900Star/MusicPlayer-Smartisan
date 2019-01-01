@@ -21,13 +21,11 @@ import com.yibao.music.util.Constants;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
-import com.yibao.music.view.SwipeItemLayout;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.ObservableEmitter;
 
 
 /**
@@ -80,11 +78,11 @@ public class DetailsViewAdapter extends BaseRvAdapter<MusicBean> {
             detailsHolder.mIvDetailsMenu.setOnClickListener(v -> openItemMenu(info, adapterPosition));
             detailsHolder.mDetailItem.setOnClickListener(view -> {
                 if (mContext instanceof OnMusicItemClickListener) {
-                    SpUtil.setMusicDataListFlag(mContext, Constants.NUMBER_TEN);
+                    SpUtil.setSortFlag(mContext, Constants.NUMBER_TEN);
                     if (mDataFlag == Constants.NUMBER_THRRE) {
                         insertSearchBean(info.getTitle());
                     }
-                    ((OnMusicItemClickListener) mContext).startMusicServiceFlag(adapterPosition, mDataFlag, getQueryFlag(info));
+                    ((OnMusicItemClickListener) mContext).startMusicServiceFlag(adapterPosition, Constants.NUMBER_TEN, mDataFlag, getQueryFlag(info));
                 }
 
             });
@@ -150,6 +148,7 @@ public class DetailsViewAdapter extends BaseRvAdapter<MusicBean> {
         LinearLayout mSlideDeleteView;
         @BindView(R.id.detail_item_view)
         RelativeLayout mDetailItem;
+
         DetailsHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

@@ -115,7 +115,7 @@ public class MediaSessionManager {
         if (StringUtil.isReal(albumArtPath)) {
             return BitmapFactory.decodeFile(albumArtPath);
         } else {
-            return BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.nina);
+            return BitmapFactory.decodeResource(mContext.getResources(), R.drawable.nina);
         }
     }
 

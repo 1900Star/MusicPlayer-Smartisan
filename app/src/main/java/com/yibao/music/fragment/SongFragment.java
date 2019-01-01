@@ -140,7 +140,7 @@ public class SongFragment extends BaseMusicFragment {
         mMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_selector);
         mMusicCategoryAddtime.setTextColor(ColorUtil.textName);
         mMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_selector);
-        SpUtil.setMusicDataListFlag(mActivity, playListFlag);
+        SpUtil.setSortFlag(mActivity, playListFlag);
     }
     @Override
     protected void changeEditStatus(int currentIndex) {

@@ -3,20 +3,13 @@ package com.yibao.music.util;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.support.annotation.Nullable;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.yibao.music.R;
 import com.yibao.music.view.ZoomImageView;
 
@@ -59,8 +52,8 @@ public class ImageUitl {
     public static void loadPlaceholder(Activity activity, String url, ImageView view) {
         if (!activity.isDestroyed()) {
             RequestOptions options = new RequestOptions();
-            options.placeholder(R.mipmap.nina);
-            options.error(R.mipmap.nina);
+            options.placeholder(R.drawable.nina);
+            options.error(R.drawable.nina);
             options.diskCacheStrategy(DiskCacheStrategy.ALL);
             Glide.with(activity).load(url).apply(options).into(view);
         } else {
@@ -71,8 +64,8 @@ public class ImageUitl {
     public static void loadPlaceholder(Context context, String url, ImageView view) {
         if (context != null) {
             RequestOptions options = new RequestOptions();
-            options.placeholder(R.mipmap.nina);
-            options.error(R.mipmap.nina);
+            options.placeholder(R.drawable.nina);
+            options.error(R.drawable.nina);
             options.diskCacheStrategy(DiskCacheStrategy.ALL);
             Glide.with(context).load(url).apply(options).into(view);
         } else {
