@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
@@ -26,12 +25,8 @@ import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
-import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.ToastUtil;
-import com.yibao.music.view.SwipeItemLayout;
 import com.yibao.music.view.music.PlayListDetailView;
 
 import java.util.ArrayList;
@@ -285,7 +280,7 @@ public class PlayListFragment extends BaseMusicFragment {
 //            List<MusicBean> musicBeanList = MusicListUtil.sortMusicList(mDetailList, Constants.NUMBER_FIEV);
             mDetailsAdapter.setNewData(mDetailList);
             RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mDetailsAdapter);
-            mDetailsAdapter.setOnItemMenuListener((position, musicBean) -> MoreMenuBottomDialog.newInstance(musicBean, position, false).getBottomDialog(mActivity));
+            mDetailsAdapter.setOnItemMenuListener((position, musicBean) -> MoreMenuBottomDialog.newInstance(musicBean, position, false,false).getBottomDialog(mActivity));
             mDetailView.setAdapter(recyclerView);
             putFragToMap(Constants.NUMBER_EIGHT, mClassName);
             detailsViewTitle = title;

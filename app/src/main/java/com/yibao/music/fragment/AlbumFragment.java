@@ -138,7 +138,7 @@ public class AlbumFragment extends BaseMusicFragment {
 
             mDetailsView.setAdapter(Constants.NUMBER_TWO, albumInfo, mDetailsAdapter);
             mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
-                    MoreMenuBottomDialog.newInstance(musicBean, position, false).getBottomDialog(mActivity));
+                    MoreMenuBottomDialog.newInstance(musicBean, position, false,false).getBottomDialog(mActivity));
             putFragToMap(mClassName);
             detailsViewTitle = albumInfo.getAlbumName();
             changeToolBarTitle(albumInfo.getAlbumName(), true);

@@ -10,6 +10,8 @@ import android.view.Window;
 
 import com.yibao.music.R;
 
+import java.util.Objects;
+
 
 /**
  * Des：${为DialogFragmnet创建Dialog}
@@ -22,13 +24,12 @@ public class DialogUtil {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         AnimationUtil.applyBobbleAnim(view);
         dialog.setContentView(view);
-        dialog.getWindow()
+        Objects.requireNonNull(dialog.getWindow())
               .setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow()
               .setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.getWindow()
               .getAttributes().windowAnimations = R.style.dialogAnim;
-
         return dialog;
 
     }

@@ -245,7 +245,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
 
     private void initListener() {
         mSearchDetailAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
-                MoreMenuBottomDialog.newInstance(musicBean, position, false).getBottomDialog(this));
+                MoreMenuBottomDialog.newInstance(musicBean, position, false,false).getBottomDialog(this));
         mEditSearch.addTextChangedListener(new TextChangedListener() {
             @Override
             public void afterTextChanged(Editable s) {

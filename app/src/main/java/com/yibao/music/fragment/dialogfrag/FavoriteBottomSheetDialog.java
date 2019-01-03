@@ -64,8 +64,6 @@ public class FavoriteBottomSheetDialog
     private RxBus
             mBus = RxBus.getInstance();
     private ViewPager mBottomViewPager;
-    // ViewPager使用
-//    private List<List<MusicBean>> mListList = new ArrayList<>();
     private BottomSheetAdapter mAdapter;
     private static String mSongTitle;
     private MusicBeanDao mMusicDao;
@@ -80,6 +78,7 @@ public class FavoriteBottomSheetDialog
         BottomSheetDialog dialog = new BottomSheetDialog(context);
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.bottom_sheet_list_dialog, null);
+
         mCompositeDisposable = new CompositeDisposable();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
         initView(view);
@@ -90,11 +89,6 @@ public class FavoriteBottomSheetDialog
     }
 
     private void initData(BottomSheetDialog dialog, View view) {
-//        mListList.add(MusicListUtil.sortMusicList(mList, Constants.NUMBER_TWO));
-        // ViewPager 显示多个列表
-//        BottomPagerAdapter bottomPagerAdapter = new BottomPagerAdapter(mContext, mListList);
-//        mBottomViewPager.setAdapter(bottomPagerAdapter);
-//        mRecyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener());
         dialog.setContentView(view);
         dialog.setCancelable(true);
         Window window = dialog.getWindow();
@@ -104,7 +98,7 @@ public class FavoriteBottomSheetDialog
 
         dialog.setCanceledOnTouchOutside(true);
         mBehavior = BottomSheetBehavior.from((View) view.getParent());
-        dialog.setOnCancelListener(dialog12 -> clearDisposable());
+        dialog.setOnCancelListener(dialog12 -> FavoriteBottomSheetDialog.this.clearDisposable());
 
     }
 

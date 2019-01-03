@@ -215,5 +215,4 @@ public class SpUtil {
 
         return sp.getBoolean(Constants.MUSIC_FOCUS_KEY, isLossFoucs);
     }
-
 }

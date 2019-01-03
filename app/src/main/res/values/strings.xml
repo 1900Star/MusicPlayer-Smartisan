@@ -62,6 +62,8 @@
     <string name="lyrics">歌词</string>
     <string name="select_operation">选择操作</string>
     <string name="delelet_play_list">删除列表</string>
+    <string name="set_play_time">设定定时播放时间</string>
+    <string name="timing_close_play">定时关闭播放</string>
     <string name="edit_play_list">编辑列表</string>
     <string name="baidu_key">4502b57559</string>
     <string name="app_info">ArtisanMusicPlayer 仿照锤子音乐播放器写的一个本地音乐播放器。 https://github.com/1900Star/SmartisanMusicPlayer </string>

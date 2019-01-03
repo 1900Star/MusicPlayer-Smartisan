@@ -11,7 +11,10 @@ import com.yibao.music.model.MusicBean;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Des：${歌曲的时间格式处理}
@@ -146,5 +149,36 @@ public class StringUtil {
 
     public static String idToString(Context context, int resourcesId) {
         return context.getResources().getString(resourcesId);
+    }
+
+    public static long getSetCountdown(String countdown) {
+        int mContdownTime = 0;
+        switch (countdown) {
+            case "正在倒计时":
+                LogUtil.d("     正在倒计时");
+                mContdownTime = -1;
+                break;
+            case "无":
+                LogUtil.d("     时间为无");
+                break;
+            case "15 分":
+                mContdownTime = 15 * 60 * 1000;
+                break;
+            case "30 分":
+                mContdownTime = 30 * 60 * 1000;
+                break;
+            case "1 小时":
+                mContdownTime = 60 * 60 * 1000;
+                break;
+            case "1 小时 30 分":
+                mContdownTime = 90 * 60 * 1000;
+                break;
+            case "2 小时":
+                mContdownTime = 120 * 60 * 1000;
+                break;
+            default:
+                break;
+        }
+        return mContdownTime;
     }
 }

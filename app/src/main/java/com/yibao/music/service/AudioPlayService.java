@@ -54,19 +54,6 @@ public class AudioPlayService
     public static final int PLAY_MODE_ALL = 0;
     public static final int PLAY_MODE_SINGLE = 1;
     public static final int PLAY_MODE_RANDOM = 2;
-    /**
-     * 音乐通知栏
-     */
-    private static final int FAVORITE = 0;
-    public static final int PREV = 1;
-    public static final int PLAY = 2;
-    public static final int NEXT = 3;
-    public static final int CLOSE = 4;
-    /**
-     * 广播匹配
-     */
-    public final static String BUTTON_ID = "ButtonId";
-    public final static String ACTION_MUSIC = "MUSIC";
 
     private int position = -2;
     private List<MusicBean> mMusicDataList;
@@ -388,7 +375,7 @@ public class AudioPlayService
     private void initNotifyBroadcast() {
         mMusicReceiver = new MusicBroacastReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_MUSIC);
+        filter.addAction(Constants.ACTION_MUSIC);
         registerReceiver(mMusicReceiver, filter);
 
     }
@@ -399,23 +386,24 @@ public class AudioPlayService
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action != null) {
-                if (action.equals(ACTION_MUSIC)) {
-                    int id = intent.getIntExtra(BUTTON_ID, 0);
+                if (action.equals(Constants.ACTION_MUSIC)) {
+                    int id = intent.getIntExtra(Constants.BUTTON_ID, 0);
                     switch (id) {
-                        case FAVORITE:
+                        case Constants.FAVORITE:
                             mAudioBinder.updataFavorite();
                             mBus.post(new PlayStatusBean(1));
                             break;
-                        case CLOSE:
+                        case Constants.CLOSE:
                             mAudioBinder.pause();
                             mAudioBinder.hintNotifycation();
                             mBus.post(new PlayStatusBean(2));
                             SpUtil.setFoucesFlag(AudioPlayService.this, false);
                             break;
-                        case PREV:
+                        case Constants.PREV:
                             mAudioBinder.playPre();
                             break;
-                        case PLAY:
+                        case Constants.COUNTDOWN_fINISH:
+                        case Constants.PLAY:
                             if (mAudioBinder.isPlaying()) {
                                 mAudioBinder.pause();
                             } else {
@@ -423,7 +411,7 @@ public class AudioPlayService
                             }
                             mBus.post(new PlayStatusBean(0));
                             break;
-                        case NEXT:
+                        case Constants.NEXT:
                             mAudioBinder.playNext();
                             break;
                         default:

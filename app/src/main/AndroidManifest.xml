@@ -34,6 +34,7 @@
         <service android:name=".service.AudioPlayService" />
         <service android:name=".service.AidlService" />
         <service android:name=".service.LoadMusicDataService" />
+        <service android:name=".service.CountdownService" />
 
         <!--百度-->
         <meta-data

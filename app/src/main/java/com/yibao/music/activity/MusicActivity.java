@@ -128,13 +128,6 @@ public class MusicActivity
         mCurrentPosition = SpUtil.getMusicPosition(this);
         int aa = 0;
         if (initMusicList != null && initMusicList.size() > 0) {
-            for (int i = 0; i < initMusicList.size(); i++) {
-                if (aa < 10) {
-                    LogUtil.d("Title====  for  " + initMusicList.get(i).getTitle());
-                }
-                aa++;
-
-            }
             mCurrentMusicBean = initMusicList.get(mCurrentPosition > initMusicList.size() ? 0 : mCurrentPosition);
         } else {
             LogUtil.d("==========================NoThing=555555555555555555");

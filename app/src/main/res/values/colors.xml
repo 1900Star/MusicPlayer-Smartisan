@@ -3,6 +3,7 @@
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="textName">#939396</color>
+    <color name="noClickText">#bfbfbf</color>
     <color name="tabbarTv">#939396</color>
     <color name="tabbarDownTv">#E64040</color>
     <color name="textDes">#4d4d4d</color>

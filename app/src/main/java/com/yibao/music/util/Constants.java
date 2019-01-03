@@ -10,6 +10,25 @@ import android.os.Environment;
  * @author Stran
  */
 public class Constants {
+    /**
+     * 广播匹配
+     */
+    public final static String BUTTON_ID = "ButtonId";
+    public final static String ACTION_MUSIC = "MUSIC";
+
+    /**
+     * 音乐通知栏
+     */
+    public static final int FAVORITE = 0;
+    public static final int PREV = 1;
+    public static final int PLAY = 2;
+    public static final int NEXT = 3;
+    public static final int CLOSE = 4;
+
+    /**
+     * 倒计时结束，广播通知暂停播放音乐
+     */
+    public static final int COUNTDOWN_fINISH = 5;
 
     public static final int NUMBER_ZOER = 0;
     public static final int NUMBER_ONE = 1;
@@ -18,6 +37,7 @@ public class Constants {
     public static final int NUMBER_FOUR = 4;
     public static final int NUMBER_FIEV = 5;
     public static final int NUMBER_SIX = 6;
+    public static final int NUMBER_SEVEN = 7;
     public static final int NUMBER_EIGHT = 8;
     public static final int NUMBER_NINE = 9;
     public static final int NUMBER_TEN = 10;
@@ -28,8 +48,11 @@ public class Constants {
     public static final char LETTER_Z = 'Z';
     public static final char LETTER_HASH = '#';
     public static final String SONG_NAME = "song_name";
+    public static final String TIME_SERVICE_NAME = "com.yibao.music.service.CountdownService";
     public static final String NULL_STRING = "";
     public static final String PLAY_LIST_BACK_FLAG = "LSP_98";
+    public static final String TIME_FLAG = "time_flag";
+    public static final String TIME_FLAG_KEY = "time_flag_key";
     static final int MODE_KEY = 0;
     static final String MUSIC_LOAD = "music_load";
 
@@ -71,6 +94,7 @@ public class Constants {
     public static final String ADD_TO_LIST = "add2List";
     public static final String FAVORITE_FLAG = "favoriteFlag";
     public static final String NO_NEED_FLAG = "no_need_flag";
+    public static final String COUNTDOWN_TIME = "countdown_time";
 
     public static final String FAVORITE_FILE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/favorite.txt/";
 

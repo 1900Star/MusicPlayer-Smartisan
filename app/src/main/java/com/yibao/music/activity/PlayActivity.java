@@ -20,6 +20,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.base.BasePlayActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
+import com.yibao.music.fragment.dialogfrag.CountdownBottomSheetDialog;
 import com.yibao.music.fragment.dialogfrag.FavoriteBottomSheetDialog;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
@@ -190,8 +191,12 @@ public class PlayActivity extends BasePlayActivity {
                 showLyrics();
                 break;
             case Constants.NUMBER_FOUR:
-                mBus.post(Constants.NUMBER_ONE, moreMenuStatus);
-                mMusicDao.delete(moreMenuStatus.getMusicBean());
+                CountdownBottomSheetDialog.newInstance().getBottomDialog(this);
+                break;
+            case Constants.NUMBER_FIEV:
+//                mBus.post(Constants.NUMBER_ONE, moreMenuStatus);
+//                mMusicDao.delete(moreMenuStatus.getMusicBean());
+                SnakbarUtil.keepGoing(mAlbumCover);
                 break;
             default:
                 break;
@@ -373,7 +378,7 @@ public class PlayActivity extends BasePlayActivity {
                 showLyrics();
                 break;
             case R.id.iv_lyrics_switch:
-                MoreMenuBottomDialog.newInstance(mCurrenMusicInfo, audioBinder.getPosition(), true).getBottomDialog(this);
+                MoreMenuBottomDialog.newInstance(mCurrenMusicInfo, audioBinder.getPosition(), true,true).getBottomDialog(this);
                 break;
             case R.id.iv_secreen_sun_switch:
                 screenAlwaysOnSwitch(mIvSecreenSunSwitch);

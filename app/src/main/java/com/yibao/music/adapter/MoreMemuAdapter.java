@@ -54,7 +54,7 @@ public class MoreMemuAdapter
             menuHolder.mTvMoreMenu.setText(menuBean.getNameId());
             menuHolder.itemView.setOnClickListener(v -> {
                 if (mListener != null) {
-                    mListener.itemClick(mMusicPosition,position, mMusicBean);
+                    mListener.itemClick(mMusicPosition, position, mMusicBean);
                 }
             });
         }
@@ -80,21 +80,6 @@ public class MoreMemuAdapter
         return 0;
     }
 
-    @Override
-    public Object[] getSections() {
-        return new Object[0];
-    }
-
-    @Override
-    public int getPositionForSection(int i) {
-        return 0;
-    }
-
-    @Override
-    public int getSectionForPosition(int i) {
-        return 0;
-    }
-
     static class MoreMenuHolder
             extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_more_menu_name)
@@ -114,7 +99,7 @@ public class MoreMemuAdapter
     }
 
     public interface OnMenuItemClickListener {
-        void itemClick(int musicPosition,int position, MusicBean musicBean);
+        void itemClick(int musicPosition, int position, MusicBean musicBean);
     }
 
 }

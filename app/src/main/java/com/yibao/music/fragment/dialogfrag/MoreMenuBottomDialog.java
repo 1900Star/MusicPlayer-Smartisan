@@ -38,11 +38,13 @@ public class MoreMenuBottomDialog {
     private static int mMusicPosition;
     private RatingBar mRatingBar;
     private static boolean mIsNeedScore;
+    private static boolean mIsNeedSetTime;
 
-    public static MoreMenuBottomDialog newInstance(MusicBean musicBean, int musicPosition, boolean isNeedScore) {
+    public static MoreMenuBottomDialog newInstance(MusicBean musicBean, int musicPosition, boolean isNeedScore,boolean isNeedSetTime) {
         mMusicBean = musicBean;
         mMusicPosition = musicPosition;
         mIsNeedScore = isNeedScore;
+        mIsNeedSetTime = isNeedSetTime;
         musicDao = MusicApplication.getIntstance().getMusicDao();
         return new MoreMenuBottomDialog();
     }
@@ -91,7 +93,7 @@ public class MoreMenuBottomDialog {
 
     private void initData() {
         mRatingBar.setRating(mMusicBean.getSongScore());
-        mMemuAdapter = new MoreMemuAdapter(MenuListUtil.getMenuData(mMusicBean.isFavorite()), mMusicBean, mMusicPosition);
+        mMemuAdapter = new MoreMemuAdapter(MenuListUtil.getMenuData(mMusicBean.isFavorite(),mIsNeedSetTime), mMusicBean, mMusicPosition);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(4, mMemuAdapter);
         mBottomListContent.addView(recyclerView);
     }

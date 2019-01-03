@@ -61,7 +61,7 @@ public class AddListDialog
      *
      * @param operationType  1 新建列表  2 列表改名
      * @param editHint e
-     * @return
+     * @return c
      */
     public static AddListDialog newInstance(int operationType, String editHint) {
         mOperationType = operationType;
