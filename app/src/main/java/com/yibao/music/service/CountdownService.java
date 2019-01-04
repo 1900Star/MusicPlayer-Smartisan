@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 
 import com.yibao.music.model.CountdownBean;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.StringUtil;
 

@@ -394,15 +394,11 @@ public class AudioPlayService
                             mBus.post(new PlayStatusBean(1));
                             break;
                         case Constants.CLOSE:
-                            mAudioBinder.pause();
-                            mAudioBinder.hintNotifycation();
-                            mBus.post(new PlayStatusBean(2));
-                            SpUtil.setFoucesFlag(AudioPlayService.this, false);
+                            pauseMusic();
                             break;
                         case Constants.PREV:
                             mAudioBinder.playPre();
                             break;
-                        case Constants.COUNTDOWN_fINISH:
                         case Constants.PLAY:
                             if (mAudioBinder.isPlaying()) {
                                 mAudioBinder.pause();
@@ -414,11 +410,21 @@ public class AudioPlayService
                         case Constants.NEXT:
                             mAudioBinder.playNext();
                             break;
+                        case Constants.COUNTDOWN_fINISH:
+                            pauseMusic();
+                            break;
                         default:
                             break;
                     }
                 }
             }
+        }
+
+        private void pauseMusic() {
+            mAudioBinder.pause();
+            mAudioBinder.hintNotifycation();
+            mBus.post(new PlayStatusBean(2));
+            SpUtil.setFoucesFlag(AudioPlayService.this, false);
         }
     }
 

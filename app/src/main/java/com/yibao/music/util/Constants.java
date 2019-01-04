@@ -95,6 +95,7 @@ public class Constants {
     public static final String FAVORITE_FLAG = "favoriteFlag";
     public static final String NO_NEED_FLAG = "no_need_flag";
     public static final String COUNTDOWN_TIME = "countdown_time";
+    public static final String FINISH_TIME = "00:01";
 
     public static final String FAVORITE_FILE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/favorite.txt/";
 

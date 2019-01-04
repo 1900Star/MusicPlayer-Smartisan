@@ -1,7 +1,9 @@
 package com.yibao.music.fragment.dialogfrag;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import com.yibao.music.R;
 import com.yibao.music.model.CountdownBean;
 import com.yibao.music.service.CountdownService;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.ServiceUtil;
 import com.yibao.music.util.StringUtil;
@@ -55,21 +58,25 @@ public class CountdownBottomSheetDialog
         BottomSheetDialog dialog = new BottomSheetDialog(context);
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.countdown_dialog_fragment, null);
-        initView(dialog,view);
+        initView(dialog, view);
         initListener();
-        initRxData();
+        initRxData(dialog);
         initData();
         dialog.show();
     }
 
-    private void initRxData() {
+    private void initRxData(BottomSheetDialog dialog) {
         if (mDisposable == null) {
             mDisposable = RxBus.getInstance().toObserverable(CountdownBean.class)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(countdownBean -> {
-                        String str = "剩余时间 " + countdownBean.getCountdownTime();
+                        String countdownTime = countdownBean.getCountdownTime();
+                        String str = "剩余时间 " + countdownTime;
                         mTvCountdown.setText(str);
+                        if (countdownTime.equals(Constants.FINISH_TIME)) {
+                            dialog.dismiss();
+                        }
                     });
         }
     }
@@ -92,7 +99,6 @@ public class CountdownBottomSheetDialog
                 setCompleteStata(!str.equals(arrTime[0]));
             }
         });
-
     }
 
     @Override
@@ -139,7 +145,7 @@ public class CountdownBottomSheetDialog
         }
         dialog.setCanceledOnTouchOutside(true);
         mBehavior = BottomSheetBehavior.from((View) view.getParent());
-        dialog.setOnCancelListener(dialog12 -> {
+        dialog.setOnDismissListener(dialog12 -> {
             if (mDisposable != null) {
                 mDisposable.dispose();
                 mDisposable = null;
