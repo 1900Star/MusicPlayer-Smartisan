@@ -20,9 +20,6 @@ ArtisanMusic
                 专辑列表、收藏、通知栏、网络歌词、歌词滚动、屏幕常亮、本地搜索、收藏列表本地备份、导入本地列表、锁屏显示、列表多选删除、崩溃日志收集。
 
 
-### 注意
-   为了收集crash 日志，项目中集成了百度统计。所以大家运行源码时会因为缺少百度统计的Key，而编译失败，你可以在清单文件中将统计Key的那个节点注释掉，就    能正常编译了。
-
 ## 第三方库
   * [Rxjava](https://github.com/ReactiveX/RxJava)
   * [Glide](https://github.com/bumptech/glide)
