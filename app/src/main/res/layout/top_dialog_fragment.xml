@@ -7,32 +7,10 @@
     android:fitsSystemWindows="true"
     tools:context=".activity.PlayActivity">
 
-    <com.yibao.music.view.ProgressBtn
-        android:id="@+id/pb_toppic"
+    <com.yibao.music.view.ZoomImageView
+        android:id="@+id/zoom_view"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_gravity="bottom" />
-
-    <LinearLayout
-        android:id="@+id/top_big_pic_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:fitsSystemWindows="true"
-        android:orientation="vertical">
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|bottom"
-        android:layout_marginBottom="2dp"
-        android:alpha="0.3"
-        android:text="@string/save_pic"
-        android:textSize="18sp"
-        android:visibility="gone" />
+        android:layout_height="match_parent" />
 
 
 </FrameLayout>

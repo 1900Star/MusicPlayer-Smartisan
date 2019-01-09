@@ -5,13 +5,13 @@
     android:id="@+id/rl_details_item"
     android:layout_width="match_parent"
     android:layout_height="55dp"
-    android:background="@drawable/list_item_selector"
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/detail_item_view"
+        android:background="@drawable/list_item_selector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 

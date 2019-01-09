@@ -201,6 +201,7 @@ public class MusicActivity
         LogUtil.d("=========== AppBar DetailFlag  " + detailFlag);
         HashMap<String, BaseFragment> detailsViewMap = BaseMusicFragment.mDetailsViewMap;
         HashMap<String, BaseFragment> itemStatusMap = BaseMusicFragment.mItemStatusMap;
+        LogUtil.d(" map==   " + detailsViewMap +"   ==   "+ itemStatusMap);
         if (detailsViewMap != null && itemStatusMap != null) {
             switch (v.getId()) {
                 case R.id.tv_edit:

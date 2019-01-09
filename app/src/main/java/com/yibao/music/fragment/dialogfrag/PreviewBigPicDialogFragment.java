@@ -2,6 +2,7 @@ package com.yibao.music.fragment.dialogfrag;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,18 +41,15 @@ public class PreviewBigPicDialogFragment
     }
 
     private void initView() {
-        LinearLayout topPicContent = mView.findViewById(R.id.top_big_pic_content);
-        TextView save = mView.findViewById(R.id.tv_save);
-        ProgressBtn pb = mView.findViewById(R.id.pb_toppic);
-        pb.setMax(MAX_DOWN_PREGRESS);
-        ZoomImageView view = ImageUitl.creatZoomViewTop(getActivity());
+        ZoomImageView view = mView.findViewById(R.id.zoom_view);
+        view.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//        ZoomImageView view = ImageUitl.creatZoomViewTop(getActivity());
         String url = getArguments().getString("url");
 
         ImageUitl.loadPlaceholder(getActivity(), url, view);
         view.setOnClickListener(view1 -> PreviewBigPicDialogFragment.this.dismiss());
-        save.setOnClickListener(view12 -> LogUtil.d(""));
-        AnimationUtil.applyBobbleAnim(topPicContent);
-        topPicContent.addView(view);
+        AnimationUtil.applyBobbleAnim(view);
+//        topPicContent.addView(view);
 
 
     }

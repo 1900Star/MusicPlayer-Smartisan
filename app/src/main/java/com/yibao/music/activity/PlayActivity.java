@@ -216,6 +216,7 @@ public class PlayActivity extends BasePlayActivity {
         updatePlayBtnStatus();
 //        初始化歌词
         mLyricList = audioBinder.getLyricList();
+        mIvSecreenSunSwitch.setVisibility(mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
         mTvLyrics.setLrcFile(mLyricList);
         if (isShowLyrics) {
             closeLyricsView(mLyricList);
