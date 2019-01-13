@@ -29,7 +29,6 @@ import io.reactivex.disposables.CompositeDisposable;
  * @描述： TODO
  */
 public abstract class BaseFragment extends Fragment {
-    protected String tag;
     protected Activity mActivity;
     protected RxBus mBus;
     protected final MusicBeanDao mMusicBeanDao;
@@ -51,7 +50,6 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        tag = this.getClass().getSimpleName();
         mActivity = getActivity();
         mContext = getActivity();
         mCompositeDisposable = new CompositeDisposable();
@@ -78,11 +76,5 @@ public abstract class BaseFragment extends Fragment {
             mCompositeDisposable = null;
 
         }
-//        if (mActivity != null) {
-//            mActivity = null;
-//        }
-//        if (mContext != null) {
-//            mContext = null;
-//        }
     }
 }

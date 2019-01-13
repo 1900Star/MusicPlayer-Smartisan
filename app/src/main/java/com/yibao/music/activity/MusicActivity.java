@@ -538,10 +538,6 @@ public class MusicActivity
         startService(intent);
     }
 
-//    private int getSpMusicFlag() {
-//        return SpUtil.getSortFlag(this);
-//    }
-
     /**
      * PagerAdapter回调
      */

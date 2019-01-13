@@ -80,7 +80,6 @@ public abstract class BaseMusicFragment extends BaseFragment {
                 })
         );
 
-
     }
 
     // 有详情页面的子类重写这个方法，让自己处理返回事件的，只要这个方法一调用，按返回键就会将详情页面隐藏。
@@ -176,7 +175,6 @@ public abstract class BaseMusicFragment extends BaseFragment {
             mDetailsViewMap = null;
         }
     }
-
 
     @Override
     public void onPause() {

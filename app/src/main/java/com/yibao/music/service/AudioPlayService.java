@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.manager.MediaSessionManager;
+import com.yibao.music.manager.MusicNotifyManager;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.PlayStatusBean;
@@ -26,7 +27,6 @@ import com.yibao.music.util.QueryMusicFlagListUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
-import com.yibao.music.manager.MusicNotifyManager;
 import com.yibao.music.util.StringUtil;
 
 import java.util.List;
@@ -59,7 +59,6 @@ public class AudioPlayService
     private List<MusicBean> mMusicDataList;
     private MusicBroacastReceiver mMusicReceiver;
     private MusicBeanDao mMusicDao;
-    private MusicBean mMusicBean;
     private RxBus mBus;
     private Disposable mDisposable;
     private AudioManager mAudioManager;
@@ -99,7 +98,6 @@ public class AudioPlayService
         mBus = RxBus.getInstance();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        mMusicBean = new MusicBean();
         PLAY_MODE = SpUtil.getMusicMode(this);
         mSessionManager = new MediaSessionManager(this, mAudioBinder);
     }
