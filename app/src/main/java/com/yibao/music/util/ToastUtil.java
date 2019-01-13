@@ -34,15 +34,11 @@ public class ToastUtil {
 
     }
 
-    public static void showScreenOn(Context context) {
-        Toast.makeText(context, "您开启了屏幕常亮", Toast.LENGTH_SHORT).show();
+    public static void showScreenOnAndOff(Context context, boolean isOn) {
+        Toast.makeText(context, isOn ? "您关闭了屏幕常亮" : "您开启了屏幕常亮", Toast.LENGTH_SHORT).show();
 
     }
 
-    public static void showScreenOf(Context context) {
-        Toast.makeText(context, "您关闭了屏幕常亮", Toast.LENGTH_SHORT).show();
-
-    }
 
 
 }

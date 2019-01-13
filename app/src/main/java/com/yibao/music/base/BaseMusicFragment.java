@@ -123,7 +123,8 @@ public abstract class BaseMusicFragment extends BaseFragment {
     }
 
     protected void randomPlayMusic() {
-        int position = RandomUtil.getRandomPostion(mSongList.size());
+        int randomSize = mSongList.size();
+        int position = RandomUtil.getRandomPostion(randomSize > 0 ? randomSize : 0);
         if (getActivity() instanceof OnMusicItemClickListener) {
             ((OnMusicItemClickListener) getActivity()).startMusicService(position);
         }

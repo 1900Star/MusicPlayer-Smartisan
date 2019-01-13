@@ -43,13 +43,10 @@ public class PreviewBigPicDialogFragment
     private void initView() {
         ZoomImageView view = mView.findViewById(R.id.zoom_view);
         view.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//        ZoomImageView view = ImageUitl.creatZoomViewTop(getActivity());
         String url = getArguments().getString("url");
-
         ImageUitl.loadPlaceholder(getActivity(), url, view);
         view.setOnClickListener(view1 -> PreviewBigPicDialogFragment.this.dismiss());
         AnimationUtil.applyBobbleAnim(view);
-//        topPicContent.addView(view);
 
 
     }

@@ -167,15 +167,13 @@ public abstract class BasePlayActivity extends BaseTansitionActivity implements 
      */
 
     protected void screenAlwaysOnSwitch(ImageView mIvSecreenSunSwitch) {
+        mIvSecreenSunSwitch.setImageResource(isScreenAlwaysOn ? R.drawable.sun_always_of_selector : R.drawable.sun_always_on_selector);
+        ToastUtil.showScreenOnAndOff(this, isScreenAlwaysOn);
         if (isScreenAlwaysOn) {
             mWakeLock.release();
-            mIvSecreenSunSwitch.setImageResource(R.drawable.sun_always_of_selector);
-            ToastUtil.showScreenOf(this);
         } else {
             long screenTime = 30 * 60 * 1000L;
             mWakeLock.acquire(screenTime);
-            mIvSecreenSunSwitch.setImageResource(R.drawable.sun_always_on_selector);
-            ToastUtil.showScreenOn(this);
         }
         isScreenAlwaysOn = !isScreenAlwaysOn;
     }

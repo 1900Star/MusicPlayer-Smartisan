@@ -86,7 +86,7 @@ public abstract class BaseRvAdapter<T>
             }
         } else {
 
-            bindView(holder, mList.get(position >= mList.size() ? position - 1 : position));
+            bindView(holder, mList.get(position != 0 ? position >= mList.size() ? position - 1 : position : 0));
         }
     }
 

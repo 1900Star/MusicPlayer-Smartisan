@@ -72,12 +72,8 @@ public class LoadMusicDataService extends IntentService {
         } else {
             // 首次安装自动扫描本地歌曲并创建本地数据库
             if (songSum > 0) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    dataList.forEach((MusicBean bean) -> sendLoadProgress(songSum, bean));
-                } else {
-                    for (MusicBean musicInfo : dataList) {
-                        sendLoadProgress(songSum, musicInfo);
-                    }
+                for (MusicBean musicInfo : dataList) {
+                    sendLoadProgress(songSum, musicInfo);
                 }
                 LogUtil.d("LoadMusicDataServices===== 加载数据完成");
                 recoverFavoriteMusic(dataList);

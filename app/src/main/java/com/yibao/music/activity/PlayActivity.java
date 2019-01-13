@@ -98,8 +98,6 @@ public class PlayActivity extends BasePlayActivity {
     ImageView mMusicPlayerNext;
     @BindView(R.id.iv_favorite_music)
     ImageView mIvFavoriteMusic;
-    @BindView(R.id.iv_lyrics_mask)
-    ImageView mIvLyricsMask;
     @BindView(R.id.sb_volume)
     SeekBar mSbVolume;
     private int mDuration;
@@ -216,10 +214,10 @@ public class PlayActivity extends BasePlayActivity {
         updatePlayBtnStatus();
 //        初始化歌词
         mLyricList = audioBinder.getLyricList();
-        mIvSecreenSunSwitch.setVisibility(mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
         mTvLyrics.setLrcFile(mLyricList);
         if (isShowLyrics) {
             closeLyricsView(mLyricList);
+            mIvSecreenSunSwitch.setVisibility(mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -379,7 +377,7 @@ public class PlayActivity extends BasePlayActivity {
                 showLyrics();
                 break;
             case R.id.iv_lyrics_switch:
-                MoreMenuBottomDialog.newInstance(mCurrenMusicInfo, audioBinder.getPosition(), true,true).getBottomDialog(this);
+                MoreMenuBottomDialog.newInstance(mCurrenMusicInfo, audioBinder.getPosition(), true, true).getBottomDialog(this);
                 break;
             case R.id.iv_secreen_sun_switch:
                 screenAlwaysOnSwitch(mIvSecreenSunSwitch);
@@ -416,28 +414,20 @@ public class PlayActivity extends BasePlayActivity {
     private void showLyrics() {
 
         if (isShowLyrics) {
-            mIvLyricsSwitch.setBackgroundResource(R.drawable.music_lrc_close);
-            AnimationDrawable animation = (AnimationDrawable) mIvLyricsSwitch.getBackground();
-            animation.start();
-            mTvLyrics.setVisibility(View.GONE);
-            mIvLyricsMask.setVisibility(View.GONE);
-            mIvSecreenSunSwitch.setVisibility(View.GONE);
             clearDisposableLyric();
             disPosableLyricsView();
         } else {
-            mIvLyricsSwitch.setBackgroundResource(R.drawable.music_lrc_open);
-            AnimationDrawable animation = (AnimationDrawable) mIvLyricsSwitch.getBackground();
-            animation.start();
-            mTvLyrics.setVisibility(View.VISIBLE);
-            mIvLyricsMask.setVisibility(View.GONE);
-            mIvSecreenSunSwitch.setVisibility(mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
             // 开始滚动歌词
             if (audioBinder.isPlaying()) {
                 startRollPlayLyrics(mTvLyrics);
             }
             closeLyricsView(mLyricList);
-
         }
+        mTvLyrics.setVisibility(isShowLyrics ? View.GONE : View.VISIBLE);
+        mIvSecreenSunSwitch.setVisibility(isShowLyrics ? View.GONE : mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
+        mIvLyricsSwitch.setBackgroundResource(isShowLyrics ? R.drawable.music_lrc_close : R.drawable.music_lrc_open);
+        AnimationDrawable animation = (AnimationDrawable) mIvLyricsSwitch.getBackground();
+        animation.start();
         isShowLyrics = !isShowLyrics;
     }
 
