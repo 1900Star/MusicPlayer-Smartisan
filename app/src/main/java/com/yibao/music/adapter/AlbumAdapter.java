@@ -187,7 +187,7 @@ public class AlbumAdapter
     @Override
     public int getPositionForSection(int section) {
         for (int i = 0; i < getItemCount(); i++) {
-            char firstChar = mList.get(i).getFirstChar().toUpperCase().charAt(0);
+            char firstChar = mList.get(i > mList.size() ? 0 : i).getFirstChar().toUpperCase().charAt(0);
             if (firstChar == section) {
                 return i;
             }
