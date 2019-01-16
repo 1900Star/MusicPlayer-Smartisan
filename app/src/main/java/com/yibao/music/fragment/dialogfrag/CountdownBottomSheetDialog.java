@@ -84,7 +84,11 @@ public class CountdownBottomSheetDialog
     private void initData() {
         mTimerIntent = new Intent(mContext, CountdownService.class);
         mTimerIntent.setAction(ACTION_TIMER);
+        boolean serviceIsRunning = getServiceIsRunning();
         List<String> timeList = new ArrayList<>(Arrays.asList(arrTime).subList(getServiceIsRunning() ? 0 : 1, arrTime.length - 1));
+        LogUtil.d("============== running   "+serviceIsRunning+"    ==  "+timeList.size());
+
+
         setCompleteStata(!timeList.get(0).equals(arrTime[0]));
         mWheelView.setOffset(Constants.NUMBER_ONE);
         mWheelView.setItems(timeList);

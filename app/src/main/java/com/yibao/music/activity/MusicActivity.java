@@ -205,39 +205,41 @@ public class MusicActivity
 //        if (detailsViewMap != null && itemStatusMap != null) {
         switch (v.getId()) {
             case R.id.tv_edit:
-                if (mCurrentIndex == 0) {
-                    // 详情页面已打开 或者 列表处于选择状态，编辑按钮有两种Text，返回播放列表 和 完成，点击都执行返回操作(交给Fragment处理)。
-                    boolean isContainsKey = itemStatusMap.containsKey(Constants.FRAGMENT_PLAYLIST);
-                    if (detailsViewMap.containsKey(Constants.FRAGMENT_PLAYLIST)) {
-                        mBus.post(isContainsKey ? new EditBean(mCurrentIndex) : new DetailsFlagBean(detailFlag));
-                    } else {
-                        // 点击编辑按钮进入列表多选状态。
-                        mBus.post(new EditBean(mCurrentIndex));
-                    }
-                    mIvSearch.setVisibility(isContainsKey ? View.VISIBLE : View.GONE);
-                    mTvEditDelete.setVisibility(isContainsKey ? View.GONE : View.VISIBLE);
+                if (detailsViewMap != null && itemStatusMap != null) {
+                    if (mCurrentIndex == 0) {
+                        // 详情页面已打开 或者 列表处于选择状态，编辑按钮有两种Text，返回播放列表 和 完成，点击都执行返回操作(交给Fragment处理)。
+                        boolean isContainsKey = itemStatusMap.containsKey(Constants.FRAGMENT_PLAYLIST);
+                        if (detailsViewMap.containsKey(Constants.FRAGMENT_PLAYLIST)) {
+                            mBus.post(isContainsKey ? new EditBean(mCurrentIndex) : new DetailsFlagBean(detailFlag));
+                        } else {
+                            // 点击编辑按钮进入列表多选状态。
+                            mBus.post(new EditBean(mCurrentIndex));
+                        }
+                        mIvSearch.setVisibility(isContainsKey ? View.VISIBLE : View.GONE);
+                        mTvEditDelete.setVisibility(isContainsKey ? View.GONE : View.VISIBLE);
 
-                } else if (mCurrentIndex == 1) {
-                    if (detailsViewMap.containsKey(Constants.FRAGMENT_ARTIST)) {
-                        mBus.post(new DetailsFlagBean(SpUtil.getDetailFlag(this)));
-                    }
-                } else if (mCurrentIndex == 2) {
-                    boolean isContainsKey = detailsViewMap.containsKey(Constants.FRAGMENT_SONG_CATEGORY);
-                    mBus.post(new EditBean(mCurrentIndex));
-                    mIvSearch.setVisibility(isContainsKey ? View.VISIBLE : View.GONE);
-                    mTvEditDelete.setVisibility(isContainsKey ? View.GONE : View.VISIBLE);
-                } else if (mCurrentIndex == 3) {
-
-                    // 详情页面已打开 或者 列表处于选择状态，编辑按钮有两种Text，返回播放列表 和 完成，点击都执行返回操作(交给Fragment处理)。
-                    boolean isContainsKey = itemStatusMap.containsKey(Constants.FRAGMENT_ALBUM);
-                    if (detailsViewMap.containsKey(Constants.FRAGMENT_ALBUM)) {
-                        mBus.post(isContainsKey ? new EditBean(mCurrentIndex) : new DetailsFlagBean(detailFlag));
-                    } else {
-                        // 点击编辑按钮进入列表多选状态。
+                    } else if (mCurrentIndex == 1) {
+                        if (detailsViewMap.containsKey(Constants.FRAGMENT_ARTIST)) {
+                            mBus.post(new DetailsFlagBean(SpUtil.getDetailFlag(this)));
+                        }
+                    } else if (mCurrentIndex == 2) {
+                        boolean isContainsKey = detailsViewMap.containsKey(Constants.FRAGMENT_SONG_CATEGORY);
                         mBus.post(new EditBean(mCurrentIndex));
+                        mIvSearch.setVisibility(isContainsKey ? View.VISIBLE : View.GONE);
+                        mTvEditDelete.setVisibility(isContainsKey ? View.GONE : View.VISIBLE);
+                    } else if (mCurrentIndex == 3) {
+
+                        // 详情页面已打开 或者 列表处于选择状态，编辑按钮有两种Text，返回播放列表 和 完成，点击都执行返回操作(交给Fragment处理)。
+                        boolean isContainsKey = itemStatusMap.containsKey(Constants.FRAGMENT_ALBUM);
+                        if (detailsViewMap.containsKey(Constants.FRAGMENT_ALBUM)) {
+                            mBus.post(isContainsKey ? new EditBean(mCurrentIndex) : new DetailsFlagBean(detailFlag));
+                        } else {
+                            // 点击编辑按钮进入列表多选状态。
+                            mBus.post(new EditBean(mCurrentIndex));
+                        }
+                        mIvSearch.setVisibility(isContainsKey ? View.VISIBLE : View.GONE);
+                        mTvEditDelete.setVisibility(isContainsKey ? View.GONE : View.VISIBLE);
                     }
-                    mIvSearch.setVisibility(isContainsKey ? View.VISIBLE : View.GONE);
-                    mTvEditDelete.setVisibility(isContainsKey ? View.GONE : View.VISIBLE);
                 }
                 break;
             // 删除 *******************************************************************************

@@ -6,6 +6,9 @@ package com.yibao.music.util;
  * 邮箱：strangermy@outlook.com
  */
 public class Api {
+
+    public static String[] picUrlArr1 = {"https://static.smartisanos.cn/common/pr/thumb-img/smartisan-os/cn/18.jpg",
+            "https://static.smartisanos.cn/common/pr/thumb-img/smartisan-os/cn/22.jpg"};
     public static String[] picUrlArr = {
             //***********************新垣结衣
             "http://imglf0.ph.126.net/Puk3K4Ll6GWpXj0zPDi4tQ==/3340826498678886372.jpg",
