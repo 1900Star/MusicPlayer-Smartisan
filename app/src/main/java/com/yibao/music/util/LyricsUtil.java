@@ -151,6 +151,7 @@ public class LyricsUtil {
      * @return d
      */
     private static int parseTime(String s) {
+        int mtime = 0;
         boolean containsChinese = isContainsEnglishAndChinese(s);
         String braces = "[";
         if (containsChinese) {
@@ -162,9 +163,12 @@ public class LyricsUtil {
             if (min.contains(braces)) {
                 min = "00";
             }
-            String sec = arr[1];
-            boolean b = isContainsEnglishAndChinese(sec);
-            return (int) (Integer.parseInt(min) * 60 * 1000 + Float.parseFloat(b ? "1" : sec) * 1000);
+            if (arr.length > 1) {
+                String sec = arr[1];
+                boolean b = isContainsEnglishAndChinese(sec);
+                mtime = (int) (Integer.parseInt(min) * 60 * 1000 + Float.parseFloat(b ? "1" : sec) * 1000);
+            }
+            return arr.length > 1 ? mtime : 1;
         }
 
     }
