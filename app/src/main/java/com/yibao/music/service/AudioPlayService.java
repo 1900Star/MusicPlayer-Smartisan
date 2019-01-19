@@ -65,10 +65,6 @@ public class AudioPlayService
     private MediaSessionManager mSessionManager;
     private List<MusicLyricBean> mLyricList;
 
-    public void setData(List<MusicBean> list) {
-        mMusicDataList = list;
-    }
-
     @Override
     public IBinder onBind(Intent intent) {
         return mAudioBinder;
@@ -184,14 +180,16 @@ public class AudioPlayService
         }
 
         public void updataFavorite() {
-            MusicBean musicBean = mMusicDataList.get(position);
-            boolean favorite = mMusicDao.load(musicBean.getId()).getIsFavorite();
-            mNotifyManager.updataFavoriteBtn(favorite);
-            new Thread(() -> {
-                refreshFavorite(musicBean, favorite);
-                // 更新本地收藏文件
-                updataFavoritefile(musicBean, favorite);
-            }).start();
+            if (position < mMusicDataList.size()) {
+                MusicBean musicBean = mMusicDataList.get(position);
+                boolean favorite = mMusicDao.load(musicBean.getId()).getIsFavorite();
+                mNotifyManager.updataFavoriteBtn(favorite);
+                new Thread(() -> {
+                    refreshFavorite(musicBean, favorite);
+                    // 更新本地收藏文件
+                    updataFavoritefile(musicBean, favorite);
+                }).start();
+            }
         }
 
         private void hintNotifycation() {

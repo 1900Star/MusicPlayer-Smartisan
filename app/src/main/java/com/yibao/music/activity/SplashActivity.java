@@ -101,11 +101,7 @@ public class SplashActivity
             mIsFirstScanner = false;
             Intent intent = new Intent(this, LoadMusicDataService.class);
             intent.putExtra(Constants.SCANNER_MEDIA, Constants.SCANNER_MEDIA);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(intent);
-            } else {
-                startService(intent);
-            }
+            startService(intent);
             updataLoadProgress();
         }
 

@@ -399,22 +399,22 @@ public class MusicActivity
                 ToastUtil.showNoMusic(MusicActivity.this);
             }
         });
-//        mQqControlBar.setOnPagerSelecteListener(position -> {
-//            int sortFlag = SpUtil.getSortFlag(this);
-//            MusicActivity.this.disposableQqLyric();
-//            int detailFlag = SpUtil.getDetailFlag(MusicActivity.this);
-//            if (detailFlag > 0) {
-//                if (detailFlag == Constants.NUMBER_EIGHT) {
-//                    startMusicServiceFlag(mCurrentPosition, sortFlag, detailFlag, Constants.FAVORITE_FLAG);
-//                } else if (detailFlag == Constants.NUMBER_TEN) {
-//                    startMusicServiceFlag(mCurrentPosition, sortFlag, detailFlag, SpUtil.getQueryFlag(this));
-//                } else {
-//                    startMusicServiceFlag(mCurrentPosition, sortFlag, detailFlag, Constants.NO_NEED_FLAG);
-//                }
-//            } else {
-//                MusicActivity.this.startMusicService(position);
-//            }
-//        });
+        mQqControlBar.setOnPagerSelecteListener(position -> {
+            int sortFlag = SpUtil.getSortFlag(this);
+            MusicActivity.this.disposableQqLyric();
+            int detailFlag = SpUtil.getDetailFlag(MusicActivity.this);
+            if (detailFlag > 0) {
+                if (detailFlag == Constants.NUMBER_EIGHT) {
+                    startMusicServiceFlag(mCurrentPosition, sortFlag, detailFlag, Constants.FAVORITE_FLAG);
+                } else if (detailFlag == Constants.NUMBER_TEN) {
+                    startMusicServiceFlag(mCurrentPosition, sortFlag, detailFlag, SpUtil.getQueryFlag(this));
+                } else {
+                    startMusicServiceFlag(mCurrentPosition, sortFlag, detailFlag, Constants.NO_NEED_FLAG);
+                }
+            } else {
+                MusicActivity.this.startMusicService(position);
+            }
+        });
     }
 
     private void changeToolBarTitle(int currentSelecteFlag) {
