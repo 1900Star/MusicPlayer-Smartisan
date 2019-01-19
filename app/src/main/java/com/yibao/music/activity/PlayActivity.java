@@ -145,9 +145,11 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     private void init() {
-        if (audioBinder.isPlaying()) {
-            initAnimation();
-            updatePlayBtnStatus();
+        if (audioBinder != null) {
+            if (audioBinder.isPlaying()) {
+                initAnimation();
+                updatePlayBtnStatus();
+            }
         }
         setSongDuration();
         //设置播放模式图片
