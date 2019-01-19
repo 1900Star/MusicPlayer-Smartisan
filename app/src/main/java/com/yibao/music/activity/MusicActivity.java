@@ -126,7 +126,6 @@ public class MusicActivity
 //        List<MusicBean> initMusicList = audioBinder != null ? audioBinder.getMusicList() : QueryMusicFlagListUtil.getDataList(SpUtil.getSortFlag(this), SpUtil.getDataQueryFlag(this), SpUtil.getQueryFlag(this), mMusicDao);
         List<MusicBean> initMusicList = QueryMusicFlagListUtil.getDataList(SpUtil.getSortFlag(this), SpUtil.getDataQueryFlag(this), SpUtil.getQueryFlag(this), mMusicDao);
         mCurrentPosition = SpUtil.getMusicPosition(this);
-        int aa = 0;
         if (initMusicList != null && initMusicList.size() > 0) {
             mCurrentMusicBean = initMusicList.get(mCurrentPosition > initMusicList.size() ? 0 : mCurrentPosition);
         } else {
@@ -202,7 +201,6 @@ public class MusicActivity
         HashMap<String, BaseFragment> detailsViewMap = BaseMusicFragment.mDetailsViewMap;
         HashMap<String, BaseFragment> itemStatusMap = BaseMusicFragment.mItemStatusMap;
         LogUtil.d(" map==   " + detailsViewMap + "   ==   " + itemStatusMap);
-//        if (detailsViewMap != null && itemStatusMap != null) {
         switch (v.getId()) {
             case R.id.tv_edit:
                 if (detailsViewMap != null && itemStatusMap != null) {
@@ -279,7 +277,6 @@ public class MusicActivity
                 break;
             default:
                 break;
-//            }
         }
     }
 
