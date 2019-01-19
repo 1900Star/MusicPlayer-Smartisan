@@ -131,7 +131,7 @@ public class DetailsView
                 LogUtil.d("=================添加到当前播放列表");
                 break;
             case R.id.ll_album_details_playall:
-                startMusic(Constants.NUMBER_ZOER);
+                startMusic(Constants.NUMBER_ZERO);
                 break;
             case R.id.ll_album_details_random_play:
                 startMusic(RandomUtil.getRandomPostion(mListSize));
@@ -181,7 +181,7 @@ public class DetailsView
         mTvArtistAlbummDetailsTitle.setText(albumName);
         mTvArtistAlbummDetailsArtist.setText(artist);
         ImageUitl.customLoadPic(getContext(), StringUtil.getAlbulm((albumId)), R.drawable.noalbumcover_220, mIvArtistAlbummDetails);
-        if (issueYear != Constants.NUMBER_ZOER) {
+        if (issueYear != Constants.NUMBER_ZERO) {
             String year = String.valueOf(issueYear);
             mTvArtistAlbummDetailsDate.setText(year);
         }

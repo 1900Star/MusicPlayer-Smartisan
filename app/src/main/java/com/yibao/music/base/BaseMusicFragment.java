@@ -85,7 +85,7 @@ public abstract class BaseMusicFragment extends BaseFragment {
     // 有详情页面的子类重写这个方法，让自己处理返回事件的，只要这个方法一调用，按返回键就会将详情页面隐藏。
     protected void handleDetailsBack(int detailFlag) {
         // 详情页面关闭后，将标记置为0，将返回事件交给Activity处理，这样就能正常返回。
-        SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_ZOER);
+        SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_ZERO);
     }
 
     /**

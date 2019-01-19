@@ -62,7 +62,7 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
         switch (view.getId()) {
 
             case R.id.music_bar_playlist:
-                switchMusicTabbar(Constants.NUMBER_ZOER);
+                switchMusicTabbar(Constants.NUMBER_ZERO);
                 break;
             case R.id.music_bar_artisanlist:
                 switchMusicTabbar(Constants.NUMBER_ONE);
@@ -83,7 +83,7 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
 
     public void switchMusicTabbar(int flag) {
         switch (flag) {
-            case Constants.NUMBER_ZOER:
+            case Constants.NUMBER_ZERO:
                 setAllTabbarNotPressed(flag, R.string.play_list);
                 mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_selector);
                 mMusicBarPlaylistTv.setTextColor(ColorUtil.musicbarTvDown);
@@ -103,7 +103,7 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
                 mMusicBarSonglistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarSonglist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 // 没有详情页面，直接返回桌面。
-//                SpUtil.setDetailsFlag(getContext(), Constants.NUMBER_ZOER);
+//                SpUtil.setDetailsFlag(getContext(), Constants.NUMBER_ZERO);
                 setDetailFragmentFlag(Constants.FRAGMENT_SONG_CATEGORY, Constants.NUMBER_ELEVEN);
 
                 break;

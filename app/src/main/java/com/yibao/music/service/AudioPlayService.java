@@ -109,7 +109,7 @@ public class AudioPlayService
         int dataFlag = intent.getIntExtra("dataFlag", 0);
         String queryFlag = intent.getStringExtra("queryFlag");
 
-        int sortFlag = sortListFlag == Constants.NUMBER_ZOER ? Constants.NUMBER_ONE : sortListFlag;
+        int sortFlag = sortListFlag == Constants.NUMBER_ZERO ? Constants.NUMBER_ONE : sortListFlag;
         SpUtil.setDataQueryFlag(this, dataFlag);
         if (queryFlag != null && !queryFlag.equals(Constants.FAVORITE_FLAG) && !queryFlag.equals(Constants.NO_NEED_FLAG)) {
             SpUtil.setQueryFlag(AudioPlayService.this, queryFlag);

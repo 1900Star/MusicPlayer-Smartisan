@@ -2,7 +2,6 @@ package com.yibao.music.service;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.os.Build;
 import android.support.annotation.Nullable;
 
 import com.yibao.music.MusicApplication;
@@ -67,7 +66,7 @@ public class LoadMusicDataService extends IntentService {
                 }
             } else {
                 LogUtil.d("没有新增歌曲!");
-                mBus.post(new MusicCountBean(Constants.NUMBER_ZOER, Constants.NUMBER_ZOER));
+                mBus.post(new MusicCountBean(Constants.NUMBER_ZERO, Constants.NUMBER_ZERO));
             }
         } else {
             // 首次安装自动扫描本地歌曲并创建本地数据库
@@ -79,7 +78,7 @@ public class LoadMusicDataService extends IntentService {
                 recoverFavoriteMusic(dataList);
             } else {
                 // 本地没有发现歌曲
-                mBus.post(new MusicCountBean(Constants.NUMBER_ZOER, Constants.NUMBER_ZOER));
+                mBus.post(new MusicCountBean(Constants.NUMBER_ZERO, Constants.NUMBER_ZERO));
             }
         }
     }

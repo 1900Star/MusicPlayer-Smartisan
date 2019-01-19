@@ -5,10 +5,8 @@ import com.yibao.music.base.listener.OnSearchFlagListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -83,7 +81,7 @@ public class MusicDaoUtil {
             List<MusicBean> musicBeanList = musicDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle())).build().list();
             for (MusicBean musicBean : musicBeanList) {
                 musicBean.setPlayListFlag(Constants.PLAY_LIST_BACK_FLAG);
-                musicBean.setAddListTime(Constants.NUMBER_ZOER);
+                musicBean.setAddListTime(Constants.NUMBER_ZERO);
                 musicDao.update(musicBean);
             }
 

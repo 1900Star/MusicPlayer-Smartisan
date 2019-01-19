@@ -88,7 +88,7 @@ public class SongAdapter
             ImageUitl.customLoadPic(mContext, StringUtil.getAlbulm(musicBean.getAlbumId()), R.drawable.noalbumcover_120, songListViewHolder.mSongAlbum);
             songListViewHolder.mSongArtistName.setText(StringUtil.getArtist(musicBean));
             songListViewHolder.mSongName.setText(StringUtil.getTitle(musicBean));
-            if (mIsShowStickyView == Constants.NUMBER_ZOER) {
+            if (mIsShowStickyView == Constants.NUMBER_ZERO) {
                 String firstTv = musicBean.getFirstChar();
                 songListViewHolder.mTvStickyView.setText(firstTv);
                 if (position == 0) {

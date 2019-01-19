@@ -177,7 +177,7 @@ public class MusicActivity
     @Override
     protected void refreshBtnAndNotify(PlayStatusBean bean) {
         switch (bean.getType()) {
-            case Constants.NUMBER_ZOER:
+            case Constants.NUMBER_ZERO:
                 mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
                 updatePlayBtnStatus();
                 break;
@@ -243,37 +243,31 @@ public class MusicActivity
             // 删除 *******************************************************************************
             case R.id.tv_edit_delete:
                 // 删除所选的条目 mCurrentIndex + 10  (10 、12 、13  有编辑的页面)
-                switch (mCurrentIndex) {
-                    case Constants.NUMBER_ZOER:
-                        List<PlayListBean> beanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).list();
-                        if (beanList.size() > 0) {
-                            mBus.post(new EditBean(mCurrentIndex + 10));
-                            mIvSearch.setVisibility(View.VISIBLE);
-                            mTvEditDelete.setVisibility(View.GONE);
-                            mTvEdit.setText(getResources().getString(R.string.tv_edit));
-                        }
-                        break;
-                    case Constants.NUMBER_TWO:
-                        List<MusicBean> musicBeans = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsSelected.eq(true)).build().list();
-                        if (musicBeans.size() > 0) {
-                            mBus.post(new EditBean(mCurrentIndex + 10));
-                            mIvSearch.setVisibility(View.VISIBLE);
-                            mTvEditDelete.setVisibility(View.GONE);
-                            mTvEdit.setText(getResources().getString(R.string.tv_edit));
-                        }
-                        break;
-                    case Constants.NUMBER_THRRE:
-                        SnakbarUtil.keepGoing(mSmartisanControlBar);
-                        break;
-                    default:
-                        break;
+                if (mCurrentIndex == Constants.NUMBER_ZERO) {
+                    List<PlayListBean> beanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).list();
+                    if (beanList.size() > 0) {
+                        mBus.post(new EditBean(mCurrentIndex + 10));
+                        mIvSearch.setVisibility(View.VISIBLE);
+                        mTvEditDelete.setVisibility(View.GONE);
+                        mTvEdit.setText(getResources().getString(R.string.tv_edit));
+                    }
+                } else if (mCurrentIndex == Constants.NUMBER_TWO) {
+                    List<MusicBean> musicBeans = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsSelected.eq(true)).build().list();
+                    if (musicBeans.size() > 0) {
+                        mBus.post(new EditBean(mCurrentIndex + 10));
+                        mIvSearch.setVisibility(View.VISIBLE);
+                        mTvEditDelete.setVisibility(View.GONE);
+                        mTvEdit.setText(getResources().getString(R.string.tv_edit));
+                    }
+                } else if (mCurrentIndex == Constants.NUMBER_THRRE) {
+                    SnakbarUtil.keepGoing(mSmartisanControlBar);
                 }
                 break;
             case R.id.tv_music_toolbar_title:
                 switchMusicControlBar();
                 break;
             case R.id.iv_search:
-                startSearchActivity(mCurrentMusicBean, Constants.NUMBER_ZOER);
+                startSearchActivity(mCurrentMusicBean, Constants.NUMBER_ZERO);
                 break;
             default:
                 break;
@@ -286,7 +280,7 @@ public class MusicActivity
             HashMap<String, BaseFragment> itemStatusMap = BaseMusicFragment.mItemStatusMap;
             if (detailsViewMap != null && itemStatusMap != null) {
                 switch (currentSelecteFlag) {
-                    case Constants.NUMBER_ZOER:
+                    case Constants.NUMBER_ZERO:
                         // 详情页面已打开 或者 列表处于选择状态 两种情况,当处于选择状态时，删除按钮显示，搜索隐藏。
                         boolean isContainsKey = itemStatusMap.containsKey(Constants.FRAGMENT_PLAYLIST);
                         if (detailsViewMap.containsKey(Constants.FRAGMENT_PLAYLIST)) {
@@ -425,7 +419,7 @@ public class MusicActivity
 
     private void changeToolBarTitle(int currentSelecteFlag) {
         switch (currentSelecteFlag) {
-            case Constants.NUMBER_ZOER:
+            case Constants.NUMBER_ZERO:
                 setToolBarTitle(PlayListFragment.isShowDetailsView, PlayListFragment.detailsViewTitle);
                 break;
             case Constants.NUMBER_ONE:
@@ -709,7 +703,7 @@ public class MusicActivity
 
 
     private void setDetailFlagZoer() {
-        SpUtil.setDetailsFlag(this, Constants.NUMBER_ZOER);
+        SpUtil.setDetailsFlag(this, Constants.NUMBER_ZERO);
     }
 
     public static AudioPlayService.AudioBinder getAudioBinder() {
@@ -756,7 +750,7 @@ public class MusicActivity
         super.moreMenu(moreMenuStatus);
         MusicBean musicBean = moreMenuStatus.getMusicBean();
         switch (moreMenuStatus.getPosition()) {
-            case Constants.NUMBER_ZOER:
+            case Constants.NUMBER_ZERO:
                 startPlayListActivity(musicBean.getTitle());
                 break;
             case Constants.NUMBER_ONE:
@@ -823,7 +817,7 @@ public class MusicActivity
     @Override
     public void onBackPressed() {
         int detailFlag = SpUtil.getDetailFlag(this);
-        if (detailFlag > Constants.NUMBER_ZOER) {
+        if (detailFlag > Constants.NUMBER_ZERO) {
             mBus.post(new DetailsFlagBean(detailFlag));
             mTvMusicToolbarTitle.setText(mTitleResourceId);
             // 搜索和编辑

@@ -140,7 +140,7 @@ public class FavoriteBottomSheetDialog
                         mList.remove(bean.getPosition());
                         setTitle(mList);
                         checkCurrentFavorite(bean.getSongTitle());
-                        if (mList.size() == Constants.NUMBER_ZOER) {
+                        if (mList.size() == Constants.NUMBER_ZERO) {
                             mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
                     }
@@ -213,9 +213,11 @@ public class FavoriteBottomSheetDialog
 
     private void backTop() {
         BottomSheetAdapter adapter = (BottomSheetAdapter) mRecyclerView.getAdapter();
-        int positionForSection = adapter.getPositionForSection(0);
         LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-        manager.scrollToPositionWithOffset(positionForSection, 0);
+        if (adapter != null && manager != null) {
+            int positionForSection = adapter.getPositionForSection(0);
+            manager.scrollToPositionWithOffset(positionForSection, 0);
+        }
     }
 
     private void playMusic(int position) {

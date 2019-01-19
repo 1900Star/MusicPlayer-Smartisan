@@ -30,7 +30,7 @@ public class Constants {
      */
     public static final int COUNTDOWN_fINISH = 5;
 
-    public static final int NUMBER_ZOER = 0;
+    public static final int NUMBER_ZERO = 0;
     public static final int NUMBER_ONE = 1;
     public static final int NUMBER_TWO = 2;
     public static final int NUMBER_THRRE = 3;
@@ -44,8 +44,8 @@ public class Constants {
     public static final int NUMBER_ELEVEN = 11;
     public static final int NUMBER_TWELVE = 12;
     public static final int NUMBER_THIRTEEN = 13;
-    public static final char LETTER_A = 'A';
-    public static final char LETTER_Z = 'Z';
+    static final char LETTER_A = 'A';
+    static final char LETTER_Z = 'Z';
     public static final char LETTER_HASH = '#';
     public static final String SONG_NAME = "song_name";
     public static final String TIME_SERVICE_NAME = "com.yibao.music.service.CountdownService";
@@ -97,6 +97,6 @@ public class Constants {
     public static final String COUNTDOWN_TIME = "countdown_time";
     public static final String FINISH_TIME = "00:01";
 
-    public static final String FAVORITE_FILE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/favorite.txt/";
+    static final String FAVORITE_FILE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/favorite.txt/";
 
 }

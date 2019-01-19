@@ -15,7 +15,6 @@ import com.yibao.music.R;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 
 import java.util.List;
 
@@ -63,7 +62,7 @@ public abstract class BaseRvAdapter<T>
 
     @Override
     public int getItemCount() {
-        return mList == null ? Constants.NUMBER_ZOER : mList.size() + 1;
+        return mList == null ? Constants.NUMBER_ZERO : mList.size() + 1;
     }
 
 
@@ -153,7 +152,7 @@ public abstract class BaseRvAdapter<T>
     }
 
     public void setNewData(List<T> data) {
-        if (mList != null && mList.size() > Constants.NUMBER_ZOER) {
+        if (mList != null && mList.size() > Constants.NUMBER_ZERO) {
             mList.clear();
         }
         this.mList = data;

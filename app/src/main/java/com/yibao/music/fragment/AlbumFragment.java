@@ -22,7 +22,6 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicView;
@@ -115,7 +114,7 @@ public class AlbumFragment extends BaseMusicFragment {
                 randomPlayMusic();
                 break;
             case R.id.album_category_list_ll:
-                switchCategory(Constants.NUMBER_ZOER);
+                switchCategory(Constants.NUMBER_ZERO);
                 break;
             case R.id.album_category_tile_ll:
                 switchCategory(Constants.NUMBER_ONE);
@@ -174,7 +173,7 @@ public class AlbumFragment extends BaseMusicFragment {
 
     private void switchCategory(int showType) {
         mViewPager.setCurrentItem(showType, false);
-        if (showType == Constants.NUMBER_ZOER) {
+        if (showType == Constants.NUMBER_ZERO) {
 
             mAlbumCategoryListLl.setBackgroundResource(R.drawable.btn_category_songname_down_selector);
             mIvAlbumCategoryList.setImageResource(R.drawable.album_category_list_down_selector);

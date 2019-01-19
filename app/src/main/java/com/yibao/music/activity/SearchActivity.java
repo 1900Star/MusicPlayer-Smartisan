@@ -100,7 +100,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         audioBinder = MusicActivity.getAudioBinder();
         mSmartisanControlBar.setPbColorAndPreBtnGone();
         setMusicInfo(mMusicBean);
-        if (pageType > Constants.NUMBER_ZOER) {
+        if (pageType > Constants.NUMBER_ZERO) {
             initSearch(mMusicBean.getArtist());
             mIvEditClear.setVisibility(View.VISIBLE);
         } else {
@@ -191,7 +191,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         super.moreMenu(moreMenuStatus);
         MusicBean musicBean = moreMenuStatus.getMusicBean();
         switch (moreMenuStatus.getPosition()) {
-            case Constants.NUMBER_ZOER:
+            case Constants.NUMBER_ZERO:
                 startPlayListActivity(musicBean.getTitle());
                 break;
             case Constants.NUMBER_ONE:

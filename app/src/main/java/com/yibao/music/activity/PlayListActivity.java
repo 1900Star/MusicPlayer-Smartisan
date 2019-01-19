@@ -45,7 +45,7 @@ public class PlayListActivity extends AppCompatActivity implements OnFinishActiv
     @Override
     public void finish() {
         super.finish();
-        SpUtil.setAddToPlayListFlag(this, Constants.NUMBER_ZOER);
+        SpUtil.setAddToPlayListFlag(this, Constants.NUMBER_ZERO);
         overridePendingTransition(0, R.anim.dialog_push_out);
     }
 

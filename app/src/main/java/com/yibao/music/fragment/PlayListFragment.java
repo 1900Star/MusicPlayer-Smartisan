@@ -126,7 +126,7 @@ public class PlayListFragment extends BaseMusicFragment {
                         } else if (operationType == Constants.NUMBER_SIX) {
                             mDetailsAdapter.notifyDataSetChanged();
                             mDetailList.remove(bean.getPosition());
-                            if (mDetailList.size() == Constants.NUMBER_ZOER) {
+                            if (mDetailList.size() == Constants.NUMBER_ZERO) {
                                 String str = getResources().getString(R.string.play_list);
                                 showDetailsView(str);
                                 changeToolBarTitle(str, false);
@@ -176,7 +176,7 @@ public class PlayListFragment extends BaseMusicFragment {
                 mDeletePosition = currentPosition;
                 DeletePlayListDialog.newInstance(musicInfo, Constants.NUMBER_TWO).show(mActivity.getFragmentManager(), "deleteList");
             }
-            SpUtil.setAddToPlayListFlag(mContext, Constants.NUMBER_ZOER);
+            SpUtil.setAddToPlayListFlag(mContext, Constants.NUMBER_ZERO);
         });
         // 编辑按钮
         mAdapter.setItemEditClickListener(currentPosition -> {
@@ -232,7 +232,7 @@ public class PlayListFragment extends BaseMusicFragment {
 
     @Override
     protected void changeEditStatus(int currentIndex) {
-        if (currentIndex == Constants.NUMBER_ZOER) {
+        if (currentIndex == Constants.NUMBER_ZERO) {
             closeEditStatus();
         } else if (currentIndex == 10) {
             // 删除已选择的条目
@@ -249,7 +249,7 @@ public class PlayListFragment extends BaseMusicFragment {
     }
 
     private void changeEditSearchVisibility() {
-        boolean isEditVisibility = getPlayList().size() > Constants.NUMBER_ZOER;
+        boolean isEditVisibility = getPlayList().size() > Constants.NUMBER_ZERO;
         changeEditVisibility(isEditVisibility);
     }
 
@@ -296,9 +296,9 @@ public class PlayListFragment extends BaseMusicFragment {
         super.deleteItem(musicPosition);
         if (mDetailList != null && mDetailsAdapter != null) {
             mDetailList.remove(musicPosition);
-            if (mDetailList.size() == Constants.NUMBER_ZOER) {
+            if (mDetailList.size() == Constants.NUMBER_ZERO) {
                 showDetailsView(mPlayListBean.getTitle());
-                mPlayListBean.setSongCount(Constants.NUMBER_ZOER);
+                mPlayListBean.setSongCount(Constants.NUMBER_ZERO);
                 mPlayListDao.update(mPlayListBean);
                 mAdapter.setNewData(getPlayList());
             } else {

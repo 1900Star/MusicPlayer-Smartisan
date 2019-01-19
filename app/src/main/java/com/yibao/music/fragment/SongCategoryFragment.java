@@ -63,7 +63,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (mPosition != Constants.NUMBER_ZOER) {
+        if (mPosition != Constants.NUMBER_ZERO) {
             mPlayFrequencyList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_THRRE);
             mAddTimeList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
             mScoreList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_FOUR);
@@ -107,7 +107,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
         switch (mPosition) {
             case 0:
                 isShowSlidebar = true;
-                mSongAdapter = new SongAdapter(mActivity, mAbcList, Constants.NUMBER_ZOER, Constants.NUMBER_ZOER);
+                mSongAdapter = new SongAdapter(mActivity, mAbcList, Constants.NUMBER_ZERO, Constants.NUMBER_ZERO);
                 break;
             case 1:
                 mSongAdapter = new SongAdapter(mActivity, mScoreList, Constants.NUMBER_ONE, Constants.NUMBER_ONE);
@@ -116,7 +116,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
                 mSongAdapter = new SongAdapter(mActivity, mPlayFrequencyList, Constants.NUMBER_ONE, Constants.NUMBER_TWO);
                 break;
             case 3:
-                mSongAdapter = new SongAdapter(mActivity, mAddTimeList, Constants.NUMBER_ONE, Constants.NUMBER_ZOER);
+                mSongAdapter = new SongAdapter(mActivity, mAddTimeList, Constants.NUMBER_ONE, Constants.NUMBER_ZERO);
                 break;
             default:
                 break;

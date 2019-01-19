@@ -168,7 +168,7 @@ public class PlayActivity extends BasePlayActivity {
     protected void moreMenu(MoreMenuStatus moreMenuStatus) {
         super.moreMenu(moreMenuStatus);
         switch (moreMenuStatus.getPosition()) {
-            case Constants.NUMBER_ZOER:
+            case Constants.NUMBER_ZERO:
                 startPlayListActivity(mCurrenMusicInfo.getTitle());
                 break;
             case Constants.NUMBER_ONE:

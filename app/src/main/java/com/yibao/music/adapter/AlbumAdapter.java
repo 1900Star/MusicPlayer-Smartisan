@@ -2,7 +2,6 @@ package com.yibao.music.adapter;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,14 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.model.AlbumInfo;
-import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
 
 import java.util.List;
@@ -63,7 +59,7 @@ public class AlbumAdapter
     @Override
     protected void bindView(RecyclerView.ViewHolder holder, AlbumInfo info) {
         //显示 StickyView  并且列表呈普通视图显示
-        if (mIsShowStickyView == Constants.NUMBER_ZOER) {
+        if (mIsShowStickyView == Constants.NUMBER_ZERO) {
             if (holder instanceof AlbumlistHolder) {
                 AlbumlistHolder albumlistHolder = (AlbumlistHolder) holder;
                 setDataAlbumList(albumlistHolder, info);
@@ -170,13 +166,13 @@ public class AlbumAdapter
     @Override
     protected RecyclerView.ViewHolder getViewHolder(View view) {
 
-        return mIsShowStickyView == Constants.NUMBER_ZOER ? new AlbumlistHolder(view) : new AlbumTileHolder(view);
+        return mIsShowStickyView == Constants.NUMBER_ZERO ? new AlbumlistHolder(view) : new AlbumTileHolder(view);
     }
 
     @Override
     protected int getLayoutId() {
 
-        return mIsShowStickyView == Constants.NUMBER_ZOER ? R.layout.item_album_list : R.layout.item_album_tile;
+        return mIsShowStickyView == Constants.NUMBER_ZERO ? R.layout.item_album_list : R.layout.item_album_tile;
     }
 
     @Override
