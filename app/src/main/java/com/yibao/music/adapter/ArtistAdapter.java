@@ -62,7 +62,7 @@ public class ArtistAdapter extends BaseRvAdapter<ArtistInfo> {
             }
 
 
-            artisHolder.mArtistItemContent.setOnClickListener(view -> openDetails(artistInfo,false));
+            artisHolder.mArtistItemContent.setOnClickListener(view -> openDetails(artistInfo, false));
 
         }
 
@@ -80,30 +80,8 @@ public class ArtistAdapter extends BaseRvAdapter<ArtistInfo> {
     }
 
     @Override
-    public Object[] getSections() {
-        return new Object[0];
-    }
-
-
-    @Override
-    public int getPositionForSection(int section) {
-        for (int i = 0; i < getItemCount(); i++) {
-            char firstChar = HanziToPinyins.stringToPinyinSpecial(mList.get(i).getArtist());
-            if (firstChar == section) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * 根据ListView的当前位置获取分类的首字母的char ascii值
-     */
-    @Override
-    public int getSectionForPosition(int position) {
-
-
-        return HanziToPinyins.stringToPinyinSpecial(mList.get(position).getArtist());
+    protected String getFirstChar(int i) {
+        return mList.get(i).getFirstChar();
     }
 
 

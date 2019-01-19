@@ -13,6 +13,7 @@ import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.HanziToPinyins;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.StringUtil;
 
@@ -32,10 +33,7 @@ import butterknife.ButterKnife;
  */
 
 public class AlbumAdapter
-        extends BaseRvAdapter<AlbumInfo>
-
-
-{
+        extends BaseRvAdapter<AlbumInfo> {
     private Activity mContext;
     private int mIsShowStickyView;
 
@@ -175,27 +173,9 @@ public class AlbumAdapter
         return mIsShowStickyView == Constants.NUMBER_ZERO ? R.layout.item_album_list : R.layout.item_album_tile;
     }
 
-    @Override
-    public Object[] getSections() {
-        return new Object[0];
-    }
 
     @Override
-    public int getPositionForSection(int section) {
-        for (int i = 0; i < getItemCount(); i++) {
-            char firstChar = mList.get(i > mList.size() ? 0 : i).getFirstChar().toUpperCase().charAt(0);
-            if (firstChar == section) {
-                return i;
-            }
-        }
-        return -1;
+    protected String getFirstChar(int i) {
+        return mList.get(i).getFirstChar();
     }
-
-    @Override
-    public int getSectionForPosition(int position) {
-
-        return mList.get(position).getFirstChar().toUpperCase().charAt(0);
-    }
-
-
 }

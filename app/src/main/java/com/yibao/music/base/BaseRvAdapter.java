@@ -28,9 +28,7 @@ import butterknife.ButterKnife;
  * @author Stran
  */
 public abstract class BaseRvAdapter<T>
-        extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements SectionIndexer
-
-{
+        extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements SectionIndexer {
     protected List<T> mList;
     protected boolean isSelectStatus = false;
     private static final int TYPE_ITEM = 0;
@@ -171,13 +169,27 @@ public abstract class BaseRvAdapter<T>
     }
 
     @Override
-    public int getPositionForSection(int i) {
-        return 0;
+    public int getPositionForSection(int section) {
+        for (int i = 0; i < getItemCount(); i++) {
+            if (i < mList.size()) {
+                char firstChar = getFirstChar(i).toUpperCase().charAt(0);
+                if (firstChar == section) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 
+    protected String getFirstChar(int i) {
+        return null;
+    }
+
+
     @Override
-    public int getSectionForPosition(int i) {
-        return 0;
+    public int getSectionForPosition(int position) {
+
+        return getFirstChar(position).toUpperCase().charAt(0);
     }
 
 

@@ -36,10 +36,7 @@ import butterknife.ButterKnife;
  */
 
 public class SongAdapter
-        extends BaseRvAdapter<MusicBean>
-
-
-{
+        extends BaseRvAdapter<MusicBean> {
     private Activity mContext;
     private int mIsShowStickyView;
     private int mScroeAndFrequnecyFlag;
@@ -140,28 +137,8 @@ public class SongAdapter
     }
 
     @Override
-    public Object[] getSections() {
-        return new Object[0];
-    }
-
-
-    @Override
-    public int getPositionForSection(int section) {
-        for (int i = 0; i < getItemCount(); i++) {
-            if (i < mList.size()) {
-                char firstChar = mList.get(i).getFirstChar().toUpperCase().charAt(0);
-                if (firstChar == section) {
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }
-
-    @Override
-    public int getSectionForPosition(int position) {
-
-        return mList.get(position).getFirstChar().toUpperCase().charAt(0);
+    protected String getFirstChar(int i) {
+        return mList.get(i).getFirstChar();
     }
 
 

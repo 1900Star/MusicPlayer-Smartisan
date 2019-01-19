@@ -18,7 +18,8 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
  */
 
 public class HanziToPinyins {
-
+    private static char xe = 0x4e00;
+    private static char xf = 0x9fa5;
 
     /**
      * 返回一个字的拼音
@@ -29,8 +30,7 @@ public class HanziToPinyins {
         hanyuPinyin.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
         hanyuPinyin.setVCharType(HanyuPinyinVCharType.WITH_U_UNICODE);
         String[] pinyinArray = null;
-        char xe = 0x4e00;
-        char xf = 0x9fa5;
+
         try {
             //是否在汉字范围内
             if (hanzi >= xe && hanzi <= xf) {
@@ -50,8 +50,8 @@ public class HanziToPinyins {
     /**
      * 返回传入的字符串的首字母
      *
-     * @param input
-     * @return
+     * @param input i
+     * @return r
      */
     public static char stringToPinyinSpecial(String input) {
         if (input == null) {
@@ -60,7 +60,7 @@ public class HanziToPinyins {
         String result = null;
         for (int i = 0; i < input.length(); i++) {
             //是否在汉字范围内
-            if (input.charAt(i) >= 0x4e00 && input.charAt(i) <= 0x9fa5) {
+            if (input.charAt(i) >= xe && input.charAt(i) <= xf) {
                 result += toPinYin(input.charAt(i));
             } else {
                 result += input.charAt(i);
@@ -68,7 +68,7 @@ public class HanziToPinyins {
         }
         if (result != null) {
             if (result.length() > Constants.NUMBER_FOUR) {
-                result = result.substring(4, result.length());
+                result = result.substring(4);
             }
 
             //如果首字母不在[a,z]和[A,Z]内则首字母改为‘#’
@@ -77,7 +77,7 @@ public class HanziToPinyins {
                 builder.replace(0, 1, "#");
                 result = builder.toString();
             }
-        return result.toUpperCase().charAt(0);
+            return result.toUpperCase().charAt(0);
         }
         return 'a';
     }
