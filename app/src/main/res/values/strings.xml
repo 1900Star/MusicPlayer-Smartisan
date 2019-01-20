@@ -69,6 +69,7 @@
     <string name="edit_play_list">编辑列表</string>
     <string name="baidu_key">4502b57559</string>
     <string name="app_info">ArtisanMusicPlayer 仿照锤子音乐播放器写的一个本地音乐播放器。 https://github.com/1900Star/SmartisanMusicPlayer </string>
+    <string name="crashlog">CrashLog</string>
 
 
 </resources>

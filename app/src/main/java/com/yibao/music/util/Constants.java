@@ -98,5 +98,7 @@ public class Constants {
     public static final String FINISH_TIME = "00:01";
 
     static final String FAVORITE_FILE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/favorite.txt/";
-
+    // 崩溃日志本地保存地址
+    public static final String CRASH_LOG_PATH = Environment.getExternalStorageDirectory()
+            .getPath() + "/CrashLog/log/";
 }

@@ -77,10 +77,6 @@ public class BottomSheetAdapter
     }
 
 
-    @Override
-    public Object[] getSections() {
-        return new Object[0];
-    }
 
     @Override
     public int getPositionForSection(int i) {

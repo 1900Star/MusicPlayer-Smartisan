@@ -27,9 +27,7 @@ import java.util.Date;
 public class CrashHandler
         implements Thread.UncaughtExceptionHandler {
 
-    // 崩溃日志本地保存地址
-    private static final String CRASH_LOG_PATH = Environment.getExternalStorageDirectory()
-            .getPath() + "/CrashLog/log/";
+
     private static final String TAG = "CrashHandler";
     private static final String FILE_NAME = "crash";
     private static final String FILE_NAME_SUFFIX = ".txt";
@@ -80,13 +78,13 @@ public class CrashHandler
                 return;
             }
         }
-        File dir = new File(CRASH_LOG_PATH);
+        File dir = new File(Constants.CRASH_LOG_PATH);
         if (!dir.exists()) {
             dir.mkdirs();
         }
         long current = System.currentTimeMillis();
         @SuppressLint("SimpleDateFormat") String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").format(new Date(current));
-        File file = new File(CRASH_LOG_PATH + FILE_NAME + time + FILE_NAME_SUFFIX);
+        File file = new File(Constants.CRASH_LOG_PATH + FILE_NAME + time + FILE_NAME_SUFFIX);
         try {
             PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
             pw.println(time);

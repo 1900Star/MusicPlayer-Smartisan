@@ -68,19 +68,4 @@ public class RecyclerFactory {
         adapter.notifyDataSetChanged();
         return recyclerView;
     }
-
-    public static void backTop(RecyclerView recyclerView, int type) {
-        BaseRvAdapter adapter = (BaseRvAdapter) recyclerView.getAdapter();
-        int position = adapter.getPositionForSection(0);
-        if (type == RECYCLERVIEW_NORMAL) {
-            LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
-            manager.scrollToPositionWithOffset(position, 0);
-        } else if (type == RECYCLERVIEW_STAGGERED) {
-            StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(type,
-                    StaggeredGridLayoutManager.VERTICAL);
-
-            manager.scrollToPositionWithOffset(position, 0);
-        }
-
-    }
 }

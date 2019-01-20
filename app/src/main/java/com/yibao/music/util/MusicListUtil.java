@@ -12,7 +12,6 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -214,7 +213,9 @@ public class MusicListUtil {
     private static void forArtistList(MusicBean musicInfo, Map<String, List<MusicBean>> musicMap) {
         if (musicMap.containsKey(musicInfo.getArtist())) {
             ArrayList<MusicBean> singerList = (ArrayList<MusicBean>) musicMap.get(musicInfo.getArtist());
-            singerList.add(musicInfo);
+            if (singerList != null) {
+                singerList.add(musicInfo);
+            }
         } else {
             ArrayList<MusicBean> tempList = new ArrayList<>();
             tempList.add(musicInfo);
@@ -264,7 +265,9 @@ public class MusicListUtil {
     private static void forAlbumList(Map<String, List<MusicBean>> musicMap, MusicBean musicInfo) {
         if (musicMap.containsKey(musicInfo.getAlbum())) {
             ArrayList<MusicBean> albumList = (ArrayList<MusicBean>) musicMap.get(musicInfo.getAlbum());
-            albumList.add(musicInfo);
+            if (albumList != null) {
+                albumList.add(musicInfo);
+            }
         } else {
             ArrayList<MusicBean> tempList = new ArrayList<>();
             tempList.add(musicInfo);

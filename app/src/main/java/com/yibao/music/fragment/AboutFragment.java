@@ -1,6 +1,8 @@
 package com.yibao.music.fragment;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +16,7 @@ import com.yibao.music.R;
 import com.yibao.music.activity.SplashActivity;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
+import com.yibao.music.fragment.dialogfrag.CrashSheetDialog;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.MusicBean;
@@ -22,6 +25,7 @@ import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
+import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.CircleImageView;
 
@@ -64,6 +68,8 @@ public class AboutFragment extends BaseMusicFragment {
     TextView mTvShare;
     @BindView(R.id.tv_scanner_media)
     TextView mtScanerMedia;
+    @BindView(R.id.tv_crash_log)
+    TextView mTvCrashLog;
     private long mCurrentPosition;
 
 
@@ -94,10 +100,34 @@ public class AboutFragment extends BaseMusicFragment {
         mCompositeDisposable.add(RxView.clicks(mTvShare)
                 .throttleFirst(3, TimeUnit.SECONDS)
                 .subscribe(o -> shareMe()));
+        mCompositeDisposable.add(RxView.clicks(mTvCrashLog)
+                .throttleFirst(2, TimeUnit.SECONDS)
+                .subscribe(o -> openCrashLog()));
         mAboutHeaderIv.setOnLongClickListener(view -> {
             RelaxDialogFragment.newInstance().show(mFragmentManager, "girlsDialog");
             return true;
         });
+    }
+
+    private void openCrashLog() {
+        if (isAvilible()) {
+            CrashSheetDialog.newInstance().getBottomDialog(mActivity);
+        } else {
+            SnakbarUtil.favoriteSuccessView(mTvCrashLog, "请先安装 WPS");
+        }
+
+    }
+
+    private boolean isAvilible() {
+        String wpsPackageName = "cn.wps.moffice_eng";
+        final PackageManager packageManager = mActivity.getPackageManager();
+        // 获取所有已安装程序的包信息
+        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
+        for (int i = 0; i < pinfo.size(); i++) {
+            if (pinfo.get(i).packageName.equalsIgnoreCase(wpsPackageName))
+                return true;
+        }
+        return false;
     }
 
     private void scannerMedia() {
@@ -156,7 +186,7 @@ public class AboutFragment extends BaseMusicFragment {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(favoriteName -> LogUtil.d(" 更新本地收藏文件==========   "+favoriteName)));
+                .subscribe(favoriteName -> LogUtil.d(" 更新本地收藏文件==========   " + favoriteName)));
         ToastUtil.showFavoriteListBackupsDown(mActivity);
     }
 

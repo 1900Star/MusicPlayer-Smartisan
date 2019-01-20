@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/root_crash"
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_crash_title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:background="@drawable/titlebar_playing_bg"
+        android:textColor="@color/text_bottom_dialog_selector"
+        android:gravity="center"
+        android:text="@string/crashlog"
+        android:textSize="@dimen/bigLyrics"
+        android:textStyle="bold" />
+
+
+</LinearLayout>
