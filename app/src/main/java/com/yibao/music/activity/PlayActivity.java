@@ -150,8 +150,8 @@ public class PlayActivity extends BasePlayActivity {
                 initAnimation();
                 updatePlayBtnStatus();
             }
+            setSongDuration();
         }
-        setSongDuration();
         //设置播放模式图片
         int mode = SpUtil.getMusicMode(this);
         updatePlayModeImage(mode, mMusicPlayerMode);

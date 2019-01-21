@@ -152,7 +152,7 @@ public class AudioPlayService
             if (mediaPlayer != null) {
                 mediaPlayer.reset();
                 mediaPlayer.release();
-                mediaPlayer = null;
+//                mediaPlayer = null;
             }
             // “>=” 确保模糊搜索时播放不出现索引越界
             position = position >= mMusicDataList.size() ? 0 : position;
@@ -163,7 +163,7 @@ public class AudioPlayService
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.setOnCompletionListener(this);
             SpUtil.setMusicPosition(AudioPlayService.this, position);
-            SpUtil.setFoucesFlag(AudioPlayService.this, true);
+//            SpUtil.setFoucesFlag(AudioPlayService.this, true);
             showNotifycation(true);
             mSessionManager.updatePlaybackState(true);
             mSessionManager.updateLocMsg();

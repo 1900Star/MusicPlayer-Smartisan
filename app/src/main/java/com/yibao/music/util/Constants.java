@@ -101,4 +101,5 @@ public class Constants {
     // 崩溃日志本地保存地址
     public static final String CRASH_LOG_PATH = Environment.getExternalStorageDirectory()
             .getPath() + "/CrashLog/log/";
+    public static final String DATA_TYPE_TXT = "text/plain";
 }

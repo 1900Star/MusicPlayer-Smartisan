@@ -102,32 +102,11 @@ public class AboutFragment extends BaseMusicFragment {
                 .subscribe(o -> shareMe()));
         mCompositeDisposable.add(RxView.clicks(mTvCrashLog)
                 .throttleFirst(2, TimeUnit.SECONDS)
-                .subscribe(o -> openCrashLog()));
+                .subscribe(o -> CrashSheetDialog.newInstance().getBottomDialog(mActivity)));
         mAboutHeaderIv.setOnLongClickListener(view -> {
             RelaxDialogFragment.newInstance().show(mFragmentManager, "girlsDialog");
             return true;
         });
-    }
-
-    private void openCrashLog() {
-        if (isAvilible()) {
-            CrashSheetDialog.newInstance().getBottomDialog(mActivity);
-        } else {
-            SnakbarUtil.favoriteSuccessView(mTvCrashLog, "请先安装 WPS");
-        }
-
-    }
-
-    private boolean isAvilible() {
-        String wpsPackageName = "cn.wps.moffice_eng";
-        final PackageManager packageManager = mActivity.getPackageManager();
-        // 获取所有已安装程序的包信息
-        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
-        for (int i = 0; i < pinfo.size(); i++) {
-            if (pinfo.get(i).packageName.equalsIgnoreCase(wpsPackageName))
-                return true;
-        }
-        return false;
     }
 
     private void scannerMedia() {

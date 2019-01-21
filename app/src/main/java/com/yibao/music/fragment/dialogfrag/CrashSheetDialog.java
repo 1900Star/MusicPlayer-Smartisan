@@ -2,10 +2,11 @@ package com.yibao.music.fragment.dialogfrag;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,12 +18,13 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import com.yibao.music.R;
-import com.yibao.music.adapter.BottomSheetAdapter;
 import com.yibao.music.adapter.CrashAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.SnakbarUtil;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Des：${TODO}
@@ -70,26 +72,44 @@ public class CrashSheetDialog {
 
     private void openCrashLog(File crashFile) {
         Intent intent = new Intent();
-        Bundle bundle = new Bundle();
-        bundle.putString(WpsModel.OPEN_MODE, WpsModel.READ_MODE); // 打开模式
-        bundle.putBoolean(WpsModel.SEND_CLOSE_BROAD, false); // 关闭时是否发送广播
-        bundle.putString(WpsModel.THIRD_PACKAGE, mPackageName); // 第三方应用的包名，用于对改应用合法性的验证
-        bundle.putBoolean(WpsModel.CLEAR_TRACE, true);// 清除打开记录
-        // bundle.putBoolean(CLEAR_FILE, true); //关闭后删除打开文件
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setAction(android.content.Intent.ACTION_VIEW);
-        intent.setClassName(WpsModel.NORMAL_PACKAGE, WpsModel.NORMAL);
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         Uri contentUri;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             contentUri = FileProvider.getUriForFile(mContext, mPackageName + ".fileprovider", crashFile);
         } else {
             contentUri = Uri.fromFile(crashFile);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
-        intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
-        intent.putExtras(bundle);
+        // 默认用WPS打开日志
+        if (isAvilible()) {
+            Bundle bundle = new Bundle();
+            bundle.putString(WpsModel.OPEN_MODE, WpsModel.READ_MODE); // 打开模式
+            bundle.putBoolean(WpsModel.SEND_CLOSE_BROAD, false); // 关闭时是否发送广播
+            bundle.putString(WpsModel.THIRD_PACKAGE, mPackageName); // 第三方应用的包名，用于对改应用合法性的验证
+            bundle.putBoolean(WpsModel.CLEAR_TRACE, true);// 清除打开记录
+            // bundle.putBoolean(CLEAR_FILE, true); //关闭后删除打开文件
+            intent.setClassName(WpsModel.NORMAL_PACKAGE, WpsModel.NORMAL);
+            intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+            intent.putExtras(bundle);
+        } else {
+            intent.setDataAndType(contentUri, Constants.DATA_TYPE_TXT);
+        }
         mContext.startActivity(intent);
+
+
+    }
+
+    private boolean isAvilible() {
+        String wpsPackageName = "cn.wps.moffice_eng";
+        final PackageManager packageManager = mContext.getPackageManager();
+        // 获取所有已安装程序的包信息
+        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
+        for (int i = 0; i < pinfo.size(); i++) {
+            if (pinfo.get(i).packageName.equalsIgnoreCase(wpsPackageName))
+                return true;
+        }
+        return false;
     }
 
     private void backTop(RecyclerView recyclerView) {
@@ -101,7 +121,7 @@ public class CrashSheetDialog {
         }
     }
 
-    public class WpsModel {
+    private class WpsModel {
         static final String OPEN_MODE = "OpenMode";// 打开文件的模式。
         static final String SEND_CLOSE_BROAD = "SendCloseBroad";// 文件关闭时是否发送广播
         static final String THIRD_PACKAGE = "ThirdPackage";// 第三方的包名，关闭的广播会包含该项。

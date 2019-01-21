@@ -235,10 +235,7 @@ public class WheelView extends ScrollView {
     private static final int SCROLL_DIRECTION_UP = 0;
     private static final int SCROLL_DIRECTION_DOWN = 1;
 
-    Paint paint;
     int viewWidth;
-
-
     @Override
     public void setBackgroundDrawable(Drawable background) {
         super.setBackgroundDrawable(getResources().getDrawable(R.drawable.time_picker_widget_bg));

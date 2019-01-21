@@ -64,7 +64,6 @@ public class DetailsView
     private FragmentManager mFragmentManager;
     private Long mAlbumId;
     private List<MusicBean> mMusicList;
-    private DetailsViewAdapter mAdapter;
 
     public void setDataFlag(FragmentManager fragmentManager, int listSize, String queryFlag, int dataFlag) {
         this.mFragmentManager = fragmentManager;
@@ -100,17 +99,13 @@ public class DetailsView
      * @param adapter  d
      */
     public void setAdapter(int dataType, Object bean, DetailsViewAdapter adapter) {
-        mAdapter = adapter;
+        DetailsViewAdapter adapter1 = adapter;
         initData(dataType, bean);
         mMusicList = adapter.getData();
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setHasFixedSize(true);
-        DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-        divider.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(getContext(), R.drawable.shape_item_decoration)));
-        mRecyclerView.addOnItemTouchListener(new SwipeItemLayout.OnSwipeItemTouchListener(getContext()));
-        mRecyclerView.addItemDecoration(divider);
         mRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
@@ -216,6 +211,10 @@ public class DetailsView
         mLlAlbumDetailsPlayall = findViewById(R.id.ll_album_details_playall);
         mLlAlbumDetailsRandomPlay = findViewById(R.id.ll_album_details_random_play);
         mRecyclerView.setNestedScrollingEnabled(false);
+        DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        divider.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(getContext(), R.drawable.shape_item_decoration)));
+        mRecyclerView.addOnItemTouchListener(new SwipeItemLayout.OnSwipeItemTouchListener(getContext()));
+        mRecyclerView.addItemDecoration(divider);
     }
 
     @Override
