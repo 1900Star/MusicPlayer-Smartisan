@@ -71,6 +71,8 @@ public class Constants {
 
     static final String MUSIC_DATA_FLAG = "music_data_flag";
     static final String MUSIC_DATA_LIST_FLAG = "music_data_list_flag";
+    static final String PIC_URL_FLAG = "pic_url_flag";
+    static final String PIC_URL_LIST_FLAG = "pic_url_list_flag";
 
     static final String MUSIC_DATA_QUERY = "music_data_query";
     static final String MUSIC_DATA_QUERY_FLAG = "music_data_query_key";
@@ -102,4 +104,5 @@ public class Constants {
     public static final String CRASH_LOG_PATH = Environment.getExternalStorageDirectory()
             .getPath() + "/CrashLog/log/";
     public static final String DATA_TYPE_TXT = "text/plain";
+    public static String UNSPLASH_URL = "https://picsum.photos/1080/1920/?image=";
 }

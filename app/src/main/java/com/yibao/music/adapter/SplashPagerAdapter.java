@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import com.yibao.music.util.Api;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.RandomUtil;
+import com.yibao.music.util.SpUtil;
 import com.yibao.music.view.ZoomImageView;
 
 
@@ -24,6 +25,10 @@ import com.yibao.music.view.ZoomImageView;
 
 public class SplashPagerAdapter extends PagerAdapter {
     private OnZoomViewClickListener mZoomViewClickListener;
+    private boolean mPicUrlFlag;
+    public SplashPagerAdapter(boolean picUrlFlag) {
+        this.mPicUrlFlag = picUrlFlag;
+    }
 
     @Override
     public int getCount() {
@@ -39,9 +44,7 @@ public class SplashPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         ZoomImageView creatZoomView = ImageUitl.creatZoomView(container.getContext());
-        creatZoomView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-        String url = RandomUtil.getRandomUrl();
+        String url = RandomUtil.getRandomUrl(mPicUrlFlag);
         ImageUitl.loadPlaceholder(container.getContext(), url, creatZoomView);
         creatZoomView.setOnClickListener(v -> {
             if (mZoomViewClickListener != null) {

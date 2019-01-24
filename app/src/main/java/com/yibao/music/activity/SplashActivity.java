@@ -58,7 +58,7 @@ public class SplashActivity
 
     private void init() {
         mScanner = getIntent().getStringExtra(Constants.SCANNER_MEDIA);
-        SplashPagerAdapter splashPagerAdapter = new SplashPagerAdapter();
+        SplashPagerAdapter splashPagerAdapter = new SplashPagerAdapter(SpUtil.getPicUrlFlag(this,false));
         mVpSplash.setAdapter(splashPagerAdapter);
     }
 

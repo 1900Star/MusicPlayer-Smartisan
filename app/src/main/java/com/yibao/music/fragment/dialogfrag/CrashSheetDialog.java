@@ -62,12 +62,15 @@ public class CrashSheetDialog {
         LinearLayout rootView = view.findViewById(R.id.root_crash);
         // 读取CrashLog
         File files = new File(Constants.CRASH_LOG_PATH);
-        File[] array = files.listFiles();
-        CrashAdapter crashAdapter = new CrashAdapter(array);
-        RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, crashAdapter);
-        crashAdapter.setItemClickListener(this::openCrashLog);
-        rootView.addView(recyclerView);
-        view.findViewById(R.id.tv_crash_title).setOnClickListener(v -> backTop(recyclerView));
+        if (files.exists()) {
+            File[] array = files.listFiles();
+            CrashAdapter crashAdapter = new CrashAdapter(array);
+            RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, crashAdapter);
+            crashAdapter.setItemClickListener(this::openCrashLog);
+            rootView.addView(recyclerView);
+            view.findViewById(R.id.tv_crash_title).setOnClickListener(v -> backTop(recyclerView));
+        }
+
     }
 
     private void openCrashLog(File crashFile) {

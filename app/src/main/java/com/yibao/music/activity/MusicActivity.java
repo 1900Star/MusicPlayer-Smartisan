@@ -275,6 +275,10 @@ public class MusicActivity
     }
 
     private void initListener() {
+        mTvMusicToolbarTitle.setOnLongClickListener(v -> {
+            SpUtil.setPicUrlFlag(MusicActivity.this, !SpUtil.getPicUrlFlag(MusicActivity.this, false));
+            return true;
+        });
         mMusicNavigationBar.setOnNavigationbarListener((currentSelecteFlag, titleResourceId) -> {
             HashMap<String, BaseFragment> detailsViewMap = BaseMusicFragment.mDetailsViewMap;
             HashMap<String, BaseFragment> itemStatusMap = BaseMusicFragment.mItemStatusMap;

@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import com.yibao.music.R;
 import com.yibao.music.adapter.SplashPagerAdapter;
 import com.yibao.music.util.DialogUtil;
+import com.yibao.music.util.SpUtil;
 
 /**
  * Author：Sid
@@ -30,7 +31,7 @@ public class RelaxDialogFragment
 
     private void initView(View view) {
         ViewPager girlsViewPager = view.findViewById(R.id.vp_girls);
-        SplashPagerAdapter splashPagerAdapter = new SplashPagerAdapter();
+        SplashPagerAdapter splashPagerAdapter = new SplashPagerAdapter(SpUtil.getPicUrlFlag(getActivity(),false));
         girlsViewPager.setAdapter(splashPagerAdapter);
 //        splashPagerAdapter.setZoomViewClickListener(this::dismiss);
     }

@@ -215,4 +215,17 @@ public class SpUtil {
 
         return sp.getBoolean(Constants.MUSIC_FOCUS_KEY, isLossFoucs);
     }
+
+
+    public static void setPicUrlFlag(Context context, boolean value) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.PIC_URL_FLAG, Constants.MODE_KEY);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(Constants.PIC_URL_LIST_FLAG, value);
+        editor.apply();
+    }
+
+    public static boolean getPicUrlFlag(Context context, boolean value) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.PIC_URL_FLAG, Constants.MODE_KEY);
+        return sp.getBoolean(Constants.PIC_URL_LIST_FLAG, value);
+    }
 }
