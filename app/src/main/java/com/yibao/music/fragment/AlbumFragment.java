@@ -137,14 +137,13 @@ public class AlbumFragment extends BaseMusicFragment {
 
             mDetailsView.setAdapter(Constants.NUMBER_TWO, albumInfo, mDetailsAdapter);
             mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
-                    MoreMenuBottomDialog.newInstance(musicBean, position, false,false).getBottomDialog(mActivity));
+                    MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
             putFragToMap(mClassName);
             detailsViewTitle = albumInfo.getAlbumName();
             changeToolBarTitle(albumInfo.getAlbumName(), true);
         }
         SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_TEN);
         changeTvEditText(getResources().getString(isShowDetailsView ? R.string.tv_edit : R.string.back));
-        changeSearchVisibility(isShowDetailsView);
         isShowDetailsView = !isShowDetailsView;
     }
 
