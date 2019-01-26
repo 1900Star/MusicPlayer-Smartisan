@@ -213,8 +213,7 @@ public class MusicActivity
                             // 点击编辑按钮进入列表多选状态。
                             mBus.post(new EditBean(mCurrentIndex));
                         }
-                        mIvSearch.setVisibility(isContainsKey ? View.VISIBLE : View.GONE);
-                        mTvEditDelete.setVisibility(isContainsKey ? View.GONE : View.VISIBLE);
+                        aa(isContainsKey);
 
                     } else if (mCurrentIndex == 1) {
                         if (detailsViewMap.containsKey(Constants.FRAGMENT_ARTIST)) {
@@ -223,8 +222,7 @@ public class MusicActivity
                     } else if (mCurrentIndex == 2) {
                         boolean isContainsKey = detailsViewMap.containsKey(Constants.FRAGMENT_SONG_CATEGORY);
                         mBus.post(new EditBean(mCurrentIndex));
-                        mIvSearch.setVisibility(isContainsKey ? View.VISIBLE : View.GONE);
-                        mTvEditDelete.setVisibility(isContainsKey ? View.GONE : View.VISIBLE);
+                        aa(isContainsKey);
                     } else if (mCurrentIndex == 3) {
 
                         // 详情页面已打开 或者 列表处于选择状态，编辑按钮有两种Text，返回播放列表 和 完成，点击都执行返回操作(交给Fragment处理)。
@@ -235,8 +233,7 @@ public class MusicActivity
                             // 点击编辑按钮进入列表多选状态。
                             mBus.post(new EditBean(mCurrentIndex));
                         }
-                        mIvSearch.setVisibility(isContainsKey ? View.VISIBLE : View.GONE);
-                        mTvEditDelete.setVisibility(isContainsKey ? View.GONE : View.VISIBLE);
+                        aa(isContainsKey);
                     }
                 }
                 break;
@@ -247,17 +244,13 @@ public class MusicActivity
                     List<PlayListBean> beanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).list();
                     if (beanList.size() > 0) {
                         mBus.post(new EditBean(mCurrentIndex + 10));
-                        mIvSearch.setVisibility(View.VISIBLE);
-                        mTvEditDelete.setVisibility(View.GONE);
-                        mTvEdit.setText(getResources().getString(R.string.tv_edit));
+                        dd();
                     }
                 } else if (mCurrentIndex == Constants.NUMBER_TWO) {
                     List<MusicBean> musicBeans = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsSelected.eq(true)).build().list();
                     if (musicBeans.size() > 0) {
                         mBus.post(new EditBean(mCurrentIndex + 10));
-                        mIvSearch.setVisibility(View.VISIBLE);
-                        mTvEditDelete.setVisibility(View.GONE);
-                        mTvEdit.setText(getResources().getString(R.string.tv_edit));
+                        dd();
                     }
                 } else if (mCurrentIndex == Constants.NUMBER_THRRE) {
                     SnakbarUtil.keepGoing(mSmartisanControlBar);
@@ -272,6 +265,17 @@ public class MusicActivity
             default:
                 break;
         }
+    }
+
+    private void dd() {
+        mIvSearch.setVisibility(View.VISIBLE);
+        mTvEditDelete.setVisibility(View.GONE);
+        mTvEdit.setText(getResources().getString(R.string.tv_edit));
+    }
+
+    private void aa(boolean isContainsKey) {
+        mIvSearch.setVisibility(isContainsKey ? View.VISIBLE : View.GONE);
+        mTvEditDelete.setVisibility(isContainsKey ? View.GONE : View.VISIBLE);
     }
 
     private void initListener() {
@@ -803,8 +807,7 @@ public class MusicActivity
 
     @Override
     public void setIvSearchVisibility(boolean searchVisibility) {
-        mIvSearch.setVisibility(searchVisibility ? View.VISIBLE : View.GONE);
-        mTvEditDelete.setVisibility(searchVisibility ? View.GONE : View.VISIBLE);
+        aa(searchVisibility);
     }
 
     // AboutFragment 界面恢复收藏歌曲后调用
