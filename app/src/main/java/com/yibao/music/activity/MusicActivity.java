@@ -293,7 +293,7 @@ public class MusicActivity
                         } else {
                             // 正常状态  如果列表长度大于 0 ， 编辑按钮显示， 否则隐藏。
                             mTvEdit.setText(getResources().getString(R.string.tv_edit));
-                            mTvEdit.setVisibility(getPlayList().size() > 0 ? View.VISIBLE : View.GONE);
+                            mTvEdit.setVisibility(getPlayList().size() > Constants.NUMBER_ZERO ? View.VISIBLE : View.GONE);
                             setDetailFlagZoer();
                         }
                         mTvEditDelete.setVisibility(isContainsKey ? View.VISIBLE : View.GONE);
