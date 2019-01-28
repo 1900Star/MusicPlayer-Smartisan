@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class ServiceUtil {
     public static boolean isServiceRunning(Context context, String ServiceName) {
-        if (("").equals(ServiceName) || ServiceName == null) {
+        if ((Constants.NULL_STRING).equals(ServiceName) || ServiceName == null) {
             return false;
         }
         ActivityManager myManager = (ActivityManager) context

@@ -26,7 +26,6 @@ public class RxBus {
 
     private final PublishSubject<Object> bus;
     private static volatile RxBus instance;
-    private final Map<Class<?>, Object> stickyEvent =new ConcurrentHashMap<>();
 
     // PublishSubject只会把在订阅发生的时间点之后来自原始Observable的数据发射给观察者
     private RxBus() {
