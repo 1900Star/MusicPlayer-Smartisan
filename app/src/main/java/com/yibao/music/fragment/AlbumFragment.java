@@ -18,12 +18,14 @@ import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.MusicPagerListener;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.AlbumInfo;
+import com.yibao.music.model.EditBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.view.music.DetailsView;
+import com.yibao.music.view.music.MusicToolBar;
 import com.yibao.music.view.music.MusicView;
 
 import java.util.List;
@@ -46,6 +48,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class AlbumFragment extends BaseMusicFragment {
+    @BindView(R.id.music_toolbar_list)
+    MusicToolBar mMusicToolBar;
     @BindView(R.id.iv_album_category_random_paly)
     ImageView mIvAlbumCategoryRandomPaly;
     @BindView(R.id.iv_album_category_list)
@@ -75,6 +79,7 @@ public class AlbumFragment extends BaseMusicFragment {
     public static boolean isShowDetailsView = false;
     private DetailsViewAdapter mDetailsAdapter;
     private List<MusicBean> mDetailList;
+    private boolean mDetailViewFlag = true;
 
     @Nullable
     @Override
@@ -96,6 +101,51 @@ public class AlbumFragment extends BaseMusicFragment {
             }
         });
         initRxbusData();
+        initListener();
+    }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initRxBusData();
+    }
+
+    private void initRxBusData() {
+        disposeToolbar();
+        if (mEditDisposable == null) {
+            mEditDisposable = mBus.toObservableType(Constants.NUMBER_NINE, EditBean.class).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(editBean -> {
+                        mMusicToolBar.setTvEditText(R.string.tv_edit);
+                        mMusicToolBar.setTvDeleteVisibility(View.GONE);
+                        isShowDetailsView = false;
+                    });
+        }
+    }
+
+    private void initListener() {
+        mMusicToolBar.setClickListener(new MusicToolBar.OnToolbarClickListener() {
+            @Override
+            public void clickEdit() {
+                if (mDetailViewFlag) {
+                    mBus.post(new EditBean(Constants.NUMBER_THRRE));
+                }
+                mMusicToolBar.setTvDeleteVisibility(isShowDetailsView ? View.GONE : View.VISIBLE);
+                mMusicToolBar.setTvEditText(isShowDetailsView ? R.string.tv_edit : R.string.complete);
+                showDetailsView(null);
+            }
+
+            @Override
+            public void switchMusicControlBar() {
+                switchControlBar();
+            }
+
+            @Override
+            public void clickDelete() {
+                mBus.post(new EditBean(Constants.NUMBER_FOUR));
+            }
+        });
     }
 
     private void initRxbusData() {
@@ -128,22 +178,24 @@ public class AlbumFragment extends BaseMusicFragment {
         if (isShowDetailsView) {
             mDetailsView.setVisibility(View.GONE);
             detailsViewTitle = null;
+            mDetailViewFlag = true;
         } else {
-            mDetailsView.setVisibility(View.VISIBLE);
-            mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(albumInfo.getAlbumName())).build().list();
-            // DetailsView播放音乐需要的参数
-            mDetailsView.setDataFlag(mFragmentManager, mDetailList.size(), albumInfo.getAlbumName(), Constants.NUMBER_TWO);
-            mDetailsAdapter = new DetailsViewAdapter(mActivity, mDetailList, Constants.NUMBER_TWO);
-
-            mDetailsView.setAdapter(Constants.NUMBER_TWO, albumInfo, mDetailsAdapter);
-            mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
-                    MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
-            putFragToMap(mClassName);
-            detailsViewTitle = albumInfo.getAlbumName();
-            changeToolBarTitle(albumInfo.getAlbumName(), true);
+            if (albumInfo != null) {
+                mDetailViewFlag = false;
+                mDetailsView.setVisibility(View.VISIBLE);
+                mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(albumInfo.getAlbumName())).build().list();
+                // DetailsView播放音乐需要的参数
+                mDetailsView.setDataFlag(mFragmentManager, mDetailList.size(), albumInfo.getAlbumName(), Constants.NUMBER_TWO);
+                mDetailsAdapter = new DetailsViewAdapter(mActivity, mDetailList, Constants.NUMBER_TWO);
+                mDetailsView.setAdapter(Constants.NUMBER_TWO, albumInfo, mDetailsAdapter);
+                mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
+                        MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
+                putFragToMap(mClassName);
+                detailsViewTitle = albumInfo.getAlbumName();
+            }
         }
         SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_TEN);
-        changeTvEditText(getResources().getString(isShowDetailsView ? R.string.tv_edit : R.string.back));
+        mMusicToolBar.setTvEditText(isShowDetailsView ? R.string.tv_edit : R.string.back);
         isShowDetailsView = !isShowDetailsView;
     }
 
@@ -163,7 +215,7 @@ public class AlbumFragment extends BaseMusicFragment {
             mAlbumContentView.setVisibility(View.VISIBLE);
             mDetailsView.setVisibility(View.GONE);
             removeFrag(mClassName);
-            changeSearchVisibility(isShowDetailsView);
+            mMusicToolBar.setIvSearchVisibility(isShowDetailsView);
             isShowDetailsView = !isShowDetailsView;
         }
 //        super.handleDetailsBack(detailFlag);
@@ -201,11 +253,6 @@ public class AlbumFragment extends BaseMusicFragment {
 
     }
 
-    @Override
-    protected void changeEditStatus(int currentIndex) {
-
-
-    }
 
     public static AlbumFragment newInstance() {
         return new AlbumFragment();

@@ -8,13 +8,8 @@ package com.yibao.music.base.listener;
  * @ Des:    TODO
  */
 public interface OnUpdataTitleListener {
-    void updataTitle(String toolbarTitle, boolean isShowDetail);
-
-    void changeTvEdit(String tvEdit);
-
-    void setEditVisibility(int editVisibility);
-
-    void setIvSearchVisibility(boolean isIvSearchVisibility);
 
     void checkCurrentFavorite();
+
+    void switchControlBar();
 }

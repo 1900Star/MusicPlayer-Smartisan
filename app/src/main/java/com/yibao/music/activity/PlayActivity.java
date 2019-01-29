@@ -367,7 +367,7 @@ public class PlayActivity extends BasePlayActivity {
                 finish();
                 break;
             case R.id.play_song_name:
-                startSearchActivity(mCurrenMusicInfo, Constants.NUMBER_ONE);
+                startSearchActivity(mCurrenMusicInfo);
                 break;
             case R.id.rotate_rl:
                 // 按下音乐停止播放  动画停止 ，抬起恢复

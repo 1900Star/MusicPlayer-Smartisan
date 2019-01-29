@@ -1,240 +1,250 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    android:scrollbars="none"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    android:orientation="vertical">
 
-    <LinearLayout
+
+    <include layout="@layout/music_toolbar" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="4dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/shape_about_card"
-            android:padding="15dp">
-
-            <com.yibao.music.view.CircleImageView
-                android:id="@+id/about_header_iv"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:src="@drawable/nina" />
-
-            <TextView
-                android:id="@+id/tv_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_toEndOf="@id/about_header_iv"
-                android:text="@string/about_name"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/about_title"
-                android:textStyle="bold"
-                android:typeface="serif"
-                tools:ignore="RtlHardcoded" />
-
-            <TextView
-                android:id="@+id/tv_github"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_name"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="6dp"
-                android:layout_toEndOf="@id/about_header_iv"
-                android:autoLink="web"
-                android:linksClickable="true"
-                android:text="@string/about_github"
-                android:textColorLink="@color/tabbarDownTv"
-                android:textSize="@dimen/about_sign"
-                tools:ignore="RtlHardcoded" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_github"
-                android:layout_centerInParent="true"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_toEndOf="@id/about_header_iv"
-                android:text="@string/about_sign"
-                android:textColor="@color/colorGreen"
-                android:textSize="@dimen/about_sign" />
-
-        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:background="@drawable/shape_about_card"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="4dp"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:text="@string/preject_introduce"
-                android:textColor="@color/aboutTitle"
-                android:textSize="@dimen/about_title"
-                android:textStyle="bold"
-                android:typeface="serif" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:lineSpacingExtra="2dp"
-                android:text="@string/about_project_introduce"
-                android:textColor="@color/aboutContent"
-                android:textIsSelectable="true"
-                android:textSize="@dimen/about_content" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="10dp"
-                android:autoLink="web"
-                android:linksClickable="true"
-                android:text="@string/preject_url"
-                android:textColorLink="@color/tabbarDownTv"
-                android:textIsSelectable="true"
-                android:textSize="@dimen/about_content" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:layout_marginBottom="20dp"
-                android:autoLink="email"
-                android:linksClickable="true"
-                android:text="@string/email"
-                android:textColor="@color/tabbarDownTv"
-                android:textColorLink="@color/tabbarDownTv"
-                android:textIsSelectable="true"
-                android:textSize="@dimen/about_content" />
+                android:background="@drawable/shape_about_card"
+                android:padding="15dp">
+
+                <com.yibao.music.view.CircleImageView
+                    android:id="@+id/about_header_iv"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:src="@drawable/nina" />
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toEndOf="@id/about_header_iv"
+                    android:text="@string/about_name"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/about_title"
+                    android:textStyle="bold"
+                    android:typeface="serif"
+                    tools:ignore="RtlHardcoded" />
+
+                <TextView
+                    android:id="@+id/tv_github"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_name"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_toEndOf="@id/about_header_iv"
+                    android:autoLink="web"
+                    android:linksClickable="true"
+                    android:text="@string/about_github"
+                    android:textColorLink="@color/tabbarDownTv"
+                    android:textSize="@dimen/about_sign"
+                    tools:ignore="RtlHardcoded" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_github"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_toEndOf="@id/about_header_iv"
+                    android:text="@string/about_sign"
+                    android:textColor="@color/colorGreen"
+                    android:textSize="@dimen/about_sign" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/shape_about_card"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="@string/preject_introduce"
+                    android:textColor="@color/aboutTitle"
+                    android:textSize="@dimen/about_title"
+                    android:textStyle="bold"
+                    android:typeface="serif" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:lineSpacingExtra="2dp"
+                    android:text="@string/about_project_introduce"
+                    android:textColor="@color/aboutContent"
+                    android:textIsSelectable="true"
+                    android:textSize="@dimen/about_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:autoLink="web"
+                    android:linksClickable="true"
+                    android:text="@string/preject_url"
+                    android:textColorLink="@color/tabbarDownTv"
+                    android:textIsSelectable="true"
+                    android:textSize="@dimen/about_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:autoLink="email"
+                    android:linksClickable="true"
+                    android:text="@string/email"
+                    android:textColor="@color/tabbarDownTv"
+                    android:textColorLink="@color/tabbarDownTv"
+                    android:textIsSelectable="true"
+                    android:textSize="@dimen/about_content" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/shape_about_card"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_backups_favorite"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_btn_edit_selector"
+                    android:gravity="center"
+                    android:text="@string/backups_favorite_song"
+                    android:textColor="@color/music_activity_title_selector"
+                    android:textSize="@dimen/about_title"
+                    android:textStyle="bold"
+                    android:typeface="serif" />
+
+                <TextView
+                    android:id="@+id/tv_recover_favorite"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_btn_edit_selector"
+                    android:gravity="center"
+                    android:text="@string/recovery_favorite_song"
+                    android:textColor="@color/music_activity_title_selector"
+                    android:textSize="@dimen/about_title"
+                    android:textStyle="bold"
+                    android:typeface="serif" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/shape_about_card"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_scanner_media"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_btn_edit_selector"
+                    android:gravity="center"
+                    android:text="@string/scanner_music"
+                    android:textColor="@color/music_activity_title_selector"
+                    android:textSize="@dimen/about_title"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_share"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_btn_edit_selector"
+                    android:gravity="center"
+                    android:text="@string/share_me"
+                    android:textColor="@color/music_activity_title_selector"
+                    android:textSize="@dimen/about_title"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/shape_about_card"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_crash_log"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_btn_edit_selector"
+                    android:gravity="center"
+                    android:text="@string/crashlog"
+                    android:textColor="@color/music_activity_title_selector"
+                    android:textSize="@dimen/about_title"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
 
         </LinearLayout>
+    </ScrollView>
+</LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/shape_about_card"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tv_backups_favorite"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_btn_edit_selector"
-                android:gravity="center"
-                android:text="@string/backups_favorite_song"
-                android:textColor="@color/music_activity_title_selector"
-                android:textSize="@dimen/about_title"
-                android:textStyle="bold"
-                android:typeface="serif" />
-
-            <TextView
-                android:id="@+id/tv_recover_favorite"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_btn_edit_selector"
-                android:gravity="center"
-                android:text="@string/recovery_favorite_song"
-                android:textColor="@color/music_activity_title_selector"
-                android:textSize="@dimen/about_title"
-                android:textStyle="bold"
-                android:typeface="serif" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/shape_about_card"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tv_scanner_media"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_btn_edit_selector"
-                android:gravity="center"
-                android:text="@string/scanner_music"
-                android:textColor="@color/music_activity_title_selector"
-                android:textSize="@dimen/about_title"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_share"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_btn_edit_selector"
-                android:gravity="center"
-                android:text="@string/share_me"
-                android:textColor="@color/music_activity_title_selector"
-                android:textSize="@dimen/about_title"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/shape_about_card"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tv_crash_log"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_btn_edit_selector"
-                android:gravity="center"
-                android:text="@string/crashlog"
-                android:textColor="@color/music_activity_title_selector"
-                android:textSize="@dimen/about_title"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-</ScrollView>

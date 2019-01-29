@@ -95,12 +95,12 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
 
     private void init() {
         mSearchDetailAdapter = new DetailsViewAdapter(SearchActivity.this, null, Constants.NUMBER_THRRE);
-        mMusicBean = getIntent().getParcelableExtra("musicBean");
         int pageType = getIntent().getIntExtra("pageType", 0);
         audioBinder = MusicActivity.getAudioBinder();
         mSmartisanControlBar.setPbColorAndPreBtnGone();
-        setMusicInfo(mMusicBean);
         if (pageType > Constants.NUMBER_ZERO) {
+            mMusicBean = getIntent().getParcelableExtra("musicBean");
+            setMusicInfo(mMusicBean);
             initSearch(mMusicBean.getArtist());
             mIvEditClear.setVisibility(View.VISIBLE);
         } else {
@@ -245,7 +245,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
 
     private void initListener() {
         mSearchDetailAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
-                MoreMenuBottomDialog.newInstance(musicBean, position, false,false).getBottomDialog(this));
+                MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(this));
         mEditSearch.addTextChangedListener(new TextChangedListener() {
             @Override
             public void afterTextChanged(Editable s) {

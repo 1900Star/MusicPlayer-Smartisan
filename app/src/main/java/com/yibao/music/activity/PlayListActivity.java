@@ -25,6 +25,7 @@ public class PlayListActivity extends AppCompatActivity implements OnFinishActiv
     }
 
     private void initData() {
+        SpUtil.setAddToPlayListFlag(this, Constants.NUMBER_ONE);
         String songName = getIntent().getStringExtra(Constants.SONG_NAME);
         ArrayList<String> arrayList = getIntent().getStringArrayListExtra(Constants.ADD_TO_LIST);
         FragmentManager fm = getSupportFragmentManager();

@@ -2,21 +2,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/listBg"
     android:animateLayoutChanges="true"
+    android:background="@color/listBg"
     android:gravity="center"
     android:orientation="vertical">
+
+    <include
+        android:id="@+id/music_bar"
+        layout="@layout/music_toolbar" />
 
     <com.yibao.music.view.music.MusicView
         android:id="@+id/artist_music_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/music_bar"
         android:visibility="visible" />
 
     <com.yibao.music.view.music.DetailsView
         android:id="@+id/details_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/music_bar"
         android:visibility="gone" />
 
 

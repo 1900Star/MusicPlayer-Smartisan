@@ -4,10 +4,16 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
 
+
+    <include
+        android:id="@+id/music_bar"
+        layout="@layout/music_toolbar" />
+
     <LinearLayout
         android:id="@+id/album_content_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/music_bar"
         android:orientation="vertical"
         android:visibility="visible">
 
@@ -30,6 +36,7 @@
         android:id="@+id/details_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/music_bar"
         android:visibility="gone" />
 
 </RelativeLayout>

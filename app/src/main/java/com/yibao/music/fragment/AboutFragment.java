@@ -1,8 +1,6 @@
 package com.yibao.music.fragment;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,17 +15,17 @@ import com.yibao.music.activity.SplashActivity;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.CrashSheetDialog;
-import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
+import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
-import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.CircleImageView;
+import com.yibao.music.view.music.MusicToolBar;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,10 +35,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -70,8 +65,9 @@ public class AboutFragment extends BaseMusicFragment {
     TextView mtScanerMedia;
     @BindView(R.id.tv_crash_log)
     TextView mTvCrashLog;
+    @BindView(R.id.music_toolbar_list)
+    MusicToolBar mMusicToolbarList;
     private long mCurrentPosition;
-
 
     @Nullable
     @Override
@@ -79,6 +75,7 @@ public class AboutFragment extends BaseMusicFragment {
 
         View view = inflater.inflate(R.layout.about_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
+        mMusicToolbarList.setTvEditVisibility(false);
         initListener();
         return view;
     }
@@ -106,6 +103,22 @@ public class AboutFragment extends BaseMusicFragment {
         mAboutHeaderIv.setOnLongClickListener(view -> {
             RelaxDialogFragment.newInstance().show(mFragmentManager, "girlsDialog");
             return true;
+        });
+        mMusicToolbarList.setClickListener(new MusicToolBar.OnToolbarClickListener() {
+            @Override
+            public void clickEdit() {
+
+            }
+
+            @Override
+            public void switchMusicControlBar() {
+                switchControlBar();
+            }
+
+            @Override
+            public void clickDelete() {
+
+            }
         });
     }
 
@@ -169,13 +182,11 @@ public class AboutFragment extends BaseMusicFragment {
         ToastUtil.showFavoriteListBackupsDown(mActivity);
     }
 
-    @Override
-    protected void changeEditStatus(int currentIndex) {
-    }
 
     public static AboutFragment newInstance() {
 
         return new AboutFragment();
     }
+
 
 }

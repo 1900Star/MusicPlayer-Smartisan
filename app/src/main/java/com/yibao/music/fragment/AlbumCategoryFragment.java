@@ -11,10 +11,14 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.AlbumAdapter;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.model.AlbumInfo;
+import com.yibao.music.model.EditBean;
+import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.AlbumInfoDao;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
+import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.view.music.MusicView;
 
@@ -23,6 +27,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @ Author: Luoshipeng
@@ -48,6 +54,12 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
             mPosition = arguments.getInt("position");
         }
         mAlbumList = MusicListUtil.getAlbumList(mSongList);
+    }
+
+    @Override
+    protected void onLazyLoadData() {
+//        mAlbumList = MusicListUtil.getAlbumList(mSongList);
+////        initData();
     }
 
 
@@ -76,6 +88,40 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initRxBusData();
+    }
+
+    private void initRxBusData() {
+        disposeToolbar();
+        if (mEditDisposable == null) {
+            mEditDisposable = mBus.toObserverable(EditBean.class).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(editBean -> changeEditStatus(editBean.getCurrentIndex()));
+        }
+
+    }
+
+    protected void changeEditStatus(int currentIndex) {
+        if (currentIndex == Constants.NUMBER_THRRE) {
+            closeEditStatus();
+        } else if (currentIndex == Constants.NUMBER_FOUR) {
+            // 删除已选择的条目
+            List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsSelected.eq(true)).build().list();
+            if (musicBeanList.size() > Constants.NUMBER_ZERO) {
+                LogUtil.d("======== Size    " + musicBeanList.size());
+                for (MusicBean musicBean : musicBeanList) {
+                    mMusicBeanDao.delete(musicBean);
+                }
+                mAlbumAdapter.setItemSelectStatus(false);
+                mAlbumAdapter.setNewData(getAlbumList());
+                mBus.post(Constants.NUMBER_NINE, new EditBean());
+            } else {
+                SnakbarUtil.favoriteSuccessView(mMusicView, "没有选中条目");
+            }
+        }
+    }
 
     public static AlbumCategoryFragment newInstance(int position) {
         Bundle args = new Bundle();
@@ -92,20 +138,11 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
             SpUtil.setDetailsFlag(mContext, Constants.NUMBER_TEN);
             mAlbumAdapter.setItemSelectStatus(false);
             isItemSelectStatus = true;
-            changeToolBarTitle(getResources().getString(R.string.music_album),false);
-            changeSearchVisibility(true);
+            mBus.post(Constants.NUMBER_NINE, new EditBean());
         }
         super.handleDetailsBack(detailFlag);
     }
 
-    @Override
-    protected void changeEditStatus(int currentIndex) {
-        if (currentIndex == Constants.NUMBER_THRRE) {
-            closeEditStatus();
-        } else if (currentIndex == Constants.NUMBER_THIRTEEN) {
-            LogUtil.d("============批量删除专辑");
-        }
-    }
 
     private void closeEditStatus() {
         if (isItemSelectStatus) {
@@ -115,10 +152,9 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
             removeFrag(mClassName);
             removeFragItemStatus(mClassName);
         }
-        changeTvEditText(getResources().getString(isItemSelectStatus ? R.string.complete : R.string.tv_edit));
+
         mAlbumAdapter.setItemSelectStatus(isItemSelectStatus);
         isItemSelectStatus = !isItemSelectStatus;
-        changeSearchVisibility(isItemSelectStatus);
         if (!isItemSelectStatus && mSelectCount > 0) {
             cancelAllSelected();
         }

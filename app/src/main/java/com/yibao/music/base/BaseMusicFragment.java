@@ -2,14 +2,12 @@ package com.yibao.music.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.View;
 
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
 import com.yibao.music.model.DetailsFlagBean;
-import com.yibao.music.model.EditBean;
-import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.SpUtil;
 
@@ -31,9 +29,9 @@ public abstract class BaseMusicFragment extends BaseFragment {
     public static HashMap<String, BaseFragment> mDetailsViewMap;
     // 页面列表的选择状态打开时，添加到Map里面
     public static HashMap<String, BaseFragment> mItemStatusMap;
-    private Disposable mEditDisposable;
+    protected Disposable mEditDisposable;
     private Disposable mMenuDisposable;
-
+    protected boolean mIsLoadedData = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,31 +42,59 @@ public abstract class BaseMusicFragment extends BaseFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        changeTitleAndDeleteItem();
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isResumed()) {
+            viewStatusProcessing(isVisibleToUser);
+        }
     }
 
-    private void changeTitleAndDeleteItem() {
-        if (mEditDisposable == null) {
-            mEditDisposable = mBus.toObserverable(EditBean.class)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(editBean -> changeEditStatus(editBean.getCurrentIndex()));
+    /**
+     * 处理对用户是否可见
+     *
+     * @param isVisibleToUser v
+     */
+    private void viewStatusProcessing(boolean isVisibleToUser) {
+        if (isVisibleToUser) {
+            // 对用户可见
+            if (!mIsLoadedData) {
+                mIsLoadedData = true;
+                onLazyLoadData();
+            }
+            onVisibleToUser();
+        } else {
+            // 对用户不可见
+            onInvisibleToUser();
         }
-        if (mMenuDisposable == null) {
-            mMenuDisposable = mBus.toObservableType(Constants.NUMBER_ONE, MoreMenuStatus.class)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(moreMenuStatus -> deleteItem(moreMenuStatus.getMusicPosition()));
+    }
+
+    /**
+     * 懒加载一次。如果只想在对用户可见时才加载数据，并且只加载一次数据，在子类中重写该方法
+     */
+    protected void onLazyLoadData() {
+    }
+
+    /**
+     * 对用户可见时触发该方法。如果只想在对用户可见时才加载数据，在子类中重写该方法
+     */
+    protected void onVisibleToUser() {
+    }
+
+    /**
+     * 对用户不可见时触发该方法
+     */
+    protected void onInvisibleToUser() {
+    }
+
+    protected void switchControlBar() {
+        if (mActivity instanceof OnUpdataTitleListener) {
+            ((OnUpdataTitleListener) mActivity).switchControlBar();
         }
     }
 
     protected void deleteItem(int musicPosition) {
     }
 
-
-    protected abstract void changeEditStatus(int currentIndex);
 
     // 根据detailFlag处理具体详情页面的返回事件
     private void initDetailsFlag() {
@@ -86,39 +112,6 @@ public abstract class BaseMusicFragment extends BaseFragment {
     protected void handleDetailsBack(int detailFlag) {
         // 详情页面关闭后，将标记置为0，将返回事件交给Activity处理，这样就能正常返回。
         SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_ZERO);
-    }
-
-    /**
-     * @param tvEdit 编辑按钮、返回列表按钮  显示Text
-     */
-    protected void changeTvEditText(String tvEdit) {
-        if (mContext instanceof OnUpdataTitleListener) {
-            ((OnUpdataTitleListener) mContext).changeTvEdit(tvEdit);
-        }
-    }
-
-    /**
-     * @param tvEdit 编辑按钮、返回列表按钮  显示Text
-     */
-    protected void changeToolBarTitle(String tvEdit, boolean isShowDetail) {
-        if (mContext instanceof OnUpdataTitleListener) {
-            ((OnUpdataTitleListener) mContext).updataTitle(tvEdit, isShowDetail);
-        }
-    }
-
-    protected void changeEditVisibility(boolean isVisibility) {
-        if (mContext instanceof OnUpdataTitleListener) {
-            ((OnUpdataTitleListener) mContext).setEditVisibility(isVisibility ? View.VISIBLE :
-                    View.GONE);
-        }
-
-    }
-
-    protected void changeSearchVisibility(boolean isSearchVisibility) {
-        if (mContext instanceof OnUpdataTitleListener) {
-            ((OnUpdataTitleListener) mContext).setIvSearchVisibility(isSearchVisibility);
-        }
-
     }
 
     protected void randomPlayMusic() {
@@ -179,13 +172,17 @@ public abstract class BaseMusicFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (mEditDisposable != null) {
-            mEditDisposable.dispose();
-            mEditDisposable = null;
-        }
+        disposeToolbar();
         if (mMenuDisposable != null) {
             mMenuDisposable.dispose();
             mMenuDisposable = null;
+        }
+    }
+
+    protected void disposeToolbar() {
+        if (mEditDisposable != null) {
+            mEditDisposable.dispose();
+            mEditDisposable = null;
         }
     }
 }

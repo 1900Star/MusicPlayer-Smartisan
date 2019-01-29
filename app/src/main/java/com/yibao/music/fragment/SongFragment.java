@@ -14,13 +14,24 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.SongCategoryPagerAdapter;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.MusicPagerListener;
+import com.yibao.music.model.EditBean;
+import com.yibao.music.model.PlayListBean;
+import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
+import com.yibao.music.view.music.MusicToolBar;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @项目名： ArtisanMusic
@@ -33,6 +44,9 @@ import butterknife.OnClick;
  */
 
 public class SongFragment extends BaseMusicFragment {
+
+    @BindView(R.id.music_toolbar_list)
+    MusicToolBar mMusicToolBar;
     @BindView(R.id.iv_music_category_paly)
     ImageView mIvMusicCategoryPaly;
     @BindView(R.id.tv_music_category_songname)
@@ -46,19 +60,35 @@ public class SongFragment extends BaseMusicFragment {
     @BindView(R.id.vp_song_fag)
     ViewPager mViewPager;
     private int curentIndex = 0;
+    private boolean isSelecteStatus = false;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.song_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         initData();
+        initListener();
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        initRxBusData();
         switchListCategory(curentIndex);
+    }
+
+    private void initRxBusData() {
+        disposeToolbar();
+        if (mEditDisposable == null) {
+            mEditDisposable = mBus.toObservableType(Constants.NUMBER_TEN, EditBean.class).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(editBean -> {
+                        mMusicToolBar.setTvEditText(R.string.tv_edit);
+                        mMusicToolBar.setTvDeleteVisibility(View.GONE);
+                        isSelecteStatus = false;
+                    });
+        }
     }
 
     private void initData() {
@@ -73,6 +103,27 @@ public class SongFragment extends BaseMusicFragment {
         });
     }
 
+    private void initListener() {
+        mMusicToolBar.setClickListener(new MusicToolBar.OnToolbarClickListener() {
+            @Override
+            public void clickEdit() {
+                mBus.post(new EditBean(Constants.NUMBER_ONE));
+                mMusicToolBar.setTvEditText(isSelecteStatus ? R.string.tv_edit : R.string.complete);
+                mMusicToolBar.setTvDeleteVisibility(isSelecteStatus ? View.GONE : View.VISIBLE);
+                isSelecteStatus = !isSelecteStatus;
+            }
+
+            @Override
+            public void switchMusicControlBar() {
+                switchControlBar();
+            }
+
+            @Override
+            public void clickDelete() {
+                mBus.post(new EditBean(Constants.NUMBER_TWO));
+            }
+        });
+    }
 
     @OnClick({R.id.iv_music_category_paly,
             R.id.tv_music_category_songname, R.id.tv_music_category_score, R.id.tv_music_category_frequency, R.id.tv_music_category_addtime})
@@ -141,9 +192,6 @@ public class SongFragment extends BaseMusicFragment {
         mMusicCategoryAddtime.setTextColor(ColorUtil.textName);
         mMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_selector);
         SpUtil.setSortFlag(mActivity, playListFlag);
-    }
-    @Override
-    protected void changeEditStatus(int currentIndex) {
     }
 
     public static SongFragment newInstance() {

@@ -18,6 +18,9 @@ public class EditBean {
         this.currentIndex = currentIndex;
     }
 
+    public EditBean() {
+    }
+
     public int getCurrentIndex() {
         return currentIndex;
     }

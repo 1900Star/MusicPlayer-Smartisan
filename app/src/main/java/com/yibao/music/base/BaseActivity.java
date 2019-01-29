@@ -134,14 +134,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param currentMusicBean bean
-     * @param pageType 0 MusicActivity  1 PlayActivity 点击歌名进行搜索
      */
-    protected void startSearchActivity(MusicBean currentMusicBean, int pageType) {
+    protected void startSearchActivity(MusicBean currentMusicBean) {
         Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra("pageType", Constants.NUMBER_ONE);
         intent.putExtra("musicBean", currentMusicBean);
-        intent.putExtra("pageType", pageType);
         startActivity(intent);
         overridePendingTransition(R.anim.dialog_push_in, 0);
     }

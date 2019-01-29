@@ -19,11 +19,7 @@ import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.BaseTansitionActivity;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
-import com.yibao.music.fragment.AlbumFragment;
-import com.yibao.music.fragment.ArtistFragment;
-import com.yibao.music.fragment.PlayListFragment;
 import com.yibao.music.model.DetailsFlagBean;
-import com.yibao.music.model.EditBean;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
@@ -65,14 +61,6 @@ public class MusicActivity
         extends BaseTansitionActivity
         implements OnMusicItemClickListener, OnUpdataTitleListener {
 
-    @BindView(R.id.tv_music_toolbar_title)
-    TextView mTvMusicToolbarTitle;
-    @BindView(R.id.tv_edit)
-    TextView mTvEdit;
-    @BindView(R.id.tv_edit_delete)
-    TextView mTvEditDelete;
-    @BindView(R.id.iv_search)
-    ImageView mIvSearch;
 
     @BindView(R.id.music_navigation_bar)
     MusicNavigationBar mMusicNavigationBar;
@@ -193,167 +181,79 @@ public class MusicActivity
         }
     }
 
-    //TODO
-    @OnClick({R.id.tv_edit, R.id.tv_music_toolbar_title, R.id.iv_search, R.id.tv_edit_delete})
-    public void onClick(View v) {
-        int detailFlag = SpUtil.getDetailFlag(this);
-        LogUtil.d("=========== AppBar DetailFlag  " + detailFlag);
-        HashMap<String, BaseFragment> detailsViewMap = BaseMusicFragment.mDetailsViewMap;
-        HashMap<String, BaseFragment> itemStatusMap = BaseMusicFragment.mItemStatusMap;
-        LogUtil.d(" map==   " + detailsViewMap + "   ==   " + itemStatusMap);
-        switch (v.getId()) {
-            case R.id.tv_edit:
-                if (detailsViewMap != null && itemStatusMap != null) {
-                    if (mCurrentIndex == 0) {
-                        // 详情页面已打开 或者 列表处于选择状态，编辑按钮有两种Text，返回播放列表 和 完成，点击都执行返回操作(交给Fragment处理)。
-                        boolean isContainsKey = itemStatusMap.containsKey(Constants.FRAGMENT_PLAYLIST);
-                        if (detailsViewMap.containsKey(Constants.FRAGMENT_PLAYLIST)) {
-                            mBus.post(isContainsKey ? new EditBean(mCurrentIndex) : new DetailsFlagBean(detailFlag));
-                        } else {
-                            // 点击编辑按钮进入列表多选状态。
-                            mBus.post(new EditBean(mCurrentIndex));
-                        }
-                        aa(isContainsKey);
-
-                    } else if (mCurrentIndex == 1) {
-                        if (detailsViewMap.containsKey(Constants.FRAGMENT_ARTIST)) {
-                            mBus.post(new DetailsFlagBean(SpUtil.getDetailFlag(this)));
-                        }
-                    } else if (mCurrentIndex == 2) {
-                        boolean isContainsKey = detailsViewMap.containsKey(Constants.FRAGMENT_SONG_CATEGORY);
-                        mBus.post(new EditBean(mCurrentIndex));
-                        aa(isContainsKey);
-                    } else if (mCurrentIndex == 3) {
-
-                        // 详情页面已打开 或者 列表处于选择状态，编辑按钮有两种Text，返回播放列表 和 完成，点击都执行返回操作(交给Fragment处理)。
-                        boolean isContainsKey = itemStatusMap.containsKey(Constants.FRAGMENT_ALBUM);
-                        if (detailsViewMap.containsKey(Constants.FRAGMENT_ALBUM)) {
-                            mBus.post(isContainsKey ? new EditBean(mCurrentIndex) : new DetailsFlagBean(detailFlag));
-                        } else {
-                            // 点击编辑按钮进入列表多选状态。
-                            mBus.post(new EditBean(mCurrentIndex));
-                        }
-                        aa(isContainsKey);
-                    }
-                }
-                break;
-            // 删除 *******************************************************************************
-            case R.id.tv_edit_delete:
-                // 删除所选的条目 mCurrentIndex + 10  (10 、12 、13  有编辑的页面)
-                if (mCurrentIndex == Constants.NUMBER_ZERO) {
-                    List<PlayListBean> beanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).list();
-                    if (beanList.size() > 0) {
-                        mBus.post(new EditBean(mCurrentIndex + 10));
-                        dd();
-                    }
-                } else if (mCurrentIndex == Constants.NUMBER_TWO) {
-                    List<MusicBean> musicBeans = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.IsSelected.eq(true)).build().list();
-                    if (musicBeans.size() > 0) {
-                        mBus.post(new EditBean(mCurrentIndex + 10));
-                        dd();
-                    }
-                } else if (mCurrentIndex == Constants.NUMBER_THRRE) {
-                    SnakbarUtil.keepGoing(mSmartisanControlBar);
-                }
-                break;
-            case R.id.tv_music_toolbar_title:
-                switchMusicControlBar();
-                break;
-            case R.id.iv_search:
-                startSearchActivity(mCurrentMusicBean, Constants.NUMBER_ZERO);
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void dd() {
-        mIvSearch.setVisibility(View.VISIBLE);
-        mTvEditDelete.setVisibility(View.GONE);
-        mTvEdit.setText(getResources().getString(R.string.tv_edit));
-    }
-
-    private void aa(boolean isContainsKey) {
-        mIvSearch.setVisibility(isContainsKey ? View.VISIBLE : View.GONE);
-        mTvEditDelete.setVisibility(isContainsKey ? View.GONE : View.VISIBLE);
-    }
 
     private void initListener() {
-        mTvMusicToolbarTitle.setOnLongClickListener(v -> {
-            SpUtil.setPicUrlFlag(MusicActivity.this, !SpUtil.getPicUrlFlag(MusicActivity.this, false));
-            return true;
-        });
+
         mMusicNavigationBar.setOnNavigationbarListener((currentSelecteFlag, titleResourceId) -> {
             HashMap<String, BaseFragment> detailsViewMap = BaseMusicFragment.mDetailsViewMap;
             HashMap<String, BaseFragment> itemStatusMap = BaseMusicFragment.mItemStatusMap;
             if (detailsViewMap != null && itemStatusMap != null) {
-                switch (currentSelecteFlag) {
-                    case Constants.NUMBER_ZERO:
-                        // 详情页面已打开 或者 列表处于选择状态 两种情况,当处于选择状态时，删除按钮显示，搜索隐藏。
-                        boolean isContainsKey = itemStatusMap.containsKey(Constants.FRAGMENT_PLAYLIST);
-                        if (detailsViewMap.containsKey(Constants.FRAGMENT_PLAYLIST)) {
-                            mTvEdit.setText(getResources().getString(isContainsKey ? R.string.complete : R.string.back_play_list));
-                            mTvEdit.setVisibility(View.VISIBLE);
-                        } else {
-                            // 正常状态  如果列表长度大于 0 ， 编辑按钮显示， 否则隐藏。
-                            mTvEdit.setText(getResources().getString(R.string.tv_edit));
-                            mTvEdit.setVisibility(getPlayList().size() > Constants.NUMBER_ZERO ? View.VISIBLE : View.GONE);
-                            setDetailFlagZoer();
-                        }
-                        mTvEditDelete.setVisibility(isContainsKey ? View.VISIBLE : View.GONE);
-                        mIvSearch.setVisibility(isContainsKey ? View.GONE : View.VISIBLE);
-                        break;
-                    case Constants.NUMBER_ONE:
-                        if (detailsViewMap.containsKey(Constants.FRAGMENT_ARTIST)) {
-                            mTvEdit.setText(R.string.music_artisan);
-                            mTvEdit.setVisibility(View.VISIBLE);
-                        } else {
-                            mTvEdit.setVisibility(View.GONE);
-                            setDetailFlagZoer();
-                        }
-                        mTvEditDelete.setVisibility(View.GONE);
-                        mIvSearch.setVisibility(View.VISIBLE);
-                        break;
-                    case Constants.NUMBER_TWO:
-                        boolean containsKey = itemStatusMap.containsKey(Constants.FRAGMENT_SONG_CATEGORY);
-                        if (detailsViewMap.containsKey(Constants.FRAGMENT_SONG_CATEGORY)) {
-                            mTvEdit.setText(getResources().getString(containsKey ? R.string.complete : R.string.tv_edit));
-                        } else {
-                            mTvEdit.setText(R.string.tv_edit);
-                            setDetailFlagZoer();
-                        }
-                        mTvEdit.setVisibility(View.VISIBLE);
-                        mTvEditDelete.setVisibility(containsKey ? View.VISIBLE : View.GONE);
-                        mIvSearch.setVisibility(containsKey ? View.GONE : View.VISIBLE);
-                        mTvMusicToolbarTitle.setText(titleResourceId);
-                        break;
-                    case Constants.NUMBER_THRRE:
-                        // 详情页面已打开 或者 列表处于选择状态 两种情况,当处于选择状态时，删除按钮显示，搜索隐藏。
-                        boolean containsKeyAlbum = itemStatusMap.containsKey(Constants.FRAGMENT_ALBUM_CATEGORY);
-                        if (detailsViewMap.containsKey(Constants.FRAGMENT_ALBUM)) {
-                            mTvEdit.setText(getResources().getString(containsKeyAlbum ? R.string.complete : R.string.back));
-                            mTvEditDelete.setVisibility(containsKeyAlbum ? View.VISIBLE : View.GONE);
-                        } else {
-                            mTvEdit.setText(getResources().getString(R.string.tv_edit));
-                            mTvEditDelete.setVisibility(View.GONE);
-                            setDetailFlagZoer();
-                        }
-                        mTvEdit.setVisibility(View.VISIBLE);
-                        mIvSearch.setVisibility(containsKeyAlbum ? View.GONE : View.VISIBLE);
-                        mTvMusicToolbarTitle.setText(titleResourceId);
-                        break;
-                    case Constants.NUMBER_FOUR:
-                        mTvEdit.setVisibility(View.GONE);
-                        mTvEditDelete.setVisibility(View.GONE);
-                        mTvMusicToolbarTitle.setText(titleResourceId);
-                        mIvSearch.setVisibility(View.VISIBLE);
-                        break;
-                    default:
-                        break;
-                }
+//                switch (currentSelecteFlag) {
+//                    case Constants.NUMBER_ZERO:
+//                        // 详情页面已打开 或者 列表处于选择状态 两种情况,当处于选择状态时，删除按钮显示，搜索隐藏。
+//                        boolean isContainsKey = itemStatusMap.containsKey(Constants.FRAGMENT_PLAYLIST);
+//                        if (detailsViewMap.containsKey(Constants.FRAGMENT_PLAYLIST)) {
+//                            mTvEdit.setText(getResources().getString(isContainsKey ? R.string.complete : R.string.back_play_list));
+//                            mTvEdit.setVisibility(View.VISIBLE);
+//                        } else {
+//                            // 正常状态  如果列表长度大于 0 ， 编辑按钮显示， 否则隐藏。
+//                            mTvEdit.setText(getResources().getString(R.string.tv_edit));
+//                            mTvEdit.setVisibility(getPlayList().size() > Constants.NUMBER_ZERO ? View.VISIBLE : View.GONE);
+//                            setDetailFlagZoer();
+//                        }
+//                        mTvEditDelete.setVisibility(isContainsKey ? View.VISIBLE : View.GONE);
+//                        mIvSearch.setVisibility(isContainsKey ? View.GONE : View.VISIBLE);
+//                        break;
+//                    case Constants.NUMBER_ONE:
+//                        if (detailsViewMap.containsKey(Constants.FRAGMENT_ARTIST)) {
+//                            mTvEdit.setText(R.string.music_artisan);
+//                            mTvEdit.setVisibility(View.VISIBLE);
+//                        } else {
+//                            mTvEdit.setVisibility(View.GONE);
+//                            setDetailFlagZoer();
+//                        }
+//                        mTvEditDelete.setVisibility(View.GONE);
+//                        mIvSearch.setVisibility(View.VISIBLE);
+//                        break;
+//                    case Constants.NUMBER_TWO:
+//                        boolean containsKey = itemStatusMap.containsKey(Constants.FRAGMENT_SONG_CATEGORY);
+//                        if (detailsViewMap.containsKey(Constants.FRAGMENT_SONG_CATEGORY)) {
+//                            mTvEdit.setText(getResources().getString(containsKey ? R.string.complete : R.string.tv_edit));
+//                        } else {
+//                            mTvEdit.setText(R.string.tv_edit);
+//                            setDetailFlagZoer();
+//                        }
+//                        mTvEdit.setVisibility(View.VISIBLE);
+//                        mTvEditDelete.setVisibility(containsKey ? View.VISIBLE : View.GONE);
+//                        mIvSearch.setVisibility(containsKey ? View.GONE : View.VISIBLE);
+//                        mTvMusicToolbarTitle.setText(titleResourceId);
+//                        break;
+//                    case Constants.NUMBER_THRRE:
+//                        // 详情页面已打开 或者 列表处于选择状态 两种情况,当处于选择状态时，删除按钮显示，搜索隐藏。
+//                        boolean containsKeyAlbum = itemStatusMap.containsKey(Constants.FRAGMENT_ALBUM_CATEGORY);
+//                        if (detailsViewMap.containsKey(Constants.FRAGMENT_ALBUM)) {
+//                            mTvEdit.setText(getResources().getString(containsKeyAlbum ? R.string.complete : R.string.back));
+//                            mTvEditDelete.setVisibility(containsKeyAlbum ? View.VISIBLE : View.GONE);
+//                        } else {
+//                            mTvEdit.setText(getResources().getString(R.string.tv_edit));
+//                            mTvEditDelete.setVisibility(View.GONE);
+//                            setDetailFlagZoer();
+//                        }
+//                        mTvEdit.setVisibility(View.VISIBLE);
+//                        mIvSearch.setVisibility(containsKeyAlbum ? View.GONE : View.VISIBLE);
+//                        mTvMusicToolbarTitle.setText(titleResourceId);
+//                        break;
+//                    case Constants.NUMBER_FOUR:
+//                        mTvEdit.setVisibility(View.GONE);
+//                        mTvEditDelete.setVisibility(View.GONE);
+//                        mTvMusicToolbarTitle.setText(titleResourceId);
+//                        mIvSearch.setVisibility(View.VISIBLE);
+//                        break;
+//                    default:
+//                        break;
+//                }
             }
             mTitleResourceId = titleResourceId;
-            changeToolBarTitle(currentSelecteFlag);
             mCurrentIndex = currentSelecteFlag;
             mMusicViewPager.setCurrentItem(currentSelecteFlag, false);
         });
@@ -423,32 +323,6 @@ public class MusicActivity
                 MusicActivity.this.startMusicService(position);
             }
         });
-    }
-
-    private void changeToolBarTitle(int currentSelecteFlag) {
-        switch (currentSelecteFlag) {
-            case Constants.NUMBER_ZERO:
-                setToolBarTitle(PlayListFragment.isShowDetailsView, PlayListFragment.detailsViewTitle);
-                break;
-            case Constants.NUMBER_ONE:
-                setToolBarTitle(ArtistFragment.isShowDetailsView, ArtistFragment.detailsViewTitle);
-                break;
-            case Constants.NUMBER_THRRE:
-                setToolBarTitle(AlbumFragment.isShowDetailsView, AlbumFragment.detailsViewTitle);
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void setToolBarTitle(boolean isShowDetailsView, String detailsViewTitle) {
-        if (isShowDetailsView) {
-            if (detailsViewTitle != null) {
-                mTvMusicToolbarTitle.setText(detailsViewTitle);
-            }
-        } else {
-            mTvMusicToolbarTitle.setText(mTitleResourceId);
-        }
     }
 
 
@@ -790,31 +664,17 @@ public class MusicActivity
     }
 
 
-    @Override
-    public void updataTitle(String toolbarTitle, boolean isShowDetail) {
-        mTvMusicToolbarTitle.setText(toolbarTitle);
-    }
-
-    @Override
-    public void changeTvEdit(String tvEdit) {
-        mTvEdit.setText(tvEdit);
-    }
-
-    @Override
-    public void setEditVisibility(int editVisibility) {
-        mTvEdit.setVisibility(editVisibility);
-    }
-
-    @Override
-    public void setIvSearchVisibility(boolean searchVisibility) {
-        aa(searchVisibility);
-    }
 
     // AboutFragment 界面恢复收藏歌曲后调用
     @Override
     public void checkCurrentFavorite() {
         MusicBean musicBean = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Id.eq(mCurrentMusicBean.getId())).build().unique();
         checkCurrentSongIsFavorite(musicBean, mQqControlBar, mSmartisanControlBar);
+    }
+
+    @Override
+    public void switchControlBar() {
+        switchMusicControlBar();
     }
 
     private List<PlayListBean> getPlayList() {
@@ -826,10 +686,6 @@ public class MusicActivity
         int detailFlag = SpUtil.getDetailFlag(this);
         if (detailFlag > Constants.NUMBER_ZERO) {
             mBus.post(new DetailsFlagBean(detailFlag));
-            mTvMusicToolbarTitle.setText(mTitleResourceId);
-            // 搜索和编辑
-            mTvEditDelete.setVisibility(View.GONE);
-            mIvSearch.setVisibility(View.VISIBLE);
         } else {
             super.onBackPressed();
         }

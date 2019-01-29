@@ -19,6 +19,7 @@ import com.yibao.music.util.Constants;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.view.music.DetailsView;
+import com.yibao.music.view.music.MusicToolBar;
 import com.yibao.music.view.music.MusicView;
 
 import java.util.List;
@@ -39,22 +40,29 @@ import butterknife.ButterKnife;
 
 public class ArtistFragment extends BaseMusicFragment {
 
+    @BindView(R.id.music_toolbar_list)
+    MusicToolBar mMusicToolBar;
     @BindView(R.id.artist_music_view)
     MusicView mMusicView;
     @BindView(R.id.details_view)
     DetailsView mDetailsView;
     private ArtistAdapter mAdapter;
-    public static String detailsViewTitle;
     private List<ArtistInfo> mArtistList;
     public static boolean isShowDetailsView = false;
-    private ArtistInfo mArtistInfo;
     private DetailsViewAdapter mDetailsAdapter;
     private List<MusicBean> mDetailList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        mArtistList = MusicListUtil.getArtistList(mSongList);
+    }
+
+    @Override
+    protected void onLazyLoadData() {
         mArtistList = MusicListUtil.getArtistList(mSongList);
+        initData();
+        initListener();
     }
 
     @Nullable
@@ -63,13 +71,32 @@ public class ArtistFragment extends BaseMusicFragment {
 
         View view = inflater.inflate(R.layout.artisan_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
-        initData();
-        initListener();
+        mMusicToolBar.setTvEditVisibility(isShowDetailsView);
+//        initData();
+//        initListener();
         return view;
     }
 
     private void initListener() {
         mAdapter.setItemListener((bean, bean2) -> ArtistFragment.this.openDetailsView(bean));
+        mMusicToolBar.setClickListener(new MusicToolBar.OnToolbarClickListener() {
+            @Override
+            public void clickEdit() {
+                if (isShowDetailsView) {
+                    openDetailsView(null);
+                }
+            }
+
+            @Override
+            public void switchMusicControlBar() {
+                switchControlBar();
+            }
+
+            @Override
+            public void clickDelete() {
+
+            }
+        });
     }
 
 
@@ -80,14 +107,11 @@ public class ArtistFragment extends BaseMusicFragment {
     }
 
     private void openDetailsView(ArtistInfo artistInfo) {
-        mArtistInfo = artistInfo;
+        mDetailsView.setVisibility(isShowDetailsView ? View.GONE : View.VISIBLE);
+        mMusicToolBar.setTvEditVisibility(isShowDetailsView);
         if (isShowDetailsView) {
             removeFrag(mClassName);
-            mDetailsView.setVisibility(View.GONE);
-            mMusicView.setVisibility(View.VISIBLE);
-            detailsViewTitle = null;
         } else {
-            mDetailsView.setVisibility(View.VISIBLE);
             mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(artistInfo.getArtist())).build().list();
             // DetailsView播放音乐需要的参数
             mDetailsView.setDataFlag(mFragmentManager, mDetailList.size(), artistInfo.getArtist(), Constants.NUMBER_ONE);
@@ -95,14 +119,13 @@ public class ArtistFragment extends BaseMusicFragment {
             mDetailsView.setAdapter(Constants.NUMBER_ONE, artistInfo, mDetailsAdapter);
             SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_NINE);
             mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
-                    MoreMenuBottomDialog.newInstance(musicBean, position, false,false).getBottomDialog(mActivity));
+                    MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
             putFragToMap(mClassName);
-            detailsViewTitle = artistInfo.getAlbumName();
-            changeToolBarTitle(artistInfo.getAlbumName(), isShowDetailsView);
-            changeEditVisibility(true);
+            mMusicToolBar.setTvEditText(R.string.music_artisan);
         }
-        changeTvEditText(getResources().getString(isShowDetailsView ? R.string.tv_edit : R.string.music_artisan));
+        mMusicToolBar.setToolbarTitle(isShowDetailsView ? getString(R.string.music_artisan) : artistInfo.getAlbumName());
         isShowDetailsView = !isShowDetailsView;
+        mMusicToolBar.setTvEditVisibility(isShowDetailsView);
     }
 
     @Override
@@ -118,14 +141,8 @@ public class ArtistFragment extends BaseMusicFragment {
     protected void handleDetailsBack(int detailFlag) {
         super.handleDetailsBack(detailFlag);
         if (detailFlag == Constants.NUMBER_NINE) {
-            openDetailsView(mArtistInfo);
-            changeEditVisibility(false);
-            changeToolBarTitle(getResources().getString(R.string.music_artisan), false);
+            openDetailsView(null);
         }
-    }
-
-    @Override
-    protected void changeEditStatus(int currentIndex) {
     }
 
     public static ArtistFragment newInstance() {

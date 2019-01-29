@@ -10,13 +10,14 @@ import android.view.ViewGroup;
 import com.yibao.music.R;
 import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.base.BaseMusicFragment;
-import com.yibao.music.base.listener.OnUpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
+import com.yibao.music.model.EditBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
+import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.view.music.MusicView;
 
@@ -25,6 +26,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @项目名： ArtisanMusic
@@ -61,8 +64,22 @@ public class SongCategoryFragment extends BaseMusicFragment {
     }
 
     @Override
+    protected void onLazyLoadData() {
+
+//        if (mPosition != Constants.NUMBER_ZERO) {
+//            mPlayFrequencyList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_THRRE);
+//            mAddTimeList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
+//            mScoreList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_FOUR);
+//            // 新增歌曲刷新列表
+//            initData();
+//        }
+//        initListener();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+        initRxBusData();
         if (mPosition != Constants.NUMBER_ZERO) {
             mPlayFrequencyList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_THRRE);
             mAddTimeList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
@@ -71,6 +88,15 @@ public class SongCategoryFragment extends BaseMusicFragment {
             initData();
         }
         initListener();
+    }
+
+    private void initRxBusData() {
+        disposeToolbar();
+        if (mEditDisposable == null) {
+            mEditDisposable = mBus.toObserverable(EditBean.class).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(editBean -> changeEditStatus(editBean.getCurrentIndex()));
+        }
+
     }
 
     @Override
@@ -124,24 +150,32 @@ public class SongCategoryFragment extends BaseMusicFragment {
         mMusciView.setAdapter(mActivity, Constants.NUMBER_ONE, isShowSlidebar, mSongAdapter);
     }
 
-    @Override
     protected void changeEditStatus(int currentIndex) {
-        if (currentIndex == Constants.NUMBER_TWO) {
-            closeEditStatus();
-        } else if (currentIndex == Constants.NUMBER_TWELVE) {
-            // 删除已选择的条目
-            List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsSelected.eq(true)).build().list();
-            for (MusicBean musicBean : musicBeanList) {
-                mMusicBeanDao.delete(musicBean);
+        if (mIsLoadedData) {
+            LogUtil.d("=========== Lsp " + currentIndex);
+            if (currentIndex == Constants.NUMBER_ONE) {
+                closeEditStatus();
+            } else if (currentIndex == Constants.NUMBER_TWO) {
+                // 删除已选择的条目
+                List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsSelected.eq(true)).build().list();
+                if (musicBeanList.size() > Constants.NUMBER_ZERO) {
+                    LogUtil.d("======== Size    " + musicBeanList.size());
+                    for (MusicBean musicBean : musicBeanList) {
+                        mMusicBeanDao.delete(musicBean);
+                    }
+                    mSongAdapter.setItemSelectStatus(false);
+                    mSongAdapter.setNewData(getSongList());
+                    mBus.post(Constants.NUMBER_TEN, new EditBean());
+                } else {
+                    SnakbarUtil.favoriteSuccessView(mMusciView, "没有选中条目");
+                }
             }
-            mSongAdapter.setItemSelectStatus(false);
-            mSongAdapter.setNewData(getSongList());
-            changeTvEditVisibility();
         }
     }
 
 
     private void closeEditStatus() {
+        LogUtil.d("=========== Lsp isItemSelectStatus   " + isItemSelectStatus);
         if (isItemSelectStatus) {
             // 取其中一种就可以
             putFragToMap(Constants.NUMBER_ELEVEN, mClassName);
@@ -150,27 +184,19 @@ public class SongCategoryFragment extends BaseMusicFragment {
             removeFrag(mClassName);
             removeFragItemStatus(mClassName);
         }
-        changeTvEditText(getResources().getString(isItemSelectStatus ? R.string.complete : R.string.tv_edit));
         mSongAdapter.setItemSelectStatus(isItemSelectStatus);
         isItemSelectStatus = !isItemSelectStatus;
-        changeSearchVisibility(isItemSelectStatus);
         if (!isItemSelectStatus && mSelectCount > 0) {
             cancelAllSelected();
         }
     }
 
-    private void changeTvEditVisibility() {
-        if (mContext instanceof OnUpdataTitleListener) {
-            ((OnUpdataTitleListener) mContext).updataTitle(getResources().getString(R.string.tv_edit), false);
-        }
-
-    }
-
     @Override
     protected void handleDetailsBack(int detailFlag) {
-        if (detailFlag == 11) {
+        if (detailFlag == Constants.NUMBER_ELEVEN) {
             SpUtil.setDetailsFlag(mContext, Constants.NUMBER_ELEVEN);
             mSongAdapter.setItemSelectStatus(false);
+            mBus.post(Constants.NUMBER_TEN, new EditBean());
             isItemSelectStatus = !isItemSelectStatus;
         }
         super.handleDetailsBack(detailFlag);
