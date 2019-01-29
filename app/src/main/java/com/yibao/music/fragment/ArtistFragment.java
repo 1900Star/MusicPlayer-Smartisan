@@ -60,22 +60,15 @@ public class ArtistFragment extends BaseMusicFragment {
     }
 
     @Override
-    protected void onLazyLoadData() {
-//        mArtistList = MusicListUtil.getArtistList(mSongList);
-//        initData();
-//        initListener();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.music_artisan));
+        interceptBackEvent(isShowDetailsView ? Constants.NUMBER_NINE : Constants.NUMBER_ZERO);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.artisan_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         mMusicToolBar.setTvEditVisibility(isShowDetailsView);
@@ -115,9 +108,7 @@ public class ArtistFragment extends BaseMusicFragment {
     private void openDetailsView(ArtistInfo artistInfo) {
         mDetailsView.setVisibility(isShowDetailsView ? View.GONE : View.VISIBLE);
         mMusicToolBar.setTvEditVisibility(isShowDetailsView);
-        if (isShowDetailsView) {
-            removeFrag(mClassName);
-        } else {
+        if (!isShowDetailsView) {
             if (artistInfo != null) {
                 mTempTitle = artistInfo.getAlbumName();
                 mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(artistInfo.getArtist())).build().list();
@@ -128,7 +119,7 @@ public class ArtistFragment extends BaseMusicFragment {
                 SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_NINE);
                 mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
                         MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
-                putFragToMap(mClassName);
+                interceptBackEvent(Constants.NUMBER_NINE);
                 mMusicToolBar.setTvEditText(R.string.music_artisan);
             }
         }
@@ -148,7 +139,6 @@ public class ArtistFragment extends BaseMusicFragment {
 
     @Override
     protected void handleDetailsBack(int detailFlag) {
-        super.handleDetailsBack(detailFlag);
         if (detailFlag == Constants.NUMBER_NINE) {
             openDetailsView(null);
         }

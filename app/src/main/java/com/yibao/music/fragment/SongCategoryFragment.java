@@ -18,7 +18,6 @@ import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SnakbarUtil;
-import com.yibao.music.util.SpUtil;
 import com.yibao.music.view.music.MusicView;
 
 import java.util.Collections;
@@ -64,19 +63,6 @@ public class SongCategoryFragment extends BaseMusicFragment {
     }
 
     @Override
-    protected void onLazyLoadData() {
-
-//        if (mPosition != Constants.NUMBER_ZERO) {
-//            mPlayFrequencyList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_THRRE);
-//            mAddTimeList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
-//            mScoreList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_FOUR);
-//            // 新增歌曲刷新列表
-//            initData();
-//        }
-//        initListener();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         initRxBusData();
@@ -88,6 +74,9 @@ public class SongCategoryFragment extends BaseMusicFragment {
             initData();
         }
         initListener();
+        if (isItemSelectStatus) {
+            interceptBackEvent(Constants.NUMBER_ELEVEN);
+        }
     }
 
     private void initRxBusData() {
@@ -151,37 +140,28 @@ public class SongCategoryFragment extends BaseMusicFragment {
     }
 
     protected void changeEditStatus(int currentIndex) {
-            LogUtil.d("=========== Lsp " + currentIndex);
-            if (currentIndex == Constants.NUMBER_ONE) {
-                closeEditStatus();
-            } else if (currentIndex == Constants.NUMBER_TWO) {
-                // 删除已选择的条目
-                List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsSelected.eq(true)).build().list();
-                if (musicBeanList.size() > Constants.NUMBER_ZERO) {
-                    LogUtil.d("======== Size    " + musicBeanList.size());
-                    for (MusicBean musicBean : musicBeanList) {
-                        mMusicBeanDao.delete(musicBean);
-                    }
-                    mSongAdapter.setItemSelectStatus(false);
-                    mSongAdapter.setNewData(getSongList());
-                    mBus.post(Constants.NUMBER_TEN, new EditBean());
-                } else {
-                    SnakbarUtil.favoriteSuccessView(mMusciView, "没有选中条目");
+        if (currentIndex == Constants.NUMBER_ONE) {
+            closeEditStatus();
+        } else if (currentIndex == Constants.NUMBER_TWO) {
+            // 删除已选择的条目
+            List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsSelected.eq(true)).build().list();
+            if (musicBeanList.size() > Constants.NUMBER_ZERO) {
+                LogUtil.d("======== Size    " + musicBeanList.size());
+                for (MusicBean musicBean : musicBeanList) {
+                    mMusicBeanDao.delete(musicBean);
                 }
+                mSongAdapter.setItemSelectStatus(false);
+                mSongAdapter.setNewData(getSongList());
+                mBus.post(Constants.NUMBER_TEN, new EditBean());
+            } else {
+                SnakbarUtil.favoriteSuccessView(mMusciView, "没有选中条目");
             }
-    } 
+        }
+    }
 
 
     private void closeEditStatus() {
-        LogUtil.d("=========== Lsp isItemSelectStatus   " + isItemSelectStatus);
-        if (isItemSelectStatus) {
-            // 取其中一种就可以
-            putFragToMap(Constants.NUMBER_ELEVEN, mClassName);
-            putFragToItemStatusMap(Constants.NUMBER_ELEVEN, mClassName);
-        } else {
-            removeFrag(mClassName);
-            removeFragItemStatus(mClassName);
-        }
+        interceptBackEvent(isItemSelectStatus ? Constants.NUMBER_ELEVEN : Constants.NUMBER_ZERO);
         mSongAdapter.setItemSelectStatus(isItemSelectStatus);
         isItemSelectStatus = !isItemSelectStatus;
         if (!isItemSelectStatus && mSelectCount > 0) {
@@ -192,12 +172,10 @@ public class SongCategoryFragment extends BaseMusicFragment {
     @Override
     protected void handleDetailsBack(int detailFlag) {
         if (detailFlag == Constants.NUMBER_ELEVEN) {
-            SpUtil.setDetailsFlag(mContext, Constants.NUMBER_ELEVEN);
             mSongAdapter.setItemSelectStatus(false);
-            mBus.post(Constants.NUMBER_TEN, new EditBean());
+            mBus.post(Constants.NUMBER_TEN,new EditBean());
             isItemSelectStatus = !isItemSelectStatus;
         }
-        super.handleDetailsBack(detailFlag);
     }
 
     // 取消所有已选

@@ -65,7 +65,7 @@ public class PlayListFragment extends BaseMusicFragment {
     @BindView(R.id.play_list_content)
     LinearLayout mPlayListContent;
     private PlayListAdapter mAdapter;
-    private static boolean isShowDetailsView = false;
+    private boolean isShowDetailsView = false;
     private int mDeletePosition;
     private boolean isItemSelectStatus = true;
     private int mEditPosition;
@@ -96,6 +96,9 @@ public class PlayListFragment extends BaseMusicFragment {
         mAppBarLayout.setVisibility(SpUtil.getAddToPlayListFlag(mActivity) == Constants.NUMBER_ONE ? View.GONE : View.VISIBLE);
         mAdapter.setNewData(getPlayList());
         receiveRxbuData();
+        if (isShowDetailsView || !isItemSelectStatus) {
+            interceptBackEvent(Constants.NUMBER_EIGHT);
+        }
     }
 
     private void initData() {
@@ -161,12 +164,17 @@ public class PlayListFragment extends BaseMusicFragment {
         mMusicToolBar.setClickListener(new MusicToolBar.OnToolbarClickListener() {
             @Override
             public void clickEdit() {
-                if (isShowDetailsView) {
-                    showDetailsView(getString(R.string.play_list));
-                    mMusicToolBar.setTvEditText(R.string.tv_edit);
+                if (getPlayList().size() > Constants.NUMBER_ZERO) {
+                    if (isShowDetailsView) {
+                        showDetailsView(getString(R.string.play_list));
+                        mMusicToolBar.setTvEditText(R.string.tv_edit);
+                    } else {
+                        closeEditStatus();
+                    }
                 } else {
-                    closeEditStatus();
+                    SnakbarUtil.favoriteFailView(mMusicToolBar, "当前没有播放列表");
                 }
+
             }
 
             @Override
@@ -176,19 +184,7 @@ public class PlayListFragment extends BaseMusicFragment {
 
             @Override
             public void clickDelete() {
-                List<PlayListBean> beanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).build().list();
-                if (beanList.size() > Constants.NUMBER_ZERO) {
-                    for (PlayListBean playListBean : beanList) {
-                        mPlayListDao.delete(playListBean);
-                    }
-                    mAdapter.setItemSelectStatus(false);
-                    mAdapter.setNewData(getPlayList());
-                    mLlAddNewPlayList.setEnabled(true);
-                    mMusicToolBar.setTvEditText(R.string.tv_edit);
-                    mMusicToolBar.setTvDeleteVisibility(View.GONE);
-                } else {
-                    SnakbarUtil.favoriteSuccessView(mMusicToolBar, "没有选中条目");
-                }
+                deleteListItem();
             }
         });
 
@@ -227,13 +223,28 @@ public class PlayListFragment extends BaseMusicFragment {
         });
     }
 
+    private void deleteListItem() {
+        List<PlayListBean> beanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).build().list();
+        if (beanList.size() > Constants.NUMBER_ZERO) {
+            for (PlayListBean playListBean : beanList) {
+                mPlayListDao.delete(playListBean);
+            }
+            mAdapter.setItemSelectStatus(false);
+            mAdapter.setNewData(getPlayList());
+            mLlAddNewPlayList.setEnabled(true);
+            mMusicToolBar.setTvEditText(R.string.tv_edit);
+            mMusicToolBar.setTvDeleteVisibility(View.GONE);
+        } else {
+            SnakbarUtil.favoriteSuccessView(mMusicToolBar, "没有选中条目");
+        }
+    }
+
 
     private void showDetailsView(String title) {
         mMusicToolBar.setToolbarTitle(title);
         mLlAddNewPlayList.setVisibility(isShowDetailsView ? View.VISIBLE : View.GONE);
         mDetailView.setVisibility(isShowDetailsView ? View.GONE : View.VISIBLE);
         if (isShowDetailsView) {
-            removeFrag(mClassName);
             mAdapter.setNewData(getPlayList());
         } else {
             mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(title)).build().list();
@@ -242,10 +253,10 @@ public class PlayListFragment extends BaseMusicFragment {
             RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mDetailsAdapter);
             mDetailsAdapter.setOnItemMenuListener((position, musicBean) -> MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
             mDetailView.setAdapter(recyclerView);
-            putFragToMap(Constants.NUMBER_EIGHT, mClassName);
-            mMusicToolBar.setTvEditText(R.string.back);
+            interceptBackEvent(Constants.NUMBER_EIGHT);
         }
         isShowDetailsView = !isShowDetailsView;
+        mMusicToolBar.setTvEditText(isShowDetailsView ? R.string.back : R.string.tv_edit);
     }
 
     /**
@@ -345,19 +356,11 @@ public class PlayListFragment extends BaseMusicFragment {
             } else {
                 showDetailsView(getString(R.string.play_list));
             }
-
         }
-        super.handleDetailsBack(detailFlag);
     }
 
     private void closeEditStatus() {
-        if (isItemSelectStatus) {
-            putFragToMap(Constants.NUMBER_EIGHT, mClassName);
-            putFragToItemStatusMap(Constants.NUMBER_EIGHT, mClassName);
-        } else {
-            removeFrag(mClassName);
-            removeFragItemStatus(mClassName);
-        }
+        interceptBackEvent(isItemSelectStatus ? Constants.NUMBER_EIGHT : Constants.NUMBER_ZERO);
         mMusicToolBar.setTvEditText(isItemSelectStatus ? R.string.complete : R.string.tv_edit);
         mMusicToolBar.setTvDeleteVisibility(isItemSelectStatus ? View.VISIBLE : View.GONE);
         mAdapter.setItemSelectStatus(isItemSelectStatus);

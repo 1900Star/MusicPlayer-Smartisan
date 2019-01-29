@@ -48,8 +48,8 @@ public class SnakbarUtil {
     /**
      * 列表名字不能为空提示
      */
-    public static void favoriteFailView(View view) {
-        Snackbar snackbar = make(view, "列表名的长度不能超过21个字符", Snackbar.LENGTH_LONG);
+    public static void favoriteFailView(View view,String str) {
+        Snackbar snackbar = make(view, str, Snackbar.LENGTH_LONG);
         snackbar.getView()
                 .setBackgroundColor(Color.parseColor("#325ab1"));
         snackbar.show();

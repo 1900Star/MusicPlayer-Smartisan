@@ -19,7 +19,6 @@ import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SnakbarUtil;
-import com.yibao.music.util.SpUtil;
 import com.yibao.music.view.music.MusicView;
 
 import java.util.Collections;
@@ -56,12 +55,6 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
         mAlbumList = MusicListUtil.getAlbumList(mSongList);
     }
 
-    @Override
-    protected void onLazyLoadData() {
-//        mAlbumList = MusicListUtil.getAlbumList(mSongList);
-////        initData();
-    }
-
 
     @Nullable
     @Override
@@ -92,13 +85,17 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
     public void onResume() {
         super.onResume();
         initRxBusData();
+        if (!isItemSelectStatus) {
+            interceptBackEvent(Constants.NUMBER_TEN);
+        }
     }
 
     private void initRxBusData() {
         disposeToolbar();
         if (mEditDisposable == null) {
             mEditDisposable = mBus.toObserverable(EditBean.class).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread()).subscribe(editBean -> changeEditStatus(editBean.getCurrentIndex()));
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(editBean -> changeEditStatus(editBean.getCurrentIndex()));
         }
 
     }
@@ -116,49 +113,31 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
                 }
                 mAlbumAdapter.setItemSelectStatus(false);
                 mAlbumAdapter.setNewData(getAlbumList());
-                mBus.post(Constants.NUMBER_NINE, new EditBean());
+                interceptBackEvent(Constants.NUMBER_TEN);
             } else {
                 SnakbarUtil.favoriteSuccessView(mMusicView, "没有选中条目");
             }
         }
     }
 
-    public static AlbumCategoryFragment newInstance(int position) {
-        Bundle args = new Bundle();
-        AlbumCategoryFragment fragment = new AlbumCategoryFragment();
-        args.putInt("position", position);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-
-    @Override
-    protected void handleDetailsBack(int detailFlag) {
-        if (detailFlag == Constants.NUMBER_TEN) {
-            SpUtil.setDetailsFlag(mContext, Constants.NUMBER_TEN);
-            mAlbumAdapter.setItemSelectStatus(false);
-            isItemSelectStatus = true;
-            mBus.post(Constants.NUMBER_NINE, new EditBean());
-        }
-        super.handleDetailsBack(detailFlag);
-    }
-
-
     private void closeEditStatus() {
-        if (isItemSelectStatus) {
-            putFragToMap(Constants.NUMBER_TEN, mClassName);
-            putFragToItemStatusMap(Constants.NUMBER_TEN, mClassName);
-        } else {
-            removeFrag(mClassName);
-            removeFragItemStatus(mClassName);
-        }
-
         mAlbumAdapter.setItemSelectStatus(isItemSelectStatus);
         isItemSelectStatus = !isItemSelectStatus;
+        interceptBackEvent(Constants.NUMBER_TEN);
         if (!isItemSelectStatus && mSelectCount > 0) {
             cancelAllSelected();
         }
     }
+
+    @Override
+    protected void handleDetailsBack(int detailFlag) {
+        if (detailFlag == Constants.NUMBER_TEN) {
+            mAlbumAdapter.setItemSelectStatus(false);
+            mBus.post(Constants.NUMBER_NINE, new EditBean());
+            isItemSelectStatus = true;
+        }
+    }
+
 
     // 取消所有已选
     private void cancelAllSelected() {
@@ -175,4 +154,13 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
         return mAlbumDao.queryBuilder().list();
 
     }
+
+    public static AlbumCategoryFragment newInstance(int position) {
+        Bundle args = new Bundle();
+        AlbumCategoryFragment fragment = new AlbumCategoryFragment();
+        args.putInt("position", position);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 }

@@ -12,4 +12,6 @@ public interface OnUpdataTitleListener {
     void checkCurrentFavorite();
 
     void switchControlBar();
+
+    void handleBack(int detailFlag);
 }

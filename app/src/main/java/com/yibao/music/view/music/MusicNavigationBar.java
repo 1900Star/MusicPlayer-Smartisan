@@ -88,56 +88,31 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
                 mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_selector);
                 mMusicBarPlaylistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarPlaylist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
-                setDetailFragmentFlag(Constants.FRAGMENT_PLAYLIST, Constants.NUMBER_EIGHT);
                 break;
             case Constants.NUMBER_ONE:
                 mMusicBarArtisanlistIv.setBackgroundResource(R.drawable.tabbar_artisanlist_selector);
                 mMusicBarArtisanlistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarArtisanlist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
-                setDetailFragmentFlag(Constants.FRAGMENT_ARTIST, Constants.NUMBER_NINE);
                 break;
             case Constants.NUMBER_TWO:
                 mMusicBarSonglistIv.setBackgroundResource(R.drawable.tabbar_songlist_selector);
                 mMusicBarSonglistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarSonglist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
-                // 没有详情页面，直接返回桌面。
-                setDetailFragmentFlag(Constants.FRAGMENT_SONG_CATEGORY, Constants.NUMBER_ELEVEN);
                 break;
             case Constants.NUMBER_THRRE:
                 mMusicBarAlbumlistIv.setBackgroundResource(R.drawable.tabbar_albumlist_selector);
                 mMusicBarAlbumlist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 mMusicBarAlbumlistTv.setTextColor(ColorUtil.musicbarTvDown);
-                setDetailFragmentFlag(Constants.FRAGMENT_ALBUM, Constants.NUMBER_TEN);
                 break;
             case Constants.NUMBER_FOUR:
                 mMusicBarStylelistIv.setBackgroundResource(R.drawable.tabbar_stylelist_selector);
                 mMusicBarStylelistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarAboutLl.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
-                // 没有详情页面，直接返回桌面。
-                SpUtil.setDetailsFlag(getContext(), 12);
                 break;
             default:
                 break;
         }
 
-    }
-
-    /**
-     * 判断mDetailsMap中是否包含当前的Fragment页面,如果有，就说明有详情页面打开。
-     *
-     * @param className      展示详情的Fragment  Key + 10 表示有编辑状态被打开
-     * @param detailsViewKey 这个Key必须为 8 (PlayListFragment)、9 (ArtistFragment)、10 (AlbumFragment)、11 (SongCategoryFragment)
-     *                       这四个整数，这样展示详情的Fragment就能自己处理返回事件。
-     *                       tabBar的index + 20  (20PlayFag 、22SongFrag、23AlbumFag)表示有编辑状态被打开，返回时需要先关闭编辑状态。
-     *                       0 表示将返回事件还给Activity处理
-     */
-    private void setDetailFragmentFlag(String className, int detailsViewKey) {
-        HashMap<String, BaseFragment> detailsViewMap = BaseMusicFragment.mDetailsViewMap;
-        if (detailsViewMap != null) {
-            if (detailsViewMap.containsKey(className) || detailsViewMap.containsKey(Constants.FRAGMENT_ALBUM)) {
-                SpUtil.setDetailsFlag(getContext(), detailsViewKey);
-            }
-        }
     }
 
     /**

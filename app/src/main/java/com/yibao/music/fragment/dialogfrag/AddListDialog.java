@@ -58,9 +58,8 @@ public class AddListDialog
     private static String mEditHint;
 
     /**
-     *
-     * @param operationType  1 新建列表  2 列表改名
-     * @param editHint e
+     * @param operationType 1 新建列表  2 列表改名
+     * @param editHint      e
      * @return c
      */
     public static AddListDialog newInstance(int operationType, String editHint) {
@@ -104,7 +103,7 @@ public class AddListDialog
         mNoInputTv = mView.findViewById(R.id.tv_no_input_cancel);
         title.setText(mOperationType == Constants.NUMBER_ONE ? R.string.add_new_play_list : R.string.rename_tile);
         boolean b = SpUtil.getAddToPlayListFlag(getActivity()) == Constants.NUMBER_ONE;
-        mTvAddListContinue.setText(getResources().getString(b?R.string.save_and_add:R.string.continues));
+        mTvAddListContinue.setText(getResources().getString(b ? R.string.save_and_add : R.string.continues));
         mEditAddList.setHint(mEditHint);
     }
 
@@ -160,7 +159,7 @@ public class AddListDialog
         mCompositeDisposable.add(RxTextView.textChangeEvents(mEditAddList)
                 .map(textViewTextChangeEvent -> {
                     if (textViewTextChangeEvent.text().length() == 21) {
-                        SnakbarUtil.favoriteFailView(mView);
+                        SnakbarUtil.favoriteFailView(mView, "列表名的长度不能超过21个字符");
                     }
                     return TextUtils.isEmpty((textViewTextChangeEvent.text()));
                 }).subscribeOn(Schedulers.io())

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.jakewharton.rxbinding2.view.RxView;
@@ -38,7 +37,6 @@ import com.yibao.music.view.music.QqControlBar;
 import com.yibao.music.view.music.SmartisanControlBar;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -78,6 +76,7 @@ public class MusicActivity
     private int mPlayState;
     private int lyricsFlag = 0;
     private MusicBean mQqBarBean;
+    private int mHandleDetailFlag;
 
 
     @Override
@@ -90,8 +89,6 @@ public class MusicActivity
         initListener();
         deleteSelected();
     }
-
-
 
 
     private void initData() {
@@ -583,10 +580,15 @@ public class MusicActivity
     }
 
     @Override
+    public void handleBack(int detailFlag) {
+        mHandleDetailFlag = detailFlag;
+    }
+
+    @Override
     public void onBackPressed() {
-        int detailFlag = SpUtil.getDetailFlag(this);
-        if (detailFlag > Constants.NUMBER_ZERO) {
-            mBus.post(new DetailsFlagBean(detailFlag));
+        if (mHandleDetailFlag > Constants.NUMBER_ZERO) {
+            mBus.post(new DetailsFlagBean(mHandleDetailFlag));
+            mHandleDetailFlag = Constants.NUMBER_ZERO;
         } else {
             super.onBackPressed();
         }

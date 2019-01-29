@@ -23,7 +23,6 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.SpUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicToolBar;
 import com.yibao.music.view.music.MusicView;
@@ -111,6 +110,9 @@ public class AlbumFragment extends BaseMusicFragment {
         super.onResume();
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? detailsViewTitle : getString(R.string.music_album));
         initRxBusData();
+        if (isShowDetailsView) {
+            interceptBackEvent(Constants.NUMBER_TWELVE);
+        }
     }
 
     private void initRxBusData() {
@@ -133,7 +135,7 @@ public class AlbumFragment extends BaseMusicFragment {
                     mBus.post(new EditBean(Constants.NUMBER_THRRE));
                 }
                 mMusicToolBar.setTvDeleteVisibility(isShowDetailsView ? View.GONE : View.VISIBLE);
-                mMusicToolBar.setTvEditText(isShowDetailsView ? R.string.tv_edit : R.string.complete);
+                mMusicToolBar.setTvEditText(!isShowDetailsView ? R.string.tv_edit : R.string.complete);
                 showDetailsView(null);
             }
 
@@ -178,6 +180,7 @@ public class AlbumFragment extends BaseMusicFragment {
     private void showDetailsView(AlbumInfo albumInfo) {
         if (isShowDetailsView) {
             mDetailsView.setVisibility(View.GONE);
+            mMusicToolBar.setToolbarTitle(getString(R.string.music_album));
             mDetailViewFlag = true;
         } else {
             if (albumInfo != null) {
@@ -190,12 +193,11 @@ public class AlbumFragment extends BaseMusicFragment {
                 mDetailsView.setAdapter(Constants.NUMBER_TWO, albumInfo, mDetailsAdapter);
                 mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
                         MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
-                putFragToMap(mClassName);
+                interceptBackEvent(Constants.NUMBER_TWELVE);
                 detailsViewTitle = albumInfo.getAlbumName();
+                mMusicToolBar.setToolbarTitle(detailsViewTitle);
             }
         }
-        mMusicToolBar.setToolbarTitle(isShowDetailsView ? getString(R.string.music_album) : detailsViewTitle);
-        SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_TEN);
         mMusicToolBar.setTvEditText(isShowDetailsView ? R.string.tv_edit : R.string.back);
         isShowDetailsView = !isShowDetailsView;
     }
@@ -211,16 +213,9 @@ public class AlbumFragment extends BaseMusicFragment {
 
     @Override
     protected void handleDetailsBack(int detailFlag) {
-        if (detailFlag == Constants.NUMBER_TEN) {
-            SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_TEN);
-            mAlbumContentView.setVisibility(View.VISIBLE);
-            mDetailsView.setVisibility(View.GONE);
-            removeFrag(mClassName);
-            mMusicToolBar.setIvSearchVisibility(isShowDetailsView);
-            mMusicToolBar.setToolbarTitle(getString(R.string.music_album));
-            isShowDetailsView = !isShowDetailsView;
+        if (detailFlag == Constants.NUMBER_TWELVE) {
+            showDetailsView(null);
         }
-//        super.handleDetailsBack(detailFlag);
     }
 
 

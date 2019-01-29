@@ -15,22 +15,15 @@ import com.yibao.music.adapter.SongCategoryPagerAdapter;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.MusicPagerListener;
 import com.yibao.music.model.EditBean;
-import com.yibao.music.model.PlayListBean;
-import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.view.music.MusicToolBar;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
