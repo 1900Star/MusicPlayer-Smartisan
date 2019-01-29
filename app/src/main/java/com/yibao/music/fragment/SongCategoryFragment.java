@@ -151,7 +151,6 @@ public class SongCategoryFragment extends BaseMusicFragment {
     }
 
     protected void changeEditStatus(int currentIndex) {
-        if (mIsLoadedData) {
             LogUtil.d("=========== Lsp " + currentIndex);
             if (currentIndex == Constants.NUMBER_ONE) {
                 closeEditStatus();
@@ -170,8 +169,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
                     SnakbarUtil.favoriteSuccessView(mMusciView, "没有选中条目");
                 }
             }
-        }
-    }
+    } 
 
 
     private void closeEditStatus() {

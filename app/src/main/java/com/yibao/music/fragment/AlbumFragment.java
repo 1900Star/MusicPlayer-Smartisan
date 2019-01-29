@@ -75,11 +75,12 @@ public class AlbumFragment extends BaseMusicFragment {
     DetailsView mDetailsView;
     @BindView(R.id.album_content_view)
     LinearLayout mAlbumContentView;
-    public static String detailsViewTitle;
-    public static boolean isShowDetailsView = false;
+
     private DetailsViewAdapter mDetailsAdapter;
-    private List<MusicBean> mDetailList;
+    private boolean isShowDetailsView = false;
     private boolean mDetailViewFlag = true;
+    private List<MusicBean> mDetailList;
+    private String detailsViewTitle;
 
     @Nullable
     @Override
@@ -105,10 +106,10 @@ public class AlbumFragment extends BaseMusicFragment {
     }
 
 
-
     @Override
     public void onResume() {
         super.onResume();
+        mMusicToolBar.setToolbarTitle(isShowDetailsView ? detailsViewTitle : getString(R.string.music_album));
         initRxBusData();
     }
 
@@ -177,7 +178,6 @@ public class AlbumFragment extends BaseMusicFragment {
     private void showDetailsView(AlbumInfo albumInfo) {
         if (isShowDetailsView) {
             mDetailsView.setVisibility(View.GONE);
-            detailsViewTitle = null;
             mDetailViewFlag = true;
         } else {
             if (albumInfo != null) {
@@ -194,6 +194,7 @@ public class AlbumFragment extends BaseMusicFragment {
                 detailsViewTitle = albumInfo.getAlbumName();
             }
         }
+        mMusicToolBar.setToolbarTitle(isShowDetailsView ? getString(R.string.music_album) : detailsViewTitle);
         SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_TEN);
         mMusicToolBar.setTvEditText(isShowDetailsView ? R.string.tv_edit : R.string.back);
         isShowDetailsView = !isShowDetailsView;
@@ -216,6 +217,7 @@ public class AlbumFragment extends BaseMusicFragment {
             mDetailsView.setVisibility(View.GONE);
             removeFrag(mClassName);
             mMusicToolBar.setIvSearchVisibility(isShowDetailsView);
+            mMusicToolBar.setToolbarTitle(getString(R.string.music_album));
             isShowDetailsView = !isShowDetailsView;
         }
 //        super.handleDetailsBack(detailFlag);

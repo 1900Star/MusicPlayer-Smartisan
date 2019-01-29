@@ -51,7 +51,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class AboutFragment extends BaseMusicFragment {
 
-
+    @BindView(R.id.music_toolbar_list)
+    MusicToolBar mMusicToolBar;
     @BindView(R.id.about_header_iv)
     CircleImageView mAboutHeaderIv;
 
@@ -65,8 +66,6 @@ public class AboutFragment extends BaseMusicFragment {
     TextView mtScanerMedia;
     @BindView(R.id.tv_crash_log)
     TextView mTvCrashLog;
-    @BindView(R.id.music_toolbar_list)
-    MusicToolBar mMusicToolbarList;
     private long mCurrentPosition;
 
     @Nullable
@@ -75,15 +74,21 @@ public class AboutFragment extends BaseMusicFragment {
 
         View view = inflater.inflate(R.layout.about_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
-        mMusicToolbarList.setTvEditVisibility(false);
+        mMusicToolBar.setTvEditVisibility(false);
         initListener();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMusicToolBar.setToolbarTitle(getString(R.string.about));
     }
 
     private void initListener() {
         mCompositeDisposable.add(RxView.clicks(mAboutHeaderIv)
                 .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> PreviewBigPicDialogFragment.newInstance("")
+                .subscribe(o -> PreviewBigPicDialogFragment.newInstance(Constants.NULL_STRING)
                         .show(mFragmentManager, "album")));
         mCompositeDisposable.add(RxView.clicks(mTvBackupsFavorite)
                 .throttleFirst(3, TimeUnit.SECONDS)
@@ -104,10 +109,9 @@ public class AboutFragment extends BaseMusicFragment {
             RelaxDialogFragment.newInstance().show(mFragmentManager, "girlsDialog");
             return true;
         });
-        mMusicToolbarList.setClickListener(new MusicToolBar.OnToolbarClickListener() {
+        mMusicToolBar.setClickListener(new MusicToolBar.OnToolbarClickListener() {
             @Override
             public void clickEdit() {
-
             }
 
             @Override

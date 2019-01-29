@@ -30,7 +30,7 @@ public class PlayListActivity extends AppCompatActivity implements OnFinishActiv
         ArrayList<String> arrayList = getIntent().getStringArrayListExtra(Constants.ADD_TO_LIST);
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        PlayListFragment playListFragment = PlayListFragment.newInstance(Constants.NUMBER_ONE, songName,arrayList);
+        PlayListFragment playListFragment = PlayListFragment.newInstance(songName, arrayList);
         transaction.replace(R.id.fl_content, playListFragment);
         transaction.commit();
     }

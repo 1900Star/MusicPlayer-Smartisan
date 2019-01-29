@@ -34,7 +34,7 @@ public class FragmentFactory {
 
         switch (position) {
             case 0:
-                fragment = PlayListFragment.newInstance(Constants.NUMBER_ZERO,"lsp",null);
+                fragment = PlayListFragment.newInstance("lsp",null);
                 break;
             case 1:
                 fragment = ArtistFragment.newInstance();

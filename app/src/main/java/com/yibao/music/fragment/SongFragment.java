@@ -75,6 +75,7 @@ public class SongFragment extends BaseMusicFragment {
     @Override
     public void onResume() {
         super.onResume();
+        mMusicToolBar.setToolbarTitle(getString(R.string.music_song));
         initRxBusData();
         switchListCategory(curentIndex);
     }

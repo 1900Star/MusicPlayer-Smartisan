@@ -82,40 +82,34 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
     }
 
     public void switchMusicTabbar(int flag) {
+        setAllTabbarNotPressed(flag);
         switch (flag) {
             case Constants.NUMBER_ZERO:
-                setAllTabbarNotPressed(flag, R.string.play_list);
                 mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_selector);
                 mMusicBarPlaylistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarPlaylist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 setDetailFragmentFlag(Constants.FRAGMENT_PLAYLIST, Constants.NUMBER_EIGHT);
                 break;
             case Constants.NUMBER_ONE:
-                setAllTabbarNotPressed(flag, R.string.music_artisan);
                 mMusicBarArtisanlistIv.setBackgroundResource(R.drawable.tabbar_artisanlist_selector);
                 mMusicBarArtisanlistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarArtisanlist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 setDetailFragmentFlag(Constants.FRAGMENT_ARTIST, Constants.NUMBER_NINE);
                 break;
             case Constants.NUMBER_TWO:
-                setAllTabbarNotPressed(flag, R.string.music_song);
                 mMusicBarSonglistIv.setBackgroundResource(R.drawable.tabbar_songlist_selector);
                 mMusicBarSonglistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarSonglist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 // 没有详情页面，直接返回桌面。
-//                SpUtil.setDetailsFlag(getContext(), Constants.NUMBER_ZERO);
                 setDetailFragmentFlag(Constants.FRAGMENT_SONG_CATEGORY, Constants.NUMBER_ELEVEN);
-
                 break;
             case Constants.NUMBER_THRRE:
-                setAllTabbarNotPressed(flag, R.string.music_album);
                 mMusicBarAlbumlistIv.setBackgroundResource(R.drawable.tabbar_albumlist_selector);
                 mMusicBarAlbumlist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 mMusicBarAlbumlistTv.setTextColor(ColorUtil.musicbarTvDown);
                 setDetailFragmentFlag(Constants.FRAGMENT_ALBUM, Constants.NUMBER_TEN);
                 break;
             case Constants.NUMBER_FOUR:
-                setAllTabbarNotPressed(flag, R.string.about);
                 mMusicBarStylelistIv.setBackgroundResource(R.drawable.tabbar_stylelist_selector);
                 mMusicBarStylelistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarAboutLl.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
@@ -149,12 +143,11 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
     /**
      * 将Tabbar全部置于未选种状态
      *
-     * @param flag            将ViewPager切换到选中的Tag
-     * @param titleResourceId title
+     * @param flag 将ViewPager切换到选中的Tag
      */
-    private void setAllTabbarNotPressed(int flag, int titleResourceId) {
+    private void setAllTabbarNotPressed(int flag) {
         if (mBarSelecteListener != null) {
-            mBarSelecteListener.currentFlag(flag, titleResourceId);
+            mBarSelecteListener.currentFlag(flag);
         }
         mMusicBarPlaylist.setBackgroundColor(ColorUtil.wihtle);
         mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_down_selector);
@@ -217,7 +210,7 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
     }
 
     public interface OnNavigationBarSelecteListener {
-        void currentFlag(int currentSelecteFlag, int titleResourceId);
+        void currentFlag(int currentSelecteFlag);
 
     }
 }

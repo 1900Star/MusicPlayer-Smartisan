@@ -26,8 +26,6 @@ import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.HanziToPinyins;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.ToastUtil;
@@ -67,18 +65,18 @@ public class PlayListFragment extends BaseMusicFragment {
     @BindView(R.id.play_list_content)
     LinearLayout mPlayListContent;
     private PlayListAdapter mAdapter;
-    public static boolean isShowDetailsView = false;
+    private static boolean isShowDetailsView = false;
     private int mDeletePosition;
     private boolean isItemSelectStatus = true;
     private int mEditPosition;
     private int mSelectCount;
-    private static int mFlag;
     private static String mSongName;
     private List<MusicBean> mDetailList;
     private DetailsViewAdapter mDetailsAdapter;
     private PlayListBean mPlayListBean;
     private Disposable mAddDeleteListDisposable;
     private static ArrayList<String> mArrayList;
+    private String mTempTitle;
 
     @Nullable
     @Override
@@ -94,6 +92,7 @@ public class PlayListFragment extends BaseMusicFragment {
     @Override
     public void onResume() {
         super.onResume();
+        mMusicToolBar.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.play_list));
         mAppBarLayout.setVisibility(SpUtil.getAddToPlayListFlag(mActivity) == Constants.NUMBER_ONE ? View.GONE : View.VISIBLE);
         mAdapter.setNewData(getPlayList());
         receiveRxbuData();
@@ -175,7 +174,6 @@ public class PlayListFragment extends BaseMusicFragment {
                 switchControlBar();
             }
 
-
             @Override
             public void clickDelete() {
                 List<PlayListBean> beanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).build().list();
@@ -196,6 +194,7 @@ public class PlayListFragment extends BaseMusicFragment {
 
         mLlAddNewPlayList.setOnClickListener(v -> AddListDialog.newInstance(1, Constants.NULL_STRING).show(mActivity.getFragmentManager(), "addList"));
         mAdapter.setItemListener((playListBean, isEditStatus) -> {
+            mTempTitle = playListBean.getTitle();
             // 从PlayListActivity过来的
             if (SpUtil.getAddToPlayListFlag(mActivity) == Constants.NUMBER_ONE) {
                 addToList(playListBean);
@@ -206,7 +205,7 @@ public class PlayListFragment extends BaseMusicFragment {
                     mPlayListDao.update(playListBean);
                     mAdapter.notifyDataSetChanged();
                 } else {
-                    PlayListFragment.this.showDetailsView(playListBean.getTitle());
+                    PlayListFragment.this.showDetailsView(mTempTitle);
                 }
             }
         });
@@ -321,8 +320,7 @@ public class PlayListFragment extends BaseMusicFragment {
         }
     }
 
-    public static PlayListFragment newInstance(int flag, String songName, ArrayList<String> arrayList) {
-        mFlag = flag;
+    public static PlayListFragment newInstance(String songName, ArrayList<String> arrayList) {
         mSongName = songName;
         mArrayList = arrayList;
         return new PlayListFragment();

@@ -51,18 +51,25 @@ public class ArtistFragment extends BaseMusicFragment {
     public static boolean isShowDetailsView = false;
     private DetailsViewAdapter mDetailsAdapter;
     private List<MusicBean> mDetailList;
+    private String mTempTitle;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mArtistList = MusicListUtil.getArtistList(mSongList);
+        mArtistList = MusicListUtil.getArtistList(mSongList);
     }
 
     @Override
     protected void onLazyLoadData() {
-        mArtistList = MusicListUtil.getArtistList(mSongList);
-        initData();
-        initListener();
+//        mArtistList = MusicListUtil.getArtistList(mSongList);
+//        initData();
+//        initListener();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMusicToolBar.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.music_artisan));
     }
 
     @Nullable
@@ -72,8 +79,8 @@ public class ArtistFragment extends BaseMusicFragment {
         View view = inflater.inflate(R.layout.artisan_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         mMusicToolBar.setTvEditVisibility(isShowDetailsView);
-//        initData();
-//        initListener();
+        initData();
+        initListener();
         return view;
     }
 
@@ -94,7 +101,6 @@ public class ArtistFragment extends BaseMusicFragment {
 
             @Override
             public void clickDelete() {
-
             }
         });
     }
@@ -112,18 +118,21 @@ public class ArtistFragment extends BaseMusicFragment {
         if (isShowDetailsView) {
             removeFrag(mClassName);
         } else {
-            mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(artistInfo.getArtist())).build().list();
-            // DetailsView播放音乐需要的参数
-            mDetailsView.setDataFlag(mFragmentManager, mDetailList.size(), artistInfo.getArtist(), Constants.NUMBER_ONE);
-            mDetailsAdapter = new DetailsViewAdapter(mActivity, mDetailList, Constants.NUMBER_ONE);
-            mDetailsView.setAdapter(Constants.NUMBER_ONE, artistInfo, mDetailsAdapter);
-            SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_NINE);
-            mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
-                    MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
-            putFragToMap(mClassName);
-            mMusicToolBar.setTvEditText(R.string.music_artisan);
+            if (artistInfo != null) {
+                mTempTitle = artistInfo.getAlbumName();
+                mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(artistInfo.getArtist())).build().list();
+                // DetailsView播放音乐需要的参数
+                mDetailsView.setDataFlag(mFragmentManager, mDetailList.size(), artistInfo.getArtist(), Constants.NUMBER_ONE);
+                mDetailsAdapter = new DetailsViewAdapter(mActivity, mDetailList, Constants.NUMBER_ONE);
+                mDetailsView.setAdapter(Constants.NUMBER_ONE, artistInfo, mDetailsAdapter);
+                SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_NINE);
+                mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
+                        MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
+                putFragToMap(mClassName);
+                mMusicToolBar.setTvEditText(R.string.music_artisan);
+            }
         }
-        mMusicToolBar.setToolbarTitle(isShowDetailsView ? getString(R.string.music_artisan) : artistInfo.getAlbumName());
+        mMusicToolBar.setToolbarTitle(isShowDetailsView ? getString(R.string.music_artisan) : mTempTitle);
         isShowDetailsView = !isShowDetailsView;
         mMusicToolBar.setTvEditVisibility(isShowDetailsView);
     }

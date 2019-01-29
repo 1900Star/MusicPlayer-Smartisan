@@ -42,6 +42,12 @@ public abstract class BaseMusicFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        LogUtil.d("========== ClassName  " + mClassName);
+    }
+
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isResumed()) {
