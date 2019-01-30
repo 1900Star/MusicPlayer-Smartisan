@@ -314,11 +314,11 @@ public class MusicActivity
     }
 
     private void startServiceIntent(Intent intent) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent);
-        } else {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            startForegroundService(intent);
+//        } else {
+//        }
             startService(intent);
-        }
     }
 
     /**

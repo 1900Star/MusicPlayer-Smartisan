@@ -384,11 +384,11 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         intent.putExtra("position", position);
         mServiceConnection = new AudioServiceConnection();
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent);
-        } else {
-            startService(intent);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            startForegroundService(intent);
+//        } else {
+//        }
+        startService(intent);
     }
 
     @Override

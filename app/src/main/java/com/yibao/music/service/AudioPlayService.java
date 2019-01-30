@@ -84,7 +84,7 @@ public class AudioPlayService
     @Override
     public void onCreate() {
         super.onCreate();
-        startForeground(Constants.NUMBER_ONE, new Notification());
+//        startForeground(Constants.NUMBER_ONE, new Notification());
         init();
         initNotifyBroadcast();
         registerHeadsetReceiver();
