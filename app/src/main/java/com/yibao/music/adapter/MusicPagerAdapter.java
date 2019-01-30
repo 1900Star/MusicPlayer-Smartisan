@@ -2,9 +2,6 @@ package com.yibao.music.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.yibao.music.base.BasePagerAdapter;
 import com.yibao.music.base.factory.FragmentFactory;

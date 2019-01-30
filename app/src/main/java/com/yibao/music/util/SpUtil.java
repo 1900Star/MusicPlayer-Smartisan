@@ -13,25 +13,6 @@ import android.content.SharedPreferences;
  */
 
 public class SpUtil {
-
-    /**
-     * 用于标记详情页面是否打开
-     *
-     * @param context c
-     * @param value   8 ：playListFragment, 9 : artistListFragmnet, 10 : albumListFragment , 11 songCategoryFragment
-     */
-    public static void setDetailsFlag(Context context, int value) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.DETAIL_FLAG, Constants.MODE_KEY);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(Constants.DETAIL_FLAG_KEY, value);
-        editor.apply();
-    }
-
-    public static int getDetailFlag(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.DETAIL_FLAG, Constants.MODE_KEY);
-        return sp.getInt(Constants.DETAIL_FLAG_KEY, Constants.MODE_KEY);
-    }
-
     /**
      * 用于标记详情页面是否打开
      *

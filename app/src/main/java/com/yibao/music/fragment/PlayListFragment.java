@@ -88,6 +88,10 @@ public class PlayListFragment extends BaseMusicFragment {
         return view;
     }
 
+    @Override
+    protected boolean getIsOpenDetail() {
+        return isShowDetailsView || !isItemSelectStatus;
+    }
 
     @Override
     public void onResume() {
@@ -96,9 +100,6 @@ public class PlayListFragment extends BaseMusicFragment {
         mAppBarLayout.setVisibility(SpUtil.getAddToPlayListFlag(mActivity) == Constants.NUMBER_ONE ? View.GONE : View.VISIBLE);
         mAdapter.setNewData(getPlayList());
         receiveRxbuData();
-        if (isShowDetailsView || !isItemSelectStatus) {
-            interceptBackEvent(Constants.NUMBER_EIGHT);
-        }
     }
 
     private void initData() {

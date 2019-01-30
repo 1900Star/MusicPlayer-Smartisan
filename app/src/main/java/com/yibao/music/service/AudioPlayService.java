@@ -1,5 +1,6 @@
 package com.yibao.music.service;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -83,6 +84,7 @@ public class AudioPlayService
     @Override
     public void onCreate() {
         super.onCreate();
+        startForeground(Constants.NUMBER_ONE, new Notification());
         init();
         initNotifyBroadcast();
         registerHeadsetReceiver();

@@ -55,6 +55,11 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
         mAlbumList = MusicListUtil.getAlbumList(mSongList);
     }
 
+    @Override
+    protected boolean getIsOpenDetail() {
+        return !isItemSelectStatus;
+    }
+
 
     @Nullable
     @Override
@@ -85,9 +90,6 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
     public void onResume() {
         super.onResume();
         initRxBusData();
-        if (!isItemSelectStatus) {
-            interceptBackEvent(Constants.NUMBER_TEN);
-        }
     }
 
     private void initRxBusData() {

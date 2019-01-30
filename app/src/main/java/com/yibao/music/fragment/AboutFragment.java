@@ -193,4 +193,8 @@ public class AboutFragment extends BaseMusicFragment {
     }
 
 
+    @Override
+    protected boolean getIsOpenDetail() {
+        return false;
+    }
 }

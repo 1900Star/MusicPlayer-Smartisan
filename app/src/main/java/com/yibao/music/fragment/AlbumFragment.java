@@ -115,6 +115,11 @@ public class AlbumFragment extends BaseMusicFragment {
         }
     }
 
+    @Override
+    protected boolean getIsOpenDetail() {
+        return isShowDetailsView;
+    }
+
     private void initRxBusData() {
         disposeToolbar();
         if (mEditDisposable == null) {

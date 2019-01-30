@@ -35,7 +35,7 @@ import io.reactivex.schedulers.Schedulers;
  * @author: Stran
  * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/4 21:45
- * @描述： {显示当前音乐分类列表}
+ * @描述： {显示音乐分类列表}
  */
 
 public class SongCategoryFragment extends BaseMusicFragment {
@@ -74,9 +74,11 @@ public class SongCategoryFragment extends BaseMusicFragment {
             initData();
         }
         initListener();
-        if (isItemSelectStatus) {
-            interceptBackEvent(Constants.NUMBER_ELEVEN);
-        }
+    }
+
+    @Override
+    protected boolean getIsOpenDetail() {
+        return isItemSelectStatus;
     }
 
     private void initRxBusData() {
@@ -173,7 +175,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
     protected void handleDetailsBack(int detailFlag) {
         if (detailFlag == Constants.NUMBER_ELEVEN) {
             mSongAdapter.setItemSelectStatus(false);
-            mBus.post(Constants.NUMBER_TEN,new EditBean());
+            mBus.post(Constants.NUMBER_TEN, new EditBean());
             isItemSelectStatus = !isItemSelectStatus;
         }
     }

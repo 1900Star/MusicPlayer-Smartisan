@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
@@ -46,7 +47,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * @author Stran
- * Des：${音乐列表界面}
+ * Des：${主Activity}
  * Time:2017/5/30 13:27
  */
 public class MusicActivity
@@ -218,14 +219,13 @@ public class MusicActivity
         mQqControlBar.setOnPagerSelecteListener(position -> {
             int sortFlag = SpUtil.getSortFlag(this);
             MusicActivity.this.disposableQqLyric();
-            int detailFlag = SpUtil.getDetailFlag(MusicActivity.this);
-            if (detailFlag > 0) {
-                if (detailFlag == Constants.NUMBER_EIGHT) {
-                    startMusicServiceFlag(mCurrentPosition, sortFlag, detailFlag, Constants.FAVORITE_FLAG);
-                } else if (detailFlag == Constants.NUMBER_TEN) {
-                    startMusicServiceFlag(mCurrentPosition, sortFlag, detailFlag, SpUtil.getQueryFlag(this));
+            if (mHandleDetailFlag > 0) {
+                if (mHandleDetailFlag == Constants.NUMBER_EIGHT) {
+                    startMusicServiceFlag(mCurrentPosition, sortFlag, mHandleDetailFlag, Constants.FAVORITE_FLAG);
+                } else if (mHandleDetailFlag == Constants.NUMBER_TEN) {
+                    startMusicServiceFlag(mCurrentPosition, sortFlag, mHandleDetailFlag, SpUtil.getQueryFlag(this));
                 } else {
-                    startMusicServiceFlag(mCurrentPosition, sortFlag, detailFlag, Constants.NO_NEED_FLAG);
+                    startMusicServiceFlag(mCurrentPosition, sortFlag, mHandleDetailFlag, Constants.NO_NEED_FLAG);
                 }
             } else {
                 MusicActivity.this.startMusicService(position);
@@ -287,8 +287,8 @@ public class MusicActivity
         musicIntent.putExtra("sortFlag", sortFlag);
         musicIntent.putExtra("position", mCurrentPosition);
         mConnection = new AudioServiceConnection();
-        startServiceIntent(musicIntent);
         bindService(musicIntent, mConnection, Context.BIND_AUTO_CREATE);
+        startServiceIntent(musicIntent);
     }
 
     /**
@@ -309,16 +309,16 @@ public class MusicActivity
         intent.putExtra("queryFlag", queryFlag);
         intent.putExtra("position", mCurrentPosition);
         mConnection = new AudioServiceConnection();
-        startServiceIntent(intent);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        startServiceIntent(intent);
     }
 
     private void startServiceIntent(Intent intent) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            startForegroundService(intent);
-//        } else {
-//        }
-        startService(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        } else {
+            startService(intent);
+        }
     }
 
     /**
@@ -582,10 +582,12 @@ public class MusicActivity
     @Override
     public void handleBack(int detailFlag) {
         mHandleDetailFlag = detailFlag;
+        LogUtil.d("======= mHandleDetailFlag     " + mHandleDetailFlag);
     }
 
     @Override
     public void onBackPressed() {
+        LogUtil.d("======= mHandleDetailFlag  onBackPressed   " + mHandleDetailFlag);
         if (mHandleDetailFlag > Constants.NUMBER_ZERO) {
             mBus.post(new DetailsFlagBean(mHandleDetailFlag));
             mHandleDetailFlag = Constants.NUMBER_ZERO;

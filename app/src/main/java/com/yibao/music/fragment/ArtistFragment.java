@@ -17,7 +17,6 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.MusicListUtil;
-import com.yibao.music.util.SpUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicToolBar;
 import com.yibao.music.view.music.MusicView;
@@ -48,7 +47,7 @@ public class ArtistFragment extends BaseMusicFragment {
     DetailsView mDetailsView;
     private ArtistAdapter mAdapter;
     private List<ArtistInfo> mArtistList;
-    public static boolean isShowDetailsView = false;
+    public  boolean isShowDetailsView = false;
     private DetailsViewAdapter mDetailsAdapter;
     private List<MusicBean> mDetailList;
     private String mTempTitle;
@@ -60,10 +59,14 @@ public class ArtistFragment extends BaseMusicFragment {
     }
 
     @Override
+    protected boolean getIsOpenDetail() {
+        return isShowDetailsView;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.music_artisan));
-        interceptBackEvent(isShowDetailsView ? Constants.NUMBER_NINE : Constants.NUMBER_ZERO);
     }
 
     @Nullable
@@ -116,7 +119,6 @@ public class ArtistFragment extends BaseMusicFragment {
                 mDetailsView.setDataFlag(mFragmentManager, mDetailList.size(), artistInfo.getArtist(), Constants.NUMBER_ONE);
                 mDetailsAdapter = new DetailsViewAdapter(mActivity, mDetailList, Constants.NUMBER_ONE);
                 mDetailsView.setAdapter(Constants.NUMBER_ONE, artistInfo, mDetailsAdapter);
-                SpUtil.setDetailsFlag(mActivity, Constants.NUMBER_NINE);
                 mDetailsAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
                         MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
                 interceptBackEvent(Constants.NUMBER_NINE);

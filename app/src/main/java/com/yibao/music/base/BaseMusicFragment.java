@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
 import com.yibao.music.model.DetailsFlagBean;
+import com.yibao.music.util.Constants;
 import com.yibao.music.util.RandomUtil;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -31,10 +32,14 @@ public abstract class BaseMusicFragment extends BaseFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && getIsOpenDetail()) {
+            interceptBackEvent(getPageFlag());
+        }
     }
+
+    protected abstract boolean getIsOpenDetail();
 
     protected void switchControlBar() {
         if (mActivity instanceof OnUpdataTitleListener) {
@@ -86,11 +91,43 @@ public abstract class BaseMusicFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
+        if (getUserVisibleHint() && getIsOpenDetail()) {
+            interceptBackEvent(getPageFlag());
+        }
         disposeToolbar();
         if (mMenuDisposable != null) {
             mMenuDisposable.dispose();
             mMenuDisposable = null;
         }
+    }
+    private int getPageFlag() {
+        int pageFlag = Constants.NUMBER_ZERO;
+        if (mClassName != null) {
+            switch (mClassName) {
+                case Constants.FRAGMENT_PLAYLIST:
+                    pageFlag = Constants.NUMBER_EIGHT;
+                    break;
+                case Constants.FRAGMENT_ARTIST:
+                    pageFlag = Constants.NUMBER_NINE;
+                    break;
+                case Constants.FRAGMENT_SONG_CATEGORY:
+                    pageFlag = Constants.NUMBER_ELEVEN;
+                    break;
+                case Constants.FRAGMENT_ALBUM:
+                    pageFlag = Constants.NUMBER_TWELVE;
+                    break;
+                case Constants.FRAGMENT_ALBUM_CATEGORY:
+                    pageFlag = Constants.NUMBER_TEN;
+                    break;
+                case Constants.FRAGMENT_SONG:
+                    pageFlag = Constants.NUMBER_ELEVEN;
+                    break;
+                default:
+                    break;
+            }
+        }
+        return pageFlag;
+
     }
 
     protected void disposeToolbar() {

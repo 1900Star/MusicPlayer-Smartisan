@@ -66,6 +66,11 @@ public class SongFragment extends BaseMusicFragment {
     }
 
     @Override
+    protected boolean getIsOpenDetail() {
+        return isSelecteStatus;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         mMusicToolBar.setToolbarTitle(getString(R.string.music_song));

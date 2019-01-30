@@ -90,6 +90,7 @@ public class Constants {
     public static final String FRAGMENT_PLAYLIST = "PlayListFragment";
     public static final String FRAGMENT_ARTIST = "ArtistFragment";
     public static final String FRAGMENT_SONG_CATEGORY = "SongCategoryFragment";
+    public static final String FRAGMENT_SONG= "SongFragment";
     public static final String FRAGMENT_ALBUM = "AlbumFragment";
     public static final String FRAGMENT_ALBUM_CATEGORY = "AlbumCategoryFragment";
     public static final String SCANNER_MEDIA = "scanner";
