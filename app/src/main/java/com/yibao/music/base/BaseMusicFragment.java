@@ -3,13 +3,13 @@ package com.yibao.music.base;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
 import com.yibao.music.model.DetailsFlagBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
+import com.yibao.music.util.SpUtil;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -27,19 +27,15 @@ public abstract class BaseMusicFragment extends BaseFragment {
     protected Disposable mEditDisposable;
     private Disposable mMenuDisposable;
     private String mClassName;
+    private int mAddToPlayListFdlag;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initDetailsFlag();
+        mAddToPlayListFdlag = SpUtil.getAddToPlayListFdlag(mContext);
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        mClassName = getClass().getSimpleName();
-        interceptBackEvent(isVisibleToUser && getIsOpenDetail() ? getPageFlag() : Constants.NUMBER_ZERO);
-    }
 
     protected abstract boolean getIsOpenDetail();
 
@@ -91,16 +87,21 @@ public abstract class BaseMusicFragment extends BaseFragment {
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        mClassName = getClass().getSimpleName();
+        if (mAddToPlayListFdlag != Constants.NUMBER_ONE) {
+            interceptBackEvent(isVisibleToUser && getIsOpenDetail() ? getPageFlag() : Constants.NUMBER_ZERO);
+        }
+
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
-        if (getUserVisibleHint() && getIsOpenDetail()) {
-//            LogUtil.d("========= onPause  name  " + mClassName);
-//            interceptBackEvent(getPageFlag());
+        if (SpUtil.getAddToPlayListFdlag(mContext) != Constants.NUMBER_ONE) {
+            interceptBackEvent(getUserVisibleHint() && getIsOpenDetail() ? getPageFlag() : Constants.NUMBER_ZERO);
         }
-        if (!(mActivity instanceof PlayListActivity)) {
-            LogUtil.d("========= activity  " + mActivity.getLocalClassName());
-        }
-        interceptBackEvent(getUserVisibleHint() && getIsOpenDetail() ? getPageFlag() : Constants.NUMBER_ZERO);
         disposeToolbar();
         if (mMenuDisposable != null) {
             mMenuDisposable.dispose();

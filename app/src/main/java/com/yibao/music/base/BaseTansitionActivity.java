@@ -3,6 +3,8 @@ package com.yibao.music.base;
 import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.base.listener.OnGlideLoadListener;
+import com.yibao.music.util.Constants;
+import com.yibao.music.util.SpUtil;
 
 
 /**
@@ -36,4 +38,9 @@ public abstract class BaseTansitionActivity extends BaseActivity implements OnGl
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SpUtil.setAddTodPlayListFlag(this, Constants.NUMBER_ZERO);
+    }
 }

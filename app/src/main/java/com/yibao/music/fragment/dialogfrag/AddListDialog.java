@@ -131,7 +131,7 @@ public class AddListDialog
                 SnakbarUtil.favoriteSuccessView(mEditAddList, "播放列表已存在");
             } else {
                 if (mOperationType == Constants.NUMBER_ONE) {
-                    playListDao.insert(new PlayListBean(listTitle, System.currentTimeMillis()));
+                    playListDao.insertOrReplace(new PlayListBean(listTitle, System.currentTimeMillis()));
                     dismiss();
                     RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_ONE));
                 } else {

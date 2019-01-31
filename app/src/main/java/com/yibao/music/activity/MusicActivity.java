@@ -77,7 +77,6 @@ public class MusicActivity
     private int lyricsFlag = 0;
     private MusicBean mQqBarBean;
     private int mHandleDetailFlag;
-    private boolean isNeedSetDetailFlag = true;
 
 
     @Override
@@ -96,7 +95,7 @@ public class MusicActivity
         List<MusicBean> initMusicList = QueryMusicFlagListUtil.getDataList(SpUtil.getSortFlag(this), SpUtil.getDataQueryFlag(this), SpUtil.getQueryFlag(this), mMusicDao);
         mCurrentPosition = SpUtil.getMusicPosition(this);
         if (initMusicList != null && initMusicList.size() > 0) {
-            mCurrentMusicBean = initMusicList.get(mCurrentPosition > initMusicList.size() ? 0 : mCurrentPosition);
+            mCurrentMusicBean = initMusicList.get(mCurrentPosition >= initMusicList.size() ? 0 : mCurrentPosition);
         } else {
             LogUtil.d("==========================NoThing=555555555555555555");
         }
@@ -535,9 +534,7 @@ public class MusicActivity
         MusicBean musicBean = moreMenuStatus.getMusicBean();
         switch (moreMenuStatus.getPosition()) {
             case Constants.NUMBER_ZERO:
-                isNeedSetDetailFlag = false;
                 startPlayListActivity(musicBean.getTitle());
-                isNeedSetDetailFlag = true;
                 break;
             case Constants.NUMBER_ONE:
                 SnakbarUtil.keepGoing(mSmartisanControlBar);
@@ -582,10 +579,7 @@ public class MusicActivity
 
     @Override
     public void handleBack(int detailFlag) {
-        if (isNeedSetDetailFlag) {
             mHandleDetailFlag = detailFlag;
-        }
-        LogUtil.d("======= mHandleDetailFlag     " + mHandleDetailFlag);
     }
 
     @Override

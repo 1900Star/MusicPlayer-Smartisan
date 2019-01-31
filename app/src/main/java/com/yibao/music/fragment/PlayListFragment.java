@@ -15,6 +15,7 @@ import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.BaseMusicFragment;
+import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnFinishActivityListener;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
@@ -253,7 +254,9 @@ public class PlayListFragment extends BaseMusicFragment {
             mDetailView.setQureyFlag(title, mDetailList.size());
             mDetailsAdapter.setNewData(mDetailList);
             RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mDetailsAdapter);
-            mDetailsAdapter.setOnItemMenuListener((position, musicBean) -> MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
+            mDetailsAdapter.setOnItemMenuListener((position, musicBean) -> {
+                MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity);
+            });
             mDetailView.setAdapter(recyclerView);
             interceptBackEvent(Constants.NUMBER_EIGHT);
         }

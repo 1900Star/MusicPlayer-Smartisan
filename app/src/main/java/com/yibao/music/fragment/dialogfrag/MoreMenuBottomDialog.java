@@ -1,6 +1,7 @@
 package com.yibao.music.fragment.dialogfrag;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.RecyclerView;
@@ -16,11 +17,14 @@ import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.adapter.MoreMemuAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
+import com.yibao.music.base.listener.BottomSheetCallback;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
+import com.yibao.music.util.Constants;
 import com.yibao.music.util.MenuListUtil;
 import com.yibao.music.util.RxBus;
+import com.yibao.music.util.SpUtil;
 
 /**
  * Des：${TODO}
@@ -40,7 +44,7 @@ public class MoreMenuBottomDialog {
     private static boolean mIsNeedScore;
     private static boolean mIsNeedSetTime;
 
-    public static MoreMenuBottomDialog newInstance(MusicBean musicBean, int musicPosition, boolean isNeedScore,boolean isNeedSetTime) {
+    public static MoreMenuBottomDialog newInstance(MusicBean musicBean, int musicPosition, boolean isNeedScore, boolean isNeedSetTime) {
         mMusicBean = musicBean;
         mMusicPosition = musicPosition;
         mIsNeedScore = isNeedScore;
@@ -56,19 +60,30 @@ public class MoreMenuBottomDialog {
 
         init(dialog, view);
         initData();
-        initListener();
+        initListener(context, dialog);
         dialog.show();
     }
 
-    private void initListener() {
-        mBottomCancel.setOnClickListener(v -> mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
+    private void initListener(Context context, BottomSheetDialog dialog) {
+        mBottomCancel.setOnClickListener(v -> dialog.dismiss());
         mMemuAdapter.setClickLiseter(((musicPosition, position, musicBean) -> {
+            if (position == Constants.NUMBER_ZERO) {
+                SpUtil.setAddTodPlayListFlag(context, Constants.NUMBER_ONE);
+            }
             RxBus.getInstance().post(new MoreMenuStatus(mMusicPosition, position, musicBean));
-            mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            dialog.dismiss();
         }));
         mRatingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
             mMusicBean.setSongScore((int) rating);
             musicDao.update(mMusicBean);
+        });
+        mBehavior.setBottomSheetCallback(new BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int newState) {
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+            }
         });
     }
 
@@ -85,7 +100,6 @@ public class MoreMenuBottomDialog {
         if (window != null) {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
-
         dialog.setCanceledOnTouchOutside(true);
         mBehavior = BottomSheetBehavior.from((View) view.getParent());
     }
@@ -93,7 +107,7 @@ public class MoreMenuBottomDialog {
 
     private void initData() {
         mRatingBar.setRating(mMusicBean.getSongScore());
-        mMemuAdapter = new MoreMemuAdapter(MenuListUtil.getMenuData(mMusicBean.isFavorite(),mIsNeedSetTime), mMusicBean, mMusicPosition);
+        mMemuAdapter = new MoreMemuAdapter(MenuListUtil.getMenuData(mMusicBean.isFavorite(), mIsNeedSetTime), mMusicBean, mMusicPosition);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(4, mMemuAdapter);
         mBottomListContent.addView(recyclerView);
     }

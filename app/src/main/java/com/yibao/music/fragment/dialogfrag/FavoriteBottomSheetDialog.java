@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.view.ViewPager;
@@ -78,7 +79,6 @@ public class FavoriteBottomSheetDialog
         BottomSheetDialog dialog = new BottomSheetDialog(context);
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.bottom_sheet_list_dialog, null);
-
         mCompositeDisposable = new CompositeDisposable();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
         initView(view);
@@ -95,11 +95,9 @@ public class FavoriteBottomSheetDialog
         if (window != null) {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
-
-        dialog.setCanceledOnTouchOutside(true);
         mBehavior = BottomSheetBehavior.from((View) view.getParent());
+        dialog.setCanceledOnTouchOutside(true);
         dialog.setOnCancelListener(dialog12 -> FavoriteBottomSheetDialog.this.clearDisposable());
-
     }
 
     private void clearDisposable() {

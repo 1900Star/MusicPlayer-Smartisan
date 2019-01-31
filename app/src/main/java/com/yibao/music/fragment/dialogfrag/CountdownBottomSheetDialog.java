@@ -1,7 +1,9 @@
 package com.yibao.music.fragment.dialogfrag;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.view.LayoutInflater;
@@ -11,9 +13,11 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.yibao.music.R;
+import com.yibao.music.base.listener.BottomSheetCallback;
 import com.yibao.music.model.CountdownBean;
 import com.yibao.music.service.CountdownService;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.ServiceUtil;
 import com.yibao.music.util.StringUtil;
@@ -33,8 +37,7 @@ import io.reactivex.schedulers.Schedulers;
  *
  * @author Stran
  */
-public class CountdownBottomSheetDialog
-        implements View.OnClickListener {
+public class CountdownBottomSheetDialog {
     private static final String ACTION_TIMER = "countdown";
     private final String[] arrTime = {"正在倒计时", "无", "15 分", "30 分", "1 小时", "1 小时 30 分", "2 小时"};
     private TextView mTvComplete;
@@ -44,7 +47,7 @@ public class CountdownBottomSheetDialog
     private Disposable mDisposable;
     private Intent mTimerIntent;
     private Context mContext;
-    private BottomSheetBehavior<View> mBehavior;
+    private View mTvCancel;
 
     public static CountdownBottomSheetDialog newInstance() {
         return new CountdownBottomSheetDialog();
@@ -56,9 +59,9 @@ public class CountdownBottomSheetDialog
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.countdown_dialog_fragment, null);
         initView(dialog, view);
-        initListener();
         initRxData(dialog);
         initData();
+        initListener(dialog);
         dialog.show();
     }
 
@@ -87,21 +90,8 @@ public class CountdownBottomSheetDialog
         mWheelView.setItems(timeList);
     }
 
-    private void initListener() {
-        mTvComplete.setOnClickListener(this);
-        mWheelView.setOnWheelViewListener(new WheelView.OnWheelViewListener() {
-            @Override
-            public void onSelected(int selectedIndex, String str) {
-                mContdownTime = StringUtil.getSetCountdown(str);
-                setCompleteStata(!str.equals(arrTime[0]));
-            }
-        });
-    }
-
-    @Override
-    public void onClick(View v) {
-        int vId = v.getId();
-        if (vId == R.id.tv_time_complete) {
+    private void initListener(BottomSheetDialog dialog) {
+        mTvComplete.setOnClickListener(v -> {
             if (mContdownTime > 0) {
                 stopTimer();
                 mTimerIntent.putExtra(Constants.COUNTDOWN_TIME, mContdownTime);
@@ -109,8 +99,16 @@ public class CountdownBottomSheetDialog
             } else if (mContdownTime == 0) {
                 stopTimer();
             }
-        }
-        mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            dialog.dismiss();
+        });
+        mTvCancel.setOnClickListener(v -> dialog.dismiss());
+        mWheelView.setOnWheelViewListener(new WheelView.OnWheelViewListener() {
+            @Override
+            public void onSelected(int selectedIndex, String str) {
+                mContdownTime = StringUtil.getSetCountdown(str);
+                setCompleteStata(!str.equals(arrTime[0]));
+            }
+        });
     }
 
     private void stopTimer() {
@@ -129,6 +127,7 @@ public class CountdownBottomSheetDialog
     }
 
     private void initView(BottomSheetDialog dialog, View view) {
+        mTvCancel = view.findViewById(R.id.tv_time_cancel);
         mTvComplete = view.findViewById(R.id.tv_time_complete);
         mTvCountdown = view.findViewById(R.id.tv_time_title);
         mWheelView = view.findViewById(R.id.wheel_view);
@@ -138,17 +137,25 @@ public class CountdownBottomSheetDialog
         if (window != null) {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+        BottomSheetBehavior<View>  sheetBehavior = BottomSheetBehavior.from((View) view.getParent());
         dialog.setCanceledOnTouchOutside(true);
-        mBehavior = BottomSheetBehavior.from((View) view.getParent());
-        dialog.setOnDismissListener(dialog12 -> {
-            if (mDisposable != null) {
-                mDisposable.dispose();
-                mDisposable = null;
+        dialog.setOnDismissListener(dialog12 -> CountdownBottomSheetDialog.this.clearDisposable());
+        sheetBehavior.setBottomSheetCallback(new BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int newState) {
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
             }
         });
-        view.findViewById(R.id.tv_time_cancel).setOnClickListener(this);
     }
 
+    private void clearDisposable() {
+        if (mDisposable != null) {
+            mDisposable.dispose();
+            mDisposable = null;
+        }
+    }
 
 
 }
