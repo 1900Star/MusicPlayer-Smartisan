@@ -3,10 +3,12 @@ package com.yibao.music.base;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
 import com.yibao.music.model.DetailsFlagBean;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -24,6 +26,7 @@ import io.reactivex.schedulers.Schedulers;
 public abstract class BaseMusicFragment extends BaseFragment {
     protected Disposable mEditDisposable;
     private Disposable mMenuDisposable;
+    private String mClassName;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,9 +37,8 @@ public abstract class BaseMusicFragment extends BaseFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && getIsOpenDetail()) {
-            interceptBackEvent(getPageFlag());
-        }
+        mClassName = getClass().getSimpleName();
+        interceptBackEvent(isVisibleToUser && getIsOpenDetail() ? getPageFlag() : Constants.NUMBER_ZERO);
     }
 
     protected abstract boolean getIsOpenDetail();
@@ -92,14 +94,20 @@ public abstract class BaseMusicFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
         if (getUserVisibleHint() && getIsOpenDetail()) {
-            interceptBackEvent(getPageFlag());
+//            LogUtil.d("========= onPause  name  " + mClassName);
+//            interceptBackEvent(getPageFlag());
         }
+        if (!(mActivity instanceof PlayListActivity)) {
+            LogUtil.d("========= activity  " + mActivity.getLocalClassName());
+        }
+        interceptBackEvent(getUserVisibleHint() && getIsOpenDetail() ? getPageFlag() : Constants.NUMBER_ZERO);
         disposeToolbar();
         if (mMenuDisposable != null) {
             mMenuDisposable.dispose();
             mMenuDisposable = null;
         }
     }
+
     private int getPageFlag() {
         int pageFlag = Constants.NUMBER_ZERO;
         if (mClassName != null) {
@@ -110,6 +118,9 @@ public abstract class BaseMusicFragment extends BaseFragment {
                 case Constants.FRAGMENT_ARTIST:
                     pageFlag = Constants.NUMBER_NINE;
                     break;
+                case Constants.FRAGMENT_SONG:
+                    pageFlag = Constants.NUMBER_ELEVEN;
+                    break;
                 case Constants.FRAGMENT_SONG_CATEGORY:
                     pageFlag = Constants.NUMBER_ELEVEN;
                     break;
@@ -117,10 +128,7 @@ public abstract class BaseMusicFragment extends BaseFragment {
                     pageFlag = Constants.NUMBER_TWELVE;
                     break;
                 case Constants.FRAGMENT_ALBUM_CATEGORY:
-                    pageFlag = Constants.NUMBER_TEN;
-                    break;
-                case Constants.FRAGMENT_SONG:
-                    pageFlag = Constants.NUMBER_ELEVEN;
+                    pageFlag = Constants.NUMBER_TWELVE;
                     break;
                 default:
                     break;

@@ -14,17 +14,16 @@ import java.util.List;
  * @ Des:    TODO
  */
 public class ServiceUtil {
-    public static boolean isServiceRunning(Context context, String ServiceName) {
-        if ((Constants.NULL_STRING).equals(ServiceName) || ServiceName == null) {
+    public static boolean isServiceRunning(Context context, String serviceName) {
+        if ((Constants.NULL_STRING).equals(serviceName) || serviceName == null) {
             return false;
         }
         ActivityManager myManager = (ActivityManager) context
                 .getSystemService(Context.ACTIVITY_SERVICE);
         if (myManager != null) {
             List<ActivityManager.RunningServiceInfo> runningService = myManager.getRunningServices(200);
-            for (int i = 0; i < runningService.size(); i++) {
-                if (runningService.get(i).service.getClassName()
-                        .equals(ServiceName)) {
+            for (ActivityManager.RunningServiceInfo runningServiceInfo : runningService) {
+                if (runningServiceInfo.service.getClassName().equals(serviceName)) {
                     return true;
                 }
             }

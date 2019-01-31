@@ -1,9 +1,7 @@
 package com.yibao.music.fragment.dialogfrag;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.view.LayoutInflater;
@@ -16,7 +14,6 @@ import com.yibao.music.R;
 import com.yibao.music.model.CountdownBean;
 import com.yibao.music.service.CountdownService;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.ServiceUtil;
 import com.yibao.music.util.StringUtil;
@@ -84,7 +81,7 @@ public class CountdownBottomSheetDialog
     private void initData() {
         mTimerIntent = new Intent(mContext, CountdownService.class);
         mTimerIntent.setAction(ACTION_TIMER);
-        List<String> timeList = new ArrayList<>(Arrays.asList(arrTime).subList(getServiceIsRunning() ? 0 : 1, arrTime.length - 1));
+        List<String> timeList = new ArrayList<>(Arrays.asList(arrTime).subList(getServiceIsRunning() ? 0 : 1, arrTime.length));
         setCompleteStata(!timeList.get(0).equals(arrTime[0]));
         mWheelView.setOffset(Constants.NUMBER_ONE);
         mWheelView.setItems(timeList);
@@ -151,6 +148,7 @@ public class CountdownBottomSheetDialog
         });
         view.findViewById(R.id.tv_time_cancel).setOnClickListener(this);
     }
+
 
 
 }

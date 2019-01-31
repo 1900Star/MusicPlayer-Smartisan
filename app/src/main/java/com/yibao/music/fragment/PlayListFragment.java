@@ -26,6 +26,7 @@ import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.ToastUtil;
@@ -77,6 +78,7 @@ public class PlayListFragment extends BaseMusicFragment {
     private Disposable mAddDeleteListDisposable;
     private static ArrayList<String> mArrayList;
     private String mTempTitle;
+    private static boolean isFormPlayListActivity;
 
     @Nullable
     @Override
@@ -97,7 +99,7 @@ public class PlayListFragment extends BaseMusicFragment {
     public void onResume() {
         super.onResume();
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.play_list));
-        mAppBarLayout.setVisibility(SpUtil.getAddToPlayListFlag(mActivity) == Constants.NUMBER_ONE ? View.GONE : View.VISIBLE);
+        mAppBarLayout.setVisibility(isFormPlayListActivity ? View.GONE : View.VISIBLE);
         mAdapter.setNewData(getPlayList());
         receiveRxbuData();
     }
@@ -146,7 +148,7 @@ public class PlayListFragment extends BaseMusicFragment {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(newPlayList -> {
                                 mAdapter.setNewData(newPlayList);
-                                if (SpUtil.getAddToPlayListFlag(mActivity) == Constants.NUMBER_ONE) {
+                                if (isFormPlayListActivity) {
                                     addToList(getPlayList().get(mEditPosition));
                                 }
                             }
@@ -189,11 +191,11 @@ public class PlayListFragment extends BaseMusicFragment {
             }
         });
 
-        mLlAddNewPlayList.setOnClickListener(v -> AddListDialog.newInstance(1, Constants.NULL_STRING).show(mActivity.getFragmentManager(), "addList"));
+        mLlAddNewPlayList.setOnClickListener(v -> AddListDialog.newInstance(1, Constants.NULL_STRING, isFormPlayListActivity).show(mActivity.getFragmentManager(), "addList"));
         mAdapter.setItemListener((playListBean, isEditStatus) -> {
             mTempTitle = playListBean.getTitle();
             // 从PlayListActivity过来的
-            if (SpUtil.getAddToPlayListFlag(mActivity) == Constants.NUMBER_ONE) {
+            if (isFormPlayListActivity) {
                 addToList(playListBean);
             } else {
                 if (isEditStatus) {
@@ -208,18 +210,17 @@ public class PlayListFragment extends BaseMusicFragment {
         });
         // 长按删除
         mAdapter.setItemLongClickListener((musicInfo, currentPosition) -> {
-            if (SpUtil.getAddToPlayListFlag(mActivity) != Constants.NUMBER_ONE) {
+            if (isFormPlayListActivity) {
                 mDeletePosition = currentPosition;
                 DeletePlayListDialog.newInstance(musicInfo, Constants.NUMBER_TWO).show(mActivity.getFragmentManager(), "deleteList");
             }
-            SpUtil.setAddToPlayListFlag(mContext, Constants.NUMBER_ZERO);
         });
         // 编辑按钮
         mAdapter.setItemEditClickListener(currentPosition -> {
             mEditPosition = currentPosition;
             if (getPlayList().size() > 0) {
                 String currentTitle = getPlayList().get(currentPosition).getTitle();
-                AddListDialog.newInstance(2, currentTitle).show(mActivity.getFragmentManager(), "addList");
+                AddListDialog.newInstance(2, currentTitle, false).show(mActivity.getFragmentManager(), "addList");
             }
         });
     }
@@ -332,7 +333,8 @@ public class PlayListFragment extends BaseMusicFragment {
         }
     }
 
-    public static PlayListFragment newInstance(String songName, ArrayList<String> arrayList) {
+    public static PlayListFragment newInstance(String songName, ArrayList<String> arrayList, boolean formPlayListActivity) {
+        isFormPlayListActivity = formPlayListActivity;
         mSongName = songName;
         mArrayList = arrayList;
         return new PlayListFragment();
@@ -341,6 +343,7 @@ public class PlayListFragment extends BaseMusicFragment {
     @Override
     public void onPause() {
         super.onPause();
+        isFormPlayListActivity = false;
         if (mAddDeleteListDisposable != null) {
             mAddDeleteListDisposable.dispose();
             mAddDeleteListDisposable = null;

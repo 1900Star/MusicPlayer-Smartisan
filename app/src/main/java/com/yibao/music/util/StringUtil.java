@@ -155,7 +155,6 @@ public class StringUtil {
         int mContdownTime = 0;
         switch (countdown) {
             case "正在倒计时":
-                LogUtil.d("     正在倒计时");
                 mContdownTime = -1;
                 break;
             case "无":

@@ -63,9 +63,14 @@ public class SongCategoryFragment extends BaseMusicFragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        LogUtil.d("====  songCateggory  " + getUserVisibleHint());
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        initRxBusData();
         if (mPosition != Constants.NUMBER_ZERO) {
             mPlayFrequencyList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_THRRE);
             mAddTimeList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
@@ -74,6 +79,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
             initData();
         }
         initListener();
+        initRxBusData();
     }
 
     @Override

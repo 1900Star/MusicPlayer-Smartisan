@@ -26,7 +26,6 @@ import com.yibao.music.util.Constants;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SoftKeybordUtil;
-import com.yibao.music.util.SpUtil;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -56,15 +55,18 @@ public class AddListDialog
     private TextView mNoInputTv;
     private CompositeDisposable mCompositeDisposable;
     private static String mEditHint;
+    private static boolean isFormPlayListActivity;
 
     /**
      * @param operationType 1 新建列表  2 列表改名
      * @param editHint      e
+     * @param b      PlayListActivity弹出新建AddListDialog  时赋值为 true 。
      * @return c
      */
-    public static AddListDialog newInstance(int operationType, String editHint) {
+    public static AddListDialog newInstance(int operationType, String editHint, boolean b) {
         mOperationType = operationType;
         mEditHint = editHint;
+        isFormPlayListActivity = b;
         return new AddListDialog();
     }
 
@@ -102,8 +104,7 @@ public class AddListDialog
         mTvAddListContinue = mView.findViewById(R.id.tv_add_list_continue);
         mNoInputTv = mView.findViewById(R.id.tv_no_input_cancel);
         title.setText(mOperationType == Constants.NUMBER_ONE ? R.string.add_new_play_list : R.string.rename_tile);
-        boolean b = SpUtil.getAddToPlayListFlag(getActivity()) == Constants.NUMBER_ONE;
-        mTvAddListContinue.setText(getResources().getString(b ? R.string.save_and_add : R.string.continues));
+        mTvAddListContinue.setText(getResources().getString(isFormPlayListActivity ? R.string.save_and_add : R.string.continues));
         mEditAddList.setHint(mEditHint);
     }
 

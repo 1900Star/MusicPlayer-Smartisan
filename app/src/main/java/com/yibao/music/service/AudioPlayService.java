@@ -1,6 +1,5 @@
 package com.yibao.music.service;
 
-import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -469,7 +468,7 @@ public class AudioPlayService
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 // 短暂性丢失焦点并作降音处理
-                LogUtil.d("====== 33 AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
+                LogUtil.d("====== 短暂性丢失焦点并作降音处理 ");
                 break;
             case AudioManager.AUDIOFOCUS_GAIN:
                 // 当其他应用申请焦点之后又释放焦点会触发此回调,可重新播放音乐

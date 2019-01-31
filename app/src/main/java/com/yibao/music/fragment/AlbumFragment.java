@@ -110,9 +110,6 @@ public class AlbumFragment extends BaseMusicFragment {
         super.onResume();
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? detailsViewTitle : getString(R.string.music_album));
         initRxBusData();
-        if (isShowDetailsView) {
-            interceptBackEvent(Constants.NUMBER_TWELVE);
-        }
     }
 
     @Override

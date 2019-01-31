@@ -25,12 +25,11 @@ public class PlayListActivity extends AppCompatActivity implements OnFinishActiv
     }
 
     private void initData() {
-        SpUtil.setAddToPlayListFlag(this, Constants.NUMBER_ONE);
         String songName = getIntent().getStringExtra(Constants.SONG_NAME);
         ArrayList<String> arrayList = getIntent().getStringArrayListExtra(Constants.ADD_TO_LIST);
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        PlayListFragment playListFragment = PlayListFragment.newInstance(songName, arrayList);
+        PlayListFragment playListFragment = PlayListFragment.newInstance(songName, arrayList, true);
         transaction.replace(R.id.fl_content, playListFragment);
         transaction.commit();
     }
@@ -46,7 +45,6 @@ public class PlayListActivity extends AppCompatActivity implements OnFinishActiv
     @Override
     public void finish() {
         super.finish();
-        SpUtil.setAddToPlayListFlag(this, Constants.NUMBER_ZERO);
         overridePendingTransition(0, R.anim.dialog_push_out);
     }
 

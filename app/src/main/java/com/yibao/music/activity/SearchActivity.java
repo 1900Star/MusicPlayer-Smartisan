@@ -2,7 +2,6 @@ package com.yibao.music.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -81,7 +80,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     private AudioPlayService.AudioBinder audioBinder;
     private int lyricsFlag;
     private InputMethodManager mInputMethodManager;
-    private Disposable mDisposableSoft;
+    private Disposable mDisposableSoftKeyboard;
     private AudioServiceConnection mServiceConnection;
 
     @Override
@@ -107,7 +106,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         } else {
             // 主动弹出键盘
             mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            mDisposableSoft = Observable.timer(50, TimeUnit.MILLISECONDS)
+            mDisposableSoftKeyboard = Observable.timer(50, TimeUnit.MILLISECONDS)
                     .subscribe(aLong -> SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED));
         }
     }
@@ -410,9 +409,9 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mDisposableSoft != null) {
-            mDisposableSoft.dispose();
-            mDisposableSoft = null;
+        if (mDisposableSoftKeyboard != null) {
+            mDisposableSoftKeyboard.dispose();
+            mDisposableSoftKeyboard = null;
         }
         if (mServiceConnection != null) {
             unbindService(mServiceConnection);

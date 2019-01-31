@@ -13,24 +13,6 @@ import android.content.SharedPreferences;
  */
 
 public class SpUtil {
-    /**
-     * 用于标记详情页面是否打开
-     *
-     * @param context c
-     * @param value   v   0 在PlayListFragment弹出新建AddListDialog和删除DeleteDialog 时赋值为 0 。
-     *                1  点击MoreMenuDialog-->添加到播放列表-->PlayListActivity弹出新建AddListDialog  时赋值为 1 。
-     */
-    public static void setAddToPlayListFlag(Context context, int value) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.ADD_TO_PLAY_LIST_FLAG, Constants.MODE_KEY);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(Constants.ADD_TO_PLAY_LIST_FLAG_KEY, value);
-        editor.apply();
-    }
-
-    public static int getAddToPlayListFlag(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.ADD_TO_PLAY_LIST_FLAG, Constants.MODE_KEY);
-        return sp.getInt(Constants.ADD_TO_PLAY_LIST_FLAG_KEY, Constants.MODE_KEY);
-    }
 
     /**
      * 用于存储和获取音乐的播放模式

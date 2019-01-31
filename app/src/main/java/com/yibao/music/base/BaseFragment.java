@@ -34,7 +34,6 @@ public abstract class BaseFragment extends Fragment {
     protected final MusicBeanDao mMusicBeanDao;
     protected final PlayListBeanDao mPlayListDao;
     protected CompositeDisposable mCompositeDisposable;
-    protected String mClassName;
     protected FragmentManager mFragmentManager;
     protected Context mContext;
     protected Unbinder unbinder;
@@ -54,7 +53,6 @@ public abstract class BaseFragment extends Fragment {
         mContext = getActivity();
         mCompositeDisposable = new CompositeDisposable();
         mBus =RxBus.getInstance();
-        mClassName = getClass().getSimpleName();
         mFragmentManager = mActivity.getFragmentManager();
 
     }
