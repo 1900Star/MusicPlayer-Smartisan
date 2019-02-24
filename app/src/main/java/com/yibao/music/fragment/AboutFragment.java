@@ -1,6 +1,9 @@
 package com.yibao.music.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,8 +18,8 @@ import com.yibao.music.activity.SplashActivity;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.CrashSheetDialog;
-import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
+import com.yibao.music.fragment.dialogfrag.TakePhotoBottomSheetDialog;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
@@ -27,6 +30,8 @@ import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.MusicToolBar;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -75,8 +80,16 @@ public class AboutFragment extends BaseMusicFragment {
         View view = inflater.inflate(R.layout.about_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         mMusicToolBar.setTvEditVisibility(false);
+        initData();
         initListener();
         return view;
+    }
+
+    private void initData() {
+        File headerFile = FileUtil.getHeaderFile();
+        if (FileUtil.getHeaderFile().exists()) {
+            setHeaderView(Uri.fromFile(headerFile));
+        }
     }
 
     @Override
@@ -85,11 +98,19 @@ public class AboutFragment extends BaseMusicFragment {
         mMusicToolBar.setToolbarTitle(getString(R.string.about));
     }
 
+
     private void initListener() {
         mCompositeDisposable.add(RxView.clicks(mAboutHeaderIv)
                 .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> PreviewBigPicDialogFragment.newInstance(Constants.NULL_STRING)
-                        .show(mFragmentManager, "album")));
+                .subscribe(o -> {
+//                    PreviewBigPicDialogFragment.newInstance(Constants.NULL_STRING)
+//                            .show(mFragmentManager, "album");
+                    TakePhotoBottomSheetDialog.newInstance().getBottomDialog(mActivity);
+                }));
+        mCompositeDisposable.add(mBus.toObservableType(Constants.NUMBER_TWO, Object.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(o -> setHeaderView((Uri) o)));
         mCompositeDisposable.add(RxView.clicks(mTvBackupsFavorite)
                 .throttleFirst(3, TimeUnit.SECONDS)
                 .subscribe(o -> backupsFavoriteList()));
@@ -125,6 +146,7 @@ public class AboutFragment extends BaseMusicFragment {
             }
         });
     }
+
 
     private void scannerMedia() {
         Intent intent = new Intent(mActivity, SplashActivity.class);
@@ -186,6 +208,15 @@ public class AboutFragment extends BaseMusicFragment {
         ToastUtil.showFavoriteListBackupsDown(mActivity);
     }
 
+    private void setHeaderView(Uri uri) {
+        Bitmap bitmap = null;
+        try {
+            bitmap = BitmapFactory.decodeStream(mActivity.getContentResolver().openInputStream(uri));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        mAboutHeaderIv.setImageBitmap(bitmap);
+    }
 
     public static AboutFragment newInstance() {
 

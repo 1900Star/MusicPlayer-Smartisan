@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@color/colorWhite"
+    android:gravity="bottom"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/time_bar"
+        android:background="@drawable/time_picker_widget_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_time_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:text="@string/choice_opreation"
+            android:textColor="@color/lyricsNormal"
+            android:textSize="@dimen/smallLyrics"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_take_photo_cancel"
+            android:layout_width="58dp"
+            android:layout_height="28dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="12dp"
+            android:background="@drawable/shape_btn_selector"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/lyricsNormal"
+            android:textSize="@dimen/bigLyrics" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_take_photo"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_btn_take_photo_selector"
+            android:gravity="center"
+            android:text="@string/take_photo"
+            android:textColor="@color/textDes"
+            android:textSize="@dimen/about_title"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_choice_photo"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_btn_take_photo_selector"
+            android:gravity="center"
+            android:text="@string/choice_photo"
+            android:textColor="@color/textDes"
+            android:textSize="@dimen/about_title"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+</LinearLayout>

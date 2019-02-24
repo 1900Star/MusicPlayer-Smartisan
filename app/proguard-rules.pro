@@ -160,3 +160,5 @@ public static java.lang.String TABLENAME;
 #jsoup
 -dontwarn org.jsoup.**
 -keep class org.jsoup.**{*;}
+#动态权限申请
+-dontwarn com.yanzhenjie.permission.**

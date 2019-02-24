@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".MusicApplication"
@@ -84,7 +85,7 @@
             android:windowSoftInputMode="adjustPan" />
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.yibao.music.fileprovider"
+            android:authorities="com.yibao.music"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

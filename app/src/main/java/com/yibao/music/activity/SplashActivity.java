@@ -1,7 +1,6 @@
 package com.yibao.music.activity;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -21,11 +20,8 @@ import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.SystemUiVisibilityUtil;
 import com.yibao.music.view.ProgressBtn;
 
-import java.util.concurrent.TimeUnit;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -58,7 +54,7 @@ public class SplashActivity
 
     private void init() {
         mScanner = getIntent().getStringExtra(Constants.SCANNER_MEDIA);
-        SplashPagerAdapter splashPagerAdapter = new SplashPagerAdapter(SpUtil.getPicUrlFlag(this,false));
+        SplashPagerAdapter splashPagerAdapter = new SplashPagerAdapter(SpUtil.getPicUrlFlag(this, false));
         mVpSplash.setAdapter(splashPagerAdapter);
     }
 
@@ -152,17 +148,18 @@ public class SplashActivity
      * @param b ture 表示初次安装，自动扫描完成后直接进入MusicActivity 。 false 表示手动扫描，完成后停在SplashActivity页面。
      */
     private void countDownOpareton(boolean b) {
-        mCompositeDisposable.add(Observable.timer(1, TimeUnit.SECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> {
-                    if (b) {
-                        startMusicActivity();
-                    } else {
-                        mTvMusicCount.setVisibility(View.GONE);
-                        mMusicLoadProgressBar.setVisibility(View.GONE);
-                    }
-                }));
+        if (b) {
+            startMusicActivity();
+        } else {
+            mTvMusicCount.setVisibility(View.GONE);
+            mMusicLoadProgressBar.setVisibility(View.GONE);
+        }
+//        mCompositeDisposable.add(Observable.timer(20, TimeUnit.SECONDS)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(aLong -> {
+//
+//                }));
 
     }
 

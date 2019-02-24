@@ -9,6 +9,10 @@ import android.widget.Toast;
  * Time:2017/8/13 04:43
  */
 public class ToastUtil {
+    public static void show(Context context,String str) {
+        Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
+    }
+
     public static void initPlayState(Context context) {
         Toast.makeText(context, "请点击播放按钮 -_-", Toast.LENGTH_SHORT).show();
     }

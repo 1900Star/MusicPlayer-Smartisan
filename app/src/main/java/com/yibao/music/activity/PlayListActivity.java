@@ -26,6 +26,7 @@ public class PlayListActivity extends AppCompatActivity implements OnFinishActiv
     }
 
     private void initData() {
+        SpUtil.setAddTodPlayListFlag(this,Constants.NUMBER_ONE);
         String songName = getIntent().getStringExtra(Constants.SONG_NAME);
         ArrayList<String> arrayList = getIntent().getStringArrayListExtra(Constants.ADD_TO_LIST);
         FragmentManager fm = getSupportFragmentManager();
@@ -44,14 +45,9 @@ public class PlayListActivity extends AppCompatActivity implements OnFinishActiv
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        SpUtil.setAddTodPlayListFlag(this, Constants.NUMBER_ZERO);
-    }
-
-    @Override
     public void finish() {
         super.finish();
+        SpUtil.setAddTodPlayListFlag(this, Constants.NUMBER_ZERO);
         overridePendingTransition(0, R.anim.dialog_push_out);
     }
 

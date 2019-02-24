@@ -15,7 +15,6 @@ import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.BaseMusicFragment;
-import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnFinishActivityListener;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
@@ -93,14 +92,17 @@ public class PlayListFragment extends BaseMusicFragment {
 
     @Override
     protected boolean getIsOpenDetail() {
+        LogUtil.d("HSHS==========   " + isShowDetailsView + " ==  " + !isItemSelectStatus);
         return isShowDetailsView || !isItemSelectStatus;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.play_list));
-        mAppBarLayout.setVisibility(isFormPlayListActivity ? View.GONE : View.VISIBLE);
+        LogUtil.d(" ZAZA=========   " + isFormPlayListActivity + " == " + SpUtil.getAddToPlayListFdlag(mActivity));
+        mAppBarLayout.setVisibility(isFormPlayListActivity && SpUtil.getAddToPlayListFdlag(mActivity) == Constants.NUMBER_ONE ? View.GONE : View.VISIBLE);
         mAdapter.setNewData(getPlayList());
         receiveRxbuData();
     }
@@ -194,6 +196,7 @@ public class PlayListFragment extends BaseMusicFragment {
 
         mLlAddNewPlayList.setOnClickListener(v -> AddListDialog.newInstance(1, Constants.NULL_STRING, isFormPlayListActivity).show(mActivity.getFragmentManager(), "addList"));
         mAdapter.setItemListener((playListBean, isEditStatus) -> {
+            LogUtil.d("TUTU======  " + isFormPlayListActivity +" ==  "+ isEditStatus);
             mTempTitle = playListBean.getTitle();
             // 从PlayListActivity过来的
             if (isFormPlayListActivity) {
@@ -346,7 +349,9 @@ public class PlayListFragment extends BaseMusicFragment {
     @Override
     public void onPause() {
         super.onPause();
-        isFormPlayListActivity = false;
+        if (SpUtil.getAddToPlayListFdlag(mActivity) == Constants.NUMBER_ZERO) {
+            isFormPlayListActivity = false;
+        }
         if (mAddDeleteListDisposable != null) {
             mAddDeleteListDisposable.dispose();
             mAddDeleteListDisposable = null;

@@ -1,7 +1,6 @@
 package com.yibao.music.fragment.dialogfrag;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -17,7 +16,6 @@ import com.yibao.music.base.listener.BottomSheetCallback;
 import com.yibao.music.model.CountdownBean;
 import com.yibao.music.service.CountdownService;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.ServiceUtil;
 import com.yibao.music.util.StringUtil;
@@ -39,7 +37,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class CountdownBottomSheetDialog {
     private static final String ACTION_TIMER = "countdown";
-    private final String[] arrTime = {"正在倒计时", "无", "15 分", "30 分", "1 小时", "1 小时 30 分", "2 小时"};
+    private String[] arrTime = {"正在倒计时", "无", "15 分", "30 分", "1 小时", "1 小时 30 分", "2 小时"};
     private TextView mTvComplete;
     private TextView mTvCountdown;
     private WheelView mWheelView;
@@ -137,7 +135,7 @@ public class CountdownBottomSheetDialog {
         if (window != null) {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
-        BottomSheetBehavior<View>  sheetBehavior = BottomSheetBehavior.from((View) view.getParent());
+        BottomSheetBehavior<View> sheetBehavior = BottomSheetBehavior.from((View) view.getParent());
         dialog.setCanceledOnTouchOutside(true);
         dialog.setOnDismissListener(dialog12 -> CountdownBottomSheetDialog.this.clearDisposable());
         sheetBehavior.setBottomSheetCallback(new BottomSheetCallback() {

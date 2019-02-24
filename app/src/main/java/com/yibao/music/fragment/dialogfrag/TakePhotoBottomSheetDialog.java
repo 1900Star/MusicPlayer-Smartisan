@@ -1,0 +1,152 @@
+package com.yibao.music.fragment.dialogfrag;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
+import android.support.v4.content.FileProvider;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
+import com.yibao.music.R;
+import com.yibao.music.base.listener.BottomSheetCallback;
+import com.yibao.music.util.Constants;
+import com.yibao.music.util.FileUtil;
+
+import java.io.File;
+
+/**
+ * Des：${TODO}
+ * Time:2017/8/22 14:11
+ *
+ * @author Stran
+ */
+public class TakePhotoBottomSheetDialog {
+    private Activity mContext;
+    private View mTvCancel;
+    private View mTvTakePhoto;
+    private View mTvChoicePhoto;
+
+
+    public static TakePhotoBottomSheetDialog newInstance() {
+        return new TakePhotoBottomSheetDialog();
+    }
+
+    public void getBottomDialog(Activity context) {
+        this.mContext = context;
+        BottomSheetDialog dialog = new BottomSheetDialog(context);
+        View view = LayoutInflater.from(context)
+                .inflate(R.layout.takephoto_dialog_fragment, null);
+        initView(dialog, view);
+        initListener(dialog);
+        dialog.show();
+    }
+
+
+    private void initListener(BottomSheetDialog dialog) {
+        mTvCancel.setOnClickListener(v -> dialog.dismiss());
+        mTvTakePhoto.setOnClickListener(v -> {
+            AndPermission.with(mContext)
+                    .runtime()
+                    .permission(Permission.Group.CAMERA)
+                    .onGranted(permissions -> takeCameraPic())
+                    .onDenied(permissions -> {
+                        Log.d("lsp", "没有拍照的权限!");
+                        toSelfSetting(mContext);
+                    })
+                    .start();
+            dialog.dismiss();
+        });
+        mTvChoicePhoto.setOnClickListener(v -> {
+            TakePhotoBottomSheetDialog.this.choicePhoto();
+            dialog.dismiss();
+        });
+    }
+
+
+    private static void toSelfSetting(Context context) {
+        Intent mIntent = new Intent();
+        mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+        mIntent.setData(Uri.fromParts("package", context.getPackageName(), null));
+        context.startActivity(mIntent);
+    }
+
+    // 启动手机相机拍摄照片作为头像
+    private void takeCameraPic() {
+        String savePath = Environment.getExternalStorageDirectory().toString();
+        Intent intent;
+        if (FileUtil.hasSdcard()) {
+            File file = new File(savePath);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            Uri pictureUri;
+            File pictureFile = new File(savePath, Constants.IMAGE_FILE_NAME);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                pictureUri = FileProvider.getUriForFile(mContext, mContext.getPackageName(), pictureFile);
+            } else {
+                intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                pictureUri = Uri.fromFile(pictureFile);
+            }
+            intent.putExtra(MediaStore.EXTRA_OUTPUT,
+                    pictureUri);
+            mContext.startActivityForResult(intent, Constants.CODE_CAMERA_REQUEST);
+        }
+    }
+
+    private void choicePhoto() {
+        AndPermission.with(mContext)
+                .runtime()
+                .permission(Permission.Group.STORAGE)
+                .onGranted(permissions -> {
+                    Intent intentFromGallery = new Intent(Intent.ACTION_PICK, null);
+                    intentFromGallery.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                    mContext.startActivityForResult(intentFromGallery, Constants.CODE_GALLERY_REQUEST);
+                })
+                .onDenied(permissions -> Log.d("lsp", "没有读取和写入的权限!"))
+                .start();
+
+    }
+
+    private void initView(BottomSheetDialog dialog, View view) {
+        mTvCancel = view.findViewById(R.id.tv_take_photo_cancel);
+        mTvTakePhoto = view.findViewById(R.id.tv_take_photo);
+        mTvChoicePhoto = view.findViewById(R.id.tv_choice_photo);
+        dialog.setContentView(view);
+        dialog.setCancelable(true);
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+        BottomSheetBehavior<View> sheetBehavior = BottomSheetBehavior.from((View) view.getParent());
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setOnDismissListener(dialog12 -> {
+        });
+        sheetBehavior.setBottomSheetCallback(new BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int newState) {
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+            }
+        });
+    }
+
+
+}
+
+

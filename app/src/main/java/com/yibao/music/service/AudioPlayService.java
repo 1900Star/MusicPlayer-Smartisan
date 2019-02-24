@@ -121,7 +121,7 @@ public class AudioPlayService
             //通知播放界面更新
             sendCureentMusicInfo();
         }
-        if (mMusicDataList != null) {
+        if (mMusicDataList != null && mMusicDataList.size() > 0) {
             MusicBean musicBean = mMusicDataList.get(position);
             musicBean.setPlayFrequency(musicBean.getPlayFrequency() + 1);
             mMusicDao.update(musicBean);

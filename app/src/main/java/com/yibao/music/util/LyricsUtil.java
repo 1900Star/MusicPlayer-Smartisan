@@ -27,8 +27,6 @@ import java.util.List;
 public class LyricsUtil {
 
     private static BufferedReader br;
-    private static String acturlSongName;
-    private static String actualArtist;
     private static final String UNKNOWN_NAME = "<unknown>";
 
     /**
@@ -40,6 +38,8 @@ public class LyricsUtil {
      */
     public static synchronized List<MusicLyricBean> getLyricList(String songName, String artist) {
         // 通过QQ音乐下载的歌曲名会带有这个字符串，需要将正确的歌名截取出来，才能用于网络歌词的匹配。
+        String acturlSongName;
+        String actualArtist;
         if (songName.contains("[mqms2]")) {
             TitleAndArtistBean bean = TitleArtistUtil.getBean(songName);
             acturlSongName = bean.getSongName();
@@ -102,7 +102,8 @@ public class LyricsUtil {
      */
     private static List<MusicLyricBean> lyricsFileToList(List<MusicLyricBean> lrcList, File file) {
         try {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"));
+            String charsetName = "utf-8";
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsetName));
             String line = br.readLine();
             while (line != null) {
                 ArrayList<MusicLyricBean> been = parseLine(line);

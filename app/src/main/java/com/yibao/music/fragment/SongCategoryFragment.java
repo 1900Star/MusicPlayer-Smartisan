@@ -63,12 +63,6 @@ public class SongCategoryFragment extends BaseMusicFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        LogUtil.d("====  songCateggory  " + getUserVisibleHint());
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         if (mPosition != Constants.NUMBER_ZERO) {

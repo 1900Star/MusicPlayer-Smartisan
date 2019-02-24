@@ -46,6 +46,7 @@
     <string name="continues">继续</string>
     <string name="save_and_add">保存并添加</string>
     <string name="complete">完成</string>
+    <string name="choice_opreation">请选择操作</string>
     <string name="back">返回</string>
     <string name="sure">确定</string>
     <string name="about">关于</string>
@@ -69,6 +70,8 @@
     <string name="baidu_key">4502b57559</string>
     <string name="app_info">ArtisanMusicPlayer 仿照锤子音乐播放器写的一个本地音乐播放器。 https://github.com/1900Star/SmartisanMusicPlayer </string>
     <string name="crashlog">CrashLog</string>
+    <string name="take_photo">拍照</string>
+    <string name="choice_photo">从相册中选择照片</string>
 
 
 </resources>

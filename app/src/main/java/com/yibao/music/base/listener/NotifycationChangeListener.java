@@ -16,6 +16,6 @@ public interface NotifycationChangeListener {
 
     void updataFavoriteBtn(boolean currentFavorite);
 
-    void updataPlayBtn(boolean isPlaying);
+//    void updataPlayBtn(boolean isPlaying);
 
 }

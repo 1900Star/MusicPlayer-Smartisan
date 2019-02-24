@@ -1,6 +1,11 @@
 package com.yibao.music.util;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,9 +50,46 @@ public class FileUtil {
 
     public static long getId(String str) {
         //        String str="2017-06-12T10:22:59.890Z";
-
         return Long.parseLong(str.substring(11, 19)
                 .replaceAll(":", ""));
     }
 
+    public static Uri getImageContentUri(Context context, File imageFile) {
+        String filePath = imageFile.getAbsolutePath();
+        Cursor cursor = context.getContentResolver().query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Images.Media._ID},
+                MediaStore.Images.Media.DATA + "=? ",
+                new String[]{filePath}, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int id = cursor.getInt(cursor
+                    .getColumnIndex(MediaStore.MediaColumns._ID));
+            Uri baseUri = Uri.parse("content://media/external/images/media");
+            return Uri.withAppendedPath(baseUri, "" + id);
+        } else {
+            if (imageFile.exists()) {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.DATA, filePath);
+                return context.getContentResolver().insert(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            } else {
+                return null;
+            }
+        }
+    }
+
+    public static boolean hasSdcard() {
+        String state = Environment.getExternalStorageState();
+        // 有存储的SDCard
+        return state.equals(Environment.MEDIA_MOUNTED);
+    }
+
+    public static File getHeaderFile() {
+        File file = new File(Constants.HEADER_PATH);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return new File(file, Constants.CROP_IMAGE_FILE_NAME);
+    }
 }

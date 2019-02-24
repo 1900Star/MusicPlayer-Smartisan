@@ -57,27 +57,27 @@ public class HanziToPinyins {
         if (input == null) {
             return 0;
         }
-        String result = null;
+        StringBuilder result = null;
         for (int i = 0; i < input.length(); i++) {
             //是否在汉字范围内
             if (input.charAt(i) >= xe && input.charAt(i) <= xf) {
-                result += toPinYin(input.charAt(i));
+                result = (result == null ? new StringBuilder("null") : result).append(toPinYin(input.charAt(i)));
             } else {
-                result += input.charAt(i);
+                result = (result == null ? new StringBuilder("null") : result).append(input.charAt(i));
             }
         }
         if (result != null) {
             if (result.length() > Constants.NUMBER_FOUR) {
-                result = result.substring(4);
+                result = new StringBuilder(result.substring(4));
             }
 
             //如果首字母不在[a,z]和[A,Z]内则首字母改为‘#’
-            if (!(result.toUpperCase().charAt(0) >= Constants.LETTER_A && result.toUpperCase().charAt(0) <= Constants.LETTER_Z)) {
-                StringBuilder builder = new StringBuilder(result);
+            if (!(result.toString().toUpperCase().charAt(0) >= Constants.LETTER_A && result.toString().toUpperCase().charAt(0) <= Constants.LETTER_Z)) {
+                StringBuilder builder = new StringBuilder(result.toString());
                 builder.replace(0, 1, "#");
-                result = builder.toString();
+                result = new StringBuilder(builder.toString());
             }
-            return result.toUpperCase().charAt(0);
+            return result.toString().toUpperCase().charAt(0);
         }
         return 'a';
     }

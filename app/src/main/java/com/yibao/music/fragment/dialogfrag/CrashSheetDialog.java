@@ -80,7 +80,7 @@ public class CrashSheetDialog {
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         Uri contentUri;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            contentUri = FileProvider.getUriForFile(mContext, mPackageName + ".fileprovider", crashFile);
+            contentUri = FileProvider.getUriForFile(mContext, mPackageName , crashFile);
         } else {
             contentUri = Uri.fromFile(crashFile);
         }

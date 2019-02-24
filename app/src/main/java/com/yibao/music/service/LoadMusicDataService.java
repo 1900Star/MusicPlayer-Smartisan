@@ -140,9 +140,4 @@ public class LoadMusicDataService extends IntentService {
         mBus.post(new MusicCountBean(currentCount, songSum));
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        stopSelf();
-    }
 }

@@ -101,9 +101,17 @@ public class Constants {
     public static final String FINISH_TIME = "00:01";
 
     static final String FAVORITE_FILE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/favorite.txt/";
+    public static final String HEADER_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yibao/photo/";
     // 崩溃日志本地保存地址
     public static final String CRASH_LOG_PATH = Environment.getExternalStorageDirectory()
             .getPath() + "/CrashLog/log/";
     public static final String DATA_TYPE_TXT = "text/plain";
     public static String UNSPLASH_URL = "https://picsum.photos/1080/1920/?image=";
+    // 权限Code
+    public static final int CODE_GALLERY_REQUEST = 0xa0;
+    public static final int CODE_CAMERA_REQUEST = 0xa1;
+    public static final int CODE_RESULT_REQUEST = 0xa2;
+    // 头像文件
+    public static final String IMAGE_FILE_NAME = "temp_head_image.jpg";
+    public static final String CROP_IMAGE_FILE_NAME = "header.jpg";
 }

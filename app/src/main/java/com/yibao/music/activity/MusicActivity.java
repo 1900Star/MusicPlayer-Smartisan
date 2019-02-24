@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
@@ -24,6 +25,8 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.FileUtil;
+import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.QueryMusicFlagListUtil;
 import com.yibao.music.util.SnakbarUtil;
@@ -77,6 +80,7 @@ public class MusicActivity
     private int lyricsFlag = 0;
     private MusicBean mQqBarBean;
     private int mHandleDetailFlag;
+    private Uri mContentUri;
 
 
     @Override
@@ -88,6 +92,7 @@ public class MusicActivity
         initMusicConfig();
         initListener();
         deleteSelected();
+
     }
 
 
@@ -579,7 +584,7 @@ public class MusicActivity
 
     @Override
     public void handleBack(int detailFlag) {
-            mHandleDetailFlag = detailFlag;
+        mHandleDetailFlag = detailFlag;
     }
 
     @Override
@@ -630,5 +635,30 @@ public class MusicActivity
         unbindAudioService();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (resultCode == RESULT_CANCELED) {
+            ToastUtil.show(this, "取消");
+            return;
+        }
+        switch (requestCode) {
+            case Constants.CODE_GALLERY_REQUEST:
+                mContentUri = intent.getData();
+                startActivityForResult(ImageUitl.cropRawPhotoIntent(mContentUri), Constants.CODE_RESULT_REQUEST);
+                break;
+            case Constants.CODE_CAMERA_REQUEST:
+                if (FileUtil.hasSdcard()) {
+                    mContentUri = FileUtil.getImageContentUri(this, ImageUitl.getTempFile());
+                    startActivityForResult(ImageUitl.cropRawPhotoIntent(mContentUri), Constants.CODE_RESULT_REQUEST);
+                } else {
+                    ToastUtil.show(this, "没发现SD卡!");
+                }
+                break;
+            case Constants.CODE_RESULT_REQUEST:
+                mBus.post(Constants.NUMBER_TWO, mContentUri);
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, intent);
+    }
 
 }

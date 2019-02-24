@@ -19,7 +19,6 @@ import com.yibao.music.activity.MusicActivity;
 import com.yibao.music.base.listener.NotifycationChangeListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.TitleAndArtistBean;
-import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.TitleArtistUtil;
@@ -186,10 +185,10 @@ public class MusicNotifyManager implements
         mMusicBean.setIsFavorite(!isCurrentFavorite);
         show();
     }
-
-    @Override
-    public void updataPlayBtn(boolean isPlaying) {
-        isPlay = isPlaying;
-        show();
-    }
+//
+//    @Override
+//    public void updataPlayBtn(boolean isPlaying) {
+//        isPlay = isPlaying;
+//        show();
+//    }
 }
