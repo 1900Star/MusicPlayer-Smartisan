@@ -60,6 +60,7 @@
     <string name="tv_edit">编辑</string>
     <string name="tv_delete">删除</string>
     <string name="lyrics">歌词</string>
+    <string name="baidu_key">4502b57559</string>
     <string name="select_operation">选择操作</string>
     <string name="delelet_play_list">删除列表</string>
     <string name="edit_play_list">编辑列表</string>

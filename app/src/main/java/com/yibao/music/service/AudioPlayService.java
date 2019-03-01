@@ -14,7 +14,6 @@ import android.os.RemoteException;
 import android.widget.Toast;
 
 import com.yibao.music.MusicApplication;
-import com.yibao.music.aidl.IMusicAidlInterface;
 import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.aidl.MusicLyricBean;
 import com.yibao.music.manager.MediaSessionManager;
