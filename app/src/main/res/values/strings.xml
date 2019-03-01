@@ -72,6 +72,8 @@
     <string name="crashlog">CrashLog</string>
     <string name="take_photo">拍照</string>
     <string name="choice_photo">从相册中选择照片</string>
+    <string name="camera_not_open">摄像头权限未开启</string>
+    <string name="go_open">去开启</string>
 
 
 </resources>

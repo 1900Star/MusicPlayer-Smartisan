@@ -30,6 +30,16 @@
         android:gravity="center"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/tv_camera_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/camera_not_open"
+            android:textColor="@color/lyricsNormal"
+            android:textSize="@dimen/bigLyrics"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/edit_add_list"
@@ -82,6 +92,7 @@
                 android:layout_height="52dp"
                 android:gravity="center"
                 android:text="@string/continues"
+                android:visibility="gone"
                 android:textColor="@color/tabbarTv"
                 android:textStyle="bold" />
 
@@ -92,7 +103,6 @@
                 android:layout_height="52dp"
                 android:background="@drawable/add_btn_selector"
                 android:gravity="center"
-                android:text="@string/continues"
                 android:textColor="@color/text_cancel_selector"
                 android:textStyle="bold"
                 android:visibility="gone" />

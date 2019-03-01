@@ -162,6 +162,7 @@ public class SpUtil {
         return sp.getInt(Constants.MUSIC_PLAY_STATE_KEY, Constants.MODE_KEY);
     }
 
+
     /**
      * 用于存储和获取用户是否有播放记录
      *

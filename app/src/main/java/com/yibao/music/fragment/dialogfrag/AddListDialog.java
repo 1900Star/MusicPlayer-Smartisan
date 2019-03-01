@@ -60,7 +60,7 @@ public class AddListDialog
     /**
      * @param operationType 1 新建列表  2 列表改名
      * @param editHint      e
-     * @param b      PlayListActivity弹出新建AddListDialog  时赋值为 true 。
+     * @param b             PlayListActivity弹出新建AddListDialog  时赋值为 true 。
      * @return c
      */
     public static AddListDialog newInstance(int operationType, String editHint, boolean b) {
@@ -103,6 +103,7 @@ public class AddListDialog
         mTvAddListCancle = mView.findViewById(R.id.tv_add_list_cancle);
         mTvAddListContinue = mView.findViewById(R.id.tv_add_list_continue);
         mNoInputTv = mView.findViewById(R.id.tv_no_input_cancel);
+        mNoInputTv.setVisibility(View.VISIBLE);
         title.setText(mOperationType == Constants.NUMBER_ONE ? R.string.add_new_play_list : R.string.rename_tile);
         mTvAddListContinue.setText(getResources().getString(isFormPlayListActivity ? R.string.save_and_add : R.string.continues));
         mEditAddList.setHint(mEditHint);

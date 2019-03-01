@@ -34,17 +34,14 @@ public class RxBus {
 
     // 单例RxBus
     public static RxBus getInstance() {
-        RxBus rxBus = instance;
         if (instance == null) {
             synchronized (RxBus.class) {
-                rxBus = instance;
                 if (instance == null) {
-                    rxBus = new RxBus();
-                    instance = rxBus;
+                    instance = new RxBus();
                 }
             }
         }
-        return rxBus;
+        return instance;
     }
 
     public void post(Object o) {
@@ -57,6 +54,7 @@ public class RxBus {
         //本质是先filter再cast
         return bus.ofType(eventType);
     }
+
     /**
      * 提供了一个新的事件,根据code进行分发
      *
@@ -65,12 +63,13 @@ public class RxBus {
     public void post(int code, Object o) {
         bus.onNext(new Message(code, o));
     }
+
     /**
      * 根据传递的code和 eventType 类型返回特定类型(eventType)的 被观察者
      *
      * @param code      事件code
      * @param eventType 事件类型
-     * @param <T> t
+     * @param <T>       t
      * @return r
      */
     public <T> Observable<T> toObservableType(final int code, final Class<T> eventType) {

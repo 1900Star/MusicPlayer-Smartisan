@@ -17,14 +17,20 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 import com.yibao.music.R;
 import com.yibao.music.base.listener.BottomSheetCallback;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;
+import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.PermissionsUtil;
+import com.yibao.music.util.SpUtil;
+import com.yibao.music.util.ToastUtil;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Des：${TODO}
@@ -37,7 +43,6 @@ public class TakePhotoBottomSheetDialog {
     private View mTvCancel;
     private View mTvTakePhoto;
     private View mTvChoicePhoto;
-
 
     public static TakePhotoBottomSheetDialog newInstance() {
         return new TakePhotoBottomSheetDialog();
@@ -57,16 +62,21 @@ public class TakePhotoBottomSheetDialog {
     private void initListener(BottomSheetDialog dialog) {
         mTvCancel.setOnClickListener(v -> dialog.dismiss());
         mTvTakePhoto.setOnClickListener(v -> {
-            AndPermission.with(mContext)
-                    .runtime()
-                    .permission(Permission.Group.CAMERA)
-                    .onGranted(permissions -> takeCameraPic())
-                    .onDenied(permissions -> {
-                        Log.d("lsp", "没有拍照的权限!");
-                        toSelfSetting(mContext);
-                    })
-                    .start();
-            dialog.dismiss();
+            if (PermissionsUtil.cameraPermission()) {
+                takeCameraPic();
+                dialog.dismiss();
+            } else {
+                AndPermission.with(mContext)
+                        .runtime()
+                        .permission(Permission.Group.CAMERA)
+                        .onGranted(permissions -> {
+                            TakePhotoBottomSheetDialog.this.takeCameraPic();
+                            dialog.dismiss();
+                        })
+                        .onDenied(permissions -> PermissionsDialog.newInstance().show(mContext.getFragmentManager(), "permissions"))
+                        .start();
+            }
+
         });
         mTvChoicePhoto.setOnClickListener(v -> {
             TakePhotoBottomSheetDialog.this.choicePhoto();
@@ -74,31 +84,21 @@ public class TakePhotoBottomSheetDialog {
         });
     }
 
-
-    private static void toSelfSetting(Context context) {
-        Intent mIntent = new Intent();
-        mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-        mIntent.setData(Uri.fromParts("package", context.getPackageName(), null));
-        context.startActivity(mIntent);
-    }
-
     // 启动手机相机拍摄照片作为头像
     private void takeCameraPic() {
+
         String savePath = Environment.getExternalStorageDirectory().toString();
-        Intent intent;
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);;
         if (FileUtil.hasSdcard()) {
             File file = new File(savePath);
             if (!file.exists()) {
                 file.mkdirs();
             }
-            Uri pictureUri;
             File pictureFile = new File(savePath, Constants.IMAGE_FILE_NAME);
+            Uri pictureUri;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 pictureUri = FileProvider.getUriForFile(mContext, mContext.getPackageName(), pictureFile);
             } else {
-                intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 pictureUri = Uri.fromFile(pictureFile);
             }

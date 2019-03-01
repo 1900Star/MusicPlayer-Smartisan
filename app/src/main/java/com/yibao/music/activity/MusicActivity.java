@@ -621,7 +621,7 @@ public class MusicActivity
             unbindService(mConnection);
             mConnection = null;
         }
-
+        stopService(new Intent(this, AudioPlayService.class));
     }
 
     private void handleAftermath() {
@@ -633,6 +633,7 @@ public class MusicActivity
             SpUtil.setMusicPlayState(this, mPlayState);
         }
         unbindAudioService();
+
     }
 
     @Override
