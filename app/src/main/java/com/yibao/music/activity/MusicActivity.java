@@ -478,9 +478,12 @@ public class MusicActivity
 
     @Override
     protected void updataCurrentPlayProgress() {
-        if (audioBinder != null && audioBinder.isPlaying()) {
-            mSmartisanControlBar.setSongProgress(audioBinder.getProgress());
-            mQqControlBar.setProgress(audioBinder.getProgress());
+        if (audioBinder != null) {
+
+            if (audioBinder.isPlaying()) {
+                mSmartisanControlBar.setSongProgress(audioBinder.getProgress());
+                mQqControlBar.setProgress(audioBinder.getProgress());
+            }
         }
     }
 
@@ -529,7 +532,6 @@ public class MusicActivity
             updataCurrentPlayProgress();
             setDuration();
             updataQqBar();
-
         }
         openMusicPlayDialogFag();
     }
@@ -614,8 +616,8 @@ public class MusicActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbindAudioService();
         handleAftermath();
+        unbindAudioService();
 
     }
 
@@ -635,7 +637,6 @@ public class MusicActivity
             mPlayState = audioBinder.isPlaying() ? Constants.NUMBER_TWO : Constants.NUMBER_ONE;
             SpUtil.setMusicPlayState(this, mPlayState);
         }
-        unbindAudioService();
 
     }
 

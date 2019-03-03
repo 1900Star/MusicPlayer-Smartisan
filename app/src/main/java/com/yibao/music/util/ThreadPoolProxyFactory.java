@@ -1,7 +1,5 @@
 package com.yibao.music.util;
 
-import android.os.Bundle;
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -46,5 +44,4 @@ public class ThreadPoolProxyFactory {
             }
         }
     }
-
 }

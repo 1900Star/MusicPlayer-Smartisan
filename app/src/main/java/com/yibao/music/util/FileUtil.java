@@ -12,9 +12,10 @@ import java.io.IOException;
 
 
 /**
- * 作者：Stran on 2017/3/23 15:12
  * 描述：${文件操作工具类}
  * 邮箱：strangermy@outlook.com
+ *
+ * @author Luoshipeng
  */
 
 public class FileUtil {
@@ -31,9 +32,6 @@ public class FileUtil {
         File file = new File(MUSIC_LYRICS_ROOT);
         if (!file.exists()) {
             file.mkdirs();
-//            if (!file.mkdirs()) {
-//                LogUtil.d("===创建失败");
-//            }
         }
         File lyricFile = new File(file + "/", songName + "$$" + songArtisa + ".lrc");
         if (!lyricFile.exists()) {
@@ -91,5 +89,20 @@ public class FileUtil {
             file.mkdirs();
         }
         return new File(file, Constants.CROP_IMAGE_FILE_NAME);
+    }
+
+
+    public static void deleteFile(File dir) {
+        if (dir.exists()) {
+            File[] files = dir.listFiles();
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    deleteFile(file);
+                } else {
+                    file.delete();
+                }
+            }
+            dir.delete();
+        }
     }
 }

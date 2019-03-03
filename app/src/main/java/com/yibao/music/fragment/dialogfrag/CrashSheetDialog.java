@@ -16,11 +16,13 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.adapter.CrashAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.FileUtil;
 
 import java.io.File;
 import java.util.List;
@@ -34,6 +36,7 @@ import java.util.List;
 public class CrashSheetDialog {
     private Context mContext;
     private String mPackageName;
+    private File mFiles;
 
     public static CrashSheetDialog newInstance() {
         return new CrashSheetDialog();
@@ -60,14 +63,20 @@ public class CrashSheetDialog {
         dialog.setCanceledOnTouchOutside(true);
         LinearLayout rootView = view.findViewById(R.id.root_crash);
         // 读取CrashLog
-        File files = new File(Constants.CRASH_LOG_PATH);
-        if (files.exists()) {
-            File[] array = files.listFiles();
+        mFiles = new File(Constants.CRASH_LOG_PATH);
+        if (mFiles.exists()) {
+            File[] array = mFiles.listFiles();
             CrashAdapter crashAdapter = new CrashAdapter(array);
             RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, crashAdapter);
             crashAdapter.setItemClickListener(this::openCrashLog);
             rootView.addView(recyclerView);
-            view.findViewById(R.id.tv_crash_title).setOnClickListener(v -> backTop(recyclerView));
+            TextView tvTitle = view.findViewById(R.id.tv_crash_title);
+            tvTitle.setOnClickListener(v -> backTop(recyclerView));
+            tvTitle.setOnLongClickListener(v -> {
+                FileUtil.deleteFile(mFiles);
+                dialog.dismiss();
+                return true;
+            });
         }
 
     }

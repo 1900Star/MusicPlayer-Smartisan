@@ -154,7 +154,7 @@ public class AudioPlayService
             if (mediaPlayer != null) {
                 mediaPlayer.reset();
                 mediaPlayer.release();
-//                mediaPlayer = null;
+                mediaPlayer = null;
             }
             // “>=” 确保模糊搜索时播放不出现索引越界
             if (mMusicDataList != null) {
