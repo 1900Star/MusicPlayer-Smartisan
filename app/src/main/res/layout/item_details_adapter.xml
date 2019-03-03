@@ -2,7 +2,6 @@
 
 <com.yibao.music.view.SwipeItemLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rl_details_item"
     android:layout_width="match_parent"
     android:layout_height="55dp"
     android:clickable="true"

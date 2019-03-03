@@ -32,6 +32,7 @@ import com.yibao.music.util.QueryMusicFlagListUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
+import com.yibao.music.util.ThreadPoolProxyFactory;
 import com.yibao.music.util.TitleArtistUtil;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.MainViewPager;
@@ -332,7 +333,6 @@ public class MusicActivity
         readyMusic();
     }
 
-    // 防止快速点击
     private void openMusicPlayDialogFag() {
         mCompositeDisposable.add(RxView.clicks(mSmartisanControlBar)
                 .throttleFirst(1, TimeUnit.SECONDS)
@@ -351,7 +351,9 @@ public class MusicActivity
         }
     }
 
-    // 接收service发出的数据，时时更新播放歌曲 进度 歌名 歌手信息
+    /**
+     * @param musicItem 当前播放的歌曲信息，用于更新进度和动画状态,需要用的界面复写这个方法
+     */
     @Override
     protected void updataCurrentPlayInfo(MusicBean musicItem) {
         // 将MusicConfig设置为ture
@@ -404,7 +406,6 @@ public class MusicActivity
     /**
      * QQbar时时更新歌词
      */
-    //TODO
     private void setQqPagerLyric() {
         disposableQqLyric();
         if (mQqLyricsDisposable == null) {
@@ -570,7 +571,9 @@ public class MusicActivity
     }
 
 
-    // AboutFragment 界面恢复收藏歌曲后调用
+    /**
+     * AboutFragment 界面恢复收藏歌曲后调用
+     */
     @Override
     public void checkCurrentFavorite() {
         MusicBean musicBean = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Id.eq(mCurrentMusicBean.getId())).build().unique();
@@ -599,13 +602,13 @@ public class MusicActivity
     }
 
     private void deleteSelected() {
-        new Thread(() -> {
+        ThreadPoolProxyFactory.newInstance().execute(() -> {
             List<PlayListBean> beanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).build().list();
             for (PlayListBean playListBean : beanList) {
                 playListBean.setSelected(false);
                 mPlayListDao.update(playListBean);
             }
-        }).start();
+        });
     }
 
     @Override
@@ -657,6 +660,8 @@ public class MusicActivity
                 break;
             case Constants.CODE_RESULT_REQUEST:
                 mBus.post(Constants.NUMBER_TWO, mContentUri);
+                break;
+            default:
                 break;
         }
         super.onActivityResult(requestCode, resultCode, intent);

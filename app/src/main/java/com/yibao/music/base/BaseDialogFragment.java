@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import java.util.Objects;
+
 /**
  * Des：${TODO}
  * Time:2017/5/31 18:50
@@ -19,8 +21,6 @@ import android.view.Window;
 public abstract class BaseDialogFragment
         extends DialogFragment {
 
-    public static int MAX_DOWN_PREGRESS = 100;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -28,7 +28,7 @@ public abstract class BaseDialogFragment
                              @Nullable Bundle savedInstanceState) {
 
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getDialog().getWindow()
+        Objects.requireNonNull(getDialog().getWindow())
                 .setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         return getViews();
@@ -37,7 +37,7 @@ public abstract class BaseDialogFragment
     /**
      * 经过数据绑定的View
      *
-     * @return
+     * @return c
      */
     public abstract View getViews();
 

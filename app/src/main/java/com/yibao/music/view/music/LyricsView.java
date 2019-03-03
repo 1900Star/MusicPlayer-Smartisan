@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 
 import com.yibao.music.R;
 import com.yibao.music.model.MusicLyricBean;
+import com.yibao.music.util.ColorUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +54,8 @@ public class LyricsView
         mPaint = new Paint();
         mBounds = new Rect();
         mSingleBounds = new Rect();
-        mLyricsSelected = getResources().getColor(R.color.lyricsSelected);
-        mLyricsNormal = getResources().getColor(R.color.lyricsNormal);
+        mLyricsSelected = ColorUtil.lyricsSelecte;
+        mLyricsNormal = ColorUtil.lyricsNormal;
         mBigText = getResources().getDimension(R.dimen.bigLyrics);
         smallText = getResources().getDimension(R.dimen.smallLyrics);
         lineHeight = getResources().getDimensionPixelSize(R.dimen.line_height);

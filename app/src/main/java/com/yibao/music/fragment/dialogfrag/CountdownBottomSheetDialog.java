@@ -15,6 +15,7 @@ import com.yibao.music.R;
 import com.yibao.music.base.listener.BottomSheetCallback;
 import com.yibao.music.model.CountdownBean;
 import com.yibao.music.service.CountdownService;
+import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.ServiceUtil;
@@ -116,7 +117,7 @@ public class CountdownBottomSheetDialog {
     }
 
     private void setCompleteStata(boolean b) {
-        mTvComplete.setTextColor(mContext.getResources().getColor(b ? R.color.lyricsNormal : R.color.noClickText));
+        mTvComplete.setTextColor(b ? ColorUtil.lyricsNormal : ColorUtil.noClickText);
         mTvComplete.setEnabled(b);
     }
 

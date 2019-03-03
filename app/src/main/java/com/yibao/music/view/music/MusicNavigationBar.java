@@ -21,11 +21,11 @@ import java.util.HashMap;
 
 
 /**
- * @ Author: Luoshipeng
  * @ Name:   NavigationBar
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/8/11/ 0:18
  * @ Des:     底部的导航Tab
+ * @author Luoshipeng
  */
 public class MusicNavigationBar extends LinearLayout implements View.OnClickListener {
     ImageView mMusicBarPlaylistIv;

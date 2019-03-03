@@ -4,11 +4,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 
 /**
- * @ Author: Luoshipeng
  * @ Name:   TextChangedListener
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/9/16/ 21:16
  * @ Des:    TODO
+ * @author Luoshipeng
  */
 public class TextChangedListener implements TextWatcher {
     @Override

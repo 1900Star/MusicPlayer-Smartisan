@@ -23,7 +23,6 @@ import com.yibao.music.view.music.QqControlBar;
 import com.yibao.music.view.music.SmartisanControlBar;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.Unbinder;
@@ -97,7 +96,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     }
 
-    protected abstract void refreshBtnAndNotify(PlayStatusBean playStatusBean);
+    protected void refreshBtnAndNotify(PlayStatusBean playStatusBean) {
+    }
 
     protected void upDataPlayProgress() {
         if (mDisposableProgresse == null) {
@@ -110,7 +110,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     }
 
-    protected abstract void updataCurrentPlayProgress();
+    protected void updataCurrentPlayProgress() {
+    }
 
     /**
      * @param musicItem 当前播放的歌曲信息，用于更新进度和动画状态,需要用的界面复写这个方法
@@ -191,6 +192,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         mBind.unbind();
         if (mRxViewDisposable != null) {
             mRxViewDisposable.dispose();
+            mRxViewDisposable = null;
         }
     }
 }

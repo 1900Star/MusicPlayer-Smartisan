@@ -7,7 +7,6 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/time_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/time_picker_widget_header">
@@ -57,7 +56,6 @@
         android:layout_gravity="center|bottom" />
 
     <View
-        android:id="@+id/time_bottom"
         android:layout_width="match_parent"
         android:layout_height="8dp"
         android:background="@drawable/time_picker_widget_bottom" />

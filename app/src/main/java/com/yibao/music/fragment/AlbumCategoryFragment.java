@@ -30,7 +30,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * @ Author: Luoshipeng
+ * @author Luoshipeng
+ * @ author: Luoshipeng
  * @ Name:   AlbumCategoryFragment
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/9/11/ 23:47
@@ -141,7 +142,9 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
     }
 
 
-    // 取消所有已选
+    /**
+     * 取消所有已选
+     */
     private void cancelAllSelected() {
         List<AlbumInfo> albumInfoList = mAlbumDao.queryBuilder().where(AlbumInfoDao.Properties.MSelected.eq(true)).build().list();
         Collections.sort(albumInfoList);

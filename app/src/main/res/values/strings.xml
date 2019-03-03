@@ -19,11 +19,9 @@
     <string name="short_line">-</string>
     <string name="clear_all_favorite">清空</string>
     <string name="play_all">播放全部</string>
-    <string name="save_pic">保存</string>
 
     <string name="childe_view_not">SwipeItemLayout的子视图不符合规定</string>
 
-    <string name="action_search">搜索</string>
     <string name="music_add_time">添加时间</string>
     <string name="music_play_frequency">播放次数</string>
     <string name="music_score">评分</string>
@@ -40,9 +38,7 @@
     <string name="add_to_play_queue">加到播放队列</string>
     <string name="rename_tile">重命名播放列表</string>
     <string name="load_music">正常拼命加载音乐,请稍候 -_-</string>
-    <string name="not_name_hint">新建播放列表</string>
     <string name="cancel">取消</string>
-    <string name="close">关闭</string>
     <string name="continues">继续</string>
     <string name="save_and_add">保存并添加</string>
     <string name="complete">完成</string>
@@ -61,7 +57,6 @@
     <string name="tv_edit">编辑</string>
     <string name="tv_delete">删除</string>
     <string name="lyrics">歌词</string>
-    <string name="new_music_list">新增歌曲列表</string>
     <string name="select_operation">选择操作</string>
     <string name="delelet_play_list">删除列表</string>
     <string name="set_play_time">设定定时播放时间</string>

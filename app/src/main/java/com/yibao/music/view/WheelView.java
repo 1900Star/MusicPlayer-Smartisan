@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @ Author: Luoshipeng
  * @ Name:   WhereView
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2019/1/1/ 18:18
  * @ Des:    TODO
+ * @author Luoshipeng
  */
 public class WheelView extends ScrollView {
     public static class OnWheelViewListener {

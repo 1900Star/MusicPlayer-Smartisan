@@ -7,7 +7,6 @@ import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
 import com.yibao.music.model.DetailsFlagBean;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.SpUtil;
 
@@ -37,6 +36,10 @@ public abstract class BaseMusicFragment extends BaseFragment {
     }
 
 
+    /**
+     * 详情页面是否打开
+     * @return b
+     */
     protected abstract boolean getIsOpenDetail();
 
     protected void switchControlBar() {
@@ -48,8 +51,9 @@ public abstract class BaseMusicFragment extends BaseFragment {
     protected void deleteItem(int musicPosition) {
     }
 
-
-    // 根据detailFlag处理具体详情页面的返回事件
+    /**
+     * 根据detailFlag处理具体详情页面的返回事件
+     */
     private void initDetailsFlag() {
         mCompositeDisposable.add(mBus.toObserverable(DetailsFlagBean.class)
                 .subscribeOn(Schedulers.io())

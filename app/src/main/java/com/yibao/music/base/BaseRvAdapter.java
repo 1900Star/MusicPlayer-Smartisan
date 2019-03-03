@@ -241,18 +241,6 @@ public abstract class BaseRvAdapter<T>
         }
     }
 
-//    /**
-//     * Item的点击事件
-//     */
-//    protected void openDetails(T t) {
-//        if (mListener != null) {
-//            mListener.showDetailsView(t);
-//        }
-//    }
-
-    /**
-     * Item的点击事件  多状态  (正常和编辑选中状态)
-     */
     protected void openDetails(T t, boolean isEditStatus) {
         if (mListener != null) {
             mListener.showDetailsView(t, isEditStatus);
@@ -269,6 +257,11 @@ public abstract class BaseRvAdapter<T>
         // T 子类的数据类型
 //        void showDetailsView(T bean);
 
+        /**
+         * 显示详情页面
+         * @param bean
+         * @param isEditStatus status
+         */
         void showDetailsView(T bean, boolean isEditStatus);
     }
 
@@ -278,6 +271,11 @@ public abstract class BaseRvAdapter<T>
      */
 
     public interface ItemLongClickListener {
+        /**
+         * 删除item
+         * @param musicInfo info
+         * @param currentPosition 位置
+         */
         void deleteItemList(PlayListBean musicInfo, int currentPosition);
     }
 
@@ -297,6 +295,10 @@ public abstract class BaseRvAdapter<T>
      */
 
     public interface ItemEditClickListener {
+        /**
+         * 删除的位置
+         * @param currentPosition  c
+         */
         void deleteItemList(int currentPosition);
     }
 

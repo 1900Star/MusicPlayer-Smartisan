@@ -15,11 +15,11 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * @ Author: Luoshipeng
  * @ Name:   MusicDaoUtil
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/9/14/ 16:38
  * @ Des:    搜索相关操作
+ * @author Luoshipeng
  */
 public class MusicDaoUtil {
     /**

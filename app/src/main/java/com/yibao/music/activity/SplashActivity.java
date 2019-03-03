@@ -12,10 +12,11 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.SplashPagerAdapter;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.model.MusicCountBean;
-import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.service.LoadMusicDataService;
+import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.ServiceUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.SystemUiVisibilityUtil;
 import com.yibao.music.view.ProgressBtn;
@@ -69,16 +70,6 @@ public class SplashActivity
                 .start();
     }
 
-    @Override
-    protected void refreshBtnAndNotify(PlayStatusBean playStatusBean) {
-
-    }
-
-    @Override
-    protected void updataCurrentPlayProgress() {
-
-    }
-
     private void initRxbusData() {
 
         if (mScanner == null) {
@@ -88,7 +79,9 @@ public class SplashActivity
                 countDownOpareton(true);
             } else {
                 // 首次安装，开启服务加载本地音乐，创建本地数据库。
-                startService(new Intent(this, LoadMusicDataService.class));
+                if (!ServiceUtil.isServiceRunning(this, Constants.LOAD_SERVICE_NAME)) {
+                    startService(new Intent(this, LoadMusicDataService.class));
+                }
                 updataLoadProgress();
             }
 
@@ -121,7 +114,7 @@ public class SplashActivity
                         mTvMusicCount.setText(str);
                         mMusicLoadProgressBar.setProgress(currentCount);
                         if (currentCount == size) {
-                            mTvMusicCount.setTextColor(getResources().getColor(R.color.lyricsSelected));
+                            mTvMusicCount.setTextColor(ColorUtil.lyricsSelecte);
                             str = "本地音乐加载完成 -_-  共" + size + "首歌";
                             mTvMusicCount.setText(str);
                             // 初次扫描完成后进入MusicActivity
@@ -154,13 +147,6 @@ public class SplashActivity
             mTvMusicCount.setVisibility(View.GONE);
             mMusicLoadProgressBar.setVisibility(View.GONE);
         }
-//        mCompositeDisposable.add(Observable.timer(20, TimeUnit.SECONDS)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(aLong -> {
-//
-//                }));
-
     }
 
     private void startMusicActivity() {

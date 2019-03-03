@@ -194,8 +194,6 @@ public class PlayActivity extends BasePlayActivity {
                 CountdownBottomSheetDialog.newInstance().getBottomDialog(this);
                 break;
             case Constants.NUMBER_FIEV:
-//                mBus.post(Constants.NUMBER_ONE, moreMenuStatus);
-//                mMusicDao.delete(moreMenuStatus.getMusicBean());
                 SnakbarUtil.keepGoing(mAlbumCover);
                 break;
             default:
@@ -473,7 +471,9 @@ public class PlayActivity extends BasePlayActivity {
         mSbVolume.setProgress(currVolume);
     }
 
-    // 清空收藏列表中所有音乐后的回调，
+    /**
+     *  清空收藏列表中所有音乐后的回调，
+     */
     @Override
     public void updataFavoriteStatus() {
         checkCurrentIsFavorite(getFavoriteState(mCurrenMusicInfo));
@@ -505,7 +505,7 @@ public class PlayActivity extends BasePlayActivity {
      * @param lyricList list
      */
     public void closeLyricsView(List<MusicLyricBean> lyricList) {
-        if (lyricList.size() < 2) {
+        if (lyricList.size() < Constants.NUMBER_TWO) {
             if (mCloseLyrDisposable == null) {
                 mCloseLyrDisposable = Observable.timer(5, TimeUnit.SECONDS)
                         .subscribeOn(Schedulers.io())

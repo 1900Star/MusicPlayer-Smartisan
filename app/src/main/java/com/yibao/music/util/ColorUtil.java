@@ -3,9 +3,9 @@ package com.yibao.music.util;
 import android.graphics.Color;
 
 /**
- * @ Author: Luoshipeng
  * Des：${TODO}
  * Time:2017/4/6 01:01
+ * @author Luoshipeng
  */
 public class ColorUtil {
     public static int errorColor = Color.argb(255, 255, 64, 129);
@@ -16,6 +16,9 @@ public class ColorUtil {
     public static int wihtle = Color.argb(255, 255, 255, 255);
     public static int rvBg = Color.argb(255, 237, 237, 237);
     public static int normalTimeTv = Color.argb(255, 187, 187, 187);
+    public static int lyricsSelecte = Color.argb(255, 50, 90, 177);
+    public static int lyricsNormal = Color.argb(255, 91, 91, 91);
+    public static int noClickText = Color.argb(255, 191, 191, 191);
 
 
 }

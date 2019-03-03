@@ -49,6 +49,7 @@ public class Constants {
     public static final char LETTER_HASH = '#';
     public static final String SONG_NAME = "song_name";
     public static final String TIME_SERVICE_NAME = "com.yibao.music.service.CountdownService";
+    public static final String LOAD_SERVICE_NAME = "com.yibao.music.service.LoadMusicDataService";
     public static final String NULL_STRING = "";
     public static final String PLAY_LIST_BACK_FLAG = "LSP_98";
     public static final String TIME_FLAG = "time_flag";
@@ -115,4 +116,5 @@ public class Constants {
     // 头像文件
     public static final String IMAGE_FILE_NAME = "temp_head_image.jpg";
     public static final String CROP_IMAGE_FILE_NAME = "header.jpg";
+    public static final String MQMS2 = "[mqms2]";
 }

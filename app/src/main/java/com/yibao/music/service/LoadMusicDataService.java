@@ -33,7 +33,6 @@ import java.util.Set;
 public class LoadMusicDataService extends IntentService {
 
     private MusicBeanDao mMusicDao;
-    // 当前已加载的音乐数量
     private int currentCount = 0;
     private RxBus mBus;
 
@@ -105,7 +104,7 @@ public class LoadMusicDataService extends IntentService {
      */
     private void recoverFavoriteMusic(List<MusicBean> musicBeanList) {
         if (FileUtil.getFavoriteFile()) {
-            HashMap<String, String> songInfoMap = new HashMap<>();
+            HashMap<String, String> songInfoMap = new HashMap<>(16);
             Set<String> stringSet = ReadFavoriteFileUtil.stringToSet();
             for (String s : stringSet) {
                 String songName = s.substring(0, s.lastIndexOf("T"));

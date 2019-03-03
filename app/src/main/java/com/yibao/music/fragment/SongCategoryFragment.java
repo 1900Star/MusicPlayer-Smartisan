@@ -180,7 +180,9 @@ public class SongCategoryFragment extends BaseMusicFragment {
         }
     }
 
-    // 取消所有已选
+    /**
+     * 取消所有已选
+     */
     private void cancelAllSelected() {
         List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsSelected.eq(true)).build().list();
         Collections.sort(musicBeanList);

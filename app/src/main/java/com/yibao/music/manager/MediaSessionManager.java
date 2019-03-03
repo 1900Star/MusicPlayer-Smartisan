@@ -17,11 +17,11 @@ import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.TitleArtistUtil;
 
 /**
- * @ Author: Luoshipeng
  * @ Name:   MediaSessionManager
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/11/18/ 17:57
  * @ Des:    TODO
+ * @author Luoshipeng
  */
 public class MediaSessionManager {
 
@@ -123,5 +123,6 @@ public class MediaSessionManager {
         mMediaSession.setCallback(null);
         mMediaSession.setActive(false);
         mMediaSession.release();
+        mAudioBinder = null;
     }
 }

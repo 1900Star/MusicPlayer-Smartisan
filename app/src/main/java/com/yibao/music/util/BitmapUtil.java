@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
  * 作者：Stran on 2017/3/23 15:26
  * 描述：${ bitmap处理工具类}
  * 邮箱：strangermy@outlook.com
+ * @author Luoshipeng
  */
 public class BitmapUtil {
 

@@ -20,9 +20,9 @@ import com.yibao.music.R;
 
 
 /**
- * @ Author: Luoshipeng
  * Des：${圆角图片}
  * Time:2017/4/6 17:57
+ * @author Luoshipeng
  */
 public class CircleImageView
         extends ImageView

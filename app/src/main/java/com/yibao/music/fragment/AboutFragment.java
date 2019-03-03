@@ -102,11 +102,7 @@ public class AboutFragment extends BaseMusicFragment {
     private void initListener() {
         mCompositeDisposable.add(RxView.clicks(mAboutHeaderIv)
                 .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> {
-//                    PreviewBigPicDialogFragment.newInstance(Constants.NULL_STRING)
-//                            .show(mFragmentManager, "album");
-                    TakePhotoBottomSheetDialog.newInstance().getBottomDialog(mActivity);
-                }));
+                .subscribe(o -> TakePhotoBottomSheetDialog.newInstance().getBottomDialog(mActivity)));
         mCompositeDisposable.add(mBus.toObservableType(Constants.NUMBER_TWO, Object.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -164,7 +160,7 @@ public class AboutFragment extends BaseMusicFragment {
 
     private void recoverFavoriteList() {
         if (FileUtil.getFavoriteFile()) {
-            HashMap<String, String> songInfoMap = new HashMap<>();
+            HashMap<String, String> songInfoMap = new HashMap<>(16);
             Set<String> stringSet = ReadFavoriteFileUtil.stringToSet();
             for (String s : stringSet) {
                 String songName = s.substring(0, s.lastIndexOf("T"));
@@ -183,10 +179,11 @@ public class AboutFragment extends BaseMusicFragment {
             }).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(currentPostion -> {
-                        if (currentPostion == mSongList.size() - 1)
+                        if (currentPostion == mSongList.size() - 1) {
                             if (mActivity instanceof OnUpdataTitleListener) {
                                 ((OnUpdataTitleListener) mActivity).checkCurrentFavorite();
                             }
+                        }
                     }));
 
         } else {

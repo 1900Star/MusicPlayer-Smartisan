@@ -21,7 +21,6 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.CrashAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.SnakbarUtil;
 
 import java.io.File;
 import java.util.List;
@@ -80,17 +79,17 @@ public class CrashSheetDialog {
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         Uri contentUri;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            contentUri = FileProvider.getUriForFile(mContext, mPackageName , crashFile);
+            contentUri = FileProvider.getUriForFile(mContext, mPackageName, crashFile);
         } else {
             contentUri = Uri.fromFile(crashFile);
         }
         // 默认用WPS打开日志
         if (isAvilible()) {
             Bundle bundle = new Bundle();
-            bundle.putString(WpsModel.OPEN_MODE, WpsModel.READ_MODE); // 打开模式
-            bundle.putBoolean(WpsModel.SEND_CLOSE_BROAD, false); // 关闭时是否发送广播
-            bundle.putString(WpsModel.THIRD_PACKAGE, mPackageName); // 第三方应用的包名，用于对改应用合法性的验证
-            bundle.putBoolean(WpsModel.CLEAR_TRACE, true);// 清除打开记录
+            bundle.putString(WpsModel.OPEN_MODE, WpsModel.READ_MODE);
+            bundle.putBoolean(WpsModel.SEND_CLOSE_BROAD, false);
+            bundle.putString(WpsModel.THIRD_PACKAGE, mPackageName);
+            bundle.putBoolean(WpsModel.CLEAR_TRACE, true);
             // bundle.putBoolean(CLEAR_FILE, true); //关闭后删除打开文件
             intent.setClassName(WpsModel.NORMAL_PACKAGE, WpsModel.NORMAL);
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
@@ -109,8 +108,9 @@ public class CrashSheetDialog {
         // 获取所有已安装程序的包信息
         List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
         for (int i = 0; i < pinfo.size(); i++) {
-            if (pinfo.get(i).packageName.equalsIgnoreCase(wpsPackageName))
+            if (pinfo.get(i).packageName.equalsIgnoreCase(wpsPackageName)) {
                 return true;
+            }
         }
         return false;
     }
@@ -125,13 +125,13 @@ public class CrashSheetDialog {
     }
 
     private class WpsModel {
-        static final String OPEN_MODE = "OpenMode";// 打开文件的模式。
-        static final String SEND_CLOSE_BROAD = "SendCloseBroad";// 文件关闭时是否发送广播
-        static final String THIRD_PACKAGE = "ThirdPackage";// 第三方的包名，关闭的广播会包含该项。
-        static final String CLEAR_TRACE = "ClearTrace";// 关闭文件时是否删除使用记录。
-        static final String READ_MODE = "ReadMode";// 打开直接进入阅读器模式
-        static final String NORMAL = "cn.wps.moffice.documentmanager.PreStartActivity2";// 普通版
-        static final String NORMAL_PACKAGE = "cn.wps.moffice_eng";// 普通版
+        static final String OPEN_MODE = "OpenMode";
+        static final String SEND_CLOSE_BROAD = "SendCloseBroad";
+        static final String THIRD_PACKAGE = "ThirdPackage";
+        static final String CLEAR_TRACE = "ClearTrace";
+        static final String READ_MODE = "ReadMode";
+        static final String NORMAL = "cn.wps.moffice.documentmanager.PreStartActivity2";
+        static final String NORMAL_PACKAGE = "cn.wps.moffice_eng";
 
     }
 }

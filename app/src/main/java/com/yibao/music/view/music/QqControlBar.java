@@ -20,11 +20,11 @@ import com.yibao.music.view.MusicProgressView;
 import java.util.List;
 
 /**
- * @ Author: Luoshipeng
  * @ Name:   QqControlBar
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/8/11/ 21:50
  * @ Des:    TODO
+ * @author Luoshipeng
  */
 public class QqControlBar extends LinearLayout implements View.OnClickListener {
     LinearLayout mQqMusicBar;
@@ -145,7 +145,6 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
         void click(int clickFlag);
     }
 
-    //**************歌曲切换监听********************
     private OnPagerSelecteListener mSelecteListener;
 
     public void setOnPagerSelecteListener(OnPagerSelecteListener selecteListener) {
@@ -153,6 +152,10 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
     }
 
     public interface OnPagerSelecteListener {
+        /**
+         * p
+         * @param currentPosition d
+         */
         void selectePosition(int currentPosition);
     }
 }

@@ -225,10 +225,6 @@ public class FavoriteBottomSheetDialog
         intent.putExtra("position", position);
         AudioServiceConnection connection = new AudioServiceConnection();
         mContext.bindService(intent, connection, Service.BIND_AUTO_CREATE);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            mContext.startForegroundService(intent);
-//        } else {
-//        }
         mContext.startService(intent);
         SpUtil.setSortFlag(mContext, Constants.NUMBER_EIGHT);
     }

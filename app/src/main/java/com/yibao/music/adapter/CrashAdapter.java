@@ -13,11 +13,11 @@ import com.yibao.music.R;
 import java.io.File;
 
 /**
- * @ Author: Luoshipeng
  * @ Name:   CrashAdapter
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2019/1/21/ 0:04
  * @ Des:    崩溃日志列表
+ * @author Luoshipeng
  */
 public class CrashAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements SectionIndexer {
     private File[] mArray;
@@ -86,6 +86,10 @@ public class CrashAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     public interface OnCrashItemClickListener {
+        /**
+         * 日志文件
+         * @param crashFile
+         */
         void click(File crashFile);
     }
 }

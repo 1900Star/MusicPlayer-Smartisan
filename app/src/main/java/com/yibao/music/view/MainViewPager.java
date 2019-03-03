@@ -15,6 +15,7 @@ import android.view.View;
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/4/30/ 19:46
  * @ Des:    //TODO
+ * @author Luoshipeng
  */
 public class MainViewPager extends ViewPager {
     public MainViewPager(@NonNull Context context) {

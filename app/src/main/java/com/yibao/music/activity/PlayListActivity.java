@@ -15,6 +15,9 @@ import com.yibao.music.util.SpUtil;
 
 import java.util.ArrayList;
 
+/**
+ * @author Luoshipeng
+ */
 public class PlayListActivity extends AppCompatActivity implements OnFinishActivityListener {
 
     @Override

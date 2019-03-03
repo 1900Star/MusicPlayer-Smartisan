@@ -4,11 +4,11 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
 /**
- * @ Author: Luoshipeng
  * @ Name:   BaseObserver
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/9/14/ 17:36
  * @ Des:    TODO
+ * @author Luoshipeng
  */
 public class BaseObserver<T> implements Observer<T> {
 

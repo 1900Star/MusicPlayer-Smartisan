@@ -12,11 +12,11 @@ import com.yibao.music.util.RxBus;
 import com.yibao.music.util.StringUtil;
 
 /**
- * @ Author: Luoshipeng
  * @ Name:   CountdownService
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2019/1/2/ 22:49
  * @ Des:    倒计时服务
+ * @author Luoshipeng
  */
 public class CountdownService extends Service {
 

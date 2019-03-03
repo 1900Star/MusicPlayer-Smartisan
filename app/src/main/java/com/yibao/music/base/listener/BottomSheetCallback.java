@@ -5,11 +5,11 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.view.View;
 
 /**
- * @ Author: Luoshipeng
  * @ Name:   BottomSheetCallback
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2019/2/1/ 3:27
  * @ Des:    TODO
+ * @author Luoshipeng
  */
 public class BottomSheetCallback extends BottomSheetBehavior.BottomSheetCallback {
     @Override

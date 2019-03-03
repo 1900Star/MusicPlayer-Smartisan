@@ -32,11 +32,6 @@ import com.yibao.music.util.TitleArtistUtil;
 
 public class MusicNotifyManager implements
         NotifycationChangeListener {
-
-
-
-
-
     private static final int PLAY_NOTIFY_ID = 0x1213;
     private final Context activity;
     private final NotificationManager manager;
@@ -83,12 +78,12 @@ public class MusicNotifyManager implements
                         R.drawable.favorite_normal);
         // Pre
         Intent pre = new Intent(Constants.ACTION_MUSIC);
-        pre.putExtra(Constants.BUTTON_ID,Constants. PREV);
-        PendingIntent p3 = PendingIntent.getBroadcast(activity,Constants. PREV, pre, PendingIntent.FLAG_UPDATE_CURRENT);
+        pre.putExtra(Constants.BUTTON_ID, Constants.PREV);
+        PendingIntent p3 = PendingIntent.getBroadcast(activity, Constants.PREV, pre, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.play_notify_pre, p3);
         // favorite
         Intent favorite = new Intent(Constants.ACTION_MUSIC);
-        favorite.putExtra(Constants.BUTTON_ID,Constants. FAVORITE);
+        favorite.putExtra(Constants.BUTTON_ID, Constants.FAVORITE);
         PendingIntent p4 = PendingIntent.getBroadcast(activity, Constants.FAVORITE, favorite, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.play_notify_favorite, p4);
 
@@ -102,13 +97,16 @@ public class MusicNotifyManager implements
         return view;
     }
 
-    // 图片，歌名，艺术家，播放按钮
+    /**
+     *  图片，歌名，艺术家，播放按钮
+     * @param view v
+     */
     private void setCommonView(RemoteViews view) {
         String musicName;
         String musicArtist;
         String musicTitle = mMusicBean.getTitle();
 
-        if (musicTitle.contains("[mqms2]")) {
+        if (musicTitle.contains(Constants.MQMS2)) {
             TitleAndArtistBean bean = TitleArtistUtil.getBean(musicTitle);
             musicName = bean.getSongName();
             musicArtist = bean.getSongArtist();
@@ -129,7 +127,10 @@ public class MusicNotifyManager implements
 
     }
 
-    // 播放或暂停，下一曲，关闭
+    /**
+     * 播放或暂停，下一曲，关闭
+     * @param view v
+     */
     private void setCommonClickPending(RemoteViews view) {
         // Play
         Intent playOrPause = new Intent(Constants.ACTION_MUSIC);
@@ -139,7 +140,7 @@ public class MusicNotifyManager implements
         // Next
         Intent next = new Intent(Constants.ACTION_MUSIC);
         next.putExtra(Constants.BUTTON_ID, Constants.NEXT);
-        PendingIntent p2 = PendingIntent.getBroadcast(activity,Constants. NEXT, next, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent p2 = PendingIntent.getBroadcast(activity, Constants.NEXT, next, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.play_notify_next, p2);
         // Close
         Intent close = new Intent(Constants.ACTION_MUSIC);

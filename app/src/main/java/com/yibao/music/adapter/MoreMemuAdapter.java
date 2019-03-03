@@ -99,6 +99,12 @@ public class MoreMemuAdapter
     }
 
     public interface OnMenuItemClickListener {
+        /**
+         * menu点击
+         * @param musicPosition 音乐位置
+         * @param position 菜单位置
+         * @param musicBean bean
+         */
         void itemClick(int musicPosition, int position, MusicBean musicBean);
     }
 

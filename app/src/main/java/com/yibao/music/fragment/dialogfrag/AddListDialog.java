@@ -56,7 +56,7 @@ public class AddListDialog
     private CompositeDisposable mCompositeDisposable;
     private static String mEditHint;
     private static boolean isFormPlayListActivity;
-
+    private static final int MAX_LENGTH = 21;
     /**
      * @param operationType 1 新建列表  2 列表改名
      * @param editHint      e
@@ -160,7 +160,7 @@ public class AddListDialog
         );
         mCompositeDisposable.add(RxTextView.textChangeEvents(mEditAddList)
                 .map(textViewTextChangeEvent -> {
-                    if (textViewTextChangeEvent.text().length() == 21) {
+                    if (textViewTextChangeEvent.text().length() == MAX_LENGTH) {
                         SnakbarUtil.favoriteFailView(mView, "列表名的长度不能超过21个字符");
                     }
                     return TextUtils.isEmpty((textViewTextChangeEvent.text()));

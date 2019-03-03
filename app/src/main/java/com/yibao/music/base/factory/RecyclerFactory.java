@@ -48,16 +48,6 @@ public class RecyclerFactory {
             recyclerView.addItemDecoration(divider);
 
         } else {
-
-//            StaggeredGridLayoutManager.LayoutParams params = new StaggeredGridLayoutManager.LayoutParams(
-//                    RecyclerView.LayoutParams.MATCH_PARENT,
-//                    RecyclerView.LayoutParams.MATCH_PARENT);
-//            StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(type,
-//                    StaggeredGridLayoutManager.VERTICAL);
-//            manager.setOrientation(StaggeredGridLayoutManager.VERTICAL);
-//            recyclerView.setLayoutManager(manager);
-//            recyclerView.setLayoutParams(params);
-
             GridLayoutManager manager = new GridLayoutManager(recyclerView.getContext(), type);
             manager.setOrientation(GridLayoutManager.VERTICAL);
             recyclerView.setLayoutManager(manager);

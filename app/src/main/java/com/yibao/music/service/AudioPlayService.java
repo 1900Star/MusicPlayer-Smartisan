@@ -28,6 +28,7 @@ import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
+import com.yibao.music.util.ThreadPoolProxyFactory;
 
 import java.util.List;
 import java.util.Random;
@@ -165,7 +166,6 @@ public class AudioPlayService
                 mediaPlayer.setOnPreparedListener(this);
                 mediaPlayer.setOnCompletionListener(this);
                 SpUtil.setMusicPosition(AudioPlayService.this, position);
-//            SpUtil.setFoucesFlag(AudioPlayService.this, true);
                 showNotifycation(true);
                 mSessionManager.updatePlaybackState(true);
                 mSessionManager.updateLocMsg();
@@ -187,11 +187,12 @@ public class AudioPlayService
                 MusicBean musicBean = mMusicDataList.get(position);
                 boolean favorite = mMusicDao.load(musicBean.getId()).getIsFavorite();
                 mNotifyManager.updataFavoriteBtn(favorite);
-                new Thread(() -> {
+                ThreadPoolProxyFactory.newInstance().execute(() -> {
                     refreshFavorite(musicBean, favorite);
                     // 更新本地收藏文件
                     updataFavoritefile(musicBean, favorite);
-                }).start();
+                });
+
             }
         }
 
@@ -445,7 +446,9 @@ public class AudioPlayService
         }
     };
 
-    // 音频焦点
+    /**
+     * 音频焦点
+     */
     private void initAudioFocus() {
         // 申请焦点
         if (mAudioManager != null) {
@@ -460,7 +463,6 @@ public class AudioPlayService
                 // 长时间丢失焦点,会触发此回调事件，(QQ音乐，网易云音乐)，需要暂停音乐播放，避免和其他音乐同时输出声音
                 lossAudioFoucs(true);
                 // 若焦点释放掉之后，将不会再自动获得
-//                    mAudioManager.abandonAudioFocus(mAudioFocusChange);
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                 // 短暂性丢失焦点，例如播放微博短视频，拨打电话等，暂停音乐播放。
@@ -473,6 +475,8 @@ public class AudioPlayService
             case AudioManager.AUDIOFOCUS_GAIN:
                 // 当其他应用申请焦点之后又释放焦点会触发此回调,可重新播放音乐
                 lossAudioFoucs(false);
+                break;
+            default:
                 break;
         }
     };
@@ -488,8 +492,6 @@ public class AudioPlayService
             SpUtil.setFoucesFlag(this, true);
         } else {
             mAudioBinder.start();
-//            if (SpUtil.getFoucsFlag(this, false)) {
-//            }
         }
         mBus.post(new PlayStatusBean(0));
     }

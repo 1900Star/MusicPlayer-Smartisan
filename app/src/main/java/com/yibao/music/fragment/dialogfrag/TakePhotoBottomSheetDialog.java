@@ -84,7 +84,6 @@ public class TakePhotoBottomSheetDialog {
         });
     }
 
-    // 启动手机相机拍摄照片作为头像
     private void takeCameraPic() {
 
         String savePath = Environment.getExternalStorageDirectory().toString();

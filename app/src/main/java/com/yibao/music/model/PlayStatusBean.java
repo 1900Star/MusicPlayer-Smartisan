@@ -14,7 +14,7 @@ public class PlayStatusBean {
      * 2 在通知栏关闭通知栏
      */
 
-    public int type;
+    private int type;
 
     public PlayStatusBean(int type) {
         this.type = type;

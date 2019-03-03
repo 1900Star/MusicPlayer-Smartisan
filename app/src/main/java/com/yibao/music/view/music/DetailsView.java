@@ -155,7 +155,11 @@ public class DetailsView
     }
 
 
-    // 根据dataType将bean转换具体的数据类型
+    /**
+     *  根据dataType将bean转换具体的数据类型
+     * @param dataType d
+     * @param bean b
+     */
     private void initData(int dataType, Object bean) {
         if (dataType == Constants.NUMBER_ONE) {
             ArtistInfo info = (ArtistInfo) bean;

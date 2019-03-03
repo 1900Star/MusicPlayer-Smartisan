@@ -20,11 +20,11 @@ import com.yibao.music.util.SpUtil;
 import butterknife.OnClick;
 
 /**
- * @ Author: Luoshipeng
  * @ Name:   QqControlBar
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/8/11/ 21:50
  * @ Des:    TODO
+ * @author Luoshipeng
  */
 public class MusicToolBar extends LinearLayout implements View.OnClickListener {
 
