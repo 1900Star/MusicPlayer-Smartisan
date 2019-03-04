@@ -626,7 +626,7 @@ public class MusicActivity
             unbindService(mConnection);
             mConnection = null;
         }
-        stopService(new Intent(this, AudioPlayService.class));
+//        stopService(new Intent(this, AudioPlayService.class));
     }
 
     private void handleAftermath() {

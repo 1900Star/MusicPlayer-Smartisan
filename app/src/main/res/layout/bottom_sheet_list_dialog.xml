@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/bottom_favorite_root"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -46,22 +47,4 @@
             android:textSize="@dimen/bigLyrics"
             android:textStyle="bold" />
     </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/bottom_list_content"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:visibility="visible">
-
-    </LinearLayout>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/bottom_vp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/colorWhite"
-        android:visibility="gone" />
 </LinearLayout>

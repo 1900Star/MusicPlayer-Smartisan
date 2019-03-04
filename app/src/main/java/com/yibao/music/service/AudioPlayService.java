@@ -11,7 +11,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
-import android.widget.Toast;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.manager.MediaSessionManager;
@@ -29,6 +28,7 @@ import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.ThreadPoolProxyFactory;
+import com.yibao.music.util.ToastUtil;
 
 import java.util.List;
 import java.util.Random;
@@ -357,7 +357,7 @@ public class AudioPlayService
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(aBoolean -> {
                         if (!aBoolean) {
-                            Toast.makeText(this, "该歌曲还没有添加到收藏文件", Toast.LENGTH_SHORT).show();
+                            ToastUtil.show(this, "该歌曲还没有添加到收藏文件");
                         }
                     });
         } else {

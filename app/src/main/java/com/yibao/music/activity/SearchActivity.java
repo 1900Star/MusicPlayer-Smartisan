@@ -28,7 +28,6 @@ import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.service.AudioPlayService;
-import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.MusicDaoUtil;
 import com.yibao.music.util.SnakbarUtil;
@@ -81,7 +80,6 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     private int lyricsFlag;
     private InputMethodManager mInputMethodManager;
     private Disposable mDisposableSoftKeyboard;
-    private AudioServiceConnection mServiceConnection;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -381,8 +379,6 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         intent.putExtra("dataFlag", dataFlag);
         intent.putExtra("queryFlag", queryFlag);
         intent.putExtra("position", position);
-        mServiceConnection = new AudioServiceConnection();
-        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
         startService(intent);
     }
 
@@ -409,9 +405,8 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             mDisposableSoftKeyboard.dispose();
             mDisposableSoftKeyboard = null;
         }
-        if (mServiceConnection != null) {
-            unbindService(mServiceConnection);
-            mServiceConnection = null;
+        if (audioBinder != null) {
+            audioBinder = null;
         }
     }
 

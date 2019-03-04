@@ -1,13 +1,10 @@
 package com.yibao.music.fragment.dialogfrag;
 
 import android.app.Activity;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,9 +25,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.service.AudioPlayService;
-import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SnakbarUtil;
@@ -52,7 +47,7 @@ import io.reactivex.schedulers.Schedulers;
  * @author Stran
  */
 public class FavoriteBottomSheetDialog
-        implements View.OnClickListener, ViewPager.OnPageChangeListener {
+        implements View.OnClickListener {
     private LinearLayout mBottomListContent;
     private TextView mBottomListColection;
     private TextView mBottomListClear;
@@ -64,7 +59,6 @@ public class FavoriteBottomSheetDialog
     private CompositeDisposable mCompositeDisposable;
     private RxBus
             mBus = RxBus.getInstance();
-    private ViewPager mBottomViewPager;
     private BottomSheetAdapter mAdapter;
     private static String mSongTitle;
     private MusicBeanDao mMusicDao;
@@ -154,7 +148,6 @@ public class FavoriteBottomSheetDialog
         mBottomListColection.setOnClickListener(this);
         mBottomListClear.setOnClickListener(this);
         mBottomListTitleSize.setOnClickListener(this);
-        mBottomViewPager.addOnPageChangeListener(this);
     }
 
 
@@ -179,7 +172,6 @@ public class FavoriteBottomSheetDialog
                     PlayListBean bean = new PlayListBean("收藏的所有", (long) Constants.NUMBER_THRRE);
                     DeletePlayListDialog.newInstance(bean, Constants.NUMBER_THRRE).show(((Activity) mContext).getFragmentManager(), "favoriteList");
                 } else {
-                    LogUtil.d("=========    列表为空");
                     SnakbarUtil.noFavoriteMusic(mBottomListClear);
                 }
                 break;
@@ -223,38 +215,18 @@ public class FavoriteBottomSheetDialog
         intent.setClass(mContext, AudioPlayService.class);
         intent.putExtra("sortFlag", Constants.NUMBER_EIGHT);
         intent.putExtra("position", position);
-        AudioServiceConnection connection = new AudioServiceConnection();
-        mContext.bindService(intent, connection, Service.BIND_AUTO_CREATE);
         mContext.startService(intent);
         SpUtil.setSortFlag(mContext, Constants.NUMBER_EIGHT);
     }
 
 
     private void initView(View view) {
-        mBottomListContent = view.findViewById(R.id.bottom_list_content);
+        mBottomListContent = view.findViewById(R.id.bottom_favorite_root);
         mBottomListColection = view.findViewById(R.id.bottom_sheet_bar_play);
         mBottomListClear = view.findViewById(R.id.bottom_sheet_bar_clear);
         mBottomListTitleSize = view.findViewById(R.id.bottom_list_title_size);
-        mBottomViewPager = view.findViewById(R.id.bottom_vp);
     }
 
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-
-        LogUtil.d("==========退回客户   " + position);
-
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
 }
 
 
