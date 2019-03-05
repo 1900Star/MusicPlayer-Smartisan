@@ -4,8 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -91,6 +93,14 @@ public class FileUtil {
         return new File(file, Constants.CROP_IMAGE_FILE_NAME);
     }
 
+    public static Uri getPicUri(Context context, String savePath) {
+        File file = new File(savePath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        File pictureFile = new File(savePath, Constants.IMAGE_FILE_NAME);
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? FileProvider.getUriForFile(context, context.getPackageName(), pictureFile) : Uri.fromFile(pictureFile);
+    }
 
     public static void deleteFile(File dir) {
         if (dir.exists()) {
