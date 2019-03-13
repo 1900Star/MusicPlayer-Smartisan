@@ -6,10 +6,17 @@ package com.yibao.music.model;
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/11/14/ 22:11
  * @ Des:    TODO
+ * @author Luoshipeng
  */
 public class Message {
     private int code;
+    private String msgKey;
     private Object object;
+
+    public Message(String msgKey, Object object) {
+        this.msgKey = msgKey;
+        this.object = object;
+    }
 
     public Message(int code, Object o) {
         this.code = code;
@@ -30,5 +37,13 @@ public class Message {
 
     public void setObject(Object object) {
         this.object = object;
+    }
+
+    public String getMsgKey() {
+        return msgKey;
+    }
+
+    public void setMsgKey(String msgKey) {
+        this.msgKey = msgKey;
     }
 }

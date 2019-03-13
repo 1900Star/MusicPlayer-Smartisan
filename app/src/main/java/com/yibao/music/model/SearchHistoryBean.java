@@ -15,6 +15,7 @@ import java.util.Comparator;
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/9/14/ 19:19
  * @ Des:    TODO
+ * @author Luoshipeng
  */
 @Entity
 public class SearchHistoryBean implements Comparable<SearchHistoryBean> {

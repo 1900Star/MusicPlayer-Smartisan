@@ -13,7 +13,6 @@ import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.activity.SearchActivity;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
@@ -58,7 +57,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StatService.start(this);
+        StatService.start(getApplicationContext());
         mBus = RxBus.getInstance();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mSearchDao = MusicApplication.getIntstance().getSearchDao();
@@ -80,10 +79,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updataCurrentPlayInfo));
-        mCompositeDisposable.add(mBus.toObserverable(PlayStatusBean.class)
+        mCompositeDisposable.add(mBus.toObservableType(Constants.PLAY_STATUS,Object.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::refreshBtnAndNotify));
+                .subscribe(o -> refreshBtnAndNotify((Integer) o)));
         mCompositeDisposable.add(mBus.toObserverable(MoreMenuStatus.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -96,7 +95,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     }
 
-    protected void refreshBtnAndNotify(PlayStatusBean playStatusBean) {
+    protected void refreshBtnAndNotify(int playStatus) {
     }
 
     protected void upDataPlayProgress() {

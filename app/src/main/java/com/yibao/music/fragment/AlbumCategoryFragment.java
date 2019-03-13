@@ -11,7 +11,6 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.AlbumAdapter;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.model.AlbumInfo;
-import com.yibao.music.model.EditBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.AlbumInfoDao;
 import com.yibao.music.model.greendao.MusicBeanDao;
@@ -68,7 +67,6 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
 
         View view = inflater.inflate(R.layout.category_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
-        initData();
         return view;
     }
 
@@ -90,15 +88,16 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
     @Override
     public void onResume() {
         super.onResume();
+        initData();
         initRxBusData();
     }
 
     private void initRxBusData() {
         disposeToolbar();
         if (mEditDisposable == null) {
-            mEditDisposable = mBus.toObserverable(EditBean.class).subscribeOn(Schedulers.io())
+            mEditDisposable = mBus.toObservableType(Constants.ALBUM_FAG_EDIT, Object.class).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(editBean -> changeEditStatus(editBean.getCurrentIndex()));
+                    .subscribe(o -> AlbumCategoryFragment.this.changeEditStatus((Integer) o));
         }
 
     }
@@ -136,7 +135,7 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
     protected void handleDetailsBack(int detailFlag) {
         if (detailFlag == Constants.NUMBER_TEN) {
             mAlbumAdapter.setItemSelectStatus(false);
-            mBus.post(Constants.NUMBER_NINE, new EditBean());
+            mBus.post(Constants.FRAGMENT_ALBUM, Constants.NUMBER_ZERO);
             isItemSelectStatus = true;
         }
     }

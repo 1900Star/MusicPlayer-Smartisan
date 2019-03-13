@@ -25,7 +25,6 @@ import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
-import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.Constants;
@@ -214,7 +213,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
                 SnakbarUtil.keepGoing(mSmartisanControlBar);
                 break;
             case Constants.NUMBER_FOUR:
-                mBus.post(Constants.NUMBER_ONE, moreMenuStatus);
+                // 刷新搜索列表, 后续完成
                 mMusicDao.delete(moreMenuStatus.getMusicBean());
                 break;
             default:
@@ -223,8 +222,8 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     }
 
     @Override
-    protected void refreshBtnAndNotify(PlayStatusBean playStatusBean) {
-        switch (playStatusBean.getType()) {
+    protected void refreshBtnAndNotify(int playStatus) {
+        switch (playStatus) {
             case 0:
                 mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
                 mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());

@@ -1,10 +1,14 @@
 package com.yibao.music;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.baidu.mobstat.StatService;
 import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
+import com.yibao.music.base.BaseFragment;
 import com.yibao.music.model.greendao.AlbumInfoDao;
 import com.yibao.music.model.greendao.DaoMaster;
 import com.yibao.music.model.greendao.DaoSession;
@@ -30,12 +34,18 @@ public class MusicApplication
 
     private DaoSession mDaoSession;
     private static MusicBeanDao musicBeanDao;
+    private RefWatcher mRefWatcher;
 
     public static MusicApplication getIntstance() {
         if (appContext == null) {
             appContext = new MusicApplication();
         }
         return appContext;
+    }
+
+    public static RefWatcher getRefWatcher(Context context) {
+
+        return ((MusicApplication) context.getApplicationContext()).mRefWatcher;
     }
 
 
@@ -45,7 +55,7 @@ public class MusicApplication
         if (LeakCanary.isInAnalyzerProcess(this)) {
             return;
         }
-        LeakCanary.install(this);
+        mRefWatcher = LeakCanary.install(this);
         appContext = this;
 //        StatService.setDebugOn(true);
         CrashHandler.getInstance()

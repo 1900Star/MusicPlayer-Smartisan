@@ -14,7 +14,6 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.SongCategoryPagerAdapter;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.MusicPagerListener;
-import com.yibao.music.model.EditBean;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.SpUtil;
@@ -81,7 +80,7 @@ public class SongFragment extends BaseMusicFragment {
     private void initRxBusData() {
         disposeToolbar();
         if (mEditDisposable == null) {
-            mEditDisposable = mBus.toObservableType(Constants.NUMBER_TEN, EditBean.class).subscribeOn(Schedulers.io())
+            mEditDisposable = mBus.toObservableType(Constants.FRAGMENT_SONG, Object.class).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(editBean -> {
                         mMusicToolBar.setTvEditText(R.string.tv_edit);
                         mMusicToolBar.setTvDeleteVisibility(View.GONE);
@@ -106,7 +105,8 @@ public class SongFragment extends BaseMusicFragment {
         mMusicToolBar.setClickListener(new MusicToolBar.OnToolbarClickListener() {
             @Override
             public void clickEdit() {
-                mBus.post(new EditBean(Constants.NUMBER_ONE));
+                interceptBackEvent(isSelecteStatus ? Constants.NUMBER_ELEVEN : Constants.NUMBER_ZERO);
+                mBus.post(Constants.SONG_FAG_EDIT, Constants.NUMBER_ONE);
                 mMusicToolBar.setTvEditText(isSelecteStatus ? R.string.tv_edit : R.string.complete);
                 mMusicToolBar.setTvDeleteVisibility(isSelecteStatus ? View.GONE : View.VISIBLE);
                 isSelecteStatus = !isSelecteStatus;
@@ -119,7 +119,7 @@ public class SongFragment extends BaseMusicFragment {
 
             @Override
             public void clickDelete() {
-                mBus.post(new EditBean(Constants.NUMBER_TWO));
+                mBus.post(Constants.SONG_FAG_EDIT, Constants.NUMBER_TWO);
             }
         });
     }

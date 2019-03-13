@@ -6,7 +6,6 @@ import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.yibao.music.model.CountdownBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.StringUtil;
@@ -40,7 +39,7 @@ public class CountdownService extends Service {
         @Override
         public void onTick(long millisUntilFinished) {
             String contdownTime = StringUtil.parseDuration((int) millisUntilFinished);
-            RxBus.getInstance().post(new CountdownBean(contdownTime));
+            RxBus.getInstance().post(Constants.COUNTDOWN_TIME,contdownTime);
         }
 
         @Override

@@ -44,6 +44,20 @@ public class Constants {
     public static final int NUMBER_ELEVEN = 11;
     public static final int NUMBER_TWELVE = 12;
     public static final int NUMBER_THIRTEEN = 13;
+    // RxBus post  flag
+
+    public static final String HANDLE_BACK = "handle_back";
+    public static final String ALBUM_FAG_EDIT = "album_edit";
+    public static final String SONG_FAG_EDIT = "song_edit";
+    public static final String FAVORITE_POSITION = "favorite_position";
+    /**
+     * 0 表示是通知栏控制播放和暂停
+     * 1 表示在通知栏收藏音乐
+     * 2 在通知栏关闭通知栏
+     */
+    public static final String PLAY_STATUS = "play_status";
+    public static final String HEADER_PIC_URI = "header_uri";
+
     static final char LETTER_A = 'A';
     static final char LETTER_Z = 'Z';
     public static final char LETTER_HASH = '#';

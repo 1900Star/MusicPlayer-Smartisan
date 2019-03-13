@@ -11,7 +11,6 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
-import com.yibao.music.model.EditBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
@@ -45,12 +44,8 @@ public class SongCategoryFragment extends BaseMusicFragment {
     private SongAdapter mSongAdapter;
     private int mPosition;
     private boolean isShowSlidebar = false;
-    private List<MusicBean> mAbcList;
-    private List<MusicBean> mAddTimeList;
     private boolean isItemSelectStatus = true;
     private int mSelectCount;
-    private List<MusicBean> mPlayFrequencyList;
-    private List<MusicBean> mScoreList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,17 +54,12 @@ public class SongCategoryFragment extends BaseMusicFragment {
         if (arguments != null) {
             mPosition = arguments.getInt("position");
         }
-        mAbcList = MusicListUtil.sortMusicAbc(mMusicBeanDao.queryBuilder().list());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (mPosition != Constants.NUMBER_ZERO) {
-            mPlayFrequencyList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_THRRE);
-            mAddTimeList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
-            mScoreList = MusicListUtil.sortMusicList(mMusicBeanDao.queryBuilder().list(), Constants.NUMBER_FOUR);
-            // 新增歌曲刷新列表
+        if (mPosition != Constants.NUMBER_ZERO && getUserVisibleHint()) {
             initData();
         }
         initListener();
@@ -84,8 +74,9 @@ public class SongCategoryFragment extends BaseMusicFragment {
     private void initRxBusData() {
         disposeToolbar();
         if (mEditDisposable == null) {
-            mEditDisposable = mBus.toObserverable(EditBean.class).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread()).subscribe(editBean -> changeEditStatus(editBean.getCurrentIndex()));
+            mEditDisposable = mBus.toObservableType(Constants.SONG_FAG_EDIT, Object.class).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(o -> SongCategoryFragment.this.changeEditStatus((Integer) o));
         }
 
     }
@@ -115,7 +106,6 @@ public class SongCategoryFragment extends BaseMusicFragment {
                 bean.setIsSelected(!bean.isSelected());
                 mMusicBeanDao.update(bean);
                 mSongAdapter.notifyDataSetChanged();
-                LogUtil.d("===========选中  " + mSelectCount);
             }
         });
     }
@@ -123,17 +113,21 @@ public class SongCategoryFragment extends BaseMusicFragment {
     private void initData() {
         switch (mPosition) {
             case 0:
+                List<MusicBean> abcList = MusicListUtil.sortMusicAbc(mSongList);
                 isShowSlidebar = true;
-                mSongAdapter = new SongAdapter(mActivity, mAbcList, Constants.NUMBER_ZERO, Constants.NUMBER_ZERO);
+                mSongAdapter = new SongAdapter(mActivity, abcList, Constants.NUMBER_ZERO, Constants.NUMBER_ZERO);
                 break;
             case 1:
-                mSongAdapter = new SongAdapter(mActivity, mScoreList, Constants.NUMBER_ONE, Constants.NUMBER_ONE);
+                List<MusicBean> scoreList = MusicListUtil.sortMusicList(mSongList, Constants.NUMBER_FOUR);
+                mSongAdapter = new SongAdapter(mActivity, scoreList, Constants.NUMBER_ONE, Constants.NUMBER_ONE);
                 break;
             case 2:
-                mSongAdapter = new SongAdapter(mActivity, mPlayFrequencyList, Constants.NUMBER_ONE, Constants.NUMBER_TWO);
+                List<MusicBean> playFrequencyList = MusicListUtil.sortMusicList(mSongList, Constants.NUMBER_THRRE);
+                mSongAdapter = new SongAdapter(mActivity, playFrequencyList, Constants.NUMBER_ONE, Constants.NUMBER_TWO);
                 break;
             case 3:
-                mSongAdapter = new SongAdapter(mActivity, mAddTimeList, Constants.NUMBER_ONE, Constants.NUMBER_ZERO);
+                List<MusicBean> addTimeList = MusicListUtil.sortMusicList(mSongList, Constants.NUMBER_ONE);
+                mSongAdapter = new SongAdapter(mActivity, addTimeList, Constants.NUMBER_ONE, Constants.NUMBER_ZERO);
                 break;
             default:
                 break;
@@ -154,7 +148,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
                 }
                 mSongAdapter.setItemSelectStatus(false);
                 mSongAdapter.setNewData(getSongList());
-                mBus.post(Constants.NUMBER_TEN, new EditBean());
+                mBus.post(Constants.FRAGMENT_SONG, Constants.NUMBER_ZERO);
             } else {
                 SnakbarUtil.favoriteSuccessView(mMusciView, "没有选中条目");
             }
@@ -175,7 +169,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
     protected void handleDetailsBack(int detailFlag) {
         if (detailFlag == Constants.NUMBER_ELEVEN) {
             mSongAdapter.setItemSelectStatus(false);
-            mBus.post(Constants.NUMBER_TEN, new EditBean());
+            mBus.post(Constants.FRAGMENT_SONG, Constants.NUMBER_ZERO);
             isItemSelectStatus = !isItemSelectStatus;
         }
     }
@@ -197,11 +191,6 @@ public class SongCategoryFragment extends BaseMusicFragment {
     private List<MusicBean> getSongList() {
         List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().list();
         return MusicListUtil.sortMusicAbc(musicBeanList);
-    }
-
-    public static SongFragment newInstance() {
-
-        return new SongFragment();
     }
 
     public static SongCategoryFragment newInstance(int position) {

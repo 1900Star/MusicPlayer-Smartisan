@@ -103,7 +103,7 @@ public class AboutFragment extends BaseMusicFragment {
         mCompositeDisposable.add(RxView.clicks(mAboutHeaderIv)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribe(o -> TakePhotoBottomSheetDialog.newInstance().getBottomDialog(mActivity)));
-        mCompositeDisposable.add(mBus.toObservableType(Constants.NUMBER_TWO, Object.class)
+        mCompositeDisposable.add(mBus.toObservableType(Constants.HEADER_PIC_URI, Object.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> setHeaderView((Uri) o)));
@@ -159,6 +159,7 @@ public class AboutFragment extends BaseMusicFragment {
     }
 
     private void recoverFavoriteList() {
+        List<MusicBean> musicList = mMusicBeanDao.queryBuilder().list();
         if (FileUtil.getFavoriteFile()) {
             HashMap<String, String> songInfoMap = new HashMap<>(16);
             Set<String> stringSet = ReadFavoriteFileUtil.stringToSet();
@@ -167,7 +168,7 @@ public class AboutFragment extends BaseMusicFragment {
                 String favoriteTime = s.substring(s.lastIndexOf("T") + 1);
                 songInfoMap.put(songName, favoriteTime);
             }
-            mCompositeDisposable.add(Observable.fromIterable(mSongList).map(musicBean -> {
+            mCompositeDisposable.add(Observable.fromIterable(musicList).map(musicBean -> {
                 //将歌名截取出来进行比较
                 String favoriteTime = songInfoMap.get(musicBean.getTitle());
                 if (favoriteTime != null) {
@@ -179,7 +180,7 @@ public class AboutFragment extends BaseMusicFragment {
             }).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(currentPostion -> {
-                        if (currentPostion == mSongList.size() - 1) {
+                        if (currentPostion == musicList.size() - 1) {
                             if (mActivity instanceof OnUpdataTitleListener) {
                                 ((OnUpdataTitleListener) mActivity).checkCurrentFavorite();
                             }

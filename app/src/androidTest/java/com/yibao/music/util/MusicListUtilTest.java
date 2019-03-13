@@ -97,9 +97,7 @@ public class MusicListUtilTest {
     public void substringSongTitle() {
         String name = "周杰伦 - 一路向北 [mqms2]";
         String title = name.substring(name.lastIndexOf("-") + 2, name.lastIndexOf("[mqms2]") - 1);
-        LogUtil.d(title);
         String artist = name.substring(0, name.indexOf("-") - 1);
-        LogUtil.d(artist);
         assertNotNull(title);
         assertNotNull(artist);
     }

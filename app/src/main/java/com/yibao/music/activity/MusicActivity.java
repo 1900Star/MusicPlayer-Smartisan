@@ -15,12 +15,10 @@ import com.yibao.music.adapter.MusicPagerAdapter;
 import com.yibao.music.base.BaseTansitionActivity;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
-import com.yibao.music.model.DetailsFlagBean;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.PlayListBean;
-import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.service.AudioPlayService;
@@ -148,8 +146,8 @@ public class MusicActivity
     }
 
     @Override
-    protected void refreshBtnAndNotify(PlayStatusBean bean) {
-        switch (bean.getType()) {
+    protected void refreshBtnAndNotify(int playStatus) {
+        switch (playStatus) {
             case Constants.NUMBER_ZERO:
                 mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
                 updatePlayBtnStatus();
@@ -564,7 +562,7 @@ public class MusicActivity
                 SnakbarUtil.keepGoing(mSmartisanControlBar);
                 break;
             case Constants.NUMBER_FOUR:
-                mBus.post(Constants.NUMBER_ONE, moreMenuStatus);
+                // 通知SongCategoryFragment刷新列表, 后续完成
                 mMusicDao.delete(moreMenuStatus.getMusicBean());
                 break;
             default:
@@ -596,10 +594,11 @@ public class MusicActivity
     public void onBackPressed() {
         LogUtil.d("======= mHandleDetailFlag  onBackPressed   " + mHandleDetailFlag);
         if (mHandleDetailFlag > Constants.NUMBER_ZERO) {
-            mBus.post(new DetailsFlagBean(mHandleDetailFlag));
+            mBus.post(Constants.HANDLE_BACK, mHandleDetailFlag);
             mHandleDetailFlag = Constants.NUMBER_ZERO;
         } else {
             super.onBackPressed();
+            LogUtil.d("============ Activty  back");
         }
     }
 
@@ -660,7 +659,7 @@ public class MusicActivity
                 }
                 break;
             case Constants.CODE_RESULT_REQUEST:
-                mBus.post(Constants.NUMBER_TWO, mContentUri);
+                mBus.post(Constants.HEADER_PIC_URI, mContentUri);
                 break;
             default:
                 break;

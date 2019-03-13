@@ -27,7 +27,6 @@ import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
-import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
@@ -337,8 +336,8 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     @Override
-    protected void refreshBtnAndNotify(PlayStatusBean bean) {
-        switch (bean.getType()) {
+    protected void refreshBtnAndNotify(int playStatus) {
+        switch (playStatus) {
             case 0:
                 switchPlayState(!audioBinder.isPlaying());
                 break;

@@ -75,7 +75,6 @@ public class QueryMusicFlagListUtil {
      * @return h
      */
     public static List<MusicBean> getDataList(int spMusicFlag, int dataFlag, String queryFlag, MusicBeanDao musicBeanDao) {
-        LogUtil.d("CCCCCCCCc    " + spMusicFlag + "     ==  " + dataFlag + "    ======  " + queryFlag);
         if (spMusicFlag == Constants.NUMBER_THRRE) {
             return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
         } else if (spMusicFlag == Constants.NUMBER_ONE) {
@@ -104,7 +103,7 @@ public class QueryMusicFlagListUtil {
                 return musicBeanDao.queryBuilder().where(whereCondition).build().list();
             }
         }
-        return null;
+        return MusicListUtil.sortMusicAbc(musicBeanDao.queryBuilder().list());
     }
 
 }

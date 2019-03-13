@@ -20,11 +20,11 @@ import com.yibao.music.util.SpUtil;
 import butterknife.OnClick;
 
 /**
+ * @author Luoshipeng
  * @ Name:   QqControlBar
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/8/11/ 21:50
  * @ Des:    TODO
- * @author Luoshipeng
  */
 public class MusicToolBar extends LinearLayout implements View.OnClickListener {
 
@@ -88,6 +88,7 @@ public class MusicToolBar extends LinearLayout implements View.OnClickListener {
         mIvSearch.setVisibility(visibility ? VISIBLE : GONE);
     }
 
+    @Override
     @OnClick({R.id.tv_edit, R.id.tv_music_toolbar_title, R.id.iv_search, R.id.tv_edit_delete})
     public void onClick(View v) {
         if (mListener != null) {

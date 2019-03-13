@@ -24,7 +24,7 @@
         android:layout_centerInParent="true"
         android:ellipsize="marquee"
         android:marqueeRepeatLimit="marquee_forever"
-        android:maxLength="25"
+        android:maxLength="18"
         android:singleLine="true"
         android:text="@string/music_song"
         android:textColor="@color/music_activity_title_selector"

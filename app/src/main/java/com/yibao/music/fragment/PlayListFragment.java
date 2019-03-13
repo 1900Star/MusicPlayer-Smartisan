@@ -26,9 +26,9 @@ import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
+import com.yibao.music.util.ThreadPoolProxyFactory;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.MusicToolBar;
 import com.yibao.music.view.music.PlayListDetailView;
@@ -36,11 +36,6 @@ import com.yibao.music.view.music.PlayListDetailView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.PriorityBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -97,7 +92,6 @@ public class PlayListFragment extends BaseMusicFragment {
 
     @Override
     protected boolean getIsOpenDetail() {
-        LogUtil.d("HSHS==========   " + isShowDetailsView + " ==  " + !isItemSelectStatus);
         return isShowDetailsView || !isItemSelectStatus;
     }
 
@@ -106,7 +100,6 @@ public class PlayListFragment extends BaseMusicFragment {
         super.onResume();
 
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.play_list));
-        LogUtil.d(" ZAZA=========   " + isFormPlayListActivity + " == " + SpUtil.getAddToPlayListFdlag(mActivity));
         mAppBarLayout.setVisibility(isFormPlayListActivity && SpUtil.getAddToPlayListFdlag(mActivity) == Constants.NUMBER_ONE ? View.GONE : View.VISIBLE);
         mAdapter.setNewData(getPlayList());
         receiveRxbuData();
@@ -201,7 +194,6 @@ public class PlayListFragment extends BaseMusicFragment {
 
         mLlAddNewPlayList.setOnClickListener(v -> AddListDialog.newInstance(1, Constants.NULL_STRING, isFormPlayListActivity).show(mActivity.getFragmentManager(), "addList"));
         mAdapter.setItemListener((playListBean, isEditStatus) -> {
-            LogUtil.d("TUTU======  " + isFormPlayListActivity +" ==  "+ isEditStatus);
             mTempTitle = playListBean.getTitle();
             // 从PlayListActivity过来的
             if (isFormPlayListActivity) {
@@ -262,9 +254,7 @@ public class PlayListFragment extends BaseMusicFragment {
             mDetailView.setQureyFlag(title, mDetailList.size());
             mDetailsAdapter.setNewData(mDetailList);
             RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mDetailsAdapter);
-            mDetailsAdapter.setOnItemMenuListener((position, musicBean) -> {
-                MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity);
-            });
+            mDetailsAdapter.setOnItemMenuListener((position, musicBean) -> MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
             mDetailView.setAdapter(recyclerView);
             interceptBackEvent(Constants.NUMBER_EIGHT);
         }
@@ -279,15 +269,14 @@ public class PlayListFragment extends BaseMusicFragment {
         if (mContext instanceof PlayListActivity) {
             // 批量添加
             if (mArrayList != null && mArrayList.size() > 0) {
-                new Thread(() -> {
+                ThreadPoolProxyFactory.newInstance().execute(() -> {
                     for (String songTitle : mArrayList) {
                         List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle()), MusicBeanDao.Properties.Title.eq(songTitle)).build().list();
                         if (musicBeanList.size() == 0) {
                             insertSongToList(playListBean, songTitle);
                         }
                     }
-                }).start();
-
+                });
             } else {
                 // 单曲添加
                 List<MusicBean> beanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle()), MusicBeanDao.Properties.Title.eq(mSongName)).build().list();
@@ -314,8 +303,9 @@ public class PlayListFragment extends BaseMusicFragment {
         }
     }
 
-
-    // 取消所有已选
+    /**
+     * 取消所有已选
+     */
     private void cancelAllSelected() {
         List<PlayListBean> playListBeanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).build().list();
         Collections.sort(playListBeanList);

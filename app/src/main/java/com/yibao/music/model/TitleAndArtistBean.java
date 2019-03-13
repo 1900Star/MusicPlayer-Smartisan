@@ -6,6 +6,7 @@ package com.yibao.music.model;
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/10/4/ 17:58
  * @ Des:    TODO
+ * @author Luoshipeng
  */
 public class TitleAndArtistBean {
     private String songName;
