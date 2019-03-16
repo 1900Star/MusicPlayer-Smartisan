@@ -410,7 +410,7 @@ public class AudioPlayService
                         case Constants.NEXT:
                             mAudioBinder.playNext();
                             break;
-                        case Constants.COUNTDOWN_fINISH:
+                        case Constants.COUNTDOWN_FINISH:
                             pauseMusic();
                             break;
                         default:

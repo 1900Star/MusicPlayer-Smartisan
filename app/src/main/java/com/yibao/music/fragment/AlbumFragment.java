@@ -67,8 +67,6 @@ public class AlbumFragment extends BaseMusicFragment {
 
     @BindView(R.id.view_pager_album)
     ViewPager mViewPager;
-    @BindView(R.id.album_music_view)
-    MusicView mAlbumMusicView;
     @BindView(R.id.details_view)
     DetailsView mDetailsView;
     @BindView(R.id.album_content_view)
@@ -133,7 +131,7 @@ public class AlbumFragment extends BaseMusicFragment {
             @Override
             public void clickEdit() {
                 if (mDetailViewFlag) {
-                    mBus.post(Constants.ALBUM_FAG_EDIT,Constants.NUMBER_THRRE);
+                    mBus.post(Constants.ALBUM_FAG_EDIT, Constants.NUMBER_THRRE);
                 }
                 mMusicToolBar.setTvDeleteVisibility(isShowDetailsView ? View.GONE : View.VISIBLE);
                 mMusicToolBar.setTvEditText(!isShowDetailsView ? R.string.tv_edit : R.string.complete);
@@ -147,7 +145,7 @@ public class AlbumFragment extends BaseMusicFragment {
 
             @Override
             public void clickDelete() {
-                mBus.post(Constants.ALBUM_FAG_EDIT,Constants.NUMBER_FOUR);
+                mBus.post(Constants.ALBUM_FAG_EDIT, Constants.NUMBER_FOUR);
             }
         });
     }

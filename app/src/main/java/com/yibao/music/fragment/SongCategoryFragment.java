@@ -118,15 +118,15 @@ public class SongCategoryFragment extends BaseMusicFragment {
                 mSongAdapter = new SongAdapter(mActivity, abcList, Constants.NUMBER_ZERO, Constants.NUMBER_ZERO);
                 break;
             case 1:
-                List<MusicBean> scoreList = MusicListUtil.sortMusicList(mSongList, Constants.NUMBER_FOUR);
+                List<MusicBean> scoreList = MusicListUtil.sortMusicList(mSongList, Constants.SORT_SCORE);
                 mSongAdapter = new SongAdapter(mActivity, scoreList, Constants.NUMBER_ONE, Constants.NUMBER_ONE);
                 break;
             case 2:
-                List<MusicBean> playFrequencyList = MusicListUtil.sortMusicList(mSongList, Constants.NUMBER_THRRE);
+                List<MusicBean> playFrequencyList = MusicListUtil.sortMusicList(mSongList, Constants.SORT_FAVORITE_TIME);
                 mSongAdapter = new SongAdapter(mActivity, playFrequencyList, Constants.NUMBER_ONE, Constants.NUMBER_TWO);
                 break;
             case 3:
-                List<MusicBean> addTimeList = MusicListUtil.sortMusicList(mSongList, Constants.NUMBER_ONE);
+                List<MusicBean> addTimeList = MusicListUtil.sortMusicList(mSongList, Constants.SORT_DOWN_TIME);
                 mSongAdapter = new SongAdapter(mActivity, addTimeList, Constants.NUMBER_ONE, Constants.NUMBER_ZERO);
                 break;
             default:

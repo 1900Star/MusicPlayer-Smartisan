@@ -354,7 +354,7 @@ public class PlayActivity extends BasePlayActivity {
     }
 
 
-    @OnClick({R.id.titlebar_down, R.id.play_song_name,
+    @OnClick({R.id.titlebar_down, R.id.play_song_name, R.id.play_artist_name,
             R.id.playing_song_album, R.id.album_cover, R.id.rotate_rl, R.id.tv_lyrics,
             R.id.iv_lyrics_switch, R.id.iv_secreen_sun_switch, R.id.music_player_mode,
             R.id.music_player_pre, R.id.music_play, R.id.music_player_next, R.id.iv_favorite_music})
@@ -363,6 +363,7 @@ public class PlayActivity extends BasePlayActivity {
             case R.id.titlebar_down:
                 finish();
                 break;
+            case R.id.play_artist_name:
             case R.id.play_song_name:
                 startSearchActivity(mCurrenMusicInfo);
                 break;
@@ -471,7 +472,7 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     /**
-     *  清空收藏列表中所有音乐后的回调，
+     * 清空收藏列表中所有音乐后的回调，
      */
     @Override
     public void updataFavoriteStatus() {

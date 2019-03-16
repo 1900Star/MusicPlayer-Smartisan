@@ -45,9 +45,6 @@ public abstract class BaseMusicFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (getUserVisibleHint()) {
-            String sql = "create table person(_id integer primary key autoincrement, vachar name(20), vachar sex(20))";
-            String sq = "delete from user where name=?";
-//            String ssl = "insert into user (null,name,sex) values(null,'" + name + "','" + sex + "')";
             LogUtil.d("============Frag     " + mClassName);
         }
     }

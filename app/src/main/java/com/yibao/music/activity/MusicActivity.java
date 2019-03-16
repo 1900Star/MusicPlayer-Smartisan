@@ -121,7 +121,7 @@ public class MusicActivity
                     perpareItem(mCurrentMusicBean);
                 }
             } else if (mPlayState == Constants.NUMBER_TWO) {
-                executStartServiceAndInitAnimation();
+                startServiceAndAnimation();
             }
         } else {
             LogUtil.d("用户 ++++  nothing ");
@@ -130,7 +130,7 @@ public class MusicActivity
 
     }
 
-    private void executStartServiceAndInitAnimation() {
+    private void startServiceAndAnimation() {
         int sortFlag = SpUtil.getSortFlag(this);
         int detailFlag = SpUtil.getDataQueryFlag(this);
         if (detailFlag == Constants.NUMBER_EIGHT) {
@@ -250,7 +250,7 @@ public class MusicActivity
     private void switchPlayState() {
         LogUtil.d("switchPlayState   =====  " + mPlayState);
         if (mPlayState == Constants.NUMBER_ONE) {
-            executStartServiceAndInitAnimation();
+            startServiceAndAnimation();
         } else if (mPlayState == Constants.NUMBER_TWO) {
             mPlayState = Constants.NUMBER_THRRE;
         } else {

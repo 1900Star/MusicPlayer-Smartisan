@@ -24,11 +24,19 @@ public class Constants {
     public static final int PLAY = 2;
     public static final int NEXT = 3;
     public static final int CLOSE = 4;
+    /**
+     * 排序标识 1 按照歌曲下载时间 ，2 按照歌曲收藏时间 , 3 按照播放次数 ，4 按照评分 ，5 按添加到自定义列表的时间。
+     */
+    public static final int SORT_DOWN_TIME = 1;
+    public static final int SORT_FAVORITE_TIME = 2;
+    public static final int SORT_FREQUENCY= 3;
+    public static final int SORT_SCORE = 4;
+    public static final int SORT_ADD_PALY_LIST_TIME = 5;
 
     /**
      * 倒计时结束，广播通知暂停播放音乐
      */
-    public static final int COUNTDOWN_fINISH = 5;
+    public static final int COUNTDOWN_FINISH = 5;
 
     public static final int NUMBER_ZERO = 0;
     public static final int NUMBER_ONE = 1;
