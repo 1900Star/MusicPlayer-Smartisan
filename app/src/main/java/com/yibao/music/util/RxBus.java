@@ -10,6 +10,7 @@ import io.reactivex.subjects.PublishSubject;
 /**
  * Des：${TODO}
  * Time:2017/4/29 10:35
+ *
  * @author Luoshipeng
  */
 public class RxBus {
@@ -46,6 +47,15 @@ public class RxBus {
         return bus.ofType(eventType);
     }
 
+    public void post(int msgKey, Object o) {
+        bus.onNext(new Message(msgKey, o));
+    }
+
+    public <T> Observable<T> toObservableType(final int msgKey, final Class<T> eventType) {
+        return bus.ofType(Message.class)
+                .filter(msg -> msg.getMsgKey() != null && msg.getCode() == (msgKey) && eventType.isInstance(msg.getObject())).map(Message::getObject).cast(eventType);
+    }
+
     /**
      * 提供了一个新的事件,根据msgKey进行分发
      *
@@ -54,10 +64,12 @@ public class RxBus {
     public void post(String msgKey, Object o) {
         bus.onNext(new Message(msgKey, o));
     }
+
+
     /**
      * 根据传递的magKey和 eventType 类型返回特定类型(eventType)的 被观察者
      *
-     * @param msgKey      事件flag
+     * @param msgKey    事件flag
      * @param eventType 事件类型
      * @param <T>       t
      * @return r
@@ -65,7 +77,8 @@ public class RxBus {
 
     public <T> Observable<T> toObservableType(final String msgKey, final Class<T> eventType) {
         return bus.ofType(Message.class)
-                .filter(msg -> msg.getMsgKey()!=null&&msg.getMsgKey().equals(msgKey) && eventType.isInstance(msg.getObject())).map(Message::getObject).cast(eventType);
+                .filter(msg -> msg.getMsgKey() != null && msg.getMsgKey().equals(msgKey) && eventType.isInstance(msg.getObject())).map(Message::getObject).cast(eventType);
     }
+
 
 }

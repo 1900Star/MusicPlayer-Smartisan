@@ -91,7 +91,7 @@ public class SongFragment extends BaseMusicFragment {
 
     private void initData() {
         switchListCategory(0);
-        SongCategoryPagerAdapter adapter = new SongCategoryPagerAdapter(getChildFragmentManager());
+        SongCategoryPagerAdapter adapter = new SongCategoryPagerAdapter(getChildFragmentManager(), Constants.NUMBER_ONE);
         mViewPager.setAdapter(adapter);
         mViewPager.addOnPageChangeListener(new MusicPagerListener() {
             @Override

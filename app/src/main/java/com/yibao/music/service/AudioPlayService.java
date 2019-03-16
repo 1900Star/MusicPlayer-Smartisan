@@ -155,7 +155,7 @@ public class AudioPlayService
                 mediaPlayer = null;
             }
             // “>=” 确保模糊搜索时播放不出现索引越界
-            if (mMusicDataList != null) {
+            if (mMusicDataList != null && mMusicDataList.size() > 0) {
                 position = position >= mMusicDataList.size() ? 0 : position;
                 mMusicInfo = mMusicDataList.get(position);
                 mediaPlayer = MediaPlayer.create(AudioPlayService.this,

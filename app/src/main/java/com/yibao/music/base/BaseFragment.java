@@ -14,6 +14,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.AlbumInfoDao;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
+import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.RxBus;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public abstract class BaseFragment extends Fragment {
     protected Activity mActivity;
     protected RxBus mBus;
     protected final MusicBeanDao mMusicBeanDao;
+    protected final SearchHistoryBeanDao mSearchDao;
     protected final PlayListBeanDao mPlayListDao;
     protected CompositeDisposable mCompositeDisposable;
     protected FragmentManager mFragmentManager;
@@ -44,6 +46,7 @@ public abstract class BaseFragment extends Fragment {
         mMusicBeanDao = MusicApplication.getIntstance().getMusicDao();
         mPlayListDao = MusicApplication.getIntstance().getPlayListDao();
         mAlbumDao = MusicApplication.getIntstance().getAlbumDao();
+        mSearchDao = MusicApplication.getIntstance().getSearchDao();
     }
 
     @Override
@@ -52,7 +55,7 @@ public abstract class BaseFragment extends Fragment {
         mActivity = getActivity();
         mContext = getActivity();
         mCompositeDisposable = new CompositeDisposable();
-        mBus =RxBus.getInstance();
+        mBus = RxBus.getInstance();
         mFragmentManager = mActivity.getFragmentManager();
 
     }

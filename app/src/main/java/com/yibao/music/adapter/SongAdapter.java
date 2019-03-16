@@ -46,6 +46,7 @@ public class SongAdapter
      * @param list                  l
      * @param isShowStickyView      控制列表的StickyView是否显示，0 显示 ，1 ：不显示
      *                              parm isArtistList     用来控制音乐列表和艺术家列表的显示
+     *
      * @param scroeAndFrequnecyFlag 显示评分和播放次数 0 都不显示 ，1显示评分 ，2 显示播放次数
      */
     public SongAdapter(Activity context, List<MusicBean> list, int isShowStickyView, int scroeAndFrequnecyFlag) {

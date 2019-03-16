@@ -65,6 +65,8 @@ public class Constants {
      */
     public static final String PLAY_STATUS = "play_status";
     public static final String HEADER_PIC_URI = "header_uri";
+    public static final String SEARCH_CONDITION = "search_condition";
+    public static final String CLEAR_CONDITON = "clear_condition";
 
     static final char LETTER_A = 'A';
     static final char LETTER_Z = 'Z';

@@ -15,11 +15,11 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.schedulers.Schedulers;
 
 /**
+ * @author Luoshipeng
  * @ Name:   MusicDaoUtil
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/9/14/ 16:38
  * @ Des:    搜索相关操作
- * @author Luoshipeng
  */
 public class MusicDaoUtil {
     /**
@@ -77,15 +77,14 @@ public class MusicDaoUtil {
     public static void setMusicListFlag(PlayListBean playListBean) {
         MusicBeanDao musicDao = MusicApplication.getIntstance().getMusicDao();
         MusicApplication.getIntstance().getPlayListDao().delete(playListBean);
-        new Thread(() -> {
+        ThreadPoolProxyFactory.newInstance().execute(() -> {
             List<MusicBean> musicBeanList = musicDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle())).build().list();
             for (MusicBean musicBean : musicBeanList) {
                 musicBean.setPlayListFlag(Constants.PLAY_LIST_BACK_FLAG);
                 musicBean.setAddListTime(Constants.NUMBER_ZERO);
                 musicDao.update(musicBean);
             }
-
-        }).start();
+        });
     }
 
 

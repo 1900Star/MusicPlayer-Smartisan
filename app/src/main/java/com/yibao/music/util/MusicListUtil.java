@@ -130,11 +130,11 @@ public class MusicListUtil {
         if (sortFlag == Constants.NUMBER_ONE) {
             value = Float.compare(m2.getAddTime(), m1.getAddTime());
         } else if (sortFlag == Constants.NUMBER_TWO) {
-            value = Float.compare(Long.parseLong(m2.getTime()), Long.parseLong(m1.getTime()));
+            value = Integer.compare((int) m2.getAddTime(), (int) m1.getAddTime());
         } else if (sortFlag == Constants.NUMBER_THRRE) {
-            value = Float.compare(m2.getPlayFrequency(), m1.getPlayFrequency());
+            value = Integer.compare(m2.getPlayFrequency(), m1.getPlayFrequency());
         } else if (sortFlag == Constants.NUMBER_FOUR) {
-            value = Float.compare(m2.getSongScore(), m1.getSongScore());
+            value = Integer.compare(m2.getSongScore(), m1.getSongScore());
         } else if (sortFlag == Constants.NUMBER_FIEV) {
             value = Float.compare(m1.getAddListTime(), m2.getAddListTime());
         }
