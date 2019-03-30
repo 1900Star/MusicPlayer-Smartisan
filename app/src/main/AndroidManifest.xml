@@ -36,34 +36,6 @@
         <service android:name=".service.LoadMusicDataService" />
         <service android:name=".service.CountdownService" />
 
-        <!--百度-->
-        <meta-data
-            android:name="BaiduMobAd_STAT_ID"
-            android:value="@string/baidu_key" />
-
-        <!-- 渠道商编号 -->
-        <meta-data
-            android:name="BaiduMobAd_CHANNEL"
-            android:value="Baidu Market" />
-
-        <!-- 是否开启错误日志统计，默认为false -->
-        <meta-data
-            android:name="BaiduMobAd_EXCEPTION_LOG"
-            android:value="true" />
-        <!-- 日志发送策略，可选值：APP_START、ONCE_A_DAY、SET_TIME_INTERVAL，默认为APP_START -->
-        <meta-data
-            android:name="BaiduMobAd_SEND_STRATEGY"
-            android:value="APP_START" />
-        <!-- 日志发送策略 为SET_TIME_INTERVAL时，需设定时间间隔(取消下行注释)。取值为1-24的整数，默认为1 -->
-        <meta-data
-            android:name="BaiduMobAd_TIME_INTERVAL"
-            android:value="2" />
-        <!-- 日志仅在wifi网络下发送，默认为false -->
-        <meta-data
-            android:name="BaiduMobAd_ONLY_WIFI"
-            android:value="false" />
-        <!--百度-->
-
         <activity
             android:name=".activity.MusicActivity"
             android:launchMode="singleTask"
@@ -78,11 +50,14 @@
             android:name=".activity.SearchActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activity.PlayListActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.yibao.music"
@@ -92,6 +67,28 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+        <!--百度-->
+        <meta-data
+            android:name="BaiduMobAd_STAT_ID"
+            android:value="@string/baidu_key" />
+
+        <meta-data
+            android:name="BaiduMobAd_CHANNEL"
+            android:value="Baidu Market" />
+        <meta-data
+            android:name="BaiduMobAd_EXCEPTION_LOG"
+            android:value="true" />
+        <meta-data
+            android:name="BaiduMobAd_SEND_STRATEGY"
+            android:value="APP_START" />
+        <meta-data
+            android:name="BaiduMobAd_TIME_INTERVAL"
+            android:value="2" />
+        <meta-data
+            android:name="BaiduMobAd_ONLY_WIFI"
+            android:value="false" />
+        <!--百度-->
+
     </application>
 
 </manifest>

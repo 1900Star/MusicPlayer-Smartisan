@@ -15,16 +15,18 @@ import com.yibao.music.util.Constants;
  *
  * @author Stran
  */
-public class SongCategoryPagerAdapter
+public class SearchCategoryPagerAdapter
         extends BasePagerAdapter {
+    private String mArtist;
 
-    public SongCategoryPagerAdapter(FragmentManager fm) {
+    public SearchCategoryPagerAdapter(FragmentManager fm, String artist) {
         super(fm);
+        mArtist = artist;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return SongCategoryFragment.newInstance(position);
+        return SearchFragment.newInstance(position,mArtist);
     }
 
 

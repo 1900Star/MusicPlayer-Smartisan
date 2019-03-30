@@ -14,22 +14,23 @@ import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
-import com.yibao.music.activity.SearchActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.base.BaseObserver;
-import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnFlowLayoutClickListener;
+import com.yibao.music.base.listener.OnSearchFlagListener;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.SearchCategoryBean;
 import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.MusicDaoUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.view.FlowLayoutView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -94,17 +95,16 @@ public class SearchFragment extends BaseFragment {
 
     private void receviewSearchCondition() {
         if (mDisposableSearch == null) {
-            mDisposableSearch = mBus.toObservableType(Constants.SEARCH_CONDITION, Object.class)
+            mDisposableSearch = mBus.toObserverable(SearchCategoryBean.class)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(o -> searchSong((String) o));
+                    .subscribe(this::searchSong);
         }
     }
 
     private void initListener() {
         mSearchDetailAdapter.setOnItemMenuListener((position, musicBean) -> {
             MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity);
-            initSearch(musicBean.getTitle());
         });
         mIvSearchClear.setOnClickListener(v -> {
             mSearchDao.deleteAll();
@@ -128,22 +128,45 @@ public class SearchFragment extends BaseFragment {
         searchMusic(searchContent);
     }
 
-    public void searchSong(String condition) {
-        if (Constants.CLEAR_CONDITON.equals(condition)) {
-            clearAdapter();
-            mLinearDetail.setVisibility(View.INVISIBLE);
-            historyViewVisibility();
-        } else {
-            if (!Constants.NULL_STRING.equals(condition) && condition.length() > 0) {
-                searchMusic(condition);
-            } else {
+    public void searchSong(SearchCategoryBean categoryBean) {
+        int categoryFlag = categoryBean.getCategoryFlag();
+        String condition = categoryBean.getSearchCondition();
+        switch (categoryFlag) {
+            case 0:
+                setFlagAndSearch(condition, Constants.NUMBER_THRRE);
+                break;
+            case 1:
+                setFlagAndSearch(condition, Constants.NUMBER_THRRE);
+                break;
+            case 2:
+                setFlagAndSearch(condition, Constants.NUMBER_TWO);
+                break;
+            case 3:
+                setFlagAndSearch(condition, Constants.NUMBER_ONE);
+                break;
+            case 4:
+                setFlagAndSearch(condition, Constants.NUMBER_FOUR);
+                break;
+            case 9:
+                clearAdapter();
+                mLinearDetail.setVisibility(View.INVISIBLE);
+                historyViewVisibility();
+                break;
+            case 10:
                 historyViewVisibility();
                 clearAdapter();
                 mLinearDetail.setVisibility(View.INVISIBLE);
                 mTvNoSearchResult.setVisibility(View.GONE);
-            }
+                break;
+            default:
+                break;
         }
 
+    }
+
+    private void setFlagAndSearch(String condition, int numberTwo) {
+        mSearchDetailAdapter.setDataFlag(numberTwo);
+        searchMusic(condition);
     }
 
     private void clearAdapter() {
@@ -158,10 +181,7 @@ public class SearchFragment extends BaseFragment {
      * @param searchconditions 搜索关键字
      */
     private void searchMusic(String searchconditions) {
-        MusicDaoUtil.getSearchResult(flag -> {
-            mSearchDetailAdapter.setDataFlag(flag);
-            mtvStickyView.setText(flag == 1 ? "艺术家" : flag == 2 ? "专辑" : "歌曲");
-        }, mMusicBeanDao, searchconditions)
+        MusicDaoUtil.getSearchResult(mMusicBeanDao, searchconditions)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseObserver<List<MusicBean>>() {
                     @Override
@@ -177,7 +197,6 @@ public class SearchFragment extends BaseFragment {
                         mLayoutHistory.setVisibility(View.GONE);
                         mLinearDetail.setVisibility(View.GONE);
                         mTvNoSearchResult.setVisibility(View.VISIBLE);
-//                        mSmartisanControlBar.setVisibility(View.VISIBLE);
                     }
 
                 });
@@ -209,6 +228,8 @@ public class SearchFragment extends BaseFragment {
         mLinearDetail.addView(recyclerView);
         if (getArguments() != null) {
             mPosition = getArguments().getInt("position");
+            String searchArtist = getArguments().getString("searchArtist");
+            setFlagAndSearch(searchArtist, 1);
         }
     }
 
@@ -216,11 +237,10 @@ public class SearchFragment extends BaseFragment {
         MusicBean musicBean = moreMenuStatus.getMusicBean();
         switch (moreMenuStatus.getPosition()) {
             case Constants.NUMBER_ZERO:
-                Intent intent = new Intent(mActivity, PlayListActivity.class);
+                Intent intent = new Intent(mContext, PlayListActivity.class);
                 intent.putExtra(Constants.SONG_NAME, musicBean.getTitle());
                 startActivity(intent);
                 mActivity.overridePendingTransition(R.anim.dialog_push_in, 0);
-                mActivity.startActivity(intent);
                 break;
             case Constants.NUMBER_ONE:
                 SnakbarUtil.keepGoing(mLayoutHistory);
@@ -265,10 +285,11 @@ public class SearchFragment extends BaseFragment {
         }
     }
 
-    public static SearchFragment newInstance(int position) {
+    public static SearchFragment newInstance(int position, String searchArtist) {
         Bundle args = new Bundle();
         SearchFragment fragment = new SearchFragment();
         args.putInt("position", position);
+        args.putString("searchArtist", searchArtist);
         fragment.setArguments(args);
         return fragment;
     }

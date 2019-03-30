@@ -193,6 +193,7 @@ public class PlayListFragment extends BaseMusicFragment {
         });
 
         mLlAddNewPlayList.setOnClickListener(v -> AddListDialog.newInstance(1, Constants.NULL_STRING, isFormPlayListActivity).show(mActivity.getFragmentManager(), "addList"));
+        // item 点击
         mAdapter.setItemListener((playListBean, isEditStatus) -> {
             mTempTitle = playListBean.getTitle();
             // 从PlayListActivity过来的

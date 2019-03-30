@@ -50,7 +50,6 @@ public class DeletePlayListDialog
     private PlayListBean mPlayListBean;
     private RxBus mBus;
     private int mPageType;
-    private MusicBeanDao mMusicDao;
 
     public static DeletePlayListDialog newInstance(PlayListBean musicInfo, int pageType) {
         Bundle bundle = new Bundle();
@@ -92,7 +91,7 @@ public class DeletePlayListDialog
         mTvCancelDelete = mView.findViewById(R.id.tv_delete_list_cancel);
         mTvDelete = mView.findViewById(R.id.tv_delete_list_continue);
         mBus = RxBus.getInstance();
-        mMusicDao = MusicApplication.getIntstance().getMusicDao();
+        MusicBeanDao musicDao = MusicApplication.getIntstance().getMusicDao();
         mPlayListBean = getArguments().getParcelable("musicInfo");
         mPageType = getArguments().getInt("pageType");
         if (mPlayListBean != null) {

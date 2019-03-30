@@ -29,32 +29,28 @@ public class MusicDaoUtil {
      * @param queryConditions 查询的关键字
      * @return 查询结果以集合的类型返回
      */
-    public static Observable<List<MusicBean>> getSearchResult(OnSearchFlagListener listener, MusicBeanDao musicBeanDao, String queryConditions) {
+    public static Observable<List<MusicBean>> getSearchResult( MusicBeanDao musicBeanDao, String queryConditions) {
         return Observable.create((ObservableOnSubscribe<List<MusicBean>>) emitter -> {
             // 歌手搜索
             List<MusicBean> artistList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(queryConditions)).build().list();
             if (artistList != null && artistList.size() > 0) {
-                listener.setSearchFlag(1);
                 insertSearchBean(emitter, artistList);
             } else {
                 // 专辑搜索
                 List<MusicBean> albumList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(queryConditions)).build().list();
                 if (albumList != null && albumList.size() > 0) {
-                    listener.setSearchFlag(2);
                     insertSearchBean(emitter, albumList);
                 } else {
                     // 根据歌名精确搜索
                     List<MusicBean> songList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Title.eq(queryConditions)).build().list();
                     if (songList != null && songList.size() > 0) {
-                        listener.setSearchFlag(3);
                         insertSearchBean(emitter, songList);
                     } else {
                         // 模糊匹配搜索, % 加在前面为包含queryConditions，加在后面查询的结果是以 queryConditions 开头的数据。
-                        List<MusicBean> searchSongList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Title.like(queryConditions + "%")).list();
+                        List<MusicBean> searchSongList = musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Title.like("%"+queryConditions + "%")).list();
                         if (searchSongList.size() == 0) {
                             emitter.onError(new FileNotFoundException());
                         } else {
-                            listener.setSearchFlag(3);
                             insertSearchBean(emitter, searchSongList);
                         }
                     }

@@ -44,7 +44,6 @@ public abstract class BaseMusicFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (getUserVisibleHint()) {
-            LogUtil.d("============Frag     " + mClassName);
         }
     }
 

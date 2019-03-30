@@ -85,8 +85,8 @@
 
     <include
         android:id="@+id/search_category_root"
-        android:visibility="gone"
-        layout="@layout/search_category" />
+        layout="@layout/search_category"
+        android:visibility="gone" />
 
     <com.yibao.music.view.MainViewPager
         android:id="@+id/vp_search"

@@ -9,24 +9,23 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
-import com.yibao.music.adapter.DetailsViewAdapter;
-import com.yibao.music.adapter.SongCategoryPagerAdapter;
+import com.yibao.music.adapter.SearchCategoryPagerAdapter;
 import com.yibao.music.base.BaseTansitionActivity;
 import com.yibao.music.base.listener.MusicPagerListener;
 import com.yibao.music.base.listener.OnFlowLayoutClickListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.TextChangedListener;
-import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
+import com.yibao.music.model.SearchCategoryBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SoftKeybordUtil;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.TitleArtistUtil;
@@ -57,6 +56,10 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
 
     @BindView(R.id.vp_search)
     MainViewPager mViewPager;
+
+    @BindView(R.id.search_category_root)
+    LinearLayout mSearchCategoryRoot;
+
     @BindView(R.id.tv_search_all)
     TextView mTvSearchAll;
     @BindView(R.id.tv_search_song)
@@ -68,12 +71,14 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
 
     @BindView(R.id.smartisan_control_bar)
     SmartisanControlBar mSmartisanControlBar;
-    private DetailsViewAdapter mSearchDetailAdapter;
     private MusicBean mMusicBean;
     private AudioPlayService.AudioBinder audioBinder;
     private int lyricsFlag;
     private InputMethodManager mInputMethodManager;
     private Disposable mDisposableSoftKeyboard;
+    private String mSearchCondition;
+    private int currentCategoryPosition = 0;
+    private SearchCategoryPagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,20 +91,74 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     }
 
     private void init() {
-        mSearchDetailAdapter = new DetailsViewAdapter(SearchActivity.this, null, Constants.NUMBER_THRRE);
         int pageType = getIntent().getIntExtra("pageType", 0);
         audioBinder = MusicActivity.getAudioBinder();
         mSmartisanControlBar.setPbColorAndPreBtnGone();
         if (pageType > Constants.NUMBER_ZERO) {
             mMusicBean = getIntent().getParcelableExtra("musicBean");
+            mEditSearch.setText(mMusicBean.getArtist());
+            mEditSearch.setSelection(mMusicBean.getArtist().length());
+            mSearchCategoryRoot.setVisibility(View.VISIBLE);
+            // ViewPager
+            mPagerAdapter = new SearchCategoryPagerAdapter(getSupportFragmentManager(), mMusicBean.getArtist());
+            switchListCategory(3);
             setMusicInfo(mMusicBean);
             mIvEditClear.setVisibility(View.VISIBLE);
         } else {
+            mPagerAdapter = new SearchCategoryPagerAdapter(getSupportFragmentManager(), null);
             // 主动弹出键盘
             mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             mDisposableSoftKeyboard = Observable.timer(50, TimeUnit.MILLISECONDS)
                     .subscribe(aLong -> SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED));
         }
+
+        mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.addOnPageChangeListener(new MusicPagerListener() {
+            @Override
+            public void onPageSelected(int position) {
+                switchListCategory(position);
+            }
+        });
+    }
+
+    private void initData() {
+
+    }
+
+    private void initListener() {
+        mEditSearch.addTextChangedListener(new TextChangedListener() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                mSearchCondition = s.toString();
+                boolean conditionOK = !Constants.NULL_STRING.equals(mSearchCondition) && mSearchCondition.length() > 0;
+                if (conditionOK) {
+                    mIvEditClear.setVisibility(View.VISIBLE);
+                } else {
+                    mIvEditClear.setVisibility(View.GONE);
+                }
+                mBus.post(new SearchCategoryBean(conditionOK ? getDataFlag() : Constants.NUMBER_TEN, mSearchCondition));
+                mSearchCategoryRoot.setVisibility(conditionOK ? View.VISIBLE : View.GONE);
+            }
+        });
+        mSmartisanControlBar.setClickListener(clickFlag -> {
+            switch (clickFlag) {
+                case Constants.NUMBER_ONE:
+                    audioBinder.updataFavorite();
+                    checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
+                    break;
+                case Constants.NUMBER_TWO:
+                    audioBinder.playPre();
+                    break;
+                case Constants.NUMBER_THRRE:
+                    switchPlayState();
+                    break;
+                case Constants.NUMBER_FOUR:
+                    audioBinder.playNext();
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     @Override
@@ -163,20 +222,10 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     }
 
 
-    private void initData() {
-        // ViewPager
-        SongCategoryPagerAdapter pagerAdapter = new SongCategoryPagerAdapter(getSupportFragmentManager(), Constants.NUMBER_TWO);
-        mViewPager.setAdapter(pagerAdapter);
-        mViewPager.addOnPageChangeListener(new MusicPagerListener() {
-            @Override
-            public void onPageSelected(int position) {
-                switchListCategory(position);
-            }
-        });
-    }
-
     private void switchListCategory(int position) {
+        currentCategoryPosition = position;
         mViewPager.setCurrentItem(position, false);
+        mBus.post(new SearchCategoryBean(getDataFlag(), mSearchCondition));
         switch (position) {
             case 0:
                 setAllCategoryNotNormal();
@@ -233,44 +282,11 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         }
     }
 
-    private void initListener() {
-        mSearchDetailAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
-                MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(this));
-        mEditSearch.addTextChangedListener(new TextChangedListener() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                String searchContent = s.toString();
-                boolean conditionOK = !Constants.NULL_STRING.equals(searchContent) && searchContent.length() > 0;
-                if (conditionOK) {
-                    mBus.post(Constants.SEARCH_CONDITION, s.toString());
-                    mIvEditClear.setVisibility(View.VISIBLE);
-                } else {
-                    mIvEditClear.setVisibility(View.GONE);
-                    mBus.post(Constants.SEARCH_CONDITION,Constants.NULL_STRING);
-                }
-                findViewById(R.id.search_category_root).setVisibility(conditionOK ? View.VISIBLE : View.GONE);
-            }
-        });
-        mSmartisanControlBar.setClickListener(clickFlag -> {
-            switch (clickFlag) {
-                case Constants.NUMBER_ONE:
-                    audioBinder.updataFavorite();
-                    checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
-                    break;
-                case Constants.NUMBER_TWO:
-                    audioBinder.playPre();
-                    break;
-                case Constants.NUMBER_THRRE:
-                    switchPlayState();
-                    break;
-                case Constants.NUMBER_FOUR:
-                    audioBinder.playNext();
-                    break;
-                default:
-                    break;
-            }
-        });
+    private int getDataFlag() {
+        return mSearchCondition != null ? 1 : currentCategoryPosition == 0 || currentCategoryPosition == 1 ?
+                Constants.NUMBER_THRRE : currentCategoryPosition == 2 ? 2 : currentCategoryPosition == 3 ? 1 : 4;
     }
+
 
     private void switchPlayState() {
         if (audioBinder.isPlaying()) {
@@ -296,26 +312,19 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
                 break;
             case R.id.iv_edit_clear:
                 mEditSearch.setText(null);
-                if (mSearchDetailAdapter != null) {
-                    mSearchDetailAdapter.clear();
-                }
-                findViewById(R.id.search_category_root).setVisibility(View.VISIBLE);
-                mBus.post(Constants.SEARCH_CONDITION, Constants.CLEAR_CONDITON);
+                findViewById(R.id.search_category_root).setVisibility(View.GONE);
+                mBus.post(new SearchCategoryBean(Constants.NUMBER_NINE, null));
                 break;
             case R.id.tv_search_all:
-                LogUtil.d("====== id " + v.getId());
                 switchListCategory(0);
                 break;
             case R.id.tv_search_song:
-                LogUtil.d("====== id " + v.getId());
                 switchListCategory(1);
                 break;
             case R.id.tv_search_album:
-                LogUtil.d("====== id " + v.getId());
                 switchListCategory(2);
                 break;
             case R.id.tv_search_artist:
-                LogUtil.d("====== id " + v.getId());
                 switchListCategory(3);
                 break;
         }
@@ -389,4 +398,5 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         mEditSearch.setSelection(songName.length());
 
     }
+
 }
