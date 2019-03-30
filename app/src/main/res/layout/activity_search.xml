@@ -103,6 +103,6 @@
         android:id="@+id/smartisan_control_bar"
         android:layout_width="match_parent"
         android:layout_height="54dp"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
 </LinearLayout>

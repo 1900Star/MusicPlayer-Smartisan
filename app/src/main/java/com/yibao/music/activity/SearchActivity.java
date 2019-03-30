@@ -26,6 +26,7 @@ import com.yibao.music.model.SearchCategoryBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SoftKeybordUtil;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.TitleArtistUtil;
@@ -78,7 +79,6 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     private Disposable mDisposableSoftKeyboard;
     private String mSearchCondition;
     private int currentCategoryPosition = 0;
-    private SearchCategoryPagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,7 +86,6 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         setContentView(R.layout.activity_search);
         mBind = ButterKnife.bind(this);
         init();
-        initData();
         initListener();
     }
 
@@ -94,25 +93,26 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         int pageType = getIntent().getIntExtra("pageType", 0);
         audioBinder = MusicActivity.getAudioBinder();
         mSmartisanControlBar.setPbColorAndPreBtnGone();
+        SearchCategoryPagerAdapter pagerAdapter;
         if (pageType > Constants.NUMBER_ZERO) {
             mMusicBean = getIntent().getParcelableExtra("musicBean");
             mEditSearch.setText(mMusicBean.getArtist());
             mEditSearch.setSelection(mMusicBean.getArtist().length());
             mSearchCategoryRoot.setVisibility(View.VISIBLE);
             // ViewPager
-            mPagerAdapter = new SearchCategoryPagerAdapter(getSupportFragmentManager(), mMusicBean.getArtist());
+            pagerAdapter = new SearchCategoryPagerAdapter(getSupportFragmentManager(), mMusicBean.getArtist());
             switchListCategory(3);
             setMusicInfo(mMusicBean);
             mIvEditClear.setVisibility(View.VISIBLE);
         } else {
-            mPagerAdapter = new SearchCategoryPagerAdapter(getSupportFragmentManager(), null);
+            pagerAdapter = new SearchCategoryPagerAdapter(getSupportFragmentManager(), null);
             // 主动弹出键盘
             mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             mDisposableSoftKeyboard = Observable.timer(50, TimeUnit.MILLISECONDS)
                     .subscribe(aLong -> SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED));
         }
 
-        mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.setAdapter(pagerAdapter);
         mViewPager.addOnPageChangeListener(new MusicPagerListener() {
             @Override
             public void onPageSelected(int position) {
@@ -121,22 +121,18 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         });
     }
 
-    private void initData() {
-
-    }
-
     private void initListener() {
         mEditSearch.addTextChangedListener(new TextChangedListener() {
             @Override
             public void afterTextChanged(Editable s) {
                 mSearchCondition = s.toString();
                 boolean conditionOK = !Constants.NULL_STRING.equals(mSearchCondition) && mSearchCondition.length() > 0;
+                mBus.post(new SearchCategoryBean(conditionOK ? getDataFlag() : Constants.NUMBER_TEN, mSearchCondition));
                 if (conditionOK) {
                     mIvEditClear.setVisibility(View.VISIBLE);
                 } else {
                     mIvEditClear.setVisibility(View.GONE);
                 }
-                mBus.post(new SearchCategoryBean(conditionOK ? getDataFlag() : Constants.NUMBER_TEN, mSearchCondition));
                 mSearchCategoryRoot.setVisibility(conditionOK ? View.VISIBLE : View.GONE);
             }
         });
