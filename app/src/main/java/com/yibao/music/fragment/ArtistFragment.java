@@ -17,6 +17,7 @@ import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.ThreadPoolProxyFactory;
 import com.yibao.music.view.music.DetailsView;
@@ -112,12 +113,11 @@ public class ArtistFragment extends BaseMusicFragment {
     }
 
     private void openDetailsView(ArtistInfo artistInfo) {
-        mDetailsView.setVisibility(isShowDetailsView ? View.GONE : View.VISIBLE);
-        mMusicToolBar.setTvEditVisibility(isShowDetailsView);
         if (!isShowDetailsView) {
             if (artistInfo != null) {
                 mTempTitle = artistInfo.getAlbumName();
                 mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(artistInfo.getArtist())).build().list();
+                LogUtil.d("CCCCCCCCCC   "+mDetailList.size());
                 // DetailsView播放音乐需要的参数
                 mDetailsView.setDataFlag(mFragmentManager, mDetailList.size(), artistInfo.getArtist(), Constants.NUMBER_ONE);
                 mDetailsAdapter = new DetailsViewAdapter(mActivity, mDetailList, Constants.NUMBER_ONE);
@@ -128,6 +128,7 @@ public class ArtistFragment extends BaseMusicFragment {
                 mMusicToolBar.setTvEditText(R.string.music_artisan);
             }
         }
+        mDetailsView.setVisibility(isShowDetailsView ? View.GONE : View.VISIBLE);
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? getString(R.string.music_artisan) : mTempTitle);
         isShowDetailsView = !isShowDetailsView;
         mMusicToolBar.setTvEditVisibility(isShowDetailsView);
