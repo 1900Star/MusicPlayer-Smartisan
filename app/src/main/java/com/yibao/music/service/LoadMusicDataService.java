@@ -122,8 +122,6 @@ public class LoadMusicDataService extends IntentService {
             LogUtil.d("自动恢复收藏列表");
         } else {
             LogUtil.d("没有发现歌曲收藏文件");
-//            ToastUtil.showNotFoundFavoriteFile(this);
-
         }
     }
 

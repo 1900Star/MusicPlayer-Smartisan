@@ -1,7 +1,9 @@
 package com.yibao.music.util;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadFactory;
@@ -18,6 +20,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class ThreadPoolProxyFactory {
     private ThreadPoolExecutor mExecutor;
+    private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
+    private static final int CORE_POOL_SIZE = CPU_COUNT + 1;
+    private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;
+    private static final int KEEP_ALIVE = 2000;
 
     public static ThreadPoolProxyFactory newInstance() {
 
@@ -33,12 +39,11 @@ public class ThreadPoolProxyFactory {
         if (mExecutor == null || mExecutor.isShutdown() || mExecutor.isTerminated()) {
             synchronized (ThreadPoolProxyFactory.class) {
                 if (mExecutor == null || mExecutor.isShutdown() || mExecutor.isTerminated()) {
-                    long keepAliveTime = 3000;
                     TimeUnit unit = TimeUnit.MILLISECONDS;
-                    BlockingQueue workQueue = new LinkedBlockingDeque<>();
+                    BlockingQueue<Runnable> workQueue = new LinkedBlockingDeque<>();
                     ThreadFactory threadFactory = Executors.defaultThreadFactory();
                     RejectedExecutionHandler handler = new ThreadPoolExecutor.DiscardPolicy();
-                    mExecutor = new ThreadPoolExecutor(5, 5, keepAliveTime, unit, workQueue,
+                    mExecutor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE, unit, workQueue,
                             threadFactory, handler);
                 }
             }

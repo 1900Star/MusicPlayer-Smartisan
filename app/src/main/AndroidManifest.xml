@@ -45,7 +45,7 @@
             android:name=".activity.PlayActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activity.SearchActivity"
             android:launchMode="singleTop"
