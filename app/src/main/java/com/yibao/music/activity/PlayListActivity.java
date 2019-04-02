@@ -19,7 +19,6 @@ import java.util.ArrayList;
  * @author Luoshipeng
  */
 public class PlayListActivity extends AppCompatActivity implements OnFinishActivityListener {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +28,7 @@ public class PlayListActivity extends AppCompatActivity implements OnFinishActiv
     }
 
     private void initData() {
-        SpUtil.setAddTodPlayListFlag(this,Constants.NUMBER_ONE);
+        SpUtil.setAddTodPlayListFlag(this, Constants.NUMBER_ONE);
         String songName = getIntent().getStringExtra(Constants.SONG_NAME);
         ArrayList<String> arrayList = getIntent().getStringArrayListExtra(Constants.ADD_TO_LIST);
         FragmentManager fm = getSupportFragmentManager();

@@ -20,7 +20,6 @@ import com.yibao.music.adapter.BottomSheetAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.model.AddAndDeleteListBean;
-import com.yibao.music.model.BottomSheetStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
@@ -116,10 +115,10 @@ public class FavoriteBottomSheetDialog
                     mBottomListContent.addView(mRecyclerView);
                 }));
 
-        mCompositeDisposable.add(mBus.toObserverable(BottomSheetStatus.class)
+        mCompositeDisposable.add(mBus.toObservableType(Constants.FAVORITE_POSITION,Object.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(bean -> FavoriteBottomSheetDialog.this.playMusic(bean.getPosition())));
+                .subscribe(o -> FavoriteBottomSheetDialog.this.playMusic((Integer) o)));
         mCompositeDisposable.add(mBus.toObserverable(AddAndDeleteListBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(bean -> {

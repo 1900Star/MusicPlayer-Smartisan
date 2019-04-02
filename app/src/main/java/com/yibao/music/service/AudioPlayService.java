@@ -17,7 +17,6 @@ import com.yibao.music.manager.MediaSessionManager;
 import com.yibao.music.manager.MusicNotifyManager;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
-import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
@@ -47,7 +46,7 @@ public class AudioPlayService
 
     private MediaPlayer mediaPlayer;
     private AudioBinder mAudioBinder;
-    private static int PLAY_MODE;
+    private int playMode;
 
     /**
      * 三种播放模式
@@ -84,7 +83,6 @@ public class AudioPlayService
     @Override
     public void onCreate() {
         super.onCreate();
-//        startForeground(Constants.NUMBER_ONE, new Notification());
         init();
         initNotifyBroadcast();
         registerHeadsetReceiver();
@@ -96,7 +94,7 @@ public class AudioPlayService
         mBus = RxBus.getInstance();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        PLAY_MODE = SpUtil.getMusicMode(this);
+        playMode = SpUtil.getMusicMode(this);
         mSessionManager = new MediaSessionManager(this, mAudioBinder);
     }
 
@@ -157,7 +155,7 @@ public class AudioPlayService
                 mediaPlayer = null;
             }
             // “>=” 确保模糊搜索时播放不出现索引越界
-            if (mMusicDataList != null) {
+            if (mMusicDataList != null && mMusicDataList.size() > 0) {
                 position = position >= mMusicDataList.size() ? 0 : position;
                 mMusicInfo = mMusicDataList.get(position);
                 mediaPlayer = MediaPlayer.create(AudioPlayService.this,
@@ -238,7 +236,7 @@ public class AudioPlayService
         // 自动播放下一曲
 
         private void autoPlayNext() {
-            switch (PLAY_MODE) {
+            switch (playMode) {
                 case PLAY_MODE_ALL:
                     position = (position + 1) % mMusicDataList.size();
                     break;
@@ -256,22 +254,22 @@ public class AudioPlayService
         // 获取当前的播放模式
 
         public int getPalyMode() {
-            return PLAY_MODE;
+            return playMode;
         }
 
         //设置播放模式
 
         public void setPalyMode(int playmode) {
-            PLAY_MODE = playmode;
+            playMode = playmode;
             //保存播放模式
 
-            SpUtil.setMusicMode(AudioPlayService.this, PLAY_MODE);
+            SpUtil.setMusicMode(AudioPlayService.this, playMode);
         }
 
         //手动播放上一曲
 
         public void playPre() {
-            switch (PLAY_MODE) {
+            switch (playMode) {
                 case PLAY_MODE_RANDOM:
                     position = new Random().nextInt(mMusicDataList.size());
                     break;
@@ -289,7 +287,7 @@ public class AudioPlayService
         // 手动播放下一曲
 
         public void playNext() {
-            switch (PLAY_MODE) {
+            switch (playMode) {
                 case PLAY_MODE_RANDOM:
                     position = new Random().nextInt(mMusicDataList.size());
                     break;
@@ -391,7 +389,7 @@ public class AudioPlayService
                     switch (id) {
                         case Constants.FAVORITE:
                             mAudioBinder.updataFavorite();
-                            mBus.post(new PlayStatusBean(1));
+                            mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_ONE);
                             break;
                         case Constants.CLOSE:
                             pauseMusic();
@@ -400,17 +398,19 @@ public class AudioPlayService
                             mAudioBinder.playPre();
                             break;
                         case Constants.PLAY:
-                            if (mAudioBinder.isPlaying()) {
-                                mAudioBinder.pause();
-                            } else {
-                                mAudioBinder.start();
+                            if (mediaPlayer != null) {
+                                if (mAudioBinder.isPlaying()) {
+                                    mAudioBinder.pause();
+                                } else {
+                                    mAudioBinder.start();
+                                }
+                                mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_ZERO);
                             }
-                            mBus.post(new PlayStatusBean(0));
                             break;
                         case Constants.NEXT:
                             mAudioBinder.playNext();
                             break;
-                        case Constants.COUNTDOWN_fINISH:
+                        case Constants.COUNTDOWN_FINISH:
                             pauseMusic();
                             break;
                         default:
@@ -421,10 +421,13 @@ public class AudioPlayService
         }
 
         private void pauseMusic() {
-            mAudioBinder.pause();
-            mAudioBinder.hintNotifycation();
-            mBus.post(new PlayStatusBean(2));
-            SpUtil.setFoucesFlag(AudioPlayService.this, false);
+            if (mAudioBinder != null) {
+                mAudioBinder.pause();
+                mAudioBinder.hintNotifycation();
+                mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_TWO);
+                SpUtil.setFoucesFlag(AudioPlayService.this, false);
+                stopSelf();
+            }
         }
     }
 
@@ -441,7 +444,7 @@ public class AudioPlayService
         public void onReceive(Context context, Intent intent) {
             if (mAudioBinder != null && mAudioBinder.isPlaying()) {
                 mAudioBinder.pause();
-                mBus.post(new PlayStatusBean(0));
+                mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_ZERO);
             }
         }
     };
@@ -493,7 +496,7 @@ public class AudioPlayService
         } else {
             mAudioBinder.start();
         }
-        mBus.post(new PlayStatusBean(0));
+        mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_ZERO);
     }
 
     public void abandonAudioFocus() {
@@ -524,6 +527,5 @@ public class AudioPlayService
         }
         abandonAudioFocus();
         mSessionManager.release();
-        stopSelf();
     }
 }

@@ -26,12 +26,12 @@ public class MusicBean
     private String artist;
     private String album;
     private long albumId;
-    // 添加时间
     private long addTime;
-    // 添加到列表的时间
     private long addListTime;
     private long duration;
-    // 收藏时间
+    /**
+     * 收藏时间
+     */
     private String time;
     private String songUrl;
     private String firstChar;

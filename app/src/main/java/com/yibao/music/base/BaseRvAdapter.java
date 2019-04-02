@@ -82,8 +82,7 @@ public abstract class BaseRvAdapter<T>
                 moreHolder.mSongCount.setText(count);
             }
         } else {
-
-            bindView(holder, mList.get(position != 0 ? position >= mList.size() ? position - 1 : position : 0));
+            bindView(holder, mList.get(position != 0 ? position >= mList.size() ? mList.size() - 1 : position : 0));
         }
     }
 

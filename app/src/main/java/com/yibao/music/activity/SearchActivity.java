@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -15,29 +14,25 @@ import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
-import com.yibao.music.adapter.DetailsViewAdapter;
-import com.yibao.music.base.BaseObserver;
+import com.yibao.music.adapter.SearchCategoryPagerAdapter;
 import com.yibao.music.base.BaseTansitionActivity;
-import com.yibao.music.base.factory.RecyclerFactory;
+import com.yibao.music.base.listener.MusicPagerListener;
+import com.yibao.music.base.listener.OnFlowLayoutClickListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.TextChangedListener;
-import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
-import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
-import com.yibao.music.model.PlayStatusBean;
-import com.yibao.music.model.SearchHistoryBean;
+import com.yibao.music.model.SearchCategoryBean;
 import com.yibao.music.service.AudioPlayService;
+import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.MusicDaoUtil;
-import com.yibao.music.util.SnakbarUtil;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SoftKeybordUtil;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.TitleArtistUtil;
-import com.yibao.music.view.FlowLayoutView;
+import com.yibao.music.view.MainViewPager;
 import com.yibao.music.view.music.SmartisanControlBar;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -52,34 +47,38 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * @author Stran
  */
-public class SearchActivity extends BaseTansitionActivity implements OnMusicItemClickListener {
+public class SearchActivity extends BaseTansitionActivity implements OnMusicItemClickListener, OnFlowLayoutClickListener {
     @BindView(R.id.tv_search_cancel)
     TextView mTvSearchCancel;
-    @BindView(R.id.iv_search_clear)
-    ImageView mIvSearchClear;
     @BindView(R.id.iv_edit_clear)
     ImageView mIvEditClear;
     @BindView(R.id.edit_search)
     EditText mEditSearch;
-    @BindView(R.id.tv_no_search_result)
-    TextView mTvNoSearchResult;
-    @BindView(R.id.sticky_view_search)
-    TextView mtvStickyView;
-    @BindView(R.id.ll_list_view)
-    LinearLayout mLinearDetail;
-    @BindView(R.id.ll_history)
-    LinearLayout mLayoutHistory;
-    @BindView(R.id.flowlayout)
-    FlowLayoutView mFlowLayoutView;
+
+    @BindView(R.id.vp_search)
+    MainViewPager mViewPager;
+
+    @BindView(R.id.search_category_root)
+    LinearLayout mSearchCategoryRoot;
+
+    @BindView(R.id.tv_search_all)
+    TextView mTvSearchAll;
+    @BindView(R.id.tv_search_song)
+    TextView mTvSearchSong;
+    @BindView(R.id.tv_search_album)
+    TextView mTvSearchAlbum;
+    @BindView(R.id.tv_search_artist)
+    TextView mTvSearchArtist;
 
     @BindView(R.id.smartisan_control_bar)
     SmartisanControlBar mSmartisanControlBar;
-    private DetailsViewAdapter mSearchDetailAdapter;
     private MusicBean mMusicBean;
     private AudioPlayService.AudioBinder audioBinder;
     private int lyricsFlag;
     private InputMethodManager mInputMethodManager;
     private Disposable mDisposableSoftKeyboard;
+    private String mSearchCondition;
+    private int currentCategoryPosition = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,26 +86,75 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         setContentView(R.layout.activity_search);
         mBind = ButterKnife.bind(this);
         init();
-        initData();
         initListener();
     }
 
     private void init() {
-        mSearchDetailAdapter = new DetailsViewAdapter(SearchActivity.this, null, Constants.NUMBER_THRRE);
         int pageType = getIntent().getIntExtra("pageType", 0);
         audioBinder = MusicActivity.getAudioBinder();
         mSmartisanControlBar.setPbColorAndPreBtnGone();
+        SearchCategoryPagerAdapter pagerAdapter;
         if (pageType > Constants.NUMBER_ZERO) {
             mMusicBean = getIntent().getParcelableExtra("musicBean");
+            mEditSearch.setText(mMusicBean.getArtist());
+            mEditSearch.setSelection(mMusicBean.getArtist().length());
+            mSearchCategoryRoot.setVisibility(View.VISIBLE);
+            // ViewPager
+            pagerAdapter = new SearchCategoryPagerAdapter(getSupportFragmentManager(), mMusicBean.getArtist());
+            switchListCategory(3);
             setMusicInfo(mMusicBean);
-            initSearch(mMusicBean.getArtist());
             mIvEditClear.setVisibility(View.VISIBLE);
         } else {
+            pagerAdapter = new SearchCategoryPagerAdapter(getSupportFragmentManager(), null);
             // 主动弹出键盘
             mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             mDisposableSoftKeyboard = Observable.timer(50, TimeUnit.MILLISECONDS)
                     .subscribe(aLong -> SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED));
         }
+
+        mViewPager.setAdapter(pagerAdapter);
+        mViewPager.addOnPageChangeListener(new MusicPagerListener() {
+            @Override
+            public void onPageSelected(int position) {
+                switchListCategory(position);
+            }
+        });
+    }
+
+    private void initListener() {
+        mEditSearch.addTextChangedListener(new TextChangedListener() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                mSearchCondition = s.toString();
+                boolean conditionOK = !Constants.NULL_STRING.equals(mSearchCondition) && mSearchCondition.length() > 0;
+                mBus.post(new SearchCategoryBean(conditionOK ? getDataFlag() : Constants.NUMBER_TEN, mSearchCondition));
+                if (conditionOK) {
+                    mIvEditClear.setVisibility(View.VISIBLE);
+                } else {
+                    mIvEditClear.setVisibility(View.GONE);
+                }
+                mSearchCategoryRoot.setVisibility(conditionOK ? View.VISIBLE : View.GONE);
+            }
+        });
+        mSmartisanControlBar.setClickListener(clickFlag -> {
+            switch (clickFlag) {
+                case Constants.NUMBER_ONE:
+                    audioBinder.updataFavorite();
+                    checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
+                    break;
+                case Constants.NUMBER_TWO:
+                    audioBinder.playPre();
+                    break;
+                case Constants.NUMBER_THRRE:
+                    switchPlayState();
+                    break;
+                case Constants.NUMBER_FOUR:
+                    audioBinder.playNext();
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     @Override
@@ -170,61 +218,50 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     }
 
 
-    private void initData() {
-        // 搜索记录
-        List<SearchHistoryBean> searchList = mSearchDao.queryBuilder().list();
-        if (searchList != null && searchList.size() > 0) {
-            mLayoutHistory.setVisibility(View.VISIBLE);
-            Collections.sort(searchList);
-            mFlowLayoutView.setData(searchList);
-        }
-        // 列表数据
-        RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(1, mSearchDetailAdapter);
-        mLinearDetail.addView(recyclerView);
-
-    }
-
-    @Override
-    protected void moreMenu(MoreMenuStatus moreMenuStatus) {
-        super.moreMenu(moreMenuStatus);
-        MusicBean musicBean = moreMenuStatus.getMusicBean();
-        switch (moreMenuStatus.getPosition()) {
-            case Constants.NUMBER_ZERO:
-                startPlayListActivity(musicBean.getTitle());
+    private void switchListCategory(int position) {
+        currentCategoryPosition = position;
+        mViewPager.setCurrentItem(position, false);
+        mBus.post(new SearchCategoryBean(getDataFlag(), mSearchCondition));
+        switch (position) {
+            case 0:
+                setAllCategoryNotNormal();
+                mTvSearchAll.setTextColor(ColorUtil.wihtle);
+                mTvSearchAll.setBackgroundResource(R.drawable.btn_category_songname_down_selector);
                 break;
-            case Constants.NUMBER_ONE:
-                SnakbarUtil.keepGoing(mSmartisanControlBar);
+            case 1:
+                setAllCategoryNotNormal();
+                mTvSearchSong.setTextColor(ColorUtil.wihtle);
+                mTvSearchSong.setBackgroundResource(R.drawable.btn_category_score_down_selector);
                 break;
-            case Constants.NUMBER_TWO:
-                if (audioBinder != null) {
-                    if (audioBinder.getPosition() == moreMenuStatus.getMusicPosition()) {
-                        audioBinder.updataFavorite();
-                        checkCurrentSongIsFavorite(musicBean, null, mSmartisanControlBar);
-                    } else {
-                        MusicBean bean = moreMenuStatus.getMusicBean();
-                        bean.setIsFavorite(!bean.isFavorite());
-                        mMusicDao.update(bean);
-                    }
-                } else {
-                    SnakbarUtil.firstPlayMusic(mSmartisanControlBar);
-                }
-
+            case 2:
+                setAllCategoryNotNormal();
+                mTvSearchAlbum.setTextColor(ColorUtil.wihtle);
+                mTvSearchAlbum.setBackgroundResource(R.drawable.btn_category_score_down_selector);
                 break;
-            case Constants.NUMBER_THRRE:
-                SnakbarUtil.keepGoing(mSmartisanControlBar);
-                break;
-            case Constants.NUMBER_FOUR:
-                mBus.post(Constants.NUMBER_ONE, moreMenuStatus);
-                mMusicDao.delete(moreMenuStatus.getMusicBean());
+            case 3:
+                setAllCategoryNotNormal();
+                mTvSearchArtist.setBackgroundResource(R.drawable.btn_category_views_down_selector);
+                mTvSearchArtist.setTextColor(ColorUtil.wihtle);
                 break;
             default:
                 break;
         }
     }
 
+    private void setAllCategoryNotNormal() {
+        mTvSearchAll.setTextColor(ColorUtil.textName);
+        mTvSearchAll.setBackgroundResource(R.drawable.btn_category_songname_selector);
+        mTvSearchSong.setTextColor(ColorUtil.textName);
+        mTvSearchSong.setBackgroundResource(R.drawable.btn_category_score_selector);
+        mTvSearchAlbum.setTextColor(ColorUtil.textName);
+        mTvSearchAlbum.setBackgroundResource(R.drawable.btn_category_score_selector);
+        mTvSearchArtist.setTextColor(ColorUtil.textName);
+        mTvSearchArtist.setBackgroundResource(R.drawable.btn_category_views_selector);
+    }
+
     @Override
-    protected void refreshBtnAndNotify(PlayStatusBean playStatusBean) {
-        switch (playStatusBean.getType()) {
+    protected void refreshBtnAndNotify(int playStatus) {
+        switch (playStatus) {
             case 0:
                 mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
                 mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
@@ -241,45 +278,11 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         }
     }
 
-    private void initListener() {
-        mSearchDetailAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
-                MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(this));
-        mEditSearch.addTextChangedListener(new TextChangedListener() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                String searchContent = s.toString();
-                if (!Constants.NULL_STRING.equals(searchContent) && searchContent.length() > 0) {
-                    searchMusic(searchContent);
-                    mIvEditClear.setVisibility(View.VISIBLE);
-                } else {
-                    historyViewVisibility();
-                    mLinearDetail.setVisibility(View.INVISIBLE);
-                    mTvNoSearchResult.setVisibility(View.GONE);
-                    mIvEditClear.setVisibility(View.GONE);
-                }
-            }
-        });
-        mFlowLayoutView.setItemClickListener((position, bean) -> initSearch(bean.getSearchContent()));
-        mSmartisanControlBar.setClickListener(clickFlag -> {
-            switch (clickFlag) {
-                case Constants.NUMBER_ONE:
-                    audioBinder.updataFavorite();
-                    checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
-                    break;
-                case Constants.NUMBER_TWO:
-                    audioBinder.playPre();
-                    break;
-                case Constants.NUMBER_THRRE:
-                    switchPlayState();
-                    break;
-                case Constants.NUMBER_FOUR:
-                    audioBinder.playNext();
-                    break;
-                default:
-                    break;
-            }
-        });
+    private int getDataFlag() {
+        return mSearchCondition != null ? 1 : currentCategoryPosition == 0 || currentCategoryPosition == 1 ?
+                Constants.NUMBER_THRRE : currentCategoryPosition == 2 ? 2 : currentCategoryPosition == 3 ? 1 : 4;
     }
+
 
     private void switchPlayState() {
         if (audioBinder.isPlaying()) {
@@ -291,61 +294,9 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
     }
 
-    /**
-     * 点击搜索记录
-     *
-     * @param searchContent 搜索内容
-     */
-    private void initSearch(String searchContent) {
-        mEditSearch.setText(searchContent);
-        mEditSearch.setSelection(searchContent.length());
-        SearchActivity.this.searchMusic(searchContent);
-    }
 
-    private void historyViewVisibility() {
-        List<SearchHistoryBean> historyList = mSearchDao.queryBuilder().list();
-        if (historyList != null && historyList.size() > 0) {
-            mLayoutHistory.setVisibility(View.VISIBLE);
-            mTvNoSearchResult.setVisibility(View.GONE);
-            Collections.sort(historyList);
-            mFlowLayoutView.clearView(historyList);
-        } else {
-            mLayoutHistory.setVisibility(View.GONE);
-        }
-    }
-
-    /**
-     * 搜索音乐
-     *
-     * @param searchconditions 搜索关键字
-     */
-    private void searchMusic(String searchconditions) {
-        MusicDaoUtil.getSearchResult(flag -> {
-            mSearchDetailAdapter.setDataFlag(flag);
-            mtvStickyView.setText(flag == 1 ? "艺术家" : flag == 2 ? "专辑" : "歌曲");
-        }, mMusicDao, searchconditions)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new BaseObserver<List<MusicBean>>() {
-                    @Override
-                    public void onNext(List<MusicBean> musicBeanList) {
-                        mSearchDetailAdapter.setNewData(musicBeanList);
-                        mLayoutHistory.setVisibility(View.GONE);
-                        mTvNoSearchResult.setVisibility(View.GONE);
-                        mLinearDetail.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mLayoutHistory.setVisibility(View.GONE);
-                        mLinearDetail.setVisibility(View.GONE);
-                        mTvNoSearchResult.setVisibility(View.VISIBLE);
-                        mSmartisanControlBar.setVisibility(View.VISIBLE);
-                    }
-
-                });
-    }
-
-    @OnClick({R.id.tv_search_cancel, R.id.iv_edit_clear, R.id.iv_search_clear})
+    @OnClick({R.id.tv_search_cancel, R.id.iv_edit_clear,
+            R.id.tv_search_all, R.id.tv_search_song, R.id.tv_search_album, R.id.tv_search_artist})
     public void onClick(View v) {
         switch (v.getId()) {
             default:
@@ -357,17 +308,20 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
                 break;
             case R.id.iv_edit_clear:
                 mEditSearch.setText(null);
-                if (mSearchDetailAdapter != null) {
-                    mSearchDetailAdapter.clear();
-                }
-                mLinearDetail.setVisibility(View.INVISIBLE);
-                historyViewVisibility();
+                findViewById(R.id.search_category_root).setVisibility(View.GONE);
+                mBus.post(new SearchCategoryBean(Constants.NUMBER_NINE, null));
                 break;
-            case R.id.iv_search_clear:
-                mSearchDao.deleteAll();
-                mFlowLayoutView.removeAllViews();
-                mLayoutHistory.setVisibility(View.INVISIBLE);
-                mLinearDetail.setVisibility(View.INVISIBLE);
+            case R.id.tv_search_all:
+                switchListCategory(0);
+                break;
+            case R.id.tv_search_song:
+                switchListCategory(1);
+                break;
+            case R.id.tv_search_album:
+                switchListCategory(2);
+                break;
+            case R.id.tv_search_artist:
+                switchListCategory(3);
                 break;
         }
     }
@@ -433,4 +387,12 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         }
 
     }
+
+    @Override
+    public void click(String songName) {
+        mEditSearch.setText(songName);
+        mEditSearch.setSelection(songName.length());
+
+    }
+
 }

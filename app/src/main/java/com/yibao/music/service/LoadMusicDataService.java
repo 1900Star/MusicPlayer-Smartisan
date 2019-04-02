@@ -59,7 +59,7 @@ public class LoadMusicDataService extends IntentService {
             // newSong新增歌曲的数量，大于0表示有新的歌曲。
             if (newSong > 0) {
                 // 对集合按添加时间排序，这样新增的歌曲就会排在最前面，通过循环将前面新增的歌曲添加到本地数据库
-                List<MusicBean> newList = MusicListUtil.sortMusicList(dataList, Constants.NUMBER_ONE);
+                List<MusicBean> newList = MusicListUtil.sortMusicList(dataList, Constants.SORT_DOWN_TIME);
                 for (int i = 0; i < newSong; i++) {
                     sendLoadProgress(newSong, newList.get(i));
                 }
@@ -122,8 +122,6 @@ public class LoadMusicDataService extends IntentService {
             LogUtil.d("自动恢复收藏列表");
         } else {
             LogUtil.d("没有发现歌曲收藏文件");
-//            ToastUtil.showNotFoundFavoriteFile(this);
-
         }
     }
 

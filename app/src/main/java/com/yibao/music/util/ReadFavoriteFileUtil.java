@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,6 +25,7 @@ import io.reactivex.schedulers.Schedulers;
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/8/30/ 16:59
  * @ Des:    读取歌曲收藏文件
+ * @author Luoshipeng
  */
 public class ReadFavoriteFileUtil {
     private static final String FAVORITE_FILE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/favorite.txt/";
@@ -50,7 +52,7 @@ public class ReadFavoriteFileUtil {
         File file = new File(FAVORITE_FILE);
         BufferedReader reader;
         try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"));
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             for (; ; ) {
                 String text = reader.readLine();
                 if (text == null) {
@@ -80,7 +82,7 @@ public class ReadFavoriteFileUtil {
         File file = new File(FAVORITE_FILE);
         BufferedReader reader;
         try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"));
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             for (; ; ) {
                 String text = reader.readLine();
                 if (text == null) {
@@ -119,7 +121,7 @@ public class ReadFavoriteFileUtil {
             File file = new File(FAVORITE_FILE);
             BufferedReader reader;
             try {
-                reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"));
+                reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
                 for (; ; ) {
                     String text = reader.readLine();
                     if (text == null) {

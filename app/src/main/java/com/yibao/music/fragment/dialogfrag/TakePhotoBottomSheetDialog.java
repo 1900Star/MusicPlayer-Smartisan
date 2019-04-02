@@ -87,22 +87,11 @@ public class TakePhotoBottomSheetDialog {
     private void takeCameraPic() {
 
         String savePath = Environment.getExternalStorageDirectory().toString();
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);;
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (FileUtil.hasSdcard()) {
-            File file = new File(savePath);
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-            File pictureFile = new File(savePath, Constants.IMAGE_FILE_NAME);
-            Uri pictureUri;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                pictureUri = FileProvider.getUriForFile(mContext, mContext.getPackageName(), pictureFile);
-            } else {
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                pictureUri = Uri.fromFile(pictureFile);
-            }
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.putExtra(MediaStore.EXTRA_OUTPUT,
-                    pictureUri);
+                    FileUtil.getPicUri(mContext, savePath));
             mContext.startActivityForResult(intent, Constants.CODE_CAMERA_REQUEST);
         }
     }

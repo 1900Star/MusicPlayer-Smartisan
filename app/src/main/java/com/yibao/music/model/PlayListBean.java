@@ -16,6 +16,7 @@ import org.greenrobot.greendao.annotation.Unique;
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/10/28/ 23:18
  * @ Des:    播放列表的数据库
+ * @author Luoshipeng
  */
 @Entity
 public class PlayListBean implements Parcelable, Comparable<PlayListBean>{

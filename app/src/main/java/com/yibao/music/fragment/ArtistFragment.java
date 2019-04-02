@@ -11,12 +11,15 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.ArtistAdapter;
 import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.base.BaseMusicFragment;
+import com.yibao.music.base.BaseObserver;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
+import com.yibao.music.util.ThreadPoolProxyFactory;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicToolBar;
 import com.yibao.music.view.music.MusicView;
@@ -25,6 +28,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -46,17 +55,11 @@ public class ArtistFragment extends BaseMusicFragment {
     @BindView(R.id.details_view)
     DetailsView mDetailsView;
     private ArtistAdapter mAdapter;
-    private List<ArtistInfo> mArtistList;
-    public  boolean isShowDetailsView = false;
+    public boolean isShowDetailsView = false;
     private DetailsViewAdapter mDetailsAdapter;
     private List<MusicBean> mDetailList;
     private String mTempTitle;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mArtistList = MusicListUtil.getArtistList(mSongList);
-    }
 
     @Override
     protected boolean getIsOpenDetail() {
@@ -66,6 +69,7 @@ public class ArtistFragment extends BaseMusicFragment {
     @Override
     public void onResume() {
         super.onResume();
+        initListener();
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.music_artisan));
     }
 
@@ -76,7 +80,6 @@ public class ArtistFragment extends BaseMusicFragment {
         unbinder = ButterKnife.bind(this, view);
         mMusicToolBar.setTvEditVisibility(isShowDetailsView);
         initData();
-        initListener();
         return view;
     }
 
@@ -103,18 +106,18 @@ public class ArtistFragment extends BaseMusicFragment {
 
 
     private void initData() {
-        mAdapter = new ArtistAdapter(mArtistList);
+        List<ArtistInfo> artistList = MusicListUtil.getArtistList(mSongList);
+        mAdapter = new ArtistAdapter(artistList);
         mMusicView.setAdapter(getActivity(), Constants.NUMBER_TWO, true, mAdapter);
 
     }
 
     private void openDetailsView(ArtistInfo artistInfo) {
-        mDetailsView.setVisibility(isShowDetailsView ? View.GONE : View.VISIBLE);
-        mMusicToolBar.setTvEditVisibility(isShowDetailsView);
         if (!isShowDetailsView) {
             if (artistInfo != null) {
                 mTempTitle = artistInfo.getAlbumName();
                 mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(artistInfo.getArtist())).build().list();
+                LogUtil.d("CCCCCCCCCC   "+mDetailList.size());
                 // DetailsView播放音乐需要的参数
                 mDetailsView.setDataFlag(mFragmentManager, mDetailList.size(), artistInfo.getArtist(), Constants.NUMBER_ONE);
                 mDetailsAdapter = new DetailsViewAdapter(mActivity, mDetailList, Constants.NUMBER_ONE);
@@ -125,6 +128,7 @@ public class ArtistFragment extends BaseMusicFragment {
                 mMusicToolBar.setTvEditText(R.string.music_artisan);
             }
         }
+        mDetailsView.setVisibility(isShowDetailsView ? View.GONE : View.VISIBLE);
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? getString(R.string.music_artisan) : mTempTitle);
         isShowDetailsView = !isShowDetailsView;
         mMusicToolBar.setTvEditVisibility(isShowDetailsView);

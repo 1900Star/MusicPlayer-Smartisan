@@ -18,7 +18,6 @@ import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.MusicPagerListener;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.AlbumInfo;
-import com.yibao.music.model.EditBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.ColorUtil;
@@ -68,8 +67,6 @@ public class AlbumFragment extends BaseMusicFragment {
 
     @BindView(R.id.view_pager_album)
     ViewPager mViewPager;
-    @BindView(R.id.album_music_view)
-    MusicView mAlbumMusicView;
     @BindView(R.id.details_view)
     DetailsView mDetailsView;
     @BindView(R.id.album_content_view)
@@ -120,7 +117,7 @@ public class AlbumFragment extends BaseMusicFragment {
     private void initRxBusData() {
         disposeToolbar();
         if (mEditDisposable == null) {
-            mEditDisposable = mBus.toObservableType(Constants.NUMBER_NINE, EditBean.class).subscribeOn(Schedulers.io())
+            mEditDisposable = mBus.toObservableType(Constants.FRAGMENT_ALBUM, Object.class).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(editBean -> {
                         mMusicToolBar.setTvEditText(R.string.tv_edit);
                         mMusicToolBar.setTvDeleteVisibility(View.GONE);
@@ -134,7 +131,7 @@ public class AlbumFragment extends BaseMusicFragment {
             @Override
             public void clickEdit() {
                 if (mDetailViewFlag) {
-                    mBus.post(new EditBean(Constants.NUMBER_THRRE));
+                    mBus.post(Constants.ALBUM_FAG_EDIT, Constants.NUMBER_THRRE);
                 }
                 mMusicToolBar.setTvDeleteVisibility(isShowDetailsView ? View.GONE : View.VISIBLE);
                 mMusicToolBar.setTvEditText(!isShowDetailsView ? R.string.tv_edit : R.string.complete);
@@ -148,7 +145,7 @@ public class AlbumFragment extends BaseMusicFragment {
 
             @Override
             public void clickDelete() {
-                mBus.post(new EditBean(Constants.NUMBER_FOUR));
+                mBus.post(Constants.ALBUM_FAG_EDIT, Constants.NUMBER_FOUR);
             }
         });
     }

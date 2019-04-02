@@ -3,23 +3,15 @@ package com.yibao.music.util;
 
 import com.yibao.music.model.Message;
 
-import org.reactivestreams.Subscriber;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.subjects.PublishSubject;
 
 
 /**
- * @ Author: Luoshipeng
  * Des：${TODO}
  * Time:2017/4/29 10:35
+ *
+ * @author Luoshipeng
  */
 public class RxBus {
 
@@ -28,11 +20,11 @@ public class RxBus {
     private static volatile RxBus instance;
 
     // PublishSubject只会把在订阅发生的时间点之后来自原始Observable的数据发射给观察者
+
     private RxBus() {
         bus = PublishSubject.create();
     }
 
-    // 单例RxBus
     public static RxBus getInstance() {
         if (instance == null) {
             synchronized (RxBus.class) {
@@ -55,26 +47,38 @@ public class RxBus {
         return bus.ofType(eventType);
     }
 
-    /**
-     * 提供了一个新的事件,根据code进行分发
-     *
-     * @param code 事件code
-     */
-    public void post(int code, Object o) {
-        bus.onNext(new Message(code, o));
+    public void post(int msgKey, Object o) {
+        bus.onNext(new Message(msgKey, o));
+    }
+
+    public <T> Observable<T> toObservableType(final int msgKey, final Class<T> eventType) {
+        return bus.ofType(Message.class)
+                .filter(msg -> msg.getMsgKey() != null && msg.getCode() == (msgKey) && eventType.isInstance(msg.getObject())).map(Message::getObject).cast(eventType);
     }
 
     /**
-     * 根据传递的code和 eventType 类型返回特定类型(eventType)的 被观察者
+     * 提供了一个新的事件,根据msgKey进行分发
      *
-     * @param code      事件code
+     * @param msgKey 事件key
+     */
+    public void post(String msgKey, Object o) {
+        bus.onNext(new Message(msgKey, o));
+    }
+
+
+    /**
+     * 根据传递的magKey和 eventType 类型返回特定类型(eventType)的 被观察者
+     *
+     * @param msgKey    事件flag
      * @param eventType 事件类型
      * @param <T>       t
      * @return r
      */
-    public <T> Observable<T> toObservableType(final int code, final Class<T> eventType) {
+
+    public <T> Observable<T> toObservableType(final String msgKey, final Class<T> eventType) {
         return bus.ofType(Message.class)
-                .filter(message -> message.getCode() == code && eventType.isInstance(message.getObject())).map(Message::getObject).cast(eventType);
+                .filter(msg -> msg.getMsgKey() != null && msg.getMsgKey().equals(msgKey) && eventType.isInstance(msg.getObject())).map(Message::getObject).cast(eventType);
     }
+
 
 }

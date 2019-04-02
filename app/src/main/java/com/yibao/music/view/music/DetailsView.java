@@ -60,7 +60,6 @@ public class DetailsView
     private int mDataFlag;
     private int mListSize;
     private String mQueryFlag;
-    private LinearLayout mHeadView;
     private FragmentManager mFragmentManager;
     private Long mAlbumId;
     private List<MusicBean> mMusicList;
@@ -99,7 +98,6 @@ public class DetailsView
      * @param adapter  d
      */
     public void setAdapter(int dataType, Object bean, DetailsViewAdapter adapter) {
-        DetailsViewAdapter adapter1 = adapter;
         initData(dataType, bean);
         mMusicList = adapter.getData();
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
@@ -150,15 +148,16 @@ public class DetailsView
     private void startMusic(int startPosition) {
         if (getContext() instanceof OnMusicItemClickListener) {
             SpUtil.setSortFlag(getContext(), Constants.NUMBER_TEN);
-            ((OnMusicItemClickListener) getContext()).startMusicServiceFlag(startPosition,Constants.NUMBER_TEN, mDataFlag, mQueryFlag);
+            ((OnMusicItemClickListener) getContext()).startMusicServiceFlag(startPosition, Constants.NUMBER_TEN, mDataFlag, mQueryFlag);
         }
     }
 
 
     /**
-     *  根据dataType将bean转换具体的数据类型
+     * 根据dataType将bean转换具体的数据类型
+     *
      * @param dataType d
-     * @param bean b
+     * @param bean     b
      */
     private void initData(int dataType, Object bean) {
         if (dataType == Constants.NUMBER_ONE) {
@@ -192,7 +191,6 @@ public class DetailsView
         mIvDetailsAddToPlayList.setOnClickListener(this);
         mLlAlbumDetailsPlayall.setOnClickListener(this);
         mLlAlbumDetailsRandomPlay.setOnClickListener(this);
-        mHeadView.setOnClickListener(this);
         mIvArtistAlbummDetails.setOnClickListener(this);
         mIvArtistAlbummDetails.setOnLongClickListener(v -> {
             RelaxDialogFragment.newInstance().show(mFragmentManager, "girlsDialog");
@@ -204,7 +202,7 @@ public class DetailsView
     private void initView() {
         LayoutInflater.from(getContext())
                 .inflate(R.layout.details_fragment, this, true);
-        mHeadView = findViewById(R.id.details_head_view);
+
         mRecyclerView = findViewById(R.id.rv_artist_album_details);
         mIvArtistAlbummDetails = findViewById(R.id.iv_artist_albumm_details);
         mTvArtistAlbummDetailsTitle = findViewById(R.id.tv_artist_albumm_details_title);

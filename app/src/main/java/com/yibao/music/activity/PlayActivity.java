@@ -27,7 +27,6 @@ import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
-import com.yibao.music.model.PlayStatusBean;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
@@ -62,6 +61,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class PlayActivity extends BasePlayActivity {
+    @BindView(R.id.rv_titlebar)
+    RelativeLayout mTitleBar;
     @BindView(R.id.titlebar_down)
     ImageView mTitlebarDown;
     @BindView(R.id.play_song_name)
@@ -337,8 +338,8 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     @Override
-    protected void refreshBtnAndNotify(PlayStatusBean bean) {
-        switch (bean.getType()) {
+    protected void refreshBtnAndNotify(int playStatus) {
+        switch (playStatus) {
             case 0:
                 switchPlayState(!audioBinder.isPlaying());
                 break;
@@ -355,7 +356,7 @@ public class PlayActivity extends BasePlayActivity {
     }
 
 
-    @OnClick({R.id.titlebar_down, R.id.play_song_name,
+    @OnClick({R.id.titlebar_down, R.id.rv_titlebar,
             R.id.playing_song_album, R.id.album_cover, R.id.rotate_rl, R.id.tv_lyrics,
             R.id.iv_lyrics_switch, R.id.iv_secreen_sun_switch, R.id.music_player_mode,
             R.id.music_player_pre, R.id.music_play, R.id.music_player_next, R.id.iv_favorite_music})
@@ -364,7 +365,7 @@ public class PlayActivity extends BasePlayActivity {
             case R.id.titlebar_down:
                 finish();
                 break;
-            case R.id.play_song_name:
+            case R.id.rv_titlebar:
                 startSearchActivity(mCurrenMusicInfo);
                 break;
             case R.id.rotate_rl:
@@ -472,7 +473,7 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     /**
-     *  清空收藏列表中所有音乐后的回调，
+     * 清空收藏列表中所有音乐后的回调，
      */
     @Override
     public void updataFavoriteStatus() {

@@ -83,93 +83,16 @@
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
-    <LinearLayout
+    <include
+        android:id="@+id/search_category_root"
+        layout="@layout/search_category"
+        android:visibility="gone" />
+
+    <com.yibao.music.view.MainViewPager
+        android:id="@+id/vp_search"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-
-        <TextView
-            android:id="@+id/tv_no_search_result"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/listBg"
-            android:gravity="center"
-            android:text="@string/not_search_result"
-            android:textColor="@color/seekBarN"
-            android:textSize="@dimen/big_tv"
-            android:textStyle="bold"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@+id/ll_history"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="20dp"
-                    android:text="@string/search_history"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/about_title"
-                    tools:ignore="RelativeOverlap" />
-
-                <ImageView
-                    android:id="@+id/iv_search_clear"
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="16dp"
-                    android:contentDescription="@null"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/clear_text_selector" />
-
-            </RelativeLayout>
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.yibao.music.view.FlowLayoutView
-                    android:id="@+id/flowlayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:clickable="true"
-                    android:focusable="true" />
-            </ScrollView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_list_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="3dp"
-            android:background="@color/listBg"
-            android:orientation="vertical"
-            android:visibility="invisible">
-
-            <TextView
-                android:id="@+id/sticky_view_search"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:textColor="@color/textName" />
-        </LinearLayout>
-    </LinearLayout>
+        android:layout_weight="1" />
 
     <View
         android:layout_width="match_parent"
@@ -180,6 +103,6 @@
         android:id="@+id/smartisan_control_bar"
         android:layout_width="match_parent"
         android:layout_height="54dp"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
 </LinearLayout>

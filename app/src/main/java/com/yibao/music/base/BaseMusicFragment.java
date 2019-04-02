@@ -5,10 +5,13 @@ import android.support.annotation.Nullable;
 
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
-import com.yibao.music.model.DetailsFlagBean;
+import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.SpUtil;
+
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -27,17 +30,26 @@ public abstract class BaseMusicFragment extends BaseFragment {
     private Disposable mMenuDisposable;
     private String mClassName;
     private int mAddToPlayListFdlag;
+    protected List<MusicBean> mSongList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initDetailsFlag();
+        mSongList = mMusicBeanDao.queryBuilder().list();
         mAddToPlayListFdlag = SpUtil.getAddToPlayListFdlag(mContext);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getUserVisibleHint()) {
+        }
+    }
 
     /**
      * 详情页面是否打开
+     *
      * @return b
      */
     protected abstract boolean getIsOpenDetail();
@@ -55,10 +67,10 @@ public abstract class BaseMusicFragment extends BaseFragment {
      * 根据detailFlag处理具体详情页面的返回事件
      */
     private void initDetailsFlag() {
-        mCompositeDisposable.add(mBus.toObserverable(DetailsFlagBean.class)
+        mCompositeDisposable.add(mBus.toObservableType(Constants.HANDLE_BACK, Object.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(detailsFlagBean -> handleDetailsBack(detailsFlagBean.getDetailFlag()))
+                .subscribe(o -> BaseMusicFragment.this.handleDetailsBack((Integer) o))
         );
 
     }
@@ -83,7 +95,7 @@ public abstract class BaseMusicFragment extends BaseFragment {
     }
 
     protected void randomPlayMusic() {
-        int randomSize = mSongList.size();
+        int randomSize = mMusicBeanDao.queryBuilder().list().size();
         int position = RandomUtil.getRandomPostion(randomSize > 0 ? randomSize : 0);
         if (getActivity() instanceof OnMusicItemClickListener) {
             ((OnMusicItemClickListener) getActivity()).startMusicService(position);

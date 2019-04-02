@@ -24,11 +24,19 @@ public class Constants {
     public static final int PLAY = 2;
     public static final int NEXT = 3;
     public static final int CLOSE = 4;
+    /**
+     * 排序标识 1 按照歌曲下载时间 ，2 按照歌曲收藏时间 , 3 按照播放次数 ，4 按照评分 ，5 按添加到自定义列表的时间。
+     */
+    public static final int SORT_DOWN_TIME = 1;
+    public static final int SORT_FAVORITE_TIME = 2;
+    public static final int SORT_FREQUENCY= 3;
+    public static final int SORT_SCORE = 4;
+    public static final int SORT_ADD_PALY_LIST_TIME = 5;
 
     /**
      * 倒计时结束，广播通知暂停播放音乐
      */
-    public static final int COUNTDOWN_fINISH = 5;
+    public static final int COUNTDOWN_FINISH = 5;
 
     public static final int NUMBER_ZERO = 0;
     public static final int NUMBER_ONE = 1;
@@ -44,6 +52,22 @@ public class Constants {
     public static final int NUMBER_ELEVEN = 11;
     public static final int NUMBER_TWELVE = 12;
     public static final int NUMBER_THIRTEEN = 13;
+    // RxBus post  flag
+
+    public static final String HANDLE_BACK = "handle_back";
+    public static final String ALBUM_FAG_EDIT = "album_edit";
+    public static final String SONG_FAG_EDIT = "song_edit";
+    public static final String FAVORITE_POSITION = "favorite_position";
+    /**
+     * 0 表示是通知栏控制播放和暂停
+     * 1 表示在通知栏收藏音乐
+     * 2 在通知栏关闭通知栏
+     */
+    public static final String PLAY_STATUS = "play_status";
+    public static final String HEADER_PIC_URI = "header_uri";
+    public static final String SEARCH_CONDITION = "search_condition";
+    public static final String CLEAR_CONDITON = "clear_condition";
+
     static final char LETTER_A = 'A';
     static final char LETTER_Z = 'Z';
     public static final char LETTER_HASH = '#';

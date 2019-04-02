@@ -8,11 +8,11 @@ import org.greenrobot.greendao.query.WhereCondition;
 import java.util.List;
 
 /**
- * @ Author: Luoshipeng
  * @ Name:   QueryMusicFlagListUtil
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/5/6/ 18:02
  * @ Des:    //根据条件查询MusicList
+ * @author Luoshipeng
  */
 public class QueryMusicFlagListUtil {
 
@@ -30,31 +30,28 @@ public class QueryMusicFlagListUtil {
             return MusicListUtil.sortMusicAbc(musicBeanDao.queryBuilder().list());
             // 按评分
         } else if (sortListFlag == Constants.NUMBER_TWO) {
-            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.NUMBER_FOUR);
+            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.SORT_SCORE);
             // 按播放次数
         } else if (sortListFlag == Constants.NUMBER_THRRE) {
-            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.NUMBER_THRRE);
+            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.SORT_FREQUENCY);
             // 按添加时间
         } else if (sortListFlag == Constants.NUMBER_FOUR) {
-            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
+            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.SORT_DOWN_TIME);
             // 收藏列表
         } else if (sortListFlag == Constants.NUMBER_EIGHT) {
-            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list(), Constants.NUMBER_TWO);
+            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list(), Constants.SORT_FAVORITE_TIME);
             // 10表示按条件查询
         } else if (sortListFlag == Constants.NUMBER_TEN) {
             WhereCondition whereCondition = null;
             // 按艺术家查询列表
             if (dataFlag == Constants.NUMBER_ONE) {
                 whereCondition = MusicBeanDao.Properties.Artist.eq(queryFlag);
-//                return musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(queryFlag)).build().list();
                 // 按专辑名查询列表
             } else if (dataFlag == Constants.NUMBER_TWO) {
                 whereCondition = MusicBeanDao.Properties.Album.eq(queryFlag);
-//                return musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(queryFlag)).build().list();
                 // 按歌曲名查询
             } else if (dataFlag == Constants.NUMBER_THRRE) {
                 whereCondition = MusicBeanDao.Properties.Title.eq(queryFlag);
-//                return musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Title.eq(queryFlag)).build().list();
                 // 按播放列表查询
             } else if (dataFlag == Constants.NUMBER_FOUR) {
                 whereCondition = MusicBeanDao.Properties.PlayListFlag.eq(queryFlag);
@@ -63,8 +60,7 @@ public class QueryMusicFlagListUtil {
                 return musicBeanDao.queryBuilder().where(whereCondition).build().list();
             }
         }
-//        return MusicListUtil.sortMusicAbc(musicBeanDao.queryBuilder().list());
-        return null;
+        return MusicListUtil.sortMusicAbc(musicBeanDao.queryBuilder().list());
     }
 
     /**
@@ -75,9 +71,8 @@ public class QueryMusicFlagListUtil {
      * @return h
      */
     public static List<MusicBean> getDataList(int spMusicFlag, int dataFlag, String queryFlag, MusicBeanDao musicBeanDao) {
-        LogUtil.d("CCCCCCCCc    " + spMusicFlag + "     ==  " + dataFlag + "    ======  " + queryFlag);
         if (spMusicFlag == Constants.NUMBER_THRRE) {
-            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.NUMBER_ONE);
+            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.SORT_DOWN_TIME);
         } else if (spMusicFlag == Constants.NUMBER_ONE) {
             return MusicListUtil.sortMusicAbc(musicBeanDao.queryBuilder().list());
         } else if (spMusicFlag == Constants.NUMBER_EIGHT) {
@@ -87,15 +82,12 @@ public class QueryMusicFlagListUtil {
             // 按艺术家查询列表
             if (dataFlag == Constants.NUMBER_ONE) {
                 whereCondition = MusicBeanDao.Properties.Artist.eq(queryFlag);
-//                return musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(queryFlag)).build().list();
                 // 按专辑名查询列表
             } else if (dataFlag == Constants.NUMBER_TWO) {
                 whereCondition = MusicBeanDao.Properties.Album.eq(queryFlag);
-//                return musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(queryFlag)).build().list();
                 // 按歌曲名查询
             } else if (dataFlag == Constants.NUMBER_THRRE) {
                 whereCondition = MusicBeanDao.Properties.Title.eq(queryFlag);
-//                return musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Title.eq(queryFlag)).build().list();
                 // 按播放列表查询
             } else if (dataFlag == Constants.NUMBER_FOUR) {
                 whereCondition = MusicBeanDao.Properties.PlayListFlag.eq(queryFlag);
@@ -104,7 +96,7 @@ public class QueryMusicFlagListUtil {
                 return musicBeanDao.queryBuilder().where(whereCondition).build().list();
             }
         }
-        return null;
+        return MusicListUtil.sortMusicAbc(musicBeanDao.queryBuilder().list());
     }
 
 }

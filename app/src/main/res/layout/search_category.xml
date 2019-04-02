@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginEnd="8dp"
+    android:orientation="horizontal">
+
+
+    <TextView
+        android:id="@+id/tv_search_all"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/btn_category_songname_down_selector"
+        android:gravity="center"
+        android:text="@string/all_condition"
+        android:textColor="@color/colorWhite"
+
+        />
+
+
+    <TextView
+        android:id="@+id/tv_search_song"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/btn_category_score_selector"
+        android:gravity="center"
+        android:text="@string/music_song"
+        android:textColor="@color/textDes" />
+
+
+    <TextView
+        android:id="@+id/tv_search_album"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/btn_category_score_selector"
+        android:gravity="center"
+        android:text="@string/music_album"
+        android:textColor="@color/textDes" />
+
+
+    <TextView
+        android:id="@+id/tv_search_artist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/btn_category_views_selector"
+        android:gravity="center"
+        android:text="@string/music_artisan"
+        android:textColor="@color/textDes" />
+
+</LinearLayout>

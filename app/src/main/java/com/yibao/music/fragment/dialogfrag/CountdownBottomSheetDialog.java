@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.base.listener.BottomSheetCallback;
-import com.yibao.music.model.CountdownBean;
 import com.yibao.music.service.CountdownService;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
@@ -66,11 +65,11 @@ public class CountdownBottomSheetDialog {
 
     private void initRxData(BottomSheetDialog dialog) {
         if (mDisposable == null) {
-            mDisposable = RxBus.getInstance().toObserverable(CountdownBean.class)
+            mDisposable = RxBus.getInstance().toObservableType(Constants.COUNTDOWN_TIME,Object.class)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(countdownBean -> {
-                        String countdownTime = countdownBean.getCountdownTime();
+                    .subscribe(o -> {
+                        String countdownTime = (String) o;
                         String str = "剩余时间 " + countdownTime;
                         mTvCountdown.setText(str);
                         if (countdownTime.equals(Constants.FINISH_TIME)) {
