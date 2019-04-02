@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
@@ -34,11 +35,10 @@ public class PermissionsDialog
         return new PermissionsDialog();
     }
 
-    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        mView = getActivity().getLayoutInflater().inflate(R.layout.add_list_dialog, null);
+        mView = LayoutInflater.from(getActivity()).inflate(R.layout.add_list_dialog, null);
 
         builder.setView(mView);
         AlertDialog dialog = builder.create();
