@@ -2,6 +2,8 @@ package com.yibao.music.util;
 
 import android.support.annotation.NonNull;
 
+import com.yibao.music.base.listener.LyricsCallBack;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,27 +28,26 @@ import okhttp3.ResponseBody;
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/10/3/ 20:18
  * @ Des:    下载网络歌词
+ * @author Luoshipeng
  */
 public class DownloadLyricsUtil {
     private static final String ONLINE_LYRICS_URL = "http://geci.me/api/lyric/";
     private static boolean isDownloadSucssce = false;
-    private static String lyricsUrl;
 
     /**
      * 获取网络歌词的下载地址
      *
      * @param songName 歌名
      * @param artist   歌手
-     * @return 返回下载地址
      */
-    public static synchronized String getLyricsDownUrl(String songName, String artist) {
+    public static synchronized void downloadLyric(String songName, String artist, LyricsCallBack callBack) {
         String queryLrcURL = getQueryLrcURL(songName, artist);
-//        LogUtil.d("     查询歌词地址    ====    " + queryLrcURL);
-        OkHttpUtil.downFile(queryLrcURL, new Callback() {
+        LogUtil.d("     查询歌词地址    ====    " + queryLrcURL);
+        ThreadPoolProxyFactory.newInstance().execute(() -> OkHttpUtil.downFile(queryLrcURL, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-//                LogUtil.d("歌词下载失败   ==  " + e.toString());
-                lyricsUrl = null;
+                LogUtil.d("歌词下载失败   ==  " + e.toString());
+                callBack.lyricsUri(null);
             }
 
             @Override
@@ -63,24 +64,32 @@ public class DownloadLyricsUtil {
                     try {
                         JSONObject jObject = new JSONObject(sb.toString());
                         int count = jObject.getInt("count");
-                        int index = count == 0 ? 0 : new Random().nextInt() % count;
-                        JSONArray jArray = jObject.getJSONArray("result");
-                        JSONObject obj = jArray.getJSONObject(index);
-                        lyricsUrl = obj.getString("lrc");
-//                        LogUtil.d("CCCCCCCCCCCCCCCCCC   ==  "+lyricsUrl);
+                        LogUtil.d(" 歌词地址数量 : ==   " + count);
+                        if (count > 0) {
+                            int index = new Random().nextInt() % count;
+                            LogUtil.d("歌词的Index :   " + index);
+                            JSONArray jArray = jObject.getJSONArray("result");
+                            JSONObject obj = jArray.getJSONObject(0);
+                            String lyricsUrl = obj.getString("lrc");
+                            LogUtil.d("歌词下载地址   ====  AA  " + lyricsUrl);
+                            callBack.lyricsUri(lyricsUrl);
+                        } else {
+                            callBack.lyricsUri(null);
+
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        callBack.lyricsUri(null);
                     }
                 }
             }
-        });
-        LogUtil.d("歌词下载地址   ====  AA  " + lyricsUrl);
-        return lyricsUrl;
+        }));
+
     }
 
     private static String getQueryLrcURL(String title, String artist) {
-        String str = ONLINE_LYRICS_URL + Encode(title);
-        return artist == null ? str : str + "/" + Encode(artist);
+        String str = ONLINE_LYRICS_URL + encode(title);
+        return artist == null ? str : str + "/" + encode(artist);
     }
 
     /**
@@ -92,8 +101,6 @@ public class DownloadLyricsUtil {
      * @return 是否下载成功
      */
     public static boolean getLyricsFile(final String url, final String songName, final String artist) {
-//        LogUtil.d(" 歌词下载信息  " + songName + " $$ " + artist);
-//        LogUtil.d("     歌词下载地址url    ====    " + url);
         OkHttpUtil.downFile(url, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -118,6 +125,7 @@ public class DownloadLyricsUtil {
                         fos.close();
                         inputStream.close();
                         isDownloadSucssce = true;
+                        LogUtil.d("========= 歌词下载完成 ======地址 =====   "+FileUtil.getLyricsFile(songName,artist));
                     } catch (IOException e) {
                         e.printStackTrace();
                         isDownloadSucssce = false;
@@ -139,7 +147,8 @@ public class DownloadLyricsUtil {
     }
 
     // 对歌名和歌手名中的空格进行转码
-    private static String Encode(String str) {
+
+    private static String encode(String str) {
         try {
             return URLEncoder.encode(str.trim(), "utf-8");
         } catch (UnsupportedEncodingException e) {

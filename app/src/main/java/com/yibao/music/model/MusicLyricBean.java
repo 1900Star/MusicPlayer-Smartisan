@@ -36,4 +36,12 @@ public class MusicLyricBean
     public int compareTo(@NonNull MusicLyricBean musicLrcBean) {
         return startTime - musicLrcBean.getStartTime();
     }
+
+    @Override
+    public String toString() {
+        return "MusicLyricBean{" +
+                "startTime=" + startTime +
+                ", content='" + content + '\'' +
+                '}';
+    }
 }

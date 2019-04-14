@@ -27,6 +27,7 @@ import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SoftKeybordUtil;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.TitleArtistUtil;
@@ -371,10 +372,9 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(musicBeanList -> {
-                        List<MusicLyricBean> lyricList = audioBinder.getLyricList();
-                        if (lyricList != null && lyricList.size() > 1 && lyricsFlag < lyricList.size()) {
+                        if (mLyricList != null && mLyricList.size() > 1 && lyricsFlag < mLyricList.size()) {
                             //通过集合，播放过的歌词就从集合中删除
-                            MusicLyricBean lyrBean = lyricList.get(lyricsFlag);
+                            MusicLyricBean lyrBean = mLyricList.get(lyricsFlag);
                             String content = lyrBean.getContent();
                             int progress = audioBinder.getProgress();
                             int startTime = lyrBean.getStartTime();

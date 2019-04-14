@@ -75,6 +75,8 @@ public class Constants {
     public static final String TIME_SERVICE_NAME = "com.yibao.music.service.CountdownService";
     public static final String LOAD_SERVICE_NAME = "com.yibao.music.service.LoadMusicDataService";
     public static final String NULL_STRING = "";
+    public static final String SERVICE_MUSIC = "service_music";
+    public static final String MUSIC_LYRIC_OK = "lyric_ok";
     public static final String PLAY_LIST_BACK_FLAG = "LSP_98";
     public static final String TIME_FLAG = "time_flag";
     public static final String TIME_FLAG_KEY = "time_flag_key";
@@ -125,7 +127,7 @@ public class Constants {
     public static final String NO_NEED_FLAG = "no_need_flag";
     public static final String COUNTDOWN_TIME = "countdown_time";
     public static final String FINISH_TIME = "00:01";
-
+    public static String MUSIC_LYRICS_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyricz/";
     static final String FAVORITE_FILE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/favorite.txt/";
     public static final String HEADER_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yibao/photo/";
     // 崩溃日志本地保存地址

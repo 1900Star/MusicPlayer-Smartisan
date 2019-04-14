@@ -13,8 +13,10 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.yibao.music.MusicApplication;
+import com.yibao.music.base.listener.LyricDownCallBack;
 import com.yibao.music.manager.MediaSessionManager;
 import com.yibao.music.manager.MusicNotifyManager;
+import com.yibao.music.model.LyricDownBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
@@ -63,7 +65,6 @@ public class AudioPlayService
     private Disposable mDisposable;
     private AudioManager mAudioManager;
     private MediaSessionManager mSessionManager;
-    private List<MusicLyricBean> mLyricList;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -136,7 +137,7 @@ public class AudioPlayService
         if (mMusicDataList != null && position < mMusicDataList.size()) {
             MusicBean musicBean = mMusicDataList.get(position);
             musicBean.setCureetPosition(position);
-            mBus.post(musicBean);
+            mBus.post(Constants.SERVICE_MUSIC,musicBean);
         }
     }
 
@@ -160,7 +161,15 @@ public class AudioPlayService
                 mMusicInfo = mMusicDataList.get(position);
                 mediaPlayer = MediaPlayer.create(AudioPlayService.this,
                         Uri.parse(mMusicInfo.getSongUrl()));
-                mLyricList = LyricsUtil.getLyricList(mMusicInfo.getTitle(), mMusicInfo.getArtist());
+                boolean lyricIsExists = LyricsUtil.checkLyricFile(mMusicInfo.getTitle(), mMusicInfo.getArtist());
+                LogUtil.d("=======  当前歌词是否存在 ========== "+lyricIsExists);
+                if (!lyricIsExists) {
+                    LyricsUtil.downloadLyricFile(mMusicInfo.getTitle(), mMusicInfo.getArtist(), (isDone, msg) -> {
+                        mBus.post(Constants.MUSIC_LYRIC_OK,new LyricDownBean(mMusicInfo.getTitle(),mMusicInfo.getArtist(),true));
+                        LogUtil.d("======== AudioPlayService LyricDownCallBack  =======  " + isDone);
+                        LogUtil.d("======== AudioPlayService LyricDownCallBack  ======= msg " + msg);
+                    });
+                }
                 mediaPlayer.setOnPreparedListener(this);
                 mediaPlayer.setOnCompletionListener(this);
                 SpUtil.setMusicPosition(AudioPlayService.this, position);
@@ -169,10 +178,6 @@ public class AudioPlayService
                 mSessionManager.updateLocMsg();
             }
 
-        }
-
-        public List<MusicLyricBean> getLyricList() {
-            return mLyricList;
         }
 
         private void showNotifycation(boolean b) {

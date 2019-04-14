@@ -25,6 +25,7 @@ import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SnakbarUtil;
@@ -115,7 +116,7 @@ public class FavoriteBottomSheetDialog
                     mBottomListContent.addView(mRecyclerView);
                 }));
 
-        mCompositeDisposable.add(mBus.toObservableType(Constants.FAVORITE_POSITION,Object.class)
+        mCompositeDisposable.add(mBus.toObservableType(Constants.FAVORITE_POSITION, Object.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> FavoriteBottomSheetDialog.this.playMusic((Integer) o)));
@@ -214,6 +215,7 @@ public class FavoriteBottomSheetDialog
         intent.setClass(mContext, AudioPlayService.class);
         intent.putExtra("sortFlag", Constants.NUMBER_EIGHT);
         intent.putExtra("position", position);
+        LogUtil.d("===========      " + position);
         mContext.startService(intent);
         SpUtil.setSortFlag(mContext, Constants.NUMBER_EIGHT);
     }
