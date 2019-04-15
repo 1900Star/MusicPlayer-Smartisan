@@ -26,6 +26,7 @@ import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.QueryMusicFlagListUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
@@ -80,7 +81,6 @@ public class MusicActivity
     private MusicBean mQqBarBean;
     private int mHandleDetailFlag;
     private Uri mContentUri;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -408,20 +408,19 @@ public class MusicActivity
         disposableQqLyric();
         if (mQqLyricsDisposable == null) {
             // 刚开始延时100 确保歌词下载完成。
-            mQqLyricsDisposable = Observable.interval(100, 1600, TimeUnit.MICROSECONDS)
+            mQqLyricsDisposable = Observable.interval(1600, TimeUnit.MICROSECONDS)
 //                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(musicBeanList -> {
-                        List<MusicLyricBean> lyricList = audioBinder.getLyricList();
-                        if (lyricList != null && lyricList.size() > 1 && lyricsFlag < lyricList.size()) {
+                        if (mLyricList != null && mLyricList.size() > 1 && lyricsFlag < mLyricList.size()) {
                             //通过集合，播放过的歌词就从集合中删除
-                            MusicLyricBean lyrBean = lyricList.get(lyricsFlag);
+                            MusicLyricBean lyrBean = mLyricList.get(lyricsFlag);
                             String lyrics = lyrBean.getContent();
                             int progress = audioBinder.getProgress();
                             int startTime = lyrBean.getStartTime();
                             List<MusicBean> musicList = audioBinder.getMusicList();
                             if (musicList != null && progress > startTime) {
-                                LogUtil.d("歌词List的长度    ==  " + lyricList.size());
+                                LogUtil.d("歌词List的长度    ==  " + mLyricList.size());
                                 if (mCurrentPosition < musicList.size()) {
                                     mQqBarBean = musicList.get(mCurrentPosition);
                                     mQqBarBean.setCurrentLyrics(lyrics);
@@ -433,6 +432,8 @@ public class MusicActivity
                                 mQqControlBar.updaPagerData(musicList, mCurrentPosition);
                                 lyricsFlag++;
                             }
+                        } else {
+                            LogUtil.d("========MusicActivity =====没有发现歌词 ");
                         }
                     });
         } else {

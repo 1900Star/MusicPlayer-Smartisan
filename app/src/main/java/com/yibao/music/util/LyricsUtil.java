@@ -2,6 +2,8 @@ package com.yibao.music.util;
 
 import android.os.Environment;
 
+import com.yibao.music.base.listener.LyricDownCallBack;
+import com.yibao.music.base.listener.LyricsCallBack;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.TitleAndArtistBean;
 
@@ -29,18 +31,11 @@ public class LyricsUtil {
     private static BufferedReader br;
     private static final String UNKNOWN_NAME = "<unknown>";
 
-    /**
-     * 将歌词封装到list中
-     *
-     * @param songName 歌名
-     * @param artist   歌手
-     * @return 返回歌词list
-     */
-    public static synchronized List<MusicLyricBean> getLyricList(String songName, String artist) {
+    public static boolean checkLyricFile(String songName, String artist) {
         // 通过QQ音乐下载的歌曲名会带有这个字符串，需要将正确的歌名截取出来，才能用于网络歌词的匹配。
         String acturlSongName;
         String actualArtist;
-        if (songName.contains("[mqms2]")) {
+        if (songName.contains(Constants.MQMS2)) {
             TitleAndArtistBean bean = TitleArtistUtil.getBean(songName);
             acturlSongName = bean.getSongName();
             actualArtist = bean.getSongArtist();
@@ -49,83 +44,99 @@ public class LyricsUtil {
             actualArtist = UNKNOWN_NAME.equals(artist) ? "Smartisan" : artist;
         }
         LogUtil.d(" 本地歌词信息  " + acturlSongName + " $$ " + actualArtist);
-        List<MusicLyricBean> lrcList = new ArrayList<>();
-        String str = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyric/";
-        String path = str + acturlSongName + "$$" + actualArtist + ".lrc";
+        String path = Constants.MUSIC_LYRICS_ROOT + acturlSongName + "$$" + actualArtist + ".lrc";
         File file = new File(path);
-//        LogUtil.d("FilePath ==      " + (file.exists() ? "AAA" : "BBBBB"));
-        if (!file.exists()) {
-            if (NetworkUtil.isNetworkConnected()) {
-                // 本地没有歌词，从网络下载，如果下载失败，返回" 暂无歌词"
-                String lyricsUrl = DownloadLyricsUtil.getLyricsDownUrl(acturlSongName, actualArtist);
-//                LogUtil.d("     歌词地址first    ====    " + lyricsUrl);
-                if (lyricsUrl != null) {
-                    loadLyrics(acturlSongName, actualArtist, lrcList, file, lyricsUrl);
-                } else {
-//                        // 二次搜索，只用歌名搜索歌词
-//                        String lastUrl = DownloadLyricsUtil.getLyricsDownUrl(acturlSongName, null);
-//                        if (lastUrl != null) {
-//                            LogUtil.d("     歌词地址last    ====    " + lastUrl);
-//                            loadLyrics(acturlSongName, actualArtist, lrcList, file, lastUrl);
-//                        } else {
-                    lrcList.add(new MusicLyricBean(0, "暂无歌词"));
-//                        }
-                }
-            } else {
-                lrcList.add(new MusicLyricBean(0, "无网络连接，连接网络后自动匹配歌词."));
-            }
-
-
-            return lrcList;
-
-        } else {
-            // 本地有歌词，直接返回。
-            return lyricsFileToList(lrcList, file);
-        }
+        return file.exists();
     }
 
-    private static void loadLyrics(String songName, String actualArtist, List<MusicLyricBean> lrcList, File file, String lyricsUrl) {
-        boolean isSuccessful = DownloadLyricsUtil.getLyricsFile(lyricsUrl, songName, actualArtist);
-        if (isSuccessful) {
-            lyricsFileToList(lrcList, file);
+
+    /**
+     * 将歌词封装到list中
+     *
+     * @param songName 歌名
+     * @param artist   歌手
+     */
+    public static void downloadLyricFile(String songName, String artist, LyricDownCallBack callBack) {
+        String acturlSongName;
+        String actualArtist;
+        if (songName.contains(Constants.MQMS2)) {
+            TitleAndArtistBean bean = TitleArtistUtil.getBean(songName);
+            acturlSongName = bean.getSongName();
+            actualArtist = bean.getSongArtist();
         } else {
-            lrcList.add(new MusicLyricBean(0, "暂无歌词"));
+            acturlSongName = songName;
+            actualArtist = UNKNOWN_NAME.equals(artist) ? "Smartisan" : artist;
+        }
+        String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + artist + ".lrc";
+        File file = new File(path);
+        if (!file.exists()) {
+            if (NetworkUtil.isNetworkConnected()) {
+                // 本地没有歌词，先获取网络歌词的下载地址Url,，如果没有歌词地址或者地址下载失败，返回" 暂无歌词"
+                DownloadLyricsUtil.downloadLyric(acturlSongName, actualArtist, lyricsUrl -> {
+                    if (lyricsUrl == null) {
+//                        // 二次搜索，只用歌名搜索歌词
+                        DownloadLyricsUtil.downloadLyric(acturlSongName, null, lastLyricUrl -> {
+                            if (lastLyricUrl != null) {
+                                LogUtil.d("     歌词地址last    ====    " + lastLyricUrl);
+                                callBack.downLyric(DownloadLyricsUtil.getLyricsFile(lastLyricUrl, songName, actualArtist), "成功");
+                            } else {
+                                callBack.downLyric(false, "没有发现歌词");
+                            }
+                        });
+                    } else {
+                        callBack.downLyric(DownloadLyricsUtil.getLyricsFile(lyricsUrl, songName, actualArtist), "成功");
+                    }
+
+
+                });
+
+            }
         }
     }
 
     /**
      * 将读取本地歌词文件，将歌词封装到List中。
      *
-     * @param lrcList List
-     * @param file    歌词文件
      * @return 返回歌词List
      */
-    private static List<MusicLyricBean> lyricsFileToList(List<MusicLyricBean> lrcList, File file) {
-        try {
-            String charsetName = "utf-8";
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsetName));
-            String line = br.readLine();
-            while (line != null) {
-                ArrayList<MusicLyricBean> been = parseLine(line);
-                lrcList.addAll(been);
-                line = br.readLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            lrcList.add(new MusicLyricBean(0, "歌词加载出错"));
-            return lrcList;
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                    br = null;
+    public static List<MusicLyricBean> getLyricList(String songName, String artist) {
+        List<MusicLyricBean> lrcList = new ArrayList<>();
+        String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + artist + ".lrc";
+        LogUtil.d("=====  path  "+path);
+        File file = new File(path);
+        if (!file.exists()) {
+            lrcList.add(new MusicLyricBean(0, "没有发现歌词"));
+        } else {
+            ThreadPoolProxyFactory.newInstance().execute(() -> {
+                try {
+                    String charsetName = "utf-8";
+                    br = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsetName));
+                    String line = br.readLine();
+                    while (line != null) {
+                        ArrayList<MusicLyricBean> been = parseLine(line);
+                        lrcList.addAll(been);
+                        line = br.readLine();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    lrcList.add(new MusicLyricBean(0, "歌词加载出错"));
+                } finally {
+                    try {
+                        if (br != null) {
+                            br.close();
+                            br = null;
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+            });
 
         }
         Collections.sort(lrcList);
+        LogUtil.d("歌词最终长度 ： " + lrcList.size());
         return lrcList;
     }
 

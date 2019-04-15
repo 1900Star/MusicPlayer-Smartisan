@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -31,6 +32,8 @@ import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
+import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
@@ -38,6 +41,7 @@ import com.yibao.music.util.TitleArtistUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.LyricsView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -108,7 +112,6 @@ public class PlayActivity extends BasePlayActivity {
     private ObjectAnimator mAnimator;
     private MyAnimatorUpdateListener mAnimatorListener;
     private Disposable mCloseLyrDisposable;
-    private List<MusicLyricBean> mLyricList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -214,7 +217,6 @@ public class PlayActivity extends BasePlayActivity {
         setSongDuration();
         updatePlayBtnStatus();
 //        初始化歌词
-        mLyricList = audioBinder.getLyricList();
         mTvLyrics.setLrcFile(mLyricList);
         if (isShowLyrics) {
             closeLyricsView(mLyricList);
@@ -375,7 +377,9 @@ public class PlayActivity extends BasePlayActivity {
             case R.id.playing_song_album:
             case R.id.album_cover:
             case R.id.tv_lyrics:
-                showLyrics();
+                if (mLyricList != null) {
+                    showLyrics();
+                }
                 break;
             case R.id.iv_lyrics_switch:
                 MoreMenuBottomDialog.newInstance(mCurrenMusicInfo, audioBinder.getPosition(), true, true).getBottomDialog(this);
@@ -413,7 +417,6 @@ public class PlayActivity extends BasePlayActivity {
      * 显示歌词 和 屏幕常亮图标显示
      */
     private void showLyrics() {
-
         if (isShowLyrics) {
             clearDisposableLyric();
             disPosableLyricsView();

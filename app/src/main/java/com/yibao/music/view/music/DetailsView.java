@@ -32,6 +32,7 @@ import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
+import com.yibao.music.view.MusicScrollView;
 import com.yibao.music.view.SwipeItemLayout;
 
 import java.util.ArrayList;
@@ -63,6 +64,8 @@ public class DetailsView
     private FragmentManager mFragmentManager;
     private Long mAlbumId;
     private List<MusicBean> mMusicList;
+    private MusicScrollView mMusicScrollView;
+    private LinearLayout mSuspensionLl;
 
     public void setDataFlag(FragmentManager fragmentManager, int listSize, String queryFlag, int dataFlag) {
         this.mFragmentManager = fragmentManager;
@@ -88,6 +91,7 @@ public class DetailsView
     protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
 //        LogUtil.d("==========++== 详情显示  " + visibility);
+
     }
 
     /**
@@ -104,6 +108,7 @@ public class DetailsView
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setNestedScrollingEnabled(true);
         mRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
@@ -202,7 +207,8 @@ public class DetailsView
     private void initView() {
         LayoutInflater.from(getContext())
                 .inflate(R.layout.details_fragment, this, true);
-
+        mMusicScrollView = findViewById(R.id.detail_root);
+        mSuspensionLl = findViewById(R.id.ll_play);
         mRecyclerView = findViewById(R.id.rv_artist_album_details);
         mIvArtistAlbummDetails = findViewById(R.id.iv_artist_albumm_details);
         mTvArtistAlbummDetailsTitle = findViewById(R.id.tv_artist_albumm_details_title);
@@ -217,6 +223,10 @@ public class DetailsView
         divider.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(getContext(), R.drawable.shape_item_decoration)));
         mRecyclerView.addOnItemTouchListener(new SwipeItemLayout.OnSwipeItemTouchListener(getContext()));
         mRecyclerView.addItemDecoration(divider);
+    }
+
+    public void setSuspension() {
+        mMusicScrollView.resetHeight(mSuspensionLl, mRecyclerView);
     }
 
     @Override

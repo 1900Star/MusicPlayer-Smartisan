@@ -21,7 +21,6 @@ import java.io.IOException;
  */
 
 public class FileUtil {
-    private static String MUSIC_LYRICS_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyrics/";
 
 
     public static boolean getFavoriteFile() {
@@ -31,7 +30,7 @@ public class FileUtil {
 
     public static File getLyricsFile(String songName, String songArtisa) {
 
-        File file = new File(MUSIC_LYRICS_ROOT);
+        File file = new File(Constants.MUSIC_LYRICS_ROOT);
         if (!file.exists()) {
             file.mkdirs();
         }

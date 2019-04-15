@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.baidu.mobstat.StatService;
 import com.yibao.music.MusicApplication;
@@ -11,17 +12,22 @@ import com.yibao.music.R;
 import com.yibao.music.activity.PlayActivity;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.activity.SearchActivity;
+import com.yibao.music.model.LyricDownBean;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.view.music.QqControlBar;
 import com.yibao.music.view.music.SmartisanControlBar;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.Unbinder;
@@ -29,6 +35,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -53,6 +60,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Unbinder mBind;
     protected Disposable mRxViewDisposable;
     protected PlayListBeanDao mPlayListDao;
+    protected List<MusicLyricBean> mLyricList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,11 +83,21 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (mCompositeDisposable == null) {
             mCompositeDisposable = new CompositeDisposable();
         }
-        mCompositeDisposable.add(mBus.toObserverable(MusicBean.class)
+        mCompositeDisposable.add(mBus.toObservableType(Constants.SERVICE_MUSIC, MusicBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updataCurrentPlayInfo));
-        mCompositeDisposable.add(mBus.toObservableType(Constants.PLAY_STATUS,Object.class)
+        mCompositeDisposable.add(mBus.toObservableType(Constants.MUSIC_LYRIC_OK, LyricDownBean.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(bean -> {
+                    boolean isDone = bean.isDoneOK();
+                    LogUtil.d("BaseActivity ======   开始下载歌词  "+isDone);
+                    if (isDone) {
+                        mLyricList = LyricsUtil.getLyricList(bean.getSongName(), bean.getSongArtist());
+                    }
+                }));
+        mCompositeDisposable.add(mBus.toObservableType(Constants.PLAY_STATUS, Object.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> refreshBtnAndNotify((Integer) o)));
