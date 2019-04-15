@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +66,7 @@ public class SearchFragment extends BaseFragment {
     private Disposable mDisposableSearch;
     private Disposable mDisposableMoreMenu;
     private boolean mIsFirst = false;
+    private int mPosition;
 
     @Nullable
     @Override
@@ -80,6 +82,9 @@ public class SearchFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         rxbusData();
+        LogUtil.d("=========== searchPostion    " + mPosition);
+        if (getUserVisibleHint()) {
+        }
 
     }
 
@@ -184,7 +189,7 @@ public class SearchFragment extends BaseFragment {
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(1, mSearchDetailAdapter);
         mLinearDetail.addView(recyclerView);
         if (getArguments() != null) {
-            int position = getArguments().getInt("position");
+            mPosition = getArguments().getInt("position");
             String searchArtist = getArguments().getString("searchArtist");
             setFlagAndSearch(searchArtist, 1);
         }

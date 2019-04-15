@@ -128,11 +128,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
                 mSearchCondition = s.toString();
                 boolean conditionOK = !Constants.NULL_STRING.equals(mSearchCondition) && mSearchCondition.length() > 0;
                 mBus.post(new SearchCategoryBean(conditionOK ? getDataFlag() : Constants.NUMBER_TEN, mSearchCondition));
-                if (conditionOK) {
-                    mIvEditClear.setVisibility(View.VISIBLE);
-                } else {
-                    mIvEditClear.setVisibility(View.GONE);
-                }
+                mIvEditClear.setVisibility(conditionOK ? View.VISIBLE : View.GONE);
                 mSearchCategoryRoot.setVisibility(conditionOK ? View.VISIBLE : View.GONE);
             }
         });
