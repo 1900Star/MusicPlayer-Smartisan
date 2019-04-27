@@ -4,14 +4,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.base.BaseDialogFragment;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ImageUitl;
-import com.yibao.music.util.LogUtil;
-import com.yibao.music.view.ProgressBtn;
 import com.yibao.music.view.ZoomImageView;
 
 /**

@@ -1,23 +1,21 @@
 package com.yibao.music.base;
 
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 
 import com.baidu.mobstat.StatService;
 import com.squareup.leakcanary.RefWatcher;
 import com.yibao.music.MusicApplication;
-import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.AlbumInfoDao;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.RxBus;
-
-import java.util.List;
 
 import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
@@ -31,16 +29,16 @@ import io.reactivex.disposables.CompositeDisposable;
  * @描述： TODO
  */
 public abstract class BaseFragment extends Fragment {
-    protected Activity mActivity;
+    protected AppCompatActivity mActivity;
     protected RxBus mBus;
     protected final MusicBeanDao mMusicBeanDao;
     protected final SearchHistoryBeanDao mSearchDao;
     protected final PlayListBeanDao mPlayListDao;
     protected CompositeDisposable mCompositeDisposable;
-    protected FragmentManager mFragmentManager;
     protected Context mContext;
     protected Unbinder unbinder;
     protected final AlbumInfoDao mAlbumDao;
+    protected FragmentManager mFragmentManager;
 
     protected BaseFragment() {
         mMusicBeanDao = MusicApplication.getIntstance().getMusicDao();
@@ -52,11 +50,11 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mActivity = getActivity();
+        mActivity = (AppCompatActivity) getActivity();
         mContext = getActivity();
         mCompositeDisposable = new CompositeDisposable();
         mBus = RxBus.getInstance();
-        mFragmentManager = mActivity.getFragmentManager();
+        mFragmentManager = mActivity.getSupportFragmentManager();
 
     }
 

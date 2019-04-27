@@ -10,8 +10,8 @@ package com.yibao.music.base.listener;
  */
 public interface LyricsCallBack {
     /**
-     *
+     * @param b 下载成功 失败
      * @param lyricsUri 歌词下载地址
      */
-    void lyricsUri(String lyricsUri);
+    void lyricsUri(boolean b,String lyricsUri);
 }

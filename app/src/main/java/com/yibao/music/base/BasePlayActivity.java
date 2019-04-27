@@ -16,10 +16,13 @@ import com.yibao.music.R;
 import com.yibao.music.activity.MusicActivity;
 import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.base.listener.SeekBarChangeListtener;
+import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.service.AudioPlayService;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.LyricsView;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;

@@ -137,7 +137,7 @@ public class AudioPlayService
         if (mMusicDataList != null && position < mMusicDataList.size()) {
             MusicBean musicBean = mMusicDataList.get(position);
             musicBean.setCureetPosition(position);
-            mBus.post(Constants.SERVICE_MUSIC,musicBean);
+            mBus.post(Constants.SERVICE_MUSIC, musicBean);
         }
     }
 
@@ -161,17 +161,13 @@ public class AudioPlayService
                 mMusicInfo = mMusicDataList.get(position);
                 mediaPlayer = MediaPlayer.create(AudioPlayService.this,
                         Uri.parse(mMusicInfo.getSongUrl()));
-                boolean lyricIsExists = LyricsUtil.checkLyricFile(mMusicInfo.getTitle(), mMusicInfo.getArtist());
-                LogUtil.d("=======  当前歌词是否存在 ========== "+lyricIsExists);
-                if (!lyricIsExists) {
-                    LyricsUtil.downloadLyricFile(mMusicInfo.getTitle(), mMusicInfo.getArtist(), (isDone, msg) -> {
-                        mBus.post(Constants.MUSIC_LYRIC_OK,new LyricDownBean(mMusicInfo.getTitle(),mMusicInfo.getArtist(),true));
-                        LogUtil.d("======== AudioPlayService LyricDownCallBack  =======  " + isDone);
-                        LogUtil.d("======== AudioPlayService LyricDownCallBack  ======= msg " + msg);
-                    });
-                }
                 mediaPlayer.setOnPreparedListener(this);
                 mediaPlayer.setOnCompletionListener(this);
+                boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getTitle(mMusicInfo), StringUtil.getArtist(mMusicInfo));
+                LogUtil.d("=======  当前歌词是否存在 ===== " + lyricIsExists + " == " + mMusicInfo.getTitle() + " == " + mMusicInfo.getArtist());
+                if (!lyricIsExists) {
+                    LyricsUtil.downloadLyricFile(mMusicInfo);
+                }
                 SpUtil.setMusicPosition(AudioPlayService.this, position);
                 showNotifycation(true);
                 mSessionManager.updatePlaybackState(true);

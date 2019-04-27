@@ -1,5 +1,7 @@
 package com.yibao.music.model;
 
+import java.io.File;
+
 /**
  * @author: Luoshipeng
  * @ Name:    LyricDownBean
@@ -9,30 +11,14 @@ package com.yibao.music.model;
  * @ Des:     TODO
  */
 public class LyricDownBean {
-    private String songName;
-    private String songArtist;
     private boolean doneOK;
+    private File lyricsFile;
+    private String downMsg;
 
-    public LyricDownBean(String songName, String songArtist, boolean doneOK) {
-        this.songName = songName;
-        this.songArtist = songArtist;
+    public LyricDownBean(boolean doneOK, File lyricsFile, String downMsg) {
         this.doneOK = doneOK;
-    }
-
-    public String getSongName() {
-        return songName;
-    }
-
-    public void setSongName(String songName) {
-        this.songName = songName;
-    }
-
-    public String getSongArtist() {
-        return songArtist;
-    }
-
-    public void setSongArtist(String songArtist) {
-        this.songArtist = songArtist;
+        this.lyricsFile = lyricsFile;
+        this.downMsg = downMsg;
     }
 
     public boolean isDoneOK() {
@@ -41,5 +27,21 @@ public class LyricDownBean {
 
     public void setDoneOK(boolean doneOK) {
         this.doneOK = doneOK;
+    }
+
+    public File getLyricsFile() {
+        return lyricsFile;
+    }
+
+    public void setLyricsFile(File lyricsFile) {
+        this.lyricsFile = lyricsFile;
+    }
+
+    public String getDownMsg() {
+        return downMsg;
+    }
+
+    public void setDownMsg(String downMsg) {
+        this.downMsg = downMsg;
     }
 }

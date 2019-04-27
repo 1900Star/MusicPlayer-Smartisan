@@ -29,7 +29,6 @@ public class FileUtil {
     }
 
     public static File getLyricsFile(String songName, String songArtisa) {
-
         File file = new File(Constants.MUSIC_LYRICS_ROOT);
         if (!file.exists()) {
             file.mkdirs();
@@ -42,7 +41,6 @@ public class FileUtil {
                 e.printStackTrace();
             }
         }
-        LogUtil.d("路径   ====    " + lyricFile.getAbsolutePath());
         return lyricFile;
     }
 
