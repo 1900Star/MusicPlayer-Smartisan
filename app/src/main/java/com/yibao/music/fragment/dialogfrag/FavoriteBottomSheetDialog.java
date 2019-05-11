@@ -102,7 +102,6 @@ public class FavoriteBottomSheetDialog
         }
     }
 
-    //    接收BottomSheetAdapter发过来的当前点击Item的Position
 
     private void rxData() {
         mCompositeDisposable.add(MusicListUtil.getFavoriteList()
@@ -115,7 +114,7 @@ public class FavoriteBottomSheetDialog
                     mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
                     mBottomListContent.addView(mRecyclerView);
                 }));
-
+        //    接收BottomSheetAdapter发过来的当前点击Item的Position
         mCompositeDisposable.add(mBus.toObservableType(Constants.FAVORITE_POSITION, Object.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

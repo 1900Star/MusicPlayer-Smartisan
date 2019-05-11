@@ -1,18 +1,20 @@
 package com.yibao.music.util;
 
+import com.yibao.music.MusicApplication;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 
 import org.greenrobot.greendao.query.WhereCondition;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
+ * @author Luoshipeng
  * @ Name:   QueryMusicFlagListUtil
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/5/6/ 18:02
  * @ Des:    //根据条件查询MusicList
- * @author Luoshipeng
  */
 public class QueryMusicFlagListUtil {
 
@@ -39,7 +41,11 @@ public class QueryMusicFlagListUtil {
             return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.SORT_DOWN_TIME);
             // 收藏列表
         } else if (sortListFlag == Constants.NUMBER_EIGHT) {
-            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list(), Constants.SORT_FAVORITE_TIME);
+            List<MusicBean> musicBeanList = MusicApplication.getIntstance()
+                    .getMusicDao().queryBuilder()
+                    .where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
+            Collections.sort(musicBeanList);
+            return musicBeanList;
             // 10表示按条件查询
         } else if (sortListFlag == Constants.NUMBER_TEN) {
             WhereCondition whereCondition = null;
