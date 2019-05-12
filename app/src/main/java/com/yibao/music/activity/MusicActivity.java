@@ -220,6 +220,7 @@ public class MusicActivity
             }
         });
         mQqControlBar.setOnPagerSelecteListener(position -> {
+            LogUtil.d("==== Qq Bar  ==============");
             int sortFlag = SpUtil.getSortFlag(this);
             MusicActivity.this.disposableQqLyric();
             if (mHandleDetailFlag > 0) {
@@ -233,6 +234,7 @@ public class MusicActivity
             } else {
                 MusicActivity.this.startMusicService(position);
             }
+//            updataQqBar();
         });
     }
 
@@ -408,7 +410,6 @@ public class MusicActivity
         List<MusicLyricBean> lyricList = getLyricList(mCurrentMusicBean);
         disposableQqLyric();
         if (mQqLyricsDisposable == null) {
-            // 刚开始延时100 确保歌词下载完成。
             mQqLyricsDisposable = Observable.interval(1600, TimeUnit.MICROSECONDS)
 //                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -594,13 +595,11 @@ public class MusicActivity
 
     @Override
     public void onBackPressed() {
-        LogUtil.d("======= mHandleDetailFlag  onBackPressed   " + mHandleDetailFlag);
         if (mHandleDetailFlag > Constants.NUMBER_ZERO) {
             mBus.post(Constants.HANDLE_BACK, mHandleDetailFlag);
             mHandleDetailFlag = Constants.NUMBER_ZERO;
         } else {
             super.onBackPressed();
-            LogUtil.d("============ Activty  back");
         }
     }
 

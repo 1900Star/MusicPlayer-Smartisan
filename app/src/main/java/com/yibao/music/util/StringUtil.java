@@ -131,17 +131,17 @@ public class StringUtil {
         String musicArtist = musicBean.getArtist();
         return musicTitle.contains("[mqms2]")
                 ? TitleArtistUtil.getBean(musicTitle).getSongArtist()
-                : "<unknown>".equals(musicArtist)
+                : "<unknown>".equals(musicArtist) || "群星".equals(musicArtist)
                 ? "Smartisan" : musicArtist;
     }
 
     public static String getSongName(String songName) {
-        return songName.contains("[mqms2]" )? songName.substring(songName.lastIndexOf("-") + 2, songName.lastIndexOf("[mqms2]") - 1):songName;
+        return songName.contains("[mqms2]") ? songName.substring(songName.lastIndexOf("-") + 2, songName.lastIndexOf("[mqms2]") - 1) : songName;
     }
 
     public static String getArtist(String singerName) {
         String unknownName = "<unknown>";
-        return unknownName.equals(singerName) ? "Smartisan" : singerName;
+        return unknownName.equals(singerName) || "群星".equals(singerName) ? "Smartisan" : singerName;
 
     }
 

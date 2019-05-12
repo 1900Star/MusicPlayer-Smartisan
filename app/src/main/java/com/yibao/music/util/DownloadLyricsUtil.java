@@ -39,7 +39,8 @@ public class DownloadLyricsUtil {
     /**
      * 获取网络歌词的下载地址
      */
-    public static synchronized void downloadLyricUrl(String songName,String songArtist, LyricsCallBack callBack) {
+    public static synchronized void downloadLyricUrl(String songName, String songArtist, LyricsCallBack callBack) {
+        // 实际歌词的查询条件
         String queryLrcURL = getQueryLrcURL(songName, songArtist);
         LogUtil.d("     查询歌词地址    ====    " + queryLrcURL);
         ThreadPoolProxyFactory.newInstance().execute(() -> OkHttpUtil.downFile(queryLrcURL, new Callback() {
@@ -86,7 +87,7 @@ public class DownloadLyricsUtil {
     private static String getQueryLrcURL(String title, String artist) {
         String unknownName = "<unknown>";
         String str = ONLINE_LYRICS_URL + encode(title);
-        return unknownName.equals(artist) ? str : str + "/" + encode(artist);
+        return unknownName.equals(artist) || "群星".equals(artist) ? str : str + "/" + encode(artist);
     }
 
     /**

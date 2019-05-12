@@ -19,6 +19,7 @@ import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.StringUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.ProgressBtn;
 
@@ -139,8 +140,7 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
     }
 
     public void setSingerName(String singerName) {
-        String unknownName = "<unknown>";
-        mSingerName.setText(unknownName.equals(singerName) ? "Smartisan" : singerName);
+        mSingerName.setText(StringUtil.getArtist(singerName));
 
     }
 

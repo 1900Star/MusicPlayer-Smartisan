@@ -160,7 +160,7 @@ public class AudioPlayService
                         Uri.parse(mMusicInfo.getSongUrl()));
                 mediaPlayer.setOnPreparedListener(this);
                 mediaPlayer.setOnCompletionListener(this);
-                boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getTitle(mMusicInfo), StringUtil.getArtist(mMusicInfo));
+                boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(mMusicInfo.getTitle()), StringUtil.getArtist(mMusicInfo.getArtist()));
                 LogUtil.d("=======  当前歌词是否存在 ===== " + lyricIsExists + " == " + mMusicInfo.getTitle() + " == " + mMusicInfo.getArtist());
                 if (!lyricIsExists) {
                     LyricsUtil.downloadLyricFile(mMusicInfo);
@@ -267,17 +267,14 @@ public class AudioPlayService
         //手动播放上一曲
 
         public void playPre() {
-            switch (playMode) {
-                case PLAY_MODE_RANDOM:
-                    position = new Random().nextInt(mMusicDataList.size());
-                    break;
-                default:
-                    if (position == 0) {
-                        position = mMusicDataList.size() - 1;
-                    } else {
-                        position--;
-                    }
-                    break;
+            if (playMode == PLAY_MODE_RANDOM) {
+                position = new Random().nextInt(mMusicDataList.size());
+            } else {
+                if (position == 0) {
+                    position = mMusicDataList.size() - 1;
+                } else {
+                    position--;
+                }
             }
             play();
         }
@@ -285,13 +282,10 @@ public class AudioPlayService
         // 手动播放下一曲
 
         public void playNext() {
-            switch (playMode) {
-                case PLAY_MODE_RANDOM:
-                    position = new Random().nextInt(mMusicDataList.size());
-                    break;
-                default:
-                    position = (position + 1) % mMusicDataList.size();
-                    break;
+            if (playMode == PLAY_MODE_RANDOM) {
+                position = new Random().nextInt(mMusicDataList.size());
+            } else {
+                position = (position + 1) % mMusicDataList.size();
             }
             play();
         }

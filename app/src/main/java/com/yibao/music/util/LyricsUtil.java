@@ -53,8 +53,13 @@ public class LyricsUtil {
                     // 发现歌词下载地址，下载歌词。
                     DownloadLyricsUtil.downloadlyricsfile(lyricsUri, songName, artist);
                 } else {
+                    String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + artist + ".lrc";
+                    File file = new File(path);
                     LyricDownBean lyricDownBean = new LyricDownBean(false, null, Constants.NO_FIND_LYRICS);
                     RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);
+                    if (file.exists()) {
+                        file.delete();
+                    }
                 }
 
             });
@@ -64,17 +69,36 @@ public class LyricsUtil {
         }
     }
 
+    /**
+     * 当前歌词不正确，重新下载。
+     *
+     * @param name
+     * @param artist
+     */
+    public static void deleteCurrentLyric(String name, String artist) {
+        String songName = StringUtil.getSongName(name);
+        String songArtist = StringUtil.getArtist(artist);
+        String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + songArtist + ".lrc";
+        LogUtil.d(" 删除当前 歌词    " + path);
+        File file = new File(path);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
+    /**
+     * 删除本地歌词list长度小于2的歌词文件，以便播放时重新下载正确的歌词。
+     */
     public static void clearLyricList() {
         File file = new File(Constants.MUSIC_LYRICS_ROOT);
         File[] files = file.listFiles();
-        LogUtil.d(" ===== 歌词总长度     " + files.length);
         int nu = 0;
         for (File f : files) {
             List<String> lylist = getLylist(f);
             if (lylist.size() < 2) {
                 LogUtil.d(" 歌词长度小于2的 : " + "\n" + f.getAbsolutePath());
                 nu++;
-//                f.delete();
+                f.delete();
             }
 
         }
@@ -120,7 +144,7 @@ public class LyricsUtil {
      */
     public static List<MusicLyricBean> getLyricList(MusicBean musicBean) {
 
-        File file = FileUtil.getLyricsFile(StringUtil.getTitle(musicBean), StringUtil.getArtist(musicBean));
+        File file = FileUtil.getLyricsFile(StringUtil.getSongName(musicBean.getTitle()), StringUtil.getArtist(musicBean.getArtist()));
         List<MusicLyricBean> lrcList = new ArrayList<>();
         if (!file.exists()) {
             lrcList.add(new MusicLyricBean(0, "没有发现歌词"));

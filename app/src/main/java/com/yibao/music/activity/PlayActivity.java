@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
@@ -87,8 +89,13 @@ public class PlayActivity extends BasePlayActivity {
     LyricsView mLyricsView;
     @BindView(R.id.iv_lyrics_switch)
     ImageView mIvLyricsSwitch;
+
+    @BindView(R.id.ll_sun_and_delete)
+    LinearLayout mLlSunAndDelele;
     @BindView(R.id.iv_secreen_sun_switch)
     ImageView mIvSecreenSunSwitch;
+    @BindView(R.id.iv_delete_lyric)
+    ImageView mIvDeleteLyric;
     @BindView(R.id.music_player_mode)
     ImageView mMusicPlayerMode;
     @BindView(R.id.music_player_pre)
@@ -217,7 +224,8 @@ public class PlayActivity extends BasePlayActivity {
         mLyricsView.setLrcFile(mLyricList);
         if (isShowLyrics) {
             closeLyricsView();
-            mIvSecreenSunSwitch.setVisibility(mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
+            mLlSunAndDelele.setVisibility(mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
+
         }
     }
 
@@ -356,8 +364,9 @@ public class PlayActivity extends BasePlayActivity {
 
     @OnClick({R.id.titlebar_down, R.id.rv_titlebar,
             R.id.playing_song_album, R.id.album_cover, R.id.rotate_rl, R.id.tv_lyrics,
-            R.id.iv_lyrics_switch, R.id.iv_secreen_sun_switch, R.id.music_player_mode,
-            R.id.music_player_pre, R.id.music_play, R.id.music_player_next, R.id.iv_favorite_music})
+            R.id.iv_lyrics_switch, R.id.iv_delete_lyric, R.id.iv_secreen_sun_switch,
+            R.id.music_player_mode, R.id.music_player_pre, R.id.music_play,
+            R.id.music_player_next, R.id.iv_favorite_music})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.titlebar_down:
@@ -377,6 +386,11 @@ public class PlayActivity extends BasePlayActivity {
                 break;
             case R.id.iv_lyrics_switch:
                 MoreMenuBottomDialog.newInstance(mCurrenMusicInfo, audioBinder.getPosition(), true, true).getBottomDialog(this);
+                break;
+            case R.id.iv_delete_lyric:
+                LogUtil.d("============ 删除当前歌词");
+                showLyrics();
+                LyricsUtil.deleteCurrentLyric(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
                 break;
             case R.id.iv_secreen_sun_switch:
                 screenAlwaysOnSwitch(mIvSecreenSunSwitch);
@@ -425,16 +439,22 @@ public class PlayActivity extends BasePlayActivity {
             clearDisposableLyric();
             disPosableLyricsView();
         } else {
-            mLyricList = getLyricList(mCurrenMusicInfo);
-            mLyricsView.setLrcFile(mLyricList);
-            // 开始滚动歌词
-            if (audioBinder.isPlaying()) {
-                startRollPlayLyrics(mLyricsView);
+            boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(mCurrenMusicInfo.getTitle()), StringUtil.getArtist(mCurrenMusicInfo.getArtist()));
+            if (lyricIsExists) {
+                mLyricList = getLyricList(mCurrenMusicInfo);
+                mLyricsView.setLrcFile(mLyricList);
+                // 开始滚动歌词
+                if (audioBinder.isPlaying()) {
+                    startRollPlayLyrics(mLyricsView);
+                }
+                closeLyricsView();
+            } else {
+                LogUtil.d(" -----  下载歌词 ");
+                LyricsUtil.downloadLyricFile(mCurrenMusicInfo);
             }
-            closeLyricsView();
         }
         mLyricsView.setVisibility(isShowLyrics ? View.GONE : View.VISIBLE);
-        mIvSecreenSunSwitch.setVisibility(isShowLyrics ? View.GONE : mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
+        mLlSunAndDelele.setVisibility(isShowLyrics ? View.GONE : mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
         mIvLyricsSwitch.setBackgroundResource(isShowLyrics ? R.drawable.music_lrc_close : R.drawable.music_lrc_open);
         AnimationDrawable animation = (AnimationDrawable) mIvLyricsSwitch.getBackground();
         animation.start();
@@ -513,7 +533,7 @@ public class PlayActivity extends BasePlayActivity {
      * size 小于2表示没有歌词，5秒后自动关闭歌词画面。
      */
     public void closeLyricsView() {
-       disPosableLyricsView();
+        disPosableLyricsView();
         if (mLyricList.size() < Constants.NUMBER_TWO) {
             if (mCloseLyrDisposable == null) {
                 mCloseLyrDisposable = Observable.timer(5, TimeUnit.SECONDS)

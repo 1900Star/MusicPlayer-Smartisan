@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +27,8 @@ import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
+import com.yibao.music.util.ProgressDialogUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
-import com.yibao.music.util.ThreadPoolProxyFactory;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.MusicToolBar;
@@ -73,6 +74,8 @@ public class AboutFragment extends BaseMusicFragment {
     TextView mtScanerMedia;
     @BindView(R.id.tv_crash_log)
     TextView mTvCrashLog;
+    @BindView(R.id.tv_delete_error_lyric)
+    TextView mTvDeleteErrorLyric;
     private long mCurrentPosition;
 
     @Nullable
@@ -88,6 +91,10 @@ public class AboutFragment extends BaseMusicFragment {
     }
 
     private void initData() {
+        File file = new File(Constants.MUSIC_LYRICS_ROOT);
+        if (file.exists()) {
+            mTvDeleteErrorLyric.setVisibility(View.VISIBLE);
+        }
         File headerFile = FileUtil.getHeaderFile();
         if (FileUtil.getHeaderFile().exists()) {
             setHeaderView(Uri.fromFile(headerFile));
@@ -121,6 +128,9 @@ public class AboutFragment extends BaseMusicFragment {
         mCompositeDisposable.add(RxView.clicks(mTvShare)
                 .throttleFirst(3, TimeUnit.SECONDS)
                 .subscribe(o -> shareMe()));
+        mCompositeDisposable.add(RxView.clicks(mTvDeleteErrorLyric)
+                .throttleFirst(2, TimeUnit.SECONDS)
+                .subscribe(o -> clearErrorLyric()));
         mCompositeDisposable.add(RxView.clicks(mTvCrashLog)
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribe(o -> CrashSheetDialog.newInstance().getBottomDialog(mActivity)));
@@ -149,15 +159,7 @@ public class AboutFragment extends BaseMusicFragment {
     private void scannerMedia() {
         Intent intent = new Intent(mActivity, SplashActivity.class);
         intent.putExtra(Constants.SCANNER_MEDIA, Constants.SCANNER_MEDIA);
-//        startActivity(intent);
-        ThreadPoolProxyFactory.newInstance().execute(new Runnable() {
-            @Override
-            public void run() {
-                LyricsUtil.clearLyricList();
-
-            }
-        });
-
+        startActivity(intent);
     }
 
     private void shareMe() {
@@ -226,6 +228,11 @@ public class AboutFragment extends BaseMusicFragment {
         mAboutHeaderIv.setImageBitmap(bitmap);
     }
 
+    private void clearErrorLyric() {
+//        ProgressDialogUtil.getProgressDialog(mActivity);
+        LyricsUtil.clearLyricList();
+        ToastUtil.show(mActivity,"错误歌词已删除");
+    }
     public static AboutFragment newInstance() {
 
         return new AboutFragment();
