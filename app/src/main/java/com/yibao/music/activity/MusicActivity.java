@@ -407,7 +407,7 @@ public class MusicActivity
      * QQbar时时更新歌词
      */
     private void setQqPagerLyric() {
-        List<MusicLyricBean> lyricList = getLyricList(mCurrentMusicBean);
+        List<MusicLyricBean> lyricList = LyricsUtil.getLyricList(mCurrentMusicBean);
         disposableQqLyric();
         if (mQqLyricsDisposable == null) {
             mQqLyricsDisposable = Observable.interval(1600, TimeUnit.MICROSECONDS)

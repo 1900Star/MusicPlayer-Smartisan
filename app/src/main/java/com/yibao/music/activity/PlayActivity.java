@@ -219,10 +219,11 @@ public class PlayActivity extends BasePlayActivity {
         setAlbulm(mAlbumUrl);
         setSongDuration();
         updatePlayBtnStatus();
-//        初始化歌词
-        mLyricList = getLyricList(musicBean);
+        // 设置当前歌词
+        mLyricList = LyricsUtil.getLyricList(musicBean);
         mLyricsView.setLrcFile(mLyricList);
         if (isShowLyrics) {
+            startRollPlayLyrics(mLyricsView);
             closeLyricsView();
             mLlSunAndDelele.setVisibility(mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
 
@@ -276,6 +277,7 @@ public class PlayActivity extends BasePlayActivity {
             mCloseLyrDisposable.dispose();
             mCloseLyrDisposable = null;
         }
+//        clearDisposableLyric();
     }
 
     private void setAlbulm(String url) {
@@ -423,11 +425,11 @@ public class PlayActivity extends BasePlayActivity {
 
     @Override
     protected void updataLyricsView(boolean lyricsExists) {
-        super.updataLyricsView(lyricsExists);
-        mLyricList = getLyricList(mCurrenMusicInfo);
-        mLyricsView.setLrcFile(lyricsExists ? mLyricList : null);
-
-        closeLyricsView();
+        if (lyricsExists) {
+            mLyricList = LyricsUtil.getLyricList(mCurrenMusicInfo);
+            mLyricsView.setLrcFile(mLyricList);
+            closeLyricsView();
+        }
 
     }
 
@@ -441,7 +443,7 @@ public class PlayActivity extends BasePlayActivity {
         } else {
             boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(mCurrenMusicInfo.getTitle()), StringUtil.getArtist(mCurrenMusicInfo.getArtist()));
             if (lyricIsExists) {
-                mLyricList = getLyricList(mCurrenMusicInfo);
+                mLyricList = LyricsUtil.getLyricList(mCurrenMusicInfo);
                 mLyricsView.setLrcFile(mLyricList);
                 // 开始滚动歌词
                 if (audioBinder.isPlaying()) {
@@ -449,7 +451,7 @@ public class PlayActivity extends BasePlayActivity {
                 }
                 closeLyricsView();
             } else {
-                LogUtil.d(" -----  下载歌词 ");
+                LogUtil.d(" ----- 点击专辑图片 下载歌词 ");
                 LyricsUtil.downloadLyricFile(mCurrenMusicInfo);
             }
         }

@@ -366,7 +366,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     }
 
     private void updataLyric() {
-        List<MusicLyricBean> lyricList = getLyricList(mMusicBean);
+        List<MusicLyricBean> lyricList = LyricsUtil.getLyricList(mMusicBean);
         disposableQqLyric();
         if (mQqLyricsDisposable == null) {
             mQqLyricsDisposable = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)

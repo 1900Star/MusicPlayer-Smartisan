@@ -12,12 +12,10 @@ import java.io.File;
  */
 public class LyricDownBean {
     private boolean doneOK;
-    private File lyricsFile;
     private String downMsg;
 
-    public LyricDownBean(boolean doneOK, File lyricsFile, String downMsg) {
+    public LyricDownBean(boolean doneOK, String downMsg) {
         this.doneOK = doneOK;
-        this.lyricsFile = lyricsFile;
         this.downMsg = downMsg;
     }
 
@@ -27,14 +25,6 @@ public class LyricDownBean {
 
     public void setDoneOK(boolean doneOK) {
         this.doneOK = doneOK;
-    }
-
-    public File getLyricsFile() {
-        return lyricsFile;
-    }
-
-    public void setLyricsFile(File lyricsFile) {
-        this.lyricsFile = lyricsFile;
     }
 
     public String getDownMsg() {

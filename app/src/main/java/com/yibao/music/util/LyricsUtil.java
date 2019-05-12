@@ -1,5 +1,7 @@
 package com.yibao.music.util;
 
+import android.util.Log;
+
 import com.yibao.music.base.listener.LyricsCallBack;
 import com.yibao.music.model.LyricDownBean;
 import com.yibao.music.model.MusicBean;
@@ -30,9 +32,9 @@ public class LyricsUtil {
     private static final String UNKNOWN_NAME = "<unknown>";
 
     public static boolean checkLyricFile(String songName, String songArtisa) {
-        LogUtil.d(" 本地歌词信息  " + songName + " $$ " + songArtisa);
         String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + songArtisa + ".lrc";
         File file = new File(path);
+        LogUtil.d(" 本地歌词信息  " + songName + " $$ " + songArtisa + " == 是否存在    " + file.exists());
         return file.exists();
     }
 
@@ -48,23 +50,19 @@ public class LyricsUtil {
             // 先获取网络歌词的下载地址Url,，如果没有歌词地址或者地址下载失败，返回" 暂无歌词"
 
             DownloadLyricsUtil.downloadLyricUrl(songName, musicBean.getArtist(), (lyricsUrlOk, lyricsUri) -> {
-                LogUtil.d("====== downloadLyricUrl  =====       " + lyricsUrlOk);
                 if (lyricsUrlOk && lyricsUri != null) {
+                    LogUtil.d("====== 歌词地址下载成功   =====       ");
                     // 发现歌词下载地址，下载歌词。
                     DownloadLyricsUtil.downloadlyricsfile(lyricsUri, songName, artist);
                 } else {
-                    String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + artist + ".lrc";
-                    File file = new File(path);
-                    LyricDownBean lyricDownBean = new LyricDownBean(false, null, Constants.NO_FIND_LYRICS);
+                    LogUtil.d("====== 歌词地址下载失败   =====       ");
+                    LyricDownBean lyricDownBean = new LyricDownBean(false, Constants.NO_FIND_LYRICS);
                     RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);
-                    if (file.exists()) {
-                        file.delete();
-                    }
                 }
 
             });
         } else {
-            LyricDownBean lyricDownBean = new LyricDownBean(false, null, Constants.NO_FIND_NETWORK);
+            LyricDownBean lyricDownBean = new LyricDownBean(false, Constants.NO_FIND_NETWORK);
             RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);
         }
     }
@@ -95,8 +93,8 @@ public class LyricsUtil {
         int nu = 0;
         for (File f : files) {
             List<String> lylist = getLylist(f);
-            if (lylist.size() < 2) {
-                LogUtil.d(" 歌词长度小于2的 : " + "\n" + f.getAbsolutePath());
+            if (lylist.size() < 4) {
+                LogUtil.d(" 歌词长度小于4的 : " + "\n" + f.getAbsolutePath());
                 nu++;
                 f.delete();
             }
@@ -143,12 +141,11 @@ public class LyricsUtil {
      * @return 返回歌词List
      */
     public static List<MusicLyricBean> getLyricList(MusicBean musicBean) {
-
-        File file = FileUtil.getLyricsFile(StringUtil.getSongName(musicBean.getTitle()), StringUtil.getArtist(musicBean.getArtist()));
         List<MusicLyricBean> lrcList = new ArrayList<>();
-        if (!file.exists()) {
-            lrcList.add(new MusicLyricBean(0, "没有发现歌词"));
-        } else {
+        boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(musicBean.getTitle()), StringUtil.getArtist(musicBean.getArtist()));
+        if (lyricIsExists) {
+            String path = Constants.MUSIC_LYRICS_ROOT + musicBean.getTitle() + "$$" + musicBean.getArtist() + ".lrc";
+            File file = new File(path);
             try {
                 String charsetName = "utf-8";
                 br = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsetName));
@@ -175,8 +172,11 @@ public class LyricsUtil {
                 }
 
             }
+        } else {
 
+            lrcList.add(new MusicLyricBean(0, "没有发现歌词"));
         }
+
         Collections.sort(lrcList);
         return lrcList;
     }

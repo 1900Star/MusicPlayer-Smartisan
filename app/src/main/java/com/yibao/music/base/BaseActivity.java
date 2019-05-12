@@ -100,7 +100,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     } else {
                         String downMsg = bean.getDownMsg();
                         if (downMsg.equals(Constants.NO_FIND_LYRICS)) {
-                            ToastUtil.show(this, "暂无歌词");
+                            LogUtil.d("暂无歌词");
                         } else if (downMsg.equals(Constants.NO_FIND_NETWORK)) {
                             ToastUtil.show(this, "没有发现可使用的网络");
                         }
@@ -120,10 +120,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    protected List<MusicLyricBean> getLyricList(MusicBean musicBean) {
-        return LyricsUtil.getLyricList(musicBean);
-    }
-
+    /**
+     *
+     * @param b 歌词下载是否成功 ，成功就重新设置歌词View
+     */
     protected void updataLyricsView(boolean b) {
     }
 

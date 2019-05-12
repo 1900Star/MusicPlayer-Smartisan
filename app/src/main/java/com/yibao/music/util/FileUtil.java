@@ -29,6 +29,7 @@ public class FileUtil {
     }
 
     public static File getLyricsFile(String songName, String songArtisa) {
+
         File file = new File(Constants.MUSIC_LYRICS_ROOT);
         if (!file.exists()) {
             file.mkdirs();
@@ -41,6 +42,7 @@ public class FileUtil {
                 e.printStackTrace();
             }
         }
+        LogUtil.d(" ==========  下载歌词啦   ");
         return lyricFile;
     }
 
@@ -99,7 +101,7 @@ public class FileUtil {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? FileProvider.getUriForFile(context, context.getPackageName(), pictureFile) : Uri.fromFile(pictureFile);
     }
 
-    public static void deleteFile(File dir) {
+    public static void deleteFileDirectory(File dir) {
         if (dir.exists()) {
             File[] files = dir.listFiles();
             for (File file : files) {
@@ -110,6 +112,12 @@ public class FileUtil {
                 }
             }
             dir.delete();
+        }
+    }
+
+    public static void deleteFile(File file) {
+        if (file.exists()) {
+            file.delete();
         }
     }
 }

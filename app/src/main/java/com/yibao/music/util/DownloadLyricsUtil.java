@@ -42,7 +42,9 @@ public class DownloadLyricsUtil {
     public static synchronized void downloadLyricUrl(String songName, String songArtist, LyricsCallBack callBack) {
         // 实际歌词的查询条件
         String queryLrcURL = getQueryLrcURL(songName, songArtist);
+
         LogUtil.d("     查询歌词地址    ====    " + queryLrcURL);
+
         ThreadPoolProxyFactory.newInstance().execute(() -> OkHttpUtil.downFile(queryLrcURL, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -94,14 +96,14 @@ public class DownloadLyricsUtil {
      * 将网络歌词文件本地
      *
      * @param url 歌词缓冲地址
-     * @return 是否下载成功
      */
     public static void downloadlyricsfile(String url, String songName, String artist) {
+        String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + artist + ".lrc";
         OkHttpUtil.downFile(url, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 e.printStackTrace();
-                sentResult(true, songName, artist, e.getMessage());
+                sentResult(false, path, e.getMessage());
             }
 
             @Override
@@ -120,12 +122,12 @@ public class DownloadLyricsUtil {
                         fos.flush();
                         fos.close();
                         inputStream.close();
-                        sentResult(true, songName, artist, "OK");
-                        LogUtil.d("========= 歌词下载完成 ======final =====   " + FileUtil.getLyricsFile(songName, artist));
+                        sentResult(true, null, "OK");
+                        LogUtil.d("========= 歌词下载完成 ======final =====   ");
                     } catch (IOException e) {
                         e.printStackTrace();
-                        sentResult(false, songName, artist, e.getMessage());
-                        LogUtil.d("========= 歌词下载失败 ======final =====   " + FileUtil.getLyricsFile(songName, artist));
+                        sentResult(false, path, e.getMessage());
+                        LogUtil.d("========= 歌词下载失败 ======final =====   ");
                     }
                 }
             }
@@ -134,9 +136,18 @@ public class DownloadLyricsUtil {
         });
     }
 
-    private static void sentResult(boolean b, String songName, String artist, String msg) {
-        LyricDownBean lyricDownBean = new LyricDownBean(b, FileUtil.getLyricsFile(songName, artist), msg);
+
+    /**
+     * @param b   歌词是否下载成功
+     * @param msg 下载的信息，下载成功为 “OK”，下载失败或者下载异常为 Exception.getMessage()
+     */
+    private static void sentResult(boolean b, String path, String msg) {
+        LyricDownBean lyricDownBean = new LyricDownBean(b, msg);
         RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);
+        if (!b) {
+            // 下载失败或者下载异常，将已经创建的歌词文件删除，以便重新下载完整的歌词。
+            FileUtil.deleteFile(new File(path));
+        }
     }
 
     private static InputStream getInputStream(Response response) {

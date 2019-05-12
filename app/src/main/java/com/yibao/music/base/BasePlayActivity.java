@@ -107,7 +107,7 @@ public abstract class BasePlayActivity extends BaseTansitionActivity implements 
      */
     protected void startRollPlayLyrics(LyricsView lyricsView) {
         if (mDisposableLyrics == null) {
-            mDisposableLyrics = Observable.interval(50, TimeUnit.MILLISECONDS)
+            mDisposableLyrics = Observable.interval(30, TimeUnit.MILLISECONDS)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(aLong -> lyricsView.rollText(audioBinder.getProgress(), audioBinder.getDuration()));
