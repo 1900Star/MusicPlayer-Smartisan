@@ -1,6 +1,5 @@
 package com.yibao.music.util;
 
-import com.yibao.music.base.listener.LyricDownCallBack;
 import com.yibao.music.base.listener.LyricsCallBack;
 import com.yibao.music.model.LyricDownBean;
 import com.yibao.music.model.MusicBean;
@@ -43,24 +42,21 @@ public class LyricsUtil {
      */
     public static void downloadLyricFile(MusicBean musicBean) {
         String songName = StringUtil.getTitle(musicBean);
-        String artist = StringUtil.getArtist(musicBean);
+        String artist = StringUtil.getArtist(musicBean.getArtist());
         if (NetworkUtil.isNetworkConnected()) {
 
             // 先获取网络歌词的下载地址Url,，如果没有歌词地址或者地址下载失败，返回" 暂无歌词"
 
-            DownloadLyricsUtil.downloadLyricUrl(musicBean, new LyricsCallBack() {
-                @Override
-                public void lyricsUri(boolean lyricsUrlOk, String lyricsUri) {
-                    LogUtil.d("====== downloadLyricUrl  =====       " + lyricsUrlOk);
-                    if (lyricsUrlOk && lyricsUri != null) {
-                        // 发现歌词下载地址，下载歌词。
-                        DownloadLyricsUtil.downloadlyricsfile(lyricsUri, songName, artist);
-                    } else {
-                        LyricDownBean lyricDownBean = new LyricDownBean(false, null, Constants.NO_FIND_LYRICS);
-                        RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);
-                    }
-
+            DownloadLyricsUtil.downloadLyricUrl(songName, musicBean.getArtist(), (lyricsUrlOk, lyricsUri) -> {
+                LogUtil.d("====== downloadLyricUrl  =====       " + lyricsUrlOk);
+                if (lyricsUrlOk && lyricsUri != null) {
+                    // 发现歌词下载地址，下载歌词。
+                    DownloadLyricsUtil.downloadlyricsfile(lyricsUri, songName, artist);
+                } else {
+                    LyricDownBean lyricDownBean = new LyricDownBean(false, null, Constants.NO_FIND_LYRICS);
+                    RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);
                 }
+
             });
         } else {
             LyricDownBean lyricDownBean = new LyricDownBean(false, null, Constants.NO_FIND_NETWORK);
@@ -68,44 +64,93 @@ public class LyricsUtil {
         }
     }
 
+    public static void clearLyricList() {
+        File file = new File(Constants.MUSIC_LYRICS_ROOT);
+        File[] files = file.listFiles();
+        LogUtil.d(" ===== 歌词总长度     " + files.length);
+        int nu = 0;
+        for (File f : files) {
+            List<String> lylist = getLylist(f);
+            if (lylist.size() < 2) {
+                LogUtil.d(" 歌词长度小于2的 : " + "\n" + f.getAbsolutePath());
+                nu++;
+//                f.delete();
+            }
+
+        }
+        LogUtil.d("  无效歌词的长度   " + nu);
+
+    }
+
+    private static List<String> getLylist(File file) {
+        List<String> strings = new ArrayList<>();
+        try {
+            String charsetName = "utf-8";
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsetName));
+            String line = br.readLine();
+            while (line != null) {
+                strings.add(line);
+                if (br != null) {
+                    line = br.readLine();
+                }
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            strings.add("歌词加载出错");
+
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                    br = null;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return strings;
+    }
+
     /**
      * 将读取本地歌词文件，将歌词封装到List中。
      *
      * @return 返回歌词List
      */
-    public static List<MusicLyricBean> getLyricList(File file) {
+    public static List<MusicLyricBean> getLyricList(MusicBean musicBean) {
+
+        File file = FileUtil.getLyricsFile(StringUtil.getTitle(musicBean), StringUtil.getArtist(musicBean));
         List<MusicLyricBean> lrcList = new ArrayList<>();
         if (!file.exists()) {
             lrcList.add(new MusicLyricBean(0, "没有发现歌词"));
         } else {
-            ThreadPoolProxyFactory.newInstance().execute(() -> {
+            try {
+                String charsetName = "utf-8";
+                br = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsetName));
+                String line = br.readLine();
+                while (line != null) {
+                    ArrayList<MusicLyricBean> been = parseLine(line);
+                    lrcList.addAll(been);
+                    if (br != null) {
+                        line = br.readLine();
+                    }
+                }
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                lrcList.add(new MusicLyricBean(0, "歌词加载出错"));
+            } finally {
                 try {
-                    String charsetName = "utf-8";
-                    br = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsetName));
-                    String line = br.readLine();
-                    while (line != null) {
-                        ArrayList<MusicLyricBean> been = parseLine(line);
-                        lrcList.addAll(been);
-                        if (br != null) {
-                            line = br.readLine();
-                        }
+                    if (br != null) {
+                        br.close();
+                        br = null;
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-                    lrcList.add(new MusicLyricBean(0, "歌词加载出错"));
-                } finally {
-                    try {
-                        if (br != null) {
-                            br.close();
-                            br = null;
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
                 }
 
-            });
+            }
 
         }
         Collections.sort(lrcList);

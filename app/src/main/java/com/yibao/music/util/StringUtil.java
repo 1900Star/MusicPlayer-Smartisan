@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Des：${歌曲的时间格式处理}
@@ -105,14 +106,14 @@ public class StringUtil {
      */
     public static String getCurrentTime() {
         long time = System.currentTimeMillis();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         Date date = new Date(time);
         return format.format(date);
 
     }
 
     public static String getFormatDate(Long l) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         Date date = new Date(l);
         return format.format(date);
 
@@ -132,6 +133,16 @@ public class StringUtil {
                 ? TitleArtistUtil.getBean(musicTitle).getSongArtist()
                 : "<unknown>".equals(musicArtist)
                 ? "Smartisan" : musicArtist;
+    }
+
+    public static String getSongName(String songName) {
+        return songName.contains("[mqms2]" )? songName.substring(songName.lastIndexOf("-") + 2, songName.lastIndexOf("[mqms2]") - 1):songName;
+    }
+
+    public static String getArtist(String singerName) {
+        String unknownName = "<unknown>";
+        return unknownName.equals(singerName) ? "Smartisan" : singerName;
+
     }
 
     public static String getBottomSheetTitle(int size) {

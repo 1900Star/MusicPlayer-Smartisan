@@ -13,7 +13,7 @@ public class Constants {
     /**
      * 广播匹配
      */
-    public final static String BUTTON_ID = "ButtonId";
+    public final static String NOTIFY_BUTTON_ID = "notify_btn_id";
     public final static String ACTION_MUSIC = "MUSIC";
 
     /**

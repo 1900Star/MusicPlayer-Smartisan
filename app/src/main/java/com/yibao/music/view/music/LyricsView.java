@@ -188,13 +188,11 @@ public class LyricsView
      * @param lrcList s
      */
     public void setLrcFile(List<MusicLyricBean> lrcList) {
-        LogUtil.d("=======  歌词List   " + lrcList);
         musicLyrList = lrcList;
         //默认剧中行=0
         centerLine = 0;
         invalidate();
     }
-
 
     private void drawSingLine(Canvas canvas) {
         mCurrentLrc = "暂无歌词";

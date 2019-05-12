@@ -13,12 +13,9 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.yibao.music.MusicApplication;
-import com.yibao.music.base.listener.LyricDownCallBack;
 import com.yibao.music.manager.MediaSessionManager;
 import com.yibao.music.manager.MusicNotifyManager;
-import com.yibao.music.model.LyricDownBean;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
@@ -386,7 +383,7 @@ public class AudioPlayService
             String action = intent.getAction();
             if (action != null) {
                 if (action.equals(Constants.ACTION_MUSIC)) {
-                    int id = intent.getIntExtra(Constants.BUTTON_ID, 0);
+                    int id = intent.getIntExtra(Constants.NOTIFY_BUTTON_ID, 0);
                     switch (id) {
                         case Constants.FAVORITE:
                             mAudioBinder.updataFavorite();

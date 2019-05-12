@@ -366,15 +366,16 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     }
 
     private void updataLyric() {
+        List<MusicLyricBean> lyricList = getLyricList(mMusicBean);
         disposableQqLyric();
         if (mQqLyricsDisposable == null) {
             mQqLyricsDisposable = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(musicBeanList -> {
-                        if (mLyricList != null && mLyricList.size() > 1 && lyricsFlag < mLyricList.size()) {
+                        if (lyricList != null && lyricList.size() > 1 && lyricsFlag < lyricList.size()) {
                             //通过集合，播放过的歌词就从集合中删除
-                            MusicLyricBean lyrBean = mLyricList.get(lyricsFlag);
+                            MusicLyricBean lyrBean = lyricList.get(lyricsFlag);
                             String content = lyrBean.getContent();
                             int progress = audioBinder.getProgress();
                             int startTime = lyrBean.getStartTime();

@@ -25,7 +25,9 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
+import com.yibao.music.util.ThreadPoolProxyFactory;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.MusicToolBar;
@@ -147,7 +149,15 @@ public class AboutFragment extends BaseMusicFragment {
     private void scannerMedia() {
         Intent intent = new Intent(mActivity, SplashActivity.class);
         intent.putExtra(Constants.SCANNER_MEDIA, Constants.SCANNER_MEDIA);
-        startActivity(intent);
+//        startActivity(intent);
+        ThreadPoolProxyFactory.newInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                LyricsUtil.clearLyricList();
+
+            }
+        });
+
     }
 
     private void shareMe() {

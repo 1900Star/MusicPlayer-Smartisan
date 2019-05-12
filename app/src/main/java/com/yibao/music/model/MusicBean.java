@@ -379,4 +379,33 @@ public class MusicBean
     public void setIsPlayFlag(boolean isPlayFlag) {
         this.isPlayFlag = isPlayFlag;
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "MusicBean{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", artist='" + artist + '\'' +
+                ", album='" + album + '\'' +
+                ", albumId=" + albumId +
+                ", addTime=" + addTime +
+                ", addListTime=" + addListTime +
+                ", duration=" + duration +
+                ", time='" + time + '\'' +
+                ", songUrl='" + songUrl + '\'' +
+                ", firstChar='" + firstChar + '\'' +
+                ", isFavorite=" + isFavorite +
+                ", playFrequency=" + playFrequency +
+                ", songScore=" + songScore +
+                ", playStatus=" + playStatus +
+                ", issueYear=" + issueYear +
+                ", musicQualityType=" + musicQualityType +
+                ", isSelected=" + isSelected +
+                ", isPlayFlag=" + isPlayFlag +
+                ", playListFlag='" + playListFlag + '\'' +
+                ", currentLyrics='" + currentLyrics + '\'' +
+                ", cureetPosition=" + cureetPosition +
+                '}';
+    }
 }

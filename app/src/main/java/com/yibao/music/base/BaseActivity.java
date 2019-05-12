@@ -62,13 +62,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Unbinder mBind;
     protected Disposable mRxViewDisposable;
     protected PlayListBeanDao mPlayListDao;
-    protected List<MusicLyricBean> mLyricList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StatService.start(getApplicationContext());
-        mLyricList = new ArrayList<>();
         mBus = RxBus.getInstance();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mSearchDao = MusicApplication.getIntstance().getSearchDao();
@@ -123,8 +121,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     protected List<MusicLyricBean> getLyricList(MusicBean musicBean) {
-        File file = FileUtil.getLyricsFile(StringUtil.getTitle(musicBean), StringUtil.getArtist(musicBean));
-        return LyricsUtil.getLyricList(file);
+        return LyricsUtil.getLyricList(musicBean);
     }
 
     protected void updataLyricsView(boolean b) {
