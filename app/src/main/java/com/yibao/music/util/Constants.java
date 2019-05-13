@@ -13,7 +13,7 @@ public class Constants {
     /**
      * 广播匹配
      */
-    public final static String BUTTON_ID = "ButtonId";
+    public final static String NOTIFY_BUTTON_ID = "notify_btn_id";
     public final static String ACTION_MUSIC = "MUSIC";
 
     /**
@@ -77,6 +77,8 @@ public class Constants {
     public static final String NULL_STRING = "";
     public static final String SERVICE_MUSIC = "service_music";
     public static final String MUSIC_LYRIC_OK = "lyric_ok";
+    public static final String NO_FIND_LYRICS = "no_find_lyrics";
+    public static final String NO_FIND_NETWORK = "no_find_network";
     public static final String PLAY_LIST_BACK_FLAG = "LSP_98";
     public static final String TIME_FLAG = "time_flag";
     public static final String TIME_FLAG_KEY = "time_flag_key";
@@ -127,7 +129,7 @@ public class Constants {
     public static final String NO_NEED_FLAG = "no_need_flag";
     public static final String COUNTDOWN_TIME = "countdown_time";
     public static final String FINISH_TIME = "00:01";
-    public static String MUSIC_LYRICS_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyricz/";
+    public static String MUSIC_LYRICS_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyric/";
     static final String FAVORITE_FILE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/favorite.txt/";
     public static final String HEADER_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yibao/photo/";
     // 崩溃日志本地保存地址
@@ -140,6 +142,7 @@ public class Constants {
     public static final int CODE_CAMERA_REQUEST = 0xa1;
     public static final int CODE_RESULT_REQUEST = 0xa2;
     // 头像文件
+
     public static final String IMAGE_FILE_NAME = "temp_head_image.jpg";
     public static final String CROP_IMAGE_FILE_NAME = "header.jpg";
     public static final String MQMS2 = "[mqms2]";

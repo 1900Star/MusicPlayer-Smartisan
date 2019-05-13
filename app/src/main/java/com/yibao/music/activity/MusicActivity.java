@@ -220,6 +220,7 @@ public class MusicActivity
             }
         });
         mQqControlBar.setOnPagerSelecteListener(position -> {
+            LogUtil.d("==== Qq Bar  ==============");
             int sortFlag = SpUtil.getSortFlag(this);
             MusicActivity.this.disposableQqLyric();
             if (mHandleDetailFlag > 0) {
@@ -233,6 +234,7 @@ public class MusicActivity
             } else {
                 MusicActivity.this.startMusicService(position);
             }
+//            updataQqBar();
         });
     }
 
@@ -405,22 +407,22 @@ public class MusicActivity
      * QQbar时时更新歌词
      */
     private void setQqPagerLyric() {
+        List<MusicLyricBean> lyricList = LyricsUtil.getLyricList(mCurrentMusicBean);
         disposableQqLyric();
         if (mQqLyricsDisposable == null) {
-            // 刚开始延时100 确保歌词下载完成。
             mQqLyricsDisposable = Observable.interval(1600, TimeUnit.MICROSECONDS)
 //                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(musicBeanList -> {
-                        if (mLyricList != null && mLyricList.size() > 1 && lyricsFlag < mLyricList.size()) {
+                        if (lyricList != null && lyricList.size() > 1 && lyricsFlag < lyricList.size()) {
                             //通过集合，播放过的歌词就从集合中删除
-                            MusicLyricBean lyrBean = mLyricList.get(lyricsFlag);
+                            MusicLyricBean lyrBean = lyricList.get(lyricsFlag);
                             String lyrics = lyrBean.getContent();
                             int progress = audioBinder.getProgress();
                             int startTime = lyrBean.getStartTime();
                             List<MusicBean> musicList = audioBinder.getMusicList();
                             if (musicList != null && progress > startTime) {
-                                LogUtil.d("歌词List的长度    ==  " + mLyricList.size());
+                                LogUtil.d("歌词List的长度    ==  " + lyricList.size());
                                 if (mCurrentPosition < musicList.size()) {
                                     mQqBarBean = musicList.get(mCurrentPosition);
                                     mQqBarBean.setCurrentLyrics(lyrics);
@@ -593,13 +595,11 @@ public class MusicActivity
 
     @Override
     public void onBackPressed() {
-        LogUtil.d("======= mHandleDetailFlag  onBackPressed   " + mHandleDetailFlag);
         if (mHandleDetailFlag > Constants.NUMBER_ZERO) {
             mBus.post(Constants.HANDLE_BACK, mHandleDetailFlag);
             mHandleDetailFlag = Constants.NUMBER_ZERO;
         } else {
             super.onBackPressed();
-            LogUtil.d("============ Activty  back");
         }
     }
 

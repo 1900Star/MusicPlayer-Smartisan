@@ -13,12 +13,9 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.yibao.music.MusicApplication;
-import com.yibao.music.base.listener.LyricDownCallBack;
 import com.yibao.music.manager.MediaSessionManager;
 import com.yibao.music.manager.MusicNotifyManager;
-import com.yibao.music.model.LyricDownBean;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
@@ -137,7 +134,7 @@ public class AudioPlayService
         if (mMusicDataList != null && position < mMusicDataList.size()) {
             MusicBean musicBean = mMusicDataList.get(position);
             musicBean.setCureetPosition(position);
-            mBus.post(Constants.SERVICE_MUSIC,musicBean);
+            mBus.post(Constants.SERVICE_MUSIC, musicBean);
         }
     }
 
@@ -161,17 +158,13 @@ public class AudioPlayService
                 mMusicInfo = mMusicDataList.get(position);
                 mediaPlayer = MediaPlayer.create(AudioPlayService.this,
                         Uri.parse(mMusicInfo.getSongUrl()));
-                boolean lyricIsExists = LyricsUtil.checkLyricFile(mMusicInfo.getTitle(), mMusicInfo.getArtist());
-                LogUtil.d("=======  当前歌词是否存在 ========== "+lyricIsExists);
-                if (!lyricIsExists) {
-                    LyricsUtil.downloadLyricFile(mMusicInfo.getTitle(), mMusicInfo.getArtist(), (isDone, msg) -> {
-                        mBus.post(Constants.MUSIC_LYRIC_OK,new LyricDownBean(mMusicInfo.getTitle(),mMusicInfo.getArtist(),true));
-                        LogUtil.d("======== AudioPlayService LyricDownCallBack  =======  " + isDone);
-                        LogUtil.d("======== AudioPlayService LyricDownCallBack  ======= msg " + msg);
-                    });
-                }
                 mediaPlayer.setOnPreparedListener(this);
                 mediaPlayer.setOnCompletionListener(this);
+                boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(mMusicInfo.getTitle()), StringUtil.getArtist(mMusicInfo.getArtist()));
+                LogUtil.d("=======  当前歌词是否存在 ===== " + lyricIsExists + " == " + mMusicInfo.getTitle() + " == " + mMusicInfo.getArtist());
+                if (!lyricIsExists) {
+                    LyricsUtil.downloadLyricFile(mMusicInfo);
+                }
                 SpUtil.setMusicPosition(AudioPlayService.this, position);
                 showNotifycation(true);
                 mSessionManager.updatePlaybackState(true);
@@ -274,17 +267,14 @@ public class AudioPlayService
         //手动播放上一曲
 
         public void playPre() {
-            switch (playMode) {
-                case PLAY_MODE_RANDOM:
-                    position = new Random().nextInt(mMusicDataList.size());
-                    break;
-                default:
-                    if (position == 0) {
-                        position = mMusicDataList.size() - 1;
-                    } else {
-                        position--;
-                    }
-                    break;
+            if (playMode == PLAY_MODE_RANDOM) {
+                position = new Random().nextInt(mMusicDataList.size());
+            } else {
+                if (position == 0) {
+                    position = mMusicDataList.size() - 1;
+                } else {
+                    position--;
+                }
             }
             play();
         }
@@ -292,13 +282,10 @@ public class AudioPlayService
         // 手动播放下一曲
 
         public void playNext() {
-            switch (playMode) {
-                case PLAY_MODE_RANDOM:
-                    position = new Random().nextInt(mMusicDataList.size());
-                    break;
-                default:
-                    position = (position + 1) % mMusicDataList.size();
-                    break;
+            if (playMode == PLAY_MODE_RANDOM) {
+                position = new Random().nextInt(mMusicDataList.size());
+            } else {
+                position = (position + 1) % mMusicDataList.size();
             }
             play();
         }
@@ -390,7 +377,7 @@ public class AudioPlayService
             String action = intent.getAction();
             if (action != null) {
                 if (action.equals(Constants.ACTION_MUSIC)) {
-                    int id = intent.getIntExtra(Constants.BUTTON_ID, 0);
+                    int id = intent.getIntExtra(Constants.NOTIFY_BUTTON_ID, 0);
                     switch (id) {
                         case Constants.FAVORITE:
                             mAudioBinder.updataFavorite();

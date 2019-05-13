@@ -73,7 +73,7 @@ public class CrashSheetDialog {
             TextView tvTitle = view.findViewById(R.id.tv_crash_title);
             tvTitle.setOnClickListener(v -> backTop(recyclerView));
             tvTitle.setOnLongClickListener(v -> {
-                FileUtil.deleteFile(mFiles);
+                FileUtil.deleteFileDirectory(mFiles);
                 dialog.dismiss();
                 return true;
             });

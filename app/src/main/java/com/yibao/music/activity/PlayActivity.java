@@ -6,9 +6,9 @@ import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -37,11 +37,9 @@ import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
-import com.yibao.music.util.TitleArtistUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.LyricsView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -88,11 +86,16 @@ public class PlayActivity extends BasePlayActivity {
     @BindView(R.id.rotate_rl)
     RelativeLayout mRotateRl;
     @BindView(R.id.tv_lyrics)
-    LyricsView mTvLyrics;
+    LyricsView mLyricsView;
     @BindView(R.id.iv_lyrics_switch)
     ImageView mIvLyricsSwitch;
+
+    @BindView(R.id.ll_sun_and_delete)
+    LinearLayout mLlSunAndDelele;
     @BindView(R.id.iv_secreen_sun_switch)
     ImageView mIvSecreenSunSwitch;
+    @BindView(R.id.iv_delete_lyric)
+    ImageView mIvDeleteLyric;
     @BindView(R.id.music_player_mode)
     ImageView mMusicPlayerMode;
     @BindView(R.id.music_player_pre)
@@ -112,6 +115,7 @@ public class PlayActivity extends BasePlayActivity {
     private ObjectAnimator mAnimator;
     private MyAnimatorUpdateListener mAnimatorListener;
     private Disposable mCloseLyrDisposable;
+    private List<MusicLyricBean> mLyricList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -129,7 +133,7 @@ public class PlayActivity extends BasePlayActivity {
         mSbVolume.setOnSeekBarChangeListener(new SeekBarListener());
         mPlayingSongAlbum.setOnLongClickListener(view -> {
             PreviewBigPicDialogFragment.newInstance(mAlbumUrl)
-                    .show(getFragmentManager(), "album");
+                    .show(getSupportFragmentManager(), "album");
             return true;
         });
     }
@@ -207,7 +211,6 @@ public class PlayActivity extends BasePlayActivity {
 
     @Override
     protected void updataCurrentPlayInfo(MusicBean musicBean) {
-        disPosableLyricsView();
         mCurrenMusicInfo = musicBean;
         checkCurrentIsFavorite(mCurrenMusicInfo.isFavorite());
         initAnimation();
@@ -216,18 +219,20 @@ public class PlayActivity extends BasePlayActivity {
         setAlbulm(mAlbumUrl);
         setSongDuration();
         updatePlayBtnStatus();
-//        初始化歌词
-        mTvLyrics.setLrcFile(mLyricList);
+        // 设置当前歌词
+        mLyricList = LyricsUtil.getLyricList(musicBean);
+        mLyricsView.setLrcFile(mLyricList);
         if (isShowLyrics) {
-            closeLyricsView(mLyricList);
-            mIvSecreenSunSwitch.setVisibility(mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
+            startRollPlayLyrics(mLyricsView);
+            closeLyricsView();
+            mLlSunAndDelele.setVisibility(mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
+
         }
     }
 
     private void setTitleAndArtist(MusicBean bean) {
-        MusicBean musicBean = TitleArtistUtil.getMusicBean(bean);
-        mPlaySongName.setText(musicBean.getTitle());
-        mPlayArtistName.setText(musicBean.getArtist());
+        mPlaySongName.setText(StringUtil.getSongName(bean.getTitle()));
+        mPlayArtistName.setText(StringUtil.getArtist(bean.getArtist()));
     }
 
     /**
@@ -272,6 +277,7 @@ public class PlayActivity extends BasePlayActivity {
             mCloseLyrDisposable.dispose();
             mCloseLyrDisposable = null;
         }
+//        clearDisposableLyric();
     }
 
     private void setAlbulm(String url) {
@@ -311,7 +317,7 @@ public class PlayActivity extends BasePlayActivity {
             audioBinder.start();
             initAnimation();
             if (isShowLyrics) {
-                startRollPlayLyrics(mTvLyrics);
+                startRollPlayLyrics(mLyricsView);
             }
         }
     }
@@ -360,8 +366,9 @@ public class PlayActivity extends BasePlayActivity {
 
     @OnClick({R.id.titlebar_down, R.id.rv_titlebar,
             R.id.playing_song_album, R.id.album_cover, R.id.rotate_rl, R.id.tv_lyrics,
-            R.id.iv_lyrics_switch, R.id.iv_secreen_sun_switch, R.id.music_player_mode,
-            R.id.music_player_pre, R.id.music_play, R.id.music_player_next, R.id.iv_favorite_music})
+            R.id.iv_lyrics_switch, R.id.iv_delete_lyric, R.id.iv_secreen_sun_switch,
+            R.id.music_player_mode, R.id.music_player_pre, R.id.music_play,
+            R.id.music_player_next, R.id.iv_favorite_music})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.titlebar_down:
@@ -377,12 +384,15 @@ public class PlayActivity extends BasePlayActivity {
             case R.id.playing_song_album:
             case R.id.album_cover:
             case R.id.tv_lyrics:
-                if (mLyricList != null) {
-                    showLyrics();
-                }
+                showLyrics();
                 break;
             case R.id.iv_lyrics_switch:
                 MoreMenuBottomDialog.newInstance(mCurrenMusicInfo, audioBinder.getPosition(), true, true).getBottomDialog(this);
+                break;
+            case R.id.iv_delete_lyric:
+                LogUtil.d("============ 删除当前歌词");
+                showLyrics();
+                LyricsUtil.deleteCurrentLyric(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
                 break;
             case R.id.iv_secreen_sun_switch:
                 screenAlwaysOnSwitch(mIvSecreenSunSwitch);
@@ -413,6 +423,16 @@ public class PlayActivity extends BasePlayActivity {
     }
 
 
+    @Override
+    protected void updataLyricsView(boolean lyricsExists) {
+        if (lyricsExists) {
+            mLyricList = LyricsUtil.getLyricList(mCurrenMusicInfo);
+            mLyricsView.setLrcFile(mLyricList);
+            closeLyricsView();
+        }
+
+    }
+
     /**
      * 显示歌词 和 屏幕常亮图标显示
      */
@@ -421,14 +441,22 @@ public class PlayActivity extends BasePlayActivity {
             clearDisposableLyric();
             disPosableLyricsView();
         } else {
-            // 开始滚动歌词
-            if (audioBinder.isPlaying()) {
-                startRollPlayLyrics(mTvLyrics);
+            boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(mCurrenMusicInfo.getTitle()), StringUtil.getArtist(mCurrenMusicInfo.getArtist()));
+            if (lyricIsExists) {
+                mLyricList = LyricsUtil.getLyricList(mCurrenMusicInfo);
+                mLyricsView.setLrcFile(mLyricList);
+                // 开始滚动歌词
+                if (audioBinder.isPlaying()) {
+                    startRollPlayLyrics(mLyricsView);
+                }
+                closeLyricsView();
+            } else {
+                LogUtil.d(" ----- 点击专辑图片 下载歌词 ");
+                LyricsUtil.downloadLyricFile(mCurrenMusicInfo);
             }
-            closeLyricsView(mLyricList);
         }
-        mTvLyrics.setVisibility(isShowLyrics ? View.GONE : View.VISIBLE);
-        mIvSecreenSunSwitch.setVisibility(isShowLyrics ? View.GONE : mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
+        mLyricsView.setVisibility(isShowLyrics ? View.GONE : View.VISIBLE);
+        mLlSunAndDelele.setVisibility(isShowLyrics ? View.GONE : mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
         mIvLyricsSwitch.setBackgroundResource(isShowLyrics ? R.drawable.music_lrc_close : R.drawable.music_lrc_open);
         AnimationDrawable animation = (AnimationDrawable) mIvLyricsSwitch.getBackground();
         animation.start();
@@ -505,11 +533,10 @@ public class PlayActivity extends BasePlayActivity {
 
     /**
      * size 小于2表示没有歌词，5秒后自动关闭歌词画面。
-     *
-     * @param lyricList list
      */
-    public void closeLyricsView(List<MusicLyricBean> lyricList) {
-        if (lyricList.size() < Constants.NUMBER_TWO) {
+    public void closeLyricsView() {
+        disPosableLyricsView();
+        if (mLyricList.size() < Constants.NUMBER_TWO) {
             if (mCloseLyrDisposable == null) {
                 mCloseLyrDisposable = Observable.timer(5, TimeUnit.SECONDS)
                         .subscribeOn(Schedulers.io())
@@ -518,4 +545,5 @@ public class PlayActivity extends BasePlayActivity {
             }
         }
     }
+
 }

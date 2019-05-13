@@ -42,7 +42,7 @@ public class FileUtil {
                 e.printStackTrace();
             }
         }
-        LogUtil.d("路径   ====    " + lyricFile.getAbsolutePath());
+        LogUtil.d(" ==========  下载歌词啦   ");
         return lyricFile;
     }
 
@@ -101,7 +101,7 @@ public class FileUtil {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? FileProvider.getUriForFile(context, context.getPackageName(), pictureFile) : Uri.fromFile(pictureFile);
     }
 
-    public static void deleteFile(File dir) {
+    public static void deleteFileDirectory(File dir) {
         if (dir.exists()) {
             File[] files = dir.listFiles();
             for (File file : files) {
@@ -112,6 +112,12 @@ public class FileUtil {
                 }
             }
             dir.delete();
+        }
+    }
+
+    public static void deleteFile(File file) {
+        if (file.exists()) {
+            file.delete();
         }
     }
 }

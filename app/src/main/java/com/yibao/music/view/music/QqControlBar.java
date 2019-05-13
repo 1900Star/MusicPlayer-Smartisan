@@ -135,6 +135,7 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
     }
 
     //**************按钮点击监听********************
+
     private OnButtonClickListener mButtonClickListener;
 
     public void setOnButtonClickListener(OnButtonClickListener buttonClickListener) {

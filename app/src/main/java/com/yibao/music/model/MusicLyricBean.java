@@ -37,6 +37,7 @@ public class MusicLyricBean
         return startTime - musicLrcBean.getStartTime();
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "MusicLyricBean{" +

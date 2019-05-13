@@ -51,7 +51,7 @@ public class CountdownService extends Service {
 
         private void sendColseMusicBroadcast() {
             Intent intent = new Intent(Constants.ACTION_MUSIC);
-            intent.putExtra(Constants.BUTTON_ID, Constants.COUNTDOWN_FINISH);
+            intent.putExtra(Constants.NOTIFY_BUTTON_ID, Constants.COUNTDOWN_FINISH);
             sendBroadcast(intent);
         }
 

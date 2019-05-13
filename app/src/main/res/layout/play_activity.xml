@@ -10,8 +10,8 @@
 
 
     <RelativeLayout
-        android:layout_width="match_parent"
         android:id="@+id/rv_titlebar"
+        android:layout_width="match_parent"
         android:layout_height="48dp">
 
         <ImageView
@@ -188,18 +188,35 @@
                 android:src="@drawable/btn_unbrella_icon0" />
         </LinearLayout>
 
-
-        <ImageView
-            android:id="@+id/iv_secreen_sun_switch"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="right"
+        <LinearLayout
+            android:id="@+id/ll_sun_and_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="8dp"
-            android:contentDescription="@null"
-            android:src="@drawable/sun_always_of_selector"
-            android:visibility="gone"
-            tools:ignore="RtlHardcoded" />
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+
+            <ImageView
+                android:id="@+id/iv_secreen_sun_switch"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:src="@drawable/sun_always_of_selector" />
+
+            <ImageView
+                android:id="@+id/iv_delete_lyric"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:src="@drawable/delete_lyric_selector" />
+        </LinearLayout>
+
 
     </FrameLayout>
 

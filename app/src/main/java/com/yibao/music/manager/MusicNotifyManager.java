@@ -78,12 +78,12 @@ public class MusicNotifyManager implements
                         R.drawable.favorite_normal);
         // Pre
         Intent pre = new Intent(Constants.ACTION_MUSIC);
-        pre.putExtra(Constants.BUTTON_ID, Constants.PREV);
+        pre.putExtra(Constants.NOTIFY_BUTTON_ID, Constants.PREV);
         PendingIntent p3 = PendingIntent.getBroadcast(activity, Constants.PREV, pre, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.play_notify_pre, p3);
         // favorite
         Intent favorite = new Intent(Constants.ACTION_MUSIC);
-        favorite.putExtra(Constants.BUTTON_ID, Constants.FAVORITE);
+        favorite.putExtra(Constants.NOTIFY_BUTTON_ID, Constants.FAVORITE);
         PendingIntent p4 = PendingIntent.getBroadcast(activity, Constants.FAVORITE, favorite, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.play_notify_favorite, p4);
 
@@ -134,17 +134,17 @@ public class MusicNotifyManager implements
     private void setCommonClickPending(RemoteViews view) {
         // Play
         Intent playOrPause = new Intent(Constants.ACTION_MUSIC);
-        playOrPause.putExtra(Constants.BUTTON_ID, Constants.PLAY);
+        playOrPause.putExtra(Constants.NOTIFY_BUTTON_ID, Constants.PLAY);
         PendingIntent p1 = PendingIntent.getBroadcast(activity, Constants.PLAY, playOrPause, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.play_notify_play, p1);
         // Next
         Intent next = new Intent(Constants.ACTION_MUSIC);
-        next.putExtra(Constants.BUTTON_ID, Constants.NEXT);
+        next.putExtra(Constants.NOTIFY_BUTTON_ID, Constants.NEXT);
         PendingIntent p2 = PendingIntent.getBroadcast(activity, Constants.NEXT, next, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.play_notify_next, p2);
         // Close
         Intent close = new Intent(Constants.ACTION_MUSIC);
-        close.putExtra(Constants.BUTTON_ID, Constants.CLOSE);
+        close.putExtra(Constants.NOTIFY_BUTTON_ID, Constants.CLOSE);
         PendingIntent p3 = PendingIntent.getBroadcast(activity, Constants.CLOSE, close, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.play_notify_close, p3);
     }

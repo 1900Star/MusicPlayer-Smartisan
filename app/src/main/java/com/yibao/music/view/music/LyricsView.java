@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import com.yibao.music.R;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.util.ColorUtil;
+import com.yibao.music.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,7 +140,7 @@ public class LyricsView
 
             float textW = mPaint.measureText(mCurrentLrc, 0, mCurrentLrc.length());
 
-            float x = mViewW / 2 - textW / 2;
+            float x = (mViewW >> 1) - textW / 2;
             float y = centerY + (i - centerLine) * lineHeight;
             canvas.drawText(mCurrentLrc, 0, mCurrentLrc.length(), x, y, mPaint);
 
@@ -187,20 +188,18 @@ public class LyricsView
      * @param lrcList s
      */
     public void setLrcFile(List<MusicLyricBean> lrcList) {
-
         musicLyrList = lrcList;
         //默认剧中行=0
         centerLine = 0;
+        invalidate();
     }
 
-
     private void drawSingLine(Canvas canvas) {
-
         mCurrentLrc = "暂无歌词";
         mPaint.setColor(mLyricsNormal);
         mPaint.getTextBounds(mCurrentLrc, 0, mCurrentLrc.length(), mSingleBounds);
-        float x = mViewW / 2 - mSingleBounds.width() / 2;
-        float y = mViewH / 2 + mSingleBounds.height() / 2;
+        float x = (mViewW >> 1) - (mSingleBounds.width() >> 1);
+        float y = (mViewH >> 1) + (mSingleBounds.height() >> 1);
         canvas.drawText(mCurrentLrc, 0, mCurrentLrc.length(), x, y, mPaint);
     }
 

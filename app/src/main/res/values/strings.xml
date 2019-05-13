@@ -15,13 +15,12 @@
     <string name="email">Email: strangermy98@gmail.com</string>
     <string name="preject_introduce">关于项目</string>
 
+    <string name="childe_view_not">SwipeItemLayout的子视图不符合规定</string>
+
     //*********音乐
     <string name="short_line">-</string>
     <string name="clear_all_favorite">清空</string>
     <string name="play_all">播放全部</string>
-
-    <string name="childe_view_not">SwipeItemLayout的子视图不符合规定</string>
-
     <string name="music_add_time">添加时间</string>
     <string name="music_play_frequency">播放次数</string>
     <string name="music_score">评分</string>
@@ -70,6 +69,7 @@
     <string name="choice_photo">从相册中选择照片</string>
     <string name="camera_not_open">摄像头权限未开启</string>
     <string name="go_open">去开启</string>
+    <string name="delete_error_lyric">删除错误歌词</string>
 
 
 </resources>
