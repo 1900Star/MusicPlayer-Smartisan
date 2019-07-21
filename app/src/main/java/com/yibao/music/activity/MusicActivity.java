@@ -90,7 +90,6 @@ public class MusicActivity
         initData();
         initMusicConfig();
         initListener();
-        deleteSelected();
 
     }
 
@@ -603,15 +602,7 @@ public class MusicActivity
         }
     }
 
-    private void deleteSelected() {
-        ThreadPoolProxyFactory.newInstance().execute(() -> {
-            List<PlayListBean> beanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).build().list();
-            for (PlayListBean playListBean : beanList) {
-                playListBean.setSelected(false);
-                mPlayListDao.update(playListBean);
-            }
-        });
-    }
+
 
     @Override
     protected void onDestroy() {

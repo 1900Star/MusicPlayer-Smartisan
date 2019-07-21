@@ -62,7 +62,7 @@ public class ArtistAdapter extends BaseRvAdapter<ArtistInfo> {
             }
 
 
-            artisHolder.mArtistItemContent.setOnClickListener(view -> openDetails(artistInfo, false));
+            artisHolder.mArtistItemContent.setOnClickListener(view -> openDetails(artistInfo, position, false));
 
         }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -169,7 +170,7 @@ public class FavoriteBottomSheetDialog
                 if (mList != null && mList.size() > 0) {
                     // playstatus 在这里暂时用来做删除播放列表和收藏列表的标识，在DeletePlayListDialog中使用，2 为播放列表PlayActivity界面 ，3 为收藏列表FavoriteBottomDialog界面。
                     PlayListBean bean = new PlayListBean("收藏的所有", (long) Constants.NUMBER_THRRE);
-                    DeletePlayListDialog.newInstance(bean, Constants.NUMBER_THRRE).show(((Activity) mContext).getFragmentManager(), "favoriteList");
+                    DeletePlayListDialog.newInstance(bean, Constants.NUMBER_THRRE).show(((AppCompatActivity) mContext).getSupportFragmentManager(), "favoriteList");
                 } else {
                     SnakbarUtil.noFavoriteMusic(mBottomListClear);
                 }

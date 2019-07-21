@@ -2,6 +2,7 @@ package com.yibao.music.fragment.dialogfrag;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.yibao.music.util.SpUtil;
 public class RelaxDialogFragment
         extends DialogFragment {
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view = LinearLayout.inflate(getActivity(), R.layout.relax_dialog_fragment, null);

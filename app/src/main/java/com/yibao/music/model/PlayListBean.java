@@ -109,13 +109,6 @@ public class PlayListBean implements Parcelable, Comparable<PlayListBean>{
         this.songCount = songCount;
     }
 
-    public boolean isSelected() {
-        return isSelected;
-    }
-
-    public void setSelected(boolean selected) {
-        isSelected = selected;
-    }
 
     @Override
     public int compareTo(@NonNull PlayListBean o) {
@@ -154,5 +147,17 @@ public class PlayListBean implements Parcelable, Comparable<PlayListBean>{
 
     public void setIsSelected(boolean isSelected) {
         this.isSelected = isSelected;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "PlayListBean{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", addTime=" + addTime +
+                ", songCount=" + songCount +
+                ", isSelected=" + isSelected +
+                '}';
     }
 }

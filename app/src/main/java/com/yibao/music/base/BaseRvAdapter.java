@@ -240,9 +240,9 @@ public abstract class BaseRvAdapter<T>
         }
     }
 
-    protected void openDetails(T t, boolean isEditStatus) {
+    protected void openDetails(T t, int adapterPosition, boolean isEditStatus) {
         if (mListener != null) {
-            mListener.showDetailsView(t, isEditStatus);
+            mListener.showDetailsView(t,adapterPosition, isEditStatus);
         }
     }
 
@@ -258,10 +258,12 @@ public abstract class BaseRvAdapter<T>
 
         /**
          * 显示详情页面
+         *
          * @param bean
+         * @param position
          * @param isEditStatus status
          */
-        void showDetailsView(T bean, boolean isEditStatus);
+        void showDetailsView(T bean, int position ,boolean isEditStatus);
     }
 
 
@@ -272,7 +274,8 @@ public abstract class BaseRvAdapter<T>
     public interface ItemLongClickListener {
         /**
          * 删除item
-         * @param musicInfo info
+         *
+         * @param musicInfo       info
          * @param currentPosition 位置
          */
         void deleteItemList(PlayListBean musicInfo, int currentPosition);
@@ -296,7 +299,8 @@ public abstract class BaseRvAdapter<T>
     public interface ItemEditClickListener {
         /**
          * 删除的位置
-         * @param currentPosition  c
+         *
+         * @param currentPosition c
          */
         void deleteItemList(int currentPosition);
     }
@@ -334,4 +338,23 @@ public abstract class BaseRvAdapter<T>
             mMenuListener.openClickMoerMenu(position, musicBean);
         }
     }
+
+
+
+    private OnCheckBoxClickListener<T> mCheckBoxClickListener;
+
+    public void setCheckBoxClickListener(OnCheckBoxClickListener<T> checkBoxClickListener) {
+        mCheckBoxClickListener = checkBoxClickListener;
+    }
+
+    public interface OnCheckBoxClickListener<T> {
+        void checkboxChange(T t, boolean isChecked, int position);
+    }
+
+    protected void checkBoxClick(T t, int position, boolean isChecked) {
+        if (mCheckBoxClickListener != null) {
+            mCheckBoxClickListener.checkboxChange(t, isChecked, position);
+        }
+    }
+
 }

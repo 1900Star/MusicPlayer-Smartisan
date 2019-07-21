@@ -2,11 +2,9 @@ package com.yibao.music.fragment.dialogfrag;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
+import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -15,22 +13,11 @@ import android.widget.TextView;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.model.AddAndDeleteListBean;
-import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicInfo;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.model.greendao.MusicInfoDao;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicDaoUtil;
-import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RxBus;
-
-import java.util.List;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Author：Sid

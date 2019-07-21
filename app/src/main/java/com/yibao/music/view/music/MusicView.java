@@ -1,6 +1,7 @@
 package com.yibao.music.view.music;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
@@ -56,7 +57,7 @@ public class MusicView
     private void initListener(Context context) {
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (context instanceof OnGlideLoadListener) {
                     switch (newState) {
                         case RecyclerView.SCROLL_STATE_IDLE:

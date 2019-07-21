@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.BaseMusicFragment;
+import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnFinishActivityListener;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
@@ -26,6 +28,7 @@ import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.ThreadPoolProxyFactory;
@@ -70,15 +73,16 @@ public class PlayListFragment extends BaseMusicFragment {
     private int mDeletePosition;
     private boolean isItemSelectStatus = true;
     private int mEditPosition;
-    private int mSelectCount;
     private static String mSongName;
     private List<MusicBean> mDetailList;
     private DetailsViewAdapter mDetailsAdapter;
     private PlayListBean mPlayListBean;
     private Disposable mAddDeleteListDisposable;
-    private static ArrayList<String> mArrayList;
+    private static ArrayList<String> mArrayLisopenDetailst;
     private String mTempTitle;
     private static boolean isFormPlayListActivity;
+    private SparseBooleanArray checkBoxMap = new SparseBooleanArray();
+    private List<PlayListBean> mSelecteList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -106,10 +110,18 @@ public class PlayListFragment extends BaseMusicFragment {
     }
 
     private void initData() {
-        mAdapter = new PlayListAdapter(getPlayList());
+        List<PlayListBean> playList = getPlayList();
+        setNotAllSelected(playList);
+        mAdapter = new PlayListAdapter(playList, checkBoxMap);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
         mPlayListContent.addView(recyclerView);
         mDetailsAdapter = new DetailsViewAdapter(mActivity, null, Constants.NUMBER_FOUR);
+    }
+
+    private void setNotAllSelected(List<PlayListBean> listBeanList) {
+        for (int i = 0; i < listBeanList.size(); i++) {
+            checkBoxMap.put(i, false);
+        }
     }
 
     /**
@@ -161,6 +173,7 @@ public class PlayListFragment extends BaseMusicFragment {
     private List<PlayListBean> getPlayList() {
         List<PlayListBean> playListBeans = mPlayListDao.queryBuilder().list();
         Collections.sort(playListBeans);
+        setNotAllSelected(playListBeans);
         return playListBeans;
     }
 
@@ -192,20 +205,15 @@ public class PlayListFragment extends BaseMusicFragment {
             }
         });
 
-        mLlAddNewPlayList.setOnClickListener(v -> AddListDialog.newInstance(1, Constants.NULL_STRING, isFormPlayListActivity).show(mActivity.getFragmentManager(), "addList"));
+        mLlAddNewPlayList.setOnClickListener(v -> AddListDialog.newInstance(1, Constants.NULL_STRING, isFormPlayListActivity).show(getChildFragmentManager(), "addList"));
         // item 点击
-        mAdapter.setItemListener((playListBean, isEditStatus) -> {
+        mAdapter.setItemListener((playListBean, position, isEditStatus) -> {
             mTempTitle = playListBean.getTitle();
             // 从PlayListActivity过来的
             if (isFormPlayListActivity) {
                 addToList(playListBean);
             } else {
-                if (isEditStatus) {
-                    mSelectCount = playListBean.isSelected() ? mSelectCount-- : mSelectCount++;
-                    playListBean.setIsSelected(!playListBean.isSelected());
-                    mPlayListDao.update(playListBean);
-                    mAdapter.notifyDataSetChanged();
-                } else {
+                if (!isEditStatus) {
                     PlayListFragment.this.showDetailsView(mTempTitle);
                 }
             }
@@ -214,7 +222,7 @@ public class PlayListFragment extends BaseMusicFragment {
         mAdapter.setItemLongClickListener((musicInfo, currentPosition) -> {
             if (isFormPlayListActivity) {
                 mDeletePosition = currentPosition;
-                DeletePlayListDialog.newInstance(musicInfo, Constants.NUMBER_TWO).show(mActivity.getFragmentManager(), "deleteList");
+                DeletePlayListDialog.newInstance(musicInfo, Constants.NUMBER_TWO).show(getChildFragmentManager(), "deleteList");
             }
         });
         // 编辑按钮
@@ -222,15 +230,34 @@ public class PlayListFragment extends BaseMusicFragment {
             mEditPosition = currentPosition;
             if (getPlayList().size() > 0) {
                 String currentTitle = getPlayList().get(currentPosition).getTitle();
-                AddListDialog.newInstance(2, currentTitle, false).show(mActivity.getFragmentManager(), "addList");
+                AddListDialog.newInstance(2, currentTitle, false).show(getChildFragmentManager(), "addList");
             }
+        });
+        mAdapter.setCheckBoxClickListener((playListBean, isChecked, position) -> {
+            checkBoxMap.put(position, isChecked);
+            updataSelected(playListBean);
         });
     }
 
+    private void updataSelected(PlayListBean bean) {
+        if (mSelecteList.contains(bean)) {
+            mSelecteList.remove(bean);
+        } else {
+            mSelecteList.add(bean);
+        }
+        for (PlayListBean playListBean : mSelecteList) {
+
+            LogUtil.d(" ===  selected   " + playListBean.toString());
+        }
+        for (int i = 0; i < checkBoxMap.size(); i++) {
+            LogUtil.d("AAAA     " + checkBoxMap.get(i));
+        }
+        LogUtil.d(" selected size   " + mSelecteList.size());
+    }
+
     private void deleteListItem() {
-        List<PlayListBean> beanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).build().list();
-        if (beanList.size() > Constants.NUMBER_ZERO) {
-            for (PlayListBean playListBean : beanList) {
+        if (mSelecteList.size() > Constants.NUMBER_ZERO) {
+            for (PlayListBean playListBean : mSelecteList) {
                 mPlayListDao.delete(playListBean);
             }
             mAdapter.setItemSelectStatus(false);
@@ -269,9 +296,9 @@ public class PlayListFragment extends BaseMusicFragment {
     private void addToList(PlayListBean playListBean) {
         if (mContext instanceof PlayListActivity) {
             // 批量添加
-            if (mArrayList != null && mArrayList.size() > 0) {
+            if (mArrayLisopenDetailst != null && mArrayLisopenDetailst.size() > 0) {
                 ThreadPoolProxyFactory.newInstance().execute(() -> {
-                    for (String songTitle : mArrayList) {
+                    for (String songTitle : mArrayLisopenDetailst) {
                         List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle()), MusicBeanDao.Properties.Title.eq(songTitle)).build().list();
                         if (musicBeanList.size() == 0) {
                             insertSongToList(playListBean, songTitle);
@@ -304,21 +331,6 @@ public class PlayListFragment extends BaseMusicFragment {
         }
     }
 
-    /**
-     * 取消所有已选
-     */
-    private void cancelAllSelected() {
-        List<PlayListBean> playListBeanList = mPlayListDao.queryBuilder().where(PlayListBeanDao.Properties.IsSelected.eq(true)).build().list();
-        Collections.sort(playListBeanList);
-        for (PlayListBean playListBean : playListBeanList) {
-            playListBean.setSelected(false);
-            mPlayListDao.update(playListBean);
-        }
-        mSelectCount = 0;
-        mAdapter.setNewData(getPlayList());
-    }
-
-
     @Override
     protected void deleteItem(int musicPosition) {
         super.deleteItem(musicPosition);
@@ -338,7 +350,7 @@ public class PlayListFragment extends BaseMusicFragment {
     public static PlayListFragment newInstance(String songName, ArrayList<String> arrayList, boolean formPlayListActivity) {
         isFormPlayListActivity = formPlayListActivity;
         mSongName = songName;
-        mArrayList = arrayList;
+        mArrayLisopenDetailst = arrayList;
         return new PlayListFragment();
     }
 
@@ -373,8 +385,8 @@ public class PlayListFragment extends BaseMusicFragment {
         mMusicToolBar.setTvDeleteVisibility(isItemSelectStatus ? View.VISIBLE : View.GONE);
         mAdapter.setItemSelectStatus(isItemSelectStatus);
         isItemSelectStatus = !isItemSelectStatus;
-        if (!isItemSelectStatus && mSelectCount > 0) {
-            cancelAllSelected();
+        if (mSelecteList.size() > 0) {
+            mSelecteList.clear();
         }
         mLlAddNewPlayList.setEnabled(isItemSelectStatus);
     }

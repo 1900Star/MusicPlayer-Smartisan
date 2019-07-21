@@ -75,7 +75,7 @@ public class ArtistFragment extends BaseMusicFragment {
     }
 
     private void initListener() {
-        mAdapter.setItemListener((bean, bean2) -> ArtistFragment.this.openDetailsView(bean));
+        mAdapter.setItemListener((bean,position, bean2) -> ArtistFragment.this.openDetailsView(bean));
         mMusicToolBar.setClickListener(new MusicToolBar.OnToolbarClickListener() {
             @Override
             public void clickEdit() {
@@ -108,6 +108,7 @@ public class ArtistFragment extends BaseMusicFragment {
             if (artistInfo != null) {
                 mTempTitle = artistInfo.getAlbumName();
                 mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(artistInfo.getArtist())).build().list();
+                MusicListUtil.sortMusicAbc(mDetailList);
                 // DetailsView播放音乐需要的参数
                 mDetailsView.setDataFlag(mFragmentManager, mDetailList.size(), artistInfo.getArtist(), Constants.NUMBER_ONE);
                 mDetailsAdapter = new DetailsViewAdapter(mActivity, mDetailList, Constants.NUMBER_ONE);

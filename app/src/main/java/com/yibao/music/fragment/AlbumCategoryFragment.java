@@ -73,7 +73,7 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
     private void initData() {
         mAlbumAdapter = new AlbumAdapter(mActivity, mAlbumList, mPosition);
         mMusicView.setAdapter(mActivity, mPosition == 0 ? 3 : 4, mPosition == 0, mAlbumAdapter);
-        mAlbumAdapter.setItemListener((bean, isEditStatus) -> {
+        mAlbumAdapter.setItemListener((bean, position,isEditStatus) -> {
             if (isEditStatus) {
                 mSelectCount = bean.isSelected() ? mSelectCount-- : mSelectCount++;
                 bean.setSelected(!bean.isSelected());

@@ -13,7 +13,6 @@ import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.HanziToPinyins;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.StringUtil;
 
@@ -94,20 +93,19 @@ public class AlbumAdapter
         } else {
             albumlistHolder.mTvAlbumItemStickyView.setVisibility(View.VISIBLE);
         }
-        albumlistHolder.mIvListSelect.setOnClickListener(v -> selectStatus(info, albumlistHolder));
+        albumlistHolder.mIvListSelect.setOnClickListener(v -> selectStatus(info, position));
         //            Item点击监听
         albumlistHolder.mLlAlbumListItem.setOnClickListener(view -> {
             if (isSelectStatus) {
-                selectStatus(info, albumlistHolder);
+                selectStatus(info, position);
             } else {
-                AlbumAdapter.this.openDetails(info, false);
+                AlbumAdapter.this.openDetails(info, position, false);
             }
         });
     }
 
-    private void selectStatus(AlbumInfo musicBean, AlbumAdapter.AlbumlistHolder playViewHolder) {
-        playViewHolder.mIvListSelect.setImageResource(musicBean.isSelected() ? R.drawable.item_selected_normal : R.drawable.item_selected);
-        openDetails(musicBean, true);
+    private void selectStatus(AlbumInfo musicBean, int adapterPosition) {
+        openDetails(musicBean, adapterPosition, true);
     }
 
     private void setDataAlbumTile(AlbumTileHolder holder, AlbumInfo albumInfo) {
@@ -116,7 +114,7 @@ public class AlbumAdapter
         ImageUitl.customLoadPic(mContext, StringUtil.getAlbulm(albumInfo.getAlbumId()), R.drawable.noalbumcover_120, holder.mIvAlbumTileAlbum);
         holder.mTvAlbumTileName.setText(albumInfo.getSongName());
 
-        holder.mIvAlbumTileAlbum.setOnClickListener(view1 -> AlbumAdapter.this.openDetails(albumInfo, false));
+        holder.mIvAlbumTileAlbum.setOnClickListener(view1 -> AlbumAdapter.this.openDetails(albumInfo, holder.getAdapterPosition(), false));
 
     }
 

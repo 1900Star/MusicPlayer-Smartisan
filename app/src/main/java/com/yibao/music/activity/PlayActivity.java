@@ -425,11 +425,9 @@ public class PlayActivity extends BasePlayActivity {
 
     @Override
     protected void updataLyricsView(boolean lyricsExists) {
-        if (lyricsExists) {
-            mLyricList = LyricsUtil.getLyricList(mCurrenMusicInfo);
-            mLyricsView.setLrcFile(mLyricList);
-            closeLyricsView();
-        }
+        mLyricList = LyricsUtil.getLyricList(mCurrenMusicInfo);
+        mLyricsView.setLrcFile(lyricsExists ? mLyricList : null);
+        closeLyricsView();
 
     }
 

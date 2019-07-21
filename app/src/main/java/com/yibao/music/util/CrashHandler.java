@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Author：luoshipeng
@@ -83,7 +84,7 @@ public class CrashHandler
             dir.mkdirs();
         }
         long current = System.currentTimeMillis();
-        @SuppressLint("SimpleDateFormat") String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss").format(new Date(current));
+        String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss", Locale.getDefault()).format(new Date(current));
         File file = new File(Constants.CRASH_LOG_PATH + FILE_NAME + time + FILE_NAME_SUFFIX);
         try {
             PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));

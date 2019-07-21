@@ -100,7 +100,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
     private void initListener() {
         mSongAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
                 MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
-        mSongAdapter.setItemListener((bean, isEditStatus) -> {
+        mSongAdapter.setItemListener((bean,position, isEditStatus) -> {
             if (isEditStatus) {
                 mSelectCount = bean.isSelected() ? mSelectCount-- : mSelectCount++;
                 bean.setIsSelected(!bean.isSelected());
