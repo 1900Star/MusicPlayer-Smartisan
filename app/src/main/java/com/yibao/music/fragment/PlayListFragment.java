@@ -245,14 +245,6 @@ public class PlayListFragment extends BaseMusicFragment {
         } else {
             mSelecteList.add(bean);
         }
-        for (PlayListBean playListBean : mSelecteList) {
-
-            LogUtil.d(" ===  selected   " + playListBean.toString());
-        }
-        for (int i = 0; i < checkBoxMap.size(); i++) {
-            LogUtil.d("AAAA     " + checkBoxMap.get(i));
-        }
-        LogUtil.d(" selected size   " + mSelecteList.size());
     }
 
     private void deleteListItem() {

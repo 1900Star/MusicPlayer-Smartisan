@@ -47,7 +47,7 @@ public class MusicListUtil {
             int mTitle = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
             int mArtist = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
             int mAlbum = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
-            int mAlbumID = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
+            int mAlbumId = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
             int mDuration = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION);
             int mSize = cursor.getColumnIndex(MediaStore.Audio.Media.SIZE);
             int mUrl = cursor.getColumnIndex(MediaStore.Audio.Media.DATA);
@@ -65,7 +65,7 @@ public class MusicListUtil {
                 String artist = cursor.getString(mArtist);
                 // 专辑
                 String album = cursor.getString(mAlbum);
-                long albumId = cursor.getInt(mAlbumID);
+                long albumId = cursor.getInt(mAlbumId);
                 // 时长
                 long duration = cursor.getInt(mDuration);
                 // 添加时间
