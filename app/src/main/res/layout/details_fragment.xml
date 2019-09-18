@@ -9,7 +9,7 @@
     android:background="@color/listBg"
     tools:context=".activity.MusicActivity">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -155,10 +155,10 @@
             android:background="@color/listBg"
             app:layout_constraintTop_toBottomOf="@id/ll_play" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_artist_album_details"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@id/detail_line" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.yibao.music.view.MusicScrollView>

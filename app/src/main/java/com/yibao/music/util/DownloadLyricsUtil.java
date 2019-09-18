@@ -1,10 +1,9 @@
 package com.yibao.music.util;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.yibao.music.base.listener.LyricsCallBack;
 import com.yibao.music.model.LyricDownBean;
-import com.yibao.music.model.MusicBean;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,7 +17,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;

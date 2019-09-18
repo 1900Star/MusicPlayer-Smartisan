@@ -1,15 +1,13 @@
 package com.yibao.music.adapter;
 
-import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.yibao.music.util.Api;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.RandomUtil;
-import com.yibao.music.util.SpUtil;
 import com.yibao.music.view.ZoomImageView;
 
 

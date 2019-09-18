@@ -1,11 +1,10 @@
 package com.yibao.music.adapter;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.yibao.music.base.BasePagerAdapter;
 import com.yibao.music.fragment.SearchFragment;
-import com.yibao.music.fragment.SongCategoryFragment;
 import com.yibao.music.util.Constants;
 
 /**

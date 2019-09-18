@@ -3,8 +3,8 @@ package com.yibao.music.view.music;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,15 +15,11 @@ import android.widget.TextView;
 import com.yibao.music.R;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.util.AnimationUtil;
-import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.ProgressBtn;
-
-import butterknife.BindView;
 
 /**
  * @ Author: Luoshipeng

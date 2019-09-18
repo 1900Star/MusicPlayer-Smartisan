@@ -1,16 +1,15 @@
 package com.yibao.music.activity;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.base.listener.OnFinishActivityListener;
 import com.yibao.music.fragment.PlayListFragment;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SpUtil;
 
 import java.util.ArrayList;

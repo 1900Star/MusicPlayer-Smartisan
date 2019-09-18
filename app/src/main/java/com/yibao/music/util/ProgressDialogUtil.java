@@ -3,7 +3,7 @@ package com.yibao.music.util;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.support.v4.widget.ContentLoadingProgressBar;
+import androidx.core.widget.ContentLoadingProgressBar;
 
 /**
  * @author: Luoshipeng

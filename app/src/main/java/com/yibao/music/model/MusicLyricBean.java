@@ -1,6 +1,6 @@
 package com.yibao.music.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Des：${TODO}

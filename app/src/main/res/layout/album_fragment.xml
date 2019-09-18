@@ -25,7 +25,7 @@
             android:layout_height="match_parent"
             android:visibility="gone" />
 
-        <android.support.v4.view.ViewPager
+        <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager_album"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

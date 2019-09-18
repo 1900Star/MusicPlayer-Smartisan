@@ -2,8 +2,8 @@ package com.yibao.music.base;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.baidu.mobstat.StatService;
 import com.yibao.music.MusicApplication;
@@ -14,23 +14,17 @@ import com.yibao.music.activity.SearchActivity;
 import com.yibao.music.model.LyricDownBean;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.RxBus;
-import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.QqControlBar;
 import com.yibao.music.view.music.SmartisanControlBar;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.Unbinder;

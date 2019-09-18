@@ -17,7 +17,7 @@
         android:background="@color/seekBarN" />
 
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/vp_song_fag"
         android:layout_width="match_parent"
         android:layout_height="0dp"

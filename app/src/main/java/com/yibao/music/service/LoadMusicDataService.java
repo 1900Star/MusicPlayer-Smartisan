@@ -2,7 +2,7 @@ package com.yibao.music.service;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.model.MusicBean;

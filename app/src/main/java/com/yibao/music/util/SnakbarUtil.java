@@ -1,10 +1,10 @@
 package com.yibao.music.util;
 
 import android.graphics.Color;
-import android.support.design.widget.Snackbar;
+import com.google.android.material.snackbar.Snackbar;
 import android.view.View;
 
-import static android.support.design.widget.Snackbar.make;
+import static com.google.android.material.snackbar.Snackbar.make;
 
 
 /**
