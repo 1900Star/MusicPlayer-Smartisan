@@ -1,36 +1,26 @@
 package com.yibao.music.fragment.dialogfrag;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.v4.content.FileProvider;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 import com.yibao.music.R;
 import com.yibao.music.base.listener.BottomSheetCallback;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.PermissionsUtil;
-import com.yibao.music.util.SpUtil;
-import com.yibao.music.util.ToastUtil;
-
-import java.io.File;
-import java.util.List;
 
 /**
  * Des：${TODO}

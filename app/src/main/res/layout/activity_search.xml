@@ -6,11 +6,11 @@
     android:background="@color/colorWhite"
     android:orientation="vertical">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@drawable/tabbar_bg">
@@ -80,8 +80,8 @@
                     android:textStyle="bold" />
             </RelativeLayout>
 
-        </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.AppBarLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <include
         android:id="@+id/search_category_root"

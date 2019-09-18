@@ -1,13 +1,10 @@
 package com.yibao.music.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Transient;
-
-import java.util.Comparator;
 
 /**
  * @ Author: Luoshipeng

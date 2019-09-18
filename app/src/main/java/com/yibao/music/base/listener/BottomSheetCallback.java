@@ -1,7 +1,7 @@
 package com.yibao.music.base.listener;
 
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import android.view.View;
 
 /**

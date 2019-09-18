@@ -3,7 +3,7 @@ package com.yibao.music.view.music;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yibao.music.R;
-import com.yibao.music.activity.MusicActivity;
 import com.yibao.music.activity.SearchActivity;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.SpUtil;

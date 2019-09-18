@@ -1,17 +1,15 @@
 package com.yibao.music.base.factory;
 
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.widget.LinearLayout;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
-import com.yibao.music.base.BaseRvAdapter;
-import com.yibao.music.util.Constants;
 import com.yibao.music.view.SwipeItemLayout;
 
 import java.util.Objects;

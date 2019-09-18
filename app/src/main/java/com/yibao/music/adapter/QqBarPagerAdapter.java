@@ -3,9 +3,9 @@ package com.yibao.music.adapter;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
+
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,19 +17,11 @@ import com.yibao.music.R;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.TitleAndArtistBean;
-import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ImageUitl;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
-import com.yibao.music.util.TitleArtistUtil;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
-import io.reactivex.disposables.Disposable;
 
 /**
  * 作者：Stran on 2017/3/23 03:31

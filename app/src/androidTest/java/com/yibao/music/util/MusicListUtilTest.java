@@ -1,8 +1,8 @@
 package com.yibao.music.util;
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;

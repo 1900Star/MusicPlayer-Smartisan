@@ -1,15 +1,12 @@
 package com.yibao.music.view;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.NestedScrollView;
+
+import androidx.core.view.ViewCompat;
+import androidx.core.widget.NestedScrollView;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
-import android.widget.TextView;
 
 /**
  * @ Name:   MyScrollView

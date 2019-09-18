@@ -84,7 +84,6 @@ public class AudioPlayService
         init();
         initNotifyBroadcast();
         registerHeadsetReceiver();
-        //初始化播放模式
     }
 
     private void init() {
@@ -92,6 +91,7 @@ public class AudioPlayService
         mBus = RxBus.getInstance();
         mMusicDao = MusicApplication.getIntstance().getMusicDao();
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        //初始化播放模式
         playMode = SpUtil.getMusicMode(this);
         mSessionManager = new MediaSessionManager(this, mAudioBinder);
     }

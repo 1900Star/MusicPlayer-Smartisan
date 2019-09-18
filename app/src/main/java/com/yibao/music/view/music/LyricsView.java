@@ -4,13 +4,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.yibao.music.R;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.util.ColorUtil;
-import com.yibao.music.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,7 @@ import java.util.List;
  * @author Stran
  */
 public class LyricsView
-        extends android.support.v7.widget.AppCompatTextView {
+        extends androidx.appcompat.widget.AppCompatTextView {
 
     private Paint mPaint;
     private int mViewW;

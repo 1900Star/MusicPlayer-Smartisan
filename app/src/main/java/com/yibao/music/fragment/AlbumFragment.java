@@ -1,9 +1,9 @@
 package com.yibao.music.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +25,6 @@ import com.yibao.music.util.Constants;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicToolBar;
-import com.yibao.music.view.music.MusicView;
 
 import java.util.List;
 
