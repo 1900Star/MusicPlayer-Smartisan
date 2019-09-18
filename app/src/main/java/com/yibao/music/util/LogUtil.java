@@ -16,7 +16,7 @@ public class LogUtil {
     }
 
 
-    private static boolean isDebug = BuildConfig.SHOW_LOG;
+    private static boolean isDebug = true;
 
     private static final String TAG = "lsp";
 
