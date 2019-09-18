@@ -264,11 +264,12 @@
         <ImageView
             android:id="@+id/iv_favorite_music"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="58dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:contentDescription="@null"
-            android:src="@drawable/music_qqbar_favorite_normal_selector" />
+            android:src="@drawable/btn_favorite_gray_selector" />
+            <!--android:src="@drawable/music_qqbar_favorite_normal_selector" />-->
     </LinearLayout>
 
     <SeekBar

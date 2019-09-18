@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.ContentLoadingProgressBar;
@@ -29,6 +30,7 @@ import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.ProgressDialogUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
+import com.yibao.music.util.ThreadPoolProxyFactory;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.MusicToolBar;
@@ -229,10 +231,15 @@ public class AboutFragment extends BaseMusicFragment {
     }
 
     private void clearErrorLyric() {
+        Handler handler = new Handler();
 //        ProgressDialogUtil.getProgressDialog(mActivity);
-        LyricsUtil.clearLyricList();
-        ToastUtil.show(mActivity,"错误歌词已删除");
+        ThreadPoolProxyFactory.newInstance().execute(() -> {
+            LyricsUtil.clearLyricList();
+            handler.post(() -> ToastUtil.show(mActivity, "错误歌词已删除"));
+
+        });
     }
+
     public static AboutFragment newInstance() {
 
         return new AboutFragment();
