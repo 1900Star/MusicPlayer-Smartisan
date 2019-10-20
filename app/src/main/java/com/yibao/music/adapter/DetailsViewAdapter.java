@@ -18,6 +18,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
@@ -64,6 +65,7 @@ public class DetailsViewAdapter extends BaseRvAdapter<MusicBean> {
             DetailsHolder detailsHolder = (DetailsHolder) holder;
             int adapterPosition = detailsHolder.getAdapterPosition();
             detailsHolder.mTvDetailsSongName.setText(info.getTitle());
+            LogUtil.d(" artist info     "+info.getTitle()+""+info.getAddTime());
             int duration = (int) info.getDuration();
             detailsHolder.mTvSongDuration.setText(StringUtil.parseDuration(duration));
             if (mDataFlag == Constants.NUMBER_FOUR) {

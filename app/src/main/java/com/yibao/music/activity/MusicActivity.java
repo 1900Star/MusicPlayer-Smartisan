@@ -297,7 +297,7 @@ public class MusicActivity
      * sortFlag        列表的排序方式
      *
      * @param position  播放位置
-     * @param dataFlag  数据列表的标识
+     * @param dataFlag  数据列表的标识  1:艺术家、2：专辑、3：曲名 、4: 播放列表
      * @param queryFlag 具体查询的条 ( 按 歌手 或 专辑查询 )
      */
     @Override

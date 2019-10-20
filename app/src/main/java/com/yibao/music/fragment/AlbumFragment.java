@@ -186,7 +186,6 @@ public class AlbumFragment extends BaseMusicFragment {
                 mDetailViewFlag = false;
                 mDetailsView.setVisibility(View.VISIBLE);
                 mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(albumInfo.getAlbumName())).build().list();
-                MusicListUtil.sortMusicAbc(mDetailList);
                 // DetailsView播放音乐需要的参数
                 mDetailsView.setDataFlag(mFragmentManager, mDetailList.size(), albumInfo.getAlbumName(), Constants.NUMBER_TWO);
                 mDetailsAdapter = new DetailsViewAdapter(mActivity, mDetailList, Constants.NUMBER_TWO);

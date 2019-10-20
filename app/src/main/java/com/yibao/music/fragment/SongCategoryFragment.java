@@ -135,7 +135,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
         mMusciView.setAdapter(mActivity, Constants.NUMBER_ONE, isShowSlidebar, mSongAdapter);
     }
 
-    protected void changeEditStatus(int currentIndex) {
+    private void changeEditStatus(int currentIndex) {
         if (currentIndex == Constants.NUMBER_ONE) {
             closeEditStatus();
         } else if (currentIndex == Constants.NUMBER_TWO) {

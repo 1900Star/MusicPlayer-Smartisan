@@ -108,7 +108,6 @@ public class ArtistFragment extends BaseMusicFragment {
             if (artistInfo != null) {
                 mTempTitle = artistInfo.getAlbumName();
                 mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(artistInfo.getArtist())).build().list();
-                MusicListUtil.sortMusicAbc(mDetailList);
                 // DetailsView播放音乐需要的参数
                 mDetailsView.setDataFlag(mFragmentManager, mDetailList.size(), artistInfo.getArtist(), Constants.NUMBER_ONE);
                 mDetailsAdapter = new DetailsViewAdapter(mActivity, mDetailList, Constants.NUMBER_ONE);

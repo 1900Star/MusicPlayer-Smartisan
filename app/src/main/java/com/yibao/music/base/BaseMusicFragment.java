@@ -1,6 +1,7 @@
 package com.yibao.music.base;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 
 import com.yibao.music.base.listener.OnMusicItemClickListener;
@@ -37,13 +38,6 @@ public abstract class BaseMusicFragment extends BaseFragment {
         initDetailsFlag();
         mSongList = mMusicBeanDao.queryBuilder().list();
         mAddToPlayListFdlag = SpUtil.getAddToPlayListFdlag(mContext);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (getUserVisibleHint()) {
-        }
     }
 
     /**
