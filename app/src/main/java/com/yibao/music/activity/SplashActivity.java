@@ -130,7 +130,7 @@ public class SplashActivity
                         }
                     } else {
                         mTvMusicCount.setText(mIsFirstScanner ? "本地没有发现音乐,去下载歌曲后再来体验吧!" : "没有新增歌曲!");
-                        countDownOpareton(mIsFirstScanner);
+                        countDownOpareton(false);
                     }
                 }));
     }

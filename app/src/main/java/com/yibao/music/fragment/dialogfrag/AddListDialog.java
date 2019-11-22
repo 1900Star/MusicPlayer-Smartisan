@@ -111,15 +111,11 @@ public class AddListDialog
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_add_list_cancle:
-                dismiss();
-                break;
-            case R.id.tv_add_list_continue:
-                addNewPlayList();
-                break;
-            default:
-                break;
+        int id = v.getId();
+        if (id == R.id.tv_add_list_cancle) {
+            dismiss();
+        } else if (id == R.id.tv_add_list_continue) {
+            addNewPlayList();
         }
     }
 
