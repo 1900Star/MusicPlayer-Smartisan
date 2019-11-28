@@ -4,9 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
@@ -15,6 +17,9 @@ import com.yibao.music.R;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.SnakbarUtil;
+import com.yibao.music.util.ToastUtil;
 
 import java.util.List;
 
@@ -37,6 +42,7 @@ public abstract class BaseRvAdapter<T>
     private ItemLongClickListener mLongClickListener;
     private ItemEditClickListener mEditClickListener;
     private OnOpenItemMoerMenuListener mMenuListener;
+    private static String TAG = "   ====    " + BaseAdapter.class.getSimpleName()+"    ";
 
     public BaseRvAdapter(List<T> list) {
         mList = list;
@@ -54,8 +60,9 @@ public abstract class BaseRvAdapter<T>
                     .inflate(R.layout.load_more_footview, parent, false);
             return new LoadMoreHolder(view);
         }
-
-        return getViewHolder(null);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.load_more_footview, parent, false);
+        return getViewHolder(view);
     }
 
     @Override
@@ -77,7 +84,9 @@ public abstract class BaseRvAdapter<T>
         if (holder instanceof LoadMoreHolder) {
             LoadMoreHolder moreHolder = (LoadMoreHolder) holder;
             String lastItemDes = getLastItemDes();
+            moreHolder.itemView.setOnClickListener(SnakbarUtil::lastItem);
             if (lastItemDes != null) {
+                LogUtil.d(TAG, lastItemDes);
                 String count = (mList.size()) + lastItemDes;
                 moreHolder.mSongCount.setText(count);
             }
@@ -242,7 +251,7 @@ public abstract class BaseRvAdapter<T>
 
     protected void openDetails(T t, int adapterPosition, boolean isEditStatus) {
         if (mListener != null) {
-            mListener.showDetailsView(t,adapterPosition, isEditStatus);
+            mListener.showDetailsView(t, adapterPosition, isEditStatus);
         }
     }
 
@@ -263,7 +272,7 @@ public abstract class BaseRvAdapter<T>
          * @param position
          * @param isEditStatus status
          */
-        void showDetailsView(T bean, int position ,boolean isEditStatus);
+        void showDetailsView(T bean, int position, boolean isEditStatus);
     }
 
 
@@ -338,7 +347,6 @@ public abstract class BaseRvAdapter<T>
             mMenuListener.openClickMoerMenu(position, musicBean);
         }
     }
-
 
 
     private OnCheckBoxClickListener<T> mCheckBoxClickListener;

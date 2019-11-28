@@ -57,6 +57,14 @@ public class SnakbarUtil {
 
     }
 
+    public static void lastItem(View view) {
+        Snackbar snackbar = make(view, "点我干嘛? 我又不能播放 -_-", Snackbar.LENGTH_LONG);
+        snackbar.getView()
+                .setBackgroundColor(ColorUtil.errorColor);
+        snackbar.show();
+
+    }
+
     public static void noFavoriteMusic(View view) {
         Snackbar snackbar = make(view, "当前没有收藏歌曲  -_-", Snackbar.LENGTH_LONG);
         snackbar.getView()

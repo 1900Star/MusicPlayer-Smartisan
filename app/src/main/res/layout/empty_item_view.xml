@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/loadLayout"
+    android:layout_width="match_parent"
+    android:layout_height="62dp"
+    android:background="@color/deleteNorma"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/tv_song_count"
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+        android:alpha="0.6"
+        android:text="bug"
+        android:gravity="center"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/about_sign" />
+
+</LinearLayout>
