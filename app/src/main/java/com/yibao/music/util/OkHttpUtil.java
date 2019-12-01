@@ -3,6 +3,7 @@ package com.yibao.music.util;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
@@ -35,6 +36,30 @@ class OkHttpUtil {
     static void downFile(String url, Callback callback) {
         Request request = new Request.Builder().url(url).addHeader("Accept-Encoding", "identity")
                 .build();
+        OkHttpUtil.getClient()
+                .newCall(request).enqueue(callback);
+
+    }
+
+    public static final String HEADER_USER_AGENT = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36";
+    public static final String HEADER_REFERER= "Referer:https://y.qq.com/portal/player.html";
+
+    static void getAlbum(String url, Callback callback) {
+        //获取歌手图片需要添加user-agent的表头
+        FormBody formBody = new FormBody.Builder().build();
+
+        Request request = new Request.Builder().url(url).
+                addHeader("User-Agent", HEADER_USER_AGENT).post(formBody).build();
+        OkHttpUtil.getClient()
+                .newCall(request).enqueue(callback);
+
+    }
+
+    static void getLyrics(String url, Callback callback) {
+        //获取歌手图片需要添加user-agent的表头
+        FormBody formBody = new FormBody.Builder().build();
+        Request request = new Request.Builder().url(url).
+                addHeader("Referer", HEADER_REFERER).post(formBody).build();
         OkHttpUtil.getClient()
                 .newCall(request).enqueue(callback);
 

@@ -20,7 +20,9 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.service.AudioPlayService;
+import com.yibao.music.util.AlbumUtil;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.DownloadLyricsUtil;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
@@ -581,7 +583,8 @@ public class MusicActivity
 
     @Override
     public void switchControlBar() {
-        switchMusicControlBar();
+//        switchMusicControlBar();
+       AlbumUtil.getLyricsUrl("邓紫棋");
     }
 
     @Override

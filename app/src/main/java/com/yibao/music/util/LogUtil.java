@@ -33,6 +33,12 @@ public class LogUtil {
             Log.d(TAG, msg);
         }
     }
+    public static void d(Class clazz) {
+        String msg = "====" + clazz.getSimpleName() + "    ";
+        if (isDebug) {
+            Log.d(TAG, msg);
+        }
+    }
 
     public static void e(String msg) {
         if (isDebug) {
