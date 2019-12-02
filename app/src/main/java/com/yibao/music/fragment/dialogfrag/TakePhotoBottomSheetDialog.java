@@ -57,7 +57,6 @@ public class TakePhotoBottomSheetDialog {
                 dialog.dismiss();
             } else {
                 AndPermission.with(mContext)
-                        .runtime()
                         .permission(Permission.Group.CAMERA)
                         .onGranted(permissions -> {
                             TakePhotoBottomSheetDialog.this.takeCameraPic();
@@ -88,7 +87,6 @@ public class TakePhotoBottomSheetDialog {
 
     private void choicePhoto() {
         AndPermission.with(mContext)
-                .runtime()
                 .permission(Permission.Group.STORAGE)
                 .onGranted(permissions -> {
                     Intent intentFromGallery = new Intent(Intent.ACTION_PICK, null);

@@ -58,7 +58,7 @@ android {
         implementation 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.0.0'
         implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
         // 权限申请
-        implementation 'com.yanzhenjie:permission:2.0.0-rc12'
+        implementation 'com.yanzhenjie:permission:2.0.0-rc4'
         // 百度统计
         implementation 'com.baidu.mobstat:mtj-sdk:3.9.2.1'
     }
