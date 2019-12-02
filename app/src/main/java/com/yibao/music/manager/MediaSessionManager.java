@@ -10,11 +10,9 @@ import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.yibao.music.R;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.TitleAndArtistBean;
-import com.yibao.music.service.AudioPlayService;
+import com.yibao.music.service.MusicPlayService;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
-import com.yibao.music.util.TitleArtistUtil;
 
 /**
  * @ Name:   MediaSessionManager
@@ -27,12 +25,12 @@ public class MediaSessionManager {
 
     private static final String TAG = "MediaSessionManager";
 
-    private AudioPlayService.AudioBinder mAudioBinder;
+    private MusicPlayService.AudioBinder mAudioBinder;
     private MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder stateBuilder;
     private Context mContext;
 
-    public MediaSessionManager(Context context, AudioPlayService.AudioBinder audioBinder) {
+    public MediaSessionManager(Context context, MusicPlayService.AudioBinder audioBinder) {
         this.mContext = context;
         this.mAudioBinder = audioBinder;
         initSession();

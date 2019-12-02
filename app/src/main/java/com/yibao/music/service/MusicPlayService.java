@@ -17,6 +17,7 @@ import com.yibao.music.manager.MediaSessionManager;
 import com.yibao.music.manager.MusicNotifyManager;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
+import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
@@ -40,7 +41,7 @@ import io.reactivex.disposables.Disposable;
  * Des：${控制音乐的Service}
  * Time:2017/5/30 13:27
  */
-public class AudioPlayService
+public class MusicPlayService
         extends Service {
 
     private MediaPlayer mediaPlayer;
@@ -102,11 +103,10 @@ public class AudioPlayService
         int sortListFlag = intent.getIntExtra("sortFlag", 0);
         int dataFlag = intent.getIntExtra("dataFlag", 0);
         String queryFlag = intent.getStringExtra("queryFlag");
-
         int sortFlag = sortListFlag == Constants.NUMBER_ZERO ? Constants.NUMBER_ONE : sortListFlag;
         SpUtil.setDataQueryFlag(this, dataFlag);
         if (queryFlag != null && !queryFlag.equals(Constants.FAVORITE_FLAG) && !queryFlag.equals(Constants.NO_NEED_FLAG)) {
-            SpUtil.setQueryFlag(AudioPlayService.this, queryFlag);
+            SpUtil.setQueryFlag(MusicPlayService.this, queryFlag);
         }
         LogUtil.d(" position  ==" + enterPosition + "   sortListFlag  ==" + sortFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
         mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao, sortFlag, dataFlag, queryFlag);
@@ -156,16 +156,16 @@ public class AudioPlayService
             if (mMusicDataList != null && mMusicDataList.size() > 0) {
                 position = position >= mMusicDataList.size() ? 0 : position;
                 mMusicInfo = mMusicDataList.get(position);
-                mediaPlayer = MediaPlayer.create(AudioPlayService.this,
+                mediaPlayer = MediaPlayer.create(MusicPlayService.this,
                         Uri.parse(mMusicInfo.getSongUrl()));
                 mediaPlayer.setOnPreparedListener(this);
                 mediaPlayer.setOnCompletionListener(this);
                 boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(mMusicInfo.getTitle()), StringUtil.getArtist(mMusicInfo.getArtist()));
                 LogUtil.d("=======  当前歌词是否存在 ===== " + lyricIsExists + " == " + mMusicInfo.getTitle() + " == " + mMusicInfo.getArtist());
                 if (!lyricIsExists) {
-                    LyricsUtil.downloadLyricFile(mMusicInfo);
+                    RetrofitHelper.getSongLyrics(StringUtil.getSongName(mMusicInfo.getTitle()), StringUtil.getArtist(mMusicInfo.getArtist()));
                 }
-                SpUtil.setMusicPosition(AudioPlayService.this, position);
+                SpUtil.setMusicPosition(MusicPlayService.this, position);
                 showNotifycation(true);
                 mSessionManager.updatePlaybackState(true);
                 mSessionManager.updateLocMsg();
@@ -261,7 +261,7 @@ public class AudioPlayService
             playMode = playmode;
             //保存播放模式
 
-            SpUtil.setMusicMode(AudioPlayService.this, playMode);
+            SpUtil.setMusicMode(MusicPlayService.this, playMode);
         }
 
         //手动播放上一曲
@@ -417,7 +417,7 @@ public class AudioPlayService
                 mAudioBinder.pause();
                 mAudioBinder.hintNotifycation();
                 mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_TWO);
-                SpUtil.setFoucesFlag(AudioPlayService.this, false);
+                SpUtil.setFoucesFlag(MusicPlayService.this, false);
                 stopSelf();
             }
         }

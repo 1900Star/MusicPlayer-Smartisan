@@ -23,7 +23,7 @@ import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.service.AudioPlayService;
+import com.yibao.music.service.MusicPlayService;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
@@ -211,7 +211,7 @@ public class FavoriteBottomSheetDialog
 
     private void playMusic(int position) {
         Intent intent = new Intent();
-        intent.setClass(mContext, AudioPlayService.class);
+        intent.setClass(mContext, MusicPlayService.class);
         intent.putExtra("sortFlag", Constants.NUMBER_EIGHT);
         intent.putExtra("position", position);
         LogUtil.d("===========      " + position);

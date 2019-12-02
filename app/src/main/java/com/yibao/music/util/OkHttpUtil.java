@@ -1,11 +1,16 @@
 package com.yibao.music.util;
 
+import com.yibao.music.network.RetrofitHelper;
+
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * @ Author: Luoshipeng
@@ -14,17 +19,18 @@ import okhttp3.Request;
  * @ Time:   2018/10/3/ 21:08
  * @ Des:    TODO
  */
-class OkHttpUtil {
+public class OkHttpUtil {
+    private static final String TAG = "====" + OkHttpUtil.class.getSimpleName() + "    ";
     private static OkHttpClient okHttpClient;
 
-    private static OkHttpClient getClient() {
+    public static OkHttpClient getClient() {
         if (okHttpClient == null) {
             synchronized ("OkHttpUtil") {
                 if (okHttpClient == null) {
                     okHttpClient = new OkHttpClient.Builder()
                             .connectTimeout(3, TimeUnit.SECONDS)
                             .writeTimeout(3, TimeUnit.SECONDS)
-                            .readTimeout(3, TimeUnit.SECONDS)
+                            .readTimeout(3, TimeUnit.SECONDS).addInterceptor(new LoggingInterceptor())
                             .build();
                 }
             }
@@ -41,27 +47,23 @@ class OkHttpUtil {
 
     }
 
-    public static final String HEADER_USER_AGENT = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36";
-    public static final String HEADER_REFERER= "Referer:https://y.qq.com/portal/player.html";
+    static class LoggingInterceptor implements Interceptor {
+        @Override
+        public Response intercept(Interceptor.Chain chain) throws IOException {
+            Request request = chain.request();
 
-    static void getAlbum(String url, Callback callback) {
-        //获取歌手图片需要添加user-agent的表头
-        FormBody formBody = new FormBody.Builder().build();
+            long t1 = System.nanoTime();
+            LogUtil.d(TAG, String.format("Sending request %s on %s%n%s",
+                    request.url(), chain.connection(), request.headers()));
 
-        Request request = new Request.Builder().url(url).
-                addHeader("User-Agent", HEADER_USER_AGENT).post(formBody).build();
-        OkHttpUtil.getClient()
-                .newCall(request).enqueue(callback);
+            Response response = chain.proceed(request);
 
+            long t2 = System.nanoTime();
+            LogUtil.d(TAG, String.format("Received response for %s in %.1fms%n%s",
+                    response.request().url(), (t2 - t1) / 1e6d, response.headers()));
+
+            return response;
+        }
     }
 
-    static void getLyrics(String url, Callback callback) {
-        //获取歌手图片需要添加user-agent的表头
-        FormBody formBody = new FormBody.Builder().build();
-        Request request = new Request.Builder().url(url).
-                addHeader("Referer", HEADER_REFERER).post(formBody).build();
-        OkHttpUtil.getClient()
-                .newCall(request).enqueue(callback);
-
-    }
 }

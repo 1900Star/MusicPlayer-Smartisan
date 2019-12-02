@@ -1,11 +1,9 @@
 package com.yibao.music.util;
 
-import android.util.Log;
-
-import com.yibao.music.base.listener.LyricsCallBack;
 import com.yibao.music.model.LyricDownBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
+import com.yibao.music.network.RetrofitHelper;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -41,26 +39,25 @@ public class LyricsUtil {
 
     /**
      * 将歌词封装到list中
+     * @param songName
+     * @param artist
      */
-    public static void downloadLyricFile(MusicBean musicBean) {
-        String songName = StringUtil.getTitle(musicBean);
-        String artist = StringUtil.getArtist(musicBean.getArtist());
+    public static void downloadLyricFile(String songName, String artist) {
         if (NetworkUtil.isNetworkConnected()) {
+//            RetrofitHelper.searchSong(songName,1);
 
-            // 先获取网络歌词的下载地址Url,，如果没有歌词地址或者地址下载失败，返回" 暂无歌词"
-
-            DownloadLyricsUtil.downloadLyricUrl(songName, musicBean.getArtist(), (lyricsUrlOk, lyricsUri) -> {
-                if (lyricsUrlOk && lyricsUri != null) {
-                    LogUtil.d("====== 歌词地址下载成功   =====       ");
-                    // 发现歌词下载地址，下载歌词。
-                    DownloadLyricsUtil.downloadlyricsfile(lyricsUri, songName, artist);
-                } else {
-                    LogUtil.d("====== 歌词地址下载失败   =====       ");
-                    LyricDownBean lyricDownBean = new LyricDownBean(false, Constants.NO_FIND_LYRICS);
-                    RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);
-                }
-
-            });
+//            DownloadLyricsUtil.downloadLyricUrl(songName, musicBean.getArtist(), (lyricsUrlOk, lyricsUri) -> {
+//                if (lyricsUrlOk && lyricsUri != null) {
+//                    LogUtil.d("====== 歌词地址下载成功   =====       ");
+//                    // 发现歌词下载地址，下载歌词。
+//                    DownloadLyricsUtil.downloadlyricsfile(lyricsUri, songName, artist);
+//                } else {
+//                    LogUtil.d("====== 歌词地址下载失败   =====       ");
+//                    LyricDownBean lyricDownBean = new LyricDownBean(false, Constants.NO_FIND_LYRICS);
+//                    RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);
+//                }
+//
+//            });
         } else {
             LyricDownBean lyricDownBean = new LyricDownBean(false, Constants.NO_FIND_NETWORK);
             RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);

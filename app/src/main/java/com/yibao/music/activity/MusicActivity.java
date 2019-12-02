@@ -19,10 +19,9 @@ import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.service.AudioPlayService;
-import com.yibao.music.util.AlbumUtil;
+import com.yibao.music.network.RetrofitHelper;
+import com.yibao.music.service.MusicPlayService;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.DownloadLyricsUtil;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
@@ -69,7 +68,7 @@ public class MusicActivity
     QqControlBar mQqControlBar;
 
 
-    private static AudioPlayService.AudioBinder audioBinder;
+    private static MusicPlayService.AudioBinder audioBinder;
     private AudioServiceConnection mConnection;
     private MusicBean mCurrentMusicBean;
     private int mCurrentPosition;
@@ -285,7 +284,7 @@ public class MusicActivity
     public void startMusicService(int position) {
         int sortFlag = SpUtil.getSortFlag(this);
         mCurrentPosition = position;
-        Intent musicIntent = new Intent(this, AudioPlayService.class);
+        Intent musicIntent = new Intent(this, MusicPlayService.class);
         musicIntent.putExtra("sortFlag", sortFlag);
         musicIntent.putExtra("position", mCurrentPosition);
         mConnection = new AudioServiceConnection();
@@ -305,7 +304,7 @@ public class MusicActivity
     @Override
     public void startMusicServiceFlag(int position, int sortFlag, int dataFlag, String queryFlag) {
         mCurrentPosition = position;
-        Intent intent = new Intent(this, AudioPlayService.class);
+        Intent intent = new Intent(this, MusicPlayService.class);
         intent.putExtra("sortFlag", sortFlag);
         intent.putExtra("dataFlag", dataFlag);
         intent.putExtra("queryFlag", queryFlag);
@@ -497,7 +496,7 @@ public class MusicActivity
     }
 
 
-    public static AudioPlayService.AudioBinder getAudioBinder() {
+    public static MusicPlayService.AudioBinder getAudioBinder() {
         return audioBinder;
     }
 
@@ -505,7 +504,7 @@ public class MusicActivity
             implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            audioBinder = (AudioPlayService.AudioBinder) service;
+            audioBinder = (MusicPlayService.AudioBinder) service;
         }
 
         @Override
@@ -583,8 +582,15 @@ public class MusicActivity
 
     @Override
     public void switchControlBar() {
+        //TODO
 //        switchMusicControlBar();
-       AlbumUtil.getLyricsUrl("邓紫棋");
+        try {
+            RetrofitHelper.getSongLyrics("想起","BB");
+
+
+        } catch (Exception e) {
+            LogUtil.d(TAG, e.getMessage());
+        }
     }
 
     @Override
@@ -601,7 +607,6 @@ public class MusicActivity
             super.onBackPressed();
         }
     }
-
 
 
     @Override

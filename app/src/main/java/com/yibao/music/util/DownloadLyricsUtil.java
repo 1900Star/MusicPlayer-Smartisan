@@ -1,5 +1,7 @@
 package com.yibao.music.util;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.yibao.music.base.listener.LyricsCallBack;
@@ -15,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -34,60 +37,64 @@ import okhttp3.ResponseBody;
 public class DownloadLyricsUtil {
     private static final String ONLINE_LYRICS_URL = "http://geci.me/api/lyric/";
 
-    /**
-     * 获取网络歌词的下载地址
-     */
-    public static synchronized void downloadLyricUrl(String songName, String songArtist, LyricsCallBack callBack) {
-        // 实际歌词的查询条件
-        String queryLrcURL = getQueryLrcURL(songName, songArtist);
 
-        LogUtil.d("     查询歌词地址    ====    " + queryLrcURL);
+    private void writeFile(String directory, String s) {
+        File file = new File(directory);
 
-        ThreadPoolProxyFactory.newInstance().execute(() -> OkHttpUtil.downFile(queryLrcURL, new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                callBack.lyricsUri(false, e.toString());
-                LogUtil.d("歌词地址下载失败   ==  " + e.toString());
+        //实例化一个输出流
+        FileOutputStream out;
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
             }
+            out = new FileOutputStream(file, true);
+            //把文字转化为字节数组
+            byte[] bytes = s.getBytes();
+            //写入字节数组到文件
+            out.write(bytes);
+            out.write("\n".getBytes());
+            //关闭输入流
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                InputStream inputStream = getInputStream(response);
-                if (inputStream != null) {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-                    StringBuilder sb = new StringBuilder();
-                    String temp;
-                    while ((temp = in.readLine()) != null) {
-                        sb.append(temp);
-                    }
-                    try {
-                        JSONObject jObject = new JSONObject(sb.toString());
-                        int count = jObject.getInt("count");
-                        LogUtil.d(" 歌词地址数量 : ==   " + count);
-                        if (count > 0) {
-                            JSONArray jArray = jObject.getJSONArray("result");
-                            JSONObject obj = jArray.getJSONObject(0);
-                            String lyricsUrl = obj.getString("lrc");
-                            LogUtil.d("歌词下载地址   ====  AA  " + lyricsUrl);
-                            callBack.lyricsUri(true, lyricsUrl);
-                        } else {
-                            callBack.lyricsUri(false, null);
-
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        callBack.lyricsUri(false, null);
-                    }
-                }
-            }
-        }));
 
     }
 
-    private static String getQueryLrcURL(String title, String artist) {
-        String unknownName = "<unknown>";
-        String str = ONLINE_LYRICS_URL + encode(title);
-        return unknownName.equals(artist) || "群星".equals(artist) ? str : str + "/" + encode(artist);
+    /**
+     * 字符串写入本地txt
+     *
+     * @param strcontent 文件内容
+     * @param songName   文件地址
+     * @param artist     文件名
+     * @return 写入结果
+     */
+    public static boolean writeTxtToFile(String strcontent, String songName, String artist) {
+        boolean isSavaFile;
+        File lyricsFile = new File(Constants.MUSIC_LYRICS_ROOT);
+        if (!lyricsFile.exists()) {
+            lyricsFile.mkdirs();
+        }
+        String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + artist + ".lrc";
+        String strContent = strcontent + "\r\n";
+        try {
+            File file = new File(path);
+            if (!file.exists()) {
+                Log.d("TestFile", "Create the file:" + path);
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+            }
+            RandomAccessFile raf = new RandomAccessFile(file, "rwd");
+            raf.seek(file.length());
+            raf.write(strContent.getBytes());
+            raf.close();
+            isSavaFile = true;
+        } catch (Exception e) {
+            isSavaFile = false;
+            Log.e("TestFile", "Error on write File:" + e);
+        }
+        return isSavaFile;
     }
 
     /**
@@ -96,6 +103,7 @@ public class DownloadLyricsUtil {
      * @param url 歌词缓冲地址
      */
     public static void downloadlyricsfile(String url, String songName, String artist) {
+
         String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + artist + ".lrc";
         OkHttpUtil.downFile(url, new Callback() {
             @Override

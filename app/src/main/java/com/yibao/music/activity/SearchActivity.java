@@ -23,7 +23,7 @@ import com.yibao.music.base.listener.TextChangedListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.SearchCategoryBean;
-import com.yibao.music.service.AudioPlayService;
+import com.yibao.music.service.MusicPlayService;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LyricsUtil;
@@ -73,7 +73,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     @BindView(R.id.smartisan_control_bar)
     SmartisanControlBar mSmartisanControlBar;
     private MusicBean mMusicBean;
-    private AudioPlayService.AudioBinder audioBinder;
+    private MusicPlayService.AudioBinder audioBinder;
     private int lyricsFlag;
     private InputMethodManager mInputMethodManager;
     private Disposable mDisposableSoftKeyboard;
@@ -324,7 +324,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
 
     @Override
     public void startMusicServiceFlag(int position, int sortFlag, int dataFlag, String queryFlag) {
-        Intent intent = new Intent(this, AudioPlayService.class);
+        Intent intent = new Intent(this, MusicPlayService.class);
         intent.putExtra("sortFlag", sortFlag);
         intent.putExtra("dataFlag", dataFlag);
         intent.putExtra("queryFlag", queryFlag);

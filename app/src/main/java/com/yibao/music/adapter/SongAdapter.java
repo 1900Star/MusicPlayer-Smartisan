@@ -2,8 +2,11 @@ package com.yibao.music.adapter;
 
 
 import android.app.Activity;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +19,10 @@ import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
 
 import java.util.List;
@@ -37,6 +42,7 @@ import butterknife.ButterKnife;
 
 public class SongAdapter
         extends BaseRvAdapter<MusicBean> {
+    private static final String TAG = "====" + SongAdapter.class.getSimpleName() + "    ";
     private Activity mContext;
     private int mIsShowStickyView;
     private int mScroeAndFrequnecyFlag;

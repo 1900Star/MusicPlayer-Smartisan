@@ -17,6 +17,7 @@
         android:allowBackup="true"
         android:fullBackupContent="@null"
         android:icon="@mipmap/artisan_launcher"
+        android:usesCleartextTraffic="true"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -32,7 +33,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.AudioPlayService" />
+        <service android:name=".service.MusicPlayService" />
         <service android:name=".service.LoadMusicDataService" />
         <service android:name=".service.CountdownService" />
 

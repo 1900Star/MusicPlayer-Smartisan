@@ -5,7 +5,9 @@ import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,6 +30,7 @@ import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
+import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
@@ -285,18 +288,24 @@ public class PlayActivity extends BasePlayActivity {
         ImageUitl.loadPic(this, url, mPlayingSongAlbum, new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                mPlayingSongAlbum.setVisibility(View.GONE);
-                mAlbumCover.setVisibility(View.VISIBLE);
+//                RetrofitHelper.searchSong("飘雪", 1);
+                LogUtil.d(TAG, e.getMessage());
+
+                showAlbum(false);
                 return false;
             }
 
             @Override
             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                mPlayingSongAlbum.setVisibility(View.VISIBLE);
-                mAlbumCover.setVisibility(View.GONE);
+                showAlbum(true);
                 return false;
             }
         });
+    }
+
+    private void showAlbum(boolean b) {
+        mPlayingSongAlbum.setVisibility(b ? View.VISIBLE : View.INVISIBLE);
+        mAlbumCover.setVisibility(b ? View.GONE : View.VISIBLE);
     }
 
     private void switchPlayState(boolean isPlaying) {
@@ -451,7 +460,7 @@ public class PlayActivity extends BasePlayActivity {
                 closeLyricsView();
             } else {
                 LogUtil.d(" ----- 点击专辑图片 下载歌词 ");
-                LyricsUtil.downloadLyricFile(mCurrenMusicInfo);
+                LyricsUtil.downloadLyricFile(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
             }
         }
         mLyricsView.setVisibility(isShowLyrics ? View.GONE : View.VISIBLE);

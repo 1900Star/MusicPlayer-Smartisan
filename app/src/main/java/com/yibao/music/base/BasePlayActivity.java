@@ -16,7 +16,7 @@ import com.yibao.music.R;
 import com.yibao.music.activity.MusicActivity;
 import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.base.listener.SeekBarChangeListtener;
-import com.yibao.music.service.AudioPlayService;
+import com.yibao.music.service.MusicPlayService;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.LyricsView;
 
@@ -42,7 +42,7 @@ public abstract class BasePlayActivity extends BaseTansitionActivity implements 
 
     protected AudioManager mAudioManager;
     protected int mMaxVolume;
-    protected AudioPlayService.AudioBinder audioBinder;
+    protected MusicPlayService.AudioBinder audioBinder;
     private PowerManager.WakeLock mWakeLock;
     protected boolean isScreenAlwaysOn;
     private VolumeReceiver mVolumeReceiver;
@@ -122,14 +122,14 @@ public abstract class BasePlayActivity extends BaseTansitionActivity implements 
         int playMode = audioBinder.getPalyMode();
         //根据当前播放模式进行其它模式切换
         switch (playMode) {
-            case AudioPlayService.PLAY_MODE_ALL:
-                audioBinder.setPalyMode(AudioPlayService.PLAY_MODE_SINGLE);
+            case MusicPlayService.PLAY_MODE_ALL:
+                audioBinder.setPalyMode(MusicPlayService.PLAY_MODE_SINGLE);
                 break;
-            case AudioPlayService.PLAY_MODE_SINGLE:
-                audioBinder.setPalyMode(AudioPlayService.PLAY_MODE_RANDOM);
+            case MusicPlayService.PLAY_MODE_SINGLE:
+                audioBinder.setPalyMode(MusicPlayService.PLAY_MODE_RANDOM);
                 break;
-            case AudioPlayService.PLAY_MODE_RANDOM:
-                audioBinder.setPalyMode(AudioPlayService.PLAY_MODE_ALL);
+            case MusicPlayService.PLAY_MODE_RANDOM:
+                audioBinder.setPalyMode(MusicPlayService.PLAY_MODE_ALL);
                 break;
             default:
                 break;
@@ -146,13 +146,13 @@ public abstract class BasePlayActivity extends BaseTansitionActivity implements 
      */
     protected void updatePlayModeImage(int playMode, ImageView mMusicPlayerMode) {
         switch (playMode) {
-            case AudioPlayService.PLAY_MODE_ALL:
+            case MusicPlayService.PLAY_MODE_ALL:
                 mMusicPlayerMode.setImageResource(R.drawable.audio_playmode_allrepeat_selector);
                 break;
-            case AudioPlayService.PLAY_MODE_SINGLE:
+            case MusicPlayService.PLAY_MODE_SINGLE:
                 mMusicPlayerMode.setImageResource(R.drawable.audio_playmode_single_selector);
                 break;
-            case AudioPlayService.PLAY_MODE_RANDOM:
+            case MusicPlayService.PLAY_MODE_RANDOM:
                 mMusicPlayerMode.setImageResource(R.drawable.audio_playmode_random_selector);
                 break;
             default:
