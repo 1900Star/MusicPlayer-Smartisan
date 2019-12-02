@@ -29,7 +29,7 @@ public class Constants {
      */
     public static final int SORT_DOWN_TIME = 1;
     public static final int SORT_FAVORITE_TIME = 2;
-    public static final int SORT_FREQUENCY= 3;
+    public static final int SORT_FREQUENCY = 3;
     public static final int SORT_SCORE = 4;
     public static final int SORT_ADD_PALY_LIST_TIME = 5;
 
@@ -77,6 +77,10 @@ public class Constants {
     public static final String NULL_STRING = "";
     public static final String SERVICE_MUSIC = "service_music";
     public static final String MUSIC_LYRIC_OK = "lyric_ok";
+    public static final String MUSIC_LYRIC_FAIL = "lyric_fail";
+    public static final String PURE_MUSIC = "此歌曲为没有填词的纯音乐，请您欣赏";
+    public static final String NO_LYRICS = "暂无歌词";
+
     public static final String NO_FIND_LYRICS = "no_find_lyrics";
     public static final String NO_FIND_NETWORK = "no_find_network";
     public static final String PLAY_LIST_BACK_FLAG = "LSP_98";
@@ -120,7 +124,7 @@ public class Constants {
     public static final String FRAGMENT_PLAYLIST = "PlayListFragment";
     public static final String FRAGMENT_ARTIST = "ArtistFragment";
     public static final String FRAGMENT_SONG_CATEGORY = "SongCategoryFragment";
-    public static final String FRAGMENT_SONG= "SongFragment";
+    public static final String FRAGMENT_SONG = "SongFragment";
     public static final String FRAGMENT_ALBUM = "AlbumFragment";
     public static final String FRAGMENT_ALBUM_CATEGORY = "AlbumCategoryFragment";
     public static final String SCANNER_MEDIA = "scanner";
@@ -129,7 +133,7 @@ public class Constants {
     public static final String NO_NEED_FLAG = "no_need_flag";
     public static final String COUNTDOWN_TIME = "countdown_time";
     public static final String FINISH_TIME = "00:01";
-    public static String MUSIC_LYRICS_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyric/";
+    public static String MUSIC_LYRICS_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyrics/";
     static final String FAVORITE_FILE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/favorite.txt/";
     public static final String HEADER_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yibao/photo/";
     // 崩溃日志本地保存地址

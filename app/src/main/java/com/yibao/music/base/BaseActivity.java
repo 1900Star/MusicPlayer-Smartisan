@@ -2,6 +2,7 @@ package com.yibao.music.base;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,9 +18,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
-import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.QqControlBar;
@@ -57,7 +56,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Unbinder mBind;
     protected Disposable mRxViewDisposable;
     protected PlayListBeanDao mPlayListDao;
-    protected final String TAG = "====" +this.getClass().getSimpleName() + "    ";
+    protected final String TAG = "====" + this.getClass().getSimpleName() + "    ";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,18 +88,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bean -> {
-                    boolean isDone = bean.isDoneOK();
-                    LogUtil.d(" ======= BaseActivity ======   歌词下载结果  " + isDone);
-                    if (isDone) {
-                        updataLyricsView(true);
-                    } else {
-                        String downMsg = bean.getDownMsg();
-                        if (downMsg.equals(Constants.NO_FIND_LYRICS)) {
-                            LogUtil.d("暂无歌词");
-                        } else if (downMsg.equals(Constants.NO_FIND_NETWORK)) {
-                            ToastUtil.show(this, "没有发现可使用的网络");
-                        }
-                        updataLyricsView(false);
+                    updataLyricsView(bean.isDoneOK(), bean.getDownMsg());
+                    if (!bean.isDoneOK()) {
+                        ToastUtil.show(this, "暂无歌词");
                     }
                 }));
         mCompositeDisposable.add(mBus.toObservableType(Constants.PLAY_STATUS, Object.class)
@@ -114,13 +105,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         upDataPlayProgress();
     }
 
-
     /**
-     *
-     * @param b 歌词下载是否成功 ，成功就重新设置歌词View
+     * @param lyricsOK  歌词下载是否成功 ，成功就重新设置歌词View
+     * @param downMsg 歌词下载的信息。
      */
-    protected void updataLyricsView(boolean b) {
+    protected void updataLyricsView(boolean lyricsOK, String downMsg) {
     }
+
 
     protected void moreMenu(MoreMenuStatus moreMenuStatus) {
 

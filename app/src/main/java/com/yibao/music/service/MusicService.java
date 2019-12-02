@@ -24,7 +24,7 @@ import retrofit2.http.Query;
  */
 public interface MusicService {
     /**
-     *  搜索歌曲：https://c.y.qq.com/soso/fcgi-bin/client_search_cp?p=2&n=2&w=周杰伦&format=json
+     *  搜索歌曲：https://c.y.qq.com/soso/fcgi-bin/client_search_cp?p=2&n=2&w=想起&format=json
      */
     @GET(Api.SEARCH_SONG)
     Observable<SearchSong> search(@Query("w") String seek, @Query("p")int offset);

@@ -35,32 +35,6 @@ import okhttp3.ResponseBody;
  * @ Des:    下载网络歌词
  */
 public class DownloadLyricsUtil {
-    private static final String ONLINE_LYRICS_URL = "http://geci.me/api/lyric/";
-
-
-    private void writeFile(String directory, String s) {
-        File file = new File(directory);
-
-        //实例化一个输出流
-        FileOutputStream out;
-        try {
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            out = new FileOutputStream(file, true);
-            //把文字转化为字节数组
-            byte[] bytes = s.getBytes();
-            //写入字节数组到文件
-            out.write(bytes);
-            out.write("\n".getBytes());
-            //关闭输入流
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
 
     /**
      * 字符串写入本地txt
@@ -81,7 +55,6 @@ public class DownloadLyricsUtil {
         try {
             File file = new File(path);
             if (!file.exists()) {
-                Log.d("TestFile", "Create the file:" + path);
                 file.getParentFile().mkdirs();
                 file.createNewFile();
             }

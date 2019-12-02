@@ -19,9 +19,9 @@ import com.yibao.music.util.SpUtil;
 
 public abstract class BaseTansitionActivity extends BaseActivity implements OnGlideLoadListener {
     @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(0, R.anim.dialog_push_out);
+    protected void onResume() {
+        super.onResume();
+
     }
 
     @Override
@@ -43,4 +43,10 @@ public abstract class BaseTansitionActivity extends BaseActivity implements OnGl
         super.onPause();
         SpUtil.setAddTodPlayListFlag(this, Constants.NUMBER_ZERO);
     }
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, R.anim.dialog_push_out);
+    }
+
 }

@@ -25,44 +25,19 @@ import java.util.List;
  */
 
 public class LyricsUtil {
-
+    private static final String TAG = "====" + LyricsUtil.class.getSimpleName() + "    ";
     private static BufferedReader br;
     private static final String UNKNOWN_NAME = "<unknown>";
 
     public static boolean checkLyricFile(String songName, String songArtisa) {
         String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + songArtisa + ".lrc";
         File file = new File(path);
-        LogUtil.d(" 本地歌词信息  " + songName + " $$ " + songArtisa + " == 是否存在    " + file.exists());
+        LogUtil.d(TAG," 本地歌词信息  " + songName + " $$ " + songArtisa + " == 是否存在    " + file.exists());
         return file.exists();
     }
 
 
-    /**
-     * 将歌词封装到list中
-     * @param songName
-     * @param artist
-     */
-    public static void downloadLyricFile(String songName, String artist) {
-        if (NetworkUtil.isNetworkConnected()) {
-//            RetrofitHelper.searchSong(songName,1);
 
-//            DownloadLyricsUtil.downloadLyricUrl(songName, musicBean.getArtist(), (lyricsUrlOk, lyricsUri) -> {
-//                if (lyricsUrlOk && lyricsUri != null) {
-//                    LogUtil.d("====== 歌词地址下载成功   =====       ");
-//                    // 发现歌词下载地址，下载歌词。
-//                    DownloadLyricsUtil.downloadlyricsfile(lyricsUri, songName, artist);
-//                } else {
-//                    LogUtil.d("====== 歌词地址下载失败   =====       ");
-//                    LyricDownBean lyricDownBean = new LyricDownBean(false, Constants.NO_FIND_LYRICS);
-//                    RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);
-//                }
-//
-//            });
-        } else {
-            LyricDownBean lyricDownBean = new LyricDownBean(false, Constants.NO_FIND_NETWORK);
-            RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);
-        }
-    }
 
     /**
      * 当前歌词不正确，重新下载。
@@ -74,7 +49,7 @@ public class LyricsUtil {
         String songName = StringUtil.getSongName(name);
         String songArtist = StringUtil.getArtist(artist);
         String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + songArtist + ".lrc";
-        LogUtil.d(" 删除当前 歌词    " + path);
+        LogUtil.d(TAG," 删除当前 歌词    " + path);
         File file = new File(path);
         if (file.exists()) {
             file.delete();
@@ -90,14 +65,14 @@ public class LyricsUtil {
         int nu = 0;
         for (File f : files) {
             List<String> lylist = getLylist(f);
-            if (lylist.size() < 4) {
-                LogUtil.d(" 歌词长度小于4的 : " + "\n" + f.getAbsolutePath());
+            if (lylist.size() < 2) {
+                LogUtil.d(TAG," 歌词长度小于4的 : " + "\n" + f.getAbsolutePath());
                 nu++;
                 f.delete();
             }
 
         }
-        LogUtil.d("  无效歌词的长度   " + nu);
+        LogUtil.d(TAG,"  无效歌词的长度   " + nu);
 
     }
 
@@ -183,13 +158,10 @@ public class LyricsUtil {
         ArrayList<MusicLyricBean> list = new ArrayList<>();
         String[] arr = str.split("]");
         String content = arr[arr.length - 1];
-
         for (int i = 0; i < arr.length - 1; i++) {
-            if (arr.length > i) {
-                int startTime = parseTime(arr[i]);
-                MusicLyricBean lrcBean = new MusicLyricBean(startTime, content);
-                list.add(lrcBean);
-            }
+            int startTime = parseTime(arr[i]);
+            MusicLyricBean lrcBean = new MusicLyricBean(startTime, content);
+            list.add(lrcBean);
         }
         return list;
     }
@@ -205,7 +177,7 @@ public class LyricsUtil {
         boolean containsChinese = isContainsEnglishAndChinese(s);
         String braces = "[";
         if (containsChinese) {
-            LogUtil.d("============== 歌词时间解析异常！================");
+            LogUtil.d(TAG,"============== 歌词时间解析异常！================");
             return 0;
         } else {
             String[] arr = s.split(":");

@@ -3,7 +3,9 @@ package com.yibao.music.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import android.text.Editable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -26,6 +28,7 @@ import com.yibao.music.model.SearchCategoryBean;
 import com.yibao.music.service.MusicPlayService;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SoftKeybordUtil;
 import com.yibao.music.util.StringUtil;
@@ -87,6 +90,13 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         mBind = ButterKnife.bind(this);
         init();
         initListener();
+    }
+
+    @Override
+    protected void updataLyricsView(boolean lyricsOK, String downMsg) {
+        if (lyricsOK) {
+            updataLyric();
+        }
     }
 
     private void init() {

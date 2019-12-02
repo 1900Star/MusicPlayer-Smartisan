@@ -4,12 +4,15 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+
 import androidx.annotation.Nullable;
+
 import android.util.AttributeSet;
 
 import com.yibao.music.R;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.util.ColorUtil;
+import com.yibao.music.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +41,7 @@ public class LyricsView
     private int currentProgress;
     private Rect mBounds;
     private Rect mSingleBounds;
+    private String mLyricsMsg;
 
     public LyricsView(Context context) {
         super(context);
@@ -186,7 +190,8 @@ public class LyricsView
      *
      * @param lrcList s
      */
-    public void setLrcFile(List<MusicLyricBean> lrcList) {
+    public void setLrcFile(List<MusicLyricBean> lrcList, String lyricsMsg) {
+        mLyricsMsg = lyricsMsg;
         musicLyrList = lrcList;
         //默认剧中行=0
         centerLine = 0;
@@ -194,7 +199,7 @@ public class LyricsView
     }
 
     private void drawSingLine(Canvas canvas) {
-        mCurrentLrc = "暂无歌词";
+        mCurrentLrc = mLyricsMsg.equals(Constants.PURE_MUSIC) ? Constants.PURE_MUSIC : Constants.NO_LYRICS;
         mPaint.setColor(mLyricsNormal);
         mPaint.getTextBounds(mCurrentLrc, 0, mCurrentLrc.length(), mSingleBounds);
         float x = (mViewW >> 1) - (mSingleBounds.width() >> 1);

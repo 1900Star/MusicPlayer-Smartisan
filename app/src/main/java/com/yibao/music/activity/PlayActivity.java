@@ -27,10 +27,10 @@ import com.yibao.music.fragment.dialogfrag.CountdownBottomSheetDialog;
 import com.yibao.music.fragment.dialogfrag.FavoriteBottomSheetDialog;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
+import com.yibao.music.model.LyricDownBean;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
-import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
@@ -225,7 +225,7 @@ public class PlayActivity extends BasePlayActivity {
         updatePlayBtnStatus();
         // 设置当前歌词
         mLyricList = LyricsUtil.getLyricList(musicBean);
-        mLyricsView.setLrcFile(mLyricList);
+        mLyricsView.setLrcFile(mLyricList, mLyricList.size() > 1 ? Constants.MUSIC_LYRIC_OK : Constants.PURE_MUSIC);
         if (isShowLyrics) {
             startRollPlayLyrics(mLyricsView);
             closeLyricsView();
@@ -434,9 +434,12 @@ public class PlayActivity extends BasePlayActivity {
 
 
     @Override
-    protected void updataLyricsView(boolean lyricsExists) {
-        mLyricList = LyricsUtil.getLyricList(mCurrenMusicInfo);
-        mLyricsView.setLrcFile(lyricsExists ? mLyricList : null);
+    protected void updataLyricsView(boolean lyricsOK, String downMsg) {
+        if (lyricsOK) {
+            mLyricList = LyricsUtil.getLyricList(mCurrenMusicInfo);
+        }
+        //TODO
+        mLyricsView.setLrcFile(lyricsOK ? mLyricList : null, downMsg);
         closeLyricsView();
 
     }
@@ -452,15 +455,14 @@ public class PlayActivity extends BasePlayActivity {
             boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(mCurrenMusicInfo.getTitle()), StringUtil.getArtist(mCurrenMusicInfo.getArtist()));
             if (lyricIsExists) {
                 mLyricList = LyricsUtil.getLyricList(mCurrenMusicInfo);
-                mLyricsView.setLrcFile(mLyricList);
+                mLyricsView.setLrcFile(mLyricList, mLyricList.size() > 1 ? Constants.MUSIC_LYRIC_OK : Constants.PURE_MUSIC);
                 // 开始滚动歌词
                 if (audioBinder.isPlaying()) {
                     startRollPlayLyrics(mLyricsView);
                 }
                 closeLyricsView();
             } else {
-                LogUtil.d(" ----- 点击专辑图片 下载歌词 ");
-                LyricsUtil.downloadLyricFile(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
+                mLyricsView.setLrcFile(null, Constants.NO_LYRICS);
             }
         }
         mLyricsView.setVisibility(isShowLyrics ? View.GONE : View.VISIBLE);

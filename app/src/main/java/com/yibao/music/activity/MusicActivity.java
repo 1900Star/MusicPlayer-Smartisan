@@ -583,14 +583,8 @@ public class MusicActivity
     @Override
     public void switchControlBar() {
         //TODO
-//        switchMusicControlBar();
-        try {
-            RetrofitHelper.getSongLyrics("想起","BB");
+        switchMusicControlBar();
 
-
-        } catch (Exception e) {
-            LogUtil.d(TAG, e.getMessage());
-        }
     }
 
     @Override

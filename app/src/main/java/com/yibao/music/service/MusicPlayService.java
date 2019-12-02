@@ -160,11 +160,13 @@ public class MusicPlayService
                         Uri.parse(mMusicInfo.getSongUrl()));
                 mediaPlayer.setOnPreparedListener(this);
                 mediaPlayer.setOnCompletionListener(this);
+                String songName = StringUtil.getSongName(mMusicInfo.getTitle());
                 boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(mMusicInfo.getTitle()), StringUtil.getArtist(mMusicInfo.getArtist()));
                 LogUtil.d("=======  当前歌词是否存在 ===== " + lyricIsExists + " == " + mMusicInfo.getTitle() + " == " + mMusicInfo.getArtist());
                 if (!lyricIsExists) {
-                    RetrofitHelper.getSongLyrics(StringUtil.getSongName(mMusicInfo.getTitle()), StringUtil.getArtist(mMusicInfo.getArtist()));
+                    RetrofitHelper.getSongLyrics(songName, StringUtil.getArtist(mMusicInfo.getArtist()));
                 }
+                RetrofitHelper.getSongAlbumImg(songName);
                 SpUtil.setMusicPosition(MusicPlayService.this, position);
                 showNotifycation(true);
                 mSessionManager.updatePlaybackState(true);
