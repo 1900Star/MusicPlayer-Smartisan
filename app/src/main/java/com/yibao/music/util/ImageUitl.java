@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -15,11 +16,25 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.target.ViewTarget;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
+import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.view.ZoomImageView;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 作者：Stran on 2017/3/23 03:23
@@ -30,6 +45,7 @@ import java.io.File;
  */
 @SuppressLint("CheckResult")
 public class ImageUitl {
+    private static final String TAG = "====" + ImageUitl.class.getSimpleName() + "    ";
 
     public static ZoomImageView creatZoomView(Context context) {
         ZoomImageView view = new ZoomImageView(context);
@@ -90,7 +106,6 @@ public class ImageUitl {
             LogUtil.d("Picture loading failed,context is null");
         }
 
-
     }
 
     public static void customLoadPic(Context context, String url, int placeId, ImageView view) {
@@ -109,6 +124,58 @@ public class ImageUitl {
 
     }
 
+    public static void glideSaveImg(Context context, String url, String songName, String artist) {
+        Observable.create((ObservableOnSubscribe<File>) e -> {
+            //通过gilde下载得到file文件,这里需要注意android.permission.INTERNET权限
+            e.onNext(Glide.with(context)
+                    .load(url)
+                    .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                    .get());
+            e.onComplete();
+        }).subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.newThread())
+                .subscribe(file -> {
+                    //获取到下载得到的图片，进行本地保存
+                    File songAlbumFile = new File(Constants.MUSIC_SONG_ALBUM_ROOT);
+                    if (!songAlbumFile.exists()) {
+                        songAlbumFile.mkdirs();
+                    }
+                    String fileName = songName + "-" + artist + ".jpg";
+                    File destFile = new File(songAlbumFile, fileName);
+                    //把gilde下载得到图片复制到定义好的目录中去
+                    copy(file, destFile);
+
+                });
+    }
+
+    /**
+     * 复制文件
+     *
+     * @param source 输入文件
+     * @param target 输出文件
+     */
+    private static void copy(File source, File target) {
+        FileInputStream fileInputStream = null;
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileInputStream = new FileInputStream(source);
+            fileOutputStream = new FileOutputStream(target);
+            byte[] buffer = new byte[1024];
+            while (fileInputStream.read(buffer) > 0) {
+                fileOutputStream.write(buffer);
+            }
+            LogUtil.d(TAG, "歌曲图片保存完成");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fileInputStream.close();
+                fileOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     /**
      * 裁剪原始的图片

@@ -70,6 +70,18 @@ public class StringUtil {
 
     }
 
+    /**
+     * 返回下载保存到本地的专辑图片路径
+     *
+     * @param songName a
+     * @return f
+     */
+    public static String getDownAlbum(String songName, String artist) {
+
+        return Constants.MUSIC_SONG_ALBUM_ROOT + songName + "-" + artist + ".jpg";
+
+    }
+
 
     /**
      * @param context c

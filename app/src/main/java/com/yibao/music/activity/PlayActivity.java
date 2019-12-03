@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,12 +16,14 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
+import com.yibao.music.base.BaseObserver;
 import com.yibao.music.base.BasePlayActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.fragment.dialogfrag.CountdownBottomSheetDialog;
@@ -31,6 +34,8 @@ import com.yibao.music.model.LyricDownBean;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
+import com.yibao.music.model.qq.SearchSong;
+import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
@@ -43,6 +48,7 @@ import com.yibao.music.util.StringUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.LyricsView;
 
+import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -147,7 +153,7 @@ public class PlayActivity extends BasePlayActivity {
         if (mCurrenMusicInfo != null) {
             setTitleAndArtist(mCurrenMusicInfo);
             mAlbumUrl = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId());
-            setAlbulm(mAlbumUrl);
+            setAlbulm(mAlbumUrl, true);
         }
     }
 
@@ -220,7 +226,7 @@ public class PlayActivity extends BasePlayActivity {
         initAnimation();
         setTitleAndArtist(musicBean);
         mAlbumUrl = StringUtil.getAlbulm(musicBean.getAlbumId());
-        setAlbulm(mAlbumUrl);
+        setAlbulm(mAlbumUrl, true);
         setSongDuration();
         updatePlayBtnStatus();
         // 设置当前歌词
@@ -284,21 +290,60 @@ public class PlayActivity extends BasePlayActivity {
 //        clearDisposableLyric();
     }
 
-    private void setAlbulm(String url) {
+    private void setAlbulm(String url, boolean firstSet) {
+
         ImageUitl.loadPic(this, url, mPlayingSongAlbum, new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-//                RetrofitHelper.searchSong("飘雪", 1);
-                LogUtil.d(TAG, e.getMessage());
+                LogUtil.d(TAG, "isFirstResource  " + isFirstResource);
+                // 首次专辑图片设置失败，再去专辑下载目录找对应的专辑图片，如果还是失败，就直接加载从网络获取的专辑图片，同时将图片保存到本地。
+                if (firstSet) {
+                    String albumPath = StringUtil.getDownAlbum(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
+                    new Handler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            LogUtil.d(TAG, "第二次加载");
+                            LogUtil.d(TAG, albumPath);
+                            setAlbulm(albumPath, false);
+                            LogUtil.d(TAG, "第二次加载出错");
 
+//                            Glide.with(PlayActivity.this).load(new File(albumPath)).into(mPlayingSongAlbum);
+                        }
+                    });
+                } else {
+                    LogUtil.d(TAG, "请求网络地址");
+                    String albumUrlHead = "http://y.gtimg.cn/music/photo_new/T002R500x500M000";
+                    RetrofitHelper.getMusicService().search(mCurrenMusicInfo.getTitle(), 1)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new BaseObserver<SearchSong>() {
+                                @Override
+                                public void onNext(SearchSong searchSong) {
+                                    String albummid = searchSong.getData().getSong().getList().get(0).getAlbummid();
+                                    String imgUrl = albumUrlHead + albummid + ".jpg";
+                                    // 将专辑图片保存到本地
+                                    ImageUitl.glideSaveImg(PlayActivity.this, imgUrl, mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
+                                    LogUtil.d(TAG, "图片地址 " + imgUrl);
+                                    setAlbulm(imgUrl, true);
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    super.onError(e);
+                                    LogUtil.d(TAG, e.getMessage());
+
+                                }
+                            });
+                }
                 showAlbum(false);
-                return false;
+                return true;
             }
 
             @Override
             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                LogUtil.d(TAG, "图片加载成功");
                 showAlbum(true);
-                return false;
+                return true;
             }
         });
     }

@@ -134,6 +134,7 @@ public class Constants {
     public static final String COUNTDOWN_TIME = "countdown_time";
     public static final String FINISH_TIME = "00:01";
     public static String MUSIC_LYRICS_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyrics/";
+    public static String MUSIC_SONG_ALBUM_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/songAlbum/";
     static final String FAVORITE_FILE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/favorite.txt/";
     public static final String HEADER_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yibao/photo/";
     // 崩溃日志本地保存地址

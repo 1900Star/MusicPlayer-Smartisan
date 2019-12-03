@@ -166,7 +166,7 @@ public class MusicPlayService
                 if (!lyricIsExists) {
                     RetrofitHelper.getSongLyrics(songName, StringUtil.getArtist(mMusicInfo.getArtist()));
                 }
-                RetrofitHelper.getSongAlbumImg(songName);
+//                RetrofitHelper.getSongAlbumImg(songName);
                 SpUtil.setMusicPosition(MusicPlayService.this, position);
                 showNotifycation(true);
                 mSessionManager.updatePlaybackState(true);

@@ -110,8 +110,6 @@ public class DownloadLyricsUtil {
                     }
                 }
             }
-
-
         });
     }
 

@@ -33,7 +33,7 @@ public class RetrofitHelper {
     private static final String TAG = "====" + RetrofitHelper.class.getSimpleName() + "    ";
     private static Retrofit retrofit;
 
-    private static MusicService getMusicService() {
+    public static MusicService getMusicService() {
         if (retrofit == null) {
             synchronized (RetrofitHelper.class) {
                 if (retrofit == null) {
@@ -52,14 +52,17 @@ public class RetrofitHelper {
 
     }
 
-    public static void getSongAlbumImg(String songName) {
-        String albumUrlHead = "http://y.gtimg.cn/music/photo_new/T002R180x180M000";
+    public static String getSongAlbumImg(String songName) {
+        final String[] imgUrl = new String[1];
+        String albumUrlHead = "http://y.gtimg.cn/music/photo_new/T002R500x500M000";
         getMusicService().search(songName, 1)
                 .subscribeOn(Schedulers.io()).subscribe(new BaseObserver<SearchSong>() {
             @Override
             public void onNext(SearchSong searchSong) {
                 String albummid = searchSong.getData().getSong().getList().get(0).getAlbummid();
-                LogUtil.d(TAG, albumUrlHead + albummid + ".jpg");
+                imgUrl[0] = albumUrlHead + albummid + ".jpg";
+                LogUtil.d(TAG, "请求到的图片地址 " + imgUrl[0]);
+
 
             }
 
@@ -69,6 +72,7 @@ public class RetrofitHelper {
                 LogUtil.d(TAG, e.getMessage());
             }
         });
+        return imgUrl[0];
     }
 
     public static void getSongLyrics(String songName, String artist) {
