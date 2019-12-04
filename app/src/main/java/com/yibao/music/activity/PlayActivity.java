@@ -26,6 +26,7 @@ import com.yibao.music.R;
 import com.yibao.music.base.BaseObserver;
 import com.yibao.music.base.BasePlayActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
+import com.yibao.music.base.listener.OnLoadImageListener;
 import com.yibao.music.fragment.dialogfrag.CountdownBottomSheetDialog;
 import com.yibao.music.fragment.dialogfrag.FavoriteBottomSheetDialog;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
@@ -39,6 +40,7 @@ import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
@@ -118,7 +120,6 @@ public class PlayActivity extends BasePlayActivity {
     @BindView(R.id.sb_volume)
     SeekBar mSbVolume;
     private int mDuration;
-    private String mAlbumUrl;
     private MusicBean mCurrenMusicInfo;
     boolean isShowLyrics = false;
     private ObjectAnimator mAnimator;
@@ -141,7 +142,7 @@ public class PlayActivity extends BasePlayActivity {
         mSbProgress.setOnSeekBarChangeListener(new SeekBarListener());
         mSbVolume.setOnSeekBarChangeListener(new SeekBarListener());
         mPlayingSongAlbum.setOnLongClickListener(view -> {
-            PreviewBigPicDialogFragment.newInstance(mAlbumUrl)
+            PreviewBigPicDialogFragment.newInstance(FileUtil.getAlbumUrl(mCurrenMusicInfo))
                     .show(getSupportFragmentManager(), "album");
             return true;
         });
@@ -152,8 +153,7 @@ public class PlayActivity extends BasePlayActivity {
         mCurrenMusicInfo = audioBinder != null ? audioBinder.getMusicBean() : getIntent().getParcelableExtra("currentBean");
         if (mCurrenMusicInfo != null) {
             setTitleAndArtist(mCurrenMusicInfo);
-            mAlbumUrl = StringUtil.getAlbulm(mCurrenMusicInfo.getAlbumId());
-            setAlbulm(mAlbumUrl, true);
+            setAlbulm(FileUtil.getAlbumUrl(mCurrenMusicInfo));
         }
     }
 
@@ -225,8 +225,7 @@ public class PlayActivity extends BasePlayActivity {
         checkCurrentIsFavorite(mCurrenMusicInfo.isFavorite());
         initAnimation();
         setTitleAndArtist(musicBean);
-        mAlbumUrl = StringUtil.getAlbulm(musicBean.getAlbumId());
-        setAlbulm(mAlbumUrl, true);
+        setAlbulm(FileUtil.getAlbumUrl(musicBean));
         setSongDuration();
         updatePlayBtnStatus();
         // 设置当前歌词
@@ -290,28 +289,13 @@ public class PlayActivity extends BasePlayActivity {
 //        clearDisposableLyric();
     }
 
-    private void setAlbulm(String url, boolean firstSet) {
-
-        ImageUitl.loadPic(this, url, mPlayingSongAlbum, new RequestListener<Drawable>() {
+    private void setAlbulm(String url) {
+        ImageUitl.loadPic(this, url, mPlayingSongAlbum, new OnLoadImageListener() {
             @Override
-            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                LogUtil.d(TAG, "isFirstResource  " + isFirstResource);
-                // 首次专辑图片设置失败，再去专辑下载目录找对应的专辑图片，如果还是失败，就直接加载从网络获取的专辑图片，同时将图片保存到本地。
-                if (firstSet) {
-                    String albumPath = StringUtil.getDownAlbum(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
-                    new Handler().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            LogUtil.d(TAG, "第二次加载");
-                            LogUtil.d(TAG, albumPath);
-                            setAlbulm(albumPath, false);
-                            LogUtil.d(TAG, "第二次加载出错");
-
-//                            Glide.with(PlayActivity.this).load(new File(albumPath)).into(mPlayingSongAlbum);
-                        }
-                    });
+            public void loadResult(boolean isSuccess) {
+                if (isSuccess) {
+                    showAlbum(true);
                 } else {
-                    LogUtil.d(TAG, "请求网络地址");
                     String albumUrlHead = "http://y.gtimg.cn/music/photo_new/T002R500x500M000";
                     RetrofitHelper.getMusicService().search(mCurrenMusicInfo.getTitle(), 1)
                             .subscribeOn(Schedulers.io())
@@ -324,28 +308,22 @@ public class PlayActivity extends BasePlayActivity {
                                     // 将专辑图片保存到本地
                                     ImageUitl.glideSaveImg(PlayActivity.this, imgUrl, mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
                                     LogUtil.d(TAG, "图片地址 " + imgUrl);
-                                    setAlbulm(imgUrl, true);
+                                    Glide.with(PlayActivity.this).load(imgUrl).placeholder(R.drawable.playing_cover_lp).error(R.drawable.playing_cover_lp).into(mPlayingSongAlbum);
+                                    showAlbum(true);
                                 }
 
                                 @Override
                                 public void onError(Throwable e) {
                                     super.onError(e);
                                     LogUtil.d(TAG, e.getMessage());
-
+                                    showAlbum(false);
                                 }
                             });
-                }
-                showAlbum(false);
-                return true;
-            }
 
-            @Override
-            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                LogUtil.d(TAG, "图片加载成功");
-                showAlbum(true);
-                return true;
+                }
             }
         });
+
     }
 
     private void showAlbum(boolean b) {

@@ -6,6 +6,7 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.yibao.music.R;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.StringUtil;
 
@@ -94,7 +96,7 @@ public class QqBarPagerAdapter
         ImageView mAlbulm = view.findViewById(R.id.iv_pager_albulm);
         TextView tvSongName = view.findViewById(R.id.tv_pager_song_name);
         TextView tvArtist = view.findViewById(R.id.tv_pager_art_name);
-        String albumUri = StringUtil.getAlbulm(musicInfo.getAlbumId());
+        String albumUri = FileUtil.getAlbumUrl(musicInfo);
         ImageUitl.loadPlaceholder(mContext, albumUri, mAlbulm);
         String currentLyrics = musicInfo.getCurrentLyrics();
         tvSongName.setText(StringUtil.getTitle(musicInfo));

@@ -7,7 +7,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+
 import androidx.core.content.FileProvider;
+
+import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
+import com.yibao.music.model.MusicBean;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +25,7 @@ import java.io.IOException;
  */
 
 public class FileUtil {
-
+    private static final String TAG = "====" + FileUtil.class.getSimpleName() + "    ";
 
     public static boolean getFavoriteFile() {
         File file = new File(Constants.FAVORITE_FILE);
@@ -51,6 +55,29 @@ public class FileUtil {
         //        String str="2017-06-12T10:22:59.890Z";
         return Long.parseLong(str.substring(11, 19)
                 .replaceAll(":", ""));
+    }
+
+    /**
+     * 歌曲是否从qq音乐下载过专辑图片
+     *
+     * @param songName s
+     * @param artist   a
+     * @return b
+     */
+    public static boolean albumFileExists(String songName, String artist) {
+        String albumPath = StringUtil.getDownAlbum(songName, artist);
+        File file = new File(albumPath);
+        return file.exists();
+    }
+
+    public static String getAlbumUrl(MusicBean bean) {
+        boolean b = FileUtil.albumFileExists(bean.getTitle(), bean.getArtist());
+        return b ? StringUtil.getDownAlbum(bean.getTitle(), bean.getArtist()) : StringUtil.getAlbulm(bean.getAlbumId());
+    }
+
+    public static String getNotifyAlbumUrl(Context context, MusicBean bean) {
+        boolean b = FileUtil.albumFileExists(bean.getTitle(), bean.getArtist());
+        return b ? StringUtil.getDownAlbum(bean.getTitle(), bean.getArtist()) : StringUtil.getAlbumArtPath(context, String.valueOf(bean.getAlbumId()));
     }
 
     public static Uri getImageContentUri(Context context, File imageFile) {

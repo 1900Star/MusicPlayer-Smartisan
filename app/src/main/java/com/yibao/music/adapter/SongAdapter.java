@@ -21,6 +21,7 @@ import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
@@ -80,7 +81,7 @@ public class SongAdapter
                 songListViewHolder.mTvFrequency.setText(String.valueOf(musicBean.getPlayFrequency()));
             }
             songListViewHolder.mItemSelect.setVisibility(isSelectStatus ? View.VISIBLE : View.GONE);
-            ImageUitl.customLoadPic(mContext, StringUtil.getAlbulm(musicBean.getAlbumId()), R.drawable.noalbumcover_120, songListViewHolder.mSongAlbum);
+            ImageUitl.customLoadPic(mContext, FileUtil.getAlbumUrl(musicBean), R.drawable.noalbumcover_120, songListViewHolder.mSongAlbum);
             songListViewHolder.mSongArtistName.setText(StringUtil.getArtist(musicBean));
             songListViewHolder.mSongName.setText(StringUtil.getTitle(musicBean));
             if (mIsShowStickyView == Constants.NUMBER_ZERO) {

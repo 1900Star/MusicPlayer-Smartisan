@@ -9,9 +9,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+
 import android.widget.RemoteViews;
 
 import com.yibao.music.R;
@@ -20,6 +22,7 @@ import com.yibao.music.base.listener.NotifycationChangeListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.TitleAndArtistBean;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.TitleArtistUtil;
 
@@ -98,7 +101,8 @@ public class MusicNotifyManager implements
     }
 
     /**
-     *  图片，歌名，艺术家，播放按钮
+     * 图片，歌名，艺术家，播放按钮
+     *
      * @param view v
      */
     private void setCommonView(RemoteViews view) {
@@ -115,8 +119,8 @@ public class MusicNotifyManager implements
             String artist = mMusicBean.getArtist();
             musicArtist = "<unknown>".equals(artist) ? "Smartisan" : artist;
         }
-        String albumArtPath = StringUtil.getAlbumArtPath(activity, String.valueOf(mMusicBean.getAlbumId()));
-        final Bitmap cover = createCover(albumArtPath);
+        String notifyAlbumUrl = FileUtil.getNotifyAlbumUrl(activity, mMusicBean);
+        final Bitmap cover = createCover(notifyAlbumUrl);
         isFavorite = mMusicBean.getIsFavorite();
         view.setImageViewBitmap(R.id.play_notify_cover, cover);
         view.setTextViewText(R.id.play_notify_name, musicName);
@@ -129,6 +133,7 @@ public class MusicNotifyManager implements
 
     /**
      * 播放或暂停，下一曲，关闭
+     *
      * @param view v
      */
     private void setCommonClickPending(RemoteViews view) {

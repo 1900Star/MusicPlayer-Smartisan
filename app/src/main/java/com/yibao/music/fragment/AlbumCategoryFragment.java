@@ -102,7 +102,7 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
 
     }
 
-    protected void changeEditStatus(int currentIndex) {
+    private void changeEditStatus(int currentIndex) {
         if (currentIndex == Constants.NUMBER_THRRE) {
             closeEditStatus();
         } else if (currentIndex == Constants.NUMBER_FOUR) {

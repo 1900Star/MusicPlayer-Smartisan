@@ -11,13 +11,13 @@ import com.yibao.music.MusicApplication;
  * Des：${TODO}
  * Time:2017/4/7 15:52
  */
-class NetworkUtil {
+public class NetworkUtil {
     /**
      * 判断是否有网络连接
      *
      * @return 网络状态
      */
-    static boolean isNetworkConnected() {
+   public static boolean isNetworkConnected() {
 
         ConnectivityManager manager = (ConnectivityManager) MusicApplication.getIntstance().getSystemService(
                 Context.CONNECTIVITY_SERVICE);

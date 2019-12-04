@@ -12,8 +12,12 @@ import android.provider.MediaStore;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -21,6 +25,7 @@ import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.target.ViewTarget;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
+import com.yibao.music.base.listener.OnLoadImageListener;
 import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.view.ZoomImageView;
 
@@ -57,28 +62,35 @@ public class ImageUitl {
     }
 
 
-    // 加载图片
-    public static void loadPic(Activity activity, String url, ImageView view, RequestListener listener) {
+    /**
+     * 播放界面设置歌曲专辑图片
+     *
+     * @param activity a
+     * @param url      url
+     * @param view     v
+     * @param listener l
+     */
+    public static void loadPic(Activity activity, String url, ImageView view, OnLoadImageListener listener) {
         if (!activity.isDestroyed()) {
             RequestOptions options = new RequestOptions();
             options.diskCacheStrategy(DiskCacheStrategy.NONE);
-            Glide.with(activity).load(url).listener(listener).apply(options).into(view);
+            Glide.with(activity).load(url).listener(new RequestListener<Drawable>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                    listener.loadResult(false);
+                    return false;
+                }
+
+                @Override
+                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    listener.loadResult(true);
+                    return false;
+                }
+            }).placeholder(R.drawable.playing_cover_lp).error(R.drawable.playing_cover_lp).apply(options).into(view);
         } else {
             LogUtil.d("Picture loading failed,context is null");
         }
 
-    }
-
-    public static void loadPlaceholder(Activity activity, String url, ImageView view) {
-        if (!activity.isDestroyed()) {
-            RequestOptions options = new RequestOptions();
-            options.placeholder(R.drawable.nina);
-            options.error(R.drawable.nina);
-            options.diskCacheStrategy(DiskCacheStrategy.ALL);
-            Glide.with(activity).load(url).apply(options).into(view);
-        } else {
-            LogUtil.d("Picture loading failed,context is null");
-        }
     }
 
     public static void loadPlaceholder(Context context, String url, ImageView view) {
@@ -164,7 +176,6 @@ public class ImageUitl {
             while (fileInputStream.read(buffer) > 0) {
                 fileOutputStream.write(buffer);
             }
-            LogUtil.d(TAG, "歌曲图片保存完成");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

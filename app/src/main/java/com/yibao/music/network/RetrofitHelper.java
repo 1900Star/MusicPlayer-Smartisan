@@ -17,6 +17,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
@@ -89,14 +90,12 @@ public class RetrofitHelper {
                     public void onNext(OnlineSongLrc onlineSongLrc) {
                         String lyric = onlineSongLrc.getLyric();
                         if (lyric != null) {
-//                            LogUtil.d(TAG, "歌词   " + onlineSongLrc.getLyric());
                             if (lyric.contains(Constants.PURE_MUSIC)) {
                                 boolean b = DownloadLyricsUtil.writeTxtToFile(lyric, songName, artist);
                                 LyricDownBean lyricDownBean = new LyricDownBean(true, b ? Constants.PURE_MUSIC : Constants.NO_LYRICS);
                                 RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);
                             } else {
                                 boolean b = DownloadLyricsUtil.writeTxtToFile(lyric, songName, artist);
-                                LogUtil.d(TAG, "写入结果  " + b);
                                 LyricDownBean lyricDownBean = new LyricDownBean(b, b ? Constants.MUSIC_LYRIC_OK : Constants.MUSIC_LYRIC_FAIL);
                                 RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);
                             }
@@ -110,21 +109,6 @@ public class RetrofitHelper {
                         super.onError(e);
                     }
                 });
-    }
-
-    //匹配歌词
-    private static void matchLrc(List<SearchSong.DataBean.SongBean.ListBean> listBeans, long duration) {
-        boolean isFind = false;
-        for (SearchSong.DataBean.SongBean.ListBean listBean : listBeans) {
-            if (duration == listBean.getInterval()) {
-                isFind = true;
-//                mView.setLocalSongId(listBean.getSongmid());
-            }
-        }
-        //如果找不到歌曲id就传输找不到歌曲的消息
-        if (!isFind) {
-//            mView.getLrcError(Constant.SONG_ID_UNFIND);
-        }
     }
 
 

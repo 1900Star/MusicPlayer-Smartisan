@@ -28,6 +28,7 @@ import com.yibao.music.model.SearchCategoryBean;
 import com.yibao.music.service.MusicPlayService;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SoftKeybordUtil;
@@ -213,7 +214,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             musicItem = TitleArtistUtil.getMusicBean(musicItem);
             mSmartisanControlBar.setSongName(musicItem.getTitle());
             mSmartisanControlBar.setSingerName(musicItem.getArtist());
-            mSmartisanControlBar.setAlbulmUrl(StringUtil.getAlbulm(musicItem.getAlbumId()));
+            mSmartisanControlBar.setAlbulmUrl(FileUtil.getAlbumUrl(musicItem));
         }
         if (audioBinder != null) {
             mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());

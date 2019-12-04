@@ -463,8 +463,7 @@ public class MusicActivity
         // 更新歌手名称
         mSmartisanControlBar.setSingerName(mCurrentMusicBean.getArtist());
         // 设置专辑
-        String albumUri = StringUtil.getAlbulm(mCurrentMusicBean.getAlbumId());
-        mSmartisanControlBar.setAlbulmUrl(albumUri);
+        mSmartisanControlBar.setAlbulmUrl(FileUtil.getAlbumUrl(mCurrentMusicBean));
     }
 
     private void updataQqBar() {
