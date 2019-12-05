@@ -290,7 +290,7 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     private void setAlbulm(String url) {
-        ImageUitl.loadPic(this, url, mPlayingSongAlbum, new OnLoadImageListener() {
+        ImageUitl.loadPic(this, url, mPlayingSongAlbum, R.drawable.playing_cover_lp, new OnLoadImageListener() {
             @Override
             public void loadResult(boolean isSuccess) {
                 if (isSuccess) {

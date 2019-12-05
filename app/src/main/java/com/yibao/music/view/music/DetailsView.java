@@ -1,5 +1,6 @@
 package com.yibao.music.view.music;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
+import com.yibao.music.base.listener.OnLoadImageListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
@@ -183,7 +185,12 @@ public class DetailsView
     private void setMusicInfo(String albumName, String artist, long albumId, int issueYear) {
         mTvArtistAlbummDetailsTitle.setText(albumName);
         mTvArtistAlbummDetailsArtist.setText(artist);
-        ImageUitl.customLoadPic(getContext(), StringUtil.getAlbulm((albumId)), R.drawable.noalbumcover_220, mIvArtistAlbummDetails);
+        ImageUitl.loadPic((Activity) getContext(), StringUtil.getAlbulm((albumId)), mIvArtistAlbummDetails,R.drawable.noalbumcover_220,  new OnLoadImageListener() {
+            @Override
+            public void loadResult(boolean isSuccess) {
+
+            }
+        });
         if (issueYear != Constants.NUMBER_ZERO) {
             String year = String.valueOf(issueYear);
             mTvArtistAlbummDetailsDate.setText(year);

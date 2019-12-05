@@ -46,7 +46,7 @@ public class ArtistFragment extends BaseMusicFragment {
     @BindView(R.id.details_view)
     DetailsView mDetailsView;
     private ArtistAdapter mAdapter;
-    public boolean isShowDetailsView = false;
+    private boolean isShowDetailsView = false;
     private DetailsViewAdapter mDetailsAdapter;
     private List<MusicBean> mDetailList;
     private String mTempTitle;

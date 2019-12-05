@@ -70,7 +70,7 @@ public class ImageUitl {
      * @param view     v
      * @param listener l
      */
-    public static void loadPic(Activity activity, String url, ImageView view, OnLoadImageListener listener) {
+    public static void loadPic(Activity activity, String url, ImageView view,int placeId, OnLoadImageListener listener) {
         if (!activity.isDestroyed()) {
             RequestOptions options = new RequestOptions();
             options.diskCacheStrategy(DiskCacheStrategy.NONE);
@@ -86,7 +86,7 @@ public class ImageUitl {
                     listener.loadResult(true);
                     return false;
                 }
-            }).placeholder(R.drawable.playing_cover_lp).error(R.drawable.playing_cover_lp).apply(options).into(view);
+            }).placeholder(placeId).error(placeId).apply(options).into(view);
         } else {
             LogUtil.d("Picture loading failed,context is null");
         }
