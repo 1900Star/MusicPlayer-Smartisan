@@ -194,7 +194,6 @@ public class DetailsView
 
 
     private void setMusicInfo(int dataType, String albumName, String artist, long albumId, int issueYear) {
-        LogUtil.d(TAG,"dataType     "+dataType);
         mTvArtistAlbummDetailsTitle.setText(albumName);
         mTvArtistAlbummDetailsArtist.setText(artist);
         ImageUitl.loadPic((Activity) getContext(), StringUtil.getAlbulm(dataType, (albumId), artist), mIvArtistAlbummDetails, R.drawable.noalbumcover_220, isSuccess -> {
