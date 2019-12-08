@@ -142,7 +142,7 @@ public class PlayActivity extends BasePlayActivity {
         mSbProgress.setOnSeekBarChangeListener(new SeekBarListener());
         mSbVolume.setOnSeekBarChangeListener(new SeekBarListener());
         mPlayingSongAlbum.setOnLongClickListener(view -> {
-            PreviewBigPicDialogFragment.newInstance(FileUtil.getAlbumUrl(mCurrenMusicInfo))
+            PreviewBigPicDialogFragment.newInstance(FileUtil.getAlbumUrl(mCurrenMusicInfo,1))
                     .show(getSupportFragmentManager(), "album");
             return true;
         });
@@ -153,7 +153,7 @@ public class PlayActivity extends BasePlayActivity {
         mCurrenMusicInfo = audioBinder != null ? audioBinder.getMusicBean() : getIntent().getParcelableExtra("currentBean");
         if (mCurrenMusicInfo != null) {
             setTitleAndArtist(mCurrenMusicInfo);
-            setAlbulm(FileUtil.getAlbumUrl(mCurrenMusicInfo));
+            setAlbulm(FileUtil.getAlbumUrl(mCurrenMusicInfo,1));
         }
     }
 
@@ -225,7 +225,7 @@ public class PlayActivity extends BasePlayActivity {
         checkCurrentIsFavorite(mCurrenMusicInfo.isFavorite());
         initAnimation();
         setTitleAndArtist(musicBean);
-        setAlbulm(FileUtil.getAlbumUrl(musicBean));
+        setAlbulm(FileUtil.getAlbumUrl(musicBean,1));
         setSongDuration();
         updatePlayBtnStatus();
         // 设置当前歌词
@@ -297,7 +297,7 @@ public class PlayActivity extends BasePlayActivity {
                     showAlbum(true);
                 } else {
                     String albumUrlHead = "http://y.gtimg.cn/music/photo_new/T002R500x500M000";
-                    RetrofitHelper.getMusicService().search(mCurrenMusicInfo.getTitle(), 1)
+                    RetrofitHelper.getMusicService(true).search(mCurrenMusicInfo.getTitle(), 1)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new BaseObserver<SearchSong>() {
@@ -306,7 +306,7 @@ public class PlayActivity extends BasePlayActivity {
                                     String albummid = searchSong.getData().getSong().getList().get(0).getAlbummid();
                                     String imgUrl = albumUrlHead + albummid + ".jpg";
                                     // 将专辑图片保存到本地
-                                    ImageUitl.glideSaveImg(PlayActivity.this, imgUrl, mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
+                                    ImageUitl.glideSaveImg(PlayActivity.this, imgUrl, 1, mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
                                     LogUtil.d(TAG, "图片地址 " + imgUrl);
                                     Glide.with(PlayActivity.this).load(imgUrl).placeholder(R.drawable.playing_cover_lp).error(R.drawable.playing_cover_lp).into(mPlayingSongAlbum);
                                     showAlbum(true);

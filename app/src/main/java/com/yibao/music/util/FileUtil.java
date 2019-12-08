@@ -60,23 +60,27 @@ public class FileUtil {
     /**
      * 歌曲是否从qq音乐下载过专辑图片
      *
-     * @param songName s
-     * @param artist   a
+     * @param imageType 1 歌曲图片 、2 歌手图片 、3 专辑图片
+     * @param songName  s
+     * @param artist    a
      * @return b
      */
-    public static boolean albumFileExists(String songName, String artist) {
-        String albumPath = StringUtil.getDownAlbum(songName, artist);
+    public static boolean albumFileExists(int imageType, String songName, String artist) {
+
+        String albumPath = imageType == 1
+                ? Constants.MUSIC_SONG_ALBUM_ROOT + songName + ".jpg" : imageType == 2
+                ? Constants.MUSIC_ARITIST_IMG_ROOT + artist + ".jpg" : Constants.MUSIC_ALBUM_ROOT + artist + ".jpg";
         File file = new File(albumPath);
         return file.exists();
     }
 
-    public static String getAlbumUrl(MusicBean bean) {
-        boolean b = FileUtil.albumFileExists(bean.getTitle(), bean.getArtist());
-        return b ? StringUtil.getDownAlbum(bean.getTitle(), bean.getArtist()) : StringUtil.getAlbulm(bean.getAlbumId());
+    public static String getAlbumUrl(MusicBean bean, int imageType) {
+        boolean b = FileUtil.albumFileExists(imageType, bean.getTitle(), bean.getArtist());
+        return b ? StringUtil.getDownAlbum(bean.getTitle(), bean.getArtist()) : StringUtil.getAlbulm(2, bean.getAlbumId(), bean.getArtist());
     }
 
     public static String getNotifyAlbumUrl(Context context, MusicBean bean) {
-        boolean b = FileUtil.albumFileExists(bean.getTitle(), bean.getArtist());
+        boolean b = FileUtil.albumFileExists(4, bean.getTitle(), bean.getArtist());
         return b ? StringUtil.getDownAlbum(bean.getTitle(), bean.getArtist()) : StringUtil.getAlbumArtPath(context, String.valueOf(bean.getAlbumId()));
     }
 

@@ -10,7 +10,9 @@
     <com.yibao.music.view.ZoomImageView
         android:id="@+id/zoom_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:minWidth="1080dp"
+        android:minHeight="1080dp" />
 
 
 </FrameLayout>

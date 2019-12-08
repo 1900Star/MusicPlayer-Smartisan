@@ -116,7 +116,7 @@ public class LyricsUtil {
         List<MusicLyricBean> lrcList = new ArrayList<>();
         boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(musicBean.getTitle()), StringUtil.getArtist(musicBean.getArtist()));
         if (lyricIsExists) {
-            String path = Constants.MUSIC_LYRICS_ROOT + musicBean.getTitle() + "$$" + musicBean.getArtist() + ".lrc";
+            String path = Constants.MUSIC_LYRICS_ROOT + StringUtil.getSongName(musicBean.getTitle()) + "$$" + StringUtil.getSongName(musicBean.getArtist()) + ".lrc";
             File file = new File(path);
             try {
                 String charsetName = "utf-8";

@@ -3,12 +3,14 @@ package com.yibao.music.view.music;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,16 +20,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
-import com.yibao.music.base.listener.OnLoadImageListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
@@ -68,6 +71,8 @@ public class DetailsView
     private List<MusicBean> mMusicList;
     private MusicScrollView mMusicScrollView;
     private LinearLayout mSuspensionLl;
+    private String mArtist;
+    private int mPicType;
 
     public void setDataFlag(FragmentManager fragmentManager, int listSize, String queryFlag, int dataFlag) {
         this.mFragmentManager = fragmentManager;
@@ -120,7 +125,7 @@ public class DetailsView
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_artist_albumm_details:
-                String albumUrl = StringUtil.getAlbulm(mAlbumId);
+                String albumUrl = StringUtil.getAlbulm(mPicType, mAlbumId, mArtist);
                 PreviewBigPicDialogFragment.newInstance(albumUrl)
                         .show(mFragmentManager, "album");
                 break;
@@ -167,30 +172,49 @@ public class DetailsView
      * @param bean     b
      */
     private void initData(int dataType, Object bean) {
+        mPicType = dataType;
         if (dataType == Constants.NUMBER_ONE) {
             ArtistInfo info = (ArtistInfo) bean;
+            mArtist = info.getArtist();
             mAlbumId = info.getAlbumId();
-            setMusicInfo(info.getAlbumName(), info.getArtist(), mAlbumId, info.getYear());
+            setMusicInfo(dataType, info.getAlbumName(), info.getArtist(), mAlbumId, info.getYear());
 
         } else if (dataType == Constants.NUMBER_TWO) {
             AlbumInfo info = (AlbumInfo) bean;
             mAlbumId = info.getAlbumId();
-            setMusicInfo(info.getAlbumName(), info.getArtist(), mAlbumId, info.getYear());
+            mArtist = info.getArtist();
+            setMusicInfo(dataType, info.getAlbumName(), info.getArtist(), mAlbumId, info.getYear());
 
         }
 
     }
 
 
-    private void setMusicInfo(String albumName, String artist, long albumId, int issueYear) {
+    private void setMusicInfo(int dataType, String albumName, String artist, long albumId, int issueYear) {
         mTvArtistAlbummDetailsTitle.setText(albumName);
         mTvArtistAlbummDetailsArtist.setText(artist);
-        ImageUitl.loadPic((Activity) getContext(), StringUtil.getAlbulm((albumId)), mIvArtistAlbummDetails,R.drawable.noalbumcover_220,  new OnLoadImageListener() {
-            @Override
-            public void loadResult(boolean isSuccess) {
+        ImageUitl.loadPic((Activity) getContext(), StringUtil.getAlbulm(dataType, (albumId), artist), mIvArtistAlbummDetails, R.drawable.noalbumcover_220, isSuccess -> {
+            if (!isSuccess) {
+                if (dataType == 1) {
+                    RetrofitHelper.getArtistImg(getContext(), artist, url -> {
+                        if (!url.isEmpty()) {
+                            Glide.with(getContext()).load(url).placeholder(R.drawable.noalbumcover_220).error(R.drawable.noalbumcover_220).into(mIvArtistAlbummDetails);
+                        }
+                    });
 
+                } else {
+                    RetrofitHelper.getAlbumImg(getContext(), artist, url -> {
+                        if (!url.isEmpty()) {
+                            Glide.with(getContext()).load(url).placeholder(R.drawable.noalbumcover_220).error(R.drawable.noalbumcover_220).into(mIvArtistAlbummDetails);
+                        }
+                    });
+
+                }
             }
+
         });
+
+
         if (issueYear != Constants.NUMBER_ZERO) {
             String year = String.valueOf(issueYear);
             mTvArtistAlbummDetailsDate.setText(year);

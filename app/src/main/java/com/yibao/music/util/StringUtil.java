@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 
 import com.yibao.music.model.MusicBean;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,13 +61,16 @@ public class StringUtil {
     /**
      * 返回专辑图片地址
      *
-     * @param albulmId a
+     * @param picType 1 歌手图片 、 2 专辑图片
+     * @param albumId a
      * @return f
      */
-    public static String getAlbulm(Long albulmId) {
+    public static String getAlbulm(int picType, Long albumId, String artist) {
+        String path = picType == 1 ? Constants.MUSIC_ARITIST_IMG_ROOT + artist + ".jpg" : Constants.MUSIC_ALBUM_ROOT + artist + ".jpg";
+        File file = new File(path);
 
-        return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"),
-                albulmId).toString();
+        return file.exists() ? path : ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"),
+                albumId).toString();
 
     }
 
@@ -78,7 +82,7 @@ public class StringUtil {
      */
     public static String getDownAlbum(String songName, String artist) {
 
-        return Constants.MUSIC_SONG_ALBUM_ROOT + songName + "-" + artist + ".jpg";
+        return Constants.MUSIC_SONG_ALBUM_ROOT + songName + ".jpg";
 
     }
 

@@ -2,7 +2,9 @@ package com.yibao.music.adapter;
 
 
 import android.app.Activity;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -78,7 +80,7 @@ public class AlbumAdapter
         int position = albumlistHolder.getAdapterPosition();
 
         albumlistHolder.mTvAlbumListSongArtist.setText(info.getArtist());
-        ImageUitl.customLoadPic(mContext, StringUtil.getAlbulm(info.getAlbumId()), R.drawable.noalbumcover_220, albumlistHolder.mIvItemAlbumList);
+        ImageUitl.customLoadPic(mContext, StringUtil.getAlbulm(2,info.getAlbumId(), info.getArtist()), R.drawable.noalbumcover_220, albumlistHolder.mIvItemAlbumList);
         albumlistHolder.mTvAlbumListSongName.setText(info.getAlbumName());
         String songCount = info.getSongCount() + "首";
         albumlistHolder.mTvAlbumListSongCount.setText(songCount);
@@ -111,7 +113,7 @@ public class AlbumAdapter
     private void setDataAlbumTile(AlbumTileHolder holder, AlbumInfo albumInfo) {
 
 
-        ImageUitl.customLoadPic(mContext, StringUtil.getAlbulm(albumInfo.getAlbumId()), R.drawable.noalbumcover_120, holder.mIvAlbumTileAlbum);
+        ImageUitl.customLoadPic(mContext, StringUtil.getAlbulm(2,albumInfo.getAlbumId(), albumInfo.getArtist()), R.drawable.noalbumcover_120, holder.mIvAlbumTileAlbum);
         holder.mTvAlbumTileName.setText(albumInfo.getAlbumName());
 
         holder.mIvAlbumTileAlbum.setOnClickListener(view1 -> AlbumAdapter.this.openDetails(albumInfo, holder.getAdapterPosition(), false));

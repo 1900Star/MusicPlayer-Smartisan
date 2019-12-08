@@ -39,14 +39,6 @@ public class OkHttpUtil {
 
     }
 
-    static void downFile(String url, Callback callback) {
-        Request request = new Request.Builder().url(url).addHeader("Accept-Encoding", "identity")
-                .build();
-        OkHttpUtil.getClient()
-                .newCall(request).enqueue(callback);
-
-    }
-
     static class LoggingInterceptor implements Interceptor {
         @Override
         public Response intercept(Interceptor.Chain chain) throws IOException {

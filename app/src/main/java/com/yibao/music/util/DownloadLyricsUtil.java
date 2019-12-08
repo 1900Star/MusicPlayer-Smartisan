@@ -4,19 +4,12 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.yibao.music.base.listener.LyricsCallBack;
 import com.yibao.music.model.LyricDownBean;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -44,7 +37,7 @@ public class DownloadLyricsUtil {
      * @param artist     文件名
      * @return 写入结果
      */
-    public static boolean writeTxtToFile(String strcontent, String songName, String artist) {
+    public static boolean saveLyrics(String strcontent, String songName, String artist) {
         boolean isSavaFile;
         File lyricsFile = new File(Constants.MUSIC_LYRICS_ROOT);
         if (!lyricsFile.exists()) {
@@ -68,82 +61,6 @@ public class DownloadLyricsUtil {
             Log.e("TestFile", "Error on write File:" + e);
         }
         return isSavaFile;
-    }
-
-    /**
-     * 将网络歌词文件本地
-     *
-     * @param url 歌词缓冲地址
-     */
-    public static void downloadlyricsfile(String url, String songName, String artist) {
-
-        String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + artist + ".lrc";
-        OkHttpUtil.downFile(url, new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                e.printStackTrace();
-                sentResult(false, path, e.getMessage());
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) {
-                byte[] buf = new byte[1024 * 2];
-                int len;
-                int off = 0;
-                FileOutputStream fos;
-                InputStream inputStream = getInputStream(response);
-                if (inputStream != null) {
-                    try {
-                        fos = new FileOutputStream(FileUtil.getLyricsFile(songName, artist));
-                        while ((len = inputStream.read(buf)) != -1) {
-                            fos.write(buf, off, len);
-                        }
-                        fos.flush();
-                        fos.close();
-                        inputStream.close();
-                        sentResult(true, null, "OK");
-                        LogUtil.d("========= 歌词下载完成 ======final =====   ");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        sentResult(false, path, e.getMessage());
-                        LogUtil.d("========= 歌词下载失败 ======final =====   ");
-                    }
-                }
-            }
-        });
-    }
-
-
-    /**
-     * @param b   歌词是否下载成功
-     * @param msg 下载的信息，下载成功为 “OK”，下载失败或者下载异常为 Exception.getMessage()
-     */
-    private static void sentResult(boolean b, String path, String msg) {
-        LyricDownBean lyricDownBean = new LyricDownBean(b, msg);
-        RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);
-        if (!b) {
-            // 下载失败或者下载异常，将已经创建的歌词文件删除，以便重新下载完整的歌词。
-            FileUtil.deleteFile(new File(path));
-        }
-    }
-
-    private static InputStream getInputStream(Response response) {
-        ResponseBody body = response.body();
-        if (body != null) {
-            return body.byteStream();
-        }
-        return null;
-    }
-
-    // 对歌名和歌手名中的空格进行转码
-
-    private static String encode(String str) {
-        try {
-            return URLEncoder.encode(str.trim(), "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return str;
     }
 
 }

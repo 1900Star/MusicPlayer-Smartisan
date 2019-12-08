@@ -96,7 +96,7 @@ public class QqBarPagerAdapter
         ImageView mAlbulm = view.findViewById(R.id.iv_pager_albulm);
         TextView tvSongName = view.findViewById(R.id.tv_pager_song_name);
         TextView tvArtist = view.findViewById(R.id.tv_pager_art_name);
-        String albumUri = FileUtil.getAlbumUrl(musicInfo);
+        String albumUri = FileUtil.getAlbumUrl(musicInfo,1);
         ImageUitl.loadPlaceholder(mContext, albumUri, mAlbulm);
         String currentLyrics = musicInfo.getCurrentLyrics();
         tvSongName.setText(StringUtil.getTitle(musicInfo));

@@ -38,6 +38,7 @@ import java.net.URL;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -70,7 +71,7 @@ public class ImageUitl {
      * @param view     v
      * @param listener l
      */
-    public static void loadPic(Activity activity, String url, ImageView view,int placeId, OnLoadImageListener listener) {
+    public static void loadPic(Activity activity, String url, ImageView view, int placeId, OnLoadImageListener listener) {
         if (!activity.isDestroyed()) {
             RequestOptions options = new RequestOptions();
             options.diskCacheStrategy(DiskCacheStrategy.NONE);
@@ -120,25 +121,16 @@ public class ImageUitl {
 
     }
 
-    public static void customLoadPic(Context context, String url, int placeId, ImageView view) {
-        if (context != null) {
-            RequestOptions options = new RequestOptions();
-            options.placeholder(placeId);
-            options.error(placeId);
-            options.diskCacheStrategy(DiskCacheStrategy.NONE);
-            Glide.with(context).load(url)
-                    .apply(options)
-                    .into(view);
-        } else {
-            LogUtil.d("Picture loading failed,context is null");
-        }
 
-
-    }
-
-    public static void glideSaveImg(Context context, String url, String songName, String artist) {
+    /**
+     * @param context   c
+     * @param url       url
+     * @param imageType 1 歌曲图片 、 2 歌手图片 、3 专辑图片
+     * @param songName  歌曲名
+     * @param artist    歌手名
+     */
+    public static void glideSaveImg(Context context, String url, int imageType, String songName, String artist) {
         Observable.create((ObservableOnSubscribe<File>) e -> {
-            //通过gilde下载得到file文件,这里需要注意android.permission.INTERNET权限
             e.onNext(Glide.with(context)
                     .load(url)
                     .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
@@ -148,11 +140,16 @@ public class ImageUitl {
                 .observeOn(Schedulers.newThread())
                 .subscribe(file -> {
                     //获取到下载得到的图片，进行本地保存
-                    File songAlbumFile = new File(Constants.MUSIC_SONG_ALBUM_ROOT);
+                    String path = imageType == 1
+                            ? Constants.MUSIC_SONG_ALBUM_ROOT : imageType == 2
+                            ? Constants.MUSIC_ARITIST_IMG_ROOT : Constants.MUSIC_ALBUM_ROOT;
+                    File songAlbumFile = new File(path);
                     if (!songAlbumFile.exists()) {
                         songAlbumFile.mkdirs();
                     }
-                    String fileName = songName + "-" + artist + ".jpg";
+                    String fileName = imageType == 1
+                            ? songName + ".jpg" : imageType == 2
+                            ? artist + ".jpg" : artist + ".jpg";
                     File destFile = new File(songAlbumFile, fileName);
                     //把gilde下载得到图片复制到定义好的目录中去
                     copy(file, destFile);
@@ -167,7 +164,7 @@ public class ImageUitl {
      * @param target 输出文件
      */
     private static void copy(File source, File target) {
-        FileInputStream fileInputStream = null;
+        FileInputStream fileInputStream;
         FileOutputStream fileOutputStream = null;
         try {
             fileInputStream = new FileInputStream(source);
@@ -180,8 +177,9 @@ public class ImageUitl {
             e.printStackTrace();
         } finally {
             try {
-                fileInputStream.close();
-                fileOutputStream.close();
+                if (fileOutputStream != null) {
+                    fileOutputStream.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -214,7 +214,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             musicItem = TitleArtistUtil.getMusicBean(musicItem);
             mSmartisanControlBar.setSongName(musicItem.getTitle());
             mSmartisanControlBar.setSingerName(musicItem.getArtist());
-            mSmartisanControlBar.setAlbulmUrl(FileUtil.getAlbumUrl(musicItem));
+            mSmartisanControlBar.setAlbulmUrl(FileUtil.getAlbumUrl(musicItem,1));
         }
         if (audioBinder != null) {
             mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());

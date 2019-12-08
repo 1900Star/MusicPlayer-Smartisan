@@ -81,7 +81,7 @@ public class SongAdapter
                 songListViewHolder.mTvFrequency.setText(String.valueOf(musicBean.getPlayFrequency()));
             }
             songListViewHolder.mItemSelect.setVisibility(isSelectStatus ? View.VISIBLE : View.GONE);
-            ImageUitl.customLoadPic(mContext, FileUtil.getAlbumUrl(musicBean), R.drawable.noalbumcover_120, songListViewHolder.mSongAlbum);
+            ImageUitl.customLoadPic(mContext, FileUtil.getAlbumUrl(musicBean, 1), R.drawable.noalbumcover_120, songListViewHolder.mSongAlbum);
             songListViewHolder.mSongArtistName.setText(StringUtil.getArtist(musicBean));
             songListViewHolder.mSongName.setText(StringUtil.getTitle(musicBean));
             if (mIsShowStickyView == Constants.NUMBER_ZERO) {
