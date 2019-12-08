@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,6 +33,7 @@ import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
@@ -53,7 +55,7 @@ import java.util.Objects;
 
 public class DetailsView
         extends RelativeLayout implements View.OnClickListener {
-
+    private static final String TAG = "====" + DetailsView.class.getSimpleName() + "    ";
     private RecyclerView mRecyclerView;
     private ImageView mIvArtistAlbummDetails;
     private TextView mTvArtistAlbummDetailsTitle;
@@ -125,6 +127,7 @@ public class DetailsView
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_artist_albumm_details:
+                LogUtil.d(TAG, " pictype " + mPicType);
                 String albumUrl = StringUtil.getAlbulm(mPicType, mAlbumId, mArtist);
                 PreviewBigPicDialogFragment.newInstance(albumUrl)
                         .show(mFragmentManager, "album");
@@ -191,6 +194,7 @@ public class DetailsView
 
 
     private void setMusicInfo(int dataType, String albumName, String artist, long albumId, int issueYear) {
+        LogUtil.d(TAG,"dataType     "+dataType);
         mTvArtistAlbummDetailsTitle.setText(albumName);
         mTvArtistAlbummDetailsArtist.setText(artist);
         ImageUitl.loadPic((Activity) getContext(), StringUtil.getAlbulm(dataType, (albumId), artist), mIvArtistAlbummDetails, R.drawable.noalbumcover_220, isSuccess -> {

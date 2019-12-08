@@ -39,11 +39,28 @@ public class RetrofitHelper {
     private static final String TAG = "====" + RetrofitHelper.class.getSimpleName() + "    ";
     private static Retrofit retrofit;
 
-    public static MusicService getMusicService(boolean b) {
+    public static MusicService getMusicService() {
         if (retrofit == null) {
             synchronized (RetrofitHelper.class) {
                 if (retrofit == null) {
-                    retrofit = new Retrofit.Builder().baseUrl(b ? Api.FIDDLER_BASE_QQ_URL : Api.SINGER_PIC_BASE_URL)
+                    retrofit = new Retrofit.Builder().baseUrl(Api.FIDDLER_BASE_QQ_URL)
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                            .client(OkHttpUtil.getClient())
+                            .build();
+                }
+
+            }
+
+        }
+        return retrofit.create(MusicService.class);
+    }
+
+    public static MusicService getSingerMusicService() {
+        if (retrofit == null) {
+            synchronized (RetrofitHelper.class) {
+                if (retrofit == null) {
+                    retrofit = new Retrofit.Builder().baseUrl(Api.SINGER_PIC_BASE_URL)
                             .addConverterFactory(GsonConverterFactory.create())
                             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                             .client(OkHttpUtil.getClient())
@@ -58,7 +75,7 @@ public class RetrofitHelper {
 
     public static void getArtistImg(Context context, String artist, OnImagePathListener listener) {
         String albumUrlHead = "http://y.gtimg.cn/music/photo_new/T002R500x500M000";
-        getMusicService(false).getSingerImg(artist)
+        getSingerMusicService().getSingerImg(artist)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseObserver<SingerImg>() {
@@ -81,7 +98,7 @@ public class RetrofitHelper {
 
     public static void getAlbumImg(Context context, String artist, OnImagePathListener listener) {
         String albumUrlHead = "http://y.gtimg.cn/music/photo_new/T002R500x500M000";
-        getMusicService(true).searchAlbum(artist, 1)
+        getMusicService().searchAlbum(artist, 1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseObserver<Album>() {
@@ -103,12 +120,12 @@ public class RetrofitHelper {
     }
 
     public static void getSongLyrics(String songName, String artist) {
-        getMusicService(true).search(songName, 1)
+        getMusicService().search(songName, 1)
                 .subscribeOn(Schedulers.io())
                 .flatMap((Function<SearchSong, Observable<OnlineSongLrc>>) searchSong -> {
                     List<SearchSong.DataBean.SongBean.ListBean> list = searchSong.getData().getSong().getList();
                     SearchSong.DataBean.SongBean.ListBean listBean = list.get(0);
-                    return getMusicService(true).getOnlineSongLrc(listBean.getSongmid());
+                    return getMusicService().getOnlineSongLrc(listBean.getSongmid());
                 })
 //                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseObserver<OnlineSongLrc>() {

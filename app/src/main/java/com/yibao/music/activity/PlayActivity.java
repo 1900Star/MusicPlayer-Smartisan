@@ -297,7 +297,7 @@ public class PlayActivity extends BasePlayActivity {
                     showAlbum(true);
                 } else {
                     String albumUrlHead = "http://y.gtimg.cn/music/photo_new/T002R500x500M000";
-                    RetrofitHelper.getMusicService(true).search(mCurrenMusicInfo.getTitle(), 1)
+                    RetrofitHelper.getMusicService().search(mCurrenMusicInfo.getTitle(), 1)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new BaseObserver<SearchSong>() {
