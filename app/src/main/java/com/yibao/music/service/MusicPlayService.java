@@ -17,6 +17,7 @@ import com.yibao.music.manager.MediaSessionManager;
 import com.yibao.music.manager.MusicNotifyManager;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
+import com.yibao.music.network.QqMusicRemote;
 import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
@@ -164,7 +165,7 @@ public class MusicPlayService
                 String songName = StringUtil.getSongName(mMusicInfo.getTitle());
                 boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(mMusicInfo.getTitle()), StringUtil.getArtist(mMusicInfo.getArtist()));
                 if (!lyricIsExists && NetworkUtil.isNetworkConnected()) {
-                    RetrofitHelper.getSongLyrics(songName, StringUtil.getArtist(mMusicInfo.getArtist()));
+                    QqMusicRemote.getSongLyrics(songName, StringUtil.getArtist(mMusicInfo.getArtist()));
                 }
                 SpUtil.setMusicPosition(MusicPlayService.this, position);
                 showNotifycation(true);

@@ -25,12 +25,15 @@ import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
+import com.yibao.music.base.listener.OnImagePathListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
+import com.yibao.music.fragment.dialogfrag.AlbumDetailDialogFragment;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.network.QqMusicRemote;
 import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;
@@ -126,6 +129,10 @@ public class DetailsView
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.tv_artist_albumm_details_title:
+                String albulmUrl = StringUtil.getAlbulm(mPicType, mAlbumId, mArtist);
+                openAlbumDetail(albulmUrl, mArtist);
+                break;
             case R.id.iv_artist_albumm_details:
                 LogUtil.d(TAG, " pictype " + mPicType);
                 String albumUrl = StringUtil.getAlbulm(mPicType, mAlbumId, mArtist);
@@ -148,6 +155,11 @@ public class DetailsView
                 break;
 
         }
+    }
+
+    private void openAlbumDetail(String albulmUrl, String albumName) {
+        LogUtil.d(TAG, "显示专辑详情");
+        AlbumDetailDialogFragment.newInstance(albulmUrl, albumName).show(mFragmentManager, "album detail");
     }
 
     protected void startPlayListActivity() {
@@ -185,7 +197,7 @@ public class DetailsView
         } else if (dataType == Constants.NUMBER_TWO) {
             AlbumInfo info = (AlbumInfo) bean;
             mAlbumId = info.getAlbumId();
-            mArtist = info.getArtist();
+            mArtist = info.getAlbumName();
             setMusicInfo(dataType, info.getAlbumName(), info.getArtist(), mAlbumId, info.getYear());
 
         }
@@ -199,16 +211,16 @@ public class DetailsView
         ImageUitl.loadPic((Activity) getContext(), StringUtil.getAlbulm(dataType, (albumId), artist), mIvArtistAlbummDetails, R.drawable.noalbumcover_220, isSuccess -> {
             if (!isSuccess) {
                 if (dataType == 1) {
-                    RetrofitHelper.getArtistImg(getContext(), artist, url -> {
+                    QqMusicRemote.getArtistImg(getContext(), artist, url -> {
                         if (!url.isEmpty()) {
                             Glide.with(getContext()).load(url).placeholder(R.drawable.noalbumcover_220).error(R.drawable.noalbumcover_220).into(mIvArtistAlbummDetails);
                         }
                     });
 
                 } else {
-                    RetrofitHelper.getAlbumImg(getContext(), artist, url -> {
+                    QqMusicRemote.getAlbumImg(getContext(), albumName, url -> {
                         if (!url.isEmpty()) {
-                            Glide.with(getContext()).load(url).placeholder(R.drawable.noalbumcover_220).error(R.drawable.noalbumcover_220).into(mIvArtistAlbummDetails);
+                            Glide.with(DetailsView.this.getContext()).load(url).placeholder(R.drawable.noalbumcover_220).error(R.drawable.noalbumcover_220).into(mIvArtistAlbummDetails);
                         }
                     });
 
@@ -231,6 +243,7 @@ public class DetailsView
         mLlAlbumDetailsPlayall.setOnClickListener(this);
         mLlAlbumDetailsRandomPlay.setOnClickListener(this);
         mIvArtistAlbummDetails.setOnClickListener(this);
+        mTvArtistAlbummDetailsTitle.setOnClickListener(this);
         mIvArtistAlbummDetails.setOnLongClickListener(v -> {
             RelaxDialogFragment.newInstance().show(mFragmentManager, "girlsDialog");
             return true;

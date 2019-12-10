@@ -26,6 +26,7 @@ import com.yibao.music.R;
 import com.yibao.music.base.BaseObserver;
 import com.yibao.music.base.BasePlayActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
+import com.yibao.music.base.listener.OnImagePathListener;
 import com.yibao.music.base.listener.OnLoadImageListener;
 import com.yibao.music.fragment.dialogfrag.CountdownBottomSheetDialog;
 import com.yibao.music.fragment.dialogfrag.FavoriteBottomSheetDialog;
@@ -36,6 +37,7 @@ import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.qq.SearchSong;
+import com.yibao.music.network.QqMusicRemote;
 import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
@@ -142,7 +144,7 @@ public class PlayActivity extends BasePlayActivity {
         mSbProgress.setOnSeekBarChangeListener(new SeekBarListener());
         mSbVolume.setOnSeekBarChangeListener(new SeekBarListener());
         mPlayingSongAlbum.setOnLongClickListener(view -> {
-            PreviewBigPicDialogFragment.newInstance(FileUtil.getAlbumUrl(mCurrenMusicInfo,1))
+            PreviewBigPicDialogFragment.newInstance(FileUtil.getAlbumUrl(mCurrenMusicInfo, 1))
                     .show(getSupportFragmentManager(), "album");
             return true;
         });
@@ -153,7 +155,7 @@ public class PlayActivity extends BasePlayActivity {
         mCurrenMusicInfo = audioBinder != null ? audioBinder.getMusicBean() : getIntent().getParcelableExtra("currentBean");
         if (mCurrenMusicInfo != null) {
             setTitleAndArtist(mCurrenMusicInfo);
-            setAlbulm(FileUtil.getAlbumUrl(mCurrenMusicInfo,1));
+            setAlbulm(FileUtil.getAlbumUrl(mCurrenMusicInfo, 1));
         }
     }
 
@@ -225,7 +227,7 @@ public class PlayActivity extends BasePlayActivity {
         checkCurrentIsFavorite(mCurrenMusicInfo.isFavorite());
         initAnimation();
         setTitleAndArtist(musicBean);
-        setAlbulm(FileUtil.getAlbumUrl(musicBean,1));
+        setAlbulm(FileUtil.getAlbumUrl(musicBean, 1));
         setSongDuration();
         updatePlayBtnStatus();
         // 设置当前歌词
@@ -290,37 +292,20 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     private void setAlbulm(String url) {
-        ImageUitl.loadPic(this, url, mPlayingSongAlbum, R.drawable.playing_cover_lp, new OnLoadImageListener() {
-            @Override
-            public void loadResult(boolean isSuccess) {
-                if (isSuccess) {
-                    showAlbum(true);
-                } else {
-                    String albumUrlHead = "http://y.gtimg.cn/music/photo_new/T002R500x500M000";
-                    RetrofitHelper.getMusicService().search(mCurrenMusicInfo.getTitle(), 1)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new BaseObserver<SearchSong>() {
-                                @Override
-                                public void onNext(SearchSong searchSong) {
-                                    String albummid = searchSong.getData().getSong().getList().get(0).getAlbummid();
-                                    String imgUrl = albumUrlHead + albummid + ".jpg";
-                                    // 将专辑图片保存到本地
-                                    ImageUitl.glideSaveImg(PlayActivity.this, imgUrl, 1, mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
-                                    LogUtil.d(TAG, "图片地址 " + imgUrl);
-                                    Glide.with(PlayActivity.this).load(imgUrl).placeholder(R.drawable.playing_cover_lp).error(R.drawable.playing_cover_lp).into(mPlayingSongAlbum);
-                                    showAlbum(true);
-                                }
+        ImageUitl.loadPic(this, url, mPlayingSongAlbum, R.drawable.playing_cover_lp, isSuccess -> {
+            if (isSuccess) {
+                showAlbum(true);
+            } else {
+                QqMusicRemote.getSongImg(PlayActivity.this, mCurrenMusicInfo.getTitle(), url1 -> {
+                    if (url1 == null) {
+                        showAlbum(false);
+                    } else {
+                        Glide.with(PlayActivity.this).load(url1).placeholder(R.drawable.playing_cover_lp).error(R.drawable.playing_cover_lp).into(mPlayingSongAlbum);
+                        showAlbum(true);
+                    }
+                });
 
-                                @Override
-                                public void onError(Throwable e) {
-                                    super.onError(e);
-                                    LogUtil.d(TAG, e.getMessage());
-                                    showAlbum(false);
-                                }
-                            });
 
-                }
             }
         });
 
