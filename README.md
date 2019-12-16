@@ -1,4 +1,4 @@
-﻿
+﻿# ArtisanMusic
 
 ![image](https://github.com/1900Star/ShareFile/blob/master/pic/artistMusic.jpg)
 ![image](https://github.com/1900Star/ShareFile/blob/master/pic/Details.jpg)
@@ -10,14 +10,13 @@
 ![image](https://github.com/1900Star/ShareFile/blob/master/pic/detailsBack.gif)
 ![image](https://github.com/1900Star/SmartisanMusicPlayer/blob/master/screenshot/artisanMusic.gif)
 
-ArtisanMusic
 
-#项目介绍：
+## 项目介绍：
 
 [ArtisanMusicPlayer](https://github.com/1900Star/ArtisanMusic) 仿照锤子音乐播放器写的一个本地音乐播放器，会尽可能的实现锤子音乐播放器已有的功能。
                 也会去除一些功能，比如去除:云音乐，联网搜索，因为主要还是播放本地音乐为主。
                 同时也会增加一些个人觉得有趣的交互，比如增加了类似QQ音乐的左右滑动切换上/下一曲的交互。用GreenDao实现了收藏功能，使用了Rxjava和                   Rxbus。目前实现的功能：播放功能、播放列表(按歌曲名、评分、播放次数、添加时间排序)、艺术家列表、
-                专辑列表、收藏、通知栏、网络歌词、歌词滚动、屏幕常亮、本地搜索、收藏列表本地备份、导入本地列表、锁屏显示、列表多选删除、崩溃日志收集、定时关闭播放。
+                专辑列表、收藏、通知栏、网络歌词、网络专辑图片、歌词滚动、屏幕常亮、本地搜索、收藏列表本地备份、导入本地列表、锁屏显示、列表多选删除、崩溃日志收集、定时关闭播放。
 
 
 ## 第三方库
