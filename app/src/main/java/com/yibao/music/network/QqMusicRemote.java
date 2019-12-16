@@ -119,7 +119,6 @@ public class QqMusicRemote {
                     SearchSong.DataBean.SongBean.ListBean listBean = list.get(0);
                     return RetrofitHelper.getMusicService().getOnlineSongLrc(listBean.getSongmid());
                 })
-//                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseObserver<OnlineSongLrc>() {
                     @Override
                     public void onNext(OnlineSongLrc onlineSongLrc) {
