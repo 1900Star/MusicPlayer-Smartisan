@@ -2,6 +2,7 @@ package com.yibao.music.service;
 
 import android.app.IntentService;
 import android.content.Intent;
+
 import androidx.annotation.Nullable;
 
 import com.yibao.music.MusicApplication;
@@ -31,7 +32,7 @@ import java.util.Set;
  */
 
 public class LoadMusicDataService extends IntentService {
-
+    private static final String TAG = " ==== " + LoadMusicDataService.class.getSimpleName() + "  ";
     private MusicBeanDao mMusicDao;
     private int currentCount = 0;
     private RxBus mBus;
@@ -52,7 +53,7 @@ public class LoadMusicDataService extends IntentService {
         List<MusicBean> dataList = MusicListUtil.getMusicDataList();
         int songSum = dataList.size();
         // 手动扫描本地歌曲
-        if (getIsNeedAgainScaner(intent)) {
+        if (getIsNeedAgainScanner(intent)) {
             // 数据库的歌曲和最新媒体库中歌曲数量比较
             List<MusicBean> beanList = mMusicDao.queryBuilder().build().list();
             int newSong = songSum - beanList.size();
@@ -73,7 +74,7 @@ public class LoadMusicDataService extends IntentService {
                 for (MusicBean musicInfo : dataList) {
                     sendLoadProgress(songSum, musicInfo);
                 }
-                LogUtil.d("LoadMusicDataServices===== 加载数据完成");
+                LogUtil.d(TAG,"LoadMusicDataServices===== 加载数据完成");
                 recoverFavoriteMusic(dataList);
             } else {
                 // 本地没有发现歌曲
@@ -88,7 +89,7 @@ public class LoadMusicDataService extends IntentService {
      * @param intent i
      * @return true 为手动扫描   false 为自动扫描
      */
-    private boolean getIsNeedAgainScaner(Intent intent) {
+    private boolean getIsNeedAgainScanner(Intent intent) {
         if (intent != null) {
             String scanner = intent.getStringExtra(Constants.SCANNER_MEDIA);
             return scanner != null;
@@ -119,9 +120,9 @@ public class LoadMusicDataService extends IntentService {
                     mMusicDao.update(musicBean);
                 }
             }
-            LogUtil.d("自动恢复收藏列表");
+            LogUtil.d(TAG,"自动恢复收藏列表");
         } else {
-            LogUtil.d("没有发现歌曲收藏文件");
+            LogUtil.d(TAG,"没有发现歌曲收藏文件");
         }
     }
 

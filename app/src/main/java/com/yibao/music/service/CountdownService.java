@@ -38,8 +38,8 @@ public class CountdownService extends Service {
 
         @Override
         public void onTick(long millisUntilFinished) {
-            String contdownTime = StringUtil.parseDuration((int) millisUntilFinished);
-            RxBus.getInstance().post(Constants.COUNTDOWN_TIME,contdownTime);
+            String countdownTime = StringUtil.parseDuration((int) millisUntilFinished);
+            RxBus.getInstance().post(Constants.COUNTDOWN_TIME,countdownTime);
         }
 
         @Override

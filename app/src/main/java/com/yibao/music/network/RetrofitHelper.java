@@ -1,30 +1,8 @@
 package com.yibao.music.network;
 
-import android.content.Context;
-import android.widget.ImageView;
-
-import com.yibao.music.base.BaseObserver;
-import com.yibao.music.base.listener.OnImagePathListener;
-import com.yibao.music.model.LyricDownBean;
-import com.yibao.music.model.qq.Album;
-import com.yibao.music.model.qq.OnlineSongLrc;
-import com.yibao.music.model.qq.SearchSong;
-import com.yibao.music.model.qq.SingerImg;
-import com.yibao.music.service.MusicService;
 import com.yibao.music.util.Api;
-import com.yibao.music.util.Constants;
-import com.yibao.music.util.DownloadLyricsUtil;
-import com.yibao.music.util.ImageUitl;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.OkHttpUtil;
-import com.yibao.music.util.RxBus;
 
-import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
