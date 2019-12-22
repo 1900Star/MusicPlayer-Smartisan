@@ -65,7 +65,7 @@ public class SplashActivity
         AndPermission.with(this)
                 .permission(Permission.Group.STORAGE)
                 .onGranted(permissions -> initRxbusData())
-                .onDenied(permissions -> LogUtil.d("没有读取和写入的权限!"))
+                .onDenied(permissions -> LogUtil.d(TAG,"没有读取和写入的权限!"))
                 .start();
     }
 

@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.yibao.music.R;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.MusicListUtil;
 
 
 /**
@@ -18,6 +19,7 @@ import com.yibao.music.util.LogUtil;
  */
 public class MusicSlideBarBack
         extends View {
+    private static final String TAG = "====" + MusicSlideBarBack.class.getSimpleName() + "    ";
     private String[] names = new String[]{"A",
             "B",
             "C",
@@ -167,7 +169,7 @@ public class MusicSlideBarBack
         postInvalidate();
         //获取当前要显示的字母
         String cureentIndex = names[mIndex];
-        LogUtil.d("=======Section index=======  " + cureentIndex);
+        LogUtil.d(TAG,"=======Section index=======  " + cureentIndex);
         mTouchListener.cureentSectionIndex(cureentIndex);
 
         //显示toast

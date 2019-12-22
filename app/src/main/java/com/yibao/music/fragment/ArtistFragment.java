@@ -1,8 +1,10 @@
 package com.yibao.music.fragment;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicToolBar;
@@ -58,24 +61,21 @@ public class ArtistFragment extends BaseMusicFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        initListener();
+    protected void initView(Bundle savedInstanceState) {
+        setContentView(R.layout.artisan_list_fragment);
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.music_artisan));
+        mMusicToolBar.setTvEditVisibility(isShowDetailsView);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.artisan_list_fragment, container, false);
-        unbinder = ButterKnife.bind(this, view);
-        mMusicToolBar.setTvEditVisibility(isShowDetailsView);
+    protected void onLazyLoadData() {
+        super.onLazyLoadData();
         initData();
-        return view;
+        initListener();
     }
 
     private void initListener() {
-        mAdapter.setItemListener((bean,position, bean2) -> ArtistFragment.this.openDetailsView(bean));
+        mAdapter.setItemListener((bean, position, bean2) -> ArtistFragment.this.openDetailsView(bean));
         mMusicToolBar.setClickListener(new MusicToolBar.OnToolbarClickListener() {
             @Override
             public void clickEdit() {

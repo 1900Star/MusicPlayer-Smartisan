@@ -2,20 +2,18 @@ package com.yibao.music.base;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.telephony.mbms.StreamingService;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.baidu.mobstat.StatService;
 import com.squareup.leakcanary.RefWatcher;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.model.greendao.AlbumInfoDao;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.model.greendao.PlayListBeanDao;
-import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.RxBus;
 
 import butterknife.Unbinder;
@@ -33,23 +31,21 @@ public abstract class BaseFragment extends Fragment {
     protected AppCompatActivity mActivity;
     protected RxBus mBus;
     protected final MusicBeanDao mMusicBeanDao;
-    protected final SearchHistoryBeanDao mSearchDao;
-    protected final PlayListBeanDao mPlayListDao;
     protected CompositeDisposable mCompositeDisposable;
     protected Context mContext;
     protected Unbinder unbinder;
     protected final AlbumInfoDao mAlbumDao;
     protected FragmentManager mFragmentManager;
+    protected String TAG = " ==== " + this.getClass().getSimpleName() + "  ";
 
     protected BaseFragment() {
         mMusicBeanDao = MusicApplication.getIntstance().getMusicDao();
-        mPlayListDao = MusicApplication.getIntstance().getPlayListDao();
         mAlbumDao = MusicApplication.getIntstance().getAlbumDao();
-        mSearchDao = MusicApplication.getIntstance().getSearchDao();
+
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mActivity = (AppCompatActivity) getActivity();
         mContext = getActivity();
@@ -70,7 +66,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+
         if (mCompositeDisposable != null) {
             mCompositeDisposable.dispose();
             mCompositeDisposable.clear();
@@ -84,5 +80,6 @@ public abstract class BaseFragment extends Fragment {
         super.onDestroy();
         RefWatcher refWatcher = MusicApplication.getRefWatcher(mActivity);
         refWatcher.watch(this);
+
     }
 }

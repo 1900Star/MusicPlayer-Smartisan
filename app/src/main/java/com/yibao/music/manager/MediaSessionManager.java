@@ -23,7 +23,7 @@ import com.yibao.music.util.StringUtil;
  */
 public class MediaSessionManager {
 
-    private static final String TAG = "MediaSessionManager";
+    private static final String TAG = " ==== " + MediaSessionManager.class.getSimpleName() + "  ";
 
     private MusicPlayService.AudioBinder mAudioBinder;
     private MediaSessionCompat mMediaSession;
@@ -50,7 +50,7 @@ public class MediaSessionManager {
             mMediaSession.setCallback(sessionCb);
             mMediaSession.setActive(true);
         } catch (Exception e) {
-            LogUtil.d(e.toString());
+            LogUtil.d(TAG,e.toString());
         }
     }
 

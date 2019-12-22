@@ -10,7 +10,6 @@ import android.provider.MediaStore;
 
 import androidx.core.content.FileProvider;
 
-import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.MusicBean;
 
 import java.io.File;
@@ -46,7 +45,7 @@ public class FileUtil {
                 e.printStackTrace();
             }
         }
-        LogUtil.d(" ==========  下载歌词啦   ");
+        LogUtil.d(TAG," ==========  下载歌词啦   ");
         return lyricFile;
     }
 
@@ -76,7 +75,7 @@ public class FileUtil {
 
     public static String getAlbumUrl(MusicBean bean, int imageType) {
         boolean b = FileUtil.albumFileExists(imageType, bean.getTitle(), bean.getArtist());
-        return b ? StringUtil.getDownAlbum(bean.getTitle(), bean.getArtist()) : StringUtil.getAlbulm(2, bean.getAlbumId(), bean.getArtist());
+        return b ? StringUtil.getDownAlbum(bean.getTitle(), bean.getArtist()) : StringUtil.getAlbum(2, bean.getAlbumId(), bean.getArtist());
     }
 
     public static String getNotifyAlbumUrl(Context context, MusicBean bean) {

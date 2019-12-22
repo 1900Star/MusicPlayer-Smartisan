@@ -1,9 +1,10 @@
 package com.yibao.music.fragment;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,6 @@ import com.yibao.music.util.SpUtil;
 import com.yibao.music.view.music.MusicToolBar;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -51,30 +51,28 @@ public class SongFragment extends BaseMusicFragment {
     TextView mMusicCategoryAddtime;
     @BindView(R.id.vp_song_fag)
     ViewPager mViewPager;
-    private int curentIndex = 0;
-    private boolean isSelecteStatus = false;
+    private int currentIndex = 0;
+    private boolean isSelectStatus = false;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.song_fragment, container, false);
-        unbinder = ButterKnife.bind(this, view);
+    protected void initView(Bundle savedInstanceState) {
+        setContentView(R.layout.song_fragment);
+        mMusicToolBar.setToolbarTitle(getString(R.string.music_song));
         initData();
+        switchListCategory(currentIndex);
         initListener();
-        return view;
     }
 
     @Override
     protected boolean getIsOpenDetail() {
-        return isSelecteStatus;
+        return isSelectStatus;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mMusicToolBar.setToolbarTitle(getString(R.string.music_song));
         initRxBusData();
-        switchListCategory(curentIndex);
+
     }
 
     private void initRxBusData() {
@@ -84,7 +82,7 @@ public class SongFragment extends BaseMusicFragment {
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(editBean -> {
                         mMusicToolBar.setTvEditText(R.string.tv_edit);
                         mMusicToolBar.setTvDeleteVisibility(View.GONE);
-                        isSelecteStatus = false;
+                        isSelectStatus = false;
                     });
         }
     }
@@ -105,11 +103,11 @@ public class SongFragment extends BaseMusicFragment {
         mMusicToolBar.setClickListener(new MusicToolBar.OnToolbarClickListener() {
             @Override
             public void clickEdit() {
-                interceptBackEvent(isSelecteStatus ? Constants.NUMBER_ELEVEN : Constants.NUMBER_ZERO);
+                interceptBackEvent(isSelectStatus ? Constants.NUMBER_ELEVEN : Constants.NUMBER_ZERO);
                 mBus.post(Constants.SONG_FAG_EDIT, Constants.NUMBER_ONE);
-                mMusicToolBar.setTvEditText(isSelecteStatus ? R.string.tv_edit : R.string.complete);
-                mMusicToolBar.setTvDeleteVisibility(isSelecteStatus ? View.GONE : View.VISIBLE);
-                isSelecteStatus = !isSelecteStatus;
+                mMusicToolBar.setTvEditText(isSelectStatus ? R.string.tv_edit : R.string.complete);
+                mMusicToolBar.setTvDeleteVisibility(isSelectStatus ? View.GONE : View.VISIBLE);
+                isSelectStatus = !isSelectStatus;
             }
 
             @Override
@@ -150,7 +148,7 @@ public class SongFragment extends BaseMusicFragment {
 
 
     private void switchListCategory(int flag) {
-        curentIndex = flag;
+        currentIndex = flag;
         mViewPager.setCurrentItem(flag, false);
         switch (flag) {
             case 0:

@@ -65,7 +65,7 @@ public class StringUtil {
      * @param albumId a
      * @return f
      */
-    public static String getAlbulm(int picType, Long albumId, String artist) {
+    public static String getAlbum(int picType, Long albumId, String artist) {
         String path = picType == 1 ? Constants.MUSIC_ARITIST_IMG_ROOT + artist + ".jpg" : Constants.MUSIC_ALBUM_ROOT + artist + ".jpg";
         File file = new File(path);
 
@@ -185,7 +185,7 @@ public class StringUtil {
                 mContdownTime = -1;
                 break;
             case "无":
-                LogUtil.d("     时间为无");
+                LogUtil.d(TAG, "     时间为无");
                 break;
             case "15 分":
                 mContdownTime = 15 * 60 * 1000;

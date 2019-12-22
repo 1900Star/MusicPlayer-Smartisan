@@ -408,7 +408,7 @@ public class PlayActivity extends BasePlayActivity {
                 MoreMenuBottomDialog.newInstance(mCurrenMusicInfo, audioBinder.getPosition(), true, true).getBottomDialog(this);
                 break;
             case R.id.iv_delete_lyric:
-                LogUtil.d("============ 删除当前歌词");
+                LogUtil.d(TAG,"============ 删除当前歌词");
                 showLyrics();
                 LyricsUtil.deleteCurrentLyric(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
                 break;

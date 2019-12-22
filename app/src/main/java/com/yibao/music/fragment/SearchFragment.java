@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
@@ -25,6 +26,7 @@ import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.SearchCategoryBean;
 import com.yibao.music.model.SearchHistoryBean;
+import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicDaoUtil;
@@ -66,7 +68,7 @@ public class SearchFragment extends BaseFragment {
     private Disposable mDisposableMoreMenu;
     private boolean mIsFirst = false;
     private int mPosition;
-
+    private SearchHistoryBeanDao mSearchDao;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,9 +83,7 @@ public class SearchFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         rxbusData();
-        LogUtil.d("=========== searchPostion    " + mPosition);
-        if (getUserVisibleHint()) {
-        }
+        LogUtil.d(TAG,"=========== searchPostion    " + mPosition);
 
     }
 
@@ -176,6 +176,7 @@ public class SearchFragment extends BaseFragment {
     }
 
     private void initData() {
+        mSearchDao = MusicApplication.getIntstance().getSearchDao();
         // 搜索记录
         List<SearchHistoryBean> searchList = mSearchDao.queryBuilder().list();
         if (searchList != null && searchList.size() > 0) {

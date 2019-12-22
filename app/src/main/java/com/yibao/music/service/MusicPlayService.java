@@ -22,6 +22,7 @@ import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
+import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.NetworkUtil;
 import com.yibao.music.util.QueryMusicFlagListUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
@@ -45,7 +46,7 @@ import io.reactivex.disposables.Disposable;
  */
 public class MusicPlayService
         extends Service {
-
+    private static final String TAG = "====" + MusicListUtil.class.getSimpleName() + "    ";
     private MediaPlayer mediaPlayer;
     private AudioBinder mAudioBinder;
     private int playMode;
@@ -110,7 +111,7 @@ public class MusicPlayService
         if (queryFlag != null && !queryFlag.equals(Constants.FAVORITE_FLAG) && !queryFlag.equals(Constants.NO_NEED_FLAG)) {
             SpUtil.setQueryFlag(MusicPlayService.this, queryFlag);
         }
-        LogUtil.d(" position  ==" + enterPosition + "   sortListFlag  ==" + sortFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
+        LogUtil.d(TAG," position  ==" + enterPosition + "   sortListFlag  ==" + sortFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
         mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao, sortFlag, dataFlag, queryFlag);
         if (enterPosition != position && enterPosition != -1) {
             position = enterPosition;
@@ -467,7 +468,7 @@ public class MusicPlayService
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 // 短暂性丢失焦点并作降音处理
-                LogUtil.d("====== 短暂性丢失焦点并作降音处理 ");
+                LogUtil.d(TAG,"====== 短暂性丢失焦点并作降音处理 ");
                 break;
             case AudioManager.AUDIOFOCUS_GAIN:
                 // 当其他应用申请焦点之后又释放焦点会触发此回调,可重新播放音乐

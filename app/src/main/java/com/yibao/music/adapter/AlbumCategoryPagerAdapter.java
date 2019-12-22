@@ -1,5 +1,6 @@
 package com.yibao.music.adapter;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -22,6 +23,7 @@ public class AlbumCategoryPagerAdapter
         super(fm);
     }
 
+    @NonNull
     @Override
     public Fragment getItem(int position) {
         return AlbumCategoryFragment.newInstance(position);

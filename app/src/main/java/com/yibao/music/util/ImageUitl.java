@@ -89,7 +89,7 @@ public class ImageUitl {
                 }
             }).placeholder(placeId).error(placeId).apply(options).into(view);
         } else {
-            LogUtil.d("Picture loading failed,context is null");
+            LogUtil.d(TAG,"Picture loading failed,context is null");
         }
 
     }
@@ -102,7 +102,7 @@ public class ImageUitl {
             options.diskCacheStrategy(DiskCacheStrategy.ALL);
             Glide.with(context).load(url).apply(options).into(view);
         } else {
-            LogUtil.d("Picture loading failed,context is null");
+            LogUtil.d(TAG,"Picture loading failed,context is null");
         }
     }
 
@@ -116,7 +116,7 @@ public class ImageUitl {
                     .apply(options)
                     .into(view);
         } else {
-            LogUtil.d("Picture loading failed,context is null");
+            LogUtil.d(TAG,"Picture loading failed,context is null");
         }
 
     }

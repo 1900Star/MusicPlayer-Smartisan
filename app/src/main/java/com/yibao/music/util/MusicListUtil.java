@@ -27,7 +27,7 @@ import io.reactivex.schedulers.Schedulers;
  * @author Stran
  */
 public class MusicListUtil {
-
+    private static final String TAG = "====" + MusicListUtil.class.getSimpleName() + "    ";
 
     /**
      * 从本地获取歌曲的信息，保存在List当中
@@ -96,7 +96,7 @@ public class MusicListUtil {
             }
             cursor.close();
         }
-        LogUtil.d("歌曲数量 ========== " + musicInfos.size());
+        LogUtil.d(TAG, "歌曲数量 ========== " + musicInfos.size());
         return musicInfos;
     }
 

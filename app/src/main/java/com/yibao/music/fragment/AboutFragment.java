@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -79,16 +80,18 @@ public class AboutFragment extends BaseMusicFragment {
     TextView mTvDeleteErrorLyric;
     private long mCurrentPosition;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.about_fragment, container, false);
-        unbinder = ButterKnife.bind(this, view);
+    protected void initView(Bundle savedInstanceState) {
+        setContentView(R.layout.about_fragment);
+        mMusicToolBar.setToolbarTitle(getString(R.string.about));
         mMusicToolBar.setTvEditVisibility(false);
-        initData();
         initListener();
-        return view;
+    }
+
+    @Override
+    protected void onLazyLoadData() {
+        super.onLazyLoadData();
+        initData();
     }
 
     private void initData() {
@@ -101,13 +104,6 @@ public class AboutFragment extends BaseMusicFragment {
             setHeaderView(Uri.fromFile(headerFile));
         }
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mMusicToolBar.setToolbarTitle(getString(R.string.about));
-    }
-
 
     private void initListener() {
         mCompositeDisposable.add(RxView.clicks(mAboutHeaderIv)
@@ -215,7 +211,7 @@ public class AboutFragment extends BaseMusicFragment {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(favoriteName -> LogUtil.d(" 更新本地收藏文件==========   " + favoriteName)));
+                .subscribe(favoriteName -> LogUtil.d(TAG, " 更新本地收藏文件==========   " + favoriteName)));
         ToastUtil.showFavoriteListBackupsDown(mActivity);
     }
 

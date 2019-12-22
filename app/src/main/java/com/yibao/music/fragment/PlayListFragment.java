@@ -1,16 +1,21 @@
 package com.yibao.music.fragment;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.google.android.material.appbar.AppBarLayout;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
@@ -25,7 +30,9 @@ import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
+import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.ThreadPoolProxyFactory;
@@ -80,16 +87,25 @@ public class PlayListFragment extends BaseMusicFragment {
     private static boolean isFormPlayListActivity;
     private SparseBooleanArray checkBoxMap = new SparseBooleanArray();
     private List<PlayListBean> mSelecteList = new ArrayList<>();
+    private PlayListBeanDao mPlayListDao;
 
-    @Nullable
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.play_list_fragment, container, false);
-        unbinder = ButterKnife.bind(this, view);
+    protected void initView(Bundle savedInstanceState) {
+        setContentView(R.layout.play_list_fragment);
+
+        mMusicToolBar.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.play_list));
+        mAppBarLayout.setVisibility(isFormPlayListActivity && SpUtil.getAddToPlayListFdlag(mActivity) == Constants.NUMBER_ONE ? View.GONE : View.VISIBLE);
+        mPlayListDao = MusicApplication.getIntstance().getPlayListDao();
+    }
+
+    @Override
+    protected void onLazyLoadData() {
+        super.onLazyLoadData();
         initData();
         initListener();
-        return view;
     }
+
 
     @Override
     protected boolean getIsOpenDetail() {
@@ -99,10 +115,9 @@ public class PlayListFragment extends BaseMusicFragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        mMusicToolBar.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.play_list));
-        mAppBarLayout.setVisibility(isFormPlayListActivity && SpUtil.getAddToPlayListFdlag(mActivity) == Constants.NUMBER_ONE ? View.GONE : View.VISIBLE);
-        mAdapter.setNewData(getPlayList());
+        if (mAdapter != null) {
+            mAdapter.setNewData(getPlayList());
+        }
         receiveRxbuData();
     }
 

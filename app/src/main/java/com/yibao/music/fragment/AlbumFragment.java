@@ -1,9 +1,11 @@
 package com.yibao.music.fragment;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,15 +80,12 @@ public class AlbumFragment extends BaseMusicFragment {
     private List<MusicBean> mDetailList;
     private String detailsViewTitle;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.album_fragment, container, false);
-        unbinder = ButterKnife.bind(this, view);
+    protected void initView(Bundle savedInstanceState) {
+        setContentView(R.layout.album_fragment);
+        mMusicToolBar.setToolbarTitle(isShowDetailsView ? detailsViewTitle : getString(R.string.music_album));
         initData();
-        return view;
     }
-
 
     private void initData() {
         AlbumCategoryPagerAdapter pagerAdapter = new AlbumCategoryPagerAdapter(getChildFragmentManager());
@@ -105,7 +104,7 @@ public class AlbumFragment extends BaseMusicFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mMusicToolBar.setToolbarTitle(isShowDetailsView ? detailsViewTitle : getString(R.string.music_album));
+
         initRxBusData();
     }
 

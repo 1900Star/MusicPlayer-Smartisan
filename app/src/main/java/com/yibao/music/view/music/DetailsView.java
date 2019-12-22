@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,7 +24,6 @@ import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
-import com.yibao.music.base.listener.OnImagePathListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.fragment.dialogfrag.AlbumDetailDialogFragment;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
@@ -34,9 +32,7 @@ import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.network.QqMusicRemote;
-import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
@@ -130,12 +126,12 @@ public class DetailsView
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_artist_albumm_details_title:
-                String albulmUrl = StringUtil.getAlbulm(mPicType, mAlbumId, mArtist);
+                String albulmUrl = StringUtil.getAlbum(mPicType, mAlbumId, mArtist);
                 openAlbumDetail(albulmUrl, mArtist);
                 break;
             case R.id.iv_artist_albumm_details:
                 LogUtil.d(TAG, " pictype " + mPicType);
-                String albumUrl = StringUtil.getAlbulm(mPicType, mAlbumId, mArtist);
+                String albumUrl = StringUtil.getAlbum(mPicType, mAlbumId, mArtist);
                 PreviewBigPicDialogFragment.newInstance(albumUrl)
                         .show(mFragmentManager, "album");
                 break;
@@ -143,7 +139,7 @@ public class DetailsView
                 startPlayListActivity();
                 break;
             case R.id.iv_details_add_to_play_list:
-                LogUtil.d("=================添加到当前播放列表");
+                LogUtil.d(TAG,"=================添加到当前播放列表");
                 break;
             case R.id.ll_album_details_playall:
                 startMusic(Constants.NUMBER_ZERO);
@@ -158,7 +154,7 @@ public class DetailsView
     }
 
     private void openAlbumDetail(String albulmUrl, String albumName) {
-        LogUtil.d(TAG, "显示专辑详情");
+        LogUtil.d(TAG, "显示专辑详情  " + albumName);
         AlbumDetailDialogFragment.newInstance(albulmUrl, albumName).show(mFragmentManager, "album detail");
     }
 
@@ -208,7 +204,7 @@ public class DetailsView
     private void setMusicInfo(int dataType, String albumName, String artist, long albumId, int issueYear) {
         mTvArtistAlbummDetailsTitle.setText(albumName);
         mTvArtistAlbummDetailsArtist.setText(artist);
-        ImageUitl.loadPic((Activity) getContext(), StringUtil.getAlbulm(dataType, (albumId), artist), mIvArtistAlbummDetails, R.drawable.noalbumcover_220, isSuccess -> {
+        ImageUitl.loadPic((Activity) getContext(), StringUtil.getAlbum(dataType, (albumId), artist), mIvArtistAlbummDetails, R.drawable.noalbumcover_220, isSuccess -> {
             if (!isSuccess) {
                 if (dataType == 1) {
                     QqMusicRemote.getArtistImg(getContext(), artist, url -> {

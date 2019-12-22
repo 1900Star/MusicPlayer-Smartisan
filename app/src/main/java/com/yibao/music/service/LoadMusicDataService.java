@@ -2,6 +2,7 @@ package com.yibao.music.service;
 
 import android.app.IntentService;
 import android.content.Intent;
+
 import androidx.annotation.Nullable;
 
 import com.yibao.music.MusicApplication;
@@ -31,7 +32,7 @@ import java.util.Set;
  */
 
 public class LoadMusicDataService extends IntentService {
-
+    private static final String TAG = " ==== " + LoadMusicDataService.class.getSimpleName() + "  ";
     private MusicBeanDao mMusicDao;
     private int currentCount = 0;
     private RxBus mBus;
@@ -64,7 +65,7 @@ public class LoadMusicDataService extends IntentService {
                     sendLoadProgress(newSong, newList.get(i));
                 }
             } else {
-                LogUtil.d("没有新增歌曲!");
+               LogUtil.d(TAG,"没有新增歌曲!");
                 mBus.post(new MusicCountBean(Constants.NUMBER_ZERO, Constants.NUMBER_ZERO));
             }
         } else {
@@ -73,7 +74,7 @@ public class LoadMusicDataService extends IntentService {
                 for (MusicBean musicInfo : dataList) {
                     sendLoadProgress(songSum, musicInfo);
                 }
-                LogUtil.d("LoadMusicDataServices===== 加载数据完成");
+               LogUtil.d(TAG,"LoadMusicDataServices===== 加载数据完成");
                 recoverFavoriteMusic(dataList);
             } else {
                 // 本地没有发现歌曲
@@ -119,9 +120,9 @@ public class LoadMusicDataService extends IntentService {
                     mMusicDao.update(musicBean);
                 }
             }
-            LogUtil.d("自动恢复收藏列表");
+           LogUtil.d(TAG,"自动恢复收藏列表");
         } else {
-            LogUtil.d("没有发现歌曲收藏文件");
+           LogUtil.d(TAG,"没有发现歌曲收藏文件");
         }
     }
 

@@ -106,8 +106,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * @param lyricsOK  歌词下载是否成功 ，成功就重新设置歌词View
-     * @param downMsg 歌词下载的信息。
+     * @param lyricsOK 歌词下载是否成功 ，成功就重新设置歌词View
+     * @param downMsg  歌词下载的信息。
      */
     protected void updataLyricsView(boolean lyricsOK, String downMsg) {
     }

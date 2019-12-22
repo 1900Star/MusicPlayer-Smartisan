@@ -1,8 +1,10 @@
 package com.yibao.music.fragment;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +39,6 @@ import io.reactivex.schedulers.Schedulers;
  * @ Des:    TODO
  */
 public class AlbumCategoryFragment extends BaseMusicFragment {
-    @BindView(R.id.musci_view)
     MusicView mMusicView;
     private int mPosition;
     private List<AlbumInfo> mAlbumList;
@@ -46,38 +47,32 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
     private int mSelectCount;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected boolean getIsOpenDetail() {
+        return !isItemSelectStatus;
+    }
+
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+        setContentView(R.layout.category_fragment);
+        mMusicView = getViewById(R.id.musci_view);
         Bundle arguments = getArguments();
         if (arguments != null) {
             mPosition = arguments.getInt("position");
         }
         mAlbumList = MusicListUtil.getAlbumList(mSongList);
+        initData();
+
     }
 
-    @Override
-    protected boolean getIsOpenDetail() {
-        return !isItemSelectStatus;
-    }
-
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.category_fragment, container, false);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
-    }
 
     private void initData() {
         mAlbumAdapter = new AlbumAdapter(mActivity, mAlbumList, mPosition);
         mMusicView.setAdapter(mActivity, mPosition == 0 ? 3 : 4, mPosition == 0, mAlbumAdapter);
-        mAlbumAdapter.setItemListener((bean, position,isEditStatus) -> {
+        mAlbumAdapter.setItemListener((bean, position, isEditStatus) -> {
             if (isEditStatus) {
                 mSelectCount = bean.isSelected() ? mSelectCount-- : mSelectCount++;
                 bean.setSelected(!bean.isSelected());
-                LogUtil.d("=========== album list 选中  " + mSelectCount);
+                LogUtil.d(TAG, "=========== album list 选中  " + mSelectCount);
                 mAlbumAdapter.notifyDataSetChanged();
             } else {
                 mBus.post(bean);
@@ -88,7 +83,6 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
     @Override
     public void onResume() {
         super.onResume();
-        initData();
         initRxBusData();
     }
 
@@ -109,7 +103,7 @@ public class AlbumCategoryFragment extends BaseMusicFragment {
             // 删除已选择的条目
             List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsSelected.eq(true)).build().list();
             if (musicBeanList.size() > Constants.NUMBER_ZERO) {
-                LogUtil.d("======== Size    " + musicBeanList.size());
+                LogUtil.d(TAG, "======== Size    " + musicBeanList.size());
                 for (MusicBean musicBean : musicBeanList) {
                     mMusicBeanDao.delete(musicBean);
                 }

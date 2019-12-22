@@ -48,6 +48,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class FavoriteBottomSheetDialog
         implements View.OnClickListener {
+    private String TAG = " ==== " + FavoriteBottomSheetDialog.class.getSimpleName() + "  ";
     private LinearLayout mBottomListContent;
     private TextView mBottomListColection;
     private TextView mBottomListClear;
@@ -214,7 +215,7 @@ public class FavoriteBottomSheetDialog
         intent.setClass(mContext, MusicPlayService.class);
         intent.putExtra("sortFlag", Constants.NUMBER_EIGHT);
         intent.putExtra("position", position);
-        LogUtil.d("===========      " + position);
+        LogUtil.d(TAG,"===========      " + position);
         mContext.startService(intent);
         SpUtil.setSortFlag(mContext, Constants.NUMBER_EIGHT);
     }
