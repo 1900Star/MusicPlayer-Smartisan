@@ -64,7 +64,5 @@ android {
         implementation 'com.yanzhenjie:permission:2.0.0-rc4'
         // 百度统计
         implementation 'com.baidu.mobstat:mtj-sdk:3.9.2.1'
-        // autosize
-        implementation 'me.jessyan:autosize:1.1.2'
     }
 }
