@@ -1,4 +1,4 @@
-package com.yibao.music.service;
+package com.yibao.music.network;
 
 import com.yibao.music.model.qq.Album;
 import com.yibao.music.model.qq.AlbumSong;

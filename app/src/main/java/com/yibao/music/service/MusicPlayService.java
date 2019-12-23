@@ -13,6 +13,7 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.yibao.music.MusicApplication;
+import com.yibao.music.R;
 import com.yibao.music.manager.MediaSessionManager;
 import com.yibao.music.manager.MusicNotifyManager;
 import com.yibao.music.model.MusicBean;
@@ -350,7 +351,7 @@ public class MusicPlayService
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(aBoolean -> {
                         if (!aBoolean) {
-                            ToastUtil.show(this, "该歌曲还没有添加到收藏文件");
+                            ToastUtil.show(this, getResources().getString(R.string.song_not_faverite));
                         }
                     });
         } else {

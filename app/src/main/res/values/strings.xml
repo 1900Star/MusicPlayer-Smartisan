@@ -70,6 +70,7 @@
     <string name="camera_not_open">摄像头权限未开启</string>
     <string name="go_open">去开启</string>
     <string name="delete_error_lyric">删除错误歌词</string>
+    <string name="song_not_faverite">该歌曲还没有添加到收藏文件</string>
 
 
 </resources>

@@ -227,7 +227,6 @@ public class AboutFragment extends BaseMusicFragment {
 
     private void clearErrorLyric() {
         Handler handler = new Handler();
-//        ProgressDialogUtil.getProgressDialog(mActivity);
         ThreadPoolProxyFactory.newInstance().execute(() -> {
             LyricsUtil.clearLyricList();
             handler.post(() -> ToastUtil.show(mActivity, "错误歌词已删除"));
