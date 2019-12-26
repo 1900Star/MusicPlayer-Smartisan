@@ -1,24 +1,17 @@
 package com.yibao.music.fragment;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.yibao.music.R;
 import com.yibao.music.adapter.ArtistAdapter;
 import com.yibao.music.adapter.DetailsViewAdapter;
-import com.yibao.music.base.BaseMusicFragment;
+import com.yibao.music.base.BaseLazyFragment;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicToolBar;
@@ -27,7 +20,6 @@ import com.yibao.music.view.music.MusicView;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 /**
@@ -40,7 +32,7 @@ import butterknife.ButterKnife;
  * @描述： {TODO}
  */
 
-public class ArtistFragment extends BaseMusicFragment {
+public class ArtistFragment extends BaseLazyFragment {
 
     @BindView(R.id.music_toolbar_list)
     MusicToolBar mMusicToolBar;

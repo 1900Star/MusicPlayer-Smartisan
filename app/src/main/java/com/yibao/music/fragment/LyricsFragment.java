@@ -16,30 +16,41 @@ import com.yibao.music.util.LogUtil;
 public class LyricsFragment extends BaseLazyFragment {
     private TextView mTvLyricsPage;
     private int mPosition;
+    private String mLyrics;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.lyrics_fragment);
         mTvLyricsPage = getViewById(R.id.tv_lyrics_page);
+        mLyrics = getArguments().getString("lyrics");
         mPosition = getArguments().getInt("position");
         if (mPosition == 0) {
-            mTvLyricsPage.setText("Hello World 0");
+            setLyrics();
         }
+    }
+
+    private void setLyrics() {
+        String replace = mLyrics.replace("\\n", "\n\n");
+        mTvLyricsPage.setText(replace);
     }
 
     @Override
     protected void onLazyLoadData() {
         super.onLazyLoadData();
-        LogUtil.d(TAG, "开始加载歌词");
-        String str = "Hello World " + mPosition;
-        mTvLyricsPage.setText(str);
+        setLyrics();
     }
 
-    public static LyricsFragment newInstance(int position) {
+    public static LyricsFragment newInstance(int position, String lyrics) {
         Bundle args = new Bundle();
         args.putInt("position", position);
+        args.putString("lyrics", lyrics);
         LyricsFragment fragment = new LyricsFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    protected boolean getIsOpenDetail() {
+        return false;
     }
 }

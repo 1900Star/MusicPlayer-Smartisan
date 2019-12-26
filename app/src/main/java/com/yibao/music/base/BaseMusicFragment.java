@@ -26,7 +26,7 @@ import io.reactivex.schedulers.Schedulers;
  * @创建时间: 2018/1/1 17:36
  * @描述： TODO
  */
-public abstract class BaseMusicFragment extends BaseLazyFragment {
+public abstract class BaseMusicFragment extends BaseFragment {
     protected Disposable mEditDisposable;
     private Disposable mMenuDisposable;
     private String mClassName;

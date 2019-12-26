@@ -1,9 +1,15 @@
 package com.yibao.music.fragment;
 
 import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.yibao.music.R;
 import com.yibao.music.adapter.SongAdapter;
+import com.yibao.music.base.BaseLazyFragment;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.MusicBean;
@@ -18,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -31,37 +38,23 @@ import io.reactivex.schedulers.Schedulers;
  * @描述： {显示音乐分类列表}
  */
 
-public class SongCategoryFragment extends BaseMusicFragment {
+public class SongCategoryFragment extends BaseLazyFragment {
 
     @BindView(R.id.musci_view)
     MusicView mMusciView;
     private SongAdapter mSongAdapter;
     private int mPosition;
-    private boolean isShowSlidBar = false;
+    private boolean isShowSlidebar = false;
     private boolean isItemSelectStatus = true;
     private int mSelectCount;
 
     @Override
-    protected void initView(Bundle savedInstanceState) {
-        setContentView(R.layout.category_fragment);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         if (arguments != null) {
             mPosition = arguments.getInt("position");
         }
-        initData();
-    }
-
-    private void initListener() {
-        mSongAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
-                MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
-        mSongAdapter.setItemListener((bean, position, isEditStatus) -> {
-            if (isEditStatus) {
-                mSelectCount = bean.isSelected() ? mSelectCount-- : mSelectCount++;
-                bean.setIsSelected(!bean.isSelected());
-                mMusicBeanDao.update(bean);
-                mSongAdapter.notifyDataSetChanged();
-            }
-        });
     }
 
     @Override
@@ -96,11 +89,38 @@ public class SongCategoryFragment extends BaseMusicFragment {
     }
 
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.category_fragment, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        initData();
+        return view;
+    }
+
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+
+    }
+
+    private void initListener() {
+        mSongAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
+                MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
+        mSongAdapter.setItemListener((bean,position, isEditStatus) -> {
+            if (isEditStatus) {
+                mSelectCount = bean.isSelected() ? mSelectCount-- : mSelectCount++;
+                bean.setIsSelected(!bean.isSelected());
+                mMusicBeanDao.update(bean);
+                mSongAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
     private void initData() {
         switch (mPosition) {
             case 0:
                 List<MusicBean> abcList = MusicListUtil.sortMusicAbc(mSongList);
-                isShowSlidBar = true;
+                isShowSlidebar = true;
                 mSongAdapter = new SongAdapter(mActivity, abcList, Constants.NUMBER_ZERO, Constants.NUMBER_ZERO);
                 break;
             case 1:
@@ -118,7 +138,7 @@ public class SongCategoryFragment extends BaseMusicFragment {
             default:
                 break;
         }
-        mMusciView.setAdapter(mActivity, Constants.NUMBER_ONE, isShowSlidBar, mSongAdapter);
+        mMusciView.setAdapter(mActivity, Constants.NUMBER_ONE, isShowSlidebar, mSongAdapter);
     }
 
     private void changeEditStatus(int currentIndex) {

@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
  * className   BaseLazyFragment
  * Des：TODO
  */
-public abstract class BaseLazyFragment extends BaseFragment {
+public abstract class BaseLazyFragment extends BaseMusicFragment {
     private View mContentView;
 
     private boolean mIsLoadedData = false;

@@ -81,6 +81,7 @@ public class Constants {
     public static final String MUSIC_LYRIC_FAIL = "lyric_fail";
     public static final String PURE_MUSIC = "此歌曲为没有填词的纯音乐，请您欣赏";
     public static final String NO_LYRICS = "暂无歌词";
+    public static final String NO_NETWORK = "网络异常,稍后重试!";
 
     public static final String NO_FIND_LYRICS = "no_find_lyrics";
     public static final String NO_FIND_NETWORK = "no_find_network";

@@ -20,6 +20,7 @@ import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.adapter.PlayListAdapter;
+import com.yibao.music.base.BaseLazyFragment;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnFinishActivityListener;
@@ -61,7 +62,7 @@ import io.reactivex.schedulers.Schedulers;
  * @描述： {个人播放列表}
  */
 
-public class PlayListFragment extends BaseMusicFragment {
+public class PlayListFragment extends BaseLazyFragment {
     @BindView(R.id.appbar_playlist)
     AppBarLayout mAppBarLayout;
     @BindView(R.id.music_toolbar_list)

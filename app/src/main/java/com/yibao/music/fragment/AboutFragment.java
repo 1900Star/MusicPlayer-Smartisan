@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.activity.SplashActivity;
+import com.yibao.music.base.BaseLazyFragment;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.CrashSheetDialog;
@@ -59,7 +60,7 @@ import io.reactivex.schedulers.Schedulers;
  * @描述： {TODO}
  */
 
-public class AboutFragment extends BaseMusicFragment {
+public class AboutFragment extends BaseLazyFragment {
 
     @BindView(R.id.music_toolbar_list)
     MusicToolBar mMusicToolBar;

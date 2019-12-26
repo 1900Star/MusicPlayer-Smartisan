@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.yibao.music.R;
 import com.yibao.music.adapter.AlbumAdapter;
+import com.yibao.music.base.BaseLazyFragment;
 import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.MusicBean;
@@ -38,8 +39,8 @@ import io.reactivex.schedulers.Schedulers;
  * @ Time:   2018/9/11/ 23:47
  * @ Des:    TODO
  */
-public class AlbumCategoryFragment extends BaseMusicFragment {
-    MusicView mMusicView;
+public class AlbumCategoryFragment extends BaseLazyFragment {
+    private MusicView mMusicView;
     private int mPosition;
     private List<AlbumInfo> mAlbumList;
     private boolean isItemSelectStatus = true;

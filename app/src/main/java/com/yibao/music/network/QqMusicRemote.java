@@ -2,34 +2,21 @@ package com.yibao.music.network;
 
 import android.content.Context;
 
-import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.reflect.TypeToken;
-import com.yibao.music.R;
-import com.yibao.music.activity.PlayActivity;
 import com.yibao.music.base.BaseObserver;
 import com.yibao.music.base.listener.OnAlbumDetailListener;
 import com.yibao.music.base.listener.OnImagePathListener;
-import com.yibao.music.base.listener.OnLoadImageListener;
-import com.yibao.music.base.listener.OnSearchLyricsListener;
 import com.yibao.music.model.LyricDownBean;
 import com.yibao.music.model.qq.Album;
 import com.yibao.music.model.qq.AlbumSong;
 import com.yibao.music.model.qq.OnlineSongLrc;
 import com.yibao.music.model.qq.SearchSong;
 import com.yibao.music.model.qq.SingerImg;
-import com.yibao.music.model.qq.SongLrc;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.DownloadLyricsUtil;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.OkHttpUtil;
 import com.yibao.music.util.RxBus;
 
-import org.json.JSONArray;
-
-import java.io.IOException;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -37,11 +24,6 @@ import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * @author luoshipeng
@@ -199,28 +181,4 @@ public class QqMusicRemote {
                 });
     }
 
-    public static void searchLyrics(String songName, OnSearchLyricsListener listener) {
-        String url = "https://c.y.qq.com/soso/fcgi-bin/client_search_cp?p=1&n=1&w=" + songName + "&format=json&t=7";
-        OkHttpClient client = OkHttpUtil.getClient();
-        Request request = new Request.Builder().url(url).build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String string = response.body().string();
-                LogUtil.d(TAG, "body  " + string);
-//                Gson gson = new Gson();
-//                List<SongLrc> retList = gson.fromJson(string, new TypeToken<List<SongLrc>>() {
-//                }.getType());
-//                listener.searchResult(retList);
-
-
-            }
-        });
-
-    }
 }

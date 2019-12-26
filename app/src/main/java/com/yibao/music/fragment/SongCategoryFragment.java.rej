@@ -1,0 +1,36 @@
+diff a/app/src/main/java/com/yibao/music/fragment/SongCategoryFragment.java b/app/src/main/java/com/yibao/music/fragment/SongCategoryFragment.java	(rejected hunks)
+@@ -37,17 +37,31 @@
+     MusicView mMusciView;
+     private SongAdapter mSongAdapter;
+     private int mPosition;
+-    private boolean isShowSlidebar = false;
++    private boolean isShowSlidBar = false;
+     private boolean isItemSelectStatus = true;
+     private int mSelectCount;
+ 
+     @Override
+-    public void onCreate(@Nullable Bundle savedInstanceState) {
+-        super.onCreate(savedInstanceState);
++    protected void initView(Bundle savedInstanceState) {
++        setContentView(R.layout.category_fragment);
+         Bundle arguments = getArguments();
+         if (arguments != null) {
+             mPosition = arguments.getInt("position");
+         }
++        initData();
++    }
++
++    private void initListener() {
++        mSongAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
++                MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
++        mSongAdapter.setItemListener((bean, position, isEditStatus) -> {
++            if (isEditStatus) {
++                mSelectCount = bean.isSelected() ? mSelectCount-- : mSelectCount++;
++                bean.setIsSelected(!bean.isSelected());
++                mMusicBeanDao.update(bean);
++                mSongAdapter.notifyDataSetChanged();
++            }
++        });
+     }
+ 
+     @Override

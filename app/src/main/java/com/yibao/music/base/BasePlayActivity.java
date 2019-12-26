@@ -8,7 +8,9 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.PowerManager;
+
 import androidx.annotation.Nullable;
+
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
@@ -63,9 +65,11 @@ public abstract class BasePlayActivity extends BaseTansitionActivity implements 
     protected void onPause() {
         super.onPause();
         clearDisposableLyric();
-        if (mWakeLock.isHeld()) {
-            mWakeLock.release();
-            mWakeLock = null;
+        if (mWakeLock != null) {
+            if (mWakeLock.isHeld()) {
+                mWakeLock.release();
+                mWakeLock = null;
+            }
         }
     }
 
