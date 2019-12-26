@@ -11,21 +11,22 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
-
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
         android:name=".MusicApplication"
         android:allowBackup="true"
         android:fullBackupContent="@null"
         android:icon="@mipmap/artisan_launcher"
-        android:usesCleartextTraffic="true"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name=".activity.SelectLyricsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.SplashActivity"
             android:configChanges="orientation|screenSize"
@@ -71,12 +72,10 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
-        </provider>
-        <!--百度-->
+        </provider> <!-- 百度 -->
         <meta-data
             android:name="BaiduMobAd_STAT_ID"
             android:value="@string/baidu_key" />
-
         <meta-data
             android:name="BaiduMobAd_CHANNEL"
             android:value="Baidu Market" />
@@ -92,8 +91,6 @@
         <meta-data
             android:name="BaiduMobAd_ONLY_WIFI"
             android:value="false" />
-        <!--百度-->
-
     </application>
 
 </manifest>

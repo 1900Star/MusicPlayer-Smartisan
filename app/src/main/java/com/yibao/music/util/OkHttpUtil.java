@@ -46,8 +46,8 @@ public class OkHttpUtil {
             LogUtil.d(TAG, String.format("Sending request %s on %s%n%s",
                     request.url(), chain.connection(), request.headers()));
             Response response = chain.proceed(request);
+//            LogUtil.d(TAG, " body   " + response.body().string());
             LogUtil.d(TAG, response.request().url() + request.headers().toString());
-
             return response;
         }
     }

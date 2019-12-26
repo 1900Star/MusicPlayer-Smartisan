@@ -173,19 +173,37 @@
             android:visibility="gone" />
 
         <LinearLayout
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
             android:layout_marginStart="8dp"
             android:layout_marginTop="40dp"
-            android:background="@drawable/lyrics_bm">
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/lyrics_bm">
+
+                <ImageView
+                    android:id="@+id/iv_lyrics_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/btn_unbrella_icon0" />
+
+            </LinearLayout>
 
             <ImageView
-                android:id="@+id/iv_lyrics_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/iv_select_lyric"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:contentDescription="@null"
-                android:src="@drawable/btn_unbrella_icon0" />
+                android:src="@drawable/delete_lyric_selector" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -269,7 +287,7 @@
             android:layout_weight="1"
             android:contentDescription="@null"
             android:src="@drawable/btn_favorite_gray_selector" />
-            <!--android:src="@drawable/music_qqbar_favorite_normal_selector" />-->
+        <!--android:src="@drawable/music_qqbar_favorite_normal_selector" />-->
     </LinearLayout>
 
     <SeekBar

@@ -27,6 +27,8 @@
     <string name="song_name">歌曲名</string>
     <string name="play_list">播放列表</string>
     <string name="music_artisan">艺术家</string>
+    <string name="singer">歌手:</string>
+    <string name="song_names">歌名:</string>
     <string name="music_song">歌曲</string>
     <string name="music_album">专辑</string>
     <string name="album_tile">平铺</string>
@@ -71,6 +73,7 @@
     <string name="go_open">去开启</string>
     <string name="delete_error_lyric">删除错误歌词</string>
     <string name="song_not_faverite">该歌曲还没有添加到收藏文件</string>
+    <string name="retry_search_lyrics">重新搜索歌词</string>
 
 
 </resources>

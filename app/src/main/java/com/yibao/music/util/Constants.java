@@ -72,6 +72,7 @@ public class Constants {
     static final char LETTER_Z = 'Z';
     public static final char LETTER_HASH = '#';
     public static final String SONG_NAME = "song_name";
+    public static final String SONG_ARTIST = "song_artist";
     public static final String TIME_SERVICE_NAME = "com.yibao.music.service.CountdownService";
     public static final String LOAD_SERVICE_NAME = "com.yibao.music.service.LoadMusicDataService";
     public static final String NULL_STRING = "";

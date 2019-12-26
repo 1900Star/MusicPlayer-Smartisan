@@ -85,7 +85,7 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
         mButtonFavorite.setImageResource(isFavorite ? R.drawable.favorite_yes : R.drawable.music_qqbar_favorite_normal_selector);
     }
 
-    //**************ViewPager数据********************
+    // **************ViewPager数据********************
     public void updaPagerData(List<MusicBean> musicItems, int currentPosition) {
         mPagerAdapter = null;
         mPagerAdapter = new QqBarPagerAdapter(getContext(), musicItems);

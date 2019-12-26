@@ -1,6 +1,7 @@
 package com.yibao.music.activity;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -93,6 +94,8 @@ public class PlayActivity extends BasePlayActivity {
     LinearLayout mLlSunAndDelele;
     @BindView(R.id.iv_secreen_sun_switch)
     ImageView mIvSecreenSunSwitch;
+    @BindView(R.id.iv_select_lyric)
+    ImageView mIvSelectLyric;
     @BindView(R.id.iv_delete_lyric)
     ImageView mIvDeleteLyric;
     @BindView(R.id.music_player_mode)
@@ -123,6 +126,36 @@ public class PlayActivity extends BasePlayActivity {
         init();
         initSongInfo();
         initListener();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mCurrenMusicInfo != null && audioBinder != null) {
+            checkCurrentIsFavorite(mMusicDao.load(mCurrenMusicInfo.getId()).isFavorite());
+            updataCurrentPlayInfo(audioBinder.getMusicBean());
+        }
+        rxViewClick();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (isShowLyrics) {
+            showLyrics();
+        }
+        disPosableLyricsView();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        boolean allSwitch = mAnimator != null && mAnimatorListener != null;
+        if (allSwitch) {
+            mAnimatorListener.pause();
+            mAnimator.cancel();
+        }
     }
 
 
@@ -238,16 +271,6 @@ public class PlayActivity extends BasePlayActivity {
     @Override
     protected void updataCurrentPlayProgress() {
         updataMusicProgress(audioBinder.getProgress());
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (isShowLyrics) {
-            showLyrics();
-        }
-        disPosableLyricsView();
-
     }
 
     protected void updataMusicProgress(int progress) {
@@ -370,9 +393,9 @@ public class PlayActivity extends BasePlayActivity {
 
     @OnClick({R.id.titlebar_down, R.id.rv_titlebar,
             R.id.playing_song_album, R.id.album_cover, R.id.rotate_rl, R.id.tv_lyrics,
-            R.id.iv_lyrics_switch, R.id.iv_delete_lyric, R.id.iv_secreen_sun_switch,
-            R.id.music_player_mode, R.id.music_player_pre, R.id.music_play,
-            R.id.music_player_next, R.id.iv_favorite_music})
+            R.id.iv_lyrics_switch, R.id.iv_delete_lyric, R.id.iv_select_lyric,
+            R.id.iv_secreen_sun_switch, R.id.music_player_mode, R.id.music_player_pre,
+            R.id.music_play, R.id.music_player_next, R.id.iv_favorite_music})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.titlebar_down:
@@ -394,9 +417,16 @@ public class PlayActivity extends BasePlayActivity {
                 MoreMenuBottomDialog.newInstance(mCurrenMusicInfo, audioBinder.getPosition(), true, true).getBottomDialog(this);
                 break;
             case R.id.iv_delete_lyric:
-                LogUtil.d(TAG,"============ 删除当前歌词");
+                LogUtil.d(TAG, "============ 删除当前歌词");
                 showLyrics();
                 LyricsUtil.deleteCurrentLyric(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
+                break;
+            case R.id.iv_select_lyric:
+                Intent intent = new Intent(this, SelectLyricsActivity.class);
+                intent.putExtra(Constants.SONG_NAME, mCurrenMusicInfo.getTitle());
+                intent.putExtra(Constants.SONG_ARTIST, mCurrenMusicInfo.getArtist());
+                startActivity(intent);
+                overridePendingTransition(R.anim.dialog_push_in, 0);
                 break;
             case R.id.iv_secreen_sun_switch:
                 screenAlwaysOnSwitch(mIvSecreenSunSwitch);
@@ -513,26 +543,6 @@ public class PlayActivity extends BasePlayActivity {
     @Override
     public void updataFavoriteStatus() {
         checkCurrentIsFavorite(getFavoriteState(mCurrenMusicInfo));
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mCurrenMusicInfo != null && audioBinder != null) {
-            checkCurrentIsFavorite(mMusicDao.load(mCurrenMusicInfo.getId()).isFavorite());
-            updataCurrentPlayInfo(audioBinder.getMusicBean());
-        }
-        rxViewClick();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        boolean allSwitch = mAnimator != null && mAnimatorListener != null;
-        if (allSwitch) {
-            mAnimatorListener.pause();
-            mAnimator.cancel();
-        }
     }
 
     /**
