@@ -118,11 +118,11 @@
             android:textSize="14sp" />
 
         <View
-            android:layout_width="1dp"
+            android:layout_width="2dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
 
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="10dp"
             android:background="#5A85EB" />
 
         <ImageView
@@ -145,10 +145,20 @@
         android:gravity="center"
         android:textColor="@color/bg_hint" />
 
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/vp_search_lyrics"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp2_search_lyrics"
         android:layout_width="match_parent"
-        android:layout_marginBottom="8dp"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/tv_lyrics_page_index"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:textColor="@color/deleteNorma"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 </LinearLayout>

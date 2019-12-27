@@ -24,20 +24,13 @@ public class LyricsFragment extends BaseLazyFragment {
         mTvLyricsPage = getViewById(R.id.tv_lyrics_page);
         mLyrics = getArguments().getString("lyrics");
         mPosition = getArguments().getInt("position");
-        if (mPosition == 0) {
-            setLyrics();
-        }
+        setLyrics();
     }
 
     private void setLyrics() {
+        LogUtil.d(TAG, "显示歌词 " + mPosition);
         String replace = mLyrics.replace("\\n", "\n\n");
         mTvLyricsPage.setText(replace);
-    }
-
-    @Override
-    protected void onLazyLoadData() {
-        super.onLazyLoadData();
-        setLyrics();
     }
 
     public static LyricsFragment newInstance(int position, String lyrics) {

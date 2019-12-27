@@ -1,13 +1,14 @@
 package com.yibao.music.adapter;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.yibao.music.base.BasePagerAdapter;
 import com.yibao.music.fragment.LyricsFragment;
-import com.yibao.music.fragment.SongCategoryFragment;
 import com.yibao.music.model.qq.SearchLyricsBean;
-import com.yibao.music.util.Constants;
 
 import java.util.List;
 
@@ -19,24 +20,23 @@ import java.util.List;
  * @author Stran
  */
 public class LyricsSearchPagerAdapter
-        extends BasePagerAdapter {
+        extends FragmentStateAdapter {
     private List<SearchLyricsBean> mLyricsList;
 
-    public LyricsSearchPagerAdapter(FragmentManager fm, List<SearchLyricsBean> lyricsList) {
-        super(fm);
+    public LyricsSearchPagerAdapter(@NonNull FragmentActivity fragmentActivity, List<SearchLyricsBean> lyricsList) {
+        super(fragmentActivity);
         mLyricsList = lyricsList;
     }
 
+    @NonNull
     @Override
-    public Fragment getItem(int position) {
+    public Fragment createFragment(int position) {
         return LyricsFragment.newInstance(position, mLyricsList.get(position).getLyrics());
     }
 
-
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return mLyricsList != null ? mLyricsList.size() : 0;
     }
-
 
 }
