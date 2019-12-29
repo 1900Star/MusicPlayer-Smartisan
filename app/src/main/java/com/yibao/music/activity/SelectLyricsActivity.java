@@ -2,10 +2,13 @@ package com.yibao.music.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -40,7 +43,6 @@ import io.reactivex.schedulers.Schedulers;
 public class SelectLyricsActivity extends AppCompatActivity {
     protected final String TAG = "====" + this.getClass().getSimpleName() + "    ";
     private ImageView mIvBack;
-    private TextView mMainTitle;
     private TextView mTvSearchComplete;
     private EditText mEditSongName;
     private EditText mEditArtist;
@@ -50,6 +52,7 @@ public class SelectLyricsActivity extends AppCompatActivity {
     private TextView mTvLyricsPageIndex;
     private List<SearchLyricsBean> mLyricsBeanList;
     private String mSongMid;
+    private ImageView mIvLoading;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,7 +96,8 @@ public class SelectLyricsActivity extends AppCompatActivity {
 
     private void initView() {
         mIvBack = findViewById(R.id.search_lyrics_titlebar_down);
-        mMainTitle = findViewById(R.id.main_title);
+        TextView mMainTitle = findViewById(R.id.main_title);
+        mIvLoading = findViewById(R.id.iv_search_lyrics_loading);
         mTvSearchComplete = findViewById(R.id.tv_search_lyrics_complete);
         mTvLyricsCount = findViewById(R.id.tv_search_lyrics_count);
         mEditSongName = findViewById(R.id.edit_search_lyrics_name);
@@ -106,6 +110,7 @@ public class SelectLyricsActivity extends AppCompatActivity {
 
 
     private void searchLyrics(boolean isNeedArtist) {
+        showProgress();
         mLyricsBeanList.clear();
         if (NetworkUtil.isNetworkConnected()) {
             String songName = mEditSongName.getText().toString().trim();
@@ -123,15 +128,13 @@ public class SelectLyricsActivity extends AppCompatActivity {
                         if (isNeedArtist) {
                             if (!Constants.NO_LYRICS.equals(content) && !Constants.PURE_MUSIC.equals(content) && songName.equals(songNames) && songSinger.contains(singer)) {
                                 SearchLyricsBean lyricsBean = new SearchLyricsBean(listBean.getSongmid(), listBean.getContent());
-                                LogUtil.d(TAG, "AAAAAAAAAAAAAAAAAAAA");
                                 if (!mLyricsBeanList.contains(lyricsBean)) {
                                     mLyricsBeanList.add(lyricsBean);
                                 }
                             }
 
                         } else {
-                            if (songName.equals(songNames)) {
-                                LogUtil.d(TAG, "BBBBBBBBBBBBBBBBBBBBB");
+                            if (!Constants.NO_LYRICS.equals(content) && !Constants.PURE_MUSIC.equals(content) && songName.equals(songNames)) {
                                 SearchLyricsBean lyricsBean = new SearchLyricsBean(listBean.getSongmid(), listBean.getContent());
                                 if (!mLyricsBeanList.contains(lyricsBean)) {
                                     mLyricsBeanList.add(lyricsBean);
@@ -139,6 +142,7 @@ public class SelectLyricsActivity extends AppCompatActivity {
                             }
                         }
                     }
+                    mIvLoading.setVisibility(View.GONE);
                     setTvIndex(mLyricsBeanList.size());
                     LyricsSearchPagerAdapter pagerAdapter2 = new LyricsSearchPagerAdapter(SelectLyricsActivity.this, mLyricsBeanList);
                     mViewPager2.setAdapter(pagerAdapter2);
@@ -151,9 +155,16 @@ public class SelectLyricsActivity extends AppCompatActivity {
                 }
             });
         } else {
+            mIvLoading.setVisibility(View.GONE);
             ToastUtil.show(this, Constants.NO_NETWORK);
         }
 
+    }
+
+    private void showProgress() {
+        mIvLoading.setVisibility(View.VISIBLE);
+        AnimationDrawable animation = (AnimationDrawable) mIvLoading.getBackground();
+        animation.start();
     }
 
     private void setTvIndex(int size) {

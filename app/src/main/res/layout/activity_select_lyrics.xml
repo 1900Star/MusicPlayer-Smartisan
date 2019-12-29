@@ -92,9 +92,9 @@
         android:layout_gravity="center_vertical"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
-        android:gravity="center_vertical"
         android:layout_marginEnd="10dp"
         android:background="@drawable/shape_btn_edit_selector"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
@@ -146,11 +146,26 @@
         android:gravity="center"
         android:textColor="@color/bg_hint" />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/vp2_search_lyrics"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp2_search_lyrics"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:id="@+id/iv_search_lyrics_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/search_loading_animation"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
 
     <TextView
         android:id="@+id/tv_lyrics_page_index"

@@ -94,7 +94,6 @@ public class PlayListFragment extends BaseLazyFragment {
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.play_list_fragment);
-
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.play_list));
         mAppBarLayout.setVisibility(isFormPlayListActivity && SpUtil.getAddToPlayListFdlag(mActivity) == Constants.NUMBER_ONE ? View.GONE : View.VISIBLE);
         mPlayListDao = MusicApplication.getIntstance().getPlayListDao();
