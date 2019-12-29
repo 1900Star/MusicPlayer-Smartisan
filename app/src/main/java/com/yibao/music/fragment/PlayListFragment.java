@@ -97,13 +97,16 @@ public class PlayListFragment extends BaseLazyFragment {
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.play_list));
         mAppBarLayout.setVisibility(isFormPlayListActivity && SpUtil.getAddToPlayListFdlag(mActivity) == Constants.NUMBER_ONE ? View.GONE : View.VISIBLE);
         mPlayListDao = MusicApplication.getIntstance().getPlayListDao();
+        if (isFormPlayListActivity) {
+            initData();
+        }
     }
 
     @Override
     protected void onLazyLoadData() {
         super.onLazyLoadData();
         initData();
-        initListener();
+
     }
 
 
@@ -128,6 +131,7 @@ public class PlayListFragment extends BaseLazyFragment {
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
         mPlayListContent.addView(recyclerView);
         mDetailsAdapter = new DetailsViewAdapter(mActivity, null, Constants.NUMBER_FOUR);
+        initListener();
     }
 
     private void setNotAllSelected(List<PlayListBean> listBeanList) {
