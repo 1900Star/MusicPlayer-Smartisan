@@ -112,7 +112,7 @@ public class MusicPlayService
         if (queryFlag != null && !queryFlag.equals(Constants.FAVORITE_FLAG) && !queryFlag.equals(Constants.NO_NEED_FLAG)) {
             SpUtil.setQueryFlag(MusicPlayService.this, queryFlag);
         }
-        LogUtil.d(TAG," position  ==" + enterPosition + "   sortListFlag  ==" + sortFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
+        LogUtil.d(TAG, " position  ==" + enterPosition + "   sortListFlag  ==" + sortFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
         mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao, sortFlag, dataFlag, queryFlag);
         if (enterPosition != position && enterPosition != -1) {
             position = enterPosition;
@@ -165,9 +165,10 @@ public class MusicPlayService
                 mediaPlayer.setOnPreparedListener(this);
                 mediaPlayer.setOnCompletionListener(this);
                 String songName = StringUtil.getSongName(mMusicInfo.getTitle());
-                boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(mMusicInfo.getTitle()), StringUtil.getArtist(mMusicInfo.getArtist()));
+                String artist = StringUtil.getArtist(mMusicInfo.getArtist());
+                boolean lyricIsExists = LyricsUtil.checkLyricFile(songName, artist);
                 if (!lyricIsExists && NetworkUtil.isNetworkConnected()) {
-                    QqMusicRemote.getSongLyrics(songName, StringUtil.getArtist(mMusicInfo.getArtist()));
+                    QqMusicRemote.getSongLyrics(songName, artist);
                 }
                 SpUtil.setMusicPosition(MusicPlayService.this, position);
                 showNotifycation(true);
@@ -469,7 +470,7 @@ public class MusicPlayService
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 // 短暂性丢失焦点并作降音处理
-                LogUtil.d(TAG,"====== 短暂性丢失焦点并作降音处理 ");
+                LogUtil.d(TAG, "====== 短暂性丢失焦点并作降音处理 ");
                 break;
             case AudioManager.AUDIOFOCUS_GAIN:
                 // 当其他应用申请焦点之后又释放焦点会触发此回调,可重新播放音乐

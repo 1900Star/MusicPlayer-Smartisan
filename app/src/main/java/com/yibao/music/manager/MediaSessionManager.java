@@ -11,15 +11,16 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import com.yibao.music.R;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.service.MusicPlayService;
+import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
 
 /**
+ * @author Luoshipeng
  * @ Name:   MediaSessionManager
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/11/18/ 17:57
  * @ Des:    TODO
- * @author Luoshipeng
  */
 public class MediaSessionManager {
 
@@ -50,7 +51,7 @@ public class MediaSessionManager {
             mMediaSession.setCallback(sessionCb);
             mMediaSession.setActive(true);
         } catch (Exception e) {
-            LogUtil.d(TAG,e.toString());
+            LogUtil.d(TAG, e.toString());
         }
     }
 
@@ -109,7 +110,8 @@ public class MediaSessionManager {
     };
 
     private Bitmap getCoverBitmap(MusicBean musicBean) {
-        String albumArtPath = StringUtil.getAlbumArtPath(mContext, String.valueOf(musicBean.getAlbumId()));
+//        String albumArtPath = StringUtil.getAlbumArtPath(mContext, String.valueOf(musicBean.getAlbumId()));
+        String albumArtPath = FileUtil.getNotifyAlbumUrl(mContext, musicBean);
         if (StringUtil.isReal(albumArtPath)) {
             return BitmapFactory.decodeFile(albumArtPath);
         } else {

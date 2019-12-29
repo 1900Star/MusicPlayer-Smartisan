@@ -92,6 +92,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
+        android:gravity="center_vertical"
         android:layout_marginEnd="10dp"
         android:background="@drawable/shape_btn_edit_selector"
         android:orientation="horizontal">
@@ -121,18 +122,18 @@
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
-
             android:layout_marginBottom="10dp"
-            android:background="#5A85EB" />
+            android:background="@color/aboutSign" />
 
         <ImageView
             android:id="@+id/iv_search_lyrics"
-            android:layout_width="48dp"
-            android:layout_height="28dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginEnd="3dp"
             android:contentDescription="@null"
             android:scaleType="center"
-            android:src="@drawable/iv_title_search_"
+            android:src="@drawable/lyrics_select_search_selector"
             android:visibility="visible" />
     </LinearLayout>
 

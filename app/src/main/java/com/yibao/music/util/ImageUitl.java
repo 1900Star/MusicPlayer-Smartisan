@@ -89,7 +89,7 @@ public class ImageUitl {
                 }
             }).placeholder(placeId).error(placeId).apply(options).into(view);
         } else {
-            LogUtil.d(TAG,"Picture loading failed,context is null");
+            LogUtil.d(TAG, "Picture loading failed,context is null");
         }
 
     }
@@ -102,7 +102,7 @@ public class ImageUitl {
             options.diskCacheStrategy(DiskCacheStrategy.ALL);
             Glide.with(context).load(url).apply(options).into(view);
         } else {
-            LogUtil.d(TAG,"Picture loading failed,context is null");
+            LogUtil.d(TAG, "Picture loading failed,context is null");
         }
     }
 
@@ -116,7 +116,7 @@ public class ImageUitl {
                     .apply(options)
                     .into(view);
         } else {
-            LogUtil.d(TAG,"Picture loading failed,context is null");
+            LogUtil.d(TAG, "Picture loading failed,context is null");
         }
 
     }
@@ -130,31 +130,36 @@ public class ImageUitl {
      * @param artist    歌手名
      */
     public static void glideSaveImg(Context context, String url, int imageType, String songName, String artist) {
-        Observable.create((ObservableOnSubscribe<File>) e -> {
-            e.onNext(Glide.with(context)
-                    .load(url)
-                    .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                    .get());
-            e.onComplete();
-        }).subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.newThread())
-                .subscribe(file -> {
-                    //获取到下载得到的图片，进行本地保存
-                    String path = imageType == 1
-                            ? Constants.MUSIC_SONG_ALBUM_ROOT : imageType == 2
-                            ? Constants.MUSIC_ARITIST_IMG_ROOT : Constants.MUSIC_ALBUM_ROOT;
-                    File songAlbumFile = new File(path);
-                    if (!songAlbumFile.exists()) {
-                        songAlbumFile.mkdirs();
-                    }
-                    String fileName = imageType == 1
-                            ? songName + ".jpg" : imageType == 2
-                            ? artist + ".jpg" : artist + ".jpg";
-                    File destFile = new File(songAlbumFile, fileName);
-                    //把gilde下载得到图片复制到定义好的目录中去
-                    copy(file, destFile);
+        try {
+            Observable.create((ObservableOnSubscribe<File>) e -> {
+                e.onNext(Glide.with(context)
+                        .load(url).error(R.drawable.nina)
+                        .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                        .get());
+                e.onComplete();
+            }).subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.newThread())
+                    .subscribe(file -> {
+                        //获取到下载得到的图片，进行本地保存
+                        String path = imageType == 1
+                                ? Constants.MUSIC_SONG_ALBUM_ROOT : imageType == 2
+                                ? Constants.MUSIC_ARITIST_IMG_ROOT : Constants.MUSIC_ALBUM_ROOT;
+                        File songAlbumFile = new File(path);
+                        if (!songAlbumFile.exists()) {
+                            songAlbumFile.mkdirs();
+                        }
+                        String fileName = imageType == 1
+                                ? songName + ".jpg" : imageType == 2
+                                ? artist + ".jpg" : artist + ".jpg";
+                        File destFile = new File(songAlbumFile, fileName);
+                        //把gilde下载得到图片复制到定义好的目录中去
+                        copy(file, destFile);
 
-                });
+                    });
+        } catch (Exception e) {
+            LogUtil.d(TAG, e.getMessage());
+        }
+
     }
 
     /**

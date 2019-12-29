@@ -59,12 +59,12 @@ public class FileUtil {
     /**
      * 歌曲是否从qq音乐下载过专辑图片
      *
-     * @param imageType 1 歌曲图片 、2 歌手图片 、3 专辑图片
+     * @param imageType 1 歌曲图片 、2 歌手图片 、3 专辑图片 、4 通知栏图片
      * @param songName  s
      * @param artist    a
      * @return b
      */
-    public static boolean albumFileExists(int imageType, String songName, String artist) {
+    private static boolean albumFileExists(int imageType, String songName, String artist) {
 
         String albumPath = imageType == 1
                 ? Constants.MUSIC_SONG_ALBUM_ROOT + songName + ".jpg" : imageType == 2
@@ -79,7 +79,7 @@ public class FileUtil {
     }
 
     public static String getNotifyAlbumUrl(Context context, MusicBean bean) {
-        boolean b = FileUtil.albumFileExists(4, bean.getTitle(), bean.getArtist());
+        boolean b = FileUtil.albumFileExists(1, bean.getTitle(), bean.getArtist());
         return b ? StringUtil.getDownAlbum(bean.getTitle(), bean.getArtist()) : StringUtil.getAlbumArtPath(context, String.valueOf(bean.getAlbumId()));
     }
 

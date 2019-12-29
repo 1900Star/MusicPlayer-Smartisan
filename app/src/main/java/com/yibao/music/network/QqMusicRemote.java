@@ -125,6 +125,7 @@ public class QqMusicRemote {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
+                        LogUtil.d(TAG, "保存歌词出错 " + e.getMessage());
                     }
                 });
     }
@@ -169,16 +170,18 @@ public class QqMusicRemote {
     }
 
     public static void getOnlineLyrics(String songMid, String songName, String artist) {
-        RetrofitHelper.getMusicService().getOnlineSongLrc(songMid)
+        LogUtil.d(TAG, songMid + songName + artist);
+        RetrofitHelper.getMusicService().getOnlineSongLrc(songMid).subscribeOn(Schedulers.io())
                 .subscribe(new BaseObserver<OnlineSongLrc>() {
                     @Override
                     public void onNext(OnlineSongLrc onlineSongLrc) {
-                        sendSearchLyricsResult(onlineSongLrc, songName, artist);
+                            sendSearchLyricsResult(onlineSongLrc, songName, artist);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
+                        LogUtil.d(TAG, "保存歌词出错 select  " + e.getLocalizedMessage());
                     }
                 });
     }

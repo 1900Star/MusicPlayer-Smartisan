@@ -80,7 +80,7 @@ public class AlbumAdapter
         int position = albumlistHolder.getAdapterPosition();
 
         albumlistHolder.mTvAlbumListSongArtist.setText(info.getArtist());
-        ImageUitl.customLoadPic(mContext, StringUtil.getAlbum(2,info.getAlbumId(), info.getArtist()), R.drawable.noalbumcover_220, albumlistHolder.mIvItemAlbumList);
+        ImageUitl.customLoadPic(mContext, StringUtil.getAlbum(2, info.getAlbumId(), info.getAlbumName()), R.drawable.noalbumcover_220, albumlistHolder.mIvItemAlbumList);
         albumlistHolder.mTvAlbumListSongName.setText(info.getAlbumName());
         String songCount = info.getSongCount() + "首";
         albumlistHolder.mTvAlbumListSongCount.setText(songCount);
@@ -113,7 +113,7 @@ public class AlbumAdapter
     private void setDataAlbumTile(AlbumTileHolder holder, AlbumInfo albumInfo) {
 
 
-        ImageUitl.customLoadPic(mContext, StringUtil.getAlbum(2,albumInfo.getAlbumId(), albumInfo.getArtist()), R.drawable.noalbumcover_120, holder.mIvAlbumTileAlbum);
+        ImageUitl.customLoadPic(mContext, StringUtil.getAlbum(2, albumInfo.getAlbumId(), albumInfo.getAlbumName()), R.drawable.noalbumcover_120, holder.mIvAlbumTileAlbum);
         holder.mTvAlbumTileName.setText(albumInfo.getAlbumName());
 
         holder.mIvAlbumTileAlbum.setOnClickListener(view1 -> AlbumAdapter.this.openDetails(albumInfo, holder.getAdapterPosition(), false));

@@ -204,7 +204,7 @@ public class DetailsView
     private void setMusicInfo(int dataType, String albumName, String artist, long albumId, int issueYear) {
         mTvArtistAlbummDetailsTitle.setText(albumName);
         mTvArtistAlbummDetailsArtist.setText(artist);
-        ImageUitl.loadPic((Activity) getContext(), StringUtil.getAlbum(dataType, (albumId), artist), mIvArtistAlbummDetails, R.drawable.noalbumcover_220, isSuccess -> {
+        ImageUitl.loadPic((Activity) getContext(), StringUtil.getAlbum(dataType, albumId, artist), mIvArtistAlbummDetails, R.drawable.noalbumcover_220, isSuccess -> {
             if (!isSuccess) {
                 if (dataType == 1) {
                     QqMusicRemote.getArtistImg(getContext(), artist, url -> {

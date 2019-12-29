@@ -155,4 +155,11 @@ public class Constants {
     public static final String IMAGE_FILE_NAME = "temp_head_image.jpg";
     public static final String CROP_IMAGE_FILE_NAME = "header.jpg";
     public static final String MQMS2 = "[mqms2]";
+    /**
+     * 选择歌词完成
+     */
+    public static final int SELECT_LYRICS = 22;
+    public static final String SONGMID = "song_mid";
+
+
 }

@@ -26,6 +26,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".activity.SelectLyricsActivity"
+            android:windowSoftInputMode="adjustNothing"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.SplashActivity"

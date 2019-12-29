@@ -198,11 +198,12 @@
 
             <ImageView
                 android:id="@+id/iv_select_lyric"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="4dp"
                 android:layout_gravity="center"
                 android:contentDescription="@null"
-                android:src="@drawable/delete_lyric_selector" />
+                android:src="@drawable/more_select_icon_lyric" />
 
         </LinearLayout>
 
@@ -233,8 +234,9 @@
                 android:layout_gravity="center"
                 android:contentDescription="@null"
                 android:src="@drawable/delete_lyric_selector" />
-        </LinearLayout>
 
+
+        </LinearLayout>
 
     </FrameLayout>
 

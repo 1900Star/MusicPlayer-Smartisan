@@ -301,22 +301,27 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     private void setAlbulm(String url) {
-        ImageUitl.loadPic(this, url, mPlayingSongAlbum, R.drawable.playing_cover_lp, isSuccess -> {
-            if (isSuccess) {
-                showAlbum(true);
-            } else {
-                QqMusicRemote.getSongImg(PlayActivity.this, mCurrenMusicInfo.getTitle(), url1 -> {
-                    if (url1 == null) {
-                        showAlbum(false);
-                    } else {
-                        Glide.with(PlayActivity.this).load(url1).placeholder(R.drawable.playing_cover_lp).error(R.drawable.playing_cover_lp).into(mPlayingSongAlbum);
-                        showAlbum(true);
-                    }
-                });
+        try {
+            ImageUitl.loadPic(this, url, mPlayingSongAlbum, R.drawable.playing_cover_lp, isSuccess -> {
+                if (isSuccess) {
+                    showAlbum(true);
+                } else {
+                    QqMusicRemote.getSongImg(PlayActivity.this, mCurrenMusicInfo.getTitle(), url1 -> {
+                        if (url1 == null) {
+                            showAlbum(false);
+                        } else {
+                            Glide.with(PlayActivity.this).load(url1).placeholder(R.drawable.playing_cover_lp).error(R.drawable.playing_cover_lp).into(mPlayingSongAlbum);
+                            showAlbum(true);
+                        }
+                    });
 
 
-            }
-        });
+                }
+            });
+        } catch (Exception e) {
+            LogUtil.d(TAG, e.getMessage());
+        }
+
 
     }
 
@@ -423,9 +428,9 @@ public class PlayActivity extends BasePlayActivity {
                 break;
             case R.id.iv_select_lyric:
                 Intent intent = new Intent(this, SelectLyricsActivity.class);
-                intent.putExtra(Constants.SONG_NAME, mCurrenMusicInfo.getTitle());
-                intent.putExtra(Constants.SONG_ARTIST, mCurrenMusicInfo.getArtist());
-                startActivity(intent);
+                intent.putExtra(Constants.SONG_NAME, StringUtil.getSongName(mCurrenMusicInfo.getTitle()));
+                intent.putExtra(Constants.SONG_ARTIST, StringUtil.getArtist(mCurrenMusicInfo.getArtist()));
+                startActivityForResult(intent, Constants.SELECT_LYRICS);
                 overridePendingTransition(R.anim.dialog_push_in, 0);
                 break;
             case R.id.iv_secreen_sun_switch:
@@ -462,7 +467,6 @@ public class PlayActivity extends BasePlayActivity {
         if (lyricsOK) {
             mLyricList = LyricsUtil.getLyricList(mCurrenMusicInfo);
         }
-        //TODO
         mLyricsView.setLrcFile(lyricsOK ? mLyricList : null, downMsg);
         closeLyricsView();
 
@@ -560,4 +564,18 @@ public class PlayActivity extends BasePlayActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.SELECT_LYRICS) {
+            if (data != null) {
+                String songMid = data.getStringExtra(Constants.SONGMID);
+                if (songMid != null) {
+                    LyricsUtil.deleteCurrentLyric(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
+                    QqMusicRemote.getOnlineLyrics(songMid, mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
+                    showLyrics();
+                }
+            }
+        }
+    }
 }
