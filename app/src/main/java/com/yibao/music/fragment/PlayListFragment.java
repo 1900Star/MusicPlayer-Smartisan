@@ -2,17 +2,12 @@ package com.yibao.music.fragment;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.google.android.material.appbar.AppBarLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.SparseBooleanArray;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.yibao.music.MusicApplication;
@@ -21,7 +16,6 @@ import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.BaseLazyFragment;
-import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnFinishActivityListener;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
@@ -33,7 +27,6 @@ import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.ThreadPoolProxyFactory;
@@ -46,7 +39,6 @@ import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -85,7 +77,7 @@ public class PlayListFragment extends BaseLazyFragment {
     private Disposable mAddDeleteListDisposable;
     private static ArrayList<String> mArrayLisopenDetailst;
     private String mTempTitle;
-    private static boolean isFormPlayListActivity;
+    private static boolean isFromPlayListActivity;
     private SparseBooleanArray checkBoxMap = new SparseBooleanArray();
     private List<PlayListBean> mSelecteList = new ArrayList<>();
     private PlayListBeanDao mPlayListDao;
@@ -95,9 +87,9 @@ public class PlayListFragment extends BaseLazyFragment {
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.play_list_fragment);
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.play_list));
-        mAppBarLayout.setVisibility(isFormPlayListActivity && SpUtil.getAddToPlayListFdlag(mActivity) == Constants.NUMBER_ONE ? View.GONE : View.VISIBLE);
+        mAppBarLayout.setVisibility(isFromPlayListActivity && SpUtil.getAddToPlayListFdlag(mActivity) == Constants.NUMBER_ONE ? View.GONE : View.VISIBLE);
         mPlayListDao = MusicApplication.getIntstance().getPlayListDao();
-        if (isFormPlayListActivity) {
+        if (isFromPlayListActivity) {
             initData();
         }
     }
@@ -177,7 +169,7 @@ public class PlayListFragment extends BaseLazyFragment {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(newPlayList -> {
                                 mAdapter.setNewData(newPlayList);
-                                if (isFormPlayListActivity) {
+                                if (isFromPlayListActivity) {
                                     addToList(getPlayList().get(mEditPosition));
                                 }
                             }
@@ -221,12 +213,12 @@ public class PlayListFragment extends BaseLazyFragment {
             }
         });
 
-        mLlAddNewPlayList.setOnClickListener(v -> AddListDialog.newInstance(1, Constants.NULL_STRING, isFormPlayListActivity).show(getChildFragmentManager(), "addList"));
+        mLlAddNewPlayList.setOnClickListener(v -> AddListDialog.newInstance(1, Constants.NULL_STRING, isFromPlayListActivity).show(getChildFragmentManager(), "addList"));
         // item 点击
         mAdapter.setItemListener((playListBean, position, isEditStatus) -> {
             mTempTitle = playListBean.getTitle();
             // 从PlayListActivity过来的
-            if (isFormPlayListActivity) {
+            if (isFromPlayListActivity) {
                 addToList(playListBean);
             } else {
                 if (!isEditStatus) {
@@ -236,7 +228,7 @@ public class PlayListFragment extends BaseLazyFragment {
         });
         // 长按删除
         mAdapter.setItemLongClickListener((musicInfo, currentPosition) -> {
-            if (isFormPlayListActivity) {
+            if (isFromPlayListActivity) {
                 mDeletePosition = currentPosition;
                 DeletePlayListDialog.newInstance(musicInfo, Constants.NUMBER_TWO).show(getChildFragmentManager(), "deleteList");
             }
@@ -356,7 +348,7 @@ public class PlayListFragment extends BaseLazyFragment {
     }
 
     public static PlayListFragment newInstance(String songName, ArrayList<String> arrayList, boolean formPlayListActivity) {
-        isFormPlayListActivity = formPlayListActivity;
+        isFromPlayListActivity = formPlayListActivity;
         mSongName = songName;
         mArrayLisopenDetailst = arrayList;
         return new PlayListFragment();
@@ -366,7 +358,7 @@ public class PlayListFragment extends BaseLazyFragment {
     public void onPause() {
         super.onPause();
         if (SpUtil.getAddToPlayListFdlag(mActivity) == Constants.NUMBER_ZERO) {
-            isFormPlayListActivity = false;
+            isFromPlayListActivity = false;
         }
         if (mAddDeleteListDisposable != null) {
             mAddDeleteListDisposable.dispose();

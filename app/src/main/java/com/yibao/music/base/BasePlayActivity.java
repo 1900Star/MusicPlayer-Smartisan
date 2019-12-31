@@ -58,36 +58,6 @@ public abstract class BasePlayActivity extends BaseTansitionActivity implements 
         registerVolumeReceiver();
     }
 
-    /**
-     * 停止更新
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        clearDisposableLyric();
-        if (mWakeLock != null) {
-            if (mWakeLock.isHeld()) {
-                mWakeLock.release();
-                mWakeLock = null;
-            }
-        }
-    }
-
-    protected void clearDisposableLyric() {
-        if (mDisposableLyrics != null) {
-            mDisposableLyrics.dispose();
-            mDisposableLyrics = null;
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(mVolumeReceiver);
-        if (audioBinder != null) {
-            audioBinder = null;
-        }
-    }
 
     @SuppressLint("InvalidWakeLockTag")
     private void init() {
@@ -237,4 +207,35 @@ public abstract class BasePlayActivity extends BaseTansitionActivity implements 
      * @param b        b
      */
     protected abstract void updataMusicBarAndVolumeBar(SeekBar seekBar, int progress, boolean b);
+
+    /**
+     * 停止更新
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        clearDisposableLyric();
+        if (mWakeLock != null) {
+            if (mWakeLock.isHeld()) {
+                mWakeLock.release();
+                mWakeLock = null;
+            }
+        }
+    }
+
+    protected void clearDisposableLyric() {
+        if (mDisposableLyrics != null) {
+            mDisposableLyrics.dispose();
+            mDisposableLyrics = null;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mVolumeReceiver);
+        if (audioBinder != null) {
+            audioBinder = null;
+        }
+    }
 }
