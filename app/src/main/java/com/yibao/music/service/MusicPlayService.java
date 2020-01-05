@@ -9,17 +9,16 @@ import android.content.ServiceConnection;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Binder;
 import android.os.IBinder;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
+import com.yibao.music.aidl.MusicBean;
+import com.yibao.music.aidl.MusicLyricBean;
 import com.yibao.music.manager.MediaSessionManager;
 import com.yibao.music.manager.MusicNotifyManager;
-import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.network.QqMusicRemote;
-import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
@@ -47,7 +46,7 @@ import io.reactivex.disposables.Disposable;
  */
 public class MusicPlayService
         extends Service {
-    private static final String TAG = "====" + MusicListUtil.class.getSimpleName() + "    ";
+    private static final String TAG = "====" + MusicPlayService.class.getSimpleName() + "    ";
     private MediaPlayer mediaPlayer;
     private AudioBinder mAudioBinder;
     private int playMode;
@@ -70,7 +69,7 @@ public class MusicPlayService
 
     @Override
     public IBinder onBind(Intent intent) {
-        return mAudioBinder;
+        return new AudioBinder();
     }
 
     @Override
@@ -120,7 +119,7 @@ public class MusicPlayService
             mAudioBinder.play();
         } else if (enterPosition != -1) {
             //通知播放界面更新
-            sendCureentMusicInfo();
+            sendCurrentMusicInfo();
         }
         if (mMusicDataList != null && mMusicDataList.size() > 0) {
             MusicBean musicBean = mMusicDataList.get(position);
@@ -134,22 +133,26 @@ public class MusicPlayService
     /**
      * 通知播放界面更新
      */
-    private void sendCureentMusicInfo() {
+    private void sendCurrentMusicInfo() {
         if (mMusicDataList != null && position < mMusicDataList.size()) {
             MusicBean musicBean = mMusicDataList.get(position);
             musicBean.setCureetPosition(position);
             mBus.post(Constants.SERVICE_MUSIC, musicBean);
+
+            LogUtil.d(TAG, "null fuck   " + musicBean.toString());
+        } else {
+            LogUtil.d(TAG, "null music ");
         }
     }
 
-
     public class AudioBinder
-            extends Binder
+            extends com.yibao.music.aidl.IMusicAidlInterface.Stub
             implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
         private MusicBean mMusicInfo;
         private MusicNotifyManager mNotifyManager;
 
-        private void play() {
+        @Override
+        public void play() {
 
             if (mediaPlayer != null) {
                 mediaPlayer.reset();
@@ -160,6 +163,7 @@ public class MusicPlayService
             if (mMusicDataList != null && mMusicDataList.size() > 0) {
                 position = position >= mMusicDataList.size() ? 0 : position;
                 mMusicInfo = mMusicDataList.get(position);
+                LogUtil.d(TAG, "service  " + mMusicInfo.toString());
                 mediaPlayer = MediaPlayer.create(MusicPlayService.this,
                         Uri.parse(mMusicInfo.getSongUrl()));
                 mediaPlayer.setOnPreparedListener(this);
@@ -178,7 +182,8 @@ public class MusicPlayService
 
         }
 
-        private void showNotifycation(boolean b) {
+        @Override
+        public void showNotifycation(boolean b) {
             mNotifyManager = new MusicNotifyManager(getApplication(), mMusicInfo, b);
             mNotifyManager.show();
         }
@@ -197,48 +202,35 @@ public class MusicPlayService
             }
         }
 
-        private void hintNotifycation() {
+        @Override
+        public void hintNotifycation() {
             mNotifyManager.hide();
         }
 
+        @Override
         public MusicBean getMusicBean() {
+//            LogUtil.d(TAG, mMusicInfo.toString());
             return mMusicInfo;
         }
         // 准备完成回调
 
-        @Override
-        public void onPrepared(MediaPlayer mediaPlayer) {
-            // 开启播放
-            mediaPlayer.start();
-            // 通知播放界面更新
-            sendCureentMusicInfo();
-        }
-
 
         // 获取当前播放进度
-
+        @Override
         public int getProgress() {
             return mediaPlayer.getCurrentPosition();
         }
 
         // 获取音乐总时长
-
+        @Override
         public int getDuration() {
             return mediaPlayer.getDuration();
-        }
-
-        // 音乐播放完成监听
-
-        @Override
-        public void onCompletion(MediaPlayer mediaPlayer) {
-            // 自动播放下一首歌曲
-            autoPlayNext();
         }
 
 
         // 自动播放下一曲
 
-        private void autoPlayNext() {
+        public void autoPlayNext() {
             switch (playMode) {
                 case PLAY_MODE_ALL:
                     position = (position + 1) % mMusicDataList.size();
@@ -296,11 +288,12 @@ public class MusicPlayService
         }
 
         //true 当前正在播放
-
+        @Override
         public boolean isPlaying() {
             return mediaPlayer.isPlaying();
         }
 
+        @Override
         public void start() {
             mediaPlayer.start();
             mSessionManager.updatePlaybackState(true);
@@ -309,23 +302,45 @@ public class MusicPlayService
         }
 
         //暂停播放
-
+        @Override
         public void pause() {
             mediaPlayer.pause();
             mSessionManager.updatePlaybackState(false);
             showNotifycation(false);
         }
 
-        //跳转到指定位置进行播放
+        @Override
+        public void onCompletion(MediaPlayer mediaPlayer) {
+            // 自动播放下一首歌曲
+            autoPlayNext();
+        }
 
+        @Override
+        public void onPrepared(MediaPlayer mediaPlayer) {
+            // 开启播放
+            mediaPlayer.start();
+            // 通知播放界面更新
+            sendCurrentMusicInfo();
+        }
+
+        //跳转到指定位置进行播放
+        @Override
         public void seekTo(int progress) {
             mediaPlayer.seekTo(progress);
         }
 
+
+        @Override
         public List<MusicBean> getMusicList() {
             return mMusicDataList;
         }
 
+        @Override
+        public List<MusicLyricBean> getLyricList() {
+            return null;
+        }
+
+        @Override
         public int getPosition() {
             return position;
         }
@@ -337,7 +352,8 @@ public class MusicPlayService
         }
     }
 
-    private void refreshFavorite(MusicBean currentMusicBean, boolean mCurrentIsFavorite) {
+    private void refreshFavorite(MusicBean currentMusicBean,
+                                 boolean mCurrentIsFavorite) {
         // 数据更新
         currentMusicBean.setIsFavorite(!mCurrentIsFavorite);
         if (!mCurrentIsFavorite) {
@@ -484,15 +500,16 @@ public class MusicPlayService
     /**
      * 是否失去焦点
      *
-     * @param isLossFocus b
+     * @param isLossFoucs b
      */
-    private void lossAudioFoucs(boolean isLossFocus) {
-        if (isLossFocus) {
+    private void lossAudioFoucs(boolean isLossFoucs) {
+        if (isLossFoucs) {
             mAudioBinder.pause();
-            SpUtil.setFoucesFlag(this, true);
         } else {
             mAudioBinder.start();
         }
+
+        SpUtil.setFoucesFlag(this, true);
         mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_ZERO);
     }
 

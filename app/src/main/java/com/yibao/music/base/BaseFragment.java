@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager;
 import com.baidu.mobstat.StatService;
 import com.squareup.leakcanary.RefWatcher;
 import com.yibao.music.MusicApplication;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.model.greendao.AlbumInfoDao;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.RxBus;

@@ -160,6 +160,7 @@ public class Constants {
      */
     public static final int SELECT_LYRICS = 22;
     public static final String SONGMID = "song_mid";
+    public static final String MUSIC_BEAN = "music_bean";
 
 
 }

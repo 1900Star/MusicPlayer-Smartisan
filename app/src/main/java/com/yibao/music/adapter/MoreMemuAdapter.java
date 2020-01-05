@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.yibao.music.R;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.model.MoreMenuBean;
-import com.yibao.music.model.MusicBean;
+import com.yibao.music.aidl.MusicBean;
 
 import java.util.List;
 

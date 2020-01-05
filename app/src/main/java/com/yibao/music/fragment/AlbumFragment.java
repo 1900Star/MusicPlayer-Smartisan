@@ -18,11 +18,10 @@ import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.MusicPagerListener;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.AlbumInfo;
-import com.yibao.music.model.MusicBean;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicToolBar;
 

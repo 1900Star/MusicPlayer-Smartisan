@@ -1,12 +1,8 @@
 package com.yibao.music.fragment.dialogfrag;
 
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -14,15 +10,23 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.adapter.BottomSheetAdapter;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.model.AddAndDeleteListBean;
-import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
+import com.yibao.music.service.AudioServiceConnection;
 import com.yibao.music.service.MusicPlayService;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
@@ -39,6 +43,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Des：${TODO}
@@ -62,6 +67,7 @@ public class FavoriteBottomSheetDialog
             mBus = RxBus.getInstance();
     private BottomSheetAdapter mAdapter;
     private static String mSongTitle;
+    private AudioServiceConnection mConnection;
     private MusicBeanDao mMusicDao;
 
     public static FavoriteBottomSheetDialog newInstance(String songTitle) {
@@ -91,8 +97,24 @@ public class FavoriteBottomSheetDialog
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
         mBehavior = BottomSheetBehavior.from((View) view.getParent());
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.setOnCancelListener(dialog12 -> FavoriteBottomSheetDialog.this.clearDisposable());
+        mBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                LogUtil.d(TAG, "bottom state " + newState);
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    if (mConnection != null) {
+                        mContext.unbindService(mConnection);
+                    }
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+        dialog.setOnCancelListener(dialog12 -> clearDisposable());
+
     }
 
     private void clearDisposable() {
@@ -183,6 +205,7 @@ public class FavoriteBottomSheetDialog
 
     private void clearAllFavoriteMusic() {
         mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
         mCompositeDisposable.add(Observable.fromIterable(mList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -215,7 +238,8 @@ public class FavoriteBottomSheetDialog
         intent.setClass(mContext, MusicPlayService.class);
         intent.putExtra("sortFlag", Constants.NUMBER_EIGHT);
         intent.putExtra("position", position);
-        LogUtil.d(TAG,"===========      " + position);
+        mConnection = new AudioServiceConnection();
+        mContext.bindService(intent, mConnection, Service.BIND_AUTO_CREATE);
         mContext.startService(intent);
         SpUtil.setSortFlag(mContext, Constants.NUMBER_EIGHT);
     }
@@ -227,6 +251,7 @@ public class FavoriteBottomSheetDialog
         mBottomListClear = view.findViewById(R.id.bottom_sheet_bar_clear);
         mBottomListTitleSize = view.findViewById(R.id.bottom_list_title_size);
     }
+
 
 }
 

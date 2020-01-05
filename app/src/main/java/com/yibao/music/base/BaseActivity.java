@@ -12,9 +12,9 @@ import com.yibao.music.R;
 import com.yibao.music.activity.PlayActivity;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.activity.SearchActivity;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.model.LyricDownBean;
 import com.yibao.music.model.MoreMenuStatus;
-import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
@@ -82,7 +82,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         mCompositeDisposable.add(mBus.toObservableType(Constants.SERVICE_MUSIC, MusicBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::updataCurrentPlayInfo));
+                .subscribe(this::updateCurrentPlayInfo));
         // 接收歌词下载状态
         mCompositeDisposable.add(mBus.toObservableType(Constants.MUSIC_LYRIC_OK, LyricDownBean.class)
                 .subscribeOn(Schedulers.io())
@@ -137,12 +137,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * @param musicItem 当前播放的歌曲信息，用于更新进度和动画状态,需要用的界面复写这个方法
      */
-    protected void updataCurrentPlayInfo(MusicBean musicItem) {
+    protected void updateCurrentPlayInfo(MusicBean musicItem) {
         upDataPlayProgress();
     }
 
-    protected void startPlayActivity() {
-        startActivity(new Intent(this, PlayActivity.class));
+    protected void startPlayActivity(MusicBean musicBean) {
+        Intent intent = new Intent(this, PlayActivity.class);
+        intent.putExtra(Constants.MUSIC_BEAN, musicBean);
+        startActivity(intent);
         overridePendingTransition(R.anim.dialog_push_in, 0);
     }
 
@@ -161,7 +163,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void startSearchActivity(MusicBean currentMusicBean) {
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra("pageType", Constants.NUMBER_ONE);
-        intent.putExtra("musicBean", currentMusicBean);
+        intent.putExtra(Constants.MUSIC_BEAN, currentMusicBean);
         startActivity(intent);
         overridePendingTransition(R.anim.dialog_push_in, 0);
     }

@@ -1,5 +1,7 @@
 package com.yibao.music.model;
 
+import com.yibao.music.aidl.MusicBean;
+
 /**
  * @ Name:   MoreMenuStatus
  * @ Email:  strangermy98@gmail.com

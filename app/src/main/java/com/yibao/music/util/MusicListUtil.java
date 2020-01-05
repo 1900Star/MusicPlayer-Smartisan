@@ -7,7 +7,7 @@ import android.provider.MediaStore;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
-import com.yibao.music.model.MusicBean;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 
 import java.util.ArrayList;

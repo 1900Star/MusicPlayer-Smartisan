@@ -10,7 +10,7 @@ import android.provider.MediaStore;
 
 import androidx.core.content.FileProvider;
 
-import com.yibao.music.model.MusicBean;
+import com.yibao.music.aidl.MusicBean;
 
 import java.io.File;
 import java.io.IOException;

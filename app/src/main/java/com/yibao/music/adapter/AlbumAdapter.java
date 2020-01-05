@@ -4,7 +4,6 @@ package com.yibao.music.adapter;
 import android.app.Activity;
 
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;

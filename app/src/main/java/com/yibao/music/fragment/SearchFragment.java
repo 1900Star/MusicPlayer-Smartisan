@@ -2,10 +2,6 @@ package com.yibao.music.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +9,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.base.BaseFragment;
 import com.yibao.music.base.BaseObserver;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnFlowLayoutClickListener;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.MoreMenuStatus;
-import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.SearchCategoryBean;
 import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;

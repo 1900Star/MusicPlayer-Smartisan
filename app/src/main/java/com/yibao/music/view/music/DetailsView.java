@@ -3,14 +3,6 @@ package com.yibao.music.view.music;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,17 +12,24 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.fragment.dialogfrag.AlbumDetailDialogFragment;
-import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
+import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
-import com.yibao.music.model.MusicBean;
 import com.yibao.music.network.QqMusicRemote;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
@@ -139,7 +138,7 @@ public class DetailsView
                 startPlayListActivity();
                 break;
             case R.id.iv_details_add_to_play_list:
-                LogUtil.d(TAG,"=================添加到当前播放列表");
+                LogUtil.d(TAG, "=================添加到当前播放列表");
                 break;
             case R.id.ll_album_details_playall:
                 startMusic(Constants.NUMBER_ZERO);

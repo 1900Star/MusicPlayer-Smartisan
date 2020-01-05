@@ -19,7 +19,7 @@ import android.widget.RemoteViews;
 import com.yibao.music.R;
 import com.yibao.music.activity.MusicActivity;
 import com.yibao.music.base.listener.NotifycationChangeListener;
-import com.yibao.music.model.MusicBean;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.model.TitleAndArtistBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;

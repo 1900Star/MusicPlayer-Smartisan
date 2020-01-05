@@ -7,7 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import com.yibao.music.model.MusicBean;
+import com.yibao.music.aidl.MusicBean;
 
 import java.io.File;
 import java.text.ParseException;

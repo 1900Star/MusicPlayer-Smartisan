@@ -1,7 +1,5 @@
 package com.yibao.music.adapter;
 
-import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,11 +7,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.model.AddAndDeleteListBean;
-import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;

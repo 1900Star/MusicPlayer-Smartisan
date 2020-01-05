@@ -2,8 +2,8 @@ package com.yibao.music.util;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.base.listener.OnSearchFlagListener;
-import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 
 import java.io.FileNotFoundException;

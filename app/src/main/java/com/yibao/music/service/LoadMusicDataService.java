@@ -6,7 +6,7 @@ import android.content.Intent;
 import androidx.annotation.Nullable;
 
 import com.yibao.music.MusicApplication;
-import com.yibao.music.model.MusicBean;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.model.MusicCountBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;

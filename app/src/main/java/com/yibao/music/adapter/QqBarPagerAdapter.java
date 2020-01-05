@@ -17,8 +17,8 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
-import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.FileUtil;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.StringUtil;
 

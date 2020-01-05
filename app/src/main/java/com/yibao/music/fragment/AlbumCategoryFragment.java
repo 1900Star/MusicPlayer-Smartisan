@@ -2,19 +2,11 @@ package com.yibao.music.fragment;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.yibao.music.R;
 import com.yibao.music.adapter.AlbumAdapter;
+import com.yibao.music.aidl.MusicBean;
 import com.yibao.music.base.BaseLazyFragment;
-import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.model.AlbumInfo;
-import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.AlbumInfoDao;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
@@ -26,8 +18,6 @@ import com.yibao.music.view.music.MusicView;
 import java.util.Collections;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 

@@ -1,9 +1,8 @@
 package com.yibao.music.util;
 
-import com.yibao.music.model.LyricDownBean;
-import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.MusicLyricBean;
-import com.yibao.music.network.RetrofitHelper;
+
+import com.yibao.music.aidl.MusicBean;
+import com.yibao.music.aidl.MusicLyricBean;
 
 import java.io.BufferedReader;
 import java.io.File;

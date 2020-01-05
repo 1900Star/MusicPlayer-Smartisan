@@ -11,11 +11,13 @@ import android.os.PowerManager;
 
 import androidx.annotation.Nullable;
 
+import android.os.RemoteException;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import com.yibao.music.R;
 import com.yibao.music.activity.MusicActivity;
+import com.yibao.music.aidl.IMusicAidlInterface;
 import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.base.listener.SeekBarChangeListtener;
 import com.yibao.music.service.MusicPlayService;
@@ -40,11 +42,11 @@ import io.reactivex.schedulers.Schedulers;
  * @描述： {仅仅针对 PlayActivity抽出的基类,目的在于减少PlayActivity中的代码}
  */
 
-public abstract class BasePlayActivity extends BaseTansitionActivity implements OnCheckFavoriteListener {
+public abstract class BasePlayActivity extends BaseTansitionActivity implements OnCheckFavoriteListener  {
 
     protected AudioManager mAudioManager;
     protected int mMaxVolume;
-    protected MusicPlayService.AudioBinder audioBinder;
+    protected IMusicAidlInterface audioBinder;
     private PowerManager.WakeLock mWakeLock;
     protected boolean isScreenAlwaysOn;
     private VolumeReceiver mVolumeReceiver;
@@ -91,7 +93,7 @@ public abstract class BasePlayActivity extends BaseTansitionActivity implements 
     /**
      * 音乐的播放模式 : 全部循环-单曲循环-随机播放
      */
-    protected void switchPlayMode(ImageView imageView) {
+    protected void switchPlayMode(ImageView imageView) throws RemoteException {
         //获取当前的播放模式
         int playMode = audioBinder.getPalyMode();
         //根据当前播放模式进行其它模式切换

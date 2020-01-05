@@ -6,7 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
-import com.yibao.music.model.MusicBean;
+import com.yibao.music.aidl.MusicBean;
 
 import org.junit.After;
 import org.junit.Before;
