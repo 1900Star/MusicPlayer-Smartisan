@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.view.ViewPager;
@@ -68,6 +69,7 @@ public class FavoriteBottomSheetDialog
     // ViewPager使用
     private List<List<MusicBean>> mListList = new ArrayList<>();
     private BottomSheetAdapter mAdapter;
+    private AudioServiceConnection mConnection;
 
     public static FavoriteBottomSheetDialog newInstance() {
 
@@ -102,6 +104,22 @@ public class FavoriteBottomSheetDialog
 
         dialog.setCanceledOnTouchOutside(true);
         mBehavior = BottomSheetBehavior.from((View) view.getParent());
+        mBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                LogUtil.d("" + newState);
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    if (mConnection != null) {
+                        mContext.unbindService(mConnection);
+                    }
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
         dialog.setOnCancelListener(dialog12 -> clearDisposable());
 
     }
@@ -184,6 +202,7 @@ public class FavoriteBottomSheetDialog
 
     private void clearAllFavoriteMusic() {
         mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
         mCompositeDisposable.add(Observable.fromIterable(mList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -210,8 +229,8 @@ public class FavoriteBottomSheetDialog
         intent.setClass(mContext, AudioPlayService.class);
         intent.putExtra("sortFlag", Constants.NUMBER_EIGHT);
         intent.putExtra("position", position);
-        AudioServiceConnection connection = new AudioServiceConnection();
-        mContext.bindService(intent, connection, Service.BIND_AUTO_CREATE);
+        mConnection = new AudioServiceConnection();
+        mContext.bindService(intent, mConnection, Service.BIND_AUTO_CREATE);
         mContext.startService(intent);
         SpUtil.setMusicDataListFlag(mContext, Constants.NUMBER_EIGHT);
     }
@@ -242,6 +261,7 @@ public class FavoriteBottomSheetDialog
     public void onPageScrollStateChanged(int state) {
 
     }
+
 }
 
 
