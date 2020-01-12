@@ -173,7 +173,7 @@ public class MusicActivity
                     if (audioBinder != null) {
                         switch (clickFlag) {
                             case Constants.NUMBER_ONE:
-                                audioBinder.updataFavorite();
+                                audioBinder.updateFavorite();
                                 checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
                                 break;
                             case Constants.NUMBER_TWO:
@@ -203,7 +203,7 @@ public class MusicActivity
                         break;
                     case Constants.NUMBER_TWO:
                         if (audioBinder != null) {
-                            audioBinder.updataFavorite();
+                            audioBinder.updateFavorite();
                             checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
                         } else {
                             SnakbarUtil.firstPlayMusic(mSmartisanControlBar);
@@ -216,7 +216,6 @@ public class MusicActivity
             }
         });
         mQqControlBar.setOnPagerSelecteListener(position -> {
-            LogUtil.d(TAG, "==== Qq Bar  ==============");
             int sortFlag = SpUtil.getSortFlag(this);
             MusicActivity.this.disposableQqLyric();
             if (mHandleDetailFlag > 0) {
@@ -230,7 +229,7 @@ public class MusicActivity
             } else {
                 MusicActivity.this.startMusicService(position);
             }
-//            updataQqBar();
+//            updateQqBar();
         });
     }
 
@@ -465,7 +464,7 @@ public class MusicActivity
         mSmartisanControlBar.setAlbulmUrl(FileUtil.getAlbumUrl(mCurrentMusicBean, 1));
     }
 
-    private void updataQqBar() {
+    private void updateQqBar() {
         if (isShowQqBar) {
             mQqControlBar.updaPagerData(audioBinder.getMusicList(), audioBinder.getPosition());
             setQqPagerLyric();
@@ -473,7 +472,7 @@ public class MusicActivity
     }
 
     @Override
-    protected void updataCurrentPlayProgress() {
+    protected void updateCurrentPlayProgress() {
         if (audioBinder != null) {
 
             if (audioBinder.isPlaying()) {
@@ -525,9 +524,9 @@ public class MusicActivity
             mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
             checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
             updatePlayBtnStatus();
-            updataCurrentPlayProgress();
+            updateCurrentPlayProgress();
             setDuration();
-            updataQqBar();
+            updateQqBar();
         }
         openMusicPlayDialogFag();
     }
@@ -546,7 +545,7 @@ public class MusicActivity
             case Constants.NUMBER_TWO:
                 if (audioBinder != null) {
                     if (audioBinder.getPosition() == moreMenuStatus.getMusicPosition()) {
-                        audioBinder.updataFavorite();
+                        audioBinder.updateFavorite();
                         checkCurrentSongIsFavorite(musicBean, mQqControlBar, mSmartisanControlBar);
                     } else {
                         audioBinder.updataFavorite(moreMenuStatus.getMusicBean());
@@ -577,12 +576,10 @@ public class MusicActivity
         MusicBean musicBean = mMusicDao.queryBuilder().where(MusicBeanDao.Properties.Id.eq(mCurrentMusicBean.getId())).build().unique();
         checkCurrentSongIsFavorite(musicBean, mQqControlBar, mSmartisanControlBar);
     }
-
     @Override
     public void switchControlBar() {
         //TODO
         switchMusicControlBar();
-
     }
 
     @Override

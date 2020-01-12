@@ -30,6 +30,7 @@ import com.yibao.music.service.MusicPlayService;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SoftKeybordUtil;
 import com.yibao.music.util.TitleArtistUtil;
@@ -93,9 +94,9 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     }
 
     @Override
-    protected void updataLyricsView(boolean lyricsOK, String downMsg) {
+    protected void updateLyricsView(boolean lyricsOK, String downMsg) {
         if (lyricsOK) {
-            updataLyric();
+            updateLyric();
         }
     }
 
@@ -104,6 +105,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         audioBinder = MusicActivity.getAudioBinder();
         mSmartisanControlBar.setPbColorAndPreBtnGone();
         SearchCategoryPagerAdapter pagerAdapter;
+        LogUtil.d(TAG, "pageType    " + pageType);
         if (pageType > Constants.NUMBER_ZERO) {
             mMusicBean = getIntent().getParcelableExtra(Constants.MUSIC_BEAN);
             mEditSearch.setText(mMusicBean.getArtist());
@@ -146,7 +148,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             try {
                 switch (clickFlag) {
                     case Constants.NUMBER_ONE:
-                        audioBinder.updataFavorite();
+                        audioBinder.updateFavorite();
                         checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
                         break;
                     case Constants.NUMBER_TWO:
@@ -177,7 +179,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
                 checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
                 mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
                 mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
-                updataLyric();
+                updateLyric();
                 setDuration();
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -203,12 +205,12 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-            updataLyric();
+            updateLyric();
         }
     }
 
     @Override
-    protected void updataCurrentPlayProgress() {
+    protected void updateCurrentPlayProgress() {
         if (audioBinder != null) {
             try {
                 mSmartisanControlBar.setSongProgress(audioBinder.getProgress());
@@ -343,12 +345,17 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             case R.id.tv_search_cancel:
                 SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 1, InputMethodManager.RESULT_UNCHANGED_SHOWN);
                 finish();
-
                 break;
             case R.id.iv_edit_clear:
                 mEditSearch.setText(null);
                 findViewById(R.id.search_category_root).setVisibility(View.GONE);
                 mBus.post(new SearchCategoryBean(Constants.NUMBER_NINE, null));
+                try {
+                    LogUtil.d(TAG, audioBinder.getMusicBean().toString());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                    LogUtil.d(TAG, e.getMessage());
+                }
                 break;
             case R.id.tv_search_all:
                 switchListCategory(0);
@@ -403,7 +410,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         }
     }
 
-    private void updataLyric() {
+    private void updateLyric() {
         List<MusicLyricBean> lyricList = LyricsUtil.getLyricList(mMusicBean);
         disposableQqLyric();
         if (mQqLyricsDisposable == null) {

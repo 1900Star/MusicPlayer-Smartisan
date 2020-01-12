@@ -22,7 +22,6 @@ import com.yibao.music.network.QqMusicRemote;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
-import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.NetworkUtil;
 import com.yibao.music.util.QueryMusicFlagListUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
@@ -138,7 +137,6 @@ public class MusicPlayService
             MusicBean musicBean = mMusicDataList.get(position);
             musicBean.setCureetPosition(position);
             mBus.post(Constants.SERVICE_MUSIC, musicBean);
-
             LogUtil.d(TAG, "null fuck   " + musicBean.toString());
         } else {
             LogUtil.d(TAG, "null music ");
@@ -163,7 +161,6 @@ public class MusicPlayService
             if (mMusicDataList != null && mMusicDataList.size() > 0) {
                 position = position >= mMusicDataList.size() ? 0 : position;
                 mMusicInfo = mMusicDataList.get(position);
-                LogUtil.d(TAG, "service  " + mMusicInfo.toString());
                 mediaPlayer = MediaPlayer.create(MusicPlayService.this,
                         Uri.parse(mMusicInfo.getSongUrl()));
                 mediaPlayer.setOnPreparedListener(this);
@@ -188,7 +185,7 @@ public class MusicPlayService
             mNotifyManager.show();
         }
 
-        public void updataFavorite() {
+        public void updateFavorite() {
             if (position < mMusicDataList.size()) {
                 MusicBean musicBean = mMusicDataList.get(position);
                 boolean favorite = mMusicDao.load(musicBean.getId()).getIsFavorite();
@@ -209,7 +206,7 @@ public class MusicPlayService
 
         @Override
         public MusicBean getMusicBean() {
-//            LogUtil.d(TAG, mMusicInfo.toString());
+            LogUtil.d(TAG, mMusicInfo.toString());
             return mMusicInfo;
         }
         // 准备完成回调
@@ -234,8 +231,6 @@ public class MusicPlayService
             switch (playMode) {
                 case PLAY_MODE_ALL:
                     position = (position + 1) % mMusicDataList.size();
-                    break;
-                case PLAY_MODE_SINGLE:
                     break;
                 case PLAY_MODE_RANDOM:
                     position = new Random().nextInt(mMusicDataList.size());
@@ -401,7 +396,7 @@ public class MusicPlayService
                     int id = intent.getIntExtra(Constants.NOTIFY_BUTTON_ID, 0);
                     switch (id) {
                         case Constants.FAVORITE:
-                            mAudioBinder.updataFavorite();
+                            mAudioBinder.updateFavorite();
                             mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_ONE);
                             break;
                         case Constants.CLOSE:

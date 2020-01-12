@@ -11,7 +11,7 @@ interface IMusicAidlInterface {
     void playPre();
     void playNext();
     void autoPlayNext();
-    void updataFavorite();
+    void updateFavorite();
     void hintNotifycation();
     void seekTo(int progress);
     void setPalyMode(int playmode);

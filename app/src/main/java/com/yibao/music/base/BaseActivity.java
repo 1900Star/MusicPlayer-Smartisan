@@ -19,6 +19,7 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.QqControlBar;
@@ -88,7 +89,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bean -> {
-                    updataLyricsView(bean.isDoneOK(), bean.getDownMsg());
+                    updateLyricsView(bean.isDoneOK(), bean.getDownMsg());
                     if (!bean.isDoneOK()) {
                         ToastUtil.show(this, "暂无歌词");
                     }
@@ -109,7 +110,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param lyricsOK 歌词下载是否成功 ，成功就重新设置歌词View
      * @param downMsg  歌词下载的信息。
      */
-    protected void updataLyricsView(boolean lyricsOK, String downMsg) {
+    protected void updateLyricsView(boolean lyricsOK, String downMsg) {
     }
 
 
@@ -125,19 +126,20 @@ public abstract class BaseActivity extends AppCompatActivity {
             mDisposableProgresse = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(aLong -> BaseActivity.this.updataCurrentPlayProgress());
+                    .subscribe(aLong -> BaseActivity.this.updateCurrentPlayProgress());
             mCompositeDisposable.add(mDisposableProgresse);
         }
 
     }
 
-    protected void updataCurrentPlayProgress() {
+    protected void updateCurrentPlayProgress() {
     }
 
     /**
      * @param musicItem 当前播放的歌曲信息，用于更新进度和动画状态,需要用的界面复写这个方法
      */
     protected void updateCurrentPlayInfo(MusicBean musicItem) {
+        LogUtil.d(TAG,"current info  "+ musicItem.toString());
         upDataPlayProgress();
     }
 

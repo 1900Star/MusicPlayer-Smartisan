@@ -233,7 +233,7 @@ public class PlayActivity extends BasePlayActivity {
                 if (audioBinder != null) {
                     try {
                         if (audioBinder.getPosition() == moreMenuStatus.getMusicPosition()) {
-                            audioBinder.updataFavorite();
+                            audioBinder.updateFavorite();
                             checkCurrentIsFavorite(getFavoriteState(mCurrentMusicInfo));
                         }
                     } catch (RemoteException e) {
@@ -287,7 +287,7 @@ public class PlayActivity extends BasePlayActivity {
      * Rxbus接收歌曲时时的进度 和 时间，并更新UI
      */
     @Override
-    protected void updataCurrentPlayProgress() {
+    protected void updateCurrentPlayProgress() {
         try {
             updataMusicProgress(audioBinder.getProgress());
         } catch (RemoteException e) {
@@ -506,7 +506,7 @@ public class PlayActivity extends BasePlayActivity {
                     break;
                 case R.id.iv_favorite_music:
                     boolean favoriteState = getFavoriteState(mCurrentMusicInfo);
-                    audioBinder.updataFavorite();
+                    audioBinder.updateFavorite();
                     checkCurrentIsFavorite(!favoriteState);
                     break;
                 default:
@@ -522,7 +522,7 @@ public class PlayActivity extends BasePlayActivity {
 
 
     @Override
-    protected void updataLyricsView(boolean lyricsOk, String downMsg) {
+    protected void updateLyricsView(boolean lyricsOk, String downMsg) {
         if (lyricsOk) {
             mLyricList = LyricsUtil.getLyricList(mCurrentMusicInfo);
         }
