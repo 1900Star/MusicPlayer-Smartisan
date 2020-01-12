@@ -1,16 +1,16 @@
 package com.yibao.music.fragment;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.yibao.music.R;
 import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.base.BaseLazyFragment;
-import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
@@ -26,6 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -41,19 +42,20 @@ import io.reactivex.schedulers.Schedulers;
 public class SongCategoryFragment extends BaseLazyFragment {
 
     @BindView(R.id.musci_view)
-    MusicView mMusciView;
+    MusicView mMusicView;
     private SongAdapter mSongAdapter;
     private int mPosition;
-    private boolean isShowSlidebar = false;
+    private boolean isShowSlidBar = false;
     private boolean isItemSelectStatus = true;
     private int mSelectCount;
+    private static final String MUSIC_POSITION = "position";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         if (arguments != null) {
-            mPosition = arguments.getInt("position");
+            mPosition = arguments.getInt(MUSIC_POSITION);
         }
     }
 
@@ -79,7 +81,14 @@ public class SongCategoryFragment extends BaseLazyFragment {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(o -> SongCategoryFragment.this.changeEditStatus((Integer) o));
         }
-
+//        mCompositeDisposable.add();
+        mBus.toObservableType(Constants.DELETE_SONG, Object.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(integer -> {
+                    int position = (int) integer;
+                    LogUtil.d(TAG, "收到删除    " + position);
+                    mSongAdapter.deleteSong(position);
+                });
     }
 
     @Override
@@ -106,7 +115,7 @@ public class SongCategoryFragment extends BaseLazyFragment {
     private void initListener() {
         mSongAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
                 MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
-        mSongAdapter.setItemListener((bean,position, isEditStatus) -> {
+        mSongAdapter.setItemListener((bean, position, isEditStatus) -> {
             if (isEditStatus) {
                 mSelectCount = bean.isSelected() ? mSelectCount-- : mSelectCount++;
                 bean.setIsSelected(!bean.isSelected());
@@ -120,7 +129,7 @@ public class SongCategoryFragment extends BaseLazyFragment {
         switch (mPosition) {
             case 0:
                 List<MusicBean> abcList = MusicListUtil.sortMusicAbc(mSongList);
-                isShowSlidebar = true;
+                isShowSlidBar = true;
                 mSongAdapter = new SongAdapter(mActivity, abcList, Constants.NUMBER_ZERO, Constants.NUMBER_ZERO);
                 break;
             case 1:
@@ -138,7 +147,7 @@ public class SongCategoryFragment extends BaseLazyFragment {
             default:
                 break;
         }
-        mMusciView.setAdapter(mActivity, Constants.NUMBER_ONE, isShowSlidebar, mSongAdapter);
+        mMusicView.setAdapter(mActivity, Constants.NUMBER_ONE, isShowSlidBar, mSongAdapter);
     }
 
     private void changeEditStatus(int currentIndex) {
@@ -148,7 +157,7 @@ public class SongCategoryFragment extends BaseLazyFragment {
             // 删除已选择的条目
             List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsSelected.eq(true)).build().list();
             if (musicBeanList.size() > Constants.NUMBER_ZERO) {
-                LogUtil.d(TAG,"======== Size    " + musicBeanList.size());
+                LogUtil.d(TAG, "======== Size    " + musicBeanList.size());
                 for (MusicBean musicBean : musicBeanList) {
                     mMusicBeanDao.delete(musicBean);
                 }
@@ -156,7 +165,7 @@ public class SongCategoryFragment extends BaseLazyFragment {
                 mSongAdapter.setNewData(getSongList());
                 mBus.post(Constants.FRAGMENT_SONG, Constants.NUMBER_ZERO);
             } else {
-                SnakbarUtil.favoriteSuccessView(mMusciView, "没有选中条目");
+                SnakbarUtil.favoriteSuccessView(mMusicView, "没有选中条目");
             }
         }
     }
@@ -202,7 +211,7 @@ public class SongCategoryFragment extends BaseLazyFragment {
     public static SongCategoryFragment newInstance(int position) {
         Bundle args = new Bundle();
         SongCategoryFragment fragment = new SongCategoryFragment();
-        args.putInt("position", position);
+        args.putInt(MUSIC_POSITION, position);
         fragment.setArguments(args);
         return fragment;
     }

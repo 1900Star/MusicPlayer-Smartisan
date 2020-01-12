@@ -269,7 +269,7 @@ public class PlayActivity extends BasePlayActivity {
      * Rxbus接收歌曲时时的进度 和 时间，并更新UI
      */
     @Override
-    protected void updataCurrentPlayProgress() {
+    protected void updateCurrentPlayProgress() {
         updataMusicProgress(audioBinder.getProgress());
     }
 

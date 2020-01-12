@@ -42,7 +42,7 @@ public abstract class BaseRvAdapter<T>
     private ItemLongClickListener mLongClickListener;
     private ItemEditClickListener mEditClickListener;
     private OnOpenItemMoerMenuListener mMenuListener;
-    protected static final String TAG = "   ====    " + BaseAdapter.class.getSimpleName()+"    ";
+    protected static final String TAG = "   ====    " + BaseAdapter.class.getSimpleName() + "    ";
 
     public BaseRvAdapter(List<T> list) {
         mList = list;
@@ -141,6 +141,11 @@ public abstract class BaseRvAdapter<T>
 
     public void setData(List<T> list) {
         mList.addAll(list);
+        notifyDataSetChanged();
+    }
+
+    public void deleteSong(int position) {
+        mList.remove(position);
         notifyDataSetChanged();
     }
 

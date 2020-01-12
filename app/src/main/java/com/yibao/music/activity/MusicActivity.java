@@ -19,7 +19,6 @@ import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.service.MusicPlayService;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;
@@ -29,7 +28,6 @@ import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.QueryMusicFlagListUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
-import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.TitleArtistUtil;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.MainViewPager;
@@ -37,6 +35,7 @@ import com.yibao.music.view.music.MusicNavigationBar;
 import com.yibao.music.view.music.QqControlBar;
 import com.yibao.music.view.music.SmartisanControlBar;
 
+import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -98,7 +97,7 @@ public class MusicActivity
         if (initMusicList != null && initMusicList.size() > 0) {
             mCurrentMusicBean = initMusicList.get(mCurrentPosition >= initMusicList.size() ? 0 : mCurrentPosition);
         } else {
-            LogUtil.d(TAG,"==========================NoThing=555555555555555555");
+            LogUtil.d(TAG, "==========================NoThing=555555555555555555");
         }
         // 初始化 MusicPagerAdapter 主页面
         MusicPagerAdapter musicPagerAdapter = new MusicPagerAdapter(getSupportFragmentManager());
@@ -111,7 +110,7 @@ public class MusicActivity
         mMusicConfig = SpUtil.getMusicConfig(this, false);
         if (mMusicConfig) {
             mPlayState = SpUtil.getMusicPlayState(this);
-            LogUtil.d(TAG,"======= mPlayStae  " + mPlayState);
+            LogUtil.d(TAG, "======= mPlayStae  " + mPlayState);
             if (mPlayState == Constants.NUMBER_ONE) {
                 // 读取用户的播放记录，设置UI显示，做好播放的准备。(暂停和播放两种状态)
                 if (mCurrentMusicBean != null) {
@@ -121,7 +120,7 @@ public class MusicActivity
                 startServiceAndAnimation();
             }
         } else {
-            LogUtil.d(TAG,"用户 ++++  nothing ");
+            LogUtil.d(TAG, "用户 ++++  nothing ");
         }
 
 
@@ -217,7 +216,7 @@ public class MusicActivity
             }
         });
         mQqControlBar.setOnPagerSelecteListener(position -> {
-            LogUtil.d(TAG,"==== Qq Bar  ==============");
+            LogUtil.d(TAG, "==== Qq Bar  ==============");
             int sortFlag = SpUtil.getSortFlag(this);
             MusicActivity.this.disposableQqLyric();
             if (mHandleDetailFlag > 0) {
@@ -231,7 +230,7 @@ public class MusicActivity
             } else {
                 MusicActivity.this.startMusicService(position);
             }
-//            updataQqBar();
+//            updateQqBar();
         });
     }
 
@@ -247,7 +246,7 @@ public class MusicActivity
      * 下次打开播放器的界面时，继续自动播放当前的歌曲。
      */
     private void switchPlayState() {
-        LogUtil.d(TAG,"switchPlayState   =====  " + mPlayState);
+        LogUtil.d(TAG, "switchPlayState   =====  " + mPlayState);
         if (mPlayState == Constants.NUMBER_ONE) {
             startServiceAndAnimation();
         } else if (mPlayState == Constants.NUMBER_TWO) {
@@ -419,24 +418,24 @@ public class MusicActivity
                             int startTime = lyrBean.getStartTime();
                             List<MusicBean> musicList = audioBinder.getMusicList();
                             if (musicList != null && progress > startTime) {
-                                LogUtil.d(TAG,"歌词List的长度    ==  " + lyricList.size());
+                                LogUtil.d(TAG, "歌词List的长度    ==  " + lyricList.size());
                                 if (mCurrentPosition < musicList.size()) {
                                     mQqBarBean = musicList.get(mCurrentPosition);
                                     mQqBarBean.setCurrentLyrics(lyrics);
                                     musicList.set(mCurrentPosition, mQqBarBean);
                                 }
-                                LogUtil.d(TAG,"当前的位置 ===  " + mCurrentPosition);
-                                LogUtil.d(TAG,"当前的进度 ===  " + progress);
-                                LogUtil.d(TAG,"当前的时间和歌词 ===  " + startTime + " ==  " + lyrics);
+                                LogUtil.d(TAG, "当前的位置 ===  " + mCurrentPosition);
+                                LogUtil.d(TAG, "当前的进度 ===  " + progress);
+                                LogUtil.d(TAG, "当前的时间和歌词 ===  " + startTime + " ==  " + lyrics);
                                 mQqControlBar.updaPagerData(musicList, mCurrentPosition);
                                 lyricsFlag++;
                             }
                         } else {
-                            LogUtil.d(TAG,"========MusicActivity =====没有发现歌词 ");
+                            LogUtil.d(TAG, "========MusicActivity =====没有发现歌词 ");
                         }
                     });
         } else {
-            LogUtil.d(TAG,"=============没有时间和歌词 ");
+            LogUtil.d(TAG, "=============没有时间和歌词 ");
             mQqControlBar.setPagerData(audioBinder.getMusicList());
         }
 
@@ -463,10 +462,10 @@ public class MusicActivity
         // 更新歌手名称
         mSmartisanControlBar.setSingerName(mCurrentMusicBean.getArtist());
         // 设置专辑
-        mSmartisanControlBar.setAlbulmUrl(FileUtil.getAlbumUrl(mCurrentMusicBean,1));
+        mSmartisanControlBar.setAlbulmUrl(FileUtil.getAlbumUrl(mCurrentMusicBean, 1));
     }
 
-    private void updataQqBar() {
+    private void updateQqBar() {
         if (isShowQqBar) {
             mQqControlBar.updaPagerData(audioBinder.getMusicList(), audioBinder.getPosition());
             setQqPagerLyric();
@@ -474,7 +473,7 @@ public class MusicActivity
     }
 
     @Override
-    protected void updataCurrentPlayProgress() {
+    protected void updateCurrentPlayProgress() {
         if (audioBinder != null) {
 
             if (audioBinder.isPlaying()) {
@@ -526,9 +525,9 @@ public class MusicActivity
             mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
             checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
             updatePlayBtnStatus();
-            updataCurrentPlayProgress();
+            updateCurrentPlayProgress();
             setDuration();
-            updataQqBar();
+            updateQqBar();
         }
         openMusicPlayDialogFag();
     }
@@ -561,12 +560,34 @@ public class MusicActivity
                 SnakbarUtil.keepGoing(mSmartisanControlBar);
                 break;
             case Constants.NUMBER_FOUR:
-                // 通知SongCategoryFragment刷新列表, 后续完成
-                mMusicDao.delete(moreMenuStatus.getMusicBean());
+                deleteSong(moreMenuStatus);
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 删除歌曲，如果删除当前正在播放的歌曲，先进行 《下一曲》 操作, 删除后通知
+     * SongCategoryFragment刷新列表。
+     *
+     * @param moreMenuStatus m
+     */
+    private void deleteSong(MoreMenuStatus moreMenuStatus) {
+        MusicBean musicBean = moreMenuStatus.getMusicBean();
+        if (audioBinder != null) {
+            if (mCurrentMusicBean.getTitle().equals(musicBean.getTitle())) {
+                audioBinder.playNext();
+            }
+            String songUrl = musicBean.getSongUrl();
+            // 先从本地数据库删除歌曲，再彻底删除歌曲文件。
+            mMusicDao.delete(musicBean);
+            FileUtil.deleteFile(new File(songUrl));
+            mBus.post(Constants.DELETE_SONG, moreMenuStatus.getPosition());
+        } else {
+            SnakbarUtil.favoriteSuccessView(mSmartisanControlBar, "请先播放音乐!");
+        }
+
     }
 
 

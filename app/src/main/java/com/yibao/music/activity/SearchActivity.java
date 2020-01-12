@@ -197,7 +197,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     }
 
     @Override
-    protected void updataCurrentPlayProgress() {
+    protected void updateCurrentPlayProgress() {
         if (audioBinder != null) {
             mSmartisanControlBar.setSongProgress(audioBinder.getProgress());
         }

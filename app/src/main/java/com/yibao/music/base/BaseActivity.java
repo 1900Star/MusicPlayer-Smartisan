@@ -125,13 +125,13 @@ public abstract class BaseActivity extends AppCompatActivity {
             mDisposableProgresse = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(aLong -> BaseActivity.this.updataCurrentPlayProgress());
+                    .subscribe(aLong -> BaseActivity.this.updateCurrentPlayProgress());
             mCompositeDisposable.add(mDisposableProgresse);
         }
 
     }
 
-    protected void updataCurrentPlayProgress() {
+    protected void updateCurrentPlayProgress() {
     }
 
     /**

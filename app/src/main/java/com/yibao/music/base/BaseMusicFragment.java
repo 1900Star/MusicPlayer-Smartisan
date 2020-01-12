@@ -8,7 +8,6 @@ import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.SpUtil;
 
@@ -30,7 +29,7 @@ public abstract class BaseMusicFragment extends BaseFragment {
     protected Disposable mEditDisposable;
     private Disposable mMenuDisposable;
     private String mClassName;
-    private int mAddToPlayListFdlag;
+    private int mAddToPlayListFlag;
     protected List<MusicBean> mSongList;
 
     @Override
@@ -38,7 +37,7 @@ public abstract class BaseMusicFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         initDetailsFlag();
         mSongList = mMusicBeanDao.queryBuilder().list();
-        mAddToPlayListFdlag = SpUtil.getAddToPlayListFdlag(mContext);
+        mAddToPlayListFlag = SpUtil.getAddToPlayListFdlag(mContext);
     }
 
     /**
@@ -100,7 +99,7 @@ public abstract class BaseMusicFragment extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         mClassName = getClass().getSimpleName();
-        if (mAddToPlayListFdlag != Constants.NUMBER_ONE) {
+        if (mAddToPlayListFlag != Constants.NUMBER_ONE) {
             interceptBackEvent(isVisibleToUser && getIsOpenDetail() ? getPageFlag() : Constants.NUMBER_ZERO);
         }
 
