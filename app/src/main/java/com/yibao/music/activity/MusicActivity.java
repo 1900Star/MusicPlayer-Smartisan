@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.adapter.MusicPagerAdapter;
@@ -56,6 +57,8 @@ public class MusicActivity
 
     @BindView(R.id.music_navigation_bar)
     MusicNavigationBar mMusicNavigationBar;
+    @BindView(R.id.bnv_music)
+    BottomNavigationView mBottomNavigationView;
 
     @BindView(R.id.music_viewpager)
     MainViewPager mMusicViewPager;
@@ -84,6 +87,7 @@ public class MusicActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
         mBind = ButterKnife.bind(this);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         initData();
         initMusicConfig();
         initListener();
@@ -102,7 +106,7 @@ public class MusicActivity
         // 初始化 MusicPagerAdapter 主页面
         MusicPagerAdapter musicPagerAdapter = new MusicPagerAdapter(getSupportFragmentManager());
         mMusicViewPager.setAdapter(musicPagerAdapter);
-        mMusicViewPager.setCurrentItem(Constants.NUMBER_TWO);
+        mMusicViewPager.setCurrentItem(Constants.NUMBER_TWO,false);
         mMusicViewPager.setOffscreenPageLimit(5);
     }
 
@@ -162,6 +166,7 @@ public class MusicActivity
 
 
     private void initListener() {
+
 
         mMusicNavigationBar.setOnNavigationbarListener((currentSelecteFlag) ->
                 mMusicViewPager.setCurrentItem(currentSelecteFlag, false));
@@ -233,6 +238,30 @@ public class MusicActivity
 //            updateQqBar();
         });
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = item -> {
+        switch (item.getItemId()) {
+            case R.id.navigation_play_list:
+                mMusicViewPager.setCurrentItem(0, false);
+                return true;
+            case R.id.navigation_artist:
+                mMusicViewPager.setCurrentItem(1, false);
+                return true;
+            case R.id.navigation_song:
+                mMusicViewPager.setCurrentItem(2, false);
+                return true;
+            case R.id.navigation_album:
+                mMusicViewPager.setCurrentItem(3, false);
+                return true;
+            case R.id.navigation_about:
+                mMusicViewPager.setCurrentItem(4, false);
+                return true;
+            default:
+                break;
+        }
+        return false;
+    };
 
 
     /**

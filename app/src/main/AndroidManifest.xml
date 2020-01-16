@@ -24,10 +24,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".activity.NavigationActivity"></activity>
         <activity
             android:name=".activity.SelectLyricsActivity"
-            android:windowSoftInputMode="adjustNothing"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".activity.SplashActivity"
             android:configChanges="orientation|screenSize"

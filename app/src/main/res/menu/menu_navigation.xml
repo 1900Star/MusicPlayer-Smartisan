@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingDefaultResource">
+    <item
+        android:id="@+id/navigation_play_list"
+        android:icon="@drawable/tabbar_playlist_down_selector"
+        android:title="@string/play_list" />
+    <item
+        android:id="@+id/navigation_artist"
+        android:icon="@drawable/tabbar_albumlist_selector"
+        android:title="@string/music_artisan" />
+    <item
+        android:id="@+id/navigation_song"
+        android:icon="@drawable/tabbar_songlist_selector"
+        android:title="@string/music_song" />
+    <item
+        android:id="@+id/navigation_album"
+        android:icon="@drawable/tabbar_albumlist_selector"
+        android:title="@string/music_album" />
+    <item
+        android:id="@+id/navigation_about"
+        android:icon="@drawable/tabbar_stylelist_selector"
+        android:title="@string/about" />
+</menu>

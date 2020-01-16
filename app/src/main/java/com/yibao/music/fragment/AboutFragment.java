@@ -5,21 +5,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.os.Handler;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
+import com.yibao.music.activity.NavigationActivity;
 import com.yibao.music.activity.SplashActivity;
 import com.yibao.music.base.BaseLazyFragment;
-import com.yibao.music.base.BaseMusicFragment;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.CrashSheetDialog;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
@@ -44,9 +38,9 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -131,7 +125,13 @@ public class AboutFragment extends BaseLazyFragment {
                 .subscribe(o -> clearErrorLyric()));
         mCompositeDisposable.add(RxView.clicks(mTvCrashLog)
                 .throttleFirst(2, TimeUnit.SECONDS)
-                .subscribe(o -> CrashSheetDialog.newInstance().getBottomDialog(mActivity)));
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+//                        CrashSheetDialog.newInstance().getBottomDialog(mActivity);
+                        startActivity(new Intent(mActivity, NavigationActivity.class));
+                    }
+                }));
         mAboutHeaderIv.setOnLongClickListener(view -> {
             RelaxDialogFragment.newInstance().show(mFragmentManager, "girlsDialog");
             return true;
