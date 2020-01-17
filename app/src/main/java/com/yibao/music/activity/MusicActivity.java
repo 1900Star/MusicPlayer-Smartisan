@@ -87,7 +87,7 @@ public class MusicActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
         mBind = ButterKnife.bind(this);
-        mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
         initData();
         initMusicConfig();
         initListener();
@@ -106,7 +106,7 @@ public class MusicActivity
         // 初始化 MusicPagerAdapter 主页面
         MusicPagerAdapter musicPagerAdapter = new MusicPagerAdapter(getSupportFragmentManager());
         mMusicViewPager.setAdapter(musicPagerAdapter);
-        mMusicViewPager.setCurrentItem(Constants.NUMBER_TWO,false);
+        mMusicViewPager.setCurrentItem(Constants.NUMBER_TWO, false);
         mMusicViewPager.setOffscreenPageLimit(5);
     }
 
@@ -166,8 +166,8 @@ public class MusicActivity
 
 
     private void initListener() {
-
-
+        mBottomNavigationView.setSelectedItemId(R.id.navigation_song);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mMusicNavigationBar.setOnNavigationbarListener((currentSelecteFlag) ->
                 mMusicViewPager.setCurrentItem(currentSelecteFlag, false));
         mSmartisanControlBar.setClickListener(clickFlag -> {

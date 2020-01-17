@@ -24,7 +24,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activity.NavigationActivity"></activity>
         <activity
             android:name=".activity.SelectLyricsActivity"
             android:theme="@style/AppTheme.NoActionBar"

@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
-import com.yibao.music.activity.NavigationActivity;
 import com.yibao.music.activity.SplashActivity;
 import com.yibao.music.base.BaseLazyFragment;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
@@ -125,13 +124,7 @@ public class AboutFragment extends BaseLazyFragment {
                 .subscribe(o -> clearErrorLyric()));
         mCompositeDisposable.add(RxView.clicks(mTvCrashLog)
                 .throttleFirst(2, TimeUnit.SECONDS)
-                .subscribe(new Consumer<Object>() {
-                    @Override
-                    public void accept(Object o) throws Exception {
-//                        CrashSheetDialog.newInstance().getBottomDialog(mActivity);
-                        startActivity(new Intent(mActivity, NavigationActivity.class));
-                    }
-                }));
+                .subscribe(o -> CrashSheetDialog.newInstance().getBottomDialog(mActivity)));
         mAboutHeaderIv.setOnLongClickListener(view -> {
             RelaxDialogFragment.newInstance().show(mFragmentManager, "girlsDialog");
             return true;

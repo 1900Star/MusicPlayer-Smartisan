@@ -8,7 +8,7 @@
         android:title="@string/play_list" />
     <item
         android:id="@+id/navigation_artist"
-        android:icon="@drawable/tabbar_albumlist_selector"
+        android:icon="@drawable/tabbar_artisanlist_selector"
         android:title="@string/music_artisan" />
     <item
         android:id="@+id/navigation_song"
