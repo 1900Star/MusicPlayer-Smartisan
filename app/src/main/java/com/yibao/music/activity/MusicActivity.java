@@ -168,8 +168,8 @@ public class MusicActivity
     private void initListener() {
         mBottomNavigationView.setSelectedItemId(R.id.navigation_song);
         mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        mMusicNavigationBar.setOnNavigationbarListener((currentSelecteFlag) ->
-                mMusicViewPager.setCurrentItem(currentSelecteFlag, false));
+        mMusicNavigationBar.setOnNavigationbarListener((currentSelectFlag) ->
+                mMusicViewPager.setCurrentItem(currentSelectFlag, false));
         mSmartisanControlBar.setClickListener(clickFlag -> {
             if (mMusicConfig) {
                 if (clickFlag == Constants.NUMBER_THRRE) {

@@ -4,18 +4,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Environment;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.Permission;
+import com.yanzhenjie.permission.runtime.Permission;
 import com.yibao.music.R;
 import com.yibao.music.base.listener.BottomSheetCallback;
 import com.yibao.music.util.Constants;
@@ -56,7 +56,7 @@ public class TakePhotoBottomSheetDialog {
                 takeCameraPic();
                 dialog.dismiss();
             } else {
-                AndPermission.with(mContext)
+                AndPermission.with(mContext).runtime()
                         .permission(Permission.Group.CAMERA)
                         .onGranted(permissions -> {
                             TakePhotoBottomSheetDialog.this.takeCameraPic();
@@ -86,7 +86,7 @@ public class TakePhotoBottomSheetDialog {
     }
 
     private void choicePhoto() {
-        AndPermission.with(mContext)
+        AndPermission.with(mContext).runtime()
                 .permission(Permission.Group.STORAGE)
                 .onGranted(permissions -> {
                     Intent intentFromGallery = new Intent(Intent.ACTION_PICK, null);

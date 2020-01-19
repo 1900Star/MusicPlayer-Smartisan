@@ -86,7 +86,6 @@ public abstract class BaseRvAdapter<T>
             String lastItemDes = getLastItemDes();
             moreHolder.itemView.setOnClickListener(SnakbarUtil::lastItem);
             if (lastItemDes != null) {
-                LogUtil.d(TAG, lastItemDes);
                 String count = (mList.size()) + lastItemDes;
                 moreHolder.mSongCount.setText(count);
             }

@@ -72,10 +72,7 @@ public class PlayListAdapter extends BaseRvAdapter<PlayListBean> {
                 MusicDaoUtil.setMusicListFlag(playListBean);
                 RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_TWO));
             });
-            playViewHolder.mCheckBox.setOnClickListener(v -> {
-                checkBoxClick(playListBean, adapterPosition, playViewHolder.mCheckBox.isChecked());
-//                    PlayListAdapter.this.openDetails(playListBean, true);
-            });
+            playViewHolder.mCheckBox.setOnClickListener(v -> checkBoxClick(playListBean, adapterPosition, playViewHolder.mCheckBox.isChecked()));
 
             playViewHolder.mIvItemEdit.setOnClickListener(v -> editItmeTitle(adapterPosition));
             playViewHolder.mRlPlayListItem.setOnLongClickListener(v -> {

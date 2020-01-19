@@ -1,14 +1,11 @@
 package com.yibao.music.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -18,14 +15,12 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.yibao.music.R;
 import com.yibao.music.adapter.LyricsSearchPagerAdapter;
 import com.yibao.music.base.BaseObserver;
-import com.yibao.music.model.qq.OnlineSongLrc;
 import com.yibao.music.model.qq.SearchLyricsBean;
 import com.yibao.music.model.qq.SongLrc;
 import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.NetworkUtil;
-import com.yibao.music.util.SoftKeybordUtil;
 import com.yibao.music.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -88,8 +83,6 @@ public class SelectLyricsActivity extends AppCompatActivity {
         if (mSongName != null && mSongArtist != null) {
             mEditSongName.setText(mSongName);
             mEditArtist.setText(mSongArtist);
-//            mEditSinger.setSelection(mSongName.length());
-//            mEditArtist.setSelection(mSongArtist.length());
         }
         searchLyrics(true);
     }

@@ -79,7 +79,7 @@ public class PlayListFragment extends BaseLazyFragment {
     private String mTempTitle;
     private static boolean isFromPlayListActivity;
     private SparseBooleanArray checkBoxMap = new SparseBooleanArray();
-    private List<PlayListBean> mSelecteList = new ArrayList<>();
+    private List<PlayListBean> mSelectList = new ArrayList<>();
     private PlayListBeanDao mPlayListDao;
 
 
@@ -113,7 +113,7 @@ public class PlayListFragment extends BaseLazyFragment {
         if (mAdapter != null) {
             mAdapter.setNewData(getPlayList());
         }
-        receiveRxbuData();
+        receiveRxbusData();
     }
 
     private void initData() {
@@ -135,7 +135,7 @@ public class PlayListFragment extends BaseLazyFragment {
     /**
      * 新增和删除列表
      */
-    private void receiveRxbuData() {
+    private void receiveRxbusData() {
         if (mAddDeleteListDisposable == null) {
             mAddDeleteListDisposable = mBus.toObserverable(AddAndDeleteListBean.class)
                     .subscribeOn(Schedulers.io()).map(bean -> {
@@ -243,21 +243,21 @@ public class PlayListFragment extends BaseLazyFragment {
         });
         mAdapter.setCheckBoxClickListener((playListBean, isChecked, position) -> {
             checkBoxMap.put(position, isChecked);
-            updataSelected(playListBean);
+            updateSelected(playListBean);
         });
     }
 
-    private void updataSelected(PlayListBean bean) {
-        if (mSelecteList.contains(bean)) {
-            mSelecteList.remove(bean);
+    private void updateSelected(PlayListBean bean) {
+        if (mSelectList.contains(bean)) {
+            mSelectList.remove(bean);
         } else {
-            mSelecteList.add(bean);
+            mSelectList.add(bean);
         }
     }
 
     private void deleteListItem() {
-        if (mSelecteList.size() > Constants.NUMBER_ZERO) {
-            for (PlayListBean playListBean : mSelecteList) {
+        if (mSelectList.size() > Constants.NUMBER_ZERO) {
+            for (PlayListBean playListBean : mSelectList) {
                 mPlayListDao.delete(playListBean);
             }
             mAdapter.setItemSelectStatus(false);
@@ -385,8 +385,8 @@ public class PlayListFragment extends BaseLazyFragment {
         mMusicToolBar.setTvDeleteVisibility(isItemSelectStatus ? View.VISIBLE : View.GONE);
         mAdapter.setItemSelectStatus(isItemSelectStatus);
         isItemSelectStatus = !isItemSelectStatus;
-        if (mSelecteList.size() > 0) {
-            mSelecteList.clear();
+        if (mSelectList.size() > 0) {
+            mSelectList.clear();
         }
         mLlAddNewPlayList.setEnabled(isItemSelectStatus);
     }

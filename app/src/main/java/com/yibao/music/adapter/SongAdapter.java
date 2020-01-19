@@ -2,12 +2,14 @@ package com.yibao.music.adapter;
 
 
 import android.app.Activity;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.yibao.music.R;
@@ -40,19 +42,22 @@ public class SongAdapter
     private Activity mContext;
     private int mIsShowStickyView;
     private int mScroeAndFrequnecyFlag;
+    private SparseBooleanArray mSparseBooleanArray;
 
     /**
      * @param context               c
      * @param list                  l
+     * @param sparseBooleanArray    s
      * @param isShowStickyView      控制列表的StickyView是否显示，0 显示 ，1 ：不显示
      *                              parm isArtistList     用来控制音乐列表和艺术家列表的显示
      * @param scroeAndFrequnecyFlag 显示评分和播放次数 0 都不显示 ，1显示评分 ，2 显示播放次数
      */
-    public SongAdapter(Activity context, List<MusicBean> list, int isShowStickyView, int scroeAndFrequnecyFlag) {
+    public SongAdapter(Activity context, List<MusicBean> list, SparseBooleanArray sparseBooleanArray, int isShowStickyView, int scroeAndFrequnecyFlag) {
         super(list);
         this.mContext = context;
         this.mIsShowStickyView = isShowStickyView;
         this.mScroeAndFrequnecyFlag = scroeAndFrequnecyFlag;
+        this.mSparseBooleanArray = sparseBooleanArray;
     }
 
 
@@ -73,7 +78,9 @@ public class SongAdapter
                 songListViewHolder.mTvFrequency.setVisibility(View.VISIBLE);
                 songListViewHolder.mTvFrequency.setText(String.valueOf(musicBean.getPlayFrequency()));
             }
-            songListViewHolder.mItemSelect.setVisibility(isSelectStatus ? View.VISIBLE : View.GONE);
+            songListViewHolder.mCheckBox.setVisibility(isSelectStatus ? View.VISIBLE : View.GONE);
+            songListViewHolder.mIvSongItemMenu.setVisibility(isSelectStatus ? View.INVISIBLE : View.VISIBLE);
+            songListViewHolder.mCheckBox.setChecked(mSparseBooleanArray.get(position));
             ImageUitl.customLoadPic(mContext, FileUtil.getAlbumUrl(musicBean, 1), R.drawable.noalbumcover_120, songListViewHolder.mSongAlbum);
             songListViewHolder.mSongArtistName.setText(StringUtil.getArtist(musicBean));
             songListViewHolder.mSongName.setText(StringUtil.getTitle(musicBean));
@@ -94,11 +101,12 @@ public class SongAdapter
             }
 
             songListViewHolder.mIvSongItemMenu.setOnClickListener(view -> openItemMenu(musicBean, position));
-            songListViewHolder.mItemSelect.setOnClickListener(v -> selectStatus(musicBean, position));
+            songListViewHolder.mCheckBox.setOnClickListener(v -> checkBoxClick(musicBean, position, songListViewHolder.mCheckBox.isChecked()));
             //  Item点击监听
             songListViewHolder.mLlMusicItem.setOnClickListener(view -> {
                 if (isSelectStatus) {
-                    selectStatus(musicBean, position);
+                    checkBoxClick(musicBean, position, songListViewHolder.mCheckBox.isChecked());
+                    openDetails(musicBean, position, songListViewHolder.mCheckBox.isChecked());
                 } else {
                     if (mContext instanceof OnMusicItemClickListener) {
                         ((OnMusicItemClickListener) mContext).startMusicService(position);
@@ -110,10 +118,6 @@ public class SongAdapter
 
     }
 
-
-    private void selectStatus(MusicBean musicBean, int adapterPosition) {
-        openDetails(musicBean, adapterPosition, true);
-    }
 
     @Override
     protected RecyclerView.ViewHolder getViewHolder(View view) {
@@ -139,8 +143,8 @@ public class SongAdapter
         TextView mTvStickyView;
         @BindView(R.id.song_album)
         ImageView mSongAlbum;
-        @BindView(R.id.iv_song_item_select)
-        ImageView mItemSelect;
+        @BindView(R.id.checkbox_item)
+        AppCompatCheckBox mCheckBox;
         @BindView(R.id.song_item_play_flag)
         ImageView mSongPlayFlag;
         @BindView(R.id.song_name)

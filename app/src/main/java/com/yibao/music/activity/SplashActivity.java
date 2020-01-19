@@ -2,12 +2,13 @@ package com.yibao.music.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.viewpager.widget.ViewPager;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.viewpager.widget.ViewPager;
+
 import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.Permission;
+import com.yanzhenjie.permission.runtime.Permission;
 import com.yibao.music.R;
 import com.yibao.music.adapter.SplashPagerAdapter;
 import com.yibao.music.base.BaseActivity;
@@ -62,7 +63,7 @@ public class SplashActivity
     @Override
     protected void onResume() {
         super.onResume();
-        AndPermission.with(this)
+        AndPermission.with(this).runtime()
                 .permission(Permission.Group.STORAGE)
                 .onGranted(permissions -> initRxbusData())
                 .onDenied(permissions -> LogUtil.d(TAG,"没有读取和写入的权限!"))
@@ -75,13 +76,13 @@ public class SplashActivity
             mIsFirstScanner = true;
             // 是否是首次安装，本地数据库是否创建，等于 8 表示不是首次安装，数据库已经创建，直接进入MusicActivity。
             if (SpUtil.getLoadMusicFlag(this) == Constants.NUMBER_EIGHT) {
-                countDownOpareton(true);
+                countDownOperation(true);
             } else {
                 // 首次安装，开启服务加载本地音乐，创建本地数据库。
                 if (!ServiceUtil.isServiceRunning(this, Constants.LOAD_SERVICE_NAME)) {
                     startService(new Intent(this, LoadMusicDataService.class));
                 }
-                updataLoadProgress();
+                updateLoadProgress();
             }
 
         } else {
@@ -90,13 +91,13 @@ public class SplashActivity
             Intent intent = new Intent(this, LoadMusicDataService.class);
             intent.putExtra(Constants.SCANNER_MEDIA, Constants.SCANNER_MEDIA);
             startService(intent);
-            updataLoadProgress();
+            updateLoadProgress();
         }
 
 
     }
 
-    private void updataLoadProgress() {
+    private void updateLoadProgress() {
         mTvMusicCount.setVisibility(View.VISIBLE);
         mMusicLoadProgressBar.setVisibility(View.VISIBLE);
         mCompositeDisposable.add(mBus.toObserverable(MusicCountBean.class)
@@ -125,11 +126,11 @@ public class SplashActivity
                                 str = "新增 " + size + " 首歌曲";
                                 mTvMusicCount.setText(str);
                             }
-                            countDownOpareton(mIsFirstScanner);
+                            countDownOperation(mIsFirstScanner);
                         }
                     } else {
                         mTvMusicCount.setText(mIsFirstScanner ? "本地没有发现音乐,去下载歌曲后再来体验吧!" : "没有新增歌曲!");
-                        countDownOpareton(false);
+                        countDownOperation(false);
                     }
                 }));
     }
@@ -137,9 +138,9 @@ public class SplashActivity
     /**
      * 倒计时操作
      *
-     * @param b ture 表示初次安装，自动扫描完成后直接进入MusicActivity 。 false 表示手动扫描，完成后停在SplashActivity页面。
+     * @param b true 表示初次安装，自动扫描完成后直接进入MusicActivity 。 false 表示手动扫描，完成后停在SplashActivity页面。
      */
-    private void countDownOpareton(boolean b) {
+    private void countDownOperation(boolean b) {
         if (b) {
             startMusicActivity();
         } else {
