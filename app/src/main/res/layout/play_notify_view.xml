@@ -2,23 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/play_notify_cover"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@null"
         android:src="@drawable/noalbumcover_220" />
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:layout_weight="7"
+        android:layout_marginBottom="10dp"
         android:orientation="vertical">
 
         <TextView
@@ -48,31 +47,28 @@
 
     </LinearLayout>
 
-    <ImageButton
+    <ImageView
         android:id="@+id/play_notify_play"
-        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        android:src="@drawable/ic_play_arrow"
-        android:tint="@color/textName" />
+        android:contentDescription="@null"
+        android:src="@drawable/btn_playing_play_selector" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/play_notify_next"
-        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        android:src="@drawable/ic_skip_next_black_24dp"
-        android:tint="@color/textName" />
+        android:contentDescription="@null"
+        android:src="@drawable/btn_playing_next_selector" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/play_notify_close"
-        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:src="@drawable/ic_clear_gray_24dp"
-        android:tint="@color/textName" />
+        android:contentDescription="@null"
+        android:src="@drawable/btn_close_selector" />
 
 </LinearLayout>

@@ -141,7 +141,7 @@ public class MusicActivity
             startMusicServiceFlag(mCurrentPosition, sortFlag, detailFlag, Constants.NO_NEED_FLAG);
         }
         mSmartisanControlBar.setPlayButtonState(R.drawable.btn_playing_pause_selector);
-        mQqControlBar.setPlayButtonState(R.drawable.notifycation_pause);
+        mQqControlBar.setPlayButtonState(R.drawable.btn_playing_pause_selector);
         mPlayState = Constants.NUMBER_THRRE;
     }
 
@@ -220,7 +220,7 @@ public class MusicActivity
                 ToastUtil.showNoMusic(MusicActivity.this);
             }
         });
-        mQqControlBar.setOnPagerSelecteListener(position -> {
+        mQqControlBar.setOnPagerSelectListener(position -> {
             LogUtil.d(TAG, "==== Qq Bar  ==============");
             int sortFlag = SpUtil.getSortFlag(this);
             MusicActivity.this.disposableQqLyric();

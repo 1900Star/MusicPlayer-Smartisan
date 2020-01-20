@@ -81,7 +81,7 @@ public class SongAdapter
             songListViewHolder.mCheckBox.setVisibility(isSelectStatus ? View.VISIBLE : View.GONE);
             songListViewHolder.mIvSongItemMenu.setVisibility(isSelectStatus ? View.INVISIBLE : View.VISIBLE);
             songListViewHolder.mCheckBox.setChecked(mSparseBooleanArray.get(position));
-            ImageUitl.customLoadPic(mContext, FileUtil.getAlbumUrl(musicBean, 1), R.drawable.noalbumcover_120, songListViewHolder.mSongAlbum);
+            ImageUitl.customLoadPic(mContext, FileUtil.getAlbumUrl(musicBean, 1), R.drawable.noalbumcover_220, songListViewHolder.mSongAlbum);
             songListViewHolder.mSongArtistName.setText(StringUtil.getArtist(musicBean));
             songListViewHolder.mSongName.setText(StringUtil.getTitle(musicBean));
             if (mIsShowStickyView == Constants.NUMBER_ZERO) {

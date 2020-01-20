@@ -15,7 +15,7 @@
         android:adjustViewBounds="true"
         android:contentDescription="@null"
         android:scaleType="centerCrop"
-        android:src="@drawable/sidebar_cover" />
+        android:src="@drawable/noalbumcover_220" />
 
     <LinearLayout
         android:layout_width="match_parent"

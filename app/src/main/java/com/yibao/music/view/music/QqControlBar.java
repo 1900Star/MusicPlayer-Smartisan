@@ -64,8 +64,8 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
         mSlideViewPager.addOnPageChangeListener(new MusicPagerListener() {
             @Override
             public void onPageSelected(int position) {
-                if (mSelecteListener != null) {
-                    mSelecteListener.selectePosition(position);
+                if (mSelectListener != null) {
+                    mSelectListener.selectPosition(position);
                     setPagerCurrentItem(position);
                 }
             }
@@ -78,11 +78,11 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
     }
 
     public void updatePlayButtonState(boolean isPlaying) {
-        mButtonPlay.setIcon(isPlaying ? R.drawable.notifycation_pause : R.drawable.notifycation_play);
+        mButtonPlay.setIcon(isPlaying ? R.drawable.btn_playing_pause_selector : R.drawable.btn_playing_play_selector);
     }
 
     public void setFavoriteButtonState(boolean isFavorite) {
-        mButtonFavorite.setImageResource(isFavorite ? R.drawable.favorite_yes : R.drawable.music_qqbar_favorite_normal_selector);
+        mButtonFavorite.setImageResource(isFavorite ? R.drawable.btn_favorite_red_selector : R.drawable.btn_favorite_gray_selector);
     }
 
     // **************ViewPager数据********************
@@ -145,10 +145,10 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
         void click(int clickFlag);
     }
 
-    private OnPagerSelecteListener mSelecteListener;
+    private OnPagerSelecteListener mSelectListener;
 
-    public void setOnPagerSelecteListener(OnPagerSelecteListener selecteListener) {
-        mSelecteListener = selecteListener;
+    public void setOnPagerSelectListener(OnPagerSelecteListener selectListener) {
+        mSelectListener = selectListener;
     }
 
     public interface OnPagerSelecteListener {
@@ -156,6 +156,6 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
          * p
          * @param currentPosition d
          */
-        void selectePosition(int currentPosition);
+        void selectPosition(int currentPosition);
     }
 }

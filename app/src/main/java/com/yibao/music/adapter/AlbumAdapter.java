@@ -113,7 +113,7 @@ public class AlbumAdapter
     private void setDataAlbumTile(AlbumTileHolder holder, AlbumInfo albumInfo) {
 
 
-        ImageUitl.customLoadPic(mContext, StringUtil.getAlbum(2, albumInfo.getAlbumId(), albumInfo.getAlbumName()), R.drawable.noalbumcover_120, holder.mIvAlbumTileAlbum);
+        ImageUitl.customLoadPic(mContext, StringUtil.getAlbum(2, albumInfo.getAlbumId(), albumInfo.getAlbumName()), R.drawable.noalbumcover_220, holder.mIvAlbumTileAlbum);
         holder.mTvAlbumTileName.setText(albumInfo.getAlbumName());
 
         holder.mIvAlbumTileAlbum.setOnClickListener(view1 -> AlbumAdapter.this.openDetails(albumInfo, holder.getAdapterPosition(), false));

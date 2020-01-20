@@ -77,8 +77,8 @@ public class MusicNotifyManager implements
         setCommonClickPending(view);
 
         view.setImageViewResource(R.id.play_notify_favorite,
-                isFavorite ? R.drawable.favorite_yes :
-                        R.drawable.favorite_normal);
+                isFavorite ? R.drawable.btn_favorite_red_selector :
+                        R.drawable.btn_favorite_gray_selector);
         // Pre
         Intent pre = new Intent(Constants.ACTION_MUSIC);
         pre.putExtra(Constants.NOTIFY_BUTTON_ID, Constants.PREV);
@@ -126,8 +126,8 @@ public class MusicNotifyManager implements
         view.setTextViewText(R.id.play_notify_name, musicName);
         view.setTextViewText(R.id.play_notify_arts, musicArtist);
         view.setImageViewResource(R.id.play_notify_play,
-                isPlay ? R.drawable.ic_pause
-                        : R.drawable.ic_play_arrow);
+                isPlay ? R.drawable.btn_playing_pause_selector
+                        : R.drawable.btn_playing_play_selector);
 
     }
 
