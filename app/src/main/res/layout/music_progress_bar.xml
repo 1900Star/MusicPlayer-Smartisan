@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="40dp"
-    android:layout_height="40dp"
-    android:layout_gravity="center">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center">
 
     <ImageView
         android:id="@+id/music_progress_bar"
-        android:layout_width="32dp"
+        android:layout_width="38dp"
+        android:layout_margin="3dp"
+        android:layout_height="38dp"
         android:layout_centerInParent="true"
-        android:layout_height="32dp"
         android:contentDescription="@null"
-        android:src="@drawable/notifycation_play" />
+        android:src="@drawable/btn_playing_play_selector" />
 
 </RelativeLayout>

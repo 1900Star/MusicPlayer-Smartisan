@@ -27,7 +27,6 @@ import com.yibao.music.util.LogUtil;
 public class MusicProgressView
         extends LinearLayout {
     private ImageView mIvIcon;
-    private TextView mTvNote;
 
     private boolean isProgressEnable = true;
     private int mMax = 100;
@@ -45,6 +44,11 @@ public class MusicProgressView
     public MusicProgressView(Context context) {
         this(context, null);
 
+    }
+
+    @Override
+    public void setGravity(int gravity) {
+        super.setGravity(gravity);
     }
 
     private void init() {
@@ -81,7 +85,7 @@ public class MusicProgressView
     /**
      * 在ViewGroup上绘制东西的时候往往重写的是dispatchDraw()
      *
-     * @param canvas
+     * @param canvas c
      */
     @Override
     protected void dispatchDraw(Canvas canvas) {
@@ -121,7 +125,7 @@ public class MusicProgressView
     /**
      * 设置是否允许进度
      *
-     * @param progressEnable
+     * @param progressEnable p
      */
     public void setProgressEnable(boolean progressEnable) {
         isProgressEnable = progressEnable;
@@ -130,7 +134,7 @@ public class MusicProgressView
     /**
      * 设置进度的最大值
      *
-     * @param max
+     * @param max m
      */
     public void setMax(int max) {
         mMax = max;
@@ -139,7 +143,7 @@ public class MusicProgressView
     /**
      * 设置进度的当前值
      *
-     * @param progress
+     * @param progress p
      */
     public void setProgress(int progress) {
         mProgress = progress;
@@ -151,12 +155,5 @@ public class MusicProgressView
      */
     public void setIcon(int resId) {
         mIvIcon.setImageResource(resId);
-    }
-
-    /**
-     * 修改文本的内容
-     */
-    public void setNote(String content) {
-        mTvNote.setText(content);
     }
 }
