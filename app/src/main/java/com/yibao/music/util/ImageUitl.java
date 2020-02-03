@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
@@ -41,6 +42,11 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * 作者：Stran on 2017/3/23 03:23
@@ -130,35 +136,50 @@ public class ImageUitl {
      * @param artist    歌手名
      */
     public static void glideSaveImg(Context context, String url, int imageType, String songName, String artist) {
-        try {
-            Observable.create((ObservableOnSubscribe<File>) e -> {
-                e.onNext(Glide.with(context)
-                        .load(url).error(R.drawable.nina)
-                        .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                        .get());
-                e.onComplete();
-            }).subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.newThread())
-                    .subscribe(file -> {
-                        //获取到下载得到的图片，进行本地保存
-                        String path = imageType == 1
-                                ? Constants.MUSIC_SONG_ALBUM_ROOT : imageType == 2
-                                ? Constants.MUSIC_ARITIST_IMG_ROOT : Constants.MUSIC_ALBUM_ROOT;
-                        File songAlbumFile = new File(path);
-                        if (!songAlbumFile.exists()) {
-                            songAlbumFile.mkdirs();
-                        }
-                        String fileName = imageType == 1
-                                ? songName + ".jpg" : imageType == 2
-                                ? artist + ".jpg" : artist + ".jpg";
-                        File destFile = new File(songAlbumFile, fileName);
-                        //把gilde下载得到图片复制到定义好的目录中去
-                        copy(file, destFile);
+        final Request request = new Request.Builder().get()
+                .url(url)
+                .build();
+        OkHttpUtil.getClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                LogUtil.d(TAG, "图片地址错误，异常。");
+            }
 
-                    });
-        } catch (Exception e) {
-            LogUtil.d(TAG, e.getMessage());
-        }
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if (response.isSuccessful()) {
+                    LogUtil.d(TAG, "图片地址OK");
+                    Observable.create((ObservableOnSubscribe<File>) e -> {
+                        e.onNext(Glide.with(context)
+                                .load(url).error(R.drawable.nina)
+                                .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                                .get());
+                        e.onComplete();
+                    }).subscribeOn(Schedulers.io())
+                            .observeOn(Schedulers.newThread())
+                            .subscribe(file -> {
+                                //获取到下载得到的图片，进行本地保存
+                                String path = imageType == 1
+                                        ? Constants.MUSIC_SONG_ALBUM_ROOT : imageType == 2
+                                        ? Constants.MUSIC_ARITIST_IMG_ROOT : Constants.MUSIC_ALBUM_ROOT;
+                                File songAlbumFile = new File(path);
+                                if (!songAlbumFile.exists()) {
+                                    songAlbumFile.mkdirs();
+                                }
+                                String fileName = imageType == 1
+                                        ? songName + ".jpg" : imageType == 2
+                                        ? artist + ".jpg" : artist + ".jpg";
+                                File destFile = new File(songAlbumFile, fileName);
+                                //把gilde下载得到图片复制到定义好的目录中去
+                                copy(file, destFile);
+
+                            });
+                } else {
+                    LogUtil.d(TAG, "图片地址错误");
+                }
+            }
+        });
+
 
     }
 

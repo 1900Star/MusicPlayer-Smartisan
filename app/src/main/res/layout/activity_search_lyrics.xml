@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical"
-    tools:context=".activity.SelectLyricsActivity">
+    tools:context=".activity.SearchLyricsActivity">
 
 
     <RelativeLayout
@@ -142,7 +142,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:gravity="center"
         android:textColor="@color/bg_hint" />
 
@@ -155,6 +155,7 @@
             android:id="@+id/vp2_search_lyrics"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="3dp"
             android:layout_gravity="center" />
 
         <ImageView
@@ -164,17 +165,18 @@
             android:layout_gravity="center"
             android:background="@drawable/search_loading_animation"
             android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/tv_lyrics_page_index"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:textColor="@color/deleteNorma"
+            android:textStyle="bold" />
     </FrameLayout>
 
 
-    <TextView
-        android:id="@+id/tv_lyrics_page_index"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:gravity="center"
-        android:textColor="@color/deleteNorma"
-        android:textSize="16sp"
-        android:textStyle="bold" />
 </LinearLayout>

@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.yibao.music.R;
-import com.yibao.music.adapter.LyricsSearchPagerAdapter;
+import com.yibao.music.adapter.SearchLyricsPagerAdapter;
 import com.yibao.music.base.BaseObserver;
 import com.yibao.music.model.qq.SearchLyricsBean;
 import com.yibao.music.model.qq.SongLrc;
@@ -32,10 +32,10 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * @author luoshipeng
  * createDate：2019/12/26 0026 14:54
- * className   SelectLyricsActivity
+ * className   SearchLyricsActivity
  * Des：TODO
  */
-public class SelectLyricsActivity extends AppCompatActivity {
+public class SearchLyricsActivity extends AppCompatActivity {
     protected final String TAG = "====" + this.getClass().getSimpleName() + "    ";
     private ImageView mIvBack;
     private TextView mTvSearchComplete;
@@ -52,7 +52,7 @@ public class SelectLyricsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_lyrics);
+        setContentView(R.layout.activity_search_lyrics);
         initView();
         intData();
         initListener();
@@ -137,7 +137,7 @@ public class SelectLyricsActivity extends AppCompatActivity {
                     }
                     mIvLoading.setVisibility(View.GONE);
                     setTvIndex(mLyricsBeanList.size());
-                    LyricsSearchPagerAdapter pagerAdapter2 = new LyricsSearchPagerAdapter(SelectLyricsActivity.this, mLyricsBeanList);
+                    SearchLyricsPagerAdapter pagerAdapter2 = new SearchLyricsPagerAdapter(SearchLyricsActivity.this, mLyricsBeanList);
                     mViewPager2.setAdapter(pagerAdapter2);
 
                 }

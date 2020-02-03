@@ -174,7 +174,7 @@ public class PlayActivity extends BasePlayActivity {
         mCurrenMusicInfo = audioBinder != null ? audioBinder.getMusicBean() : getIntent().getParcelableExtra("currentBean");
         if (mCurrenMusicInfo != null) {
             setTitleAndArtist(mCurrenMusicInfo);
-            setAlbulm(FileUtil.getAlbumUrl(mCurrenMusicInfo, 1));
+            setAlbum(FileUtil.getAlbumUrl(mCurrenMusicInfo, 1));
         }
     }
 
@@ -246,7 +246,7 @@ public class PlayActivity extends BasePlayActivity {
         checkCurrentIsFavorite(mCurrenMusicInfo.isFavorite());
         initAnimation();
         setTitleAndArtist(musicBean);
-        setAlbulm(FileUtil.getAlbumUrl(musicBean, 1));
+        setAlbum(FileUtil.getAlbumUrl(musicBean, 1));
         setSongDuration();
         updatePlayBtnStatus();
         // 设置当前歌词
@@ -300,7 +300,7 @@ public class PlayActivity extends BasePlayActivity {
 //        clearDisposableLyric();
     }
 
-    private void setAlbulm(String url) {
+    private void setAlbum(String url) {
         try {
             ImageUitl.loadPic(this, url, mPlayingSongAlbum, R.drawable.playing_cover_lp, isSuccess -> {
                 if (isSuccess) {
@@ -427,7 +427,7 @@ public class PlayActivity extends BasePlayActivity {
                 LyricsUtil.deleteCurrentLyric(mCurrenMusicInfo.getTitle(), mCurrenMusicInfo.getArtist());
                 break;
             case R.id.iv_select_lyric:
-                Intent intent = new Intent(this, SelectLyricsActivity.class);
+                Intent intent = new Intent(this, SearchLyricsActivity.class);
                 intent.putExtra(Constants.SONG_NAME, StringUtil.getSongName(mCurrenMusicInfo.getTitle()));
                 intent.putExtra(Constants.SONG_ARTIST, StringUtil.getArtist(mCurrenMusicInfo.getArtist()));
                 startActivityForResult(intent, Constants.SELECT_LYRICS);

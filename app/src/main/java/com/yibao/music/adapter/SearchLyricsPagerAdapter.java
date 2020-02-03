@@ -19,11 +19,11 @@ import java.util.List;
  *
  * @author Stran
  */
-public class LyricsSearchPagerAdapter
+public class SearchLyricsPagerAdapter
         extends FragmentStateAdapter {
     private List<SearchLyricsBean> mLyricsList;
 
-    public LyricsSearchPagerAdapter(@NonNull FragmentActivity fragmentActivity, List<SearchLyricsBean> lyricsList) {
+    public SearchLyricsPagerAdapter(@NonNull FragmentActivity fragmentActivity, List<SearchLyricsBean> lyricsList) {
         super(fragmentActivity);
         mLyricsList = lyricsList;
     }

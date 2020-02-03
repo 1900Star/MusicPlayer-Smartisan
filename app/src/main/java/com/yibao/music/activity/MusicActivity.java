@@ -114,11 +114,11 @@ public class MusicActivity
         mMusicConfig = SpUtil.getMusicConfig(this, false);
         if (mMusicConfig) {
             mPlayState = SpUtil.getMusicPlayState(this);
-            LogUtil.d(TAG, "======= mPlayStae  " + mPlayState);
+            LogUtil.d(TAG, "======= mPlayState  " + mPlayState);
             if (mPlayState == Constants.NUMBER_ONE) {
                 // 读取用户的播放记录，设置UI显示，做好播放的准备。(暂停和播放两种状态)
                 if (mCurrentMusicBean != null) {
-                    perpareItem(mCurrentMusicBean);
+                    setMusicInfo(mCurrentMusicBean);
                 }
             } else if (mPlayState == Constants.NUMBER_TWO) {
                 startServiceAndAnimation();
@@ -385,7 +385,7 @@ public class MusicActivity
         SpUtil.setMusicConfig(MusicActivity.this);
         mMusicConfig = true;
         // 更新歌曲的信息
-        MusicActivity.this.perpareItem(musicItem);
+        MusicActivity.this.setMusicInfo(musicItem);
         // 设置歌曲最大进度
         setDuration();
         // 更新播放按钮状态
@@ -435,11 +435,11 @@ public class MusicActivity
         List<MusicLyricBean> lyricList = LyricsUtil.getLyricList(mCurrentMusicBean);
         disposableQqLyric();
         if (mQqLyricsDisposable == null) {
-            mQqLyricsDisposable = Observable.interval(1600, TimeUnit.MICROSECONDS)
+            if (lyricList != null && lyricList.size() > 1 && lyricsFlag < lyricList.size()) {
+                mQqLyricsDisposable = Observable.interval(1600, TimeUnit.MICROSECONDS)
 //                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(musicBeanList -> {
-                        if (lyricList != null && lyricList.size() > 1 && lyricsFlag < lyricList.size()) {
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(musicBeanList -> {
                             //通过集合，播放过的歌词就从集合中删除
                             MusicLyricBean lyrBean = lyricList.get(lyricsFlag);
                             String lyrics = lyrBean.getContent();
@@ -459,10 +459,11 @@ public class MusicActivity
                                 mQqControlBar.updaPagerData(musicList, mCurrentPosition);
                                 lyricsFlag++;
                             }
-                        } else {
-                            LogUtil.d(TAG, "========MusicActivity =====没有发现歌词 ");
-                        }
-                    });
+                        });
+
+            } else {
+                LogUtil.d(TAG, "========MusicActivity =====没有发现歌词 ");
+            }
         } else {
             LogUtil.d(TAG, "=============没有时间和歌词 ");
             mQqControlBar.setPagerData(audioBinder.getMusicList());
@@ -482,7 +483,7 @@ public class MusicActivity
      *
      * @param musicItem g
      */
-    private void perpareItem(MusicBean musicItem) {
+    private void setMusicInfo(MusicBean musicItem) {
         mCurrentMusicBean = musicItem;
         checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
         // 更新音乐标题
@@ -550,7 +551,7 @@ public class MusicActivity
     protected void onResume() {
         super.onResume();
         if (audioBinder != null) {
-            perpareItem(audioBinder.getMusicBean());
+            setMusicInfo(audioBinder.getMusicBean());
             mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
             checkCurrentSongIsFavorite(mCurrentMusicBean, mQqControlBar, mSmartisanControlBar);
             updatePlayBtnStatus();

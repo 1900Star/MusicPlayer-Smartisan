@@ -43,10 +43,9 @@ public class QqMusicRemote {
                 .subscribe(new BaseObserver<SearchSong>() {
                     @Override
                     public void onNext(SearchSong searchSong) {
-                        String albummid = searchSong.getData().getSong().getList().get(0).getAlbummid();
-                        String imgUrl = albumUrlHead + albummid + ".jpg";
+                        String albumMid = searchSong.getData().getSong().getList().get(0).getAlbummid();
+                        String imgUrl = albumUrlHead + albumMid + ".jpg";
                         // 将专辑图片保存到本地
-
                         ImageUitl.glideSaveImg(context, imgUrl, 1, songName, songName);
                         LogUtil.d(TAG, "图片地址 " + imgUrl);
                         listener.imageUrl(imgUrl);
