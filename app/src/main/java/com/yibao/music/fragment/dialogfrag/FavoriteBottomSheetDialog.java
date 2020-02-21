@@ -123,10 +123,10 @@ public class FavoriteBottomSheetDialog
         mCompositeDisposable.add(mBus.toObserverable(AddAndDeleteListBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(bean -> {
-                    if (bean.getOperationType() == Constants.NUMBER_THRRE) {
+                    if (bean.getOperationType() == Constants.NUMBER_THREE) {
                         // 清空收藏列表
                         clearAllFavoriteMusic();
-                    } else if (bean.getOperationType() == Constants.NUMBER_FIEV) {
+                    } else if (bean.getOperationType() == Constants.NUMBER_FIVE) {
                         // 侧滑删除收藏歌曲
                         mAdapter.notifyDataSetChanged();
                         mList.remove(bean.getPosition());
@@ -169,8 +169,8 @@ public class FavoriteBottomSheetDialog
             case R.id.bottom_sheet_bar_clear:
                 if (mList != null && mList.size() > 0) {
                     // playstatus 在这里暂时用来做删除播放列表和收藏列表的标识，在DeletePlayListDialog中使用，2 为播放列表PlayActivity界面 ，3 为收藏列表FavoriteBottomDialog界面。
-                    PlayListBean bean = new PlayListBean("收藏的所有", (long) Constants.NUMBER_THRRE);
-                    DeletePlayListDialog.newInstance(bean, Constants.NUMBER_THRRE).show(((AppCompatActivity) mContext).getSupportFragmentManager(), "favoriteList");
+                    PlayListBean bean = new PlayListBean("收藏的所有", (long) Constants.NUMBER_THREE);
+                    DeletePlayListDialog.newInstance(bean, Constants.NUMBER_THREE).show(((AppCompatActivity) mContext).getSupportFragmentManager(), "favoriteList");
                 } else {
                     SnakbarUtil.noFavoriteMusic(mBottomListClear);
                 }

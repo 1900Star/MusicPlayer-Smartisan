@@ -54,7 +54,7 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
                 controlBarClick(Constants.NUMBER_TWO);
                 break;
             case R.id.music_floating_play:
-                controlBarClick(Constants.NUMBER_THRRE);
+                controlBarClick(Constants.NUMBER_THREE);
                 break;
             case R.id.music_floating_next:
                 controlBarClick(Constants.NUMBER_FOUR);

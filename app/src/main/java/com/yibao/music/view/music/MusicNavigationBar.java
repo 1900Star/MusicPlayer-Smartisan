@@ -66,7 +66,7 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
                 switchMusicTabbar(Constants.NUMBER_TWO);
                 break;
             case R.id.music_bar_albumlist:
-                switchMusicTabbar(Constants.NUMBER_THRRE);
+                switchMusicTabbar(Constants.NUMBER_THREE);
                 break;
             case R.id.music_bar_about:
                 switchMusicTabbar(Constants.NUMBER_FOUR);
@@ -94,7 +94,7 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
                 mMusicBarSonglistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarSonglist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 break;
-            case Constants.NUMBER_THRRE:
+            case Constants.NUMBER_THREE:
                 mMusicBarAlbumlistIv.setBackgroundResource(R.drawable.tabbar_albumlist_selector);
                 mMusicBarAlbumlist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 mMusicBarAlbumlistTv.setTextColor(ColorUtil.musicbarTvDown);

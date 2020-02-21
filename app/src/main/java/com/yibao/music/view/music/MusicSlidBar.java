@@ -206,7 +206,7 @@ public class MusicSlidBar
         } else if (adapterType == Constants.NUMBER_TWO) {
             ArtistAdapter artistAdapter = (ArtistAdapter) mRecyclerView.getAdapter();
             sectionForPosition = artistAdapter.getPositionForSection(name.charAt(0));
-        } else if (adapterType == Constants.NUMBER_THRRE || adapterType == Constants.NUMBER_FOUR) {
+        } else if (adapterType == Constants.NUMBER_THREE || adapterType == Constants.NUMBER_FOUR) {
             AlbumAdapter albumAdapter = (AlbumAdapter) mRecyclerView.getAdapter();
             sectionForPosition = albumAdapter.getPositionForSection(name.charAt(0));
         }

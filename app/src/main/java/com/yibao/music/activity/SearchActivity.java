@@ -29,10 +29,8 @@ import com.yibao.music.service.MusicPlayService;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SoftKeybordUtil;
-import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.TitleArtistUtil;
 import com.yibao.music.view.MainViewPager;
 import com.yibao.music.view.music.SmartisanControlBar;
@@ -152,7 +150,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
                 case Constants.NUMBER_TWO:
                     audioBinder.playPre();
                     break;
-                case Constants.NUMBER_THRRE:
+                case Constants.NUMBER_THREE:
                     switchPlayState();
                     break;
                 case Constants.NUMBER_FOUR:
@@ -184,7 +182,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
 
 
     @Override
-    protected void updataCurrentPlayInfo(MusicBean musicItem) {
+    protected void updateCurrentPlayInfo(MusicBean musicItem) {
         mMusicBean = musicItem;
         SearchActivity.this.setMusicInfo(musicItem);
         mSmartisanControlBar.initAnimation();
@@ -287,7 +285,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
 
     private int getDataFlag() {
         return mSearchCondition != null ? 1 : currentCategoryPosition == 0 || currentCategoryPosition == 1 ?
-                Constants.NUMBER_THRRE : currentCategoryPosition == 2 ? 2 : currentCategoryPosition == 3 ? 1 : 4;
+                Constants.NUMBER_THREE : currentCategoryPosition == 2 ? 2 : currentCategoryPosition == 3 ? 1 : 4;
     }
 
 

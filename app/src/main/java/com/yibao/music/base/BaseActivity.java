@@ -82,7 +82,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         mCompositeDisposable.add(mBus.toObservableType(Constants.SERVICE_MUSIC, MusicBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::updataCurrentPlayInfo));
+                .subscribe(this::updateCurrentPlayInfo));
         // 接收歌词下载状态
         mCompositeDisposable.add(mBus.toObservableType(Constants.MUSIC_LYRIC_OK, LyricDownBean.class)
                 .subscribeOn(Schedulers.io())
@@ -137,7 +137,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * @param musicItem 当前播放的歌曲信息，用于更新进度和动画状态,需要用的界面复写这个方法
      */
-    protected void updataCurrentPlayInfo(MusicBean musicItem) {
+    protected void updateCurrentPlayInfo(MusicBean musicItem) {
         upDataPlayProgress();
     }
 

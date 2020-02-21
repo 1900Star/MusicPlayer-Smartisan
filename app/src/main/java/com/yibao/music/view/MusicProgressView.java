@@ -52,7 +52,7 @@ public class MusicProgressView
     }
 
     private void init() {
-        int strokeWidth = 9;
+        int strokeWidth = 6;
         grayPaint = new Paint();
         grayPaint.setColor(Color.parseColor("#ccdcdbdb"));
         grayPaint.setStyle(Paint.Style.STROKE);

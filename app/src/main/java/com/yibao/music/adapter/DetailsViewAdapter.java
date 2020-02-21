@@ -80,7 +80,7 @@ public class DetailsViewAdapter extends BaseRvAdapter<MusicBean> {
             detailsHolder.mDetailItem.setOnClickListener(view -> {
                 if (mContext instanceof OnMusicItemClickListener) {
                     SpUtil.setSortFlag(mContext, Constants.NUMBER_TEN);
-                    if (mDataFlag == Constants.NUMBER_THRRE) {
+                    if (mDataFlag == Constants.NUMBER_THREE) {
                         insertSearchBean(info.getTitle());
                     }
                     ((OnMusicItemClickListener) mContext).startMusicServiceFlag(adapterPosition, Constants.NUMBER_TEN, mDataFlag, getQueryFlag(info));
@@ -116,7 +116,7 @@ public class DetailsViewAdapter extends BaseRvAdapter<MusicBean> {
             queryFlag = info.getArtist();
         } else if (mDataFlag == Constants.NUMBER_TWO) {
             queryFlag = info.getAlbum();
-        } else if (mDataFlag == Constants.NUMBER_THRRE) {
+        } else if (mDataFlag == Constants.NUMBER_THREE) {
             queryFlag = info.getTitle();
         } else if (mDataFlag == Constants.NUMBER_FOUR) {
             queryFlag = info.getPlayListFlag();

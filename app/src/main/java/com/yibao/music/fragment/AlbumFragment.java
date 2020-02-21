@@ -22,7 +22,6 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicToolBar;
 
@@ -131,7 +130,7 @@ public class AlbumFragment extends BaseMusicFragment {
             @Override
             public void clickEdit() {
                 if (mDetailViewFlag) {
-                    mBus.post(Constants.ALBUM_FAG_EDIT, Constants.NUMBER_THRRE);
+                    mBus.post(Constants.ALBUM_FAG_EDIT, Constants.NUMBER_THREE);
                 }
                 mMusicToolBar.setTvDeleteVisibility(isShowDetailsView ? View.GONE : View.VISIBLE);
                 mMusicToolBar.setTvEditText(!isShowDetailsView ? R.string.tv_edit : R.string.complete);

@@ -164,7 +164,7 @@ public class SongFragment extends BaseMusicFragment {
                 mMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_down_selector);
                 break;
             case 2:
-                setAllCategoryNotNormal(Constants.NUMBER_THRRE);
+                setAllCategoryNotNormal(Constants.NUMBER_THREE);
                 mMusicCategoryFrequency.setTextColor(ColorUtil.wihtle);
                 mMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_down_selector);
                 break;

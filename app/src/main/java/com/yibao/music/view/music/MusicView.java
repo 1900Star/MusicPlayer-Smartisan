@@ -86,7 +86,7 @@ public class MusicView
     public void setAdapter(Context context, int adapterType, boolean isShowSlideBar, RecyclerView.Adapter adapter) {
         mSlidebar.setAdapterType(adapterType);
         if (adapterType == Constants.NUMBER_FOUR) {
-            GridLayoutManager manager = new GridLayoutManager(context, Constants.NUMBER_THRRE);
+            GridLayoutManager manager = new GridLayoutManager(context, Constants.NUMBER_THREE);
             manager.setOrientation(GridLayoutManager.VERTICAL);
             mRecyclerView.setLayoutManager(manager);
         } else {

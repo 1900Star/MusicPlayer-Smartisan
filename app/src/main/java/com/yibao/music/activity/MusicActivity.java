@@ -77,7 +77,7 @@ public class MusicActivity
     private boolean mMusicConfig;
     private boolean isShowQqBar;
     private int mPlayState;
-    private int lyricsFlag = 0;
+    private int lyricsPlayPosition = 0;
     private MusicBean mQqBarBean;
     private int mHandleDetailFlag;
     private Uri mContentUri;
@@ -142,7 +142,7 @@ public class MusicActivity
         }
         mSmartisanControlBar.setPlayButtonState(R.drawable.btn_playing_pause_selector);
         mQqControlBar.setPlayButtonState(R.drawable.btn_playing_pause_selector);
-        mPlayState = Constants.NUMBER_THRRE;
+        mPlayState = Constants.NUMBER_THREE;
     }
 
     @Override
@@ -172,7 +172,7 @@ public class MusicActivity
                 mMusicViewPager.setCurrentItem(currentSelectFlag, false));
         mSmartisanControlBar.setClickListener(clickFlag -> {
             if (mMusicConfig) {
-                if (clickFlag == Constants.NUMBER_THRRE) {
+                if (clickFlag == Constants.NUMBER_THREE) {
                     switchPlayState();
                 } else {
                     if (audioBinder != null) {
@@ -279,7 +279,7 @@ public class MusicActivity
         if (mPlayState == Constants.NUMBER_ONE) {
             startServiceAndAnimation();
         } else if (mPlayState == Constants.NUMBER_TWO) {
-            mPlayState = Constants.NUMBER_THRRE;
+            mPlayState = Constants.NUMBER_THREE;
         } else {
             if (audioBinder == null) {
                 ToastUtil.showNoMusic(this);
@@ -380,7 +380,7 @@ public class MusicActivity
      * @param musicItem 当前播放的歌曲信息，用于更新进度和动画状态,需要用的界面复写这个方法
      */
     @Override
-    protected void updataCurrentPlayInfo(MusicBean musicItem) {
+    protected void updateCurrentPlayInfo(MusicBean musicItem) {
         // 将MusicConfig设置为ture
         SpUtil.setMusicConfig(MusicActivity.this);
         mMusicConfig = true;
@@ -435,13 +435,13 @@ public class MusicActivity
         List<MusicLyricBean> lyricList = LyricsUtil.getLyricList(mCurrentMusicBean);
         disposableQqLyric();
         if (mQqLyricsDisposable == null) {
-            if (lyricList != null && lyricList.size() > 1 && lyricsFlag < lyricList.size()) {
+            if (lyricList != null && lyricList.size() > 1 && lyricsPlayPosition < lyricList.size()) {
                 mQqLyricsDisposable = Observable.interval(1600, TimeUnit.MICROSECONDS)
 //                    .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(musicBeanList -> {
                             //通过集合，播放过的歌词就从集合中删除
-                            MusicLyricBean lyrBean = lyricList.get(lyricsFlag);
+                            MusicLyricBean lyrBean = lyricList.get(lyricsPlayPosition == lyricList.size() || lyricsPlayPosition > lyricList.size() ? lyricList.size() - 1 : lyricsPlayPosition);
                             String lyrics = lyrBean.getContent();
                             int progress = audioBinder.getProgress();
                             int startTime = lyrBean.getStartTime();
@@ -457,7 +457,7 @@ public class MusicActivity
                                 LogUtil.d(TAG, "当前的进度 ===  " + progress);
                                 LogUtil.d(TAG, "当前的时间和歌词 ===  " + startTime + " ==  " + lyrics);
                                 mQqControlBar.updaPagerData(musicList, mCurrentPosition);
-                                lyricsFlag++;
+                                lyricsPlayPosition++;
                             }
                         });
 
@@ -586,7 +586,7 @@ public class MusicActivity
                 }
 
                 break;
-            case Constants.NUMBER_THRRE:
+            case Constants.NUMBER_THREE:
                 SnakbarUtil.keepGoing(mSmartisanControlBar);
                 break;
             case Constants.NUMBER_FOUR:

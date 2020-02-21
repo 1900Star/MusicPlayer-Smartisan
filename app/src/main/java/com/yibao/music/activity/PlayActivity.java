@@ -40,6 +40,7 @@ import com.yibao.music.util.StringUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.LyricsView;
 
+import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -133,7 +134,7 @@ public class PlayActivity extends BasePlayActivity {
         super.onResume();
         if (mCurrenMusicInfo != null && audioBinder != null) {
             checkCurrentIsFavorite(mMusicDao.load(mCurrenMusicInfo.getId()).isFavorite());
-            updataCurrentPlayInfo(audioBinder.getMusicBean());
+            updateCurrentPlayInfo(audioBinder.getMusicBean());
         }
         rxViewClick();
     }
@@ -226,14 +227,18 @@ public class PlayActivity extends BasePlayActivity {
                 }
 
                 break;
-            case Constants.NUMBER_THRRE:
+            case Constants.NUMBER_THREE:
                 showLyrics();
                 break;
             case Constants.NUMBER_FOUR:
                 CountdownBottomSheetDialog.newInstance().getBottomDialog(this);
                 break;
-            case Constants.NUMBER_FIEV:
-                SnakbarUtil.keepGoing(mAlbumCover);
+            case Constants.NUMBER_FIVE:
+                audioBinder.playNext();
+                String songUrl = mCurrenMusicInfo.getSongUrl();
+                // 先从本地数据库删除歌曲，再彻底删除歌曲文件。
+                mMusicDao.delete(mCurrenMusicInfo);
+                FileUtil.deleteFile(new File(songUrl));
                 break;
             default:
                 break;
@@ -241,7 +246,7 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     @Override
-    protected void updataCurrentPlayInfo(MusicBean musicBean) {
+    protected void updateCurrentPlayInfo(MusicBean musicBean) {
         mCurrenMusicInfo = musicBean;
         checkCurrentIsFavorite(mCurrenMusicInfo.isFavorite());
         initAnimation();
@@ -510,7 +515,7 @@ public class PlayActivity extends BasePlayActivity {
     }
 
     @Override
-    protected void updataMusicBarAndVolumeBar(SeekBar seekBar, int progress, boolean b) {
+    protected void updateMusicBarAndVolumeBar(SeekBar seekBar, int progress, boolean b) {
         switch (seekBar.getId()) {
             case R.id.sb_progress:
                 if (!b) {
@@ -537,7 +542,7 @@ public class PlayActivity extends BasePlayActivity {
      * @param currVolume c
      */
     @Override
-    public void updataVolumeProgresse(int currVolume) {
+    public void updateVolumeProgress(int currVolume) {
         mSbVolume.setProgress(currVolume);
     }
 

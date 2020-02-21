@@ -9,9 +9,9 @@
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/qq_music_vp"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="58dp"
-        android:layout_weight="1" />
+        android:layout_weight="2" />
 
     <View
         android:layout_width="0.5dp"
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="58dp"
         android:layout_marginStart="5dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="5dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -38,9 +38,8 @@
 
         <ImageView
             android:id="@+id/music_floating_pager_favorite"
-            android:layout_width="0dp"
+            android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_weight="1"
             android:contentDescription="@null"
             android:src="@drawable/btn_favorite_gray_selector" />
     </LinearLayout>

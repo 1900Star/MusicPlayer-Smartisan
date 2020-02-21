@@ -134,11 +134,11 @@ public class MusicListUtil {
             value = Float.compare(m2.getAddTime(), m1.getAddTime());
         } else if (sortFlag == Constants.NUMBER_TWO) {
             value = Integer.compare(Integer.parseInt(m2.getTime()), Integer.parseInt(m1.getTime()));
-        } else if (sortFlag == Constants.NUMBER_THRRE) {
+        } else if (sortFlag == Constants.NUMBER_THREE) {
             value = Integer.compare(m2.getPlayFrequency(), m1.getPlayFrequency());
         } else if (sortFlag == Constants.NUMBER_FOUR) {
             value = Integer.compare(m2.getSongScore(), m1.getSongScore());
-        } else if (sortFlag == Constants.NUMBER_FIEV) {
+        } else if (sortFlag == Constants.NUMBER_FIVE) {
             value = Float.compare(m1.getAddListTime(), m2.getAddListTime());
         }
         if (value != 0) {

@@ -173,7 +173,7 @@ public abstract class BasePlayActivity extends BaseTansitionActivity implements 
                     // 当前的媒体音量
                     int currVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                     // 如果系统音量发生变化就更新Seekbar
-                    updataVolumeProgresse(currVolume);
+                    updateVolumeProgress(currVolume);
                 }
             }
         }
@@ -184,7 +184,7 @@ public abstract class BasePlayActivity extends BaseTansitionActivity implements 
      *
      * @param currVolume c
      */
-    public abstract void updataVolumeProgresse(int currVolume);
+    public abstract void updateVolumeProgress(int currVolume);
 
     /**
      * 音乐进度条和音量条的监听器
@@ -195,7 +195,7 @@ public abstract class BasePlayActivity extends BaseTansitionActivity implements 
         public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
             super.onProgressChanged(seekBar, progress, b);
 
-            updataMusicBarAndVolumeBar(seekBar, progress, b);
+            updateMusicBarAndVolumeBar(seekBar, progress, b);
         }
     }
 
@@ -206,7 +206,7 @@ public abstract class BasePlayActivity extends BaseTansitionActivity implements 
      * @param progress p
      * @param b        b
      */
-    protected abstract void updataMusicBarAndVolumeBar(SeekBar seekBar, int progress, boolean b);
+    protected abstract void updateMusicBarAndVolumeBar(SeekBar seekBar, int progress, boolean b);
 
     /**
      * 停止更新

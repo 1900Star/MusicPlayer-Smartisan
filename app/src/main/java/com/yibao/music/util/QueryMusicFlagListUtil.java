@@ -34,7 +34,7 @@ public class QueryMusicFlagListUtil {
         } else if (sortListFlag == Constants.NUMBER_TWO) {
             return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.SORT_SCORE);
             // 按播放次数
-        } else if (sortListFlag == Constants.NUMBER_THRRE) {
+        } else if (sortListFlag == Constants.NUMBER_THREE) {
             return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.SORT_FREQUENCY);
             // 按添加时间
         } else if (sortListFlag == Constants.NUMBER_FOUR) {
@@ -56,7 +56,7 @@ public class QueryMusicFlagListUtil {
             } else if (dataFlag == Constants.NUMBER_TWO) {
                 whereCondition = MusicBeanDao.Properties.Album.eq(queryFlag);
                 // 按歌曲名查询
-            } else if (dataFlag == Constants.NUMBER_THRRE) {
+            } else if (dataFlag == Constants.NUMBER_THREE) {
                 whereCondition = MusicBeanDao.Properties.Title.eq(queryFlag);
                 // 按播放列表查询
             } else if (dataFlag == Constants.NUMBER_FOUR) {
@@ -77,7 +77,7 @@ public class QueryMusicFlagListUtil {
      * @return h
      */
     public static List<MusicBean> getDataList(int spMusicFlag, int dataFlag, String queryFlag, MusicBeanDao musicBeanDao) {
-        if (spMusicFlag == Constants.NUMBER_THRRE) {
+        if (spMusicFlag == Constants.NUMBER_THREE) {
             return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.SORT_DOWN_TIME);
         } else if (spMusicFlag == Constants.NUMBER_ONE) {
             return MusicListUtil.sortMusicAbc(musicBeanDao.queryBuilder().list());
@@ -92,7 +92,7 @@ public class QueryMusicFlagListUtil {
             } else if (dataFlag == Constants.NUMBER_TWO) {
                 whereCondition = MusicBeanDao.Properties.Album.eq(queryFlag);
                 // 按歌曲名查询
-            } else if (dataFlag == Constants.NUMBER_THRRE) {
+            } else if (dataFlag == Constants.NUMBER_THREE) {
                 whereCondition = MusicBeanDao.Properties.Title.eq(queryFlag);
                 // 按播放列表查询
             } else if (dataFlag == Constants.NUMBER_FOUR) {

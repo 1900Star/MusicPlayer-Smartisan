@@ -47,7 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_gravity="bottom"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bnv_music"
@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/colorWhite"
-        android:visibility="gone"
+        android:visibility="visible"
         app:itemIconTint="@color/color_state_menu_navi"
         app:itemTextColor="@color/color_state_menu_navi"
         app:labelVisibilityMode="labeled"

@@ -53,7 +53,7 @@ public class BottomSheetAdapter
             musicHolder.mDeleteLayout.setOnClickListener(v -> {
                 musicItem.setFavorite(false);
                 MusicApplication.getIntstance().getMusicDao().update(musicItem);
-                RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_FIEV, position, musicItem.getTitle()));
+                RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_FIVE, position, musicItem.getTitle()));
             });
             // MusicBottomSheetDialog页面接收,用于播放收藏列表中点击Position的音乐
             musicHolder.mRootBottomSheet.setOnClickListener(view -> RxBus.getInstance().post(Constants.FAVORITE_POSITION, position));

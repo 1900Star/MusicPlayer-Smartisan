@@ -30,7 +30,7 @@ public class MusicPagerAdapter
 
     @Override
     public int getCount() {
-        return Constants.NUMBER_FIEV;
+        return Constants.NUMBER_FIVE;
     }
 
 

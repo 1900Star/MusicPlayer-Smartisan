@@ -185,7 +185,7 @@ public class SearchFragment extends BaseFragment {
             mFlowLayoutView.setData(searchList);
         }
         // 列表数据
-        mSearchDetailAdapter = new DetailsViewAdapter(mActivity, null, Constants.NUMBER_THRRE);
+        mSearchDetailAdapter = new DetailsViewAdapter(mActivity, null, Constants.NUMBER_THREE);
         RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(1, mSearchDetailAdapter);
         mLinearDetail.addView(recyclerView);
         if (getArguments() != null) {
@@ -203,10 +203,10 @@ public class SearchFragment extends BaseFragment {
         }
         switch (categoryFlag) {
             case 0:
-                setFlagAndSearch(condition, Constants.NUMBER_THRRE);
+                setFlagAndSearch(condition, Constants.NUMBER_THREE);
                 break;
             case 1:
-                setFlagAndSearch(condition, Constants.NUMBER_THRRE);
+                setFlagAndSearch(condition, Constants.NUMBER_THREE);
                 break;
             case 2:
                 setFlagAndSearch(condition, Constants.NUMBER_TWO);
@@ -253,7 +253,7 @@ public class SearchFragment extends BaseFragment {
                 break;
             case Constants.NUMBER_TWO:
                 break;
-            case Constants.NUMBER_THRRE:
+            case Constants.NUMBER_THREE:
                 SnakbarUtil.keepGoing(mtvStickyView);
                 break;
             case Constants.NUMBER_FOUR:
