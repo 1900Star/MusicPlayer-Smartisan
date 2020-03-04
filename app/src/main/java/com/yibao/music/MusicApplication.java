@@ -5,10 +5,8 @@ import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.baidu.mobstat.StatService;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
-import com.yibao.music.base.BaseFragment;
+import androidx.multidex.MultiDex;
+
 import com.yibao.music.model.greendao.AlbumInfoDao;
 import com.yibao.music.model.greendao.DaoMaster;
 import com.yibao.music.model.greendao.DaoSession;
@@ -34,7 +32,6 @@ public class MusicApplication
 
     private DaoSession mDaoSession;
     private static MusicBeanDao musicBeanDao;
-    private RefWatcher mRefWatcher;
 
     public static MusicApplication getIntstance() {
         if (appContext == null) {
@@ -43,24 +40,16 @@ public class MusicApplication
         return appContext;
     }
 
-    public static RefWatcher getRefWatcher(Context context) {
-
-        return ((MusicApplication) context.getApplicationContext()).mRefWatcher;
-    }
-
 
     @Override
     public void onCreate() {
         super.onCreate();
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return;
-        }
-        mRefWatcher = LeakCanary.install(this);
         appContext = this;
 //        StatService.setDebugOn(true);
         CrashHandler.getInstance()
                 .init();
         setUpDataBase();
+        MultiDex.install(this);
     }
 
     private void setUpDataBase() {

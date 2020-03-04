@@ -113,10 +113,14 @@
 -keepclassmembers class * extends org.greenrobot.greendao.AbstractDao {
 public static java.lang.String TABLENAME;
 }
--keep class **$Properties
-# If you do not use SQLCipher:
--dontwarn org.greenrobot.greendao.database.**
-# If you do not use RxJava:
+-keep class **$Properties { *; }
+
+# If you DO use SQLCipher:
+-keep class org.greenrobot.greendao.database.SqlCipherEncryptedHelper { *; }
+
+# If you do NOT use SQLCipher:
+-dontwarn net.sqlcipher.database.**
+# If you do NOT use RxJava:
 -dontwarn rx.**
 
 # Retrofit

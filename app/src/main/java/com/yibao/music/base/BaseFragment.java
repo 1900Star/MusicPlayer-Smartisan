@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.baidu.mobstat.StatService;
-import com.squareup.leakcanary.RefWatcher;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.model.greendao.AlbumInfoDao;
 import com.yibao.music.model.greendao.MusicBeanDao;
@@ -78,8 +77,6 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        RefWatcher refWatcher = MusicApplication.getRefWatcher(mActivity);
-        refWatcher.watch(this);
 
     }
 }
