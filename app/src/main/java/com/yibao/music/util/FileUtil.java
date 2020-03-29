@@ -150,4 +150,9 @@ public class FileUtil {
             file.delete();
         }
     }
+
+    public static File createFile(Context context, String fileName, String dirPath) {
+        String apkFilePath = context.getExternalFilesDir(dirPath).getAbsolutePath();
+        return new File(apkFilePath + File.separator + fileName);
+    }
 }

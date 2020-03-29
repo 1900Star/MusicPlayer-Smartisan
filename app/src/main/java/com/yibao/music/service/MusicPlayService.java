@@ -2,6 +2,7 @@ package com.yibao.music.service;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -11,6 +12,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
+import android.provider.MediaStore;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
@@ -19,7 +21,7 @@ import com.yibao.music.manager.MusicNotifyManager;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.network.QqMusicRemote;
-import com.yibao.music.network.RetrofitHelper;
+import com.yibao.music.util.CheckBuildVersionUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
@@ -160,8 +162,10 @@ public class MusicPlayService
             if (mMusicDataList != null && mMusicDataList.size() > 0) {
                 position = position >= mMusicDataList.size() ? 0 : position;
                 mMusicInfo = mMusicDataList.get(position);
+
                 mediaPlayer = MediaPlayer.create(MusicPlayService.this,
-                        Uri.parse(mMusicInfo.getSongUrl()));
+                        getSongFileUri());
+
                 mediaPlayer.setOnPreparedListener(this);
                 mediaPlayer.setOnCompletionListener(this);
                 String songName = StringUtil.getSongName(mMusicInfo.getTitle());
@@ -210,6 +214,7 @@ public class MusicPlayService
         public void onPrepared(MediaPlayer mediaPlayer) {
             // 开启播放
             mediaPlayer.start();
+
             // 通知播放界面更新
             sendCureentMusicInfo();
         }
@@ -335,6 +340,12 @@ public class MusicPlayService
             bean.setTime(StringUtil.getTime());
             mMusicDao.update(bean);
         }
+
+        private Uri getSongFileUri() {
+            int songId = mMusicInfo.getId().intValue();
+            return CheckBuildVersionUtil.checkAndroidVersionQ() ? ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId) : Uri.parse(mMusicInfo.getSongUrl());
+        }
+
     }
 
     private void refreshFavorite(MusicBean currentMusicBean, boolean mCurrentIsFavorite) {

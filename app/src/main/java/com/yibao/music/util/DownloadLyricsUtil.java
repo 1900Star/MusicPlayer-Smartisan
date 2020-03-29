@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.yibao.music.MusicApplication;
 import com.yibao.music.model.LyricDownBean;
 
 import java.io.File;
@@ -46,7 +47,10 @@ public class DownloadLyricsUtil {
         String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + artist + ".lrc";
         String strContent = strcontent + "\r\n";
         try {
-            File file = new File(path);
+            File file = CheckBuildVersionUtil.checkAndroidVersionQ() ?
+                    FileUtil.createFile(MusicApplication.getIntstance(), songName + "$$" + artist + ".lrc", Constants.MUSIC_LYRICS_ROOT)
+                    : new File(path);
+
             if (!file.exists()) {
                 file.getParentFile().mkdirs();
                 file.createNewFile();

@@ -1,8 +1,10 @@
 package com.yibao.music.adapter;
 
 import android.content.Context;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,7 +43,9 @@ import butterknife.ButterKnife;
 
 public class DetailsViewAdapter extends BaseRvAdapter<MusicBean> {
     private Context mContext;
-    /** 用来区分搜索的标识：1 Artist 、 2 Album 、  3 SongName(目前只按歌名搜索) 、   4 PlayList (播放列表) */
+    /**
+     * 用来区分搜索的标识：1 Artist 、 2 Album 、  3 SongName(目前只按歌名搜索) 、   4 PlayList (播放列表)
+     */
     private int mDataFlag;
 
     public DetailsViewAdapter(Context context, List<MusicBean> list, int dataFlag) {
@@ -65,7 +69,7 @@ public class DetailsViewAdapter extends BaseRvAdapter<MusicBean> {
             DetailsHolder detailsHolder = (DetailsHolder) holder;
             int adapterPosition = detailsHolder.getAdapterPosition();
             detailsHolder.mTvDetailsSongName.setText(info.getTitle());
-            LogUtil.d(TAG," artist info     "+info.getTitle()+""+info.getAddTime());
+            LogUtil.d(TAG, " artist info     " + info.getTitle() + "" + info.getAddTime());
             int duration = (int) info.getDuration();
             detailsHolder.mTvSongDuration.setText(StringUtil.parseDuration(duration));
             if (mDataFlag == Constants.NUMBER_FOUR) {
@@ -83,6 +87,7 @@ public class DetailsViewAdapter extends BaseRvAdapter<MusicBean> {
                     if (mDataFlag == Constants.NUMBER_THREE) {
                         insertSearchBean(info.getTitle());
                     }
+                    LogUtil.d(TAG, info.toString());
                     ((OnMusicItemClickListener) mContext).startMusicServiceFlag(adapterPosition, Constants.NUMBER_TEN, mDataFlag, getQueryFlag(info));
                 }
 
