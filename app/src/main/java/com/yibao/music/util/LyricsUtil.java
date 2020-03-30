@@ -1,5 +1,9 @@
 package com.yibao.music.util;
 
+import android.net.Uri;
+import android.util.Log;
+
+import com.yibao.music.MusicApplication;
 import com.yibao.music.model.LyricDownBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
@@ -29,14 +33,14 @@ public class LyricsUtil {
     private static BufferedReader br;
     private static final String UNKNOWN_NAME = "<unknown>";
 
-    public static boolean checkLyricFile(String songName, String songArtisa) {
-        String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + songArtisa + ".lrc";
-        File file = new File(path);
-        LogUtil.d(TAG," 本地歌词信息  " + songName + " $$ " + songArtisa + " == 是否存在    " + file.exists());
-        return file.exists();
+    public static boolean checkLyricFile(String songName, String songArtist) {
+        String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + songArtist + ".lrc";
+        File file = CheckBuildVersionUtil.checkAndroidVersionQ() ? FileUtil.createFile(MusicApplication.getIntstance(), songName + "$$" + songArtist + ".lrc", Constants.SONG_LYRICS)
+                : new File(path);
+        boolean b = CheckBuildVersionUtil.checkAndroidVersionQ() ? FileUtil.isAndroidQFileExists(file.getAbsolutePath()) : file.exists();
+        LogUtil.d(TAG, " 本地歌词信息  " + songName + " $$ " + songArtist + " == 是否存在    " + b);
+        return b;
     }
-
-
 
 
     /**
@@ -49,7 +53,7 @@ public class LyricsUtil {
         String songName = StringUtil.getSongName(name);
         String songArtist = StringUtil.getArtist(artist);
         String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + songArtist + ".lrc";
-        LogUtil.d(TAG," 删除当前 歌词    " + path);
+        LogUtil.d(TAG, " 删除当前 歌词    " + path);
         File file = new File(path);
         if (file.exists()) {
             file.delete();
@@ -64,19 +68,19 @@ public class LyricsUtil {
         File[] files = file.listFiles();
         int nu = 0;
         for (File f : files) {
-            List<String> lylist = getLylist(f);
+            List<String> lylist = getLyricsList(f);
             if (lylist.size() < 2) {
-                LogUtil.d(TAG," 歌词长度小于4的 : " + "\n" + f.getAbsolutePath());
+                LogUtil.d(TAG, " 歌词长度小于4的 : " + "\n" + f.getAbsolutePath());
                 nu++;
                 f.delete();
             }
 
         }
-        LogUtil.d(TAG,"  无效歌词的长度   " + nu);
+        LogUtil.d(TAG, "  无效歌词的长度   " + nu);
 
     }
 
-    private static List<String> getLylist(File file) {
+    private static List<String> getLyricsList(File file) {
         List<String> strings = new ArrayList<>();
         try {
             String charsetName = "utf-8";
@@ -117,7 +121,8 @@ public class LyricsUtil {
         boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(musicBean.getTitle()), StringUtil.getArtist(musicBean.getArtist()));
         if (lyricIsExists) {
             String path = Constants.MUSIC_LYRICS_ROOT + StringUtil.getSongName(musicBean.getTitle()) + "$$" + StringUtil.getSongName(musicBean.getArtist()) + ".lrc";
-            File file = new File(path);
+            Log.d(TAG, "lyrics path " + path);
+            File file = CheckBuildVersionUtil.checkAndroidVersionQ() ? FileUtil.createFile(MusicApplication.getIntstance(), StringUtil.getSongName(musicBean.getTitle()) + "$$" + StringUtil.getSongName(musicBean.getArtist()) + ".lrc", Constants.MUSIC_LYRICS_ROOT) : new File(path);
             try {
                 String charsetName = "utf-8";
                 br = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsetName));
@@ -177,7 +182,7 @@ public class LyricsUtil {
         boolean containsChinese = isContainsEnglishAndChinese(s);
         String braces = "[";
         if (containsChinese) {
-            LogUtil.d(TAG,"============== 歌词时间解析异常！================");
+            LogUtil.d(TAG, "============== 歌词时间解析异常！================");
             return 0;
         } else {
             String[] arr = s.split(":");

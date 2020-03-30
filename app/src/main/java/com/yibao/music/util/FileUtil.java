@@ -1,7 +1,9 @@
 package com.yibao.music.util;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -10,9 +12,11 @@ import android.provider.MediaStore;
 
 import androidx.core.content.FileProvider;
 
+import com.yibao.music.MusicApplication;
 import com.yibao.music.model.MusicBean;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 
@@ -45,7 +49,7 @@ public class FileUtil {
                 e.printStackTrace();
             }
         }
-        LogUtil.d(TAG," ==========  下载歌词啦   ");
+        LogUtil.d(TAG, " ==========  下载歌词啦   ");
         return lyricFile;
     }
 
@@ -153,6 +157,28 @@ public class FileUtil {
 
     public static File createFile(Context context, String fileName, String dirPath) {
         String apkFilePath = context.getExternalFilesDir(dirPath).getAbsolutePath();
+
         return new File(apkFilePath + File.separator + fileName);
     }
+
+    public static boolean isAndroidQFileExists(String path) {
+        AssetFileDescriptor afd = null;
+        ContentResolver cr = MusicApplication.getIntstance().getContentResolver();
+        try {
+            Uri uri = Uri.parse(path);
+            afd = cr.openAssetFileDescriptor(uri, "r");
+            if (afd == null) {
+                return false;
+            } else {
+                afd.close();
+            }
+        } catch (FileNotFoundException e) {
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+
 }

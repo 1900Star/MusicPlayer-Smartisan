@@ -162,6 +162,7 @@ public class Constants {
     public static final String SONGMID = "song_mid";
 
     public static final String DELETE_SONG = "delete_song";
+    public static final String SONG_LYRICS = "lyrics";
 
 
 }

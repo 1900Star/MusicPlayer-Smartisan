@@ -40,15 +40,19 @@ public class DownloadLyricsUtil {
      */
     public static boolean saveLyrics(String strcontent, String songName, String artist) {
         boolean isSavaFile;
-        File lyricsFile = new File(Constants.MUSIC_LYRICS_ROOT);
-        if (!lyricsFile.exists()) {
-            lyricsFile.mkdirs();
+        String path = null;
+        if (!CheckBuildVersionUtil.checkAndroidVersionQ()) {
+
+            File lyricsFile = new File(Constants.MUSIC_LYRICS_ROOT);
+            if (!lyricsFile.exists()) {
+                lyricsFile.mkdirs();
+            }
+            path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + artist + ".lrc";
         }
-        String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + artist + ".lrc";
         String strContent = strcontent + "\r\n";
         try {
             File file = CheckBuildVersionUtil.checkAndroidVersionQ() ?
-                    FileUtil.createFile(MusicApplication.getIntstance(), songName + "$$" + artist + ".lrc", Constants.MUSIC_LYRICS_ROOT)
+                    FileUtil.createFile(MusicApplication.getIntstance(), songName + "$$" + artist + ".lrc", Constants.SONG_LYRICS)
                     : new File(path);
 
             if (!file.exists()) {
