@@ -9,6 +9,7 @@ import com.yibao.music.MusicApplication;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicCountBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
+import com.yibao.music.util.CollectionUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.LogUtil;
@@ -16,6 +17,10 @@ import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -50,32 +55,33 @@ public class LoadMusicDataService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        List<MusicBean> dataList = MusicListUtil.getMusicDataList();
-        int songSum = dataList.size();
+        List<MusicBean> newList = MusicListUtil.getMusicDataList();
+        int songSum = newList.size();
         // 手动扫描本地歌曲
         if (getIsNeedAgainScanner(intent)) {
             // 数据库的歌曲和最新媒体库中歌曲数量比较
-            List<MusicBean> beanList = mMusicDao.queryBuilder().build().list();
-            int newSong = songSum - beanList.size();
-            // newSong新增歌曲的数量，大于0表示有新的歌曲。
-            if (newSong > 0) {
-                // 对集合按添加时间排序，这样新增的歌曲就会排在最前面，通过循环将前面新增的歌曲添加到本地数据库
-                List<MusicBean> newList = MusicListUtil.sortMusicList(dataList, Constants.SORT_DOWN_TIME);
-                for (int i = 0; i < newSong; i++) {
-                    sendLoadProgress(newSong, newList.get(i));
-                }
-            } else {
-                LogUtil.d(TAG, "没有新增歌曲!");
-                mBus.post(new MusicCountBean(Constants.NUMBER_ZERO, Constants.NUMBER_ZERO));
+            List<MusicBean> oldList = mMusicDao.queryBuilder().build().list();
+
+            List<MusicBean> different = (List<MusicBean>) CollectionUtil.getDifferent(newList, oldList);
+            newList.retainAll(different);
+            for (MusicBean musicBean : newList) {
+                sendLoadProgress(newList.size(), musicBean);
+                LogUtil.d(TAG, "             === new after  " + musicBean.getTitle());
             }
+            oldList.retainAll(different);
+            for (MusicBean musicBean : oldList) {
+                mMusicDao.delete(musicBean);
+                LogUtil.d(TAG, "             === old after " + musicBean.getTitle());
+            }
+            mBus.post(new MusicCountBean(Constants.NUMBER_ZERO, Constants.NUMBER_ZERO));
         } else {
             // 首次安装自动扫描本地歌曲并创建本地数据库
             if (songSum > 0) {
-                for (MusicBean musicInfo : dataList) {
+                for (MusicBean musicInfo : newList) {
                     sendLoadProgress(songSum, musicInfo);
                 }
                 LogUtil.d(TAG, "LoadMusicDataServices===== 加载数据完成");
-                recoverFavoriteMusic(dataList);
+                recoverFavoriteMusic(newList);
             } else {
                 // 本地没有发现歌曲
                 mBus.post(new MusicCountBean(Constants.NUMBER_ZERO, Constants.NUMBER_ZERO));

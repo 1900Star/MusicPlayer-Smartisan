@@ -2,6 +2,7 @@ package com.yibao.music.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
 import org.greenrobot.greendao.annotation.Entity;
@@ -9,6 +10,8 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Transient;
 import org.greenrobot.greendao.annotation.Unique;
 import org.greenrobot.greendao.annotation.Generated;
+
+import java.util.Objects;
 
 /**
  * Des：${音乐实体类,收藏 删除等}
@@ -94,10 +97,10 @@ public class MusicBean
 
     @Generated(hash = 886988323)
     public MusicBean(Long id, String title, String artist, String album, long albumId,
-            long addTime, long addListTime, long duration, String time, String songUrl,
-            String firstChar, boolean isFavorite, int playFrequency, int songScore,
-            int playStatus, int issueYear, int musicQualityType, boolean isSelected,
-            boolean isPlayFlag, String playListFlag, String currentLyrics) {
+                     long addTime, long addListTime, long duration, String time, String songUrl,
+                     String firstChar, boolean isFavorite, int playFrequency, int songScore,
+                     int playStatus, int issueYear, int musicQualityType, boolean isSelected,
+                     boolean isPlayFlag, String playListFlag, String currentLyrics) {
         this.id = id;
         this.title = title;
         this.artist = artist;
@@ -407,5 +410,45 @@ public class MusicBean
                 ", currentLyrics='" + currentLyrics + '\'' +
                 ", cureetPosition=" + cureetPosition +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+
+            return false;
+        }
+        MusicBean musicBean = (MusicBean) o;
+        return albumId == musicBean.albumId &&
+                addTime == musicBean.addTime &&
+                addListTime == musicBean.addListTime &&
+                duration == musicBean.duration &&
+                isFavorite == musicBean.isFavorite &&
+                playFrequency == musicBean.playFrequency &&
+                songScore == musicBean.songScore &&
+                playStatus == musicBean.playStatus &&
+                issueYear == musicBean.issueYear &&
+                musicQualityType == musicBean.musicQualityType &&
+                isSelected == musicBean.isSelected &&
+                isPlayFlag == musicBean.isPlayFlag &&
+                cureetPosition == musicBean.cureetPosition &&
+                Objects.equals(id, musicBean.id) &&
+                Objects.equals(title, musicBean.title) &&
+                Objects.equals(artist, musicBean.artist) &&
+                Objects.equals(album, musicBean.album) &&
+                Objects.equals(time, musicBean.time) &&
+                Objects.equals(songUrl, musicBean.songUrl) &&
+                Objects.equals(firstChar, musicBean.firstChar) &&
+                Objects.equals(playListFlag, musicBean.playListFlag) &&
+                Objects.equals(currentLyrics, musicBean.currentLyrics);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, artist, album, albumId, addTime, addListTime, duration, time, songUrl, firstChar, isFavorite, playFrequency, songScore, playStatus, issueYear, musicQualityType, isSelected, isPlayFlag, playListFlag, currentLyrics, cureetPosition);
     }
 }

@@ -1,7 +1,6 @@
 package com.yibao.music.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,28 +12,21 @@ import androidx.annotation.Nullable;
 import com.yibao.music.R;
 import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.base.BaseLazyFragment;
-import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.model.PlayListBean;
-import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.view.music.MusicView;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -75,6 +67,7 @@ public class SongCategoryFragment extends BaseLazyFragment {
         View view = inflater.inflate(R.layout.category_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         initData();
+        LogUtil.d(TAG, " song size   " + mSongList.size());
         return view;
     }
 
@@ -151,7 +144,6 @@ public class SongCategoryFragment extends BaseLazyFragment {
     }
 
     private void initData() {
-
         switch (mPosition) {
             case 0:
                 List<MusicBean> abcList = MusicListUtil.sortMusicAbc(mSongList);

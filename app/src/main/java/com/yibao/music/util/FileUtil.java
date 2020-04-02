@@ -31,8 +31,8 @@ public class FileUtil {
     private static final String TAG = "====" + FileUtil.class.getSimpleName() + "    ";
 
     public static boolean getFavoriteFile() {
-        File file = new File(Constants.FAVORITE_FILE);
-        return file.exists();
+        return CheckBuildVersionUtil.checkAndroidVersionQ() ? FileUtil.isAndroidQFileExists(Constants.FAVORITE_FILE) : new File(Constants.FAVORITE_FILE).exists();
+
     }
 
     public static File getLyricsFile(String songName, String songArtisa) {

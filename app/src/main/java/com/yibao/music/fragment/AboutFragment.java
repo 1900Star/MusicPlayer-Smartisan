@@ -16,6 +16,7 @@ import com.yibao.music.base.BaseLazyFragment;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.CrashSheetDialog;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
+import com.yibao.music.fragment.dialogfrag.ScannerConfigDialog;
 import com.yibao.music.fragment.dialogfrag.TakePhotoBottomSheetDialog;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
@@ -39,7 +40,6 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -67,7 +67,7 @@ public class AboutFragment extends BaseLazyFragment {
     @BindView(R.id.tv_share)
     TextView mTvShare;
     @BindView(R.id.tv_scanner_media)
-    TextView mtScanerMedia;
+    TextView mtScannerMedia;
     @BindView(R.id.tv_crash_log)
     TextView mTvCrashLog;
     @BindView(R.id.tv_delete_error_lyric)
@@ -100,6 +100,8 @@ public class AboutFragment extends BaseLazyFragment {
     }
 
     private void initListener() {
+        mtScannerMedia.setOnClickListener(v -> scannerMedia());
+        mTvShare.setOnClickListener(v -> shareMe());
         mCompositeDisposable.add(RxView.clicks(mAboutHeaderIv)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribe(o -> TakePhotoBottomSheetDialog.newInstance().getBottomDialog(mActivity)));
@@ -113,12 +115,6 @@ public class AboutFragment extends BaseLazyFragment {
         mCompositeDisposable.add(RxView.clicks(mTvRecoverFavorite)
                 .throttleFirst(3, TimeUnit.SECONDS)
                 .subscribe(o -> recoverFavoriteList()));
-        mCompositeDisposable.add(RxView.clicks(mtScanerMedia)
-                .throttleFirst(3, TimeUnit.SECONDS)
-                .subscribe(o -> scannerMedia()));
-        mCompositeDisposable.add(RxView.clicks(mTvShare)
-                .throttleFirst(3, TimeUnit.SECONDS)
-                .subscribe(o -> shareMe()));
         mCompositeDisposable.add(RxView.clicks(mTvDeleteErrorLyric)
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribe(o -> clearErrorLyric()));
@@ -148,9 +144,7 @@ public class AboutFragment extends BaseLazyFragment {
 
 
     private void scannerMedia() {
-        Intent intent = new Intent(mActivity, SplashActivity.class);
-        intent.putExtra(Constants.SCANNER_MEDIA, Constants.SCANNER_MEDIA);
-        startActivity(intent);
+        ScannerConfigDialog.newInstance(false).show(getChildFragmentManager(), "config_scanner");
     }
 
     private void shareMe() {

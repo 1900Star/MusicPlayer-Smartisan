@@ -74,6 +74,10 @@
     <string name="delete_error_lyric">删除错误歌词</string>
     <string name="song_not_faverite">该歌曲还没有添加到收藏文件</string>
     <string name="retry_search_lyrics">重新搜索歌词</string>
+    <string name="scanner_config">扫描配置</string>
+    <string name="scanner_one_minute">不扫描60S以下的歌曲</string>
+    <string name="scanner_one_m">不扫描1M以下的歌曲</string>
+    <string name="start_scanner_music">开始扫描</string>
 
 
 </resources>

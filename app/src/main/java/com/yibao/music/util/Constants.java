@@ -83,11 +83,15 @@ public class Constants {
     public static final String NO_LYRICS = "暂无歌词";
     public static final String NO_NETWORK = "网络异常,稍后重试!";
 
+
     public static final String NO_FIND_LYRICS = "no_find_lyrics";
     public static final String NO_FIND_NETWORK = "no_find_network";
     public static final String PLAY_LIST_BACK_FLAG = "LSP_98";
     public static final String TIME_FLAG = "time_flag";
     public static final String TIME_FLAG_KEY = "time_flag_key";
+
+
+    public static final String MUSIC_SETTING = "artist_music_setting";
     static final int MODE_KEY = 0;
     static final String MUSIC_LOAD = "music_load";
 
@@ -120,6 +124,9 @@ public class Constants {
 
     static final String MUSIC_FOCUS = "music_focus";
     static final String MUSIC_FOCUS_KEY = "music_FOCUS_key";
+
+    public static final String MUSIC_DURATION_FLAG = "music_duration_flag";
+    public static final String MUSIC_FILE_SIZE_FLAG = "music_file_size_flag";
 
     static final String MUSIC_CONFIG = "music_config";
     static final String MUSIC_REMENBER_FLAG = "music_remenber_flag";

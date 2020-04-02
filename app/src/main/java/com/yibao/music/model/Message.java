@@ -18,6 +18,9 @@ public class Message {
         this.object = object;
     }
 
+    public Message() {
+    }
+
     public Message(int code, Object o) {
         this.code = code;
         this.object = o;

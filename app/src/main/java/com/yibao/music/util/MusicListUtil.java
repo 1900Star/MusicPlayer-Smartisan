@@ -30,6 +30,14 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class MusicListUtil {
     private static final String TAG = "====" + MusicListUtil.class.getSimpleName() + "    ";
+    /**
+     * 过虑掉 文件大小 小于 1M 的音乐文件
+     */
+    private static final long CONFIG_MUSIC_FILE_SIZE = 1048576;
+    /**
+     * 过虑掉 音乐时长小于 10800 一分钟  21600 两分钟 的音乐文件
+     */
+    private static final long CONFIG_MUSIC_DURATION = 10800;
 
     /**
      * 从本地获取歌曲的信息，保存在List当中
@@ -37,7 +45,10 @@ public class MusicListUtil {
      * @return d
      */
     public static List<MusicBean> getMusicDataList() {
-        List<MusicBean> musicInfos = new ArrayList<>();
+        SharedPreferencesUtil sp = new SharedPreferencesUtil(MusicApplication.getIntstance(), Constants.MUSIC_SETTING);
+        boolean aBooleanDuration = sp.getBoolean(Constants.MUSIC_DURATION_FLAG, false);
+        boolean aBooleanFileSize = sp.getBoolean(Constants.MUSIC_FILE_SIZE_FLAG, false);
+        List<MusicBean> musicInfo = new ArrayList<>();
         Cursor cursor = MusicApplication.getIntstance().getApplicationContext().getContentResolver()
                 .query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         null,
@@ -80,26 +91,45 @@ public class MusicListUtil {
                 // 文件路径
                 String url = cursor.getString(mUrl);
                 //过滤掉小于2分钟的音乐,后续可以通过SharePreference让用户在UI界面自行选择。
-                if (size > 21600) {
-                    String firstChar = String.valueOf(HanziToPinyins.stringToPinyinSpecial(title));
-                    info.setMusicQualityType(qualityType);
-                    info.setFirstChar(firstChar);
-                    info.setId(mId);
-                    info.setTitle(title);
-                    info.setArtist(artist);
-                    info.setAlbum(album);
-                    info.setAlbumId(albumId);
-                    info.setDuration(duration);
-                    info.setAddTime(addTime);
-                    info.setSongUrl(url);
-                    info.setIssueYear(issueYear);
-                    musicInfos.add(info);
+                if (aBooleanDuration && aBooleanFileSize) {
+                    if (size > CONFIG_MUSIC_FILE_SIZE && duration > CONFIG_MUSIC_DURATION) {
+                        addMusicData(musicInfo, qualityType, issueYear, info, mId, title, artist, album, albumId, duration, addTime, url);
+                    }
+
+                } else if (aBooleanDuration) {
+                    if (duration > CONFIG_MUSIC_DURATION) {
+                        addMusicData(musicInfo, qualityType, issueYear, info, mId, title, artist, album, albumId, duration, addTime, url);
+                    }
+                } else if (aBooleanFileSize) {
+                    if (size > CONFIG_MUSIC_FILE_SIZE) {
+                        addMusicData(musicInfo, qualityType, issueYear, info, mId, title, artist, album, albumId, duration, addTime, url);
+                    }
+                } else {
+                    addMusicData(musicInfo, qualityType, issueYear, info, mId, title, artist, album, albumId, duration, addTime, url);
+
                 }
+
             }
             cursor.close();
         }
-        LogUtil.d(TAG, "歌曲数量 ========== " + musicInfos.size());
-        return musicInfos;
+        LogUtil.d(TAG, "歌曲数量 ========== " + musicInfo.size());
+        return musicInfo;
+    }
+
+    private static void addMusicData(List<MusicBean> musicInfo, int qualityType, int issueYear, MusicBean info, long mId, String title, String artist, String album, long albumId, long duration, int addTime, String url) {
+        String firstChar = String.valueOf(HanziToPinyins.stringToPinyinSpecial(title));
+        info.setMusicQualityType(qualityType);
+        info.setFirstChar(firstChar);
+        info.setId(mId);
+        info.setTitle(title);
+        info.setArtist(artist);
+        info.setAlbum(album);
+        info.setAlbumId(albumId);
+        info.setDuration(duration);
+        info.setAddTime(addTime);
+        info.setSongUrl(url);
+        info.setIssueYear(issueYear);
+        musicInfo.add(info);
     }
 
 

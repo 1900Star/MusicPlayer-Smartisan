@@ -168,10 +168,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void checkCurrentSongIsFavorite(MusicBean currentMusicBean, QqControlBar qqControlBar, SmartisanControlBar smartisanControlBar) {
         if (currentMusicBean != null) {
-            boolean favorite = mMusicDao.load(currentMusicBean.getId()).getIsFavorite();
-            smartisanControlBar.setFavoriteButtonState(favorite);
-            if (qqControlBar != null) {
-                qqControlBar.setFavoriteButtonState(favorite);
+            MusicBean loadBean = mMusicDao.load(currentMusicBean.getId());
+            if (loadBean != null) {
+                boolean favorite = mMusicDao.load(currentMusicBean.getId()).getIsFavorite();
+                smartisanControlBar.setFavoriteButtonState(favorite);
+                if (qqControlBar != null) {
+                    qqControlBar.setFavoriteButtonState(favorite);
+                }
+
             }
         }
     }

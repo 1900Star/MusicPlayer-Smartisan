@@ -89,7 +89,6 @@ public abstract class BaseLazyFragment extends BaseMusicFragment {
      * 懒加载一次。如果只想在对用户可见时才加载数据，并且只加载一次数据，在子类中重写该方法
      */
     protected void onLazyLoadData() {
-        LogUtil.d(TAG, "开始加载数据");
     }
 
     /**
