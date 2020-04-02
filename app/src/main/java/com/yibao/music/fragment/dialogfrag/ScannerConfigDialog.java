@@ -44,7 +44,6 @@ public class ScannerConfigDialog
     private TextView mTvCancel;
     private TextView mTvContinue;
     private SharedPreferencesUtil mSp;
-    private static boolean mLoadFlag;
     private RxBus mBus;
 
     /**
@@ -52,8 +51,11 @@ public class ScannerConfigDialog
      * @return ScannerConfigDialog
      */
     public static ScannerConfigDialog newInstance(boolean loadFlag) {
-        mLoadFlag = loadFlag;
-        return new ScannerConfigDialog();
+        ScannerConfigDialog dialog = new ScannerConfigDialog();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("loadFlag", loadFlag);
+        dialog.setArguments(bundle);
+        return dialog;
     }
 
 
@@ -100,9 +102,10 @@ public class ScannerConfigDialog
 
     @Override
     public void onClick(View v) {
+        boolean auto = getArguments().getBoolean("loadFlag");
         switch (v.getId()) {
             case R.id.tv_scanner_cancel:
-                if (mLoadFlag) {
+                if (auto) {
                     mBus.post("auto_load");
                 }
                 dismiss();
@@ -110,7 +113,7 @@ public class ScannerConfigDialog
             case R.id.tv_scanner_continue:
                 mSp.putValues(new SharedPreferencesUtil.ContentValue(Constants.MUSIC_FILE_SIZE_FLAG, mCheckBoxSize.isChecked()),
                         new SharedPreferencesUtil.ContentValue(Constants.MUSIC_DURATION_FLAG, mCheckBoxDuration.isChecked()));
-                if (mLoadFlag) {
+                if (auto) {
                     mBus.post("auto_load");
                 } else {
                     Intent intent = new Intent(getActivity(), SplashActivity.class);
