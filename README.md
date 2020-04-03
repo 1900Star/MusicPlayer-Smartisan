@@ -2,7 +2,7 @@
 
 [ArtisanMusicPlayer](https://github.com/1900Star/MusicPlayer-Smartisan) A local music player  
 
-[中文](https://github.com/1900Star/MusicPlayer-Smartisan/blob/master/README-zh.md)
+[中文](https://github.com/1900Star/MusicPlayer-Smartisan/blob/load/README-zh.md)
 
 ![image](https://github.com/1900Star/ShareFile/blob/master/pic/artistMusic.jpg)
 ![image](https://github.com/1900Star/ShareFile/blob/master/pic/Details.jpg)
