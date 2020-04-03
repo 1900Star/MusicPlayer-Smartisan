@@ -31,7 +31,6 @@
   * The screen is always on
   * Favorites list local backup
   * Local favorites list import
-  
 
 # Other
 
