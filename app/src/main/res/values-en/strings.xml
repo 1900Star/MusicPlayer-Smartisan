@@ -1,0 +1,91 @@
+<resources>
+    <string name="app_name">ArtisanMusic</string>
+
+    <string name="about_name">1900</string>
+    <string name="about_github">https://github.com/1900Star</string>
+    <string name="about_sign">O ever youthful, O ever weeping.</string>
+    <string name="about_project_introduce">
+
+       ArtisanMusicPlayer A local music player written like the smartisan music player will do what smartisan already does.
+        Some features will also be removed, such as cloud music and Internet search, since local music will still be played.
+        It also increases the number of interactions that individuals find interesting,For example, QQ music has been added
+        to the left and right sliding switch on/off the interaction。
+        \n\tRxJava\n\tRxBus\n\tButterknife\n\tGreenDao3.0\n\tGlide\n\tLeakcanary
+    </string>
+    <string name="project_url">https://github.com/1900Star/SmartisanMusicPlayer</string>
+    <string name="email">Email: strangermy98@gmail.com</string>
+    <string name="project_introduce">Introduction</string>
+
+    <string name="child_view_not">SwipeItemLayout Of subviews are not compliant</string>
+
+    //*********Music
+    <string name="short_line">-</string>
+    <string name="clear_all_favorite">Clear</string>
+    <string name="play_all">PlayAll</string>
+    <string name="music_add_time">Time</string>
+    <string name="music_play_frequency">Frequency</string>
+    <string name="music_score">Score</string>
+    <string name="song_name">Abc</string>
+    <string name="play_list">PlayList</string>
+    <string name="music_artisan">Artist</string>
+    <string name="singer">Singer:</string>
+    <string name="song_names">SongName:</string>
+    <string name="music_song">Songs</string>
+    <string name="music_album">Album</string>
+    <string name="album_tile">Tile</string>
+    <string name="album_list">List</string>
+    <string name="random_play">Random</string>
+    <string name="add_new_play_list">New</string>
+    <string name="add_to_play_list">AddToPlayList</string>
+    <string name="add_to_play_queue">AddToPlayQueue</string>
+    <string name="rename_tile">RenamePlayList</string>
+    <string name="load_music">Please wait while the music is loading -_-</string>
+    <string name="cancel">Cancel</string>
+    <string name="continues">Continues</string>
+    <string name="save_and_add">SaveAdd</string>
+    <string name="all_condition">All</string>
+    <string name="complete">Save</string>
+    <string name="choice_operation">Operation</string>
+    <string name="back">Back</string>
+    <string name="sure">OK</string>
+    <string name="about">About</string>
+    <string name="favorite">Favorite</string>
+    <string name="backups_favorite_song">BackFavorite</string>
+    <string name="recovery_favorite_song">RestoreFavorite</string>
+    <string name="search_history">History</string>
+    <string name="share_me">Share</string>
+    <string name="clear_edit">clear</string>
+    <string name="not_search_result">Null</string>
+    <string name="scanner_music">ScanMusic</string>
+    <string name="tv_edit">Edit</string>
+    <string name="tv_delete">Delete</string>
+    <string name="lyrics">Lyrics</string>
+    <string name="select_operation">Operation</string>
+    <string name="delete_play_list">DeleteList</string>
+    <string name="set_play_time">SetTimer</string>
+    <string name="timing_close_play">Timer</string>
+    <string name="edit_play_list">EditList</string>
+    <string name="baidu_key">4502b57559</string>
+    <string name="app_info">ArtisanMusicPlayer A local music player modeled after the hammer music player. https://github.com/1900Star/SmartisanMusicPlayer </string>
+    <string name="crash_log">CrashLog</string>
+    <string name="take_photo">TakePicture</string>
+    <string name="choice_photo">Gallery</string>
+    <string name="camera_not_open">Camera permissions are not enabled</string>
+    <string name="go_open">Open</string>
+    <string name="delete_error_lyric">DeleteWrongLyrics</string>
+    <string name="song_not_favorite">Not added to favorites</string>
+    <string name="retry_search_lyrics">SearchLyrics</string>
+    <string name="scanner_config">filter</string>L
+    <string name="scanner_one_minute">Does not scan songs under 60 S</string>
+    <string name="scanner_one_m">Do not scan songs below 1 M</string>
+    <string name="start_scanner_music">Scanning</string>
+
+    <string name="counting_down">Counting down</string>
+    <string name="no_set_up">null</string>
+    <string name="fifteen_minute">fifteen minutes</string>
+    <string name="thirty_minute">Thirty minutes</string>
+    <string name="an_hour">An hour</string>
+    <string name="a_half">An hour and a half</string>
+    <string name="two_hours">Two hours</string>
+
+</resources>

@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
-            android:text="@string/choice_opreation"
+            android:text="@string/choice_operation"
             android:textColor="@color/lyricsNormal"
             android:textSize="@dimen/smallLyrics"
             android:textStyle="bold" />
