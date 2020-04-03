@@ -12,6 +12,7 @@ import com.yanzhenjie.permission.runtime.Permission;
 import com.yibao.music.R;
 import com.yibao.music.adapter.SplashPagerAdapter;
 import com.yibao.music.base.BaseActivity;
+import com.yibao.music.fragment.dialogfrag.ScannerConfigDialog;
 import com.yibao.music.model.MusicCountBean;
 import com.yibao.music.service.LoadMusicDataService;
 import com.yibao.music.util.ColorUtil;
@@ -25,6 +26,7 @@ import com.yibao.music.view.ProgressBtn;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -66,8 +68,22 @@ public class SplashActivity
         AndPermission.with(this).runtime()
                 .permission(Permission.Group.STORAGE)
                 .onGranted(permissions -> loadMusicData())
-                .onDenied(permissions -> LogUtil.d(TAG,"没有读取和写入的权限!"))
+                .onDenied(permissions -> LogUtil.d(TAG, "没有读取和写入的权限!"))
                 .start();
+        mCompositeDisposable.add(mBus.toObserverable(String.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        // 首次安装，开启服务加载本地音乐，创建本地数据库。
+                        if (!ServiceUtil.isServiceRunning(getApplicationContext(), Constants.LOAD_SERVICE_NAME)) {
+                            startService(new Intent(getApplicationContext(), LoadMusicDataService.class));
+                        }
+                        updataLoadProgress();
+                    }
+                }));
+
     }
 
     private void loadMusicData() {
@@ -77,11 +93,13 @@ public class SplashActivity
             if (SpUtil.getLoadMusicFlag(this) == Constants.NUMBER_EIGHT) {
                 countDownOpareton(true);
             } else {
-                // 首次安装，开启服务加载本地音乐，创建本地数据库。
-                if (!ServiceUtil.isServiceRunning(this, Constants.LOAD_SERVICE_NAME)) {
-                    startService(new Intent(this, LoadMusicDataService.class));
-                }
-                updataLoadProgress();
+                ScannerConfigDialog.newInstance(true).show(getSupportFragmentManager(), "auto_config");
+
+//                // 首次安装，开启服务加载本地音乐，创建本地数据库。
+//                if (!ServiceUtil.isServiceRunning(this, Constants.LOAD_SERVICE_NAME)) {
+//                    startService(new Intent(this, LoadMusicDataService.class));
+//                }
+//                updataLoadProgress();
             }
 
         } else {
@@ -137,7 +155,7 @@ public class SplashActivity
     /**
      * 倒计时操作
      *
-     * @param b ture 表示初次安装，自动扫描完成后直接进入MusicActivity 。 false 表示手动扫描，完成后停在SplashActivity页面。
+     * @param b true 表示初次安装，自动扫描完成后直接进入MusicActivity 。 false 表示手动扫描，完成后停在SplashActivity页面。
      */
     private void countDownOpareton(boolean b) {
         if (b) {

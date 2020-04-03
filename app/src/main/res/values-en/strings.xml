@@ -6,11 +6,7 @@
     <string name="about_sign">O ever youthful, O ever weeping.</string>
     <string name="about_project_introduce">
 
-       ArtisanMusicPlayer A local music player written like the smartisan music player will do what smartisan already does.
-        Some features will also be removed, such as cloud music and Internet search, since local music will still be played.
-        It also increases the number of interactions that individuals find interesting,For example, QQ music has been added
-        to the left and right sliding switch on/off the interaction。
-        \n\tRxJava\n\tRxBus\n\tButterknife\n\tGreenDao3.0\n\tGlide\n\tLeakcanary
+       A special, simple and convenient music player.
     </string>
     <string name="project_url">https://github.com/1900Star/SmartisanMusicPlayer</string>
     <string name="email">Email: strangermy98@gmail.com</string>
@@ -24,7 +20,7 @@
     <string name="play_all">PlayAll</string>
     <string name="music_add_time">Time</string>
     <string name="music_play_frequency">Frequency</string>
-    <string name="music_score">Score</string>
+    <string name="music_score">Rating</string>
     <string name="song_name">Abc</string>
     <string name="play_list">PlayList</string>
     <string name="music_artisan">Artist</string>
@@ -87,5 +83,7 @@
     <string name="an_hour">An hour</string>
     <string name="a_half">An hour and a half</string>
     <string name="two_hours">Two hours</string>
-
+    <string name="confirm_delete">Are you sure you want to delete the </string>
+    <string name="song_list"> song list?？</string>
+    <string name="delete_all_favorite">delete all your favorite songs?</string>
 </resources>

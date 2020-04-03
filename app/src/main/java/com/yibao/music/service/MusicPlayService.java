@@ -195,7 +195,7 @@ public class MusicPlayService
                 ThreadPoolProxyFactory.newInstance().execute(() -> {
                     refreshFavorite(musicBean, favorite);
                     // 更新本地收藏文件
-                    updataFavoritefile(musicBean, favorite);
+                    updataFavoriteFile(musicBean, favorite);
                 });
 
             }
@@ -357,7 +357,7 @@ public class MusicPlayService
         mMusicDao.update(currentMusicBean);
     }
 
-    private void updataFavoritefile(MusicBean musicBean, boolean currentIsFavorite) {
+    private void updataFavoriteFile(MusicBean musicBean, boolean currentIsFavorite) {
         if (currentIsFavorite) {
             mDisposable = ReadFavoriteFileUtil.deleteFavorite(musicBean.getTitle())
                     .observeOn(AndroidSchedulers.mainThread())

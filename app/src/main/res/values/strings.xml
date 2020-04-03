@@ -87,5 +87,8 @@
     <string name="an_hour">1 小时</string>
     <string name="a_half">1 小时 30 分</string>
     <string name="two_hours">2 小时</string>
+    <string name="confirm_delete">确定要删除 </string>
+    <string name="song_list"> 歌曲列表吗？</string>
+    <string name="delete_all_favorite">确定删除所有收藏歌曲？</string>
 
 </resources>

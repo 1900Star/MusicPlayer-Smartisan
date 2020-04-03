@@ -61,9 +61,7 @@ public class MusicListUtil {
             int mArtist = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
             int mAlbum = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
             int mAlbumId = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
-            int mDuration;
-            mDuration = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION);
-            LogUtil.d(TAG, " AA time  " + mDuration);
+            int mDuration = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION);
             int mSize = cursor.getColumnIndex(MediaStore.Audio.Media.SIZE);
             int mUrl = cursor.getColumnIndex(MediaStore.Audio.Media.DATA);
             int addDed = cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED);
@@ -89,7 +87,6 @@ public class MusicListUtil {
                 long size = cursor.getLong(mSize);
                 // 文件路径
                 String url = cursor.getString(mUrl);
-                //过滤掉小于2分钟的音乐,后续可以通过SharePreference让用户在UI界面自行选择。
                 if (aBooleanDuration && aBooleanFileSize) {
                     if (size > CONFIG_MUSIC_FILE_SIZE && duration > CONFIG_MUSIC_DURATION) {
                         addMusicData(musicInfo, qualityType, issueYear, info, mId, title, artist, album, albumId, duration, addTime, url);
@@ -261,7 +258,7 @@ public class MusicListUtil {
     }
 
 
-    //    //按专辑分组
+    // 按专辑分组
 
     public static List<AlbumInfo> getAlbumList(List<MusicBean> list) {
         Map<String, List<MusicBean>> musicMap = new HashMap<>(16);

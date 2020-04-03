@@ -20,12 +20,12 @@ import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
+ * @author Luoshipeng
  * @ Author: Luoshipeng
  * @ Name:   ReadFavoriteFile
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/8/30/ 16:59
  * @ Des:    读取歌曲收藏文件
- * @author Luoshipeng
  */
 public class ReadFavoriteFileUtil {
     private static final String FAVORITE_FILE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/favorite.txt/";
@@ -194,31 +194,4 @@ public class ReadFavoriteFileUtil {
 
     }
 
-
-    public static List<String> diffrentList(List<String> listA, List<String> listB) {
-        long begin = System.nanoTime();//纳秒
-        List<String> favoriteList = new ArrayList<>();
-        Map<String, Integer> map = new HashMap<>();
-        for (String strA : listA) {
-            map.put(strA, 1);
-        }
-        for (String strB : listB) {
-            Integer value = map.get(strB);
-            if (value != null) {
-                map.put(strB, ++value);
-                continue;
-            }
-            map.put(strB, 1);
-        }
-
-        for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            //value = 1 获取不同元素集合,value != 1 取出相同的元素集合
-            if (entry.getValue() != 1) {
-                favoriteList.add(entry.getKey());
-            }
-        }
-        long end = System.nanoTime();
-        System.out.println("take " + (end - begin) + " time ");
-        return favoriteList;
-    }
 }

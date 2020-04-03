@@ -82,8 +82,8 @@ public class DeletePlayListDialog
         mPlayListBean = getArguments().getParcelable("musicInfo");
         mPageType = getArguments().getInt("pageType");
         if (mPlayListBean != null) {
-            String deleteTitle = "确定要删除 “ " + mPlayListBean.getTitle() + " ” 歌曲列表吗？";
-            tvDeleteTitle.setText(deleteTitle);
+            String deleteTitle = getString(R.string.confirm_delete) + mPlayListBean.getTitle() + getString(R.string.song_list);
+//            tvDeleteTitle.setText(deleteTitle);
         }
     }
 

@@ -683,7 +683,6 @@ public class MusicActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == RESULT_CANCELED) {
-            ToastUtil.show(this, "取消");
             return;
         }
         switch (requestCode) {
