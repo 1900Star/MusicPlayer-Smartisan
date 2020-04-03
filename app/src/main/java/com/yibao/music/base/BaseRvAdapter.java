@@ -1,25 +1,22 @@
 package com.yibao.music.base;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.SectionIndexer;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
-import android.widget.SectionIndexer;
-import android.widget.TextView;
-
 import com.yibao.music.R;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SnakbarUtil;
-import com.yibao.music.util.ToastUtil;
 
 import java.util.List;
 
@@ -42,7 +39,7 @@ public abstract class BaseRvAdapter<T>
     private ItemLongClickListener mLongClickListener;
     private ItemEditClickListener mEditClickListener;
     private OnOpenItemMoerMenuListener mMenuListener;
-    protected static final String TAG = "   ====    " + BaseAdapter.class.getSimpleName() + "    ";
+    protected static final String TAG = "   ====    " + BaseRvAdapter.class.getSimpleName() + "    ";
 
     public BaseRvAdapter(List<T> list) {
         mList = list;

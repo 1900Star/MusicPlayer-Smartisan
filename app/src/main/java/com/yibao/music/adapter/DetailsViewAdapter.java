@@ -69,7 +69,7 @@ public class DetailsViewAdapter extends BaseRvAdapter<MusicBean> {
             DetailsHolder detailsHolder = (DetailsHolder) holder;
             int adapterPosition = detailsHolder.getAdapterPosition();
             detailsHolder.mTvDetailsSongName.setText(info.getTitle());
-            LogUtil.d(TAG, " artist info     " + info.getTitle() + "" + info.getAddTime());
+            LogUtil.d(TAG, " artist info     " + info.getTitle() + " == " + info.getDuration());
             int duration = (int) info.getDuration();
             detailsHolder.mTvSongDuration.setText(StringUtil.parseDuration(duration));
             if (mDataFlag == Constants.NUMBER_FOUR) {

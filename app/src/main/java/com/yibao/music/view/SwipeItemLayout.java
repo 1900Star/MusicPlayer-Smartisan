@@ -169,7 +169,7 @@ public class SwipeItemLayout
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if (!ensureChildren()) {
-            throw new RuntimeException(getContext().getString(R.string.childe_view_not));
+            throw new RuntimeException(getContext().getString(R.string.child_view_not));
         }
 
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);

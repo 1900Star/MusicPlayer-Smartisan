@@ -363,7 +363,7 @@ public class MusicPlayService
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(aBoolean -> {
                         if (!aBoolean) {
-                            ToastUtil.show(this, getResources().getString(R.string.song_not_faverite));
+                            ToastUtil.show(this, getResources().getString(R.string.song_not_favorite));
                         }
                     });
         } else {

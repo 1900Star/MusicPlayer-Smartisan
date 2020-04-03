@@ -2,9 +2,12 @@ package com.yibao.music.fragment.dialogfrag;
 
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -37,7 +40,9 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class CountdownBottomSheetDialog {
     private static final String ACTION_TIMER = "countdown";
-    private String[] arrTime = {"正在倒计时", "无", "15 分", "30 分", "1 小时", "1 小时 30 分", "2 小时"};
+//    private String[] arrTime = {"正在倒计时", "无", "15 分", "30 分", "1 小时", "1 小时 30 分", "2 小时"};
+
+
     private TextView mTvComplete;
     private TextView mTvCountdown;
     private WheelView mWheelView;
@@ -46,6 +51,7 @@ public class CountdownBottomSheetDialog {
     private Intent mTimerIntent;
     private Context mContext;
     private View mTvCancel;
+    private String[] mTimeArray;
 
     public static CountdownBottomSheetDialog newInstance() {
         return new CountdownBottomSheetDialog();
@@ -65,7 +71,7 @@ public class CountdownBottomSheetDialog {
 
     private void initRxData(BottomSheetDialog dialog) {
         if (mDisposable == null) {
-            mDisposable = RxBus.getInstance().toObservableType(Constants.COUNTDOWN_TIME,Object.class)
+            mDisposable = RxBus.getInstance().toObservableType(Constants.COUNTDOWN_TIME, Object.class)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(o -> {
@@ -80,10 +86,11 @@ public class CountdownBottomSheetDialog {
     }
 
     private void initData() {
+        mTimeArray = new String[]{mContext.getString(R.string.counting_down), mContext.getString(R.string.no_set_up), mContext.getString(R.string.fifteen_minute), mContext.getString(R.string.thirty_minute), mContext.getString(R.string.an_hour), mContext.getString(R.string.a_half), mContext.getString(R.string.two_hours)};
         mTimerIntent = new Intent(mContext, CountdownService.class);
         mTimerIntent.setAction(ACTION_TIMER);
-        List<String> timeList = new ArrayList<>(Arrays.asList(arrTime).subList(getServiceIsRunning() ? 0 : 1, arrTime.length));
-        setCompleteStata(!timeList.get(0).equals(arrTime[0]));
+        List<String> timeList = new ArrayList<>(Arrays.asList(mTimeArray).subList(getServiceIsRunning() ? 0 : 1, mTimeArray.length));
+        setCompleteStata(!timeList.get(0).equals(mTimeArray[0]));
         mWheelView.setOffset(Constants.NUMBER_ONE);
         mWheelView.setItems(timeList);
     }
@@ -104,7 +111,7 @@ public class CountdownBottomSheetDialog {
             @Override
             public void onSelected(int selectedIndex, String str) {
                 mContdownTime = StringUtil.getSetCountdown(str);
-                setCompleteStata(!str.equals(arrTime[0]));
+                setCompleteStata(!str.equals(mTimeArray[0]));
             }
         });
     }

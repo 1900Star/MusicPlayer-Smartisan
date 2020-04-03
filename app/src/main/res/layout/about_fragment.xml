@@ -101,7 +101,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="10dp"
-                    android:text="@string/preject_introduce"
+                    android:text="@string/project_introduce"
                     android:textColor="@color/aboutTitle"
                     android:textSize="@dimen/about_title"
                     android:textStyle="bold"
@@ -124,7 +124,7 @@
                     android:layout_marginBottom="10dp"
                     android:autoLink="web"
                     android:linksClickable="true"
-                    android:text="@string/preject_url"
+                    android:text="@string/project_url"
                     android:textColorLink="@color/tabbarDownTv"
                     android:textIsSelectable="true"
                     android:textSize="@dimen/about_content" />
@@ -250,7 +250,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/shape_btn_edit_selector"
                     android:gravity="center"
-                    android:text="@string/crashlog"
+                    android:text="@string/crash_log"
                     android:textColor="@color/music_activity_title_selector"
                     android:textSize="@dimen/about_title"
                     android:textStyle="bold" />

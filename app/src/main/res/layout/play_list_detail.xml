@@ -36,7 +36,7 @@
             android:background="@drawable/shape_btn_selector"
             android:enabled="true"
             android:gravity="center"
-            android:text="@string/delelet_play_list"
+            android:text="@string/delete_play_list"
             android:textColor="@color/tabbarTv"
             android:textSize="@dimen/music_artist"
             android:textStyle="bold" />

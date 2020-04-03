@@ -12,7 +12,6 @@ import com.yanzhenjie.permission.runtime.Permission;
 import com.yibao.music.R;
 import com.yibao.music.adapter.SplashPagerAdapter;
 import com.yibao.music.base.BaseActivity;
-import com.yibao.music.fragment.dialogfrag.ScannerConfigDialog;
 import com.yibao.music.model.MusicCountBean;
 import com.yibao.music.service.LoadMusicDataService;
 import com.yibao.music.util.ColorUtil;
@@ -66,49 +65,38 @@ public class SplashActivity
         super.onResume();
         AndPermission.with(this).runtime()
                 .permission(Permission.Group.STORAGE)
-                .onGranted(permissions -> initRxbusData())
-                .onDenied(permissions -> LogUtil.d(TAG, "没有读取和写入的权限!"))
+                .onGranted(permissions -> loadMusicData())
+                .onDenied(permissions -> LogUtil.d(TAG,"没有读取和写入的权限!"))
                 .start();
-        rxBusData();
     }
 
-    private void rxBusData() {
-        mCompositeDisposable.add(mBus.toObserverable(String.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> loadMusic()));
-    }
-
-    private void loadMusic() {
-        // 是否是首次安装，本地数据库是否创建，等于 8 表示不是首次安装，数据库已经创建，直接进入MusicActivity。
-        if (SpUtil.getLoadMusicFlag(this) == Constants.NUMBER_EIGHT) {
-            countDownOperation(true);
-        } else {
-            // 首次安装，开启服务加载本地音乐，创建本地数据库。
-            if (!ServiceUtil.isServiceRunning(this, Constants.LOAD_SERVICE_NAME)) {
-                startService(new Intent(this, LoadMusicDataService.class));
-            }
-            updateLoadProgress();
-        }
-    }
-
-    private void initRxbusData() {
+    private void loadMusicData() {
         if (mScanner == null) {
             mIsFirstScanner = true;
-            ScannerConfigDialog.newInstance(true).show(getSupportFragmentManager(), "config_splash");
+            // 是否是首次安装，本地数据库是否创建，等于 8 表示不是首次安装，数据库已经创建，直接进入MusicActivity。
+            if (SpUtil.getLoadMusicFlag(this) == Constants.NUMBER_EIGHT) {
+                countDownOpareton(true);
+            } else {
+                // 首次安装，开启服务加载本地音乐，创建本地数据库。
+                if (!ServiceUtil.isServiceRunning(this, Constants.LOAD_SERVICE_NAME)) {
+                    startService(new Intent(this, LoadMusicDataService.class));
+                }
+                updataLoadProgress();
+            }
+
         } else {
             // 手动扫描歌曲
             mIsFirstScanner = false;
             Intent intent = new Intent(this, LoadMusicDataService.class);
             intent.putExtra(Constants.SCANNER_MEDIA, Constants.SCANNER_MEDIA);
             startService(intent);
-            updateLoadProgress();
+            updataLoadProgress();
         }
 
 
     }
 
-    private void updateLoadProgress() {
+    private void updataLoadProgress() {
         mTvMusicCount.setVisibility(View.VISIBLE);
         mMusicLoadProgressBar.setVisibility(View.VISIBLE);
         mCompositeDisposable.add(mBus.toObserverable(MusicCountBean.class)
@@ -137,11 +125,11 @@ public class SplashActivity
                                 str = "新增 " + size + " 首歌曲";
                                 mTvMusicCount.setText(str);
                             }
-                            countDownOperation(mIsFirstScanner);
+                            countDownOpareton(mIsFirstScanner);
                         }
                     } else {
-                        mTvMusicCount.setText(mIsFirstScanner ? "本地没有发现音乐,去下载歌曲后再来体验吧!" : "音乐扫描完成!");
-                        countDownOperation(false);
+                        mTvMusicCount.setText(mIsFirstScanner ? "本地没有发现音乐,去下载歌曲后再来体验吧!" : "没有新增歌曲!");
+                        countDownOpareton(false);
                     }
                 }));
     }
@@ -149,9 +137,9 @@ public class SplashActivity
     /**
      * 倒计时操作
      *
-     * @param b true 表示初次安装，自动扫描完成后直接进入MusicActivity 。 false 表示手动扫描，完成后停在SplashActivity页面。
+     * @param b ture 表示初次安装，自动扫描完成后直接进入MusicActivity 。 false 表示手动扫描，完成后停在SplashActivity页面。
      */
-    private void countDownOperation(boolean b) {
+    private void countDownOpareton(boolean b) {
         if (b) {
             startMusicActivity();
         } else {

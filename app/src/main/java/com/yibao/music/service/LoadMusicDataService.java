@@ -16,6 +16,7 @@ import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
+import com.yibao.music.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,12 +67,12 @@ public class LoadMusicDataService extends IntentService {
             newList.retainAll(different);
             for (MusicBean musicBean : newList) {
                 sendLoadProgress(newList.size(), musicBean);
-                LogUtil.d(TAG, "             === new after  " + musicBean.getTitle());
+//                LogUtil.d(TAG, "             === new after  " + musicBean.getTitle() + " == " + StringUtil.parseDuration((int) musicBean.getDuration()));
             }
             oldList.retainAll(different);
             for (MusicBean musicBean : oldList) {
                 mMusicDao.delete(musicBean);
-                LogUtil.d(TAG, "             === old after " + musicBean.getTitle());
+//                LogUtil.d(TAG, "             === old after  " + musicBean.getTitle() + " == " + StringUtil.parseDuration((int) musicBean.getDuration()));
             }
             mBus.post(new MusicCountBean(Constants.NUMBER_ZERO, Constants.NUMBER_ZERO));
         } else {

@@ -61,10 +61,9 @@ public class MusicListUtil {
             int mArtist = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
             int mAlbum = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
             int mAlbumId = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
-            int mDuration = 0;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                mDuration = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION);
-            }
+            int mDuration;
+            mDuration = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION);
+            LogUtil.d(TAG, " AA time  " + mDuration);
             int mSize = cursor.getColumnIndex(MediaStore.Audio.Media.SIZE);
             int mUrl = cursor.getColumnIndex(MediaStore.Audio.Media.DATA);
             int addDed = cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED);
@@ -99,6 +98,8 @@ public class MusicListUtil {
                 } else if (aBooleanDuration) {
                     if (duration > CONFIG_MUSIC_DURATION) {
                         addMusicData(musicInfo, qualityType, issueYear, info, mId, title, artist, album, albumId, duration, addTime, url);
+                    } else {
+                        LogUtil.d(TAG, "little time  " + duration);
                     }
                 } else if (aBooleanFileSize) {
                     if (size > CONFIG_MUSIC_FILE_SIZE) {

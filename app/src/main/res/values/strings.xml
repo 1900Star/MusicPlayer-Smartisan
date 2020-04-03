@@ -11,11 +11,11 @@
         比如增加了类似QQ音乐的左右滑动切换上/下一曲的交互。
         \n\tRxJava\n\tRxBus\n\tButterknife\n\tGreenDao3.0\n\tGlide\n\tLeakcanary
     </string>
-    <string name="preject_url">https://github.com/1900Star/SmartisanMusicPlayer</string>
+    <string name="project_url">https://github.com/1900Star/SmartisanMusicPlayer</string>
     <string name="email">Email: strangermy98@gmail.com</string>
-    <string name="preject_introduce">关于项目</string>
+    <string name="project_introduce">关于项目</string>
 
-    <string name="childe_view_not">SwipeItemLayout的子视图不符合规定</string>
+    <string name="child_view_not">SwipeItemLayout的子视图不符合规定</string>
 
     //*********音乐
     <string name="short_line">-</string>
@@ -38,13 +38,13 @@
     <string name="add_to_play_list">加到播放列表</string>
     <string name="add_to_play_queue">加到播放队列</string>
     <string name="rename_tile">重命名播放列表</string>
-    <string name="load_music">正常拼命加载音乐,请稍候 -_-</string>
+    <string name="load_music">正在拼命加载音乐,请稍候 -_-</string>
     <string name="cancel">取消</string>
     <string name="continues">继续</string>
     <string name="save_and_add">保存并添加</string>
     <string name="all_condition">全部</string>
     <string name="complete">完成</string>
-    <string name="choice_opreation">请选择操作</string>
+    <string name="choice_operation">请选择操作</string>
     <string name="back">返回</string>
     <string name="sure">确定</string>
     <string name="about">关于</string>
@@ -60,24 +60,32 @@
     <string name="tv_delete">删除</string>
     <string name="lyrics">歌词</string>
     <string name="select_operation">选择操作</string>
-    <string name="delelet_play_list">删除列表</string>
+    <string name="delete_play_list">删除列表</string>
     <string name="set_play_time">设定定时播放时间</string>
     <string name="timing_close_play">定时关闭播放</string>
     <string name="edit_play_list">编辑列表</string>
     <string name="baidu_key">4502b57559</string>
     <string name="app_info">ArtisanMusicPlayer 仿照锤子音乐播放器写的一个本地音乐播放器。 https://github.com/1900Star/SmartisanMusicPlayer </string>
-    <string name="crashlog">CrashLog</string>
+    <string name="crash_log">CrashLog</string>
     <string name="take_photo">拍照</string>
     <string name="choice_photo">从相册中选择照片</string>
     <string name="camera_not_open">摄像头权限未开启</string>
     <string name="go_open">去开启</string>
     <string name="delete_error_lyric">删除错误歌词</string>
-    <string name="song_not_faverite">该歌曲还没有添加到收藏文件</string>
+    <string name="song_not_favorite">该歌曲还没有添加到收藏文件</string>
     <string name="retry_search_lyrics">重新搜索歌词</string>
     <string name="scanner_config">扫描配置</string>
     <string name="scanner_one_minute">不扫描60S以下的歌曲</string>
     <string name="scanner_one_m">不扫描1M以下的歌曲</string>
     <string name="start_scanner_music">开始扫描</string>
+    <!--    "正在倒计时", "无", "15 分", "30 分", "1 小时", "1 小时 30 分", "2 小时"-->
 
+    <string name="counting_down">正在倒计时</string>
+    <string name="no_set_up">无</string>
+    <string name="fifteen_minute">15 分</string>
+    <string name="thirty_minute">30 分</string>
+    <string name="an_hour">1 小时</string>
+    <string name="a_half">1 小时 30 分</string>
+    <string name="two_hours">2 小时</string>
 
 </resources>
