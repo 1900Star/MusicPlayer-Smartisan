@@ -20,15 +20,13 @@
   * Android Q
   * Playlists (sorted by song name, rating, number of plays, time added), artist list, album list)
   * Favorite
-  * timer
+  * Timer
   * Search
   * Scanner
   * Notification
   * Search lyrics
-  * Lyrics scrolling
   * Web album picture
   * Lock screen display
-  * The screen is always on
   * Favorites list local backup
   * Local favorites list import
 
