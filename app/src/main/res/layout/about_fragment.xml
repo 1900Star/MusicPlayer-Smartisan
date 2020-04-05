@@ -129,20 +129,6 @@
                     android:textIsSelectable="true"
                     android:textSize="@dimen/about_content" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:autoLink="email"
-                    android:linksClickable="true"
-                    android:text="@string/email"
-                    android:textColor="@color/tabbarDownTv"
-                    android:textColorLink="@color/tabbarDownTv"
-                    android:textIsSelectable="true"
-                    android:textSize="@dimen/about_content" />
-
-
             </LinearLayout>
 
             <LinearLayout

@@ -12,7 +12,6 @@
         \n\tRxJava\n\tRxBus\n\tButterknife\n\tGreenDao3.0\n\tGlide\n\tLeakcanary
     </string>
     <string name="project_url">https://github.com/1900Star/SmartisanMusicPlayer</string>
-    <string name="email">Email: strangermy98@gmail.com</string>
     <string name="project_introduce">关于项目</string>
 
     <string name="child_view_not">SwipeItemLayout的子视图不符合规定</string>
@@ -85,10 +84,10 @@
     <string name="fifteen_minute">15 分</string>
     <string name="thirty_minute">30 分</string>
     <string name="an_hour">1 小时</string>
-    <string name="a_half">1 小时 30 分</string>
+    <string name="one_and_a_half_hours">1 小时 30 分</string>
     <string name="two_hours">2 小时</string>
     <string name="confirm_delete">确定要删除 </string>
     <string name="song_list"> 歌曲列表吗？</string>
     <string name="delete_all_favorite">确定删除所有收藏歌曲？</string>
-
+    <string name="time_remaining">剩余时间</string>
 </resources>

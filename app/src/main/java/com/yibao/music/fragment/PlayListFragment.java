@@ -120,7 +120,7 @@ public class PlayListFragment extends BaseLazyFragment {
         List<PlayListBean> playList = getPlayList();
         setNotAllSelected(playList);
         mAdapter = new PlayListAdapter(playList, checkBoxMap);
-        RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
+        RecyclerView recyclerView = RecyclerFactory.createRecyclerView(Constants.NUMBER_ONE, mAdapter);
         mPlayListContent.addView(recyclerView);
         mDetailsAdapter = new DetailsViewAdapter(mActivity, null, Constants.NUMBER_FOUR);
         initListener();
@@ -228,7 +228,7 @@ public class PlayListFragment extends BaseLazyFragment {
         });
         // 长按删除
         mAdapter.setItemLongClickListener((musicInfo, currentPosition) -> {
-            if (isFromPlayListActivity) {
+            if (!isFromPlayListActivity) {
                 mDeletePosition = currentPosition;
                 DeletePlayListDialog.newInstance(musicInfo, Constants.NUMBER_TWO).show(getChildFragmentManager(), "deleteList");
             }
@@ -281,7 +281,7 @@ public class PlayListFragment extends BaseLazyFragment {
             mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(title)).build().list();
             mDetailView.setQureyFlag(title, mDetailList.size());
             mDetailsAdapter.setNewData(mDetailList);
-            RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mDetailsAdapter);
+            RecyclerView recyclerView = RecyclerFactory.createRecyclerView(Constants.NUMBER_ONE, mDetailsAdapter);
             mDetailsAdapter.setOnItemMenuListener((position, musicBean) -> MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
             mDetailView.setAdapter(recyclerView);
             interceptBackEvent(Constants.NUMBER_EIGHT);

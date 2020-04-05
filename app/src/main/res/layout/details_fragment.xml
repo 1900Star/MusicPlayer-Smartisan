@@ -111,6 +111,8 @@
                     android:src="@drawable/album_category_list_selector" />
 
                 <TextView
+                    android:layout_marginStart="3dp"
+                    android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -142,6 +144,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/random_play"
+                    android:layout_marginStart="3dp"
+                    android:textStyle="bold"
                     android:textColor="@color/textDes"
                     android:textSize="@dimen/about_sign" />
 

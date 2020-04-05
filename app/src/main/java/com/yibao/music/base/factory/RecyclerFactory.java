@@ -28,8 +28,8 @@ public class RecyclerFactory {
     private static final int RECYCLERVIEW_NORMAL = 1;
     private static final int RECYCLERVIEW_STAGGERED = 2;
 
-    public static RecyclerView creatRecyclerView(int type,
-                                                 RecyclerView.Adapter<RecyclerView.ViewHolder> adapter) {
+    public static RecyclerView createRecyclerView(int type,
+                                                  RecyclerView.Adapter<RecyclerView.ViewHolder> adapter) {
         RecyclerView recyclerView = new RecyclerView(MusicApplication.getIntstance());
 
         if (type == RECYCLERVIEW_NORMAL) {

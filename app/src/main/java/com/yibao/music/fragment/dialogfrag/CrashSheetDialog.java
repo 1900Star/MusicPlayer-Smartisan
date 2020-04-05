@@ -67,7 +67,7 @@ public class CrashSheetDialog {
         if (mFiles.exists()) {
             File[] array = mFiles.listFiles();
             CrashAdapter crashAdapter = new CrashAdapter(array);
-            RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, crashAdapter);
+            RecyclerView recyclerView = RecyclerFactory.createRecyclerView(Constants.NUMBER_ONE, crashAdapter);
             crashAdapter.setItemClickListener(this::openCrashLog);
             rootView.addView(recyclerView);
             TextView tvTitle = view.findViewById(R.id.tv_crash_title);

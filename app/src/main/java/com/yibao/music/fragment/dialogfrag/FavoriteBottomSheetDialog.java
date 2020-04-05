@@ -2,11 +2,14 @@ package com.yibao.music.fragment.dialogfrag;
 
 import android.content.Context;
 import android.content.Intent;
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -53,6 +56,7 @@ public class FavoriteBottomSheetDialog
     private TextView mBottomListColection;
     private TextView mBottomListClear;
     private TextView mBottomListTitleSize;
+    private TextView mBottomListTitle;
     private Context mContext;
     private RecyclerView mRecyclerView;
     private BottomSheetBehavior<View> mBehavior;
@@ -109,10 +113,9 @@ public class FavoriteBottomSheetDialog
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(musicBeanList -> {
                     mList = musicBeanList;
-                    String sheetTitle = StringUtil.getBottomSheetTitle(musicBeanList.size());
-                    mBottomListTitleSize.setText(sheetTitle);
+                    setTitle(musicBeanList.size());
                     mAdapter = new BottomSheetAdapter(musicBeanList);
-                    mRecyclerView = RecyclerFactory.creatRecyclerView(Constants.NUMBER_ONE, mAdapter);
+                    mRecyclerView = RecyclerFactory.createRecyclerView(Constants.NUMBER_ONE, mAdapter);
                     mBottomListContent.addView(mRecyclerView);
                 }));
         //    接收BottomSheetAdapter发过来的当前点击Item的Position
@@ -130,7 +133,7 @@ public class FavoriteBottomSheetDialog
                         // 侧滑删除收藏歌曲
                         mAdapter.notifyDataSetChanged();
                         mList.remove(bean.getPosition());
-                        setTitle(mList);
+                        setTitle(mList.size());
                         checkCurrentFavorite(bean.getSongTitle());
                         if (mList.size() == Constants.NUMBER_ZERO) {
                             mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -139,15 +142,15 @@ public class FavoriteBottomSheetDialog
                 }));
     }
 
-    private void setTitle(List<MusicBean> musicBeanList) {
-        String sheetTitle = StringUtil.getBottomSheetTitle(musicBeanList.size());
-        mBottomListTitleSize.setText(sheetTitle);
+    private void setTitle(int favoriteSize) {
+        mBottomListTitleSize.setText(String.valueOf(favoriteSize));
     }
 
     private void initListener() {
         mBottomListColection.setOnClickListener(this);
         mBottomListClear.setOnClickListener(this);
         mBottomListTitleSize.setOnClickListener(this);
+        mBottomListTitle.setOnClickListener(this);
     }
 
 
@@ -163,6 +166,7 @@ public class FavoriteBottomSheetDialog
                     SnakbarUtil.noFavoriteMusic(mBottomListClear);
                 }
                 break;
+            case R.id.tv_bottom_favorite:
             case R.id.bottom_list_title_size:
                 backTop();
                 break;
@@ -215,7 +219,7 @@ public class FavoriteBottomSheetDialog
         intent.setClass(mContext, MusicPlayService.class);
         intent.putExtra("sortFlag", Constants.NUMBER_EIGHT);
         intent.putExtra("position", position);
-        LogUtil.d(TAG,"===========      " + position);
+        LogUtil.d(TAG, "===========      " + position);
         mContext.startService(intent);
         SpUtil.setSortFlag(mContext, Constants.NUMBER_EIGHT);
     }
@@ -226,6 +230,7 @@ public class FavoriteBottomSheetDialog
         mBottomListColection = view.findViewById(R.id.bottom_sheet_bar_play);
         mBottomListClear = view.findViewById(R.id.bottom_sheet_bar_clear);
         mBottomListTitleSize = view.findViewById(R.id.bottom_list_title_size);
+        mBottomListTitle = view.findViewById(R.id.tv_bottom_favorite);
     }
 
 }

@@ -45,11 +45,11 @@ public class CountdownService extends Service {
         @Override
         public void onFinish() {
             cancel();
-            sendColseMusicBroadcast();
+            sendCloseMusicBroadcast();
             stopSelf();
         }
 
-        private void sendColseMusicBroadcast() {
+        private void sendCloseMusicBroadcast() {
             Intent intent = new Intent(Constants.ACTION_MUSIC);
             intent.putExtra(Constants.NOTIFY_BUTTON_ID, Constants.COUNTDOWN_FINISH);
             sendBroadcast(intent);

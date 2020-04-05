@@ -138,11 +138,7 @@ public class MusicListUtil {
      * @param sortFlag  1 按照歌曲下载时间 ，2 按照歌曲收藏时间 , 3 按照播放次数 ，4 按照评分 ，5 按添加到自定义列表的时间。
      */
     public static List<MusicBean> sortMusicList(List<MusicBean> musicList, int sortFlag) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            musicList.sort((m1, m2) -> getSortResult(sortFlag, m1, m2));
-        } else {
-            Collections.sort(musicList, (m1, m2) -> getSortResult(sortFlag, m1, m2));
-        }
+        Collections.sort(musicList, (m1, m2) -> getSortResult(sortFlag, m1, m2));
         return musicList;
     }
 
@@ -187,12 +183,7 @@ public class MusicListUtil {
      */
     public static List<MusicBean> sortMusicAbc(List<MusicBean> musicList) {
         String str = "#";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            musicList.sort((m1, m2) -> sortAbc(str, m1, m2));
-        } else {
-            Collections.sort(musicList, (m1, m2) -> sortAbc(str, m1, m2));
-
-        }
+        Collections.sort(musicList, (m1, m2) -> sortAbc(str, m1, m2));
         return musicList;
     }
 
@@ -212,18 +203,12 @@ public class MusicListUtil {
     public static List<ArtistInfo> getArtistList(List<MusicBean> list) {
         Map<String, List<MusicBean>> musicMap = new HashMap<>(16);
         ArrayList<ArtistInfo> singerInfoList = new ArrayList<>();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            list.forEach(musicBean -> forArtistList(musicBean, musicMap));
-            musicMap.forEach((s, musicBeanList) -> forArtistMap(singerInfoList, s, musicBeanList));
 
-        } else {
-            for (MusicBean musicBean : list) {
-                forArtistList(musicBean, musicMap);
-            }
-            for (Map.Entry<String, List<MusicBean>> entry : musicMap.entrySet()) {
-                forArtistMap(singerInfoList, entry.getKey(), entry.getValue());
-            }
-
+        for (MusicBean musicBean : list) {
+            forArtistList(musicBean, musicMap);
+        }
+        for (Map.Entry<String, List<MusicBean>> entry : musicMap.entrySet()) {
+            forArtistMap(singerInfoList, entry.getKey(), entry.getValue());
         }
 
 
@@ -263,19 +248,14 @@ public class MusicListUtil {
     public static List<AlbumInfo> getAlbumList(List<MusicBean> list) {
         Map<String, List<MusicBean>> musicMap = new HashMap<>(16);
         List<AlbumInfo> albumInfoList = new ArrayList<>();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            list.forEach(musicInfo -> forAlbumList(musicMap, musicInfo));
-            musicMap.forEach((s, musicBeanList) -> forAlbumMap(albumInfoList, s, musicBeanList));
 
-        } else {
-            for (MusicBean musicInfo : list) {
-                forAlbumList(musicMap, musicInfo);
-            }
-            for (Map.Entry<String, List<MusicBean>> entry : musicMap.entrySet()) {
-                forAlbumMap(albumInfoList, entry.getKey(), entry.getValue());
-            }
-
+        for (MusicBean musicInfo : list) {
+            forAlbumList(musicMap, musicInfo);
         }
+        for (Map.Entry<String, List<MusicBean>> entry : musicMap.entrySet()) {
+            forAlbumMap(albumInfoList, entry.getKey(), entry.getValue());
+        }
+
 
         Collections.sort(albumInfoList);
         return albumInfoList;

@@ -7,6 +7,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import androidx.multidex.MultiDexApplication;
+
+import com.yibao.music.MusicApplication;
+import com.yibao.music.R;
 import com.yibao.music.model.MusicBean;
 
 import java.io.File;
@@ -179,32 +183,22 @@ public class StringUtil {
     }
 
     public static long getSetCountdown(String countdown) {
-        int mContdownTime = 0;
-        switch (countdown) {
-            case "正在倒计时":
-                mContdownTime = -1;
-                break;
-            case "无":
-                LogUtil.d(TAG, "     时间为无");
-                break;
-            case "15 分":
-                mContdownTime = 15 * 60 * 1000;
-                break;
-            case "30 分":
-                mContdownTime = 30 * 60 * 1000;
-                break;
-            case "1 小时":
-                mContdownTime = 60 * 60 * 1000;
-                break;
-            case "1 小时 30 分":
-                mContdownTime = 90 * 60 * 1000;
-                break;
-            case "2 小时":
-                mContdownTime = 120 * 60 * 1000;
-                break;
-            default:
-                break;
+        int mCountdownTime = 0;
+        if (MusicApplication.getIntstance().getString(R.string.counting_down).equals(countdown)) {
+            mCountdownTime = -1;
+        } else if (MusicApplication.getIntstance().getString(R.string.no_set_up).equals(countdown)) {
+            LogUtil.d(TAG, "     时间为无");
+        } else if (MusicApplication.getIntstance().getString(R.string.fifteen_minute).equals(countdown)) {
+            mCountdownTime = 15 * 60 * 1000;
+        } else if (MusicApplication.getIntstance().getString(R.string.thirty_minute).equals(countdown)) {
+            mCountdownTime = 30 * 60 * 1000;
+        } else if (MusicApplication.getIntstance().getString(R.string.an_hour).equals(countdown)) {
+            mCountdownTime = 60 * 60 * 1000;
+        } else if (MusicApplication.getIntstance().getString(R.string.one_and_a_half_hours).equals(countdown)) {
+            mCountdownTime = 90 * 60 * 1000;
+        } else if (MusicApplication.getIntstance().getString(R.string.two_hours).equals(countdown)) {
+            mCountdownTime = 120 * 60 * 1000;
         }
-        return mContdownTime;
+        return mCountdownTime;
     }
 }

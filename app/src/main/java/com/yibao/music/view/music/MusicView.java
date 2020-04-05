@@ -18,7 +18,7 @@ import com.yibao.music.util.Constants;
 import java.util.Objects;
 
 /**
- * Des：${将音乐列表(RecyclerView) ,StickyView, SlideBar导航栏 封装到一个Viwe里面，方便多个页面使用}
+ * Des：${将音乐列表(RecyclerView) ,StickyView, SlideBar导航栏 封装到一个View里面，方便多个页面使用}
  * Time:2017/9/10 00:43
  *
  * @author Stran
@@ -43,7 +43,6 @@ public class MusicView
     }
 
     private void initView() {
-        //自定义组合控件将第三个参数设置为true  解析之后直接添加到当前view中
         LayoutInflater.from(getContext())
                 .inflate(R.layout.music_view, this, true);
         mRecyclerView = findViewById(R.id.rv);

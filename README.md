@@ -5,8 +5,8 @@
 [中文](https://github.com/1900Star/MusicPlayer-Smartisan/blob/load/README-zh.md)
 
 ![image](https://github.com/1900Star/ShareFile/blob/master/pic/artistMusic.jpg)
-![image](https://github.com/1900Star/ShareFile/blob/master/pic/Details.jpg)
-![image](https://github.com/1900Star/SmartisanMusicPlayer/blob/master/screenshot/a.jpg)
+![image](https://upload-images.jianshu.io/upload_images/5028465-31f3ca33021b7d6a.jpg?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+![image](https://upload-images.jianshu.io/upload_images/5028465-db35a2cd0e326d26.jpg?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
 ![image](https://github.com/1900Star/SmartisanMusicPlayer/blob/master/screenshot/b.jpg)
 ![image](https://github.com/1900Star/ShareFile/blob/master/pic/loadmusic.gif)
 ![image](https://github.com/1900Star/ShareFile/blob/master/pic/all.gif)

@@ -66,7 +66,7 @@ public class MoreMenuBottomDialog {
 
     private void initListener(Context context, BottomSheetDialog dialog) {
         mBottomCancel.setOnClickListener(v -> dialog.dismiss());
-        mMemuAdapter.setClickLiseter(((musicPosition, position, musicBean) -> {
+        mMemuAdapter.setClickListener(((musicPosition, position, musicBean) -> {
             if (position == Constants.NUMBER_ZERO) {
                 SpUtil.setAddTodPlayListFlag(context, Constants.NUMBER_ONE);
             }
@@ -108,7 +108,7 @@ public class MoreMenuBottomDialog {
     private void initData() {
         mRatingBar.setRating(mMusicBean.getSongScore());
         mMemuAdapter = new MoreMemuAdapter(MenuListUtil.getMenuData(mMusicBean.isFavorite(), mIsNeedSetTime), mMusicBean, mMusicPosition);
-        RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(4, mMemuAdapter);
+        RecyclerView recyclerView = RecyclerFactory.createRecyclerView(4, mMemuAdapter);
         mBottomListContent.addView(recyclerView);
     }
 

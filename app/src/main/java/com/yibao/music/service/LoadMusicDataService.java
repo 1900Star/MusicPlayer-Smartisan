@@ -62,17 +62,14 @@ public class LoadMusicDataService extends IntentService {
         if (getIsNeedAgainScanner(intent)) {
             // 数据库的歌曲和最新媒体库中歌曲数量比较
             List<MusicBean> oldList = mMusicDao.queryBuilder().build().list();
-
             List<MusicBean> different = (List<MusicBean>) CollectionUtil.getDifferent(newList, oldList);
             newList.retainAll(different);
             for (MusicBean musicBean : newList) {
                 sendLoadProgress(newList.size(), musicBean);
-//                LogUtil.d(TAG, "             === new after  " + musicBean.getTitle() + " == " + StringUtil.parseDuration((int) musicBean.getDuration()));
             }
             oldList.retainAll(different);
             for (MusicBean musicBean : oldList) {
                 mMusicDao.delete(musicBean);
-//                LogUtil.d(TAG, "             === old after  " + musicBean.getTitle() + " == " + StringUtil.parseDuration((int) musicBean.getDuration()));
             }
             mBus.post(new MusicCountBean(Constants.NUMBER_ZERO, Constants.NUMBER_ZERO));
         } else {

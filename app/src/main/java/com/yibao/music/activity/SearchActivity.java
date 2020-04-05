@@ -94,7 +94,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     @Override
     protected void updataLyricsView(boolean lyricsOK, String downMsg) {
         if (lyricsOK) {
-            updataLyric();
+            updateLyric();
         }
     }
 
@@ -171,7 +171,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
             mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
             mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
-            updataLyric();
+            updateLyric();
             setDuration();
         }
         mCompositeDisposable.add(RxView.clicks(mSmartisanControlBar)
@@ -190,7 +190,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
             setDuration();
             SearchActivity.this.checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
             mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
-            updataLyric();
+            updateLyric();
         }
     }
 
@@ -369,7 +369,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         }
     }
 
-    private void updataLyric() {
+    private void updateLyric() {
         List<MusicLyricBean> lyricList = LyricsUtil.getLyricList(mMusicBean);
         disposableQqLyric();
         if (mQqLyricsDisposable == null) {
@@ -377,7 +377,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(musicBeanList -> {
-                        if (lyricList != null && lyricList.size() > 1 && lyricsFlag < lyricList.size()) {
+                        if (lyricList.size() > 1 && lyricsFlag < lyricList.size()) {
                             //通过集合，播放过的歌词就从集合中删除
                             MusicLyricBean lyrBean = lyricList.get(lyricsFlag);
                             String content = lyrBean.getContent();

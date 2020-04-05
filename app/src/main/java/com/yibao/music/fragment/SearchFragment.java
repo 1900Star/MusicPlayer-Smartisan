@@ -186,7 +186,7 @@ public class SearchFragment extends BaseFragment {
         }
         // 列表数据
         mSearchDetailAdapter = new DetailsViewAdapter(mActivity, null, Constants.NUMBER_THREE);
-        RecyclerView recyclerView = RecyclerFactory.creatRecyclerView(1, mSearchDetailAdapter);
+        RecyclerView recyclerView = RecyclerFactory.createRecyclerView(1, mSearchDetailAdapter);
         mLinearDetail.addView(recyclerView);
         if (getArguments() != null) {
             mPosition = getArguments().getInt("position");

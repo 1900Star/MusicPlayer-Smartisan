@@ -87,7 +87,7 @@ public class MoreMemuAdapter
     }
 
 
-    public void setClickLiseter(OnMenuItemClickListener listener) {
+    public void setClickListener(OnMenuItemClickListener listener) {
         mListener = listener;
     }
 
