@@ -30,7 +30,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * @author Stran
+ * @author lsp
  * Des：${TODO}
  * Time:2017/4/22 02:00
  */

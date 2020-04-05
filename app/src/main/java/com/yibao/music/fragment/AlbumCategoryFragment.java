@@ -1,6 +1,7 @@
 package com.yibao.music.fragment;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.yibao.music.R;
 import com.yibao.music.adapter.AlbumAdapter;
@@ -18,6 +19,7 @@ import com.yibao.music.view.music.MusicView;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.BindView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -30,7 +32,9 @@ import io.reactivex.schedulers.Schedulers;
  * @ Des:    TODO
  */
 public class AlbumCategoryFragment extends BaseLazyFragment {
-    private MusicView mMusicView;
+
+    @BindView(R.id.musci_view)
+    MusicView mMusicView;
     private int mPosition;
     private List<AlbumInfo> mAlbumList;
     private boolean isItemSelectStatus = true;
@@ -43,20 +47,17 @@ public class AlbumCategoryFragment extends BaseLazyFragment {
     }
 
     @Override
-    protected void initView(Bundle savedInstanceState) {
-        setContentView(R.layout.category_fragment);
-        mMusicView = getViewById(R.id.musci_view);
+    protected void initView(View view) {
         Bundle arguments = getArguments();
         if (arguments != null) {
             mPosition = arguments.getInt("position");
         }
-        mAlbumList = MusicListUtil.getAlbumList(mSongList);
+        List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().list();
+        mAlbumList = MusicListUtil.getAlbumList(musicBeanList);
         initData();
-
     }
 
-
-    private void initData() {
+    protected void initData() {
         mAlbumAdapter = new AlbumAdapter(mActivity, mAlbumList, mPosition);
         mMusicView.setAdapter(mActivity, mPosition == 0 ? 3 : 4, mPosition == 0, mAlbumAdapter);
         mAlbumAdapter.setItemListener((bean, position, isEditStatus) -> {
@@ -71,13 +72,13 @@ public class AlbumCategoryFragment extends BaseLazyFragment {
         });
     }
 
+
     @Override
-    public void onResume() {
-        super.onResume();
-        initRxBusData();
+    protected int getContentViewId() {
+        return R.layout.category_fragment;
     }
 
-    private void initRxBusData() {
+    protected void initRxBusData() {
         disposeToolbar();
         if (mEditDisposable == null) {
             mEditDisposable = mBus.toObservableType(Constants.ALBUM_FAG_EDIT, Object.class).subscribeOn(Schedulers.io())

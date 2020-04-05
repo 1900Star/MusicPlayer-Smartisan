@@ -1,12 +1,8 @@
 package com.yibao.music.fragment;
 
-import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
-import android.view.LayoutInflater;
+
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,7 +10,7 @@ import android.widget.TextView;
 import com.yibao.music.R;
 import com.yibao.music.adapter.AlbumCategoryPagerAdapter;
 import com.yibao.music.adapter.DetailsViewAdapter;
-import com.yibao.music.base.BaseMusicFragment;
+import com.yibao.music.base.BaseLazyFragment;
 import com.yibao.music.base.listener.MusicPagerListener;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.AlbumInfo;
@@ -28,7 +24,6 @@ import com.yibao.music.view.music.MusicToolBar;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -44,7 +39,7 @@ import io.reactivex.schedulers.Schedulers;
  * @描述： {TODO}
  */
 
-public class AlbumFragment extends BaseMusicFragment {
+public class AlbumFragment extends BaseLazyFragment {
     @BindView(R.id.music_toolbar_list)
     MusicToolBar mMusicToolBar;
     @BindView(R.id.iv_album_category_random_paly)
@@ -77,17 +72,13 @@ public class AlbumFragment extends BaseMusicFragment {
     private List<MusicBean> mDetailList;
     private String detailsViewTitle;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.album_fragment, container, false);
-        unbinder = ButterKnife.bind(this, view);
+    protected void initView(View view) {
         initData();
-        return view;
     }
 
 
-    private void initData() {
+    protected void initData() {
         AlbumCategoryPagerAdapter pagerAdapter = new AlbumCategoryPagerAdapter(getChildFragmentManager());
         mViewPager.setAdapter(pagerAdapter);
         mViewPager.addOnPageChangeListener(new MusicPagerListener() {
@@ -105,7 +96,11 @@ public class AlbumFragment extends BaseMusicFragment {
     public void onResume() {
         super.onResume();
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? detailsViewTitle : getString(R.string.music_album));
-        initRxBusData();
+    }
+
+    @Override
+    protected int getContentViewId() {
+        return R.layout.album_fragment;
     }
 
     @Override
@@ -113,7 +108,7 @@ public class AlbumFragment extends BaseMusicFragment {
         return isShowDetailsView;
     }
 
-    private void initRxBusData() {
+    protected void initRxBusData() {
         disposeToolbar();
         if (mEditDisposable == null) {
             mEditDisposable = mBus.toObservableType(Constants.FRAGMENT_ALBUM, Object.class).subscribeOn(Schedulers.io())

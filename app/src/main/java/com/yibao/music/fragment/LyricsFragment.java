@@ -1,11 +1,14 @@
 package com.yibao.music.fragment;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.base.BaseLazyFragment;
 import com.yibao.music.util.LogUtil;
+
+import butterknife.BindView;
 
 /**
  * @author luoshipeng
@@ -14,17 +17,21 @@ import com.yibao.music.util.LogUtil;
  * Des：TODO
  */
 public class LyricsFragment extends BaseLazyFragment {
-    private TextView mTvLyricsPage;
+    @BindView(R.id.tv_lyrics_page)
+    TextView mTvLyricsPage;
     private int mPosition;
     private String mLyrics;
 
     @Override
-    protected void initView(Bundle savedInstanceState) {
-        setContentView(R.layout.lyrics_fragment);
-        mTvLyricsPage = getViewById(R.id.tv_lyrics_page);
+    protected void initView(View view) {
         mLyrics = getArguments().getString("lyrics");
         mPosition = getArguments().getInt("position");
         setLyrics();
+    }
+
+    @Override
+    protected int getContentViewId() {
+        return R.layout.lyrics_fragment;
     }
 
     private void setLyrics() {
@@ -46,4 +53,6 @@ public class LyricsFragment extends BaseLazyFragment {
     protected boolean getIsOpenDetail() {
         return false;
     }
+
+
 }

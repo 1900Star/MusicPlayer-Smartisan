@@ -7,12 +7,16 @@ import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.MenuItem;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
-import com.yibao.music.adapter.MusicPagerAdapter;
+import com.yibao.music.adapter.MainViewPagerAdapter;
 import com.yibao.music.base.BaseTansitionActivity;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
@@ -31,7 +35,6 @@ import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.TitleArtistUtil;
 import com.yibao.music.util.ToastUtil;
-import com.yibao.music.view.MainViewPager;
 import com.yibao.music.view.music.MusicNavigationBar;
 import com.yibao.music.view.music.QqControlBar;
 import com.yibao.music.view.music.SmartisanControlBar;
@@ -46,7 +49,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
- * @author Stran
+ * @author lsp
  * Des：${主Activity}
  * Time:2017/5/30 13:27
  */
@@ -60,8 +63,9 @@ public class MusicActivity
     @BindView(R.id.bnv_music)
     BottomNavigationView mBottomNavigationView;
 
-    @BindView(R.id.music_viewpager)
-    MainViewPager mMusicViewPager;
+    @BindView(R.id.music_viewpager2)
+    ViewPager2 mViewPager2;
+
 
     @BindView(R.id.smartisan_control_bar)
     SmartisanControlBar mSmartisanControlBar;
@@ -87,7 +91,6 @@ public class MusicActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
         mBind = ButterKnife.bind(this);
-
         initData();
         initMusicConfig();
         initListener();
@@ -104,10 +107,11 @@ public class MusicActivity
             LogUtil.d(TAG, "==========================NoThing=555555555555555555");
         }
         // 初始化 MusicPagerAdapter 主页面
-        MusicPagerAdapter musicPagerAdapter = new MusicPagerAdapter(getSupportFragmentManager());
-        mMusicViewPager.setAdapter(musicPagerAdapter);
-        mMusicViewPager.setCurrentItem(Constants.NUMBER_TWO, false);
-        mMusicViewPager.setOffscreenPageLimit(5);
+        MainViewPagerAdapter pagerAdapter = new MainViewPagerAdapter(this);
+        mViewPager2.setAdapter(pagerAdapter);
+        mViewPager2.setCurrentItem(Constants.NUMBER_TWO, false);
+        mViewPager2.setOffscreenPageLimit(5);
+        mViewPager2.setUserInputEnabled(false);
     }
 
     private void initMusicConfig() {
@@ -168,8 +172,7 @@ public class MusicActivity
     private void initListener() {
         mBottomNavigationView.setSelectedItemId(R.id.navigation_song);
         mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        mMusicNavigationBar.setOnNavigationbarListener((currentSelectFlag) ->
-                mMusicViewPager.setCurrentItem(currentSelectFlag, false));
+        mMusicNavigationBar.setOnNavigationbarListener(this::setCurrentPosition);
         mSmartisanControlBar.setClickListener(clickFlag -> {
             if (mMusicConfig) {
                 if (clickFlag == Constants.NUMBER_THREE) {
@@ -221,7 +224,6 @@ public class MusicActivity
             }
         });
         mQqControlBar.setOnPagerSelectListener(position -> {
-            LogUtil.d(TAG, "==== Qq Bar  ==============");
             int sortFlag = SpUtil.getSortFlag(this);
             MusicActivity.this.disposableQqLyric();
             if (mHandleDetailFlag > 0) {
@@ -237,32 +239,45 @@ public class MusicActivity
             }
 //            updateQqBar();
         });
+        mViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                mBottomNavigationView.getMenu().getItem(position).setChecked(true);
+            }
+        });
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = item -> {
-        switch (item.getItemId()) {
-            case R.id.navigation_play_list:
-                mMusicViewPager.setCurrentItem(0, false);
-                return true;
-            case R.id.navigation_artist:
-                mMusicViewPager.setCurrentItem(1, false);
-                return true;
-            case R.id.navigation_song:
-                mMusicViewPager.setCurrentItem(2, false);
-                return true;
-            case R.id.navigation_album:
-                mMusicViewPager.setCurrentItem(3, false);
-                return true;
-            case R.id.navigation_about:
-                mMusicViewPager.setCurrentItem(4, false);
-                return true;
-            default:
-                break;
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_play_list:
+                    mViewPager2.setCurrentItem(0, false);
+                    return true;
+                case R.id.navigation_artist:
+                    mViewPager2.setCurrentItem(1, false);
+                    return true;
+                case R.id.navigation_song:
+                    mViewPager2.setCurrentItem(2, false);
+                    return true;
+                case R.id.navigation_album:
+                    mViewPager2.setCurrentItem(3, false);
+                    return true;
+                case R.id.navigation_about:
+                    mViewPager2.setCurrentItem(4, false);
+                    return true;
+                default:
+                    break;
+            }
+            return false;
         }
-        return false;
     };
 
+    private void setCurrentPosition(int position) {
+        mViewPager2.setCurrentItem(position, false);
+    }
 
     /**
      * 切换当前播放状态

@@ -1,17 +1,19 @@
 package com.yibao.music.adapter;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.yibao.music.base.BasePagerAdapter;
 import com.yibao.music.fragment.AboutFragment;
 import com.yibao.music.fragment.AlbumFragment;
 import com.yibao.music.fragment.ArtistFragment;
+import com.yibao.music.fragment.LyricsFragment;
 import com.yibao.music.fragment.PlayListFragment;
 import com.yibao.music.fragment.SongFragment;
-import com.yibao.music.util.Constants;
+import com.yibao.music.model.qq.SearchLyricsBean;
 
-import org.jetbrains.annotations.NotNull;
+import java.util.List;
 
 /**
  * 作者：Stran on 2017/3/23 03:31
@@ -20,26 +22,24 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Stran
  */
-public class MusicPagerAdapter
-        extends BasePagerAdapter {
-    String[] fagArr = {};
+public class MainViewPagerAdapter
+        extends FragmentStateAdapter {
 
-    public MusicPagerAdapter(FragmentManager fm) {
-        super(fm);
+
+    public MainViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+        super(fragmentActivity);
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Fragment getItem(int position) {
+    public Fragment createFragment(int position) {
         return getFragment(position);
     }
 
-
     @Override
-    public int getCount() {
-        return Constants.NUMBER_FIVE;
+    public int getItemCount() {
+        return 5;
     }
-
     private Fragment getFragment(int position) {
         Fragment fragment = SongFragment.newInstance();
         switch (position) {
@@ -63,5 +63,4 @@ public class MusicPagerAdapter
         }
         return fragment;
     }
-
 }

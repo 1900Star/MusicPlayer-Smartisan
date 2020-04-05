@@ -57,8 +57,7 @@ import io.reactivex.schedulers.Schedulers;
  * @项目名： ArtisanMusic
  * @包名： com.yibao.music.activity
  * @文件名: PlayActivity
- * @author: Stran
- * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
+ * @author: lsp
  * @创建时间: 2018/2/17 20:39
  * @描述： {TODO}
  */

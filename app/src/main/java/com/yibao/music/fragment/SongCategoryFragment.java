@@ -2,11 +2,8 @@ package com.yibao.music.fragment;
 
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.yibao.music.R;
@@ -24,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -33,8 +29,7 @@ import io.reactivex.schedulers.Schedulers;
  * @项目名： ArtisanMusic
  * @包名： com.yibao.music.artisanlist
  * @文件名: SongFragment
- * @author: Stran
- * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
+ * @author: lsp
  * @创建时间: 2018/2/4 21:45
  * @描述： {显示音乐分类列表}
  */
@@ -61,20 +56,12 @@ public class SongCategoryFragment extends BaseLazyFragment {
         }
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.category_fragment, container, false);
-        unbinder = ButterKnife.bind(this, view);
+    protected void initView(View view) {
         initData();
-        LogUtil.d(TAG, " song size   " + mSongList.size());
-        return view;
+        initListener();
     }
 
-    @Override
-    protected void initView(Bundle savedInstanceState) {
-
-    }
 
     private void initListener() {
         mSongAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
@@ -94,14 +81,10 @@ public class SongCategoryFragment extends BaseLazyFragment {
         });
     }
 
+
     @Override
-    public void onResume() {
-        super.onResume();
-        if (mPosition != Constants.NUMBER_ZERO && getUserVisibleHint()) {
-            initData();
-        }
-        initListener();
-        initRxBusData();
+    protected int getContentViewId() {
+        return R.layout.category_fragment;
     }
 
     @Override
@@ -109,7 +92,7 @@ public class SongCategoryFragment extends BaseLazyFragment {
         return isItemSelectStatus;
     }
 
-    private void initRxBusData() {
+    protected void initRxBusData() {
         disposeToolbar();
         if (mEditDisposable == null) {
             mEditDisposable = mBus.toObservableType(Constants.SONG_FAG_EDIT, Object.class).subscribeOn(Schedulers.io())
@@ -143,26 +126,27 @@ public class SongCategoryFragment extends BaseLazyFragment {
         }
     }
 
-    private void initData() {
+    protected void initData() {
+        List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().list();
         switch (mPosition) {
             case 0:
-                List<MusicBean> abcList = MusicListUtil.sortMusicAbc(mSongList);
+                List<MusicBean> abcList = MusicListUtil.sortMusicAbc(musicBeanList);
                 setNotAllSelected(abcList);
                 isShowSlidBar = true;
                 mSongAdapter = new SongAdapter(mActivity, abcList, mSparseBooleanArray, Constants.NUMBER_ZERO, Constants.NUMBER_ZERO);
                 break;
             case 1:
-                List<MusicBean> scoreList = MusicListUtil.sortMusicList(mSongList, Constants.SORT_SCORE);
+                List<MusicBean> scoreList = MusicListUtil.sortMusicList(musicBeanList, Constants.SORT_SCORE);
                 setNotAllSelected(scoreList);
                 mSongAdapter = new SongAdapter(mActivity, scoreList, mSparseBooleanArray, Constants.NUMBER_ONE, Constants.NUMBER_ONE);
                 break;
             case 2:
-                List<MusicBean> playFrequencyList = MusicListUtil.sortMusicList(mSongList, Constants.SORT_FREQUENCY);
+                List<MusicBean> playFrequencyList = MusicListUtil.sortMusicList(musicBeanList, Constants.SORT_FREQUENCY);
                 setNotAllSelected(playFrequencyList);
                 mSongAdapter = new SongAdapter(mActivity, playFrequencyList, mSparseBooleanArray, Constants.NUMBER_ONE, Constants.NUMBER_TWO);
                 break;
             case 3:
-                List<MusicBean> addTimeList = MusicListUtil.sortMusicList(mSongList, Constants.SORT_DOWN_TIME);
+                List<MusicBean> addTimeList = MusicListUtil.sortMusicList(musicBeanList, Constants.SORT_DOWN_TIME);
                 setNotAllSelected(addTimeList);
                 mSongAdapter = new SongAdapter(mActivity, addTimeList, mSparseBooleanArray, Constants.NUMBER_ONE, Constants.NUMBER_ZERO);
                 break;

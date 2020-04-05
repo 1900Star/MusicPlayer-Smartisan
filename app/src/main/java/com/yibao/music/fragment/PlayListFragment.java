@@ -1,15 +1,12 @@
 package com.yibao.music.fragment;
 
-import android.os.Bundle;
-
-import com.google.android.material.appbar.AppBarLayout;
-
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.appbar.AppBarLayout;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
@@ -82,25 +79,16 @@ public class PlayListFragment extends BaseLazyFragment {
     private List<PlayListBean> mSelectList = new ArrayList<>();
     private PlayListBeanDao mPlayListDao;
 
-
     @Override
-    protected void initView(Bundle savedInstanceState) {
-        setContentView(R.layout.play_list_fragment);
+    protected void initView(View view) {
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.play_list));
         mAppBarLayout.setVisibility(isFromPlayListActivity && SpUtil.getAddToPlayListFdlag(mActivity) == Constants.NUMBER_ONE ? View.GONE : View.VISIBLE);
         mPlayListDao = MusicApplication.getIntstance().getPlayListDao();
         if (isFromPlayListActivity) {
             initData();
         }
-    }
-
-    @Override
-    protected void onLazyLoadData() {
-        super.onLazyLoadData();
-        initData();
 
     }
-
 
     @Override
     protected boolean getIsOpenDetail() {
@@ -113,10 +101,14 @@ public class PlayListFragment extends BaseLazyFragment {
         if (mAdapter != null) {
             mAdapter.setNewData(getPlayList());
         }
-        receiveRxbusData();
     }
 
-    private void initData() {
+    @Override
+    protected int getContentViewId() {
+        return R.layout.play_list_fragment;
+    }
+
+    protected void initData() {
         List<PlayListBean> playList = getPlayList();
         setNotAllSelected(playList);
         mAdapter = new PlayListAdapter(playList, checkBoxMap);
@@ -135,7 +127,7 @@ public class PlayListFragment extends BaseLazyFragment {
     /**
      * 新增和删除列表
      */
-    private void receiveRxbusData() {
+    protected void initRxBusData() {
         if (mAddDeleteListDisposable == null) {
             mAddDeleteListDisposable = mBus.toObserverable(AddAndDeleteListBean.class)
                     .subscribeOn(Schedulers.io()).map(bean -> {
@@ -294,7 +286,7 @@ public class PlayListFragment extends BaseLazyFragment {
      * @param playListBean 通过PlayListActivity将选中的歌曲添加到列表中，有批量添加和单曲添加，
      */
     private void addToList(PlayListBean playListBean) {
-        if (mContext instanceof PlayListActivity) {
+        if (mActivity instanceof PlayListActivity) {
             // 批量添加
             if (mArrayLisopenDetailst != null && mArrayLisopenDetailst.size() > 0) {
                 ThreadPoolProxyFactory.newInstance().execute(() -> {
@@ -314,7 +306,7 @@ public class PlayListFragment extends BaseLazyFragment {
                     insertSongToList(playListBean, mSongName);
                 }
             }
-            ((OnFinishActivityListener) mContext).finishActivity();
+            ((OnFinishActivityListener) mActivity).finishActivity();
         }
     }
 

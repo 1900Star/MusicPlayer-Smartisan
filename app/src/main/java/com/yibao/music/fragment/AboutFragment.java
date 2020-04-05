@@ -4,14 +4,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
-import com.yibao.music.activity.SplashActivity;
 import com.yibao.music.base.BaseLazyFragment;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
 import com.yibao.music.fragment.dialogfrag.CrashSheetDialog;
@@ -48,7 +46,6 @@ import io.reactivex.schedulers.Schedulers;
  * @包名： com.yibao.music.folder
  * @文件名: AboutFragment
  * @author: Stran
- * @Email: www.strangermy@outlook.com / www.strangermy98@gmail.com
  * @创建时间: 2018/2/9 20:51
  * @描述： {TODO}
  */
@@ -74,21 +71,21 @@ public class AboutFragment extends BaseLazyFragment {
     TextView mTvDeleteErrorLyric;
     private long mCurrentPosition;
 
+
     @Override
-    protected void initView(Bundle savedInstanceState) {
-        setContentView(R.layout.about_fragment);
+    protected void initView(View view) {
         mMusicToolBar.setToolbarTitle(getString(R.string.about));
         mMusicToolBar.setTvEditVisibility(false);
+        initData();
         initListener();
     }
 
     @Override
-    protected void onLazyLoadData() {
-        super.onLazyLoadData();
-        initData();
+    protected int getContentViewId() {
+        return R.layout.about_fragment;
     }
 
-    private void initData() {
+    protected void initData() {
         File file = new File(Constants.MUSIC_LYRICS_ROOT);
         if (file.exists()) {
             mTvDeleteErrorLyric.setVisibility(View.VISIBLE);

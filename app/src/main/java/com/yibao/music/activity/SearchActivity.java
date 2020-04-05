@@ -47,7 +47,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * @author Stran
+ * @author lsp
  */
 public class SearchActivity extends BaseTansitionActivity implements OnMusicItemClickListener, OnFlowLayoutClickListener {
     @BindView(R.id.tv_search_cancel)

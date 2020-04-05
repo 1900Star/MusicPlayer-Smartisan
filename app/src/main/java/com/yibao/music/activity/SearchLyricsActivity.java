@@ -30,7 +30,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * @author luoshipeng
+ * @author lsp
  * createDate：2019/12/26 0026 14:54
  * className   SearchLyricsActivity
  * Des：TODO

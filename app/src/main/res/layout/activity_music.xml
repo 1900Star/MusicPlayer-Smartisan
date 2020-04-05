@@ -8,8 +8,8 @@
     android:orientation="vertical"
     tools:context="com.yibao.music.activity.MusicActivity">
 
-    <com.yibao.music.view.MainViewPager
-        android:id="@+id/music_viewpager"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/music_viewpager2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />

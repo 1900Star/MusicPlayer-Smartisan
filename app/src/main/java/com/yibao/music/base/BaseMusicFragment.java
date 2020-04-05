@@ -8,9 +8,11 @@ import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.SpUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -30,13 +32,11 @@ public abstract class BaseMusicFragment extends BaseFragment {
     private Disposable mMenuDisposable;
     private String mClassName;
     private int mAddToPlayListFlag;
-    protected List<MusicBean> mSongList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initDetailsFlag();
-        mSongList = mMusicBeanDao.queryBuilder().list();
         mAddToPlayListFlag = SpUtil.getAddToPlayListFdlag(mContext);
     }
 
@@ -89,7 +89,7 @@ public abstract class BaseMusicFragment extends BaseFragment {
 
     protected void randomPlayMusic() {
         int randomSize = mMusicBeanDao.queryBuilder().list().size();
-        int position = RandomUtil.getRandomPostion(randomSize > 0 ? randomSize : 0);
+        int position = RandomUtil.getRandomPostion(Math.max(randomSize, 0));
         if (getActivity() instanceof OnMusicItemClickListener) {
             ((OnMusicItemClickListener) getActivity()).startMusicService(position);
         }

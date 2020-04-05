@@ -1,6 +1,5 @@
 package com.yibao.music.fragment;
 
-import android.os.Bundle;
 import android.view.View;
 
 import com.yibao.music.R;
@@ -53,17 +52,16 @@ public class ArtistFragment extends BaseLazyFragment {
     }
 
     @Override
-    protected void initView(Bundle savedInstanceState) {
-        setContentView(R.layout.artisan_list_fragment);
+    protected void initView(View view) {
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.music_artisan));
         mMusicToolBar.setTvEditVisibility(isShowDetailsView);
+        initData();
+        initListener();
     }
 
     @Override
-    protected void onLazyLoadData() {
-        super.onLazyLoadData();
-        initData();
-        initListener();
+    protected int getContentViewId() {
+        return R.layout.artisan_list_fragment;
     }
 
     private void initListener() {
@@ -88,8 +86,9 @@ public class ArtistFragment extends BaseLazyFragment {
     }
 
 
-    private void initData() {
-        List<ArtistInfo> artistList = MusicListUtil.getArtistList(mSongList);
+    protected void initData() {
+        List<MusicBean> musicBeans = mMusicBeanDao.queryBuilder().list();
+        List<ArtistInfo> artistList = MusicListUtil.getArtistList(musicBeans);
         mAdapter = new ArtistAdapter(artistList);
         mMusicView.setAdapter(getActivity(), Constants.NUMBER_TWO, true, mAdapter);
 

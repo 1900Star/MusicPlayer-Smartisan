@@ -138,7 +138,11 @@ public class MusicListUtil {
      * @param sortFlag  1 按照歌曲下载时间 ，2 按照歌曲收藏时间 , 3 按照播放次数 ，4 按照评分 ，5 按添加到自定义列表的时间。
      */
     public static List<MusicBean> sortMusicList(List<MusicBean> musicList, int sortFlag) {
-        Collections.sort(musicList, (m1, m2) -> getSortResult(sortFlag, m1, m2));
+        try {
+            Collections.sort(musicList, (m1, m2) -> getSortResult(sortFlag, m1, m2));
+        } catch (Exception e) {
+            LogUtil.d(TAG, e.getMessage());
+        }
         return musicList;
     }
 
