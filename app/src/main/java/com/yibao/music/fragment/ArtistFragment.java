@@ -11,6 +11,7 @@ import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.view.music.DetailsView;
 import com.yibao.music.view.music.MusicToolBar;
@@ -55,7 +56,11 @@ public class ArtistFragment extends BaseLazyFragment {
     protected void initView(View view) {
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.music_artisan));
         mMusicToolBar.setTvEditVisibility(isShowDetailsView);
-        initData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         initListener();
     }
 

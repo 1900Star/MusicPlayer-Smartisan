@@ -1,17 +1,16 @@
 package com.yibao.music.fragment;
 
-import androidx.viewpager.widget.ViewPager;
-
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.yibao.music.R;
-import com.yibao.music.adapter.AlbumCategoryPagerAdapter;
+import com.yibao.music.adapter.AlbumViewPagerAdapter;
 import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.base.BaseLazyFragment;
-import com.yibao.music.base.listener.MusicPagerListener;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.MusicBean;
@@ -59,8 +58,8 @@ public class AlbumFragment extends BaseLazyFragment {
     @BindView(R.id.iv_album_category_paly)
     ImageView mIvAlbumCategoryPaly;
 
-    @BindView(R.id.view_pager_album)
-    ViewPager mViewPager;
+    @BindView(R.id.view_pager2_album)
+    ViewPager2 mViewPager;
     @BindView(R.id.details_view)
     DetailsView mDetailsView;
     @BindView(R.id.album_content_view)
@@ -74,19 +73,19 @@ public class AlbumFragment extends BaseLazyFragment {
 
     @Override
     protected void initView(View view) {
-        initData();
     }
 
 
     protected void initData() {
-        AlbumCategoryPagerAdapter pagerAdapter = new AlbumCategoryPagerAdapter(getChildFragmentManager());
+        AlbumViewPagerAdapter pagerAdapter = new AlbumViewPagerAdapter(mActivity);
         mViewPager.setAdapter(pagerAdapter);
-        mViewPager.addOnPageChangeListener(new MusicPagerListener() {
+        mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 switchCategory(position);
             }
         });
+
         initRxbusData();
         initListener();
     }

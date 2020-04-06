@@ -88,7 +88,7 @@
         layout="@layout/search_category"
         android:visibility="gone" />
 
-    <com.yibao.music.view.MainViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vp_search"
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -88,7 +88,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bean -> {
-                    updataLyricsView(bean.isDoneOK(), bean.getDownMsg());
+                    updateLyricsView(bean.isDoneOK(), bean.getDownMsg());
                     if (!bean.isDoneOK()) {
                         ToastUtil.show(this, "暂无歌词");
                     }
@@ -109,7 +109,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param lyricsOK 歌词下载是否成功 ，成功就重新设置歌词View
      * @param downMsg  歌词下载的信息。
      */
-    protected void updataLyricsView(boolean lyricsOK, String downMsg) {
+    protected void updateLyricsView(boolean lyricsOK, String downMsg) {
     }
 
 

@@ -3,9 +3,6 @@ package com.yibao.music.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-
 import android.text.Editable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -14,11 +11,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
-import com.yibao.music.adapter.SearchCategoryPagerAdapter;
+import com.yibao.music.adapter.SearchPagerAdapter;
 import com.yibao.music.base.BaseTansitionActivity;
-import com.yibao.music.base.listener.MusicPagerListener;
 import com.yibao.music.base.listener.OnFlowLayoutClickListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.TextChangedListener;
@@ -32,7 +31,6 @@ import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SoftKeybordUtil;
 import com.yibao.music.util.TitleArtistUtil;
-import com.yibao.music.view.MainViewPager;
 import com.yibao.music.view.music.SmartisanControlBar;
 
 import java.util.List;
@@ -58,7 +56,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     EditText mEditSearch;
 
     @BindView(R.id.vp_search)
-    MainViewPager mViewPager;
+    ViewPager2 mViewPager;
 
     @BindView(R.id.search_category_root)
     LinearLayout mSearchCategoryRoot;
@@ -92,7 +90,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     }
 
     @Override
-    protected void updataLyricsView(boolean lyricsOK, String downMsg) {
+    protected void updateLyricsView(boolean lyricsOK, String downMsg) {
         if (lyricsOK) {
             updateLyric();
         }
@@ -102,19 +100,19 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         int pageType = getIntent().getIntExtra("pageType", 0);
         audioBinder = MusicActivity.getAudioBinder();
         mSmartisanControlBar.setPbColorAndPreBtnGone();
-        SearchCategoryPagerAdapter pagerAdapter;
+        SearchPagerAdapter pagerAdapter;
         if (pageType > Constants.NUMBER_ZERO) {
             mMusicBean = getIntent().getParcelableExtra("musicBean");
             mEditSearch.setText(mMusicBean.getArtist());
             mEditSearch.setSelection(mMusicBean.getArtist().length());
             mSearchCategoryRoot.setVisibility(View.VISIBLE);
             // ViewPager
-            pagerAdapter = new SearchCategoryPagerAdapter(getSupportFragmentManager(), mMusicBean.getArtist());
+            pagerAdapter = new SearchPagerAdapter(this, mMusicBean.getArtist());
             switchListCategory(3);
             setMusicInfo(mMusicBean);
             mIvEditClear.setVisibility(View.VISIBLE);
         } else {
-            pagerAdapter = new SearchCategoryPagerAdapter(getSupportFragmentManager(), null);
+            pagerAdapter = new SearchPagerAdapter(this, null);
             // 主动弹出键盘
             mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             mDisposableSoftKeyboard = Observable.timer(50, TimeUnit.MILLISECONDS)
@@ -122,7 +120,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         }
 
         mViewPager.setAdapter(pagerAdapter);
-        mViewPager.addOnPageChangeListener(new MusicPagerListener() {
+        mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 switchListCategory(position);

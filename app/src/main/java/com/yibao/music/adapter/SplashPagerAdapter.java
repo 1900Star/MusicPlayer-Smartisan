@@ -41,16 +41,16 @@ public class SplashPagerAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        ZoomImageView creatZoomView = ImageUitl.creatZoomView(container.getContext());
+        ZoomImageView createZoomView = ImageUitl.createZoomView(container.getContext());
         String url = RandomUtil.getRandomUrl(mPicUrlFlag);
-        ImageUitl.loadPlaceholder(container.getContext(), url, creatZoomView);
-        creatZoomView.setOnClickListener(v -> {
+        ImageUitl.loadPlaceholder(container.getContext(), url, createZoomView);
+        createZoomView.setOnClickListener(v -> {
             if (mZoomViewClickListener != null) {
                 mZoomViewClickListener.doSomething();
             }
         });
-        container.addView(creatZoomView);
-        return creatZoomView;
+        container.addView(createZoomView);
+        return createZoomView;
     }
 
     @Override

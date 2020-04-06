@@ -1,9 +1,11 @@
 package com.yibao.music.fragment;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yibao.music.R;
-import com.yibao.music.adapter.SongCategoryPagerAdapter;
+import com.yibao.music.adapter.SongViewPagerAdapter;
 import com.yibao.music.base.BaseMusicFragment;
-import com.yibao.music.base.listener.MusicPagerListener;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.SpUtil;
@@ -49,8 +50,8 @@ public class SongFragment extends BaseMusicFragment {
     TextView mMusicCategoryFrequency;
     @BindView(R.id.tv_music_category_addtime)
     TextView mMusicCategoryAddtime;
-    @BindView(R.id.vp_song_fag)
-    ViewPager mViewPager;
+    @BindView(R.id.view_pager2_song)
+    ViewPager2 mViewPager2;
     private int curentIndex = 0;
     private boolean isSelecteStatus = false;
 
@@ -91,14 +92,17 @@ public class SongFragment extends BaseMusicFragment {
 
     private void initData() {
         switchListCategory(0);
-        SongCategoryPagerAdapter adapter = new SongCategoryPagerAdapter(getChildFragmentManager());
-        mViewPager.setAdapter(adapter);
-        mViewPager.addOnPageChangeListener(new MusicPagerListener() {
+        SongViewPagerAdapter pagerAdapter = new SongViewPagerAdapter(mActivity);
+        mViewPager2.setOffscreenPageLimit(4);
+        mViewPager2.setAdapter(pagerAdapter);
+        mViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
+                super.onPageSelected(position);
                 switchListCategory(position);
             }
         });
+
     }
 
     private void initListener() {
@@ -151,7 +155,8 @@ public class SongFragment extends BaseMusicFragment {
 
     private void switchListCategory(int flag) {
         curentIndex = flag;
-        mViewPager.setCurrentItem(flag, false);
+        mViewPager2.setCurrentItem(flag, false);
+
         switch (flag) {
             case 0:
                 setAllCategoryNotNormal(Constants.NUMBER_ONE);

@@ -59,7 +59,7 @@ import okhttp3.Response;
 public class ImageUitl {
     private static final String TAG = "====" + ImageUitl.class.getSimpleName() + "    ";
 
-    public static ZoomImageView creatZoomView(Context context) {
+    public static ZoomImageView createZoomView(Context context) {
         ZoomImageView view = new ZoomImageView(context);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(1080, 1920);
         view.setScaleType(ImageView.ScaleType.MATRIX);

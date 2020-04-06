@@ -110,7 +110,7 @@ public class MusicActivity
         MainViewPagerAdapter pagerAdapter = new MainViewPagerAdapter(this);
         mViewPager2.setAdapter(pagerAdapter);
         mViewPager2.setCurrentItem(Constants.NUMBER_TWO, false);
-        mViewPager2.setOffscreenPageLimit(5);
+//        mViewPager2.setOffscreenPageLimit(5);
         mViewPager2.setUserInputEnabled(false);
     }
 

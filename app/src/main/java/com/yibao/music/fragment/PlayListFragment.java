@@ -84,9 +84,7 @@ public class PlayListFragment extends BaseLazyFragment {
         mMusicToolBar.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.play_list));
         mAppBarLayout.setVisibility(isFromPlayListActivity && SpUtil.getAddToPlayListFdlag(mActivity) == Constants.NUMBER_ONE ? View.GONE : View.VISIBLE);
         mPlayListDao = MusicApplication.getIntstance().getPlayListDao();
-        if (isFromPlayListActivity) {
-            initData();
-        }
+
 
     }
 
@@ -95,13 +93,6 @@ public class PlayListFragment extends BaseLazyFragment {
         return isShowDetailsView || !isItemSelectStatus;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mAdapter != null) {
-            mAdapter.setNewData(getPlayList());
-        }
-    }
 
     @Override
     protected int getContentViewId() {

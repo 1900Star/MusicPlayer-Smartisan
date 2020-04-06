@@ -43,9 +43,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * @author: Luoshipeng
+ * @author: Lsp
  * @ Name:    SearchFragment
- * @ Email:   strangermy98@gmail.com
  * @ GitHub:  https://github.com/1900Star
  * @ Time:    2019/3/16/ 16:20
  * @ Des:     TODO
@@ -195,7 +194,7 @@ public class SearchFragment extends BaseFragment {
         }
     }
 
-    public void searchSong(SearchCategoryBean categoryBean) {
+    private void searchSong(SearchCategoryBean categoryBean) {
         int categoryFlag = categoryBean.getCategoryFlag();
         String condition = categoryBean.getSearchCondition();
         if (condition != null) {
@@ -239,7 +238,7 @@ public class SearchFragment extends BaseFragment {
         searchMusic(condition);
     }
 
-    protected void moreMenu(MoreMenuStatus moreMenuStatus) {
+    private void moreMenu(MoreMenuStatus moreMenuStatus) {
         MusicBean musicBean = moreMenuStatus.getMusicBean();
         switch (moreMenuStatus.getPosition()) {
             case Constants.NUMBER_ZERO:
