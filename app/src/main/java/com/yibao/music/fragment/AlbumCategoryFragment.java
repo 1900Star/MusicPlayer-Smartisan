@@ -57,6 +57,7 @@ public class AlbumCategoryFragment extends BaseLazyFragment {
         initData();
     }
 
+    @Override
     protected void initData() {
         mAlbumAdapter = new AlbumAdapter(mActivity, mAlbumList, mPosition);
         mMusicView.setAdapter(mActivity, mPosition == 0 ? 3 : 4, mPosition == 0, mAlbumAdapter);
@@ -78,6 +79,7 @@ public class AlbumCategoryFragment extends BaseLazyFragment {
         return R.layout.category_fragment;
     }
 
+    @Override
     protected void initRxBusData() {
         disposeToolbar();
         if (mEditDisposable == null) {
