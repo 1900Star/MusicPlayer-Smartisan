@@ -91,6 +91,7 @@ public class ArtistFragment extends BaseLazyFragment {
     }
 
 
+    @Override
     protected void initData() {
         List<MusicBean> musicBeans = mMusicBeanDao.queryBuilder().list();
         List<ArtistInfo> artistList = MusicListUtil.getArtistList(musicBeans);

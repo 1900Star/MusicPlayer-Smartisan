@@ -99,6 +99,7 @@ public class PlayListFragment extends BaseLazyFragment {
         return R.layout.play_list_fragment;
     }
 
+    @Override
     protected void initData() {
         List<PlayListBean> playList = getPlayList();
         setNotAllSelected(playList);
@@ -118,6 +119,7 @@ public class PlayListFragment extends BaseLazyFragment {
     /**
      * 新增和删除列表
      */
+    @Override
     protected void initRxBusData() {
         if (mAddDeleteListDisposable == null) {
             mAddDeleteListDisposable = mBus.toObserverable(AddAndDeleteListBean.class)

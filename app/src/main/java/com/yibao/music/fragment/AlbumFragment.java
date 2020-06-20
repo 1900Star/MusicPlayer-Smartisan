@@ -76,6 +76,7 @@ public class AlbumFragment extends BaseLazyFragment {
     }
 
 
+    @Override
     protected void initData() {
         AlbumViewPagerAdapter pagerAdapter = new AlbumViewPagerAdapter(mActivity);
         mViewPager.setAdapter(pagerAdapter);
@@ -107,6 +108,7 @@ public class AlbumFragment extends BaseLazyFragment {
         return isShowDetailsView;
     }
 
+    @Override
     protected void initRxBusData() {
         disposeToolbar();
         if (mEditDisposable == null) {

@@ -80,7 +80,7 @@ public class SplashActivity
                         if (!ServiceUtil.isServiceRunning(getApplicationContext(), Constants.LOAD_SERVICE_NAME)) {
                             startService(new Intent(getApplicationContext(), LoadMusicDataService.class));
                         }
-                        updataLoadProgress();
+                        updateLoadProgress();
                     }
                 }));
 
@@ -108,13 +108,13 @@ public class SplashActivity
             Intent intent = new Intent(this, LoadMusicDataService.class);
             intent.putExtra(Constants.SCANNER_MEDIA, Constants.SCANNER_MEDIA);
             startService(intent);
-            updataLoadProgress();
+            updateLoadProgress();
         }
 
 
     }
 
-    private void updataLoadProgress() {
+    private void updateLoadProgress() {
         mTvMusicCount.setVisibility(View.VISIBLE);
         mMusicLoadProgressBar.setVisibility(View.VISIBLE);
         mCompositeDisposable.add(mBus.toObserverable(MusicCountBean.class)

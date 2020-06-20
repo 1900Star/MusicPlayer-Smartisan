@@ -85,6 +85,7 @@ public class AboutFragment extends BaseLazyFragment {
         return R.layout.about_fragment;
     }
 
+    @Override
     protected void initData() {
         File file = new File(Constants.MUSIC_LYRICS_ROOT);
         if (file.exists()) {

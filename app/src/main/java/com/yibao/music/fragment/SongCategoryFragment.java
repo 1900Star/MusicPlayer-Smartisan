@@ -98,6 +98,7 @@ public class SongCategoryFragment extends BaseLazyFragment {
         return isItemSelectStatus;
     }
 
+    @Override
     protected void initRxBusData() {
         disposeToolbar();
         if (mEditDisposable == null) {
@@ -132,6 +133,7 @@ public class SongCategoryFragment extends BaseLazyFragment {
         }
     }
 
+    @Override
     protected void initData() {
         List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().list();
         switch (mPosition) {
