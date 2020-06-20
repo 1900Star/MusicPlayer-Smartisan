@@ -39,9 +39,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginStart="3dp"
+                android:layout_marginEnd="3dp"
                 android:ellipsize="marquee"
                 android:marqueeRepeatLimit="marquee_forever"
-                android:maxLength="22"
+                android:maxLength="24"
                 android:singleLine="true"
                 android:textColor="@color/music_activity_title_selector"
                 android:textSize="@dimen/music_eighteen"
@@ -200,8 +202,8 @@
                 android:id="@+id/iv_select_lyric"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginTop="4dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="4dp"
                 android:contentDescription="@null"
                 android:src="@drawable/more_select_icon_lyric" />
 

@@ -19,6 +19,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.ImageUitl;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
 
 import java.util.List;
@@ -100,7 +101,7 @@ public class SongAdapter
                 songListViewHolder.mTvStickyView.setVisibility(View.GONE);
             }
 
-            songListViewHolder.mIvSongItemMenu.setOnClickListener(view -> openItemMenu(musicBean, position));
+            songListViewHolder.mIvSongItemMenu.setOnClickListener(view -> SongAdapter.this.openItemMenu(musicBean, position));
             songListViewHolder.mCheckBox.setOnClickListener(v -> checkBoxClick(musicBean, position, songListViewHolder.mCheckBox.isChecked()));
             //  Item点击监听
             songListViewHolder.mLlMusicItem.setOnClickListener(view -> {

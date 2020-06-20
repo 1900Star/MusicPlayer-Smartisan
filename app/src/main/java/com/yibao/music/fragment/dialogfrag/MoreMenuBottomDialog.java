@@ -22,6 +22,7 @@ import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MenuListUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
@@ -57,7 +58,6 @@ public class MoreMenuBottomDialog {
         BottomSheetDialog dialog = new BottomSheetDialog(context);
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.bottom_more_menu_dialog, null);
-
         init(dialog, view);
         initData();
         initListener(context, dialog);

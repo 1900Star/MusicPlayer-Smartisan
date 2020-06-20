@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import com.yibao.music.R;
 import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.base.BaseLazyFragment;
+import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
@@ -64,8 +65,13 @@ public class SongCategoryFragment extends BaseLazyFragment {
 
 
     private void initListener() {
-        mSongAdapter.setOnItemMenuListener((int position, MusicBean musicBean) ->
-                MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mActivity));
+        mSongAdapter.setOnItemMenuListener(new BaseRvAdapter.OnOpenItemMoreMenuListener() {
+            @Override
+            public void openClickMoreMenu(int position, MusicBean musicBean) {
+                LogUtil.d(TAG, "more menu click");
+                MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(SongCategoryFragment.this.getActivity());
+            }
+        });
         mSongAdapter.setItemListener((bean, position, isEditStatus) -> {
             if (isEditStatus) {
                 mSparseBooleanArray.put(position, true);

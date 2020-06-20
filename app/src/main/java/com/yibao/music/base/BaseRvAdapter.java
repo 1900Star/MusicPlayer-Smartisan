@@ -38,7 +38,7 @@ public abstract class BaseRvAdapter<T>
     private OnItemListener<T> mListener;
     private ItemLongClickListener mLongClickListener;
     private ItemEditClickListener mEditClickListener;
-    private OnOpenItemMoerMenuListener mMenuListener;
+    private OnOpenItemMoreMenuListener mMenuListener;
     protected static final String TAG = "   ====    " + BaseRvAdapter.class.getSimpleName() + "    ";
 
     public BaseRvAdapter(List<T> list) {
@@ -329,23 +329,23 @@ public abstract class BaseRvAdapter<T>
     /**
      * Item更多菜单
      */
-    public interface OnOpenItemMoerMenuListener {
+    public interface OnOpenItemMoreMenuListener {
         /**
          * 更多菜单
          *
          * @param position  p
          * @param musicBean m
          */
-        void openClickMoerMenu(int position, MusicBean musicBean);
+        void openClickMoreMenu(int position, MusicBean musicBean);
     }
 
-    public void setOnItemMenuListener(OnOpenItemMoerMenuListener listener) {
+    public void setOnItemMenuListener(OnOpenItemMoreMenuListener listener) {
         mMenuListener = listener;
     }
 
     protected void openItemMenu(MusicBean musicBean, int position) {
         if (mMenuListener != null) {
-            mMenuListener.openClickMoerMenu(position, musicBean);
+            mMenuListener.openClickMoreMenu(position, musicBean);
         }
     }
 
