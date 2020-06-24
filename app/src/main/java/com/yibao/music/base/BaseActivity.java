@@ -51,7 +51,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected MusicBeanDao mMusicDao;
     protected SearchHistoryBeanDao mSearchDao;
     protected CompositeDisposable mCompositeDisposable;
-    protected Disposable mDisposableProgresse;
+    protected Disposable mDisposableProgress;
     protected Disposable mQqLyricsDisposable;
     protected Unbinder mBind;
     protected Disposable mRxViewDisposable;
@@ -121,12 +121,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void upDataPlayProgress() {
-        if (mDisposableProgresse == null) {
-            mDisposableProgresse = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
+        if (mDisposableProgress == null) {
+            mDisposableProgress = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(aLong -> BaseActivity.this.updateCurrentPlayProgress());
-            mCompositeDisposable.add(mDisposableProgresse);
+            mCompositeDisposable.add(mDisposableProgress);
         }
 
     }
@@ -205,9 +205,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void clearDisposableProgresse() {
-        if (mDisposableProgresse != null) {
-            mDisposableProgresse.dispose();
-            mDisposableProgresse = null;
+        if (mDisposableProgress != null) {
+            mDisposableProgress.dispose();
+            mDisposableProgress = null;
         }
     }
 
