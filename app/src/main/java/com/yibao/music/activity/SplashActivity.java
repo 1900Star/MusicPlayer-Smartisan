@@ -1,5 +1,6 @@
 package com.yibao.music.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -62,26 +63,25 @@ public class SplashActivity
         mVpSplash.setAdapter(splashPagerAdapter);
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     protected void onResume() {
         super.onResume();
+        String[] permissionArr = {Permission.WRITE_EXTERNAL_STORAGE, Permission.READ_EXTERNAL_STORAGE};
         AndPermission.with(this).runtime()
-                .permission(Permission.Group.STORAGE)
+                .permission(permissionArr)
                 .onGranted(permissions -> loadMusicData())
                 .onDenied(permissions -> LogUtil.d(TAG, "没有读取和写入的权限!"))
                 .start();
         mCompositeDisposable.add(mBus.toObserverable(String.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        // 首次安装，开启服务加载本地音乐，创建本地数据库。
-                        if (!ServiceUtil.isServiceRunning(getApplicationContext(), Constants.LOAD_SERVICE_NAME)) {
-                            startService(new Intent(getApplicationContext(), LoadMusicDataService.class));
-                        }
-                        updateLoadProgress();
+                .subscribe(s -> {
+                    // 首次安装，开启服务加载本地音乐，创建本地数据库。
+                    if (!ServiceUtil.isServiceRunning(getApplicationContext(), Constants.LOAD_SERVICE_NAME)) {
+                        startService(new Intent(getApplicationContext(), LoadMusicDataService.class));
                     }
+                    updateLoadProgress();
                 }));
 
     }

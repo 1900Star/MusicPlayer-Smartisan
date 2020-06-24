@@ -8,12 +8,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.yibao.music.fragment.AboutFragment;
 import com.yibao.music.fragment.AlbumFragment;
 import com.yibao.music.fragment.ArtistFragment;
-import com.yibao.music.fragment.LyricsFragment;
 import com.yibao.music.fragment.PlayListFragment;
 import com.yibao.music.fragment.SongFragment;
-import com.yibao.music.model.qq.SearchLyricsBean;
-
-import java.util.List;
 
 /**
  * 作者：Stran on 2017/3/23 03:31
