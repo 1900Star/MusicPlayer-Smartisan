@@ -109,7 +109,7 @@
 -keep class okio.**{*;}
 
 
-#greendao3.2.2
+#greendao3.3.0
 -keepclassmembers class * extends org.greenrobot.greendao.AbstractDao {
 public static java.lang.String TABLENAME;
 }
