@@ -56,13 +56,13 @@ public class DetailsView
         extends RelativeLayout implements View.OnClickListener {
     private static final String TAG = "====" + DetailsView.class.getSimpleName() + "    ";
     private RecyclerView mRecyclerView;
-    private ImageView mIvArtistAlbummDetails;
-    private TextView mTvArtistAlbummDetailsTitle;
-    private TextView mTvArtistAlbummDetailsArtist;
-    private TextView mTvArtistAlbummDetailsDate;
+    private ImageView mIvArtistAlbumDetails;
+    private TextView mTvArtistAlbumDetailsTitle;
+    private TextView mTvArtistAlbumDetailsArtist;
+    private TextView mTvArtistAlbumDetailsDate;
     private ImageView mIvDetailsAddToList;
     private ImageView mIvDetailsAddToPlayList;
-    private LinearLayout mLlAlbumDetailsPlayall;
+    private LinearLayout mLlAlbumDetailsPlayaLl;
     private LinearLayout mLlAlbumDetailsRandomPlay;
     private int mDataFlag;
     private int mListSize;
@@ -202,21 +202,21 @@ public class DetailsView
 
 
     private void setMusicInfo(int dataType, String albumName, String artist, long albumId, int issueYear) {
-        mTvArtistAlbummDetailsTitle.setText(albumName);
-        mTvArtistAlbummDetailsArtist.setText(artist);
-        ImageUitl.loadPic((Activity) getContext(), StringUtil.getAlbum(dataType, albumId, artist), mIvArtistAlbummDetails, R.drawable.noalbumcover_220, isSuccess -> {
+        mTvArtistAlbumDetailsTitle.setText(albumName);
+        mTvArtistAlbumDetailsArtist.setText(artist);
+        ImageUitl.loadPic((Activity) getContext(), StringUtil.getAlbum(dataType, albumId, artist), mIvArtistAlbumDetails, R.drawable.noalbumcover_220, isSuccess -> {
             if (!isSuccess) {
                 if (dataType == 1) {
                     QqMusicRemote.getArtistImg(getContext(), artist, url -> {
                         if (!url.isEmpty()) {
-                            Glide.with(getContext()).load(url).placeholder(R.drawable.noalbumcover_220).error(R.drawable.noalbumcover_220).into(mIvArtistAlbummDetails);
+                            Glide.with(getContext()).load(url).placeholder(R.drawable.noalbumcover_220).error(R.drawable.noalbumcover_220).into(mIvArtistAlbumDetails);
                         }
                     });
 
                 } else {
                     QqMusicRemote.getAlbumImg(getContext(), albumName, url -> {
                         if (!url.isEmpty()) {
-                            Glide.with(DetailsView.this.getContext()).load(url).placeholder(R.drawable.noalbumcover_220).error(R.drawable.noalbumcover_220).into(mIvArtistAlbummDetails);
+                            Glide.with(DetailsView.this.getContext()).load(url).placeholder(R.drawable.noalbumcover_220).error(R.drawable.noalbumcover_220).into(mIvArtistAlbumDetails);
                         }
                     });
 
@@ -228,7 +228,7 @@ public class DetailsView
 
         if (issueYear != Constants.NUMBER_ZERO) {
             String year = String.valueOf(issueYear);
-            mTvArtistAlbummDetailsDate.setText(year);
+            mTvArtistAlbumDetailsDate.setText(year);
         }
 
     }
@@ -236,11 +236,11 @@ public class DetailsView
     private void initListener() {
         mIvDetailsAddToList.setOnClickListener(this);
         mIvDetailsAddToPlayList.setOnClickListener(this);
-        mLlAlbumDetailsPlayall.setOnClickListener(this);
+        mLlAlbumDetailsPlayaLl.setOnClickListener(this);
         mLlAlbumDetailsRandomPlay.setOnClickListener(this);
-        mIvArtistAlbummDetails.setOnClickListener(this);
-        mTvArtistAlbummDetailsTitle.setOnClickListener(this);
-        mIvArtistAlbummDetails.setOnLongClickListener(v -> {
+        mIvArtistAlbumDetails.setOnClickListener(this);
+        mTvArtistAlbumDetailsTitle.setOnClickListener(this);
+        mIvArtistAlbumDetails.setOnLongClickListener(v -> {
             RelaxDialogFragment.newInstance().show(mFragmentManager, "girlsDialog");
             return true;
         });
@@ -253,13 +253,13 @@ public class DetailsView
         mMusicScrollView = findViewById(R.id.detail_root);
         mSuspensionLl = findViewById(R.id.ll_play);
         mRecyclerView = findViewById(R.id.rv_artist_album_details);
-        mIvArtistAlbummDetails = findViewById(R.id.iv_artist_albumm_details);
-        mTvArtistAlbummDetailsTitle = findViewById(R.id.tv_artist_albumm_details_title);
-        mTvArtistAlbummDetailsArtist = findViewById(R.id.tv_artist_albumm_details_artist);
-        mTvArtistAlbummDetailsDate = findViewById(R.id.tv_artist_albumm_details_date);
+        mIvArtistAlbumDetails = findViewById(R.id.iv_artist_albumm_details);
+        mTvArtistAlbumDetailsTitle = findViewById(R.id.tv_artist_albumm_details_title);
+        mTvArtistAlbumDetailsArtist = findViewById(R.id.tv_artist_albumm_details_artist);
+        mTvArtistAlbumDetailsDate = findViewById(R.id.tv_artist_albumm_details_date);
         mIvDetailsAddToList = findViewById(R.id.iv_details_add_to_list);
         mIvDetailsAddToPlayList = findViewById(R.id.iv_details_add_to_play_list);
-        mLlAlbumDetailsPlayall = findViewById(R.id.ll_album_details_playall);
+        mLlAlbumDetailsPlayaLl = findViewById(R.id.ll_album_details_playall);
         mLlAlbumDetailsRandomPlay = findViewById(R.id.ll_album_details_random_play);
         mRecyclerView.setNestedScrollingEnabled(false);
         DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);

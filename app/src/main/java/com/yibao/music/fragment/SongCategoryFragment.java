@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import com.yibao.music.R;
 import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.base.BaseLazyFragment;
-import com.yibao.music.base.BaseRvAdapter;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
@@ -48,43 +47,68 @@ public class SongCategoryFragment extends BaseLazyFragment {
     private List<MusicBean> mSelectList = new ArrayList<>();
     private Disposable mDeleteSongDisposable;
 
+
+
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initView(View view) {
         Bundle arguments = getArguments();
         if (arguments != null) {
             mPosition = arguments.getInt(MUSIC_POSITION);
         }
-    }
-
-    @Override
-    protected void initView(View view) {
-        initData();
+        List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().list();
+        switch (mPosition) {
+            case 0:
+                List<MusicBean> abcList = MusicListUtil.sortMusicAbc(musicBeanList);
+                setNotAllSelected(abcList);
+                isShowSlidBar = true;
+                mSongAdapter = new SongAdapter(mActivity, abcList, mSparseBooleanArray, Constants.NUMBER_ZERO, Constants.NUMBER_ZERO);
+                break;
+            case 1:
+                List<MusicBean> scoreList = MusicListUtil.sortMusicList(musicBeanList, Constants.SORT_SCORE);
+                setNotAllSelected(scoreList);
+                mSongAdapter = new SongAdapter(mActivity, scoreList, mSparseBooleanArray, Constants.NUMBER_ONE, Constants.NUMBER_ONE);
+                break;
+            case 2:
+                List<MusicBean> playFrequencyList = MusicListUtil.sortMusicList(musicBeanList, Constants.SORT_FREQUENCY);
+                setNotAllSelected(playFrequencyList);
+                mSongAdapter = new SongAdapter(mActivity, playFrequencyList, mSparseBooleanArray, Constants.NUMBER_ONE, Constants.NUMBER_TWO);
+                break;
+            case 3:
+                List<MusicBean> addTimeList = MusicListUtil.sortMusicList(musicBeanList, Constants.SORT_DOWN_TIME);
+                setNotAllSelected(addTimeList);
+                mSongAdapter = new SongAdapter(mActivity, addTimeList, mSparseBooleanArray, Constants.NUMBER_ONE, Constants.NUMBER_ZERO);
+                break;
+            default:
+                break;
+        }
+        mMusicView.setAdapter(mActivity, Constants.NUMBER_ONE, isShowSlidBar, mSongAdapter);
         initListener();
     }
 
+    @Override
+    protected void initData() {
+
+    }
 
     private void initListener() {
-        mSongAdapter.setOnItemMenuListener(new BaseRvAdapter.OnOpenItemMoreMenuListener() {
-            @Override
-            public void openClickMoreMenu(int position, MusicBean musicBean) {
-                LogUtil.d(TAG, "more menu click");
-                MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(SongCategoryFragment.this.getActivity());
-            }
-        });
-        mSongAdapter.setItemListener((bean, position, isEditStatus) -> {
-            if (isEditStatus) {
-                mSparseBooleanArray.put(position, true);
+        if (mSongAdapter != null) {
+            mSongAdapter.setOnItemMenuListener((position, musicBean) ->
+                    MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(SongCategoryFragment.this.getActivity()));
+
+            mSongAdapter.setItemListener((bean, position, isEditStatus) -> {
+                if (isEditStatus) {
+                    mSparseBooleanArray.put(position, true);
+                    updateSelected(bean);
+                    mSongAdapter.notifyDataSetChanged();
+                }
+            });
+            mSongAdapter.setCheckBoxClickListener((bean, isChecked, position) -> {
+                LogUtil.d(TAG, bean.getTitle() + " == " + isChecked);
+                mSparseBooleanArray.put(position, isChecked);
                 updateSelected(bean);
                 mSongAdapter.notifyDataSetChanged();
-            }
-        });
-        mSongAdapter.setCheckBoxClickListener((bean, isChecked, position) -> {
-            LogUtil.d(TAG, bean.getTitle() + " == " + isChecked);
-            mSparseBooleanArray.put(position, isChecked);
-            updateSelected(bean);
-            mSongAdapter.notifyDataSetChanged();
-        });
+            });
+        }
     }
 
 
@@ -133,36 +157,6 @@ public class SongCategoryFragment extends BaseLazyFragment {
         }
     }
 
-    @Override
-    protected void initData() {
-        List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().list();
-        switch (mPosition) {
-            case 0:
-                List<MusicBean> abcList = MusicListUtil.sortMusicAbc(musicBeanList);
-                setNotAllSelected(abcList);
-                isShowSlidBar = true;
-                mSongAdapter = new SongAdapter(mActivity, abcList, mSparseBooleanArray, Constants.NUMBER_ZERO, Constants.NUMBER_ZERO);
-                break;
-            case 1:
-                List<MusicBean> scoreList = MusicListUtil.sortMusicList(musicBeanList, Constants.SORT_SCORE);
-                setNotAllSelected(scoreList);
-                mSongAdapter = new SongAdapter(mActivity, scoreList, mSparseBooleanArray, Constants.NUMBER_ONE, Constants.NUMBER_ONE);
-                break;
-            case 2:
-                List<MusicBean> playFrequencyList = MusicListUtil.sortMusicList(musicBeanList, Constants.SORT_FREQUENCY);
-                setNotAllSelected(playFrequencyList);
-                mSongAdapter = new SongAdapter(mActivity, playFrequencyList, mSparseBooleanArray, Constants.NUMBER_ONE, Constants.NUMBER_TWO);
-                break;
-            case 3:
-                List<MusicBean> addTimeList = MusicListUtil.sortMusicList(musicBeanList, Constants.SORT_DOWN_TIME);
-                setNotAllSelected(addTimeList);
-                mSongAdapter = new SongAdapter(mActivity, addTimeList, mSparseBooleanArray, Constants.NUMBER_ONE, Constants.NUMBER_ZERO);
-                break;
-            default:
-                break;
-        }
-        mMusicView.setAdapter(mActivity, Constants.NUMBER_ONE, isShowSlidBar, mSongAdapter);
-    }
 
     private void setNotAllSelected(List<MusicBean> listBeanList) {
         for (int i = 0; i < listBeanList.size(); i++) {

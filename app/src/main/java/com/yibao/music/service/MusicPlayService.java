@@ -122,7 +122,7 @@ public class MusicPlayService
             mAudioBinder.play();
         } else if (enterPosition != -1) {
             //通知播放界面更新
-            sendCureentMusicInfo();
+            sendCurrentMusicInfo();
         }
         if (mMusicDataList != null && mMusicDataList.size() > 0) {
             MusicBean musicBean = mMusicDataList.get(position);
@@ -136,7 +136,7 @@ public class MusicPlayService
     /**
      * 通知播放界面更新
      */
-    private void sendCureentMusicInfo() {
+    private void sendCurrentMusicInfo() {
         if (mMusicDataList != null && position < mMusicDataList.size()) {
             MusicBean musicBean = mMusicDataList.get(position);
             musicBean.setCureetPosition(position);
@@ -216,7 +216,7 @@ public class MusicPlayService
             mediaPlayer.start();
 
             // 通知播放界面更新
-            sendCureentMusicInfo();
+            sendCurrentMusicInfo();
         }
 
 
