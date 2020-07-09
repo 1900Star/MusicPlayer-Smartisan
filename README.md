@@ -9,11 +9,11 @@
 ![image](https://upload-images.jianshu.io/upload_images/5028465-31f3ca33021b7d6a.jpg?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
 ![image](https://upload-images.jianshu.io/upload_images/5028465-db35a2cd0e326d26.jpg?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
 ![image](https://github.com/1900Star/SmartisanMusicPlayer/blob/master/screenshot/b.jpg)
-![image](https://github.com/1900Star/ShareFile/blob/master/pic/loadmusic.gif)
-![image](https://github.com/1900Star/ShareFile/blob/master/pic/all.gif)
-![image](https://github.com/1900Star/ShareFile/blob/master/pic/notifycation.gif)
-![image](https://github.com/1900Star/ShareFile/blob/master/pic/detailsBack.gif)
-![image](https://github.com/1900Star/SmartisanMusicPlayer/blob/master/screenshot/artisanMusic.gif)
+![image](https://upload-images.jianshu.io/upload_images/5028465-39323fce607f3763.gif)
+![image](https://upload-images.jianshu.io/upload_images/5028465-d4b33a158db41897.gif)
+![image](https://upload-images.jianshu.io/upload_images/5028465-51e5443fa9e0ecbe.gif?imageMogr2/auto-orient/strip|imageView2/2/w/241/format/webp)
+![image](https://upload-images.jianshu.io/upload_images/5028465-f628dd6c36f59364.gif?imageMogr2/auto-orient/strip|imageView2/2/w/241/format/webp)
+![image](https://upload-images.jianshu.io/upload_images/5028465-b41f34b3131c54cd.gif?imageMogr2/auto-orient/strip|imageView2/2/w/282/format/webp)
 
 
 ## Features
