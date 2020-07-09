@@ -11,6 +11,7 @@
 ![image](https://github.com/1900Star/SmartisanMusicPlayer/blob/master/screenshot/b.jpg)
 ![image](https://upload-images.jianshu.io/upload_images/5028465-39323fce607f3763.gif)
 ![image](https://upload-images.jianshu.io/upload_images/5028465-d4b33a158db41897.gif)
+
 ![image](https://upload-images.jianshu.io/upload_images/5028465-51e5443fa9e0ecbe.gif?imageMogr2/auto-orient/strip|imageView2/2/w/241/format/webp)
 ![image](https://upload-images.jianshu.io/upload_images/5028465-f628dd6c36f59364.gif?imageMogr2/auto-orient/strip|imageView2/2/w/241/format/webp)
 ![image](https://upload-images.jianshu.io/upload_images/5028465-b41f34b3131c54cd.gif?imageMogr2/auto-orient/strip|imageView2/2/w/282/format/webp)
