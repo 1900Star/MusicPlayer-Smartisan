@@ -34,8 +34,6 @@
 
 # Other
 
-### The project is not finished yet, and the code will be updated whenever there is free time.
-
-#### Due to my limited level, mistakes are inevitable in the project. If you have any questions, please submit issues or contact me at www.strangermy98@gmail.com
+#### If you have any questions, please submit issues or contact me at www.strangermy98@gmail.com
 
 
