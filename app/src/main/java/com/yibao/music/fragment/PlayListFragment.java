@@ -1,5 +1,6 @@
 package com.yibao.music.fragment;
 
+import android.database.Cursor;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -21,15 +22,19 @@ import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
+import com.yibao.music.model.greendao.DaoSession;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.ThreadPoolProxyFactory;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.MusicToolBar;
 import com.yibao.music.view.music.PlayListDetailView;
+
+import org.greenrobot.greendao.Property;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -198,7 +203,47 @@ public class PlayListFragment extends BaseLazyFragment {
             }
         });
 
-        mLlAddNewPlayList.setOnClickListener(v -> AddListDialog.newInstance(1, Constants.NULL_STRING, isFromPlayListActivity).show(getChildFragmentManager(), "addList"));
+        mLlAddNewPlayList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                AddListDialog.newInstance(1, Constants.NULL_STRING, isFromPlayListActivity).show(PlayListFragment.this.getChildFragmentManager(), "addList");
+                String sql = "select * from favorite-db";
+                ThreadPoolProxyFactory.newInstance().execute(() -> {
+
+                    try {
+                        DaoSession session = MusicApplication.getIntstance().getDaoSession();
+
+                        String tableName = mMusicBeanDao.getTablename();
+                        LogUtil.d(TAG, " 表名   " + tableName);
+                        String strSql = "select * from " + tableName
+                                +" where "+MusicBeanDao.Properties.IsFavorite.columnName +" = 1";
+                        Cursor cursor = session.getDatabase().rawQuery(strSql, null);
+                        while (cursor.moveToNext()) {
+
+                            int nameCIndex = cursor.getColumnIndex(MusicBeanDao.Properties.Title.columnName);
+                            int isFavorite = cursor.getColumnIndex(MusicBeanDao.Properties.IsFavorite.columnName);
+                            if (cursor.moveToNext()) {
+
+                                String name = cursor.getString(nameCIndex);
+                                String favorite = cursor.getString(isFavorite);
+                                LogUtil.d(TAG, " song name  ==  " + name);
+                                LogUtil.d(TAG, " favorite   ==  " + favorite);
+
+                            }
+
+                        }
+//                        c.close();
+                    } catch (Exception ex) {
+                        LogUtil.d(TAG, ex.getMessage());
+                    }
+
+
+                });
+
+
+            }
+
+        });
         // item 点击
         mAdapter.setItemListener((playListBean, position, isEditStatus) -> {
             mTempTitle = playListBean.getTitle();

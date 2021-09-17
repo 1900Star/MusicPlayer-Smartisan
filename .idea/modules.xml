@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ArtisanMusic.iml" filepath="$PROJECT_DIR$/ArtisanMusic.iml" group="ArtisanMusic" />
-      <module fileurl="file://$PROJECT_DIR$/SmartisanMusicPlayer.iml" filepath="$PROJECT_DIR$/SmartisanMusicPlayer.iml" group="SmartisanMusicPlayer" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="SmartisanMusicPlayer/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ArtisanMusic.iml" filepath="$PROJECT_DIR$/.idea/ArtisanMusic.iml" />
     </modules>
   </component>
 </project>

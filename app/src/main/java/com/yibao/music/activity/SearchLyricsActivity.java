@@ -127,7 +127,7 @@ public class SearchLyricsActivity extends AppCompatActivity {
                             }
 
                         } else {
-                            if (!Constants.NO_LYRICS.equals(content) && !Constants.PURE_MUSIC.equals(content) && songName.equals(songNames)) {
+                            if (!Constants.NO_LYRICS.equals(content) && !Constants.PURE_MUSIC.equals(content) && songName.contains(songNames)) {
                                 SearchLyricsBean lyricsBean = new SearchLyricsBean(listBean.getSongmid(), listBean.getContent());
                                 if (!mLyricsBeanList.contains(lyricsBean)) {
                                     mLyricsBeanList.add(lyricsBean);

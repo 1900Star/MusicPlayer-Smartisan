@@ -59,7 +59,9 @@ public class MusicApplication
         mDaoSession = daoMaster.newSession();
 
     }
-
+public DaoSession getDaoSession() {
+    return mDaoSession;
+}
     public MusicBeanDao getMusicDao() {
         if (musicBeanDao == null) {
             synchronized ("MusicApplication.class") {
