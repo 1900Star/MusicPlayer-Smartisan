@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/ArtisanMusic.iml" filepath="$PROJECT_DIR$/.idea/ArtisanMusic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ArtisanMusic.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ArtisanMusic.app.iml" />
     </modules>
   </component>
 </project>
