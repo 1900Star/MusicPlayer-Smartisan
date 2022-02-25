@@ -55,7 +55,7 @@ public class AlbumDetailDialogFragment
     private void initData() {
         if (getArguments() != null) {
             String albumUrl = getArguments().getString(ALBUM_URL);
-            Glide.with(Objects.requireNonNull(getActivity())).load(albumUrl).into(mIvAlbumDetail);
+            Glide.with(requireActivity()).load(albumUrl).into(mIvAlbumDetail);
             String albumName = getArguments().getString(ALBUM_NAME);
             QqMusicRemote.getAlbumDetail(albumName, dataBean -> {
                 if (dataBean != null) {

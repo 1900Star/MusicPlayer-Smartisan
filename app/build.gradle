@@ -4,7 +4,7 @@ android {
     compileSdkVersion 31
     defaultConfig {
         applicationId "com.yibao.music"
-        minSdkVersion 19
+        minSdkVersion 23
         targetSdkVersion 31
         versionCode 1
         versionName "1.0"
@@ -66,5 +66,10 @@ android {
         implementation 'com.baidu.mobstat:mtj-sdk:4.0.7.6'
         // 65536
         implementation 'com.android.support:multidex:1.0.3'
+
+        implementation 'com.jakewharton:butterknife:10.2.1'
+        annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
+
     }
+
 }
