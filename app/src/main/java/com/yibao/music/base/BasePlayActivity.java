@@ -40,7 +40,7 @@ import io.reactivex.schedulers.Schedulers;
  * @描述： {仅仅针对 PlayActivity抽出的基类,目的在于减少PlayActivity中的代码}
  */
 
-public abstract class BasePlayActivity extends BaseTansitionActivity implements OnCheckFavoriteListener {
+public abstract class BasePlayActivity extends BaseTransitionActivity implements OnCheckFavoriteListener {
 
     protected AudioManager mAudioManager;
     protected int mMaxVolume;

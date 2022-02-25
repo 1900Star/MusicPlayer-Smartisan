@@ -89,16 +89,12 @@ public class DeletePlayListDialog
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_delete_list_cancel:
-                dismiss();
-                break;
-            case R.id.tv_delete_list_continue:
-                deletePlayList();
-                dismiss();
-                break;
-            default:
-                break;
+        int id = v.getId();
+        if (id == R.id.tv_delete_list_cancel) {
+            dismiss();
+        } else if (id == R.id.tv_delete_list_continue) {
+            deletePlayList();
+            dismiss();
         }
     }
 

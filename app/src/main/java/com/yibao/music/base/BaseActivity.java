@@ -27,7 +27,6 @@ import com.yibao.music.view.music.SmartisanControlBar;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -53,7 +52,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected CompositeDisposable mCompositeDisposable;
     protected Disposable mDisposableProgress;
     protected Disposable mQqLyricsDisposable;
-    protected Unbinder mBind;
     protected Disposable mRxViewDisposable;
     protected PlayListBeanDao mPlayListDao;
     protected final String TAG = "====" + this.getClass().getSimpleName() + "    ";
@@ -214,7 +212,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mBind.unbind();
         if (mRxViewDisposable != null) {
             mRxViewDisposable.dispose();
             mRxViewDisposable = null;
