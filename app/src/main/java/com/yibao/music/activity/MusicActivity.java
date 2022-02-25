@@ -248,28 +248,26 @@ public class MusicActivity
         });
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+    private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_play_list:
-                    mViewPager2.setCurrentItem(0, false);
-                    return true;
-                case R.id.navigation_artist:
-                    mViewPager2.setCurrentItem(1, false);
-                    return true;
-                case R.id.navigation_song:
-                    mViewPager2.setCurrentItem(2, false);
-                    return true;
-                case R.id.navigation_album:
-                    mViewPager2.setCurrentItem(3, false);
-                    return true;
-                case R.id.navigation_about:
-                    mViewPager2.setCurrentItem(4, false);
-                    return true;
-                default:
-                    break;
+            int itemId = item.getItemId();
+            if (itemId == R.id.navigation_play_list) {
+                mViewPager2.setCurrentItem(0, false);
+                return true;
+            } else if (itemId == R.id.navigation_artist) {
+                mViewPager2.setCurrentItem(1, false);
+                return true;
+            } else if (itemId == R.id.navigation_song) {
+                mViewPager2.setCurrentItem(2, false);
+                return true;
+            } else if (itemId == R.id.navigation_album) {
+                mViewPager2.setCurrentItem(3, false);
+                return true;
+            } else if (itemId == R.id.navigation_about) {
+                mViewPager2.setCurrentItem(4, false);
+                return true;
             }
             return false;
         }
