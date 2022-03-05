@@ -35,24 +35,6 @@ public class FileUtil {
 
     }
 
-    public static File getLyricsFile(String songName, String songArtisa) {
-
-        File file = new File(Constants.MUSIC_LYRICS_ROOT);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        File lyricFile = new File(file + "/", songName + "$$" + songArtisa + ".lrc");
-        if (!lyricFile.exists()) {
-            try {
-                lyricFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        LogUtil.d(TAG, " ==========  下载歌词啦   ");
-        return lyricFile;
-    }
-
 
     public static long getId(String str) {
         //        String str="2017-06-12T10:22:59.890Z";
@@ -96,8 +78,7 @@ public class FileUtil {
                 new String[]{filePath}, null);
 
         if (cursor != null && cursor.moveToFirst()) {
-            int id = cursor.getInt(cursor
-                    .getColumnIndex(MediaStore.MediaColumns._ID));
+            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
             Uri baseUri = Uri.parse("content://media/external/images/media");
             return Uri.withAppendedPath(baseUri, "" + id);
         } else {
@@ -155,11 +136,28 @@ public class FileUtil {
         }
     }
 
-    public static File createFile(Context context, String fileName, String dirPath) {
-        String apkFilePath = context.getExternalFilesDir(dirPath).getAbsolutePath();
+    /**
+     * 歌词文件
+     *
+     * @param songName 歌名
+     * @param artist   歌手
+     * @return file
+     */
+    public static File getLyricsFile(String songName, String artist) {
+        String lyricsName = songName + "$$" + artist + ".lrc";
+        if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
+            String apkFilePath = MusicApplication.getIntstance().getExternalFilesDir(Constants.MUSIC_LYRICS_DIR).getAbsolutePath();
+            return new File(apkFilePath + File.separator + lyricsName);
+        } else {
+            File file = new File(Constants.MUSIC_LYRICS_ROOT);
+            if (!file.exists()) {
+                boolean mkdirs = file.mkdirs();
+            }
+            return new File(file.getAbsolutePath() + lyricsName);
 
-        return new File(apkFilePath + File.separator + fileName);
+        }
     }
+
 
     public static boolean isAndroidQFileExists(String path) {
         AssetFileDescriptor afd = null;

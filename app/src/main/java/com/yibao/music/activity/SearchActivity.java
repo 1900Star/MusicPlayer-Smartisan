@@ -251,7 +251,7 @@ public class SearchActivity extends BaseTransitionActivity implements OnMusicIte
         mBinding.smartisanControlBar.setClickListener(clickFlag -> {
             switch (clickFlag) {
                 case Constants.NUMBER_ONE:
-                    audioBinder.updataFavorite();
+                    audioBinder.updateFavorite();
                     checkCurrentSongIsFavorite(mMusicBean, null, mBinding.smartisanControlBar);
                     break;
                 case Constants.NUMBER_TWO:

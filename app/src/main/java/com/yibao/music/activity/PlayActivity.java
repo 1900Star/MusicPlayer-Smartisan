@@ -73,6 +73,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         init();
         initSongInfo();
         initListener();
+
     }
 
     @Override
@@ -104,9 +105,6 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             mAnimator.cancel();
         }
     }
-
-
-
 
 
     private void initSongInfo() {
@@ -157,7 +155,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             case Constants.NUMBER_TWO:
                 if (audioBinder != null) {
                     if (audioBinder.getPosition() == moreMenuStatus.getMusicPosition()) {
-                        audioBinder.updataFavorite();
+                        audioBinder.updateFavorite();
                         checkCurrentIsFavorite(getFavoriteState(mCurrentMusicInfo));
                     }
                 } else {
@@ -361,6 +359,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         mBinding.ivFavoriteMusic.setOnClickListener(this);
 
     }
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -399,7 +398,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             audioBinder.playNext();
         } else if (id == R.id.iv_favorite_music) {
             boolean favoriteState = getFavoriteState(mCurrentMusicInfo);
-            audioBinder.updataFavorite();
+            audioBinder.updateFavorite();
             checkCurrentIsFavorite(!favoriteState);
         }
     }

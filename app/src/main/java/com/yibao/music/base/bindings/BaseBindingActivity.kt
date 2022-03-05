@@ -1,4 +1,4 @@
-package com.yibao.music.base.binding
+package com.yibao.music.base.bindings
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle

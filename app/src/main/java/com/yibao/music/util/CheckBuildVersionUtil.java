@@ -17,4 +17,7 @@ public class CheckBuildVersionUtil {
     public static boolean checkAndroidVersionN() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
     }
+    public static boolean checkAndroidVersionR() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.R;
+    }
 }

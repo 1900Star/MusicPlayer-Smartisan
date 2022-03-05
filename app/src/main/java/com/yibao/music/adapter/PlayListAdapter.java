@@ -1,17 +1,16 @@
 package com.yibao.music.adapter;
 
-import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.SparseBooleanArray;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.yibao.music.MusicApplication;
-import com.yibao.music.R;
-import com.yibao.music.base.BaseRvAdapter;
+import com.yibao.music.base.bindings.BaseBindingAdapter;
+import com.yibao.music.databinding.ItemPlayListBinding;
 import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
@@ -21,9 +20,6 @@ import com.yibao.music.util.MusicDaoUtil;
 import com.yibao.music.util.RxBus;
 
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 /**
@@ -36,7 +32,7 @@ import butterknife.ButterKnife;
  * @描述： {TODO}
  */
 
-public class PlayListAdapter extends BaseRvAdapter<PlayListBean> {
+public class PlayListAdapter extends BaseBindingAdapter<PlayListBean> {
     private SparseBooleanArray mCheckedBoxMap;
 
     public PlayListAdapter(List<PlayListBean> list, SparseBooleanArray checkedBoxMap) {
@@ -46,36 +42,36 @@ public class PlayListAdapter extends BaseRvAdapter<PlayListBean> {
 
 
     @Override
-    protected void bindView(RecyclerView.ViewHolder holder, PlayListBean playListBean) {
+    public void bindView(RecyclerView.ViewHolder holder, PlayListBean playListBean) {
 
         if (holder instanceof PlayViewHolder) {
             PlayViewHolder playViewHolder = (PlayViewHolder) holder;
-            playViewHolder.mCheckBox.setVisibility(isSelectStatus ? View.VISIBLE : View.GONE);
-            playViewHolder.mIvItemEdit.setVisibility(isSelectStatus ? View.VISIBLE : View.GONE);
-            playViewHolder.mIvItemArrow.setVisibility(isSelectStatus ? View.GONE : View.VISIBLE);
-            playViewHolder.mTvPlayListName.setText(playListBean.getTitle());
+            playViewHolder.mBinding.checkboxItem.setVisibility(isSelectStatus() ? View.VISIBLE : View.GONE);
+            playViewHolder.mBinding.ivItemEdit.setVisibility(isSelectStatus() ? View.VISIBLE : View.GONE);
+            playViewHolder.mBinding.ivItemArrow.setVisibility(isSelectStatus() ? View.GONE : View.VISIBLE);
+            playViewHolder.mBinding.tvPlayListName.setText(playListBean.getTitle());
             List<MusicBean> musicBeans = MusicApplication.getIntstance().getMusicDao().queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle())).build().list();
             String count = musicBeans.size() + " 首歌曲";
-            playViewHolder.mTvPlayListCount.setText(count);
+            playViewHolder.mBinding.tvPlayListCount.setText(count);
             int adapterPosition = playViewHolder.getAdapterPosition();
-            playViewHolder.mCheckBox.setChecked(mCheckedBoxMap.get(adapterPosition));
-            playViewHolder.mRlPlayListItem.setOnClickListener(view -> {
-                if (isSelectStatus) {
-                    checkBoxClick(playListBean, adapterPosition, playViewHolder.mCheckBox.isChecked());
+            playViewHolder.mBinding.checkboxItem.setChecked(mCheckedBoxMap.get(adapterPosition));
+            playViewHolder.mBinding.rlPlayListItem.setOnClickListener(view -> {
+                if (isSelectStatus()) {
+                    checkBoxClick(playListBean, adapterPosition, playViewHolder.mBinding.checkboxItem.isChecked());
                     PlayListAdapter.this.openDetails(playListBean, adapterPosition, true);
                 } else {
                     PlayListAdapter.this.openDetails(playListBean, adapterPosition, false);
                 }
             });
-            playViewHolder.mDeleteView.setOnClickListener(v -> {
-                mList.remove(adapterPosition);
+            playViewHolder.mBinding.playListItemSlide.setOnClickListener(v -> {
+                getDataList().remove(adapterPosition);
                 MusicDaoUtil.setMusicListFlag(playListBean);
                 RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_TWO));
             });
-            playViewHolder.mCheckBox.setOnClickListener(v -> checkBoxClick(playListBean, adapterPosition, playViewHolder.mCheckBox.isChecked()));
+            playViewHolder.mBinding.checkboxItem.setOnClickListener(v -> checkBoxClick(playListBean, adapterPosition, playViewHolder.mBinding.checkboxItem.isChecked()));
 
-            playViewHolder.mIvItemEdit.setOnClickListener(v -> editItmeTitle(adapterPosition));
-            playViewHolder.mRlPlayListItem.setOnLongClickListener(v -> {
+            playViewHolder.mBinding.ivItemEdit.setOnClickListener(v -> editItmeTitle(adapterPosition));
+            playViewHolder.mBinding.rlPlayListItem.setOnLongClickListener(v -> {
                 deletePlaylist(playListBean, adapterPosition);
                 return true;
             });
@@ -83,36 +79,25 @@ public class PlayListAdapter extends BaseRvAdapter<PlayListBean> {
     }
 
 
-    @Override
-    protected RecyclerView.ViewHolder getViewHolder(View view) {
 
-        return new PlayViewHolder(view);
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        ItemPlayListBinding binding = ItemPlayListBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+
+        return new PlayViewHolder(binding);
     }
 
-    @Override
-    protected int getLayoutId() {
-        return R.layout.item_play_list;
-    }
 
     static class PlayViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.iv_item_arrow)
-        ImageView mIvItemArrow;
-        @BindView(R.id.checkbox_item)
-        AppCompatCheckBox mCheckBox;
-        @BindView(R.id.iv_item_edit)
-        ImageView mIvItemEdit;
-        @BindView(R.id.tv_play_list_name)
-        TextView mTvPlayListName;
-        @BindView(R.id.tv_play_list_count)
-        TextView mTvPlayListCount;
-        @BindView(R.id.rl_play_list_item)
-        RelativeLayout mRlPlayListItem;
-        @BindView(R.id.play_list_item_slide)
-        LinearLayout mDeleteView;
 
-        PlayViewHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
+        ItemPlayListBinding mBinding;
+
+        PlayViewHolder(ItemPlayListBinding binding) {
+            super(binding.getRoot());
+            mBinding = binding;
+
         }
     }
 

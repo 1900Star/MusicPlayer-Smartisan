@@ -25,7 +25,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
-        android:dataExtractionRules="@xml/data_extraction_rules"
         tools:targetApi="s">
         <activity
             android:name=".activity.SearchLyricsActivity"

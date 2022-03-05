@@ -165,7 +165,7 @@ public class MusicActivity
                     if (audioBinder != null) {
                         switch (clickFlag) {
                             case Constants.NUMBER_ONE:
-                                audioBinder.updataFavorite();
+                                audioBinder.updateFavorite();
                                 checkCurrentSongIsFavorite(mCurrentMusicBean, mBinding.qqControlBar, mBinding.smartisanControlBar);
                                 break;
                             case Constants.NUMBER_TWO:
@@ -195,7 +195,7 @@ public class MusicActivity
                         break;
                     case Constants.NUMBER_TWO:
                         if (audioBinder != null) {
-                            audioBinder.updataFavorite();
+                            audioBinder.updateFavorite();
                             checkCurrentSongIsFavorite(mCurrentMusicBean, mBinding.qqControlBar, mBinding.smartisanControlBar);
                         } else {
                             SnakbarUtil.firstPlayMusic(mBinding.smartisanControlBar);
@@ -571,10 +571,10 @@ public class MusicActivity
             case Constants.NUMBER_TWO:
                 if (audioBinder != null) {
                     if (audioBinder.getPosition() == moreMenuStatus.getMusicPosition()) {
-                        audioBinder.updataFavorite();
+                        audioBinder.updateFavorite();
                         checkCurrentSongIsFavorite(musicBean, mBinding.qqControlBar, mBinding.smartisanControlBar);
                     } else {
-                        audioBinder.updataFavorite(moreMenuStatus.getMusicBean());
+                        audioBinder.updateFavorite(moreMenuStatus.getMusicBean());
                     }
                 } else {
                     SnakbarUtil.firstPlayMusic(mBinding.smartisanControlBar);
