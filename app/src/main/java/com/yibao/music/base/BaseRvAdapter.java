@@ -91,13 +91,6 @@ public abstract class BaseRvAdapter<T>
         }
     }
 
-    /**
-     * 获取列表的类型，根据类型设置最后一个item的文字内容。
-     *
-     * @return r
-     */
-
-    protected abstract String getLastItemDes();
 
     /**
      * 具体的视图数据绑定交给子类去做
@@ -122,6 +115,18 @@ public abstract class BaseRvAdapter<T>
      * @return r
      */
     protected abstract int getLayoutId();
+
+
+
+
+
+    /**
+     * 获取列表的类型，根据类型设置最后一个item的文字内容。
+     *
+     * @return r
+     */
+
+    protected abstract String getLastItemDes();
 
     public void clear() {
         if (mList != null) {

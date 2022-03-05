@@ -188,15 +188,14 @@ public class QqMusicRemote {
     private static void sendSearchLyricsResult(OnlineSongLrc onlineSongLrc, String songName, String artist) {
         String lyric = onlineSongLrc.getLyric();
         if (lyric != null) {
+            boolean b = DownloadLyricsUtil.saveLyrics(lyric, songName, artist);
+            LyricDownBean lyricDownBean;
             if (lyric.contains(Constants.PURE_MUSIC)) {
-                boolean b = DownloadLyricsUtil.saveLyrics(lyric, songName, artist);
-                LyricDownBean lyricDownBean = new LyricDownBean(true, b ? Constants.PURE_MUSIC : Constants.NO_LYRICS);
-                RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);
+                lyricDownBean = new LyricDownBean(true, b ? Constants.PURE_MUSIC : Constants.NO_LYRICS);
             } else {
-                boolean b = DownloadLyricsUtil.saveLyrics(lyric, songName, artist);
-                LyricDownBean lyricDownBean = new LyricDownBean(b, b ? Constants.MUSIC_LYRIC_OK : Constants.MUSIC_LYRIC_FAIL);
-                RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);
+                lyricDownBean = new LyricDownBean(b, b ? Constants.MUSIC_LYRIC_OK : Constants.MUSIC_LYRIC_FAIL);
             }
+            RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);
         } else {
             RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, new LyricDownBean(false, Constants.MUSIC_LYRIC_FAIL));
         }

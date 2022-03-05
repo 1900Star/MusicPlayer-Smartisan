@@ -6,10 +6,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.viewpager2.widget.ViewPager2;
@@ -17,10 +13,11 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.adapter.SearchPagerAdapter;
-import com.yibao.music.base.BaseTansitionActivity;
+import com.yibao.music.base.BaseTransitionActivity;
 import com.yibao.music.base.listener.OnFlowLayoutClickListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.base.listener.TextChangedListener;
+import com.yibao.music.databinding.ActivitySearchBinding;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.model.SearchCategoryBean;
@@ -31,14 +28,10 @@ import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SoftKeybordUtil;
 import com.yibao.music.util.TitleArtistUtil;
-import com.yibao.music.view.music.SmartisanControlBar;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -47,31 +40,8 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * @author lsp
  */
-public class SearchActivity extends BaseTansitionActivity implements OnMusicItemClickListener, OnFlowLayoutClickListener {
-    @BindView(R.id.tv_search_cancel)
-    TextView mTvSearchCancel;
-    @BindView(R.id.iv_edit_clear)
-    ImageView mIvEditClear;
-    @BindView(R.id.edit_search)
-    EditText mEditSearch;
-
-    @BindView(R.id.vp_search)
-    ViewPager2 mViewPager;
-
-    @BindView(R.id.search_category_root)
-    LinearLayout mSearchCategoryRoot;
-
-    @BindView(R.id.tv_search_all)
-    TextView mTvSearchAll;
-    @BindView(R.id.tv_search_song)
-    TextView mTvSearchSong;
-    @BindView(R.id.tv_search_album)
-    TextView mTvSearchAlbum;
-    @BindView(R.id.tv_search_artist)
-    TextView mTvSearchArtist;
-
-    @BindView(R.id.smartisan_control_bar)
-    SmartisanControlBar mSmartisanControlBar;
+public class SearchActivity extends BaseTransitionActivity implements OnMusicItemClickListener, OnFlowLayoutClickListener, View.OnClickListener {
+    private ActivitySearchBinding mBinding;
     private MusicBean mMusicBean;
     private MusicPlayService.AudioBinder audioBinder;
     private int lyricsFlag;
@@ -84,7 +54,8 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        mBind = ButterKnife.bind(this);
+        mBinding = ActivitySearchBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
         init();
         initListener();
     }
@@ -99,18 +70,18 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     private void init() {
         int pageType = getIntent().getIntExtra("pageType", 0);
         audioBinder = MusicActivity.getAudioBinder();
-        mSmartisanControlBar.setPbColorAndPreBtnGone();
+        mBinding.smartisanControlBar.setPbColorAndPreBtnGone();
         SearchPagerAdapter pagerAdapter;
         if (pageType > Constants.NUMBER_ZERO) {
             mMusicBean = getIntent().getParcelableExtra("musicBean");
-            mEditSearch.setText(mMusicBean.getArtist());
-            mEditSearch.setSelection(mMusicBean.getArtist().length());
-            mSearchCategoryRoot.setVisibility(View.VISIBLE);
+            mBinding.editSearch.setText(mMusicBean.getArtist());
+            mBinding.editSearch.setSelection(mMusicBean.getArtist().length());
+            mBinding.searchCategoryRoot.getRoot().setVisibility(View.VISIBLE);
             // ViewPager
             pagerAdapter = new SearchPagerAdapter(this, mMusicBean.getArtist());
             switchListCategory(3);
             setMusicInfo(mMusicBean);
-            mIvEditClear.setVisibility(View.VISIBLE);
+            mBinding.ivEditClear.setVisibility(View.VISIBLE);
         } else {
             pagerAdapter = new SearchPagerAdapter(this, null);
             // 主动弹出键盘
@@ -119,8 +90,8 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
                     .subscribe(aLong -> SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED));
         }
 
-        mViewPager.setAdapter(pagerAdapter);
-        mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+        mBinding.vpSearch.setAdapter(pagerAdapter);
+        mBinding.vpSearch.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 switchListCategory(position);
@@ -128,37 +99,6 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         });
     }
 
-    private void initListener() {
-        mEditSearch.addTextChangedListener(new TextChangedListener() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                mSearchCondition = s.toString();
-                boolean conditionOK = !Constants.NULL_STRING.equals(mSearchCondition) && mSearchCondition.length() > 0;
-                mBus.post(new SearchCategoryBean(conditionOK ? getDataFlag() : Constants.NUMBER_TEN, mSearchCondition));
-                mIvEditClear.setVisibility(conditionOK ? View.VISIBLE : View.GONE);
-                mSearchCategoryRoot.setVisibility(conditionOK ? View.VISIBLE : View.GONE);
-            }
-        });
-        mSmartisanControlBar.setClickListener(clickFlag -> {
-            switch (clickFlag) {
-                case Constants.NUMBER_ONE:
-                    audioBinder.updataFavorite();
-                    checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
-                    break;
-                case Constants.NUMBER_TWO:
-                    audioBinder.playPre();
-                    break;
-                case Constants.NUMBER_THREE:
-                    switchPlayState();
-                    break;
-                case Constants.NUMBER_FOUR:
-                    audioBinder.playNext();
-                    break;
-                default:
-                    break;
-            }
-        });
-    }
 
     @Override
     protected void onResume() {
@@ -166,13 +106,13 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         if (audioBinder != null) {
             mMusicBean = audioBinder.getMusicBean();
             setMusicInfo(mMusicBean);
-            checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
-            mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
-            mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+            checkCurrentSongIsFavorite(mMusicBean, null, mBinding.smartisanControlBar);
+            mBinding.smartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+            mBinding.smartisanControlBar.animatorOnResume(audioBinder.isPlaying());
             updateLyric();
             setDuration();
         }
-        mCompositeDisposable.add(RxView.clicks(mSmartisanControlBar)
+        mCompositeDisposable.add(RxView.clicks(mBinding.smartisanControlBar)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribe(o -> startPlayActivity()));
 
@@ -183,11 +123,11 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     protected void updateCurrentPlayInfo(MusicBean musicItem) {
         mMusicBean = musicItem;
         SearchActivity.this.setMusicInfo(musicItem);
-        mSmartisanControlBar.initAnimation();
+        mBinding.smartisanControlBar.initAnimation();
         if (audioBinder != null) {
             setDuration();
-            SearchActivity.this.checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
-            mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+            SearchActivity.this.checkCurrentSongIsFavorite(mMusicBean, null, mBinding.smartisanControlBar);
+            mBinding.smartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
             updateLyric();
         }
     }
@@ -195,56 +135,56 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     @Override
     protected void updateCurrentPlayProgress() {
         if (audioBinder != null) {
-            mSmartisanControlBar.setSongProgress(audioBinder.getProgress());
+            mBinding.smartisanControlBar.setSongProgress(audioBinder.getProgress());
         }
     }
 
     private void setDuration() {
         int duration = audioBinder.getDuration();
-        mSmartisanControlBar.setMaxProgress(duration);
+        mBinding.smartisanControlBar.setMaxProgress(duration);
     }
 
     private void setMusicInfo(MusicBean musicItem) {
         if (musicItem != null) {
-            mSmartisanControlBar.setVisibility(View.VISIBLE);
+            mBinding.smartisanControlBar.setVisibility(View.VISIBLE);
             musicItem = TitleArtistUtil.getMusicBean(musicItem);
-            mSmartisanControlBar.setSongName(musicItem.getTitle());
-            mSmartisanControlBar.setSingerName(musicItem.getArtist());
-            mSmartisanControlBar.setAlbulmUrl(FileUtil.getAlbumUrl(musicItem,1));
+            mBinding.smartisanControlBar.setSongName(musicItem.getTitle());
+            mBinding.smartisanControlBar.setSingerName(musicItem.getArtist());
+            mBinding.smartisanControlBar.setAlbulmUrl(FileUtil.getAlbumUrl(musicItem, 1));
         }
         if (audioBinder != null) {
-            mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
-            mSmartisanControlBar.initAnimation();
+            mBinding.smartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+            mBinding.smartisanControlBar.initAnimation();
         } else {
-            mSmartisanControlBar.setVisibility(View.GONE);
+            mBinding.smartisanControlBar.setVisibility(View.GONE);
         }
     }
 
 
     private void switchListCategory(int position) {
         currentCategoryPosition = position;
-        mViewPager.setCurrentItem(position, false);
+        mBinding.vpSearch.setCurrentItem(position, false);
         mBus.post(new SearchCategoryBean(getDataFlag(), mSearchCondition));
         switch (position) {
             case 0:
                 setAllCategoryNotNormal();
-                mTvSearchAll.setTextColor(ColorUtil.wihtle);
-                mTvSearchAll.setBackgroundResource(R.drawable.btn_category_songname_down_selector);
+                mBinding.searchCategoryRoot.tvSearchAll.setTextColor(ColorUtil.wihtle);
+                mBinding.searchCategoryRoot.tvSearchAll.setBackgroundResource(R.drawable.btn_category_songname_down_selector);
                 break;
             case 1:
                 setAllCategoryNotNormal();
-                mTvSearchSong.setTextColor(ColorUtil.wihtle);
-                mTvSearchSong.setBackgroundResource(R.drawable.btn_category_score_down_selector);
+                mBinding.searchCategoryRoot.tvSearchSong.setTextColor(ColorUtil.wihtle);
+                mBinding.searchCategoryRoot.tvSearchSong.setBackgroundResource(R.drawable.btn_category_score_down_selector);
                 break;
             case 2:
                 setAllCategoryNotNormal();
-                mTvSearchAlbum.setTextColor(ColorUtil.wihtle);
-                mTvSearchAlbum.setBackgroundResource(R.drawable.btn_category_score_down_selector);
+                mBinding.searchCategoryRoot.tvSearchAlbum.setTextColor(ColorUtil.wihtle);
+                mBinding.searchCategoryRoot.tvSearchAlbum.setBackgroundResource(R.drawable.btn_category_score_down_selector);
                 break;
             case 3:
                 setAllCategoryNotNormal();
-                mTvSearchArtist.setBackgroundResource(R.drawable.btn_category_views_down_selector);
-                mTvSearchArtist.setTextColor(ColorUtil.wihtle);
+                mBinding.searchCategoryRoot.tvSearchArtist.setBackgroundResource(R.drawable.btn_category_views_down_selector);
+                mBinding.searchCategoryRoot.tvSearchArtist.setTextColor(ColorUtil.wihtle);
                 break;
             default:
                 break;
@@ -252,29 +192,29 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     }
 
     private void setAllCategoryNotNormal() {
-        mTvSearchAll.setTextColor(ColorUtil.textName);
-        mTvSearchAll.setBackgroundResource(R.drawable.btn_category_songname_selector);
-        mTvSearchSong.setTextColor(ColorUtil.textName);
-        mTvSearchSong.setBackgroundResource(R.drawable.btn_category_score_selector);
-        mTvSearchAlbum.setTextColor(ColorUtil.textName);
-        mTvSearchAlbum.setBackgroundResource(R.drawable.btn_category_score_selector);
-        mTvSearchArtist.setTextColor(ColorUtil.textName);
-        mTvSearchArtist.setBackgroundResource(R.drawable.btn_category_views_selector);
+        mBinding.searchCategoryRoot.tvSearchAll.setTextColor(ColorUtil.textName);
+        mBinding.searchCategoryRoot.tvSearchAll.setBackgroundResource(R.drawable.btn_category_songname_selector);
+        mBinding.searchCategoryRoot.tvSearchSong.setTextColor(ColorUtil.textName);
+        mBinding.searchCategoryRoot.tvSearchSong.setBackgroundResource(R.drawable.btn_category_score_selector);
+        mBinding.searchCategoryRoot.tvSearchAlbum.setTextColor(ColorUtil.textName);
+        mBinding.searchCategoryRoot.tvSearchAlbum.setBackgroundResource(R.drawable.btn_category_score_selector);
+        mBinding.searchCategoryRoot.tvSearchArtist.setTextColor(ColorUtil.textName);
+        mBinding.searchCategoryRoot.tvSearchArtist.setBackgroundResource(R.drawable.btn_category_views_selector);
     }
 
     @Override
     protected void refreshBtnAndNotify(int playStatus) {
         switch (playStatus) {
             case 0:
-                mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
-                mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+                mBinding.smartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+                mBinding.smartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
                 break;
             case 1:
-                checkCurrentSongIsFavorite(mMusicBean, null, mSmartisanControlBar);
+                checkCurrentSongIsFavorite(mMusicBean, null, mBinding.smartisanControlBar);
                 break;
             case 2:
-                mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
-                mSmartisanControlBar.animatorOnPause();
+                mBinding.smartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+                mBinding.smartisanControlBar.animatorOnPause();
                 break;
             default:
                 break;
@@ -293,39 +233,68 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
         } else {
             audioBinder.start();
         }
-        mSmartisanControlBar.animatorOnResume(audioBinder.isPlaying());
-        mSmartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+        mBinding.smartisanControlBar.animatorOnResume(audioBinder.isPlaying());
+        mBinding.smartisanControlBar.updatePlayBtnStatus(audioBinder.isPlaying());
+    }
+
+    private void initListener() {
+        mBinding.editSearch.addTextChangedListener(new TextChangedListener() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                mSearchCondition = s.toString();
+                boolean conditionOk = !Constants.NULL_STRING.equals(mSearchCondition) && mSearchCondition.length() > 0;
+                mBus.post(new SearchCategoryBean(conditionOk ? getDataFlag() : Constants.NUMBER_TEN, mSearchCondition));
+                mBinding.ivEditClear.setVisibility(conditionOk ? View.VISIBLE : View.GONE);
+                mBinding.searchCategoryRoot.getRoot().setVisibility(conditionOk ? View.VISIBLE : View.GONE);
+            }
+        });
+        mBinding.smartisanControlBar.setClickListener(clickFlag -> {
+            switch (clickFlag) {
+                case Constants.NUMBER_ONE:
+                    audioBinder.updateFavorite();
+                    checkCurrentSongIsFavorite(mMusicBean, null, mBinding.smartisanControlBar);
+                    break;
+                case Constants.NUMBER_TWO:
+                    audioBinder.playPre();
+                    break;
+                case Constants.NUMBER_THREE:
+                    switchPlayState();
+                    break;
+                case Constants.NUMBER_FOUR:
+                    audioBinder.playNext();
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        mBinding.tvSearchCancel.setOnClickListener(this);
+        mBinding.ivEditClear.setOnClickListener(this);
+        mBinding.searchCategoryRoot.tvSearchAll.setOnClickListener(this);
+        mBinding.searchCategoryRoot.tvSearchSong.setOnClickListener(this);
+        mBinding.searchCategoryRoot.tvSearchArtist.setOnClickListener(this);
+        mBinding.searchCategoryRoot.tvSearchAlbum.setOnClickListener(this);
     }
 
 
-    @OnClick({R.id.tv_search_cancel, R.id.iv_edit_clear,
-            R.id.tv_search_all, R.id.tv_search_song, R.id.tv_search_album, R.id.tv_search_artist})
+    @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            default:
-                break;
-            case R.id.tv_search_cancel:
-                SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 1, InputMethodManager.RESULT_UNCHANGED_SHOWN);
-                finish();
-
-                break;
-            case R.id.iv_edit_clear:
-                mEditSearch.setText(null);
-                findViewById(R.id.search_category_root).setVisibility(View.GONE);
-                mBus.post(new SearchCategoryBean(Constants.NUMBER_NINE, null));
-                break;
-            case R.id.tv_search_all:
-                switchListCategory(0);
-                break;
-            case R.id.tv_search_song:
-                switchListCategory(1);
-                break;
-            case R.id.tv_search_album:
-                switchListCategory(2);
-                break;
-            case R.id.tv_search_artist:
-                switchListCategory(3);
-                break;
+        int id = v.getId();
+        if (id == R.id.tv_search_cancel) {
+            SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 1, InputMethodManager.RESULT_UNCHANGED_SHOWN);
+            finish();
+        } else if (id == R.id.iv_edit_clear) {
+            mBinding.editSearch.setText(null);
+            findViewById(R.id.search_category_root).setVisibility(View.GONE);
+            mBus.post(new SearchCategoryBean(Constants.NUMBER_NINE, null));
+        } else if (id == R.id.tv_search_all) {
+            switchListCategory(0);
+        } else if (id == R.id.tv_search_song) {
+            switchListCategory(1);
+        } else if (id == R.id.tv_search_album) {
+            switchListCategory(2);
+        } else if (id == R.id.tv_search_artist) {
+            switchListCategory(3);
         }
     }
 
@@ -352,7 +321,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
     @Override
     protected void onPause() {
         super.onPause();
-        mSmartisanControlBar.animatorOnPause();
+        mBinding.smartisanControlBar.animatorOnPause();
     }
 
     @Override
@@ -382,7 +351,7 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
                             int progress = audioBinder.getProgress();
                             int startTime = lyrBean.getStartTime();
                             if (progress > startTime) {
-                                mSmartisanControlBar.setSingerName(content);
+                                mBinding.smartisanControlBar.setSingerName(content);
                                 lyricsFlag++;
                             }
                         }
@@ -393,8 +362,8 @@ public class SearchActivity extends BaseTansitionActivity implements OnMusicItem
 
     @Override
     public void click(String songName) {
-        mEditSearch.setText(songName);
-        mEditSearch.setSelection(songName.length());
+        mBinding.editSearch.setText(songName);
+        mBinding.editSearch.setSelection(songName.length());
 
     }
 

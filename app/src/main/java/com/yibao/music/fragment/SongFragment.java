@@ -95,6 +95,7 @@ public class SongFragment extends BaseMusicFragment {
         SongViewPagerAdapter pagerAdapter = new SongViewPagerAdapter(mActivity);
         mViewPager2.setOffscreenPageLimit(4);
         mViewPager2.setAdapter(pagerAdapter);
+        mViewPager2.setUserInputEnabled(false);
         mViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {

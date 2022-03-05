@@ -40,7 +40,7 @@ import io.reactivex.schedulers.Schedulers;
  * @描述： {仅仅针对 PlayActivity抽出的基类,目的在于减少PlayActivity中的代码}
  */
 
-public abstract class BasePlayActivity extends BaseTansitionActivity implements OnCheckFavoriteListener {
+public abstract class BasePlayActivity extends BaseTransitionActivity implements OnCheckFavoriteListener {
 
     protected AudioManager mAudioManager;
     protected int mMaxVolume;
@@ -93,23 +93,23 @@ public abstract class BasePlayActivity extends BaseTansitionActivity implements 
      */
     protected void switchPlayMode(ImageView imageView) {
         //获取当前的播放模式
-        int playMode = audioBinder.getPalyMode();
+        int playMode = audioBinder.getPlayMode();
         //根据当前播放模式进行其它模式切换
         switch (playMode) {
             case MusicPlayService.PLAY_MODE_ALL:
-                audioBinder.setPalyMode(MusicPlayService.PLAY_MODE_SINGLE);
+                audioBinder.setPlayMode(MusicPlayService.PLAY_MODE_SINGLE);
                 break;
             case MusicPlayService.PLAY_MODE_SINGLE:
-                audioBinder.setPalyMode(MusicPlayService.PLAY_MODE_RANDOM);
+                audioBinder.setPlayMode(MusicPlayService.PLAY_MODE_RANDOM);
                 break;
             case MusicPlayService.PLAY_MODE_RANDOM:
-                audioBinder.setPalyMode(MusicPlayService.PLAY_MODE_ALL);
+                audioBinder.setPlayMode(MusicPlayService.PLAY_MODE_ALL);
                 break;
             default:
                 break;
         }
         //根据当前模式,更新播放模式图片
-        updatePlayModeImage(audioBinder.getPalyMode(), imageView);
+        updatePlayModeImage(audioBinder.getPlayMode(), imageView);
     }
 
 

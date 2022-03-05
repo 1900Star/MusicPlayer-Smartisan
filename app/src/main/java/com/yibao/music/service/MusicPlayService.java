@@ -187,7 +187,7 @@ public class MusicPlayService
             mNotifyManager.show();
         }
 
-        public void updataFavorite() {
+        public void updateFavorite() {
             if (position < mMusicDataList.size()) {
                 MusicBean musicBean = mMusicDataList.get(position);
                 boolean favorite = mMusicDao.load(musicBean.getId()).getIsFavorite();
@@ -202,7 +202,9 @@ public class MusicPlayService
         }
 
         private void hintNotifycation() {
-            mNotifyManager.hide();
+            if (mNotifyManager != null) {
+                mNotifyManager.hide();
+            }
         }
 
         public MusicBean getMusicBean() {
@@ -261,14 +263,14 @@ public class MusicPlayService
 
         // 获取当前的播放模式
 
-        public int getPalyMode() {
+        public int getPlayMode() {
             return playMode;
         }
 
         //设置播放模式
 
-        public void setPalyMode(int playmode) {
-            playMode = playmode;
+        public void setPlayMode(int mode) {
+            playMode = mode;
             //保存播放模式
 
             SpUtil.setMusicMode(MusicPlayService.this, playMode);
@@ -335,7 +337,7 @@ public class MusicPlayService
             return position;
         }
 
-        public void updataFavorite(MusicBean bean) {
+        public void updateFavorite(MusicBean bean) {
             bean.setIsFavorite(!bean.isFavorite());
             bean.setTime(StringUtil.getTime());
             mMusicDao.update(bean);
@@ -396,7 +398,7 @@ public class MusicPlayService
                     int id = intent.getIntExtra(Constants.NOTIFY_BUTTON_ID, 0);
                     switch (id) {
                         case Constants.FAVORITE:
-                            mAudioBinder.updataFavorite();
+                            mAudioBinder.updateFavorite();
                             mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_ONE);
                             break;
                         case Constants.CLOSE:

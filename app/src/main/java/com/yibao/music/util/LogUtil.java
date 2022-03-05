@@ -27,10 +27,15 @@ public class LogUtil {
     }
 
     public static void d(String tag, String msg) {
+        StackTraceElement[] s = Thread.currentThread().getStackTrace();
+        int lines = s[3].getLineNumber();
+        String methodName = s[3].getMethodName();
+        String content = lines + " --> " + methodName + " == " + msg;
         if (isDebug) {
-            Log.d(tag, msg);
+            Log.d(tag, content);
         }
     }
+
 
     public static void e(String tag, String msg) {
         if (isDebug) {

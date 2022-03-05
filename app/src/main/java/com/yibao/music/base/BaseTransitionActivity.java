@@ -17,7 +17,7 @@ import com.yibao.music.util.SpUtil;
  * @描述： {TODO}
  */
 
-public abstract class BaseTansitionActivity extends BaseActivity implements OnGlideLoadListener {
+public abstract class BaseTransitionActivity extends BaseActivity implements OnGlideLoadListener {
     @Override
     protected void onResume() {
         super.onResume();
