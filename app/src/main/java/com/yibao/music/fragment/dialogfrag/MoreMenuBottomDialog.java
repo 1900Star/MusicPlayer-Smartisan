@@ -15,14 +15,13 @@ import android.widget.TextView;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
-import com.yibao.music.adapter.MoreMemuAdapter;
+import com.yibao.music.adapter.MoreMenuAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.BottomSheetCallback;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MenuListUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
@@ -39,7 +38,7 @@ public class MoreMenuBottomDialog {
     private BottomSheetBehavior<View> mBehavior;
     private static MusicBean mMusicBean;
     private TextView mBottomCancel;
-    private MoreMemuAdapter mMemuAdapter;
+    private MoreMenuAdapter mMemuAdapter;
     private static int mMusicPosition;
     private RatingBar mRatingBar;
     private static boolean mIsNeedScore;
@@ -107,7 +106,7 @@ public class MoreMenuBottomDialog {
 
     private void initData() {
         mRatingBar.setRating(mMusicBean.getSongScore());
-        mMemuAdapter = new MoreMemuAdapter(MenuListUtil.getMenuData(mMusicBean.isFavorite(), mIsNeedSetTime), mMusicBean, mMusicPosition);
+        mMemuAdapter = new MoreMenuAdapter(MenuListUtil.getMenuData(mMusicBean.isFavorite(), mIsNeedSetTime), mMusicBean, mMusicPosition);
         RecyclerView recyclerView = RecyclerFactory.createRecyclerView(4, mMemuAdapter);
         mBottomListContent.addView(recyclerView);
     }

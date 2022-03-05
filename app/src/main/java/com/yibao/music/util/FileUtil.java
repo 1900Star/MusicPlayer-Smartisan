@@ -18,6 +18,9 @@ import com.yibao.music.model.MusicBean;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 
 /**
@@ -154,6 +157,22 @@ public class FileUtil {
                 boolean mkdirs = file.mkdirs();
             }
             return new File(file.getAbsolutePath() + lyricsName);
+
+        }
+    }
+
+    /**
+     * 崩溃文件
+     * @return file
+     */
+    public static File getCrashFile() {
+        String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss", Locale.getDefault()).format(new Date(System.currentTimeMillis()));
+        if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
+            String apkFilePath = MusicApplication.getIntstance().getExternalFilesDir(Constants.CRASH_DIR).getAbsolutePath();
+            return new File(apkFilePath + File.separator + time + ".txt");
+        } else {
+            File file = new File(Constants.CRASH_LOG_PATH);
+            return new File(file.getAbsolutePath() + Constants.CRASH_DIR + time + ".txt");
 
         }
     }

@@ -143,6 +143,7 @@ public class Constants {
     public static final String COUNTDOWN_TIME = "countdown_time";
     public static final String FINISH_TIME = "00:01";
     public static String MUSIC_LYRICS_DIR = "lyrics";
+    public static String CRASH_DIR = "crash";
     public static String MUSIC_LYRICS_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyrics/";
     public static String MUSIC_SONG_ALBUM_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/songAlbum/";
     public static String MUSIC_ALBUM_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/album/";
@@ -150,8 +151,7 @@ public class Constants {
     static final String FAVORITE_FILE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/favorite.txt/";
     public static final String HEADER_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yibao/photo/";
     // 崩溃日志本地保存地址
-    public static final String CRASH_LOG_PATH = Environment.getExternalStorageDirectory()
-            .getPath() + "/CrashLog/log/";
+    public static final String CRASH_LOG_PATH = Environment.getExternalStorageDirectory().getPath() + "/CrashLog/log/";
     public static final String DATA_TYPE_TXT = "text/plain";
     public static String UNSPLASH_URL = "https://picsum.photos/1080/1920/?image=";
     // 权限Code

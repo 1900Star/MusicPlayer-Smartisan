@@ -14,9 +14,9 @@ import com.yibao.music.util.Constants
  * className   FixRecordAdapter
  * Des：TODO
  */
-abstract class BaseBindingAdapter<T>(private var mList: MutableList<T>) :
+abstract class BaseBindingAdapter<T>(protected var mList: MutableList<T>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    protected val mTAG = " ==== " + this::class.java.simpleName + "  "
+    protected  val mTAG = " ==== " + this::class.java.simpleName + "  "
     private lateinit var mListener: OnItemListener<T>
     private lateinit var mLongClickListener: ItemLongClickListener
     private lateinit var mEditClickListener: ItemEditClickListener

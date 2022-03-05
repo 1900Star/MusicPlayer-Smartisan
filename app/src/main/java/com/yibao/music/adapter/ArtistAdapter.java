@@ -1,19 +1,18 @@
 package com.yibao.music.adapter;
 
-import androidx.recyclerview.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.view.ViewGroup;
 
-import com.yibao.music.R;
-import com.yibao.music.base.BaseRvAdapter;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.yibao.music.base.bindings.BaseBindingAdapter;
+import com.yibao.music.databinding.ArtistItemBinding;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.util.HanziToPinyins;
 
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 /**
@@ -26,7 +25,7 @@ import butterknife.ButterKnife;
  * @描述： {TODO}
  */
 
-public class ArtistAdapter extends BaseRvAdapter<ArtistInfo> {
+public class ArtistAdapter extends BaseBindingAdapter<ArtistInfo> {
 
     public ArtistAdapter(List<ArtistInfo> list) {
         super(list);
@@ -39,69 +38,62 @@ public class ArtistAdapter extends BaseRvAdapter<ArtistInfo> {
     }
 
     @Override
-    protected void bindView(RecyclerView.ViewHolder holder, ArtistInfo artistInfo) {
+    public void bindView(RecyclerView.ViewHolder holder, ArtistInfo artistInfo) {
         if (holder instanceof ArtisHolder) {
             ArtisHolder artisHolder = (ArtisHolder) holder;
             int position = holder.getAdapterPosition();
             String songCount = artistInfo.getSongCount() + " 首歌曲,";
             String albumCount = artistInfo.getAlbumCount() + " 张专辑";
-            artisHolder.mArtistName.setText(artistInfo.getArtist());
-            artisHolder.mArtistAlbumCount.setText(albumCount);
-            artisHolder.mArtistSongCount.setText(songCount);
+            artisHolder.mBinding.artistItemName.setText(artistInfo.getArtist());
+            artisHolder.mBinding.artistItemAlbumCount.setText(albumCount);
+            artisHolder.mBinding.artistItemSongCount.setText(songCount);
             String firstChar = HanziToPinyins.stringToPinyinSpecial(artistInfo.getArtist()) + "";
 
-            artisHolder.mStickyView.setText(firstChar);
+            artisHolder.mBinding.artistItemStickyView.setText(firstChar);
             if (position == 0) {
-                artisHolder.mStickyView.setVisibility(View.VISIBLE);
+                artisHolder.mBinding.artistItemStickyView.setVisibility(View.VISIBLE);
             } else if (firstChar.equals(HanziToPinyins
-                    .stringToPinyinSpecial(mList.get(position - 1).getArtist()) + "")) {
-                artisHolder.mStickyView.setVisibility(View.GONE);
+                    .stringToPinyinSpecial(getDataList().get(position - 1).getArtist()) + "")) {
+                artisHolder.mBinding.artistItemStickyView.setVisibility(View.GONE);
 
             } else {
-                artisHolder.mStickyView.setVisibility(View.VISIBLE);
+                artisHolder.mBinding.artistItemStickyView.setVisibility(View.VISIBLE);
             }
 
 
-            artisHolder.mArtistItemContent.setOnClickListener(view -> openDetails(artistInfo, position, false));
+            artisHolder.mBinding.artistItemContent.setOnClickListener(view -> openDetails(artistInfo, position, false));
 
         }
 
 
     }
 
-    @Override
-    protected RecyclerView.ViewHolder getViewHolder(View view) {
-        return new ArtisHolder(view);
-    }
-
-    @Override
-    protected int getLayoutId() {
-        return R.layout.artist_item;
-    }
 
     @Override
     protected String getFirstChar(int i) {
-        return mList.get(i).getFirstChar();
+        return getDataList().get(i).getFirstChar();
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        ArtistItemBinding binding = ArtistItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new ArtisHolder(binding);
     }
 
 
-    class ArtisHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.artist_item_sticky_view)
-        TextView mStickyView;
-        @BindView(R.id.artist_item_name)
-        TextView mArtistName;
+    static class ArtisHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.artist_item_album_count)
-        TextView mArtistAlbumCount;
-        @BindView(R.id.artist_item_song_count)
-        TextView mArtistSongCount;
-        @BindView(R.id.artist_item_content)
-        LinearLayout mArtistItemContent;
+        ArtistItemBinding mBinding;
 
-        ArtisHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
+        ArtisHolder(ArtistItemBinding binding) {
+            super(binding.getRoot());
+            mBinding = binding;
+
         }
     }
+
+
 }
 

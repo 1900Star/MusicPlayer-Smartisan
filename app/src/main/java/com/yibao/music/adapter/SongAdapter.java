@@ -3,29 +3,24 @@ package com.yibao.music.adapter;
 
 import android.app.Activity;
 import android.util.SparseBooleanArray;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RatingBar;
-import android.widget.TextView;
+import android.view.ViewGroup;
 
-import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.yibao.music.R;
-import com.yibao.music.base.BaseRvAdapter;
+import com.yibao.music.base.bindings.BaseBindingAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
+import com.yibao.music.databinding.ItemMusicListBinding;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.ImageUitl;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
 
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * @项目名： BigGirl
@@ -38,12 +33,12 @@ import butterknife.ButterKnife;
  */
 
 public class SongAdapter
-        extends BaseRvAdapter<MusicBean> {
+        extends BaseBindingAdapter<MusicBean> {
     private static final String TAG = "====" + SongAdapter.class.getSimpleName() + "    ";
     private Activity mContext;
-    private int mIsShowStickyView;
-    private int mScroeAndFrequnecyFlag;
-    private SparseBooleanArray mSparseBooleanArray;
+    private final int mIsShowStickyView;
+    private final int mScroeAndFrequnecyFlag;
+    private final SparseBooleanArray mSparseBooleanArray;
 
     /**
      * @param context               c
@@ -68,46 +63,46 @@ public class SongAdapter
     }
 
     @Override
-    protected void bindView(RecyclerView.ViewHolder holder, MusicBean musicBean) {
+    public void bindView(RecyclerView.ViewHolder holder, MusicBean musicBean) {
         if (holder instanceof SongListViewHolder) {
             SongListViewHolder songListViewHolder = (SongListViewHolder) holder;
             int position = holder.getAdapterPosition();
             if (mScroeAndFrequnecyFlag == Constants.NUMBER_ONE) {
-                songListViewHolder.mRatingBar.setVisibility(View.VISIBLE);
-                songListViewHolder.mRatingBar.setRating(musicBean.getSongScore());
+                songListViewHolder.mBinding.menuRatingBar.setVisibility(View.VISIBLE);
+                songListViewHolder.mBinding.menuRatingBar.setRating(musicBean.getSongScore());
             } else if (mScroeAndFrequnecyFlag == Constants.NUMBER_TWO) {
-                songListViewHolder.mTvFrequency.setVisibility(View.VISIBLE);
-                songListViewHolder.mTvFrequency.setText(String.valueOf(musicBean.getPlayFrequency()));
+                songListViewHolder.mBinding.tvFrequency.setVisibility(View.VISIBLE);
+                songListViewHolder.mBinding.tvFrequency.setText(String.valueOf(musicBean.getPlayFrequency()));
             }
-            songListViewHolder.mCheckBox.setVisibility(isSelectStatus ? View.VISIBLE : View.GONE);
-            songListViewHolder.mIvSongItemMenu.setVisibility(isSelectStatus ? View.INVISIBLE : View.VISIBLE);
-            songListViewHolder.mCheckBox.setChecked(mSparseBooleanArray.get(position));
-            ImageUitl.customLoadPic(mContext, FileUtil.getAlbumUrl(musicBean, 1), R.drawable.noalbumcover_220, songListViewHolder.mSongAlbum);
-            songListViewHolder.mSongArtistName.setText(StringUtil.getArtist(musicBean));
-            songListViewHolder.mSongName.setText(StringUtil.getTitle(musicBean));
+            songListViewHolder.mBinding.checkboxItem.setVisibility(isSelectStatus() ? View.VISIBLE : View.GONE);
+            songListViewHolder.mBinding.ivSongItemMenu.setVisibility(isSelectStatus() ? View.INVISIBLE : View.VISIBLE);
+            songListViewHolder.mBinding.checkboxItem.setChecked(mSparseBooleanArray.get(position));
+            ImageUitl.customLoadPic(mContext, FileUtil.getAlbumUrl(musicBean, 1), R.drawable.noalbumcover_220, songListViewHolder.mBinding.songAlbum);
+            songListViewHolder.mBinding.songArtistName.setText(StringUtil.getArtist(musicBean));
+            songListViewHolder.mBinding.songName.setText(StringUtil.getTitle(musicBean));
             if (mIsShowStickyView == Constants.NUMBER_ZERO) {
                 String firstTv = musicBean.getFirstChar();
-                songListViewHolder.mTvStickyView.setText(firstTv);
+                songListViewHolder.mBinding.itemStickyView.setText(firstTv);
                 if (position == 0) {
-                    songListViewHolder.mTvStickyView.setVisibility(View.VISIBLE);
-                } else if (firstTv.equals(mList.get(position - 1)
+                    songListViewHolder.mBinding.itemStickyView.setVisibility(View.VISIBLE);
+                } else if (firstTv.equals(getDataList().get(position - 1)
                         .getFirstChar())) {
-                    songListViewHolder.mTvStickyView.setVisibility(View.GONE);
+                    songListViewHolder.mBinding.itemStickyView.setVisibility(View.GONE);
 
                 } else {
-                    songListViewHolder.mTvStickyView.setVisibility(View.VISIBLE);
+                    songListViewHolder.mBinding.itemStickyView.setVisibility(View.VISIBLE);
                 }
             } else {
-                songListViewHolder.mTvStickyView.setVisibility(View.GONE);
+                songListViewHolder.mBinding.itemStickyView.setVisibility(View.GONE);
             }
 
-            songListViewHolder.mIvSongItemMenu.setOnClickListener(view -> SongAdapter.this.openItemMenu(musicBean, position));
-            songListViewHolder.mCheckBox.setOnClickListener(v -> checkBoxClick(musicBean, position, songListViewHolder.mCheckBox.isChecked()));
+            songListViewHolder.mBinding.ivSongItemMenu.setOnClickListener(view -> SongAdapter.this.openItemMenu(musicBean, position));
+            songListViewHolder.mBinding.checkboxItem.setOnClickListener(v -> checkBoxClick(musicBean, position, songListViewHolder.mBinding.checkboxItem.isChecked()));
             //  Item点击监听
-            songListViewHolder.mLlMusicItem.setOnClickListener(view -> {
-                if (isSelectStatus) {
-                    checkBoxClick(musicBean, position, songListViewHolder.mCheckBox.isChecked());
-                    openDetails(musicBean, position, songListViewHolder.mCheckBox.isChecked());
+            songListViewHolder.mBinding.llMusicItem.setOnClickListener(view -> {
+                if (isSelectStatus()) {
+                    checkBoxClick(musicBean, position, songListViewHolder.mBinding.checkboxItem.isChecked());
+                    openDetails(musicBean, position, songListViewHolder.mBinding.checkboxItem.isChecked());
                 } else {
                     if (mContext instanceof OnMusicItemClickListener) {
                         ((OnMusicItemClickListener) mContext).startMusicService(position);
@@ -121,52 +116,26 @@ public class SongAdapter
 
 
     @Override
-    protected RecyclerView.ViewHolder getViewHolder(View view) {
-
-        return new SongListViewHolder(view);
-    }
-
-    @Override
-    protected int getLayoutId() {
-
-        return R.layout.item_music_list;
-    }
-
-    @Override
     protected String getFirstChar(int i) {
-        return mList.get(i).getFirstChar();
+        return getDataList().get(i).getFirstChar();
     }
 
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        ItemMusicListBinding binding = ItemMusicListBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new SongListViewHolder(binding);
+    }
 
-    static class SongListViewHolder
-            extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_sticky_view)
-        TextView mTvStickyView;
-        @BindView(R.id.song_album)
-        ImageView mSongAlbum;
-        @BindView(R.id.checkbox_item)
-        AppCompatCheckBox mCheckBox;
-        @BindView(R.id.song_item_play_flag)
-        ImageView mSongPlayFlag;
-        @BindView(R.id.song_name)
-        TextView mSongName;
-        @BindView(R.id.menu_rating_bar)
-        RatingBar mRatingBar;
-        @BindView(R.id.tv_frequency)
-        TextView mTvFrequency;
-        @BindView(R.id.song_artist_name)
-        TextView mSongArtistName;
-        @BindView(R.id.ll_music_item)
-        LinearLayout mLlMusicItem;
-        @BindView(R.id.iv_song_item_menu)
-        ImageView mIvSongItemMenu;
+    static class SongListViewHolder extends RecyclerView.ViewHolder {
 
-        SongListViewHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
+        ItemMusicListBinding mBinding;
+
+        SongListViewHolder(ItemMusicListBinding binding) {
+            super(binding.getRoot());
+            mBinding = binding;
 
         }
-
     }
 
 

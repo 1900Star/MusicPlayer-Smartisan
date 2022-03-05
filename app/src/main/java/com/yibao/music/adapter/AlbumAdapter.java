@@ -2,26 +2,24 @@ package com.yibao.music.adapter;
 
 
 import android.app.Activity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
 import com.yibao.music.R;
-import com.yibao.music.base.BaseRvAdapter;
+import com.yibao.music.base.bindings.BaseBindingAdapter;
+import com.yibao.music.databinding.ItemAlbumListBinding;
+import com.yibao.music.databinding.ItemAlbumTileBinding;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.ImageUitl;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
 
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * @项目名： BigGirl
@@ -34,7 +32,7 @@ import butterknife.ButterKnife;
  */
 
 public class AlbumAdapter
-        extends BaseRvAdapter<AlbumInfo> {
+        extends BaseBindingAdapter<AlbumInfo> {
     private Activity mContext;
     private int mIsShowStickyView;
 
@@ -48,6 +46,7 @@ public class AlbumAdapter
         super(list);
         this.mContext = context;
         this.mIsShowStickyView = isShowStickyView;
+        LogUtil.d("lsp", "专辑类型  " + isShowStickyView);
     }
 
     @Override
@@ -55,12 +54,21 @@ public class AlbumAdapter
         return " 张专辑";
     }
 
+    @NonNull
     @Override
-    protected void bindView(RecyclerView.ViewHolder holder, AlbumInfo info) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        ItemAlbumTileBinding tileBinding = ItemAlbumTileBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        ItemAlbumListBinding listBinding = ItemAlbumListBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+
+        return mIsShowStickyView == Constants.NUMBER_ZERO ? new AlbumListHolder(listBinding) : new AlbumTileHolder(tileBinding);
+    }
+
+    @Override
+    public void bindView(RecyclerView.ViewHolder holder, AlbumInfo info) {
         //显示 StickyView  并且列表呈普通视图显示
         if (mIsShowStickyView == Constants.NUMBER_ZERO) {
-            if (holder instanceof AlbumlistHolder) {
-                AlbumlistHolder albumlistHolder = (AlbumlistHolder) holder;
+            if (holder instanceof AlbumListHolder) {
+                AlbumListHolder albumlistHolder = (AlbumListHolder) holder;
                 setDataAlbumList(albumlistHolder, info);
             }
 
@@ -76,29 +84,29 @@ public class AlbumAdapter
 
     }
 
-    private void setDataAlbumList(AlbumlistHolder albumlistHolder, AlbumInfo info) {
+    private void setDataAlbumList(AlbumListHolder albumlistHolder, AlbumInfo info) {
         int position = albumlistHolder.getAdapterPosition();
 
-        albumlistHolder.mTvAlbumListSongArtist.setText(info.getArtist());
-        ImageUitl.customLoadPic(mContext, StringUtil.getAlbum(2, info.getAlbumId(), info.getAlbumName()), R.drawable.noalbumcover_220, albumlistHolder.mIvItemAlbumList);
-        albumlistHolder.mTvAlbumListSongName.setText(info.getAlbumName());
+        albumlistHolder.mBinding.tvAlbumListSongArtist.setText(info.getArtist());
+        ImageUitl.customLoadPic(mContext, StringUtil.getAlbum(2, info.getAlbumId(), info.getAlbumName()), R.drawable.noalbumcover_220, albumlistHolder.mBinding.ivItemAlbumList);
+        albumlistHolder.mBinding.tvAlbumListSongName.setText(info.getAlbumName());
         String songCount = info.getSongCount() + "首";
-        albumlistHolder.mTvAlbumListSongCount.setText(songCount);
+        albumlistHolder.mBinding.tvAlbumListSongCount.setText(songCount);
         String firstTv = info.getFirstChar();
-        albumlistHolder.mIvListSelect.setVisibility(isSelectStatus ? View.VISIBLE : View.GONE);
-        albumlistHolder.mTvAlbumItemStickyView.setText(firstTv);
+        albumlistHolder.mBinding.ivAlbumListItemSelect.setVisibility(isSelectStatus() ? View.VISIBLE : View.GONE);
+        albumlistHolder.mBinding.tvAlbumItemStickyView.setText(firstTv);
         if (position == 0) {
-            albumlistHolder.mTvAlbumItemStickyView.setVisibility(View.VISIBLE);
-        } else if (firstTv.equals(mList.get(position - 1).getFirstChar())) {
-            albumlistHolder.mTvAlbumItemStickyView.setVisibility(View.GONE);
+            albumlistHolder.mBinding.tvAlbumItemStickyView.setVisibility(View.VISIBLE);
+        } else if (firstTv.equals(getDataList().get(position - 1).getFirstChar())) {
+            albumlistHolder.mBinding.tvAlbumItemStickyView.setVisibility(View.GONE);
 
         } else {
-            albumlistHolder.mTvAlbumItemStickyView.setVisibility(View.VISIBLE);
+            albumlistHolder.mBinding.tvAlbumItemStickyView.setVisibility(View.VISIBLE);
         }
-        albumlistHolder.mIvListSelect.setOnClickListener(v -> selectStatus(info, position));
+        albumlistHolder.mBinding.ivAlbumListItemSelect.setOnClickListener(v -> selectStatus(info, position));
         //            Item点击监听
-        albumlistHolder.mLlAlbumListItem.setOnClickListener(view -> {
-            if (isSelectStatus) {
+        albumlistHolder.mBinding.llAlbumListItem.setOnClickListener(view -> {
+            if (isSelectStatus()) {
                 selectStatus(info, position);
             } else {
                 AlbumAdapter.this.openDetails(info, position, false);
@@ -113,69 +121,37 @@ public class AlbumAdapter
     private void setDataAlbumTile(AlbumTileHolder holder, AlbumInfo albumInfo) {
 
 
-        ImageUitl.customLoadPic(mContext, StringUtil.getAlbum(2, albumInfo.getAlbumId(), albumInfo.getAlbumName()), R.drawable.noalbumcover_220, holder.mIvAlbumTileAlbum);
-        holder.mTvAlbumTileName.setText(albumInfo.getAlbumName());
+        ImageUitl.customLoadPic(mContext, StringUtil.getAlbum(2, albumInfo.getAlbumId(), albumInfo.getAlbumName()), R.drawable.noalbumcover_220, holder.mBinding.ivAlbumTileAlbum);
+        holder.mBinding.tvAlbumTileName.setText(albumInfo.getAlbumName());
 
-        holder.mIvAlbumTileAlbum.setOnClickListener(view1 -> AlbumAdapter.this.openDetails(albumInfo, holder.getAdapterPosition(), false));
-
+        holder.mBinding.ivAlbumTileAlbum.setOnClickListener(view1 -> AlbumAdapter.this.openDetails(albumInfo, holder.getAdapterPosition(), false));
     }
 
-    static class AlbumTileHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.iv_album_tile_album)
-        ImageView mIvAlbumTileAlbum;
-        @BindView(R.id.tv_album_tile_name)
-        TextView mTvAlbumTileName;
+    private static class AlbumTileHolder extends RecyclerView.ViewHolder {
 
-        AlbumTileHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
+        ItemAlbumTileBinding mBinding;
 
-        }
-
-
-    }
-
-    static class AlbumlistHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.tv_album_item_sticky_view)
-        TextView mTvAlbumItemStickyView;
-        @BindView(R.id.iv_item_album_list)
-        ImageView mIvItemAlbumList;
-        @BindView(R.id.iv_album_list_item_select)
-        ImageView mIvListSelect;
-        @BindView(R.id.tv_album_list_song_name)
-        TextView mTvAlbumListSongName;
-        @BindView(R.id.tv_album_list_song_artist)
-        TextView mTvAlbumListSongArtist;
-        @BindView(R.id.tv_album_list_song_count)
-        TextView mTvAlbumListSongCount;
-        @BindView(R.id.ll_album_list_item)
-        LinearLayout mLlAlbumListItem;
-        @BindView(R.id.root_list)
-        RelativeLayout mRootList;
-
-        AlbumlistHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
-
+        AlbumTileHolder(ItemAlbumTileBinding binding) {
+            super(binding.getRoot());
+            mBinding = binding;
 
         }
     }
 
-    @Override
-    protected RecyclerView.ViewHolder getViewHolder(View view) {
+    private static class AlbumListHolder extends RecyclerView.ViewHolder {
 
-        return mIsShowStickyView == Constants.NUMBER_ZERO ? new AlbumlistHolder(view) : new AlbumTileHolder(view);
-    }
+        ItemAlbumListBinding mBinding;
 
-    @Override
-    protected int getLayoutId() {
+        AlbumListHolder(ItemAlbumListBinding binding) {
+            super(binding.getRoot());
+            mBinding = binding;
 
-        return mIsShowStickyView == Constants.NUMBER_ZERO ? R.layout.item_album_list : R.layout.item_album_tile;
+        }
     }
 
 
     @Override
     protected String getFirstChar(int i) {
-        return mList.get(i).getFirstChar();
+        return getDataList().get(i).getFirstChar();
     }
 }
