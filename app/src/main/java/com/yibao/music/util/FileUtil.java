@@ -109,7 +109,10 @@ public class FileUtil {
         }
         return new File(file, Constants.CROP_IMAGE_FILE_NAME);
     }
-
+    public static File createFile(Context context, String fileName, String dirPath) {
+        String apkFilePath = context.getExternalFilesDir(dirPath).getAbsolutePath();
+        return new File(apkFilePath + File.separator + fileName);
+    }
     public static Uri getPicUri(Context context, String savePath) {
         File file = new File(savePath);
         if (!file.exists()) {

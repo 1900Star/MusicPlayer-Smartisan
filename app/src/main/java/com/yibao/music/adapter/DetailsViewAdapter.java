@@ -75,9 +75,11 @@ public class DetailsViewAdapter extends BaseBindingAdapter<MusicBean> {
                 });
             }
             detailsHolder.mBinding.ivDetailsMenu.setOnClickListener(v -> openItemMenu(info, adapterPosition));
+
             detailsHolder.mBinding.detailItemView.setOnClickListener(view -> {
                 if (mContext instanceof OnMusicItemClickListener) {
                     SpUtil.setSortFlag(mContext, Constants.NUMBER_TEN);
+                    LogUtil.d(getMTAG(), info.toString());
                     if (mDataFlag == Constants.NUMBER_THREE) {
                         insertSearchBean(info.getTitle());
                     }

@@ -7,16 +7,18 @@
     android:orientation="vertical"
     tools:context="com.yibao.music.activity.MusicActivity">
 
-    <include layout="@layout/music_toolbar" />
+    <include
+        android:id="@+id/music_bar"
+        layout="@layout/music_toolbar" />
 
-    <include layout="@layout/song_fragment_category" />
+    <include
+        android:id="@+id/song_category"
+        layout="@layout/song_fragment_category" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/seekBarN" />
-
-
 
 
     <androidx.viewpager2.widget.ViewPager2

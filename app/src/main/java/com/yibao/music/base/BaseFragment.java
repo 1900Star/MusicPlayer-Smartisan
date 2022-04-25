@@ -47,10 +47,10 @@ public abstract class BaseFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mActivity = (AppCompatActivity) getActivity();
+        mFragmentManager = mActivity.getSupportFragmentManager();
         mContext = getActivity();
         mCompositeDisposable = new CompositeDisposable();
         mBus = RxBus.getInstance();
-        mFragmentManager = mActivity.getSupportFragmentManager();
 
     }
 

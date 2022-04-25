@@ -2,6 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'kotlin-android'
 android {
+    signingConfigs {
+        debug {
+            storeFile file('D:\\Android\\jks\\zhj2019signed.jks')
+            storePassword 'paradise'
+            keyAlias 'key0'
+            keyPassword 'paradise'
+        }
+    }
     compileSdkVersion 31
     defaultConfig {
         applicationId "com.yibao.music"
@@ -34,6 +42,10 @@ android {
     }
 
     dependencies {
+        implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+        implementation 'androidx.core:core-ktx:1.6.0'
+
+
         implementation 'androidx.legacy:legacy-support-v4:1.0.0'
         implementation fileTree(include: ['*.jar'], dir: 'libs')
         androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -44,7 +56,7 @@ android {
         testImplementation 'junit:junit:4.13.2'
         implementation 'com.belerweb:pinyin4j:2.5.0'
         implementation 'org.greenrobot:greendao:3.3.0'
-        implementation 'com.google.code.gson:gson:2.8.6'
+        implementation 'com.google.code.gson:gson:2.8.9'
         implementation 'androidx.viewpager2:viewpager2:1.0.0'
         implementation 'com.google.android.material:material:1.4.0'
         implementation 'io.reactivex.rxjava2:rxjava:2.2.18'

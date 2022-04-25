@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.yibao.music.model.MusicBean
 import com.yibao.music.model.PlayListBean
 import com.yibao.music.util.Constants
+import java.util.*
 
 /**
  * @author  luoshipeng
@@ -80,7 +81,7 @@ abstract class BaseBindingAdapter<T>(protected var mList: MutableList<T>) :
         if (mList.size > Constants.NUMBER_ZERO) {
             mList.clear()
         }
-        this.mList = data as MutableList<T>
+        mList.addAll(data)
         notifyDataSetChanged()
     }
 
@@ -97,8 +98,8 @@ abstract class BaseBindingAdapter<T>(protected var mList: MutableList<T>) :
     open fun getPositionForSection(section: Int): Int {
         for (i in 0 until itemCount) {
             if (i < mList.size) {
-                val firstChar = getFirstChar(i)!!.toUpperCase()[0]
-                if (firstChar.toInt() == section) {
+                val firstChar = getFirstChar(i)!!.uppercase(Locale.getDefault())[0]
+                if (firstChar.code == section) {
                     return i
                 }
             }
@@ -112,7 +113,7 @@ abstract class BaseBindingAdapter<T>(protected var mList: MutableList<T>) :
 
 
     open fun getSectionForPosition(position: Int): Int {
-        return getFirstChar(position)!!.toUpperCase()[0].toInt()
+        return getFirstChar(position)!!.uppercase(Locale.getDefault())[0].code
     }
 
 

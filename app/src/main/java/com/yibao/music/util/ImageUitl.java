@@ -162,15 +162,21 @@ public class ImageUitl {
                                 String path = imageType == 1
                                         ? Constants.MUSIC_SONG_ALBUM_ROOT : imageType == 2
                                         ? Constants.MUSIC_ARITIST_IMG_ROOT : Constants.MUSIC_ALBUM_ROOT;
-                                File songAlbumFile = new File(path);
-                                if (!songAlbumFile.exists()) {
-                                    songAlbumFile.mkdirs();
-                                }
                                 String fileName = imageType == 1
                                         ? songName + ".jpg" : imageType == 2
                                         ? artist + ".jpg" : artist + ".jpg";
-                                File destFile = new File(songAlbumFile, fileName);
-                                //把gilde下载得到图片复制到定义好的目录中去
+                                File songAlbumFile = new File(path);
+                                File destFile;
+                                if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
+                                    destFile = FileUtil.createFile(context, fileName, "songAlbum");
+                                } else {
+                                    if (!songAlbumFile.exists()) {
+                                        songAlbumFile.mkdirs();
+                                    }
+                                    destFile = new File(songAlbumFile, fileName);
+                                }
+
+                                // 把gilde下载得到图片复制到定义好的目录中去
                                 copy(file, destFile);
 
                             });

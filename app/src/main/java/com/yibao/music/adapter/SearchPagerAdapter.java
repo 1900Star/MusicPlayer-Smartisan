@@ -6,7 +6,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.yibao.music.fragment.SearchFragment;
-import com.yibao.music.fragment.SongCategoryFragment;
 
 /**
  * 作者：Stran on 2017/3/23 03:31
@@ -19,7 +18,8 @@ public class SearchPagerAdapter
         extends FragmentStateAdapter {
 
     private String mArtist;
-    public SearchPagerAdapter(@NonNull FragmentActivity fragmentActivity,String artist) {
+
+    public SearchPagerAdapter(@NonNull FragmentActivity fragmentActivity, String artist) {
         super(fragmentActivity);
         mArtist = artist;
     }
@@ -27,7 +27,8 @@ public class SearchPagerAdapter
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return SearchFragment.newInstance(position,mArtist);
+
+        return SearchFragment.Companion.newInstance(position, mArtist);
     }
 
     @Override

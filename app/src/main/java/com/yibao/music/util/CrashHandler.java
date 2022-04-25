@@ -79,15 +79,23 @@ public class CrashHandler
                 return;
             }
         }
-        File dir = new File(Constants.CRASH_LOG_PATH);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
+
         long current = System.currentTimeMillis();
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss", Locale.getDefault()).format(new Date(current));
-        File file = new File(Constants.CRASH_LOG_PATH + "FILE_NAME" + time + FILE_NAME_SUFFIX);
+
+        File exceptionFile;
+        if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
+            String fileName = time + FILE_NAME_SUFFIX;
+            exceptionFile = FileUtil.createFile(mContext, fileName, "crash");
+        } else {
+            File dir = new File(Constants.CRASH_LOG_PATH);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            exceptionFile = new File(Constants.CRASH_LOG_PATH + FILE_NAME + time + FILE_NAME_SUFFIX);
+        }
         try {
-            PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+            PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(exceptionFile)));
             pw.println(time);
             dumpPhoneInfo(pw);
             pw.println();
