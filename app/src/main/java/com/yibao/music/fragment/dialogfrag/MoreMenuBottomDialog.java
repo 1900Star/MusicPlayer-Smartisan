@@ -49,7 +49,7 @@ public class MoreMenuBottomDialog {
         mMusicPosition = musicPosition;
         mIsNeedScore = isNeedScore;
         mIsNeedSetTime = isNeedSetTime;
-        musicDao = MusicApplication.getIntstance().getMusicDao();
+        musicDao = MusicApplication.getInstance().getMusicDao();
         return new MoreMenuBottomDialog();
     }
 

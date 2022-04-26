@@ -35,7 +35,7 @@ import java.util.*
  * @ Time:    2019/3/16/ 16:20
  * @ Des:     TODO
  */
-class SearchFragment() : BaseBindingFragment<SearchFragmentBinding>() {
+class SearchFragment : BaseBindingFragment<SearchFragmentBinding>() {
 
     private lateinit var mSearchDetailAdapter: DetailsViewAdapter
     private var mDisposableSearch: Disposable? = null
@@ -82,7 +82,7 @@ class SearchFragment() : BaseBindingFragment<SearchFragmentBinding>() {
                     position,
                     false,
                     false
-                ).getBottomDialog(mActivity)
+                ).getBottomDialog(requireActivity())
 
             }
         })
@@ -166,7 +166,7 @@ class SearchFragment() : BaseBindingFragment<SearchFragmentBinding>() {
     }
 
     override fun initData() {
-        mSearchDao = MusicApplication.getIntstance().searchDao
+        mSearchDao = MusicApplication.getInstance().searchDao
         // 搜索记录
         val searchList = mSearchDao.queryBuilder().list()
         if (searchList != null && searchList.size > 0) {
@@ -224,7 +224,7 @@ class SearchFragment() : BaseBindingFragment<SearchFragmentBinding>() {
                 val intent = Intent(mContext, PlayListActivity::class.java)
                 intent.putExtra(Constants.SONG_NAME, musicBean.title)
                 startActivity(intent)
-                mActivity.overridePendingTransition(R.anim.dialog_push_in, 0)
+                requireActivity().overridePendingTransition(R.anim.dialog_push_in, 0)
             }
             Constants.NUMBER_ONE -> SnakbarUtil.keepGoing(mBinding.llHistory)
             Constants.NUMBER_TWO -> {}

@@ -9,7 +9,7 @@ import com.yibao.music.fragment.AboutFragment;
 import com.yibao.music.fragment.AlbumFragment;
 import com.yibao.music.fragment.ArtistFragment;
 import com.yibao.music.fragment.PlayListFragment;
-import com.yibao.music.fragment.SongFragmentDev;
+import com.yibao.music.fragment.SongFragment;
 
 /**
  * 作者：Stran on 2017/3/23 03:31
@@ -36,17 +36,18 @@ public class MainViewPagerAdapter
     public int getItemCount() {
         return 5;
     }
+
     private Fragment getFragment(int position) {
-        Fragment fragment =SongFragmentDev.Companion.newInstance();
+        Fragment fragment = SongFragment.Companion.newInstance();
         switch (position) {
             case 0:
                 fragment = PlayListFragment.newInstance("lsp", null, false);
                 break;
             case 1:
-                fragment = ArtistFragment.newInstance();
+                fragment = ArtistFragment.Companion.newInstance();
                 break;
             case 2:
-                fragment = SongFragmentDev.Companion.newInstance();
+                fragment = SongFragment.Companion.newInstance();
                 break;
             case 3:
                 fragment = AlbumFragment.newInstance();

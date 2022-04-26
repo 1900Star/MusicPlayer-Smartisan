@@ -1,8 +1,7 @@
-package com.yibao.music.base
+package com.yibao.music.base.bindings
 
 import android.os.Bundle
 import androidx.viewbinding.ViewBinding
-import com.yibao.music.base.bindings.BaseBindingFragment
 import com.yibao.music.base.listener.OnMusicItemClickListener
 import com.yibao.music.base.listener.OnUpdataTitleListener
 import com.yibao.music.util.Constants
@@ -21,9 +20,8 @@ import io.reactivex.schedulers.Schedulers
  * @描述： TODO
  */
 abstract class BaseMusicFragmentDev<T : ViewBinding> : BaseBindingFragment<T>() {
-    protected var mEditDisposable: Disposable? = null
+    protected open var mEditDisposable: Disposable? = null
     private var mMenuDisposable: Disposable? = null
-    private lateinit var mClassName: String
     private var mAddToPlayListFlag = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,13 +35,14 @@ abstract class BaseMusicFragmentDev<T : ViewBinding> : BaseBindingFragment<T>() 
      * @return b
      */
     protected abstract val isOpenDetail: Boolean
+
     protected fun switchControlBar() {
-        if (mActivity is OnUpdataTitleListener) {
-            (mActivity as OnUpdataTitleListener).switchControlBar()
+        if (requireActivity() is OnUpdataTitleListener) {
+            (requireActivity() as OnUpdataTitleListener).switchControlBar()
         }
     }
 
-    protected fun deleteItem(musicPosition: Int) {}
+    protected open fun deleteItem(musicPosition: Int) {}
 
     /**
      * 根据detailFlag处理具体详情页面的返回事件
@@ -61,7 +60,7 @@ abstract class BaseMusicFragmentDev<T : ViewBinding> : BaseBindingFragment<T>() 
      *
      * @param detailFlag 页面标识
      */
-    protected fun handleDetailsBack(detailFlag: Int) {}
+    protected open fun handleDetailsBack(detailFlag: Int) {}
 
     /**
      * 详情页面打开时，拦截Activity的onBackPressed()的返回事件。
@@ -69,8 +68,8 @@ abstract class BaseMusicFragmentDev<T : ViewBinding> : BaseBindingFragment<T>() 
      * @param handleFlag 页面标识
      */
     protected fun interceptBackEvent(handleFlag: Int) {
-        if (mActivity is OnUpdataTitleListener) {
-            (mActivity as OnUpdataTitleListener).handleBack(handleFlag)
+        if (requireActivity() is OnUpdataTitleListener) {
+            (requireActivity() as OnUpdataTitleListener).handleBack(handleFlag)
         }
     }
 
@@ -84,7 +83,6 @@ abstract class BaseMusicFragmentDev<T : ViewBinding> : BaseBindingFragment<T>() 
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        mClassName = javaClass.simpleName
         if (mAddToPlayListFlag != Constants.NUMBER_ONE) {
             interceptBackEvent(if (isVisibleToUser && isOpenDetail) pageFlag() else Constants.NUMBER_ZERO)
         }
@@ -103,7 +101,7 @@ abstract class BaseMusicFragmentDev<T : ViewBinding> : BaseBindingFragment<T>() 
     }
 
     private fun pageFlag(): Int {
-        val pageFlag: Int = when (mClassName) {
+        val pageFlag: Int = when (this.javaClass.name) {
             Constants.FRAGMENT_PLAYLIST -> Constants.NUMBER_EIGHT
             Constants.FRAGMENT_ARTIST -> Constants.NUMBER_NINE
             Constants.FRAGMENT_SONG -> Constants.NUMBER_ELEVEN

@@ -41,7 +41,7 @@ public class QueryMusicFlagListUtil {
             return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constants.SORT_DOWN_TIME);
             // 收藏列表
         } else if (sortListFlag == Constants.NUMBER_EIGHT) {
-            List<MusicBean> musicBeanList = MusicApplication.getIntstance()
+            List<MusicBean> musicBeanList = MusicApplication.getInstance()
                     .getMusicDao().queryBuilder()
                     .where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
             Collections.sort(musicBeanList);

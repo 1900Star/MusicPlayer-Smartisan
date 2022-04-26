@@ -85,7 +85,7 @@ public class BitmapUtil {
         // 其次把文件插入到系统图库
         if (isShowPhotos) {
             try {
-                MediaStore.Images.Media.insertImage(MusicApplication.getIntstance()
+                MediaStore.Images.Media.insertImage(MusicApplication.getInstance()
                                                                  .getContentResolver(),
                                                     file.getAbsolutePath(),
                                                     name,
@@ -94,7 +94,7 @@ public class BitmapUtil {
                 e.printStackTrace();
             }
             // 最后通知图库更新
-            MusicApplication.getIntstance()
+            MusicApplication.getInstance()
                          .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                                                    Uri.parse("file://" + file)));
         }

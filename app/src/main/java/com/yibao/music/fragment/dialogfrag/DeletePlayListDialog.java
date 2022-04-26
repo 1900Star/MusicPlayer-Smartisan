@@ -78,7 +78,7 @@ public class DeletePlayListDialog
         mTvCancelDelete = mView.findViewById(R.id.tv_delete_list_cancel);
         mTvDelete = mView.findViewById(R.id.tv_delete_list_continue);
         mBus = RxBus.getInstance();
-        MusicBeanDao musicDao = MusicApplication.getIntstance().getMusicDao();
+        MusicBeanDao musicDao = MusicApplication.getInstance().getMusicDao();
         mPlayListBean = getArguments().getParcelable("musicInfo");
         mPageType = getArguments().getInt("pageType");
         if (mPlayListBean != null) {

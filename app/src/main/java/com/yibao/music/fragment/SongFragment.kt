@@ -1,29 +1,18 @@
 package com.yibao.music.fragment
 
-import com.yibao.music.base.BaseMusicFragment
-import butterknife.BindView
-import com.yibao.music.R
-import com.yibao.music.view.music.MusicToolBar
-import android.widget.TextView
-import androidx.viewpager2.widget.ViewPager2
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
-import butterknife.ButterKnife
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.android.schedulers.AndroidSchedulers
-import com.yibao.music.adapter.SongViewPagerAdapter
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
-import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
 import butterknife.OnClick
-import com.yibao.music.base.BaseMusicFragmentDev
+import com.yibao.music.R
+import com.yibao.music.adapter.SongViewPagerAdapter
+import com.yibao.music.base.bindings.BaseMusicFragmentDev
 import com.yibao.music.databinding.SongFragmentBinding
-import com.yibao.music.util.SpUtil
-import com.yibao.music.fragment.SongFragmentDev
 import com.yibao.music.util.ColorUtil
 import com.yibao.music.util.Constants
+import com.yibao.music.util.SpUtil
+import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 /**
  * @项目名： ArtisanMusic
@@ -34,7 +23,7 @@ import com.yibao.music.util.Constants
  * @创建时间: 2018/2/4 21:45
  * @描述： {歌曲TAB}
  */
-class SongFragmentDev : BaseMusicFragmentDev<SongFragmentBinding>() {
+class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickListener {
 
     private var curentIndex = 0
     private var isSelecteStatus = false
@@ -98,17 +87,22 @@ class SongFragmentDev : BaseMusicFragmentDev<SongFragmentBinding>() {
                 mBus.post(Constants.SONG_FAG_EDIT, Constants.NUMBER_TWO)
             }
         })
+        mBinding.songCategory.tvMusicCategorySongname.setOnClickListener(this)
+        mBinding.songCategory.tvMusicCategoryScore.setOnClickListener(this)
+        mBinding.songCategory.tvMusicCategoryFrequency.setOnClickListener(this)
+        mBinding.songCategory.tvMusicCategoryAddtime.setOnClickListener(this)
+
+
     }
 
-    @OnClick
-    fun onClick(v: View) {
+    override fun onClick(v: View) {
         when (v.id) {
             R.id.iv_music_category_paly -> randomPlayMusic()
             R.id.tv_music_category_songname -> switchListCategory(0)
             R.id.tv_music_category_score -> switchListCategory(1)
             R.id.tv_music_category_frequency -> switchListCategory(2)
             R.id.tv_music_category_addtime -> switchListCategory(3)
-            else -> {}
+
         }
     }
 
@@ -154,13 +148,13 @@ class SongFragmentDev : BaseMusicFragmentDev<SongFragmentBinding>() {
     }
 
     companion object {
-        fun newInstance(): SongFragmentDev {
-            return SongFragmentDev()
+        fun newInstance(): SongFragment {
+            return SongFragment()
         }
     }
 
     override val isOpenDetail: Boolean
-        get() = isOpenDetail
+        get() = isSelecteStatus
 
 
 }

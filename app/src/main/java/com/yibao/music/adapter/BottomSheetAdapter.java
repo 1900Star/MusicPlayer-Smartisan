@@ -49,7 +49,7 @@ public class BottomSheetAdapter
             // 侧滑删除收藏歌曲
             musicHolder.mBinding.deleteItem.setOnClickListener(v -> {
                 musicItem.setFavorite(false);
-                MusicApplication.getIntstance().getMusicDao().update(musicItem);
+                MusicApplication.getInstance().getMusicDao().update(musicItem);
                 RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_FIVE, position, musicItem.getTitle()));
             });
             // MusicBottomSheetDialog页面接收,用于播放收藏列表中点击Position的音乐

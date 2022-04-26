@@ -33,7 +33,6 @@ import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
-import com.yibao.music.util.StringUtil;
 
 import java.util.List;
 import java.util.Random;
@@ -79,7 +78,7 @@ public class FavoriteBottomSheetDialog
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.bottom_sheet_list_dialog, null);
         mCompositeDisposable = new CompositeDisposable();
-        mMusicDao = MusicApplication.getIntstance().getMusicDao();
+        mMusicDao = MusicApplication.getInstance().getMusicDao();
         initView(view);
         initListener();
         rxData();

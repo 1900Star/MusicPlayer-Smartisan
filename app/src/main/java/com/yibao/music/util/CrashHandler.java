@@ -1,6 +1,5 @@
 package com.yibao.music.util;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -43,7 +42,7 @@ public class CrashHandler
     public void init() {
         mDefaultCrashHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
-        mContext = MusicApplication.getIntstance().getApplicationContext();
+        mContext = MusicApplication.getInstance().getApplicationContext();
     }
 
     @Override

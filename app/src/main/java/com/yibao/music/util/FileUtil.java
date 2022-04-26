@@ -152,7 +152,7 @@ public class FileUtil {
     public static File getLyricsFile(String songName, String artist) {
         String lyricsName = songName + "$$" + artist + ".lrc";
         if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
-            String apkFilePath = MusicApplication.getIntstance().getExternalFilesDir(Constants.MUSIC_LYRICS_DIR).getAbsolutePath();
+            String apkFilePath = MusicApplication.getInstance().getExternalFilesDir(Constants.MUSIC_LYRICS_DIR).getAbsolutePath();
             return new File(apkFilePath + File.separator + lyricsName);
         } else {
             File file = new File(Constants.MUSIC_LYRICS_ROOT);
@@ -171,7 +171,7 @@ public class FileUtil {
     public static File getCrashFile() {
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss", Locale.getDefault()).format(new Date(System.currentTimeMillis()));
         if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
-            String apkFilePath = MusicApplication.getIntstance().getExternalFilesDir(Constants.CRASH_DIR).getAbsolutePath();
+            String apkFilePath = MusicApplication.getInstance().getExternalFilesDir(Constants.CRASH_DIR).getAbsolutePath();
             return new File(apkFilePath + File.separator + time + ".txt");
         } else {
             File file = new File(Constants.CRASH_LOG_PATH);
@@ -183,7 +183,7 @@ public class FileUtil {
 
     public static boolean isAndroidQFileExists(String path) {
         AssetFileDescriptor afd = null;
-        ContentResolver cr = MusicApplication.getIntstance().getContentResolver();
+        ContentResolver cr = MusicApplication.getInstance().getContentResolver();
         try {
             Uri uri = Uri.parse(path);
             afd = cr.openAssetFileDescriptor(uri, "r");

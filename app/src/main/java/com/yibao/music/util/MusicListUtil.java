@@ -1,8 +1,6 @@
 package com.yibao.music.util;
 
 import android.database.Cursor;
-import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
 
 import com.yibao.music.MusicApplication;
@@ -11,7 +9,6 @@ import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,11 +42,11 @@ public class MusicListUtil {
      * @return d
      */
     public static List<MusicBean> getMusicDataList() {
-        SharedPreferencesUtil sp = new SharedPreferencesUtil(MusicApplication.getIntstance(), Constants.MUSIC_SETTING);
+        SharedPreferencesUtil sp = new SharedPreferencesUtil(MusicApplication.getInstance(), Constants.MUSIC_SETTING);
         boolean aBooleanDuration = sp.getBoolean(Constants.MUSIC_DURATION_FLAG, false);
         boolean aBooleanFileSize = sp.getBoolean(Constants.MUSIC_FILE_SIZE_FLAG, false);
         List<MusicBean> musicInfo = new ArrayList<>();
-        Cursor cursor = MusicApplication.getIntstance().getApplicationContext().getContentResolver()
+        Cursor cursor = MusicApplication.getInstance().getApplicationContext().getContentResolver()
                 .query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         null,
                         null,
@@ -294,7 +291,7 @@ public class MusicListUtil {
 
     public static Observable<List<MusicBean>> getFavoriteList() {
         return Observable.create((ObservableOnSubscribe<List<MusicBean>>) emitter -> {
-            List<MusicBean> musicBeanList = MusicApplication.getIntstance()
+            List<MusicBean> musicBeanList = MusicApplication.getInstance()
                     .getMusicDao().queryBuilder()
                     .where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
             Collections.sort(musicBeanList);

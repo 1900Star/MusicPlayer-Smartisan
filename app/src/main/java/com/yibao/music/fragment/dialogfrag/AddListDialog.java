@@ -121,7 +121,7 @@ public class AddListDialog
 
     private void addNewPlayList() {
         String listTitle = mEditAddList.getText().toString().trim();
-        PlayListBeanDao playListDao = MusicApplication.getIntstance().getPlayListDao();
+        PlayListBeanDao playListDao = MusicApplication.getInstance().getPlayListDao();
         if (!listTitle.isEmpty()) {
             List<PlayListBean> beanList = playListDao.queryBuilder().where(PlayListBeanDao.Properties.Title.eq(listTitle)).list();
             if (beanList.size() > 0) {

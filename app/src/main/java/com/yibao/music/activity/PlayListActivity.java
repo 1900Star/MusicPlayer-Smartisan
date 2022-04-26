@@ -16,6 +16,8 @@ import java.util.ArrayList;
 
 /**
  * @author lsp
+ *
+ * 点击Item更多菜单，将歌曲添加到播放列表。
  */
 public class PlayListActivity extends AppCompatActivity implements OnFinishActivityListener {
     @Override

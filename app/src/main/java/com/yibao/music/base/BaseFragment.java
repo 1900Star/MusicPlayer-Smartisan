@@ -38,8 +38,8 @@ public abstract class BaseFragment extends Fragment {
     protected String TAG = " ==== " + this.getClass().getSimpleName() + "  ";
 
     protected BaseFragment() {
-        mMusicBeanDao = MusicApplication.getIntstance().getMusicDao();
-        mAlbumDao = MusicApplication.getIntstance().getAlbumDao();
+        mMusicBeanDao = MusicApplication.getInstance().getMusicDao();
+        mAlbumDao = MusicApplication.getInstance().getAlbumDao();
 
     }
 

@@ -1,13 +1,12 @@
 package com.yibao.music.base.bindings
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
@@ -31,19 +30,19 @@ abstract class BaseBindingFragment<T : ViewBinding> : Fragment() {
     private var isShowToUser = false
     private var _binding: T? = null
     protected val mBinding get() = _binding!!
-    protected var mActivity = AppCompatActivity()
     protected var mBus = RxBus.getInstance()
     protected lateinit var mMusicBeanDao: MusicBeanDao
     protected lateinit var mCompositeDisposable: CompositeDisposable
     protected lateinit var mContext: Context
+    protected lateinit var mActivity: Activity
     protected lateinit var mAlbumDao: AlbumInfoDao
-    protected lateinit var mFragmentManager: FragmentManager
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = requireActivity()
+        mActivity = requireActivity()
         mCompositeDisposable = CompositeDisposable()
-        mMusicBeanDao = MusicApplication.getIntstance().musicDao
-        mAlbumDao = MusicApplication.getIntstance().albumDao
+        mMusicBeanDao = MusicApplication.getInstance().musicDao
+        mAlbumDao = MusicApplication.getInstance().albumDao
 
     }
 

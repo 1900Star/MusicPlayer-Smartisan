@@ -16,12 +16,7 @@ import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
-import com.yibao.music.util.StringUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -46,7 +41,7 @@ public class LoadMusicDataService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        mMusicDao = MusicApplication.getIntstance().getMusicDao();
+        mMusicDao = MusicApplication.getInstance().getMusicDao();
         mBus = RxBus.getInstance();
     }
 

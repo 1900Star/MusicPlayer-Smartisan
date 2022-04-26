@@ -96,7 +96,7 @@ public class MusicPlayService
     private void init() {
         mAudioBinder = new AudioBinder();
         mBus = RxBus.getInstance();
-        mMusicDao = MusicApplication.getIntstance().getMusicDao();
+        mMusicDao = MusicApplication.getInstance().getMusicDao();
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         //初始化播放模式
         playMode = SpUtil.getMusicMode(this);

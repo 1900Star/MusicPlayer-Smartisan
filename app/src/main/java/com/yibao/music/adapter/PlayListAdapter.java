@@ -50,7 +50,7 @@ public class PlayListAdapter extends BaseBindingAdapter<PlayListBean> {
             playViewHolder.mBinding.ivItemEdit.setVisibility(isSelectStatus() ? View.VISIBLE : View.GONE);
             playViewHolder.mBinding.ivItemArrow.setVisibility(isSelectStatus() ? View.GONE : View.VISIBLE);
             playViewHolder.mBinding.tvPlayListName.setText(playListBean.getTitle());
-            List<MusicBean> musicBeans = MusicApplication.getIntstance().getMusicDao().queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle())).build().list();
+            List<MusicBean> musicBeans = MusicApplication.getInstance().getMusicDao().queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle())).build().list();
             String count = musicBeans.size() + " 首歌曲";
             playViewHolder.mBinding.tvPlayListCount.setText(count);
             int adapterPosition = playViewHolder.getAdapterPosition();

@@ -5,12 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.yibao.music.fragment.AboutFragment;
-import com.yibao.music.fragment.AlbumFragment;
-import com.yibao.music.fragment.ArtistFragment;
-import com.yibao.music.fragment.PlayListFragment;
 import com.yibao.music.fragment.SongCategoryFragment;
-import com.yibao.music.fragment.SongFragment;
 
 /**
  * 作者：Stran on 2017/3/23 03:31

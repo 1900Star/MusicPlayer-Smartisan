@@ -6,7 +6,9 @@
     android:animateLayoutChanges="true"
     android:orientation="vertical">
 
-    <include layout="@layout/music_toolbar" />
+    <include
+        android:id="@+id/music_bar"
+        layout="@layout/music_toolbar" />
 
     <RelativeLayout
         android:layout_width="match_parent"
