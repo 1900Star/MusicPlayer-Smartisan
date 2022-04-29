@@ -106,6 +106,7 @@ public class AlbumAdapter
         albumlistHolder.mBinding.ivAlbumListItemSelect.setOnClickListener(v -> selectStatus(info, position));
         //            Item点击监听
         albumlistHolder.mBinding.llAlbumListItem.setOnClickListener(view -> {
+            LogUtil.d(getMTAG(), "AAAAAAAAAAAAAAAAA    " + isSelectStatus());
             if (isSelectStatus()) {
                 selectStatus(info, position);
             } else {

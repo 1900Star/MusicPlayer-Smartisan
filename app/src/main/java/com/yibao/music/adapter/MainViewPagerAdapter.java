@@ -50,7 +50,7 @@ public class MainViewPagerAdapter
                 fragment = SongFragment.Companion.newInstance();
                 break;
             case 3:
-                fragment = AlbumFragment.newInstance();
+                fragment = AlbumFragment.Companion.newInstance();
                 break;
             case 4:
                 fragment = AboutFragment.newInstance();

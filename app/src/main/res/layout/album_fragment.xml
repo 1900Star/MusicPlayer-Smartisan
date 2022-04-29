@@ -17,7 +17,9 @@
         android:orientation="vertical"
         android:visibility="visible">
 
-        <include layout="@layout/album_fragment_category" />
+        <include
+            android:id="@+id/album_category"
+            layout="@layout/album_fragment_category" />
 
         <com.yibao.music.view.music.MusicView
             android:id="@+id/album_music_view"

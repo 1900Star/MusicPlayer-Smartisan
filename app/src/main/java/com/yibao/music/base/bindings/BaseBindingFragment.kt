@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -34,12 +35,12 @@ abstract class BaseBindingFragment<T : ViewBinding> : Fragment() {
     protected lateinit var mMusicBeanDao: MusicBeanDao
     protected lateinit var mCompositeDisposable: CompositeDisposable
     protected lateinit var mContext: Context
-    protected lateinit var mActivity: Activity
+    protected lateinit var mActivity: AppCompatActivity
     protected lateinit var mAlbumDao: AlbumInfoDao
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = requireActivity()
-        mActivity = requireActivity()
+        mActivity = requireActivity() as AppCompatActivity
         mCompositeDisposable = CompositeDisposable()
         mMusicBeanDao = MusicApplication.getInstance().musicDao
         mAlbumDao = MusicApplication.getInstance().albumDao

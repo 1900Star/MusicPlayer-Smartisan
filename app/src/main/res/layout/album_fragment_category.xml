@@ -7,7 +7,7 @@
     android:orientation="horizontal">
 
     <ImageView
-        android:id="@+id/iv_album_category_random_paly"
+        android:id="@+id/iv_album_category_random_play"
         android:layout_width="60dp"
         android:layout_height="45dp"
         android:layout_gravity="center_vertical"
@@ -75,7 +75,7 @@
 
 
     <ImageView
-        android:id="@+id/iv_album_category_paly"
+        android:id="@+id/iv_album_category_play"
         android:layout_width="60dp"
         android:layout_height="45dp"
         android:layout_gravity="center_vertical"
