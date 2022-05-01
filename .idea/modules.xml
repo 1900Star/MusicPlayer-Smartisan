@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SmartisanMusicPlayer.iml" filepath="$PROJECT_DIR$/.idea/modules/SmartisanMusicPlayer.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SmartisanMusicPlayer.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SmartisanMusicPlayer.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ArtisanMusic.iml" filepath="$PROJECT_DIR$/.idea/modules/ArtisanMusic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ArtisanMusic.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ArtisanMusic.app.iml" />
     </modules>
   </component>
 </project>

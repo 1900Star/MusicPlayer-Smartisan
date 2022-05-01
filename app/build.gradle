@@ -2,14 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'kotlin-android'
 android {
-    signingConfigs {
-        debug {
-            storeFile file('D:\\Android\\jks\\zhj2019signed.jks')
-            storePassword 'paradise'
-            keyAlias 'key0'
-            keyPassword 'paradise'
-        }
-    }
+
     compileSdkVersion 31
     defaultConfig {
         applicationId "com.yibao.music"
@@ -80,8 +73,6 @@ android {
         // 65536
         implementation 'com.android.support:multidex:1.0.3'
 
-        implementation 'com.jakewharton:butterknife:10.2.1'
-        annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
 
     }
 

@@ -3,7 +3,6 @@ package com.yibao.music.view.music;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +10,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.yibao.music.R;
 import com.yibao.music.activity.SearchActivity;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.SpUtil;
 
-import butterknife.OnClick;
 
 /**
  * @author Luoshipeng
@@ -88,29 +88,20 @@ public class MusicToolBar extends LinearLayout implements View.OnClickListener {
     }
 
     @Override
-    @OnClick({R.id.tv_edit, R.id.tv_music_toolbar_title, R.id.iv_search, R.id.tv_edit_delete})
     public void onClick(View v) {
         if (mListener != null) {
             int vId = v.getId();
-            switch (vId) {
-                case R.id.tv_edit:
-                    mListener.clickEdit();
-                    break;
-                case R.id.tv_music_toolbar_title:
-                    mListener.switchMusicControlBar();
-                    break;
-                case R.id.iv_search:
-                    Intent intent = new Intent(getContext(), SearchActivity.class);
-                    intent.putExtra("pageType", Constants.NUMBER_ZERO);
-                    getContext().startActivity(intent);
-                    ((Activity) getContext()).overridePendingTransition(R.anim.dialog_push_in, 0);
-                    break;
-                case R.id.tv_edit_delete:
-                    mListener.clickDelete();
-                    break;
-                default:
-                    break;
-
+            if (vId == R.id.tv_edit) {
+                mListener.clickEdit();
+            } else if (vId == R.id.tv_music_toolbar_title) {
+                mListener.switchMusicControlBar();
+            } else if (vId == R.id.iv_search) {
+                Intent intent = new Intent(getContext(), SearchActivity.class);
+                intent.putExtra("pageType", Constants.NUMBER_ZERO);
+                getContext().startActivity(intent);
+                ((Activity) getContext()).overridePendingTransition(R.anim.dialog_push_in, 0);
+            } else if (vId == R.id.tv_edit_delete) {
+                mListener.clickDelete();
             }
         }
 
