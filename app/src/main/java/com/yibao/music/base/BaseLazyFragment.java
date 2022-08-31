@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import butterknife.ButterKnife;
-
 public abstract class BaseLazyFragment extends BaseMusicFragment {
     // 是否为第一次加载
     private boolean isFirstLoad = true;
@@ -23,7 +21,7 @@ public abstract class BaseLazyFragment extends BaseMusicFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(mContext).inflate(getContentViewId(), null);
-        unbinder = ButterKnife.bind(this, view);
+
         initView(view);
         return view;
     }

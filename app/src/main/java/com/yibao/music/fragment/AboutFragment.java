@@ -6,12 +6,12 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Handler;
 import android.view.View;
-import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
-import com.yibao.music.base.BaseLazyFragment;
+import com.yibao.music.base.bindings.BaseBindingFragment;
 import com.yibao.music.base.listener.OnUpdataTitleListener;
+import com.yibao.music.databinding.AboutFragmentBinding;
 import com.yibao.music.fragment.dialogfrag.CrashSheetDialog;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.ScannerConfigDialog;
@@ -25,7 +25,6 @@ import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.ThreadPoolProxyFactory;
 import com.yibao.music.util.ToastUtil;
-import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.music.MusicToolBar;
 
 import java.io.File;
@@ -35,7 +34,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.BindView;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -50,46 +48,24 @@ import io.reactivex.schedulers.Schedulers;
  * @描述： {TODO}
  */
 
-public class AboutFragment extends BaseLazyFragment {
+public class AboutFragment extends BaseBindingFragment<AboutFragmentBinding> {
 
-    @BindView(R.id.music_toolbar_list)
-    MusicToolBar mMusicToolBar;
-    @BindView(R.id.about_header_iv)
-    CircleImageView mAboutHeaderIv;
-
-    @BindView(R.id.tv_backups_favorite)
-    TextView mTvBackupsFavorite;
-    @BindView(R.id.tv_recover_favorite)
-    TextView mTvRecoverFavorite;
-    @BindView(R.id.tv_share)
-    TextView mTvShare;
-    @BindView(R.id.tv_scanner_media)
-    TextView mtScannerMedia;
-    @BindView(R.id.tv_crash_log)
-    TextView mTvCrashLog;
-    @BindView(R.id.tv_delete_error_lyric)
-    TextView mTvDeleteErrorLyric;
-    private long mCurrentPosition;
-
+    private static final String TAG ="====" ;
 
     @Override
-    protected void initView(View view) {
-        mMusicToolBar.setToolbarTitle(getString(R.string.about));
-        mMusicToolBar.setTvEditVisibility(false);
+    public void initView() {
+        getMBinding().aboutBar.musicToolbarList.setToolbarTitle( getString(R.string.play_list));
         initData();
         initListener();
+
     }
 
-    @Override
-    protected int getContentViewId() {
-        return R.layout.about_fragment;
-    }
 
     @Override
-    protected void initData() {
+    public void initData() {
         File file = new File(Constants.MUSIC_LYRICS_ROOT);
         if (file.exists()) {
-            mTvDeleteErrorLyric.setVisibility(View.VISIBLE);
+            getMBinding().tvDeleteErrorLyric.setVisibility(View.VISIBLE);
         }
         File headerFile = FileUtil.getHeaderFile();
         if (FileUtil.getHeaderFile().exists()) {
@@ -98,39 +74,39 @@ public class AboutFragment extends BaseLazyFragment {
     }
 
     private void initListener() {
-        mtScannerMedia.setOnClickListener(v -> scannerMedia());
-        mTvShare.setOnClickListener(v -> shareMe());
-        mCompositeDisposable.add(RxView.clicks(mAboutHeaderIv)
+        getMBinding().tvScannerMedia.setOnClickListener(v -> scannerMedia());
+        getMBinding().tvShare.setOnClickListener(v -> shareMe());
+        mCompositeDisposable.add(RxView.clicks(getMBinding().aboutHeaderIv)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribe(o -> TakePhotoBottomSheetDialog.newInstance().getBottomDialog(mActivity)));
-        mCompositeDisposable.add(mBus.toObservableType(Constants.HEADER_PIC_URI, Object.class)
+        mCompositeDisposable.add(getMBus().toObservableType(Constants.HEADER_PIC_URI, Object.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> setHeaderView((Uri) o)));
-        mCompositeDisposable.add(RxView.clicks(mTvBackupsFavorite)
+        mCompositeDisposable.add(RxView.clicks(getMBinding().tvBackupsFavorite)
                 .throttleFirst(3, TimeUnit.SECONDS)
                 .subscribe(o -> backupsFavoriteList()));
-        mCompositeDisposable.add(RxView.clicks(mTvRecoverFavorite)
+        mCompositeDisposable.add(RxView.clicks(getMBinding().tvRecoverFavorite)
                 .throttleFirst(3, TimeUnit.SECONDS)
                 .subscribe(o -> recoverFavoriteList()));
-        mCompositeDisposable.add(RxView.clicks(mTvDeleteErrorLyric)
+        mCompositeDisposable.add(RxView.clicks(getMBinding().tvDeleteErrorLyric)
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribe(o -> clearErrorLyric()));
-        mCompositeDisposable.add(RxView.clicks(mTvCrashLog)
+        mCompositeDisposable.add(RxView.clicks(getMBinding().tvCrashLog)
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribe(o -> CrashSheetDialog.newInstance().getBottomDialog(mActivity)));
-        mAboutHeaderIv.setOnLongClickListener(view -> {
-            RelaxDialogFragment.newInstance().show(mFragmentManager, "girlsDialog");
+        getMBinding().aboutHeaderIv.setOnLongClickListener(view -> {
+            RelaxDialogFragment.newInstance().show(getChildFragmentManager(), "girlsDialog");
             return true;
         });
-        mMusicToolBar.setClickListener(new MusicToolBar.OnToolbarClickListener() {
+        getMBinding().aboutBar.musicToolbarList.setClickListener(new MusicToolBar.OnToolbarClickListener() {
             @Override
             public void clickEdit() {
             }
 
             @Override
             public void switchMusicControlBar() {
-                switchControlBar();
+//                switchControlBar();
             }
 
             @Override
@@ -153,6 +129,7 @@ public class AboutFragment extends BaseLazyFragment {
         startActivity(shareIntent);
     }
 
+    private int mCurrentPosition;
     private void recoverFavoriteList() {
         List<MusicBean> musicList = mMusicBeanDao.queryBuilder().list();
         if (FileUtil.getFavoriteFile()) {
@@ -164,18 +141,18 @@ public class AboutFragment extends BaseLazyFragment {
                 songInfoMap.put(songName, favoriteTime);
             }
             mCompositeDisposable.add(Observable.fromIterable(musicList).map(musicBean -> {
-                //将歌名截取出来进行比较
-                String favoriteTime = songInfoMap.get(musicBean.getTitle());
-                if (favoriteTime != null) {
-                    musicBean.setTime(favoriteTime);
-                    musicBean.setIsFavorite(true);
-                    mMusicBeanDao.update(musicBean);
-                }
-                return mCurrentPosition++;
-            }).subscribeOn(Schedulers.io())
+                        //将歌名截取出来进行比较
+                        String favoriteTime = songInfoMap.get(musicBean.getTitle());
+                        if (favoriteTime != null) {
+                            musicBean.setTime(favoriteTime);
+                            musicBean.setIsFavorite(true);
+                            mMusicBeanDao.update(musicBean);
+                        }
+                        return mCurrentPosition++;
+                    }).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(currentPostion -> {
-                        if (currentPostion == musicList.size() - 1) {
+                    .subscribe(currentPosition -> {
+                        if (currentPosition == musicList.size() - 1) {
                             if (mActivity instanceof OnUpdataTitleListener) {
                                 ((OnUpdataTitleListener) mActivity).checkCurrentFavorite();
                             }
@@ -208,7 +185,7 @@ public class AboutFragment extends BaseLazyFragment {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        mAboutHeaderIv.setImageBitmap(bitmap);
+        getMBinding().aboutHeaderIv.setImageBitmap(bitmap);
     }
 
     private void clearErrorLyric() {
@@ -226,8 +203,4 @@ public class AboutFragment extends BaseLazyFragment {
     }
 
 
-    @Override
-    protected boolean getIsOpenDetail() {
-        return false;
-    }
 }

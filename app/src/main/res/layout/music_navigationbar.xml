@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="55dp"
-    android:layout_marginBottom="3dp"
+    android:layout_height="64dp"
+
     android:baselineAligned="false"
+
     android:orientation="horizontal"
     tools:ignore="UseCompoundDrawables">
 
@@ -31,6 +32,7 @@
             android:text="@string/play_list"
             android:textColor="@color/tabbarTv"
             android:textSize="@dimen/music_tabbar"
+         
             android:textStyle="bold" />
 
     </LinearLayout>

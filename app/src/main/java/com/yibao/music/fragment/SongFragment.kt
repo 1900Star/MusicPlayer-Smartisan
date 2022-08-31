@@ -2,7 +2,6 @@ package com.yibao.music.fragment
 
 import android.view.View
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
-import butterknife.OnClick
 import com.yibao.music.R
 import com.yibao.music.adapter.SongViewPagerAdapter
 import com.yibao.music.base.bindings.BaseMusicFragmentDev
@@ -29,6 +28,7 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
     private var isSelecteStatus = false
 
     override fun initView() {
+        mBinding.musicBar.musicToolbarList.setTvEditVisibility(true)
         initData()
         initListener()
     }

@@ -54,25 +54,17 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-
-            case R.id.music_bar_playlist:
-                switchMusicTabbar(Constants.NUMBER_ZERO);
-                break;
-            case R.id.music_bar_artisanlist:
-                switchMusicTabbar(Constants.NUMBER_ONE);
-                break;
-            case R.id.music_bar_songlist:
-                switchMusicTabbar(Constants.NUMBER_TWO);
-                break;
-            case R.id.music_bar_albumlist:
-                switchMusicTabbar(Constants.NUMBER_THREE);
-                break;
-            case R.id.music_bar_about:
-                switchMusicTabbar(Constants.NUMBER_FOUR);
-                break;
-            default:
-                break;
+        int id = view.getId();
+        if (id == R.id.music_bar_playlist) {
+            switchMusicTabbar(Constants.NUMBER_ZERO);
+        } else if (id == R.id.music_bar_artisanlist) {
+            switchMusicTabbar(Constants.NUMBER_ONE);
+        } else if (id == R.id.music_bar_songlist) {
+            switchMusicTabbar(Constants.NUMBER_TWO);
+        } else if (id == R.id.music_bar_albumlist) {
+            switchMusicTabbar(Constants.NUMBER_THREE);
+        } else if (id == R.id.music_bar_about) {
+            switchMusicTabbar(Constants.NUMBER_FOUR);
         }
     }
 

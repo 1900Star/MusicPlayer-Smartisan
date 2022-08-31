@@ -15,7 +15,6 @@ import com.yibao.music.model.greendao.AlbumInfoDao;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.RxBus;
 
-import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -32,7 +31,7 @@ public abstract class BaseFragment extends Fragment {
     protected final MusicBeanDao mMusicBeanDao;
     protected CompositeDisposable mCompositeDisposable;
     protected Context mContext;
-    protected Unbinder unbinder;
+
     protected final AlbumInfoDao mAlbumDao;
     protected FragmentManager mFragmentManager;
     protected String TAG = " ==== " + this.getClass().getSimpleName() + "  ";

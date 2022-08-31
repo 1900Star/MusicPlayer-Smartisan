@@ -6,8 +6,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -26,6 +29,7 @@ import com.yibao.music.util.Constants;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SoftKeybordUtil;
+import com.yibao.music.util.ToastUtil;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -57,16 +61,19 @@ public class AddListDialog
     private static String mEditHint;
     private static boolean isFormPlayListActivity;
     private static final int MAX_LENGTH = 21;
+    private static SwipeRefreshLayout.OnRefreshListener mListener;
+
     /**
      * @param operationType 1 新建列表  2 列表改名
      * @param editHint      e
      * @param b             PlayListActivity弹出新建AddListDialog  时赋值为 true 。
      * @return c
      */
-    public static AddListDialog newInstance(int operationType, String editHint, boolean b) {
+    public static AddListDialog newInstance(int operationType, String editHint, boolean b, SwipeRefreshLayout.OnRefreshListener listener) {
         mOperationType = operationType;
         mEditHint = editHint;
         isFormPlayListActivity = b;
+        mListener = listener;
         return new AddListDialog();
     }
 
@@ -128,13 +135,18 @@ public class AddListDialog
                 SnakbarUtil.favoriteSuccessView(mEditAddList, "播放列表已存在");
             } else {
                 if (mOperationType == Constants.NUMBER_ONE) {
-                    playListDao.insertOrReplace(new PlayListBean(listTitle, System.currentTimeMillis()));
-                    dismiss();
-                    RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_ONE));
+                    long insertOrReplaceId = playListDao.insertOrReplace(new PlayListBean(listTitle, System.currentTimeMillis()));
+                    if (insertOrReplaceId != 0) {
+                        mListener.onRefresh();
+                        dismiss();
+                    } else {
+                        ToastUtil.show(getActivity(),"添加失败");
+                    }
+
                 } else {
                     // 重命名
                     dismiss();
-                    RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_FOUR, listTitle));
+
                 }
             }
 
@@ -147,11 +159,9 @@ public class AddListDialog
         // 主动弹出键盘
         mCompositeDisposable.add(Observable.timer(50, TimeUnit.MILLISECONDS)
                 .subscribe(aLong -> {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        mInputMethodManager = (InputMethodManager) getContext()
-                                .getSystemService(Context.INPUT_METHOD_SERVICE);
-                        SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED);
-                    }
+                    mInputMethodManager = (InputMethodManager) getContext()
+                            .getSystemService(Context.INPUT_METHOD_SERVICE);
+                    SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED);
                 })
         );
         mCompositeDisposable.add(RxTextView.textChangeEvents(mEditAddList)
