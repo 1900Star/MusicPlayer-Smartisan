@@ -28,6 +28,7 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
     private var isSelecteStatus = false
 
     override fun initView() {
+        mBinding.musicBar.musicToolbarList.setTvEditVisibility(true)
         initData()
         initListener()
     }

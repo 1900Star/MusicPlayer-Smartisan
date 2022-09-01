@@ -34,7 +34,7 @@ class AlbumFragment : BaseLazyFragmentDev<AlbumFragmentBinding>(), View.OnClickL
     private var mDetailList = ArrayList<MusicBean>()
     private var detailsViewTitle = ""
     override fun initView() {
-
+        mBinding.musicBar.musicToolbarList.setTvEditVisibility(false)
 
     }
 

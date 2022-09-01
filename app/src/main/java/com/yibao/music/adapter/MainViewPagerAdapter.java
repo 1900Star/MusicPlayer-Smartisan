@@ -53,7 +53,7 @@ public class MainViewPagerAdapter
                 fragment = AlbumFragment.Companion.newInstance();
                 break;
             case 4:
-                fragment = AboutFragment.Companion.newInstance();
+                fragment = AboutFragment.newInstance();
                 break;
             default:
                 break;

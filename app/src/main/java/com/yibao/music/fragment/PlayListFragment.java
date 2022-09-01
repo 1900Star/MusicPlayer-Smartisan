@@ -1,16 +1,19 @@
 package com.yibao.music.fragment;
 
+import android.graphics.Color;
 import android.util.SparseBooleanArray;
 import android.view.View;
 
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.adapter.PlayListAdapter;
-import com.yibao.music.base.bindings.BaseLazyFragmentDev;
+import com.yibao.music.base.bindings.BaseMusicFragmentDev;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnFinishActivityListener;
 import com.yibao.music.databinding.PlayListFragmentBinding;
@@ -23,11 +26,13 @@ import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constants;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.ThreadPoolProxyFactory;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.MusicToolBar;
+import com.yibao.music.viewmodel.PlayListViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +53,7 @@ import io.reactivex.schedulers.Schedulers;
  * @描述： {个人播放列表}
  */
 
-public class PlayListFragment extends BaseLazyFragmentDev<PlayListFragmentBinding> {
+public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBinding> implements SwipeRefreshLayout.OnRefreshListener {
 
     private PlayListAdapter mAdapter;
     private boolean isShowDetailsView = false;
@@ -66,25 +71,42 @@ public class PlayListFragment extends BaseLazyFragmentDev<PlayListFragmentBindin
     private SparseBooleanArray checkBoxMap = new SparseBooleanArray();
     private List<PlayListBean> mSelectList = new ArrayList<>();
     private PlayListBeanDao mPlayListDao;
+    private PlayListViewModel mViewModel;
 
     @Override
     public void initView() {
-        getMBinding().musicBar.musicToolbarList.setToolbarTitle(isShowDetailsView ? mTempTitle : getString(R.string.play_list));
+        initRecyclerView(getMBinding().recyclerPlayList);
+        getMBinding().swipePlayList.setColorSchemeColors(Color.BLUE, Color.RED, Color.YELLOW);
+        getMBinding().swipePlayList.setOnRefreshListener(this);
+
+        getMBinding().musicBar.musicToolbarList.setToolbarTitle(getString(R.string.play_list));
         getMBinding().musicBar.musicToolbarList.setVisibility(isFromPlayListActivity && SpUtil.getAddToPlayListFdlag(mContext) == Constants.NUMBER_ONE ? View.GONE : View.VISIBLE);
         mPlayListDao = MusicApplication.getInstance().getPlayListDao();
+        mViewModel = new PlayListViewModel();
+        mViewModel.getPlayList();
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mViewModel.getListModel().observe(this, playList -> {
+            mAdapter = new PlayListAdapter(playList, checkBoxMap);
+            getMBinding().recyclerPlayList.setAdapter(mAdapter);
+            initListener();
+            getMBinding().swipePlayList.setRefreshing(false);
+        });
+    }
 
     @Override
     public void initData() {
-        List<PlayListBean> playList = getPlayList();
-        setNotAllSelected(playList);
-        mAdapter = new PlayListAdapter(playList, checkBoxMap);
-        RecyclerView recyclerView = RecyclerFactory.createRecyclerView(Constants.NUMBER_ONE, mAdapter);
-        getMBinding().playListContent.addView(recyclerView);
+//        List<PlayListBean> playList = getPlayList();
+//        setNotAllSelected(playList);
+//        mAdapter = new PlayListAdapter(playList, checkBoxMap);
         mDetailsAdapter = new DetailsViewAdapter(mContext, new ArrayList<>(), Constants.NUMBER_FOUR);
-        initListener();
+//        getMBinding().recyclerPlayList.setAdapter(mAdapter);
+//        initListener();
+//        getMBinding().swipePlayList.setRefreshing(false);
     }
 
     private void setNotAllSelected(List<PlayListBean> listBeanList) {
@@ -96,7 +118,7 @@ public class PlayListFragment extends BaseLazyFragmentDev<PlayListFragmentBindin
     /**
      * 新增和删除列表
      */
-    @Override
+
     public void initRxBusData() {
         if (mAddDeleteListDisposable == null) {
             mAddDeleteListDisposable = getMBus().toObserverable(AddAndDeleteListBean.class)
@@ -142,6 +164,10 @@ public class PlayListFragment extends BaseLazyFragmentDev<PlayListFragmentBindin
 
     private List<PlayListBean> getPlayList() {
         List<PlayListBean> playListBeans = mPlayListDao.queryBuilder().list();
+        for (PlayListBean playListBean : playListBeans) {
+            LogUtil.d(getMTag(), playListBean.getTitle());
+
+        }
         Collections.sort(playListBeans);
         setNotAllSelected(playListBeans);
         return playListBeans;
@@ -166,7 +192,7 @@ public class PlayListFragment extends BaseLazyFragmentDev<PlayListFragmentBindin
 
             @Override
             public void switchMusicControlBar() {
-                switchControlBar();
+
             }
 
             @Override
@@ -175,7 +201,8 @@ public class PlayListFragment extends BaseLazyFragmentDev<PlayListFragmentBindin
             }
         });
 
-        getMBinding().llAddNewPlayList.setOnClickListener(v -> AddListDialog.newInstance(1, Constants.NULL_STRING, isFromPlayListActivity).show(getChildFragmentManager(), "addList"));
+        getMBinding().llAddNewPlayList.setOnClickListener(v ->
+                AddListDialog.newInstance(1, Constants.NULL_STRING, isFromPlayListActivity, this).show(getChildFragmentManager(), "addList"));
         // item 点击
         mAdapter.setItemListener((playListBean, position, isEditStatus) -> {
             mTempTitle = playListBean.getTitle();
@@ -200,7 +227,7 @@ public class PlayListFragment extends BaseLazyFragmentDev<PlayListFragmentBindin
             mEditPosition = currentPosition;
             if (getPlayList().size() > 0) {
                 String currentTitle = getPlayList().get(currentPosition).getTitle();
-                AddListDialog.newInstance(2, currentTitle, false).show(getChildFragmentManager(), "addList");
+                AddListDialog.newInstance(2, currentTitle, false, this).show(getChildFragmentManager(), "addList");
             }
         });
         mAdapter.setCheckBoxClickListener((playListBean, isChecked, position) -> {
@@ -331,6 +358,8 @@ public class PlayListFragment extends BaseLazyFragmentDev<PlayListFragmentBindin
     @Override
     protected void handleDetailsBack(int detailFlag) {
         if (detailFlag == Constants.NUMBER_EIGHT) {
+
+            LogUtil.d(getMTag(), "播放列表  AAAAA ");
             if (!isItemSelectStatus) {
                 if (!isShowDetailsView) {
                     closeEditStatus();
@@ -357,5 +386,12 @@ public class PlayListFragment extends BaseLazyFragmentDev<PlayListFragmentBindin
     @Override
     protected boolean isOpenDetail() {
         return isShowDetailsView;
+    }
+
+    @Override
+    public void onRefresh() {
+        LogUtil.d(getMTag(), "添加成功");
+        mViewModel.getPlayList();
+
     }
 }

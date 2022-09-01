@@ -7,7 +7,9 @@
     android:orientation="vertical">
 
 
-    <include layout="@layout/music_toolbar" android:id="@+id/appbar_about"/>
+    <include
+        android:id="@+id/about_bar"
+        layout="@layout/music_toolbar" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

@@ -15,7 +15,7 @@ import java.util.*
  * className   FixRecordAdapter
  * Des：TODO
  */
-abstract class BaseBindingAdapter<T>(protected var mList: MutableList<T>) :
+abstract class BaseBindingAdapter<T>(private var mList: MutableList<T>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     protected  val mTAG = " ==== " + this::class.java.simpleName + "  "
     private lateinit var mListener: OnItemListener<T>
