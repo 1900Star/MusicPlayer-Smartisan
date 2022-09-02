@@ -1,8 +1,6 @@
 package com.yibao.music.adapter;
 
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -33,11 +31,11 @@ import java.util.List;
  */
 
 public class PlayListAdapter extends BaseBindingAdapter<PlayListBean> {
-    private SparseBooleanArray mCheckedBoxMap;
 
-    public PlayListAdapter(List<PlayListBean> list, SparseBooleanArray checkedBoxMap) {
+
+    public PlayListAdapter(List<PlayListBean> list) {
         super(list);
-        mCheckedBoxMap = checkedBoxMap;
+
     }
 
 
@@ -46,29 +44,20 @@ public class PlayListAdapter extends BaseBindingAdapter<PlayListBean> {
 
         if (holder instanceof PlayViewHolder) {
             PlayViewHolder playViewHolder = (PlayViewHolder) holder;
-//            playViewHolder.mBinding.checkboxItem.setVisibility(isSelectStatus() ? View.VISIBLE : View.GONE);
-//            playViewHolder.mBinding.ivItemEdit.setVisibility(isSelectStatus() ? View.VISIBLE : View.GONE);
-//            playViewHolder.mBinding.ivItemArrow.setVisibility(isSelectStatus() ? View.GONE : View.VISIBLE);
             playViewHolder.mBinding.tvPlayListName.setText(playListBean.getTitle());
             List<MusicBean> musicBeans = MusicApplication.getInstance().getMusicDao().queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle())).build().list();
             String count = musicBeans.size() + " 首歌曲";
             playViewHolder.mBinding.tvPlayListCount.setText(count);
             int adapterPosition = playViewHolder.getAdapterPosition();
-            playViewHolder.mBinding.checkboxItem.setChecked(mCheckedBoxMap.get(adapterPosition));
+
             playViewHolder.mBinding.rlPlayListItem.setOnClickListener(view -> {
-                if (isSelectStatus()) {
-                    checkBoxClick(playListBean, adapterPosition, playViewHolder.mBinding.checkboxItem.isChecked());
-                    PlayListAdapter.this.openDetails(playListBean, adapterPosition, true);
-                } else {
-                    PlayListAdapter.this.openDetails(playListBean, adapterPosition, false);
-                }
+                PlayListAdapter.this.openDetails(playListBean, adapterPosition, false);
             });
             playViewHolder.mBinding.playListItemSlide.setOnClickListener(v -> {
                 getDataList().remove(adapterPosition);
                 MusicDaoUtil.setMusicListFlag(playListBean);
                 RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_TWO));
             });
-            playViewHolder.mBinding.checkboxItem.setOnClickListener(v -> checkBoxClick(playListBean, adapterPosition, playViewHolder.mBinding.checkboxItem.isChecked()));
 
             playViewHolder.mBinding.ivItemEdit.setOnClickListener(v -> editItmeTitle(adapterPosition));
             playViewHolder.mBinding.rlPlayListItem.setOnLongClickListener(v -> {

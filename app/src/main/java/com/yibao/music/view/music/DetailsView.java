@@ -124,32 +124,23 @@ public class DetailsView
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.tv_artist_albumm_details_title:
-                String albulmUrl = StringUtil.getAlbum(mPicType, mAlbumId, mArtist);
-                openAlbumDetail(albulmUrl, mArtist);
-                break;
-            case R.id.iv_artist_albumm_details:
-                LogUtil.d(TAG, " pictype " + mPicType);
-                String albumUrl = StringUtil.getAlbum(mPicType, mAlbumId, mArtist);
-                PreviewBigPicDialogFragment.newInstance(albumUrl)
-                        .show(mFragmentManager, "album");
-                break;
-            case R.id.iv_details_add_to_list:
-                startPlayListActivity();
-                break;
-            case R.id.iv_details_add_to_play_list:
-                LogUtil.d(TAG,"=================添加到当前播放列表");
-                break;
-            case R.id.ll_album_details_playall:
-                startMusic(Constants.NUMBER_ZERO);
-                break;
-            case R.id.ll_album_details_random_play:
-                startMusic(RandomUtil.getRandomPostion(mListSize));
-                break;
-            default:
-                break;
-
+        int id = view.getId();
+        if (id == R.id.tv_artist_albumm_details_title) {
+            String albumUrl = StringUtil.getAlbum(mPicType, mAlbumId, mArtist);
+            openAlbumDetail(albumUrl, mArtist);
+        } else if (id == R.id.iv_artist_albumm_details) {
+            LogUtil.d(TAG, " pictype " + mPicType);
+            String albumUrl = StringUtil.getAlbum(mPicType, mAlbumId, mArtist);
+            PreviewBigPicDialogFragment.newInstance(albumUrl)
+                    .show(mFragmentManager, "album");
+        } else if (id == R.id.iv_details_add_to_list) {
+            startPlayListActivity();
+        } else if (id == R.id.iv_details_add_to_play_list) {
+            LogUtil.d(TAG, "=================添加到当前播放列表");
+        } else if (id == R.id.ll_album_details_playall) {
+            startMusic(Constants.NUMBER_ZERO);
+        } else if (id == R.id.ll_album_details_random_play) {
+            startMusic(RandomUtil.getRandomPostion(mListSize));
         }
     }
 

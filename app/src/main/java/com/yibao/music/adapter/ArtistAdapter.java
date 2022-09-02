@@ -42,7 +42,7 @@ public class ArtistAdapter extends BaseBindingAdapter<ArtistInfo> {
         if (holder instanceof ArtisHolder) {
             ArtisHolder artisHolder = (ArtisHolder) holder;
             int position = holder.getAdapterPosition();
-            String songCount = artistInfo.getSongCount() + " 首歌曲,";
+            String songCount = artistInfo.getSongCount() + " 首歌曲";
             String albumCount = artistInfo.getAlbumCount() + " 张专辑";
             artisHolder.mBinding.artistItemName.setText(artistInfo.getArtist());
             artisHolder.mBinding.artistItemAlbumCount.setText(albumCount);
