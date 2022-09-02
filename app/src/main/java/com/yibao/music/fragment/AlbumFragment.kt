@@ -1,5 +1,6 @@
 package com.yibao.music.fragment
 
+import android.util.Log
 import android.view.View
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.yibao.music.R
@@ -14,6 +15,7 @@ import com.yibao.music.model.MusicBean
 import com.yibao.music.model.greendao.MusicBeanDao
 import com.yibao.music.util.ColorUtil
 import com.yibao.music.util.Constants
+import com.yibao.music.util.LogUtil
 import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -46,7 +48,7 @@ class AlbumFragment : BaseLazyFragmentDev<AlbumFragmentBinding>(), View.OnClickL
                 switchCategory(position)
             }
         })
-        initRxbusData()
+
         initListener()
     }
 
@@ -57,52 +59,28 @@ class AlbumFragment : BaseLazyFragmentDev<AlbumFragmentBinding>(), View.OnClickL
                 R.string.music_album
             )
         )
+        initRxBusData()
     }
 
-    override fun initRxBusData() {
-        disposeToolbar()
-        if (mEditDisposable == null) {
-            mEditDisposable = mBus.toObservableType(Constants.FRAGMENT_ALBUM, Any::class.java)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe { editBean: Any? ->
-                    mBinding.musicBar.musicToolbarList.setTvEditText(R.string.tv_edit)
-                    mBinding.musicBar.musicToolbarList.setTvDeleteVisibility(View.GONE)
-                    isShowDetailsView = false
-                }
-        }
-    }
 
     private fun initListener() {
-        mBinding.musicBar.musicToolbarList.setClickListener(object : OnToolbarClickListener {
-            override fun clickEdit() {
-                if (mDetailViewFlag) {
-                    mBus.post(Constants.ALBUM_FAG_EDIT, Constants.NUMBER_THREE)
-                }
-                mBinding.musicBar.musicToolbarList.setTvDeleteVisibility(if (isShowDetailsView) View.GONE else View.VISIBLE)
-                mBinding.musicBar.musicToolbarList.setTvEditText(if (!isShowDetailsView) R.string.tv_edit else R.string.complete)
-                showDetailsView(null)
-            }
 
-            override fun switchMusicControlBar() {
-                switchControlBar()
-            }
-
-            override fun clickDelete() {
-                mBus.post(Constants.ALBUM_FAG_EDIT, Constants.NUMBER_FOUR)
-            }
-        })
         mBinding.albumCategory.ivAlbumCategoryRandomPlay.setOnClickListener(this)
         mBinding.albumCategory.albumCategoryTileLl.setOnClickListener(this)
         mBinding.albumCategory.albumCategoryListLl.setOnClickListener(this)
         mBinding.albumCategory.ivAlbumCategoryPlay.setOnClickListener(this)
 
     }
+    private fun initRxBusData() {
+        disposeToolbar()
+        if (mEditDisposable == null) {
+            mEditDisposable = mBus.toObservableType(Constants.FRAGMENT_ALBUM, Any::class.java)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe { editBean: Any? ->
 
-    private fun initRxbusData() {
-        mCompositeDisposable.add(mBus.toObserverable(AlbumInfo::class.java)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { albumInfo: AlbumInfo? -> showDetailsView(albumInfo) })
+                    isShowDetailsView = false
+                }
+        }
     }
 
     override fun onClick(v: View) {
@@ -165,6 +143,7 @@ class AlbumFragment : BaseLazyFragmentDev<AlbumFragmentBinding>(), View.OnClickL
 
     override fun handleDetailsBack(detailFlag: Int) {
         if (detailFlag == Constants.NUMBER_TWELVE) {
+            LogUtil.d(mTag,"显示专辑详情了")
             showDetailsView(null)
         }
     }

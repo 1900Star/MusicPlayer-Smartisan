@@ -14,10 +14,10 @@ abstract class BaseLazyFragmentDev<T : ViewBinding>  : BaseMusicFragmentDev<T>()
             initData()
             isFirstLoad = false
         }
-        initRxBusData()
+
     }
 
-    protected open fun initRxBusData() {}
+
 
 
 

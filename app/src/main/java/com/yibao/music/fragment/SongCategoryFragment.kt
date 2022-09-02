@@ -6,6 +6,7 @@ import com.yibao.music.adapter.SongAdapter
 import com.yibao.music.base.bindings.BaseBindingAdapter
 import com.yibao.music.base.bindings.BaseLazyFragmentDev
 import com.yibao.music.databinding.CategoryFragmentBinding
+
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog
 import com.yibao.music.model.MusicBean
 import com.yibao.music.util.Constants
@@ -87,7 +88,7 @@ class SongCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
                 )
             }
         }
-        mBinding.musciView.setAdapter(mActivity, Constants.NUMBER_ONE, isOpenDetail, mSongAdapter)
+        mBinding.musicView.setAdapter(mActivity, Constants.NUMBER_ONE, isOpenDetail, mSongAdapter)
         initListener()
     }
 
@@ -124,7 +125,12 @@ class SongCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
         })
     }
 
-    public override fun initRxBusData() {
+    override fun onResume() {
+        super.onResume()
+        initRxBusData()
+    }
+
+  fun initRxBusData() {
         disposeToolbar()
         if (mEditDisposable == null) {
             mEditDisposable = mBus.toObservableType(Constants.SONG_FAG_EDIT, Any::class.java)
@@ -183,7 +189,7 @@ class SongCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
             mSongAdapter.setNewData(songList)
             //            getMBus().post(Constants.FRAGMENT_SONG, Constants.NUMBER_ZERO);
         } else {
-            SnakbarUtil.favoriteSuccessView(mBinding.musciView, "没有选中条目")
+            SnakbarUtil.favoriteSuccessView(mBinding.musicView, "没有选中条目")
         }
     }
 
