@@ -45,7 +45,4 @@ class LyricsFragment : BaseLazyFragmentDev<LyricsFragmentBinding>() {
 
 
     }
-
-    override val isOpenDetail: Boolean
-        get() = false
 }

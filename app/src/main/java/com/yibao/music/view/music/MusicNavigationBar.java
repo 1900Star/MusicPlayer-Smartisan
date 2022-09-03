@@ -56,19 +56,19 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.music_bar_playlist) {
-            switchMusicTabbar(Constants.NUMBER_ZERO);
+            switchMusicTabBar(Constants.NUMBER_ZERO);
         } else if (id == R.id.music_bar_artisanlist) {
-            switchMusicTabbar(Constants.NUMBER_ONE);
+            switchMusicTabBar(Constants.NUMBER_ONE);
         } else if (id == R.id.music_bar_songlist) {
-            switchMusicTabbar(Constants.NUMBER_TWO);
+            switchMusicTabBar(Constants.NUMBER_TWO);
         } else if (id == R.id.music_bar_albumlist) {
-            switchMusicTabbar(Constants.NUMBER_THREE);
+            switchMusicTabBar(Constants.NUMBER_THREE);
         } else if (id == R.id.music_bar_about) {
-            switchMusicTabbar(Constants.NUMBER_FOUR);
+            switchMusicTabBar(Constants.NUMBER_FOUR);
         }
     }
 
-    public void switchMusicTabbar(int flag) {
+    public void switchMusicTabBar(int flag) {
         setAllTabbarNotPressed(flag);
         switch (flag) {
             case Constants.NUMBER_ZERO:
@@ -108,8 +108,8 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
      * @param flag 将ViewPager切换到选中的Tag
      */
     private void setAllTabbarNotPressed(int flag) {
-        if (mBarSelecteListener != null) {
-            mBarSelecteListener.currentFlag(flag);
+        if (mBarSelectListener != null) {
+            mBarSelectListener.currentFlag(flag);
         }
         mMusicBarPlaylist.setBackgroundColor(ColorUtil.wihtle);
         mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_down_selector);
@@ -165,14 +165,14 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
         initListener();
     }
 
-    private OnNavigationBarSelecteListener mBarSelecteListener;
+    private OnNavigationBarSelectListener mBarSelectListener;
 
-    public void setOnNavigationbarListener(OnNavigationBarSelecteListener selecteListener) {
-        mBarSelecteListener = selecteListener;
+    public void setOnNavigationBarListener(OnNavigationBarSelectListener selectListener) {
+        mBarSelectListener = selectListener;
     }
 
-    public interface OnNavigationBarSelecteListener {
-        void currentFlag(int currentSelecteFlag);
+    public interface OnNavigationBarSelectListener {
+        void currentFlag(int currentSelectFlag);
 
     }
 }

@@ -7,7 +7,7 @@ package com.yibao.music.base.listener;
  * @ Des:    TODO
  * @author Luoshipeng
  */
-public interface OnUpdataTitleListener {
+public interface OnUpdateTitleListener {
 
     /**
      * 当前歌曲是否收藏
@@ -19,9 +19,5 @@ public interface OnUpdataTitleListener {
      */
     void switchControlBar();
 
-    /**
-     * 详情页面标识
-     * @param detailFlag d
-     */
-    void handleBack(int detailFlag);
+
 }

@@ -13,6 +13,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
+import com.yibao.music.databinding.MusicToolbarContentBinding
 import com.yibao.music.util.Constants
 import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
 
@@ -24,10 +25,9 @@ import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
  * @ Des:    TODO
  */
 class MusicToolBar : LinearLayout, View.OnClickListener {
-    private var mToolbarTitle: TextView? = null
-    private var mTvEdit: TextView? = null
-    private var mTvEditDelete: TextView? = null
-    private var mIvSearch: ImageView? = null
+
+    private val mBinding =
+        MusicToolbarContentBinding.inflate(LayoutInflater.from(context), this, true)
 
     constructor(context: Context?) : super(context) {
         initView()
@@ -38,60 +38,61 @@ class MusicToolBar : LinearLayout, View.OnClickListener {
     }
 
     private fun initView() {
-        LayoutInflater.from(context).inflate(R.layout.music_toolbar_content, this, true)
-        mToolbarTitle = findViewById(R.id.tv_music_toolbar_title)
-        mTvEdit = findViewById(R.id.tv_edit)
-        mTvEditDelete = findViewById(R.id.tv_edit_delete)
-        mIvSearch = findViewById(R.id.iv_search)
         initData()
         initListener()
     }
 
     private fun initData() {}
     private fun initListener() {
-        mTvEdit!!.setOnClickListener(this)
-        mTvEditDelete!!.setOnClickListener(this)
-        mIvSearch!!.setOnClickListener(this)
-        mToolbarTitle!!.setOnClickListener(this)
-        mToolbarTitle!!.setOnLongClickListener { v: View? ->
+        mBinding.tvEdit.setOnClickListener(this)
+        mBinding.tvDelete.setOnClickListener(this)
+        mBinding.ivSearch.setOnClickListener(this)
+        mBinding.tvMusicToolbarTitle.setOnClickListener(this)
+        mBinding.tvMusicToolbarTitle.setOnLongClickListener {
             SpUtil.setPicUrlFlag(context, !SpUtil.getPicUrlFlag(context, false))
             true
         }
     }
 
     fun setTvEditText(resourceId: Int) {
-        mTvEdit!!.setText(resourceId)
+        mBinding.tvEdit.setText(resourceId)
     }
 
     fun setTvEditVisibility(visibility: Boolean) {
-        mTvEdit!!.visibility = if (visibility) VISIBLE else GONE
+        mBinding.tvEdit.visibility = if (visibility) VISIBLE else GONE
     }
 
     fun setToolbarTitle(toolbarTitle: String?) {
-        mToolbarTitle!!.text = toolbarTitle
+        mBinding.tvMusicToolbarTitle.text = toolbarTitle
     }
 
     fun setTvDeleteVisibility(visibility: Int) {
-        mTvEditDelete!!.visibility = visibility
+        mBinding.tvDelete.visibility = visibility
     }
 
     fun setIvSearchVisibility(visibility: Boolean) {
-        mIvSearch!!.visibility = if (visibility) VISIBLE else GONE
+        mBinding.ivSearch.visibility = if (visibility) VISIBLE else GONE
     }
 
     override fun onClick(v: View) {
         if (mListener != null) {
 
             when (v.id) {
-                R.id.tv_edit -> {mListener!!.clickEdit()}
-                R.id.tv_music_toolbar_title -> {mListener!!.switchMusicControlBar()}
+                R.id.tv_edit -> {
+                    mListener!!.clickEdit()
+                }
+                R.id.tv_music_toolbar_title -> {
+                    mListener!!.switchMusicControlBar()
+                }
                 R.id.iv_search -> {
                     val intent = Intent(context, SearchActivity::class.java)
                     intent.putExtra("pageType", Constants.NUMBER_ZERO)
                     context.startActivity(intent)
                     (context as Activity).overridePendingTransition(R.anim.dialog_push_in, 0)
                 }
-                R.id.tv_edit_delete -> {mListener!!.clickDelete()}
+                R.id.tv_delete -> {
+                    mListener!!.clickDelete()
+                }
                 else -> {}
             }
         }

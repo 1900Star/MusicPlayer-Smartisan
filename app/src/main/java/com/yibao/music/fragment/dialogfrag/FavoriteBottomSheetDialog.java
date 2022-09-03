@@ -9,6 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +50,7 @@ import io.reactivex.schedulers.Schedulers;
  * @author Stran
  */
 public class FavoriteBottomSheetDialog
-        implements View.OnClickListener {
+        implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
     private String TAG = " ==== " + FavoriteBottomSheetDialog.class.getSimpleName() + "  ";
     private LinearLayout mBottomListContent;
     private TextView mBottomListColection;
@@ -155,31 +156,25 @@ public class FavoriteBottomSheetDialog
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.bottom_sheet_bar_play:
-                if (mList != null && mList.size() > 0) {
-                    Random random = new Random();
-                    int position = random.nextInt(mList.size());
-                    playMusic(position);
-                } else {
-                    SnakbarUtil.noFavoriteMusic(mBottomListClear);
-                }
-                break;
-            case R.id.tv_bottom_favorite:
-            case R.id.bottom_list_title_size:
-                backTop();
-                break;
-            case R.id.bottom_sheet_bar_clear:
-                if (mList != null && mList.size() > 0) {
-                    // playstatus 在这里暂时用来做删除播放列表和收藏列表的标识，在DeletePlayListDialog中使用，2 为播放列表PlayActivity界面 ，3 为收藏列表FavoriteBottomDialog界面。
-                    PlayListBean bean = new PlayListBean("收藏的所有", (long) Constants.NUMBER_THREE);
-                    DeletePlayListDialog.newInstance(bean, Constants.NUMBER_THREE).show(((AppCompatActivity) mContext).getSupportFragmentManager(), "favoriteList");
-                } else {
-                    SnakbarUtil.noFavoriteMusic(mBottomListClear);
-                }
-                break;
-            default:
-                break;
+        int id = view.getId();
+        if (id == R.id.bottom_sheet_bar_play) {
+            if (mList != null && mList.size() > 0) {
+                Random random = new Random();
+                int position = random.nextInt(mList.size());
+                playMusic(position);
+            } else {
+                SnakbarUtil.noFavoriteMusic(mBottomListClear);
+            }
+        } else if (id == R.id.tv_bottom_favorite || id == R.id.bottom_list_title_size) {
+            backTop();
+        } else if (id == R.id.bottom_sheet_bar_clear) {
+            if (mList != null && mList.size() > 0) {
+                // playstatus 在这里暂时用来做删除播放列表和收藏列表的标识，在DeletePlayListDialog中使用，2 为播放列表PlayActivity界面 ，3 为收藏列表FavoriteBottomDialog界面。
+                PlayListBean bean = new PlayListBean("收藏的所有", (long) Constants.NUMBER_THREE);
+                DeletePlayListDialog.newInstance(bean, Constants.NUMBER_THREE, this).show(((AppCompatActivity) mContext).getSupportFragmentManager(), "favoriteList");
+            } else {
+                SnakbarUtil.noFavoriteMusic(mBottomListClear);
+            }
         }
     }
 
@@ -232,6 +227,10 @@ public class FavoriteBottomSheetDialog
         mBottomListTitle = view.findViewById(R.id.tv_bottom_favorite);
     }
 
+    @Override
+    public void onRefresh() {
+
+    }
 }
 
 

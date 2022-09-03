@@ -1,7 +1,7 @@
 package com.yibao.music.fragment
 
-import android.util.Log
 import android.view.View
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.yibao.music.R
 import com.yibao.music.adapter.AlbumViewPagerAdapter
@@ -17,6 +17,7 @@ import com.yibao.music.util.ColorUtil
 import com.yibao.music.util.Constants
 import com.yibao.music.util.LogUtil
 import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
+import com.yibao.music.viewmodel.AlbumViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -29,19 +30,19 @@ import io.reactivex.schedulers.Schedulers
  * @创建时间: 2018/2/8 20:01
  * @描述： {TODO}
  */
-class AlbumFragment : BaseLazyFragmentDev<AlbumFragmentBinding>(), View.OnClickListener {
+class AlbumFragment : BaseLazyFragmentDev<AlbumFragmentBinding>(), View.OnClickListener,
+    SwipeRefreshLayout.OnRefreshListener {
+    private val mViewModel: AlbumViewModel by lazy { gets(AlbumViewModel::class.java) }
     private var mDetailsAdapter: DetailsViewAdapter? = null
     private var isShowDetailsView = false
-    private var mDetailViewFlag = true
     private var mDetailList = ArrayList<MusicBean>()
-    private var detailsViewTitle = ""
     override fun initView() {
-        mBinding.musicBar.musicToolbarList.setTvEditVisibility(false)
-
+        mBinding.musicBar.musicToolbarList.setToolbarTitle(getString(R.string.music_album))
     }
 
+
     override fun initData() {
-        val pagerAdapter = AlbumViewPagerAdapter(requireActivity())
+        val pagerAdapter = AlbumViewPagerAdapter(this, mViewModel)
         mBinding.viewPager2Album.adapter = pagerAdapter
         mBinding.viewPager2Album.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -54,12 +55,11 @@ class AlbumFragment : BaseLazyFragmentDev<AlbumFragmentBinding>(), View.OnClickL
 
     override fun onResume() {
         super.onResume()
-        mBinding.musicBar.musicToolbarList.setToolbarTitle(
-            if (isShowDetailsView) detailsViewTitle else getString(
-                R.string.music_album
-            )
-        )
-        initRxBusData()
+        //    接收AlbumAdapter发过来的当前点击Item的Position
+        mViewModel.albumViewModel.observe(this) { bean ->
+            showDetailsView(bean)
+        }
+
     }
 
 
@@ -70,18 +70,18 @@ class AlbumFragment : BaseLazyFragmentDev<AlbumFragmentBinding>(), View.OnClickL
         mBinding.albumCategory.albumCategoryListLl.setOnClickListener(this)
         mBinding.albumCategory.ivAlbumCategoryPlay.setOnClickListener(this)
 
-    }
-    private fun initRxBusData() {
-        disposeToolbar()
-        if (mEditDisposable == null) {
-            mEditDisposable = mBus.toObservableType(Constants.FRAGMENT_ALBUM, Any::class.java)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe { editBean: Any? ->
-
-                    isShowDetailsView = false
+        mBinding.musicBar.musicToolbarList.setClickListener(object : OnToolbarClickListener {
+            override fun clickEdit() {
+                if (isShowDetailsView) {
+                    showDetailsView(null)
                 }
-        }
+            }
+
+            override fun switchMusicControlBar() {}
+            override fun clickDelete() {}
+        })
     }
+
 
     override fun onClick(v: View) {
         when (v.id) {
@@ -96,11 +96,14 @@ class AlbumFragment : BaseLazyFragmentDev<AlbumFragmentBinding>(), View.OnClickL
         if (isShowDetailsView) {
             mBinding.detailsView.visibility = View.GONE
             mBinding.musicBar.musicToolbarList.setToolbarTitle(getString(R.string.music_album))
-            mDetailViewFlag = true
+            mBinding.musicBar.musicToolbarList.setTvEditVisibility(false)
         } else {
             if (albumInfo != null) {
-                mDetailViewFlag = false
                 mBinding.detailsView.visibility = View.VISIBLE
+                mBinding.musicBar.musicToolbarList.setTvEditVisibility(true)
+                mBinding.musicBar.musicToolbarList.setToolbarTitle(albumInfo.albumName)
+                mBinding.musicBar.musicToolbarList.setTvEditText(R.string.music_album)
+
                 mDetailList = mMusicBeanDao.queryBuilder()
                     .where(MusicBeanDao.Properties.Album.eq(albumInfo.albumName)).build()
                     .list() as ArrayList<MusicBean>
@@ -124,13 +127,10 @@ class AlbumFragment : BaseLazyFragmentDev<AlbumFragmentBinding>(), View.OnClickL
                         ).getBottomDialog(mActivity)
                     }
                 })
-                interceptBackEvent(Constants.NUMBER_TWELVE)
-                detailsViewTitle = albumInfo.albumName
-                mBinding.musicBar.musicToolbarList.setToolbarTitle(detailsViewTitle)
             }
         }
-        mBinding.musicBar.musicToolbarList.setTvEditText(if (isShowDetailsView) R.string.tv_edit else R.string.back)
         isShowDetailsView = !isShowDetailsView
+
     }
 
     override fun deleteItem(musicPosition: Int) {
@@ -141,12 +141,6 @@ class AlbumFragment : BaseLazyFragmentDev<AlbumFragmentBinding>(), View.OnClickL
         }
     }
 
-    override fun handleDetailsBack(detailFlag: Int) {
-        if (detailFlag == Constants.NUMBER_TWELVE) {
-            LogUtil.d(mTag,"显示专辑详情了")
-            showDetailsView(null)
-        }
-    }
 
     private fun switchCategory(showType: Int) {
         mBinding.viewPager2Album.setCurrentItem(showType, false)
@@ -173,7 +167,18 @@ class AlbumFragment : BaseLazyFragmentDev<AlbumFragmentBinding>(), View.OnClickL
         }
     }
 
-    override val isOpenDetail: Boolean
-        get() = isShowDetailsView
 
+    override fun onBackPressed(): Boolean {
+        return if (isShowDetailsView && isVisible && isResumed) {
+            showDetailsView(null)
+            true
+        } else {
+            false
+        }
+    }
+
+    override fun onRefresh() {
+        showDetailsView(null)
+
+    }
 }

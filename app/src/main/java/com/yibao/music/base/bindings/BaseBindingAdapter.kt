@@ -149,8 +149,8 @@ abstract class BaseBindingAdapter<T>(private var mList: MutableList<T>) :
         }
     }
 
-    protected open fun openDetails(t: T, adapterPosition: Int, isEditStatus: Boolean) {
-        mListener.showDetailsView(t, adapterPosition, isEditStatus)
+    protected open fun openDetails(t: T, adapterPosition: Int) {
+        mListener.showDetailsView(t, adapterPosition)
     }
 
 
@@ -169,7 +169,7 @@ abstract class BaseBindingAdapter<T>(private var mList: MutableList<T>) :
          * @param position
          * @param isEditStatus status
          */
-        fun showDetailsView(bean: T, position: Int, isEditStatus: Boolean)
+        fun showDetailsView(bean: T, position: Int)
     }
 
 
@@ -212,10 +212,8 @@ abstract class BaseBindingAdapter<T>(private var mList: MutableList<T>) :
         this.mEditClickListener = editClickListener
     }
 
-    protected open fun editItmeTitle(itemPosition: Int) {
-        if (mEditClickListener != null) {
-            mEditClickListener.deleteItemList(itemPosition)
-        }
+    protected open fun editItemTitle(itemPosition: Int) {
+        mEditClickListener.deleteItemList(itemPosition)
     }
 
     /**

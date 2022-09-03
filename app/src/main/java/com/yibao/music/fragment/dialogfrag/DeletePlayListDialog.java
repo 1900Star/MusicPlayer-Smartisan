@@ -3,12 +3,14 @@ package com.yibao.music.fragment.dialogfrag;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
@@ -37,8 +39,10 @@ public class DeletePlayListDialog
     private PlayListBean mPlayListBean;
     private RxBus mBus;
     private int mPageType;
+    private static SwipeRefreshLayout.OnRefreshListener mListener;
 
-    public static DeletePlayListDialog newInstance(PlayListBean musicInfo, int pageType) {
+    public static DeletePlayListDialog newInstance(PlayListBean musicInfo, int pageType, SwipeRefreshLayout.OnRefreshListener listener) {
+        mListener = listener;
         Bundle bundle = new Bundle();
         bundle.putParcelable("musicInfo", musicInfo);
         bundle.putInt("pageType", pageType);
@@ -105,6 +109,7 @@ public class DeletePlayListDialog
             MusicDaoUtil.setMusicListFlag(mPlayListBean);
         }
         mBus.post(new AddAndDeleteListBean(mPageType));
+        mListener.onRefresh();
     }
 
 

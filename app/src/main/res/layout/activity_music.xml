@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical"
-    tools:context="com.yibao.music.activity.MusicActivity">
+    tools:context=".activity.MusicActivity">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/music_viewpager2"
@@ -46,9 +46,7 @@
         android:id="@+id/music_navigation_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:layout_gravity="bottom"
-        android:visibility="visible" />
+        android:layout_gravity="bottom" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bnv_music"

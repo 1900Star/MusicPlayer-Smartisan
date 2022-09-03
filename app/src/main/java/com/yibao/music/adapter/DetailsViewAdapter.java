@@ -63,15 +63,16 @@ public class DetailsViewAdapter extends BaseBindingAdapter<MusicBean> {
             DetailsHolder detailsHolder = (DetailsHolder) holder;
             int adapterPosition = detailsHolder.getAdapterPosition();
             detailsHolder.mBinding.tvDetailsSongName.setText(info.getTitle());
-            LogUtil.d(getMTAG(), " artist info     " + info.getTitle() + " == " + info.getDuration());
+//            LogUtil.d(getMTAG(), " artist info     " + info.getTitle() + " == " + info.getDuration());
             int duration = (int) info.getDuration();
             detailsHolder.mBinding.tvSongDuration.setText(StringUtil.parseDuration(duration));
             if (mDataFlag == Constants.NUMBER_FOUR) {
                 // 播放列表的详情列表有侧滑删除
                 detailsHolder.mBinding.deleteItemDetail.setOnClickListener(v -> {
-                    info.setPlayListFlag(Constants.PLAY_LIST_BACK_FLAG);
-                    MusicApplication.getInstance().getMusicDao().update(info);
-                    RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_SIX, adapterPosition, info.getTitle()));
+                    LogUtil.d(getMTAG(),"播放列表的详情列表有侧滑删除");
+//                    info.setPlayListFlag(Constants.PLAY_LIST_BACK_FLAG);
+//                    MusicApplication.getInstance().getMusicDao().update(info);
+//                    RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_SIX, adapterPosition, info.getTitle()));
                 });
             }
             detailsHolder.mBinding.ivDetailsMenu.setOnClickListener(v -> openItemMenu(info, adapterPosition));

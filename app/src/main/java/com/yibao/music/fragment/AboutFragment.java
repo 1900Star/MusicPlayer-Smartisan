@@ -10,9 +10,8 @@ import android.view.View;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.base.bindings.BaseBindingFragment;
-import com.yibao.music.base.listener.OnUpdataTitleListener;
+import com.yibao.music.base.listener.OnUpdateTitleListener;
 import com.yibao.music.databinding.AboutFragmentBinding;
-import com.yibao.music.databinding.MusicToolbarBinding;
 import com.yibao.music.fragment.dialogfrag.CrashSheetDialog;
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.ScannerConfigDialog;
@@ -54,7 +53,7 @@ public class AboutFragment extends BaseBindingFragment<AboutFragmentBinding> {
 
     @Override
     public void initView() {
-
+        getMBinding().aboutBar.musicToolbarList.setToolbarTitle(getString(R.string.about));
         initData();
         initListener();
 
@@ -139,8 +138,8 @@ public class AboutFragment extends BaseBindingFragment<AboutFragmentBinding> {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(currentPosition -> {
                         if (currentPosition == musicList.size() - 1) {
-                            if (mActivity instanceof OnUpdataTitleListener) {
-                                ((OnUpdataTitleListener) mActivity).checkCurrentFavorite();
+                            if (mActivity instanceof OnUpdateTitleListener) {
+                                ((OnUpdateTitleListener) mActivity).checkCurrentFavorite();
                             }
                         }
                     }));

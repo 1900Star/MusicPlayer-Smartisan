@@ -17,8 +17,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.yibao.music.MusicApplication
 import com.yibao.music.R
+import com.yibao.music.base.listener.OnHandleBackListener
 import com.yibao.music.model.greendao.AlbumInfoDao
 import com.yibao.music.model.greendao.MusicBeanDao
+import com.yibao.music.util.HandleBackUtil
 import com.yibao.music.util.RxBus
 import com.yibao.music.util.SharedPreferencesUtil
 import io.reactivex.disposables.CompositeDisposable
@@ -31,7 +33,7 @@ import java.util.*
  * className   BaseBindingFragment
  * Des：TODO
  */
-abstract class BaseBindingFragment<T : ViewBinding> : Fragment() {
+abstract class BaseBindingFragment<T : ViewBinding> : Fragment(),OnHandleBackListener{
     val mTag = " ==== " + this::class.java.simpleName + "  "
     protected lateinit var mSpHelper: SharedPreferencesUtil
     private var isShowToUser = false
@@ -112,5 +114,7 @@ abstract class BaseBindingFragment<T : ViewBinding> : Fragment() {
 
         }
     }
-
+    override fun onBackPressed(): Boolean {
+        return HandleBackUtil.handleBackPress(this)
+    }
 }

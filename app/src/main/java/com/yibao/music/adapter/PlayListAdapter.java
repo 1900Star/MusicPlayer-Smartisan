@@ -40,7 +40,7 @@ public class PlayListAdapter extends BaseBindingAdapter<PlayListBean> {
 
 
     @Override
-    public void bindView(RecyclerView.ViewHolder holder, PlayListBean playListBean) {
+    public void bindView(@NonNull RecyclerView.ViewHolder holder, PlayListBean playListBean) {
 
         if (holder instanceof PlayViewHolder) {
             PlayViewHolder playViewHolder = (PlayViewHolder) holder;
@@ -51,7 +51,7 @@ public class PlayListAdapter extends BaseBindingAdapter<PlayListBean> {
             int adapterPosition = playViewHolder.getAdapterPosition();
 
             playViewHolder.mBinding.rlPlayListItem.setOnClickListener(view -> {
-                PlayListAdapter.this.openDetails(playListBean, adapterPosition, false);
+                PlayListAdapter.this.openDetails(playListBean, adapterPosition);
             });
             playViewHolder.mBinding.playListItemSlide.setOnClickListener(v -> {
                 getDataList().remove(adapterPosition);
@@ -59,7 +59,7 @@ public class PlayListAdapter extends BaseBindingAdapter<PlayListBean> {
                 RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_TWO));
             });
 
-            playViewHolder.mBinding.ivItemEdit.setOnClickListener(v -> editItmeTitle(adapterPosition));
+            playViewHolder.mBinding.ivItemEdit.setOnClickListener(v -> editItemTitle(adapterPosition));
             playViewHolder.mBinding.rlPlayListItem.setOnLongClickListener(v -> {
                 deletePlaylist(playListBean, adapterPosition);
                 return true;

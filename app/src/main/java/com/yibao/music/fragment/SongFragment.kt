@@ -38,22 +38,10 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
         super.onResume()
 
         mBinding.musicBar.musicToolbarList.setToolbarTitle(getString(R.string.music_song))
-        initRxBusData()
         switchListCategory(curentIndex)
     }
 
-    private fun initRxBusData() {
-        disposeToolbar()
-        if (mEditDisposable == null) {
-            mEditDisposable = mBus.toObservableType(Constants.FRAGMENT_SONG, Any::class.java)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe { editBean: Any? ->
-                    mBinding.musicBar.musicToolbarList.setTvEditText(R.string.tv_edit)
-                    mBinding.musicBar.musicToolbarList.setTvDeleteVisibility(View.GONE)
-                    isSelecteStatus = false
-                }
-        }
-    }
+
 
     override fun initData() {
         switchListCategory(0)
@@ -72,7 +60,6 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
     private fun initListener() {
         mBinding.musicBar.musicToolbarList.setClickListener(object : OnToolbarClickListener {
             override fun clickEdit() {
-                interceptBackEvent(if (isSelecteStatus) Constants.NUMBER_ELEVEN else Constants.NUMBER_ZERO)
                 mBus.post(Constants.SONG_FAG_EDIT, Constants.NUMBER_ONE)
                 mBinding.musicBar.musicToolbarList.setTvEditText(if (isSelecteStatus) R.string.tv_edit else R.string.complete)
                 mBinding.musicBar.musicToolbarList.setTvDeleteVisibility(if (isSelecteStatus) View.GONE else View.VISIBLE)
@@ -153,8 +140,6 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
         }
     }
 
-    override val isOpenDetail: Boolean
-        get() = isSelecteStatus
 
 
 }

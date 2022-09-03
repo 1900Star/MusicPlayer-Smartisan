@@ -12,6 +12,7 @@ import com.yibao.music.model.ArtistInfo
 import com.yibao.music.model.MusicBean
 import com.yibao.music.model.greendao.MusicBeanDao
 import com.yibao.music.util.Constants
+import com.yibao.music.util.LogUtil
 import com.yibao.music.util.MusicListUtil
 import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
 
@@ -29,15 +30,8 @@ class ArtistFragment : BaseLazyFragmentDev<ArtisanListFragmentBinding>() {
     private var isShowDetailsView = false
     private var mDetailsAdapter: DetailsViewAdapter? = null
     private lateinit var mDetailList: ArrayList<MusicBean>
-    private var mTempTitle: String? = null
     override fun initView() {
-        mBinding.musicBar.musicToolbarList.setToolbarTitle(
-            if (isShowDetailsView) mTempTitle else getString(
-                R.string.music_artisan
-            )
-        )
-        mBinding.musicBar.musicToolbarList.setTvEditVisibility(isShowDetailsView)
-
+        mBinding.musicBar.musicToolbarList.setToolbarTitle(getString(R.string.music_artisan))
     }
 
     override fun onResume() {
@@ -46,21 +40,10 @@ class ArtistFragment : BaseLazyFragmentDev<ArtisanListFragmentBinding>() {
     }
 
     private fun initListener() {
-
-
-        mAdapter.setItemListener(object : BaseBindingAdapter.OnItemListener<ArtistInfo> {
-            override fun showDetailsView(bean: ArtistInfo, position: Int, isEditStatus: Boolean) {
-                openDetailsView(bean)
-
-            }
-
-        })
-
-
         mBinding.musicBar.musicToolbarList.setClickListener(object : OnToolbarClickListener {
             override fun clickEdit() {
                 if (isShowDetailsView) {
-                    openDetailsView(null)
+                    showDetail(null)
                 }
             }
 
@@ -77,12 +60,21 @@ class ArtistFragment : BaseLazyFragmentDev<ArtisanListFragmentBinding>() {
         val artistList = MusicListUtil.getArtistList(musicBeans)
         mAdapter = ArtistAdapter(artistList)
         mBinding.artistMusicView.setAdapter(activity, Constants.NUMBER_TWO, true, mAdapter)
+        mAdapter.setItemListener(object : BaseBindingAdapter.OnItemListener<ArtistInfo> {
+            override fun showDetailsView(bean: ArtistInfo, position: Int) {
+                showDetail(bean)
+            }
+        })
     }
 
-    private fun openDetailsView(artistInfo: ArtistInfo?) {
-        if (!isShowDetailsView) {
+    private fun showDetail(artistInfo: ArtistInfo?) {
+        if (isShowDetailsView) {
+            mBinding.musicBar.musicToolbarList.setToolbarTitle(getString(R.string.music_artisan))
+            mBinding.detailsView.visibility = View.GONE
+            mBinding.musicBar.musicToolbarList.setTvEditVisibility(false)
+            mDetailList.clear()
+        } else {
             if (artistInfo != null) {
-                mTempTitle = artistInfo.albumName
                 mDetailList = mMusicBeanDao.queryBuilder()
                     .where(MusicBeanDao.Properties.Artist.eq(artistInfo.artist)).build()
                     .list() as ArrayList<MusicBean>
@@ -93,7 +85,8 @@ class ArtistFragment : BaseLazyFragmentDev<ArtisanListFragmentBinding>() {
                     artistInfo.artist,
                     Constants.NUMBER_ONE
                 )
-                mDetailsAdapter = DetailsViewAdapter(requireActivity(), mDetailList, Constants.NUMBER_ONE)
+                mDetailsAdapter =
+                    DetailsViewAdapter(requireActivity(), mDetailList, Constants.NUMBER_ONE)
                 mBinding.detailsView.setAdapter(Constants.NUMBER_ONE, artistInfo, mDetailsAdapter)
                 mDetailsAdapter!!.setOnItemMenuListener(object :
                     BaseBindingAdapter.OnOpenItemMoreMenuListener {
@@ -106,33 +99,24 @@ class ArtistFragment : BaseLazyFragmentDev<ArtisanListFragmentBinding>() {
                         ).getBottomDialog(requireActivity())
 
                     }
-
-
                 })
-
                 mBinding.detailsView.setSuspension()
-                interceptBackEvent(Constants.NUMBER_NINE)
 
                 mBinding.musicBar.musicToolbarList.setTvEditText(R.string.music_artisan)
+                mBinding.musicBar.musicToolbarList.setTvEditVisibility(true)
+                mBinding.musicBar.musicToolbarList.setToolbarTitle(artistInfo.albumName)
             }
+            mBinding.detailsView.visibility = View.VISIBLE
         }
-        mBinding.detailsView.visibility = if (isShowDetailsView) View.GONE else View.VISIBLE
-        mBinding.musicBar.musicToolbarList.setToolbarTitle(if (isShowDetailsView) getString(R.string.music_artisan) else mTempTitle)
+
         isShowDetailsView = !isShowDetailsView
-        mBinding.musicBar.musicToolbarList.setTvEditVisibility(isShowDetailsView)
     }
 
     override fun deleteItem(musicPosition: Int) {
         super.deleteItem(musicPosition)
         if (mDetailsAdapter != null) {
             mDetailList.removeAt(musicPosition)
-            mDetailsAdapter!!.setData(mDetailList!!)
-        }
-    }
-
-    override fun handleDetailsBack(detailFlag: Int) {
-        if (detailFlag == Constants.NUMBER_NINE) {
-            openDetailsView(null)
+            mDetailsAdapter!!.setData(mDetailList)
         }
     }
 
@@ -143,8 +127,13 @@ class ArtistFragment : BaseLazyFragmentDev<ArtisanListFragmentBinding>() {
         }
     }
 
-    override val isOpenDetail: Boolean
-        get() = isShowDetailsView
-
+    override fun onBackPressed(): Boolean {
+        return if (isShowDetailsView && isVisible && isResumed) {
+            showDetail(null)
+            true
+        } else {
+            false
+        }
+    }
 
 }

@@ -58,6 +58,7 @@ public class Constants {
     public static final String ALBUM_FAG_EDIT = "album_edit";
     public static final String SONG_FAG_EDIT = "song_edit";
     public static final String FAVORITE_POSITION = "favorite_position";
+    public static final String POSITION = "position";
     /**
      * 0 表示是通知栏控制播放和暂停
      * 1 表示在通知栏收藏音乐
@@ -92,44 +93,44 @@ public class Constants {
 
 
     public static final String MUSIC_SETTING = "artist_music_setting";
-    static final int MODE_KEY = 0;
-    static final String MUSIC_LOAD = "music_load";
+    public static final int MODE_KEY = 0;
+    public static final String MUSIC_LOAD = "music_load";
 
-    static final String MUSIC_LOAD_FLAG = "play_load_flag";
+    public static final String MUSIC_LOAD_FLAG = "play_load_flag";
 
-    static final String MUSIC_MODE = "music_mode";
-    static final String PLAY_MODE_KEY = "play_mode";
-    static final String MUSIC_QUERY = "music_query";
-    static final String MUSIC_QUERY_FLAG = "music_query_flag";
+    public static final String MUSIC_MODE = "music_mode";
+    public static final String PLAY_MODE_KEY = "play_mode";
+    public static final String MUSIC_QUERY = "music_query";
+    public static final String MUSIC_QUERY_FLAG = "music_query_flag";
 
-    static final String DETAIL_FLAG = "detail_flag";
-    static final String DETAIL_FLAG_KEY = "detail_flag_key";
+    public static final String DETAIL_FLAG = "detail_flag";
+    public static final String DETAIL_FLAG_KEY = "detail_flag_key";
 
-    static final String ADD_TO_PLAY_LIST_FLAG = "detail_flag";
-    static final String ADD_TO_PLAY_LIST_FLAG_KEY = "detail_flag_key";
+    public static final String ADD_TO_PLAY_LIST_FLAG = "detail_flag";
+    public static final String ADD_TO_PLAY_LIST_FLAG_KEY = "detail_flag_key";
 
-    static final String MUSIC_DATA_FLAG = "music_data_flag";
-    static final String MUSIC_DATA_LIST_FLAG = "music_data_list_flag";
-    static final String PIC_URL_FLAG = "pic_url_flag";
-    static final String PIC_URL_LIST_FLAG = "pic_url_list_flag";
+    public static final String MUSIC_DATA_FLAG = "music_data_flag";
+    public static final String MUSIC_DATA_LIST_FLAG = "music_data_list_flag";
+    public static final String PIC_URL_FLAG = "pic_url_flag";
+    public static final String PIC_URL_LIST_FLAG = "pic_url_list_flag";
 
-    static final String MUSIC_DATA_QUERY = "music_data_query";
-    static final String MUSIC_DATA_QUERY_FLAG = "music_data_query_key";
+    public static final String MUSIC_DATA_QUERY = "music_data_query";
+    public static final String MUSIC_DATA_QUERY_FLAG = "music_data_query_key";
 
-    static final String MUSIC_POSITION = "music_position";
-    static final String MUSIC_ITEM_POSITION = "music_item_position";
+    public static final String MUSIC_POSITION = "music_position";
+    public static final String MUSIC_ITEM_POSITION = "music_item_position";
 
-    static final String MUSIC_PLAY_STATE = "music_play_state";
-    static final String MUSIC_PLAY_STATE_KEY = "music_play_state_key";
+    public static final String MUSIC_PLAY_STATE = "music_play_state";
+    public static final String MUSIC_PLAY_STATE_KEY = "music_play_state_key";
 
-    static final String MUSIC_FOCUS = "music_focus";
-    static final String MUSIC_FOCUS_KEY = "music_FOCUS_key";
+    public static final String MUSIC_FOCUS = "music_focus";
+    public static final String MUSIC_FOCUS_KEY = "music_FOCUS_key";
 
     public static final String MUSIC_DURATION_FLAG = "music_duration_flag";
     public static final String MUSIC_FILE_SIZE_FLAG = "music_file_size_flag";
 
-    static final String MUSIC_CONFIG = "music_config";
-    static final String MUSIC_REMENBER_FLAG = "music_remenber_flag";
+    public static final String MUSIC_CONFIG = "music_config";
+    public static final String MUSIC_REMENBER_FLAG = "music_remenber_flag";
     public static final String FRAGMENT_PLAYLIST = "PlayListFragment";
     public static final String FRAGMENT_ARTIST = "ArtistFragment";
     public static final String FRAGMENT_SONG_CATEGORY = "SongCategoryFragment";

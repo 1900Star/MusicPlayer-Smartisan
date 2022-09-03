@@ -14,9 +14,7 @@ class PlayListViewModel : BaseViewModel() {
         val playListDao = MusicApplication.getInstance().playListDao
 
         val list = playListDao.queryBuilder().list()
-        for (listBean in list) {
-            LogUtil.d(mTag, listBean.toString())
-        }
+
 
         listModel.postValue(list)
     }

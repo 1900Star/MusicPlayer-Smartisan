@@ -93,12 +93,13 @@
 
         <SeekBar
             android:id="@+id/sb_progress"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:maxHeight="6dp"
             android:minHeight="6dp"
             android:progressDrawable="@drawable/seek_bar_time"
+            android:splitTrack="false"
             android:thumb="@drawable/playing_control_time" />
 
         <TextView
@@ -305,6 +306,7 @@
         android:background="@drawable/shape_about_card"
         android:maxHeight="8dp"
         android:progressDrawable="@drawable/seek_bar_volume"
+        android:splitTrack="false"
         android:thumb="@drawable/playing_control_volume" />
 
 </LinearLayout>

@@ -28,8 +28,6 @@ import io.reactivex.schedulers.Schedulers
 class SongCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
     private lateinit var mSongAdapter: SongAdapter
     private var mPosition = 0
-    override var isOpenDetail = false
-    private var isItemSelectStatus = true
     private val mSparseBooleanArray = SparseBooleanArray()
     private val mSelectList: MutableList<MusicBean> = ArrayList()
     private var mDeleteSongDisposable: Disposable? = null
@@ -43,7 +41,6 @@ class SongCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
             0 -> {
                 val abcList = MusicListUtil.sortMusicAbc(musicBeanList)
                 setNotAllSelected(abcList)
-                isOpenDetail = true
                 mSongAdapter = SongAdapter(
                     mActivity,
                     abcList,
@@ -88,7 +85,7 @@ class SongCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
                 )
             }
         }
-        mBinding.musicView.setAdapter(mActivity, Constants.NUMBER_ONE, isOpenDetail, mSongAdapter)
+        mBinding.musicView.setAdapter(mActivity, Constants.NUMBER_ONE, true, mSongAdapter)
         initListener()
     }
 
@@ -105,12 +102,10 @@ class SongCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
             }
         })
         mSongAdapter.setItemListener(object : BaseBindingAdapter.OnItemListener<MusicBean> {
-            override fun showDetailsView(bean: MusicBean, position: Int, isEditStatus: Boolean) {
-                if (isEditStatus) {
+            override fun showDetailsView(bean: MusicBean, position: Int) {
                     mSparseBooleanArray.put(position, true)
                     updateSelected(bean)
                     mSongAdapter.notifyDataSetChanged()
-                }
 
             }
         })
@@ -125,29 +120,8 @@ class SongCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
         })
     }
 
-    override fun onResume() {
-        super.onResume()
-        initRxBusData()
-    }
 
-  fun initRxBusData() {
-        disposeToolbar()
-        if (mEditDisposable == null) {
-            mEditDisposable = mBus.toObservableType(Constants.SONG_FAG_EDIT, Any::class.java)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { o: Any -> changeEditStatus(o as Int) }
-        }
-        if (mDeleteSongDisposable == null) {
-            mDeleteSongDisposable = mBus.toObservableType(Constants.DELETE_SONG, Any::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { integer: Any ->
-                    val position = integer as Int
-                    LogUtil.d(mTag, "收到删除    $position")
-                    mSongAdapter.deleteSong(position)
-                }
-        }
-    }
+
 
     override fun deleteItem(musicPosition: Int) {
         super.deleteItem(musicPosition)
@@ -168,14 +142,7 @@ class SongCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
         }
     }
 
-    private fun changeEditStatus(currentIndex: Int) {
-        if (currentIndex == Constants.NUMBER_ONE) {
-            closeEditStatus()
-        } else if (currentIndex == Constants.NUMBER_TWO) {
-            // 删除已选择的条目
-            deleteListItem()
-        }
-    }
+
 
     private fun deleteListItem() {
         LogUtil.d(mTag, "Size " + mSelectList.size)
@@ -199,23 +166,6 @@ class SongCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
             return MusicListUtil.sortMusicAbc(musicBeans)
         }
 
-    private fun closeEditStatus() {
-        interceptBackEvent(if (isItemSelectStatus) Constants.NUMBER_ELEVEN else Constants.NUMBER_ZERO)
-        mSongAdapter.setItemSelectStatus(isItemSelectStatus)
-        isItemSelectStatus = !isItemSelectStatus
-        mSparseBooleanArray.clear()
-        if (mSelectList.size > 0) {
-            mSelectList.clear()
-        }
-    }
-
-    override fun handleDetailsBack(detailFlag: Int) {
-        if (detailFlag == Constants.NUMBER_ELEVEN) {
-            mSongAdapter.setItemSelectStatus(false)
-            mBus.post(Constants.FRAGMENT_SONG, Constants.NUMBER_ZERO)
-            isItemSelectStatus = !isItemSelectStatus
-        }
-    }
 
     override fun onPause() {
         super.onPause()

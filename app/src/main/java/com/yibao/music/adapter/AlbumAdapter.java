@@ -99,24 +99,19 @@ public class AlbumAdapter
             albumlistHolder.mBinding.tvAlbumItemStickyView.setVisibility(View.VISIBLE);
         } else if (firstTv.equals(getDataList().get(position - 1).getFirstChar())) {
             albumlistHolder.mBinding.tvAlbumItemStickyView.setVisibility(View.GONE);
-
         } else {
             albumlistHolder.mBinding.tvAlbumItemStickyView.setVisibility(View.VISIBLE);
         }
+
         albumlistHolder.mBinding.ivAlbumListItemSelect.setOnClickListener(v -> selectStatus(info, position));
         //            Item点击监听
         albumlistHolder.mBinding.llAlbumListItem.setOnClickListener(view -> {
-            LogUtil.d(getMTAG(), "AAAAAAAAAAAAAAAAA    " + isSelectStatus());
-            if (isSelectStatus()) {
-                selectStatus(info, position);
-            } else {
-                AlbumAdapter.this.openDetails(info, position, false);
-            }
+            AlbumAdapter.this.openDetails(info, position);
         });
     }
 
     private void selectStatus(AlbumInfo musicBean, int adapterPosition) {
-        openDetails(musicBean, adapterPosition, true);
+        openDetails(musicBean, adapterPosition);
     }
 
     private void setDataAlbumTile(AlbumTileHolder holder, AlbumInfo albumInfo) {
@@ -125,7 +120,7 @@ public class AlbumAdapter
         ImageUitl.customLoadPic(mContext, StringUtil.getAlbum(2, albumInfo.getAlbumId(), albumInfo.getAlbumName()), R.drawable.noalbumcover_220, holder.mBinding.ivAlbumTileAlbum);
         holder.mBinding.tvAlbumTileName.setText(albumInfo.getAlbumName());
 
-        holder.mBinding.ivAlbumTileAlbum.setOnClickListener(view1 -> AlbumAdapter.this.openDetails(albumInfo, holder.getAdapterPosition(), false));
+        holder.mBinding.ivAlbumTileAlbum.setOnClickListener(view1 -> AlbumAdapter.this.openDetails(albumInfo, holder.getAdapterPosition()));
     }
 
     private static class AlbumTileHolder extends RecyclerView.ViewHolder {

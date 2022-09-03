@@ -61,7 +61,7 @@ public class ArtistAdapter extends BaseBindingAdapter<ArtistInfo> {
             }
 
 
-            artisHolder.mBinding.artistItemContent.setOnClickListener(view -> openDetails(artistInfo, position, false));
+            artisHolder.mBinding.artistItemContent.setOnClickListener(view -> openDetails(artistInfo, position));
 
         }
 

@@ -7,9 +7,11 @@ import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
@@ -20,7 +22,7 @@ import com.yibao.music.adapter.MainViewPagerAdapter;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.base.listener.OnGlideLoadListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
-import com.yibao.music.base.listener.OnUpdataTitleListener;
+import com.yibao.music.base.listener.OnUpdateTitleListener;
 import com.yibao.music.databinding.ActivityMusicBinding;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
@@ -29,6 +31,7 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.service.MusicPlayService;
 import com.yibao.music.util.Constants;
 import com.yibao.music.util.FileUtil;
+import com.yibao.music.util.HandleBackUtil;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
@@ -52,7 +55,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  */
 public class MusicActivity
         extends BaseActivity
-        implements OnMusicItemClickListener, OnUpdataTitleListener, OnGlideLoadListener {
+        implements OnMusicItemClickListener, OnUpdateTitleListener, OnGlideLoadListener {
     private static MusicPlayService.AudioBinder audioBinder;
     private AudioServiceConnection mConnection;
     private MusicBean mCurrentMusicBean;
@@ -78,9 +81,6 @@ public class MusicActivity
     }
 
 
-
-
-
     private void initData() {
         List<MusicBean> initMusicList = QueryMusicFlagListUtil.getDataList(SpUtil.getSortFlag(this), SpUtil.getDataQueryFlag(this), SpUtil.getQueryFlag(this), mMusicDao);
         mCurrentPosition = SpUtil.getMusicPosition(this);
@@ -93,7 +93,7 @@ public class MusicActivity
         MainViewPagerAdapter pagerAdapter = new MainViewPagerAdapter(this);
         mBinding.musicViewpager2.setAdapter(pagerAdapter);
         mBinding.musicViewpager2.setCurrentItem(Constants.NUMBER_TWO, false);
-//        mBinding.musicViewpager2.setOffscreenPageLimit(5);
+        mBinding.musicViewpager2.setOffscreenPageLimit(5);
         mBinding.musicViewpager2.setUserInputEnabled(false);
     }
 
@@ -152,11 +152,10 @@ public class MusicActivity
     }
 
 
-
     private void initListener() {
         mBinding.bnvMusic.setSelectedItemId(R.id.navigation_song);
         mBinding.bnvMusic.setOnItemSelectedListener(mOnNavigationItemSelectedListener);
-        mBinding.musicNavigationBar.setOnNavigationbarListener(this::setCurrentPosition);
+        mBinding.musicNavigationBar.setOnNavigationBarListener(this::setCurrentPosition);
         mBinding.smartisanControlBar.setClickListener(clickFlag -> {
             if (mMusicConfig) {
                 if (clickFlag == Constants.NUMBER_THREE) {
@@ -169,11 +168,11 @@ public class MusicActivity
                                 checkCurrentSongIsFavorite(mCurrentMusicBean, mBinding.qqControlBar, mBinding.smartisanControlBar);
                                 break;
                             case Constants.NUMBER_TWO:
-                                clearDisposableProgresse();
+                                clearDisposableProgress();
                                 audioBinder.playPre();
                                 break;
                             case Constants.NUMBER_FOUR:
-                                clearDisposableProgresse();
+                                clearDisposableProgress();
                                 audioBinder.playNext();
                                 break;
                             default:
@@ -255,6 +254,13 @@ public class MusicActivity
     };
 
     private void setCurrentPosition(int position) {
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        for (int i = fragments.size() - 1; i >= 0; i--) {
+            Fragment fragment = fragments.get(i);
+            String name = fragment.getClass().getSimpleName();
+            LogUtil.d(TAG,  fragment.isVisible()
+                    + " == " + fragment.isResumed() + "  ==  " + fragment.isHidden()+"   " + i + "   " + name );
+        }
         mBinding.musicViewpager2.setCurrentItem(position, false);
     }
 
@@ -280,7 +286,7 @@ public class MusicActivity
             } else if (audioBinder.isPlaying()) {
                 // 当前播放  暂停
                 audioBinder.pause();
-                clearDisposableProgresse();
+                clearDisposableProgress();
             } else if (!audioBinder.isPlaying()) {
                 // 当前暂停  播放
                 audioBinder.start();
@@ -632,19 +638,15 @@ public class MusicActivity
 
     }
 
-    @Override
-    public void handleBack(int detailFlag) {
-        mHandleDetailFlag = detailFlag;
-    }
 
     @Override
     public void onBackPressed() {
-        if (mHandleDetailFlag > Constants.NUMBER_ZERO) {
-            mBus.post(Constants.HANDLE_BACK, mHandleDetailFlag);
-            mHandleDetailFlag = Constants.NUMBER_ZERO;
-        } else {
+        if (!HandleBackUtil.INSTANCE.handleBackPress(this)) {
             super.onBackPressed();
+        } else {
+            Log.d("====", "自己处理");
         }
+
     }
 
 

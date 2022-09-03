@@ -13,6 +13,7 @@
     <color name="colorGreen">#59e130</color>
     <color name="deleteNorma">#f7817a</color>
     <color name="deleteDown">#E65D54</color>
+    <color name="colorAccent">#3880FC</color>
     <color name="item">#e7e5e5</color>
     //about
     <color name="aboutTitle">#ff000000</color>

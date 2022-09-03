@@ -102,7 +102,7 @@ public class SongAdapter
             songListViewHolder.mBinding.llMusicItem.setOnClickListener(view -> {
                 if (isSelectStatus()) {
                     checkBoxClick(musicBean, position, songListViewHolder.mBinding.checkboxItem.isChecked());
-                    openDetails(musicBean, position, songListViewHolder.mBinding.checkboxItem.isChecked());
+                    openDetails(musicBean, position);
                 } else {
                     if (mContext instanceof OnMusicItemClickListener) {
                         ((OnMusicItemClickListener) mContext).startMusicService(position);
