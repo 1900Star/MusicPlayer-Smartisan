@@ -24,7 +24,7 @@
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/checkbox_config_scanner_duration"
+            android:id="@+id/cb_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -47,7 +47,7 @@
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/checkbox_config_scanner_file_size"
+            android:id="@+id/cb_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"

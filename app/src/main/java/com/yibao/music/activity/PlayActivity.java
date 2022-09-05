@@ -26,7 +26,7 @@ import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.network.QqMusicRemote;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.ColorUtil;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
@@ -54,8 +54,8 @@ import io.reactivex.schedulers.Schedulers;
  * @描述： {TODO}
  */
 
-public class PlayActivity extends BasePlayActivity implements View.OnClickListener {
-    private PlayActivityBinding mBinding;
+public class PlayActivity extends BasePlayActivity<PlayActivityBinding> implements View.OnClickListener {
+
     private int mDuration;
     private MusicBean mCurrentMusicInfo;
     boolean isShowLyrics = false;
@@ -65,16 +65,18 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
     private List<MusicLyricBean> mLyricList;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mBinding = PlayActivityBinding.inflate(getLayoutInflater());
-        View rootView = mBinding.getRoot();
-        setContentView(rootView);
+    public void initView() {
         init();
         initSongInfo();
         initListener();
 
     }
+
+    @Override
+    public void initData() {
+
+    }
+
 
     @Override
     protected void onResume() {
@@ -146,13 +148,13 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
     protected void moreMenu(MoreMenuStatus moreMenuStatus) {
         super.moreMenu(moreMenuStatus);
         switch (moreMenuStatus.getPosition()) {
-            case Constants.NUMBER_ZERO:
+            case Constant.NUMBER_ZERO:
                 startPlayListActivity(mCurrentMusicInfo.getTitle());
                 break;
-            case Constants.NUMBER_ONE:
+            case Constant.NUMBER_ONE:
                 SnakbarUtil.keepGoing(mBinding.albumCover);
                 break;
-            case Constants.NUMBER_TWO:
+            case Constant.NUMBER_TWO:
                 if (audioBinder != null) {
                     if (audioBinder.getPosition() == moreMenuStatus.getMusicPosition()) {
                         audioBinder.updateFavorite();
@@ -163,13 +165,13 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
                 }
 
                 break;
-            case Constants.NUMBER_THREE:
+            case Constant.NUMBER_THREE:
                 showLyrics();
                 break;
-            case Constants.NUMBER_FOUR:
+            case Constant.NUMBER_FOUR:
                 CountdownBottomSheetDialog.newInstance().getBottomDialog(this);
                 break;
-            case Constants.NUMBER_FIVE:
+            case Constant.NUMBER_FIVE:
                 audioBinder.playNext();
                 String songUrl = mCurrentMusicInfo.getSongUrl();
                 // 先从本地数据库删除歌曲，再彻底删除歌曲文件。
@@ -192,7 +194,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         updatePlayBtnStatus();
         // 设置当前歌词
         mLyricList = LyricsUtil.getLyricList(musicBean);
-        mBinding.tvLyrics.setLrcFile(mLyricList, mLyricList.size() > 1 ? Constants.MUSIC_LYRIC_OK : Constants.PURE_MUSIC);
+        mBinding.tvLyrics.setLrcFile(mLyricList, mLyricList.size() > 1 ? Constant.MUSIC_LYRIC_OK : Constant.PURE_MUSIC);
         if (isShowLyrics) {
             startRollPlayLyrics(mBinding.tvLyrics);
             closeLyricsView();
@@ -336,29 +338,6 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         }
     }
 
-    private void initListener() {
-        mBinding.sbProgress.setOnSeekBarChangeListener(new SeekBarListener());
-        mBinding.sbVolume.setOnSeekBarChangeListener(new SeekBarListener());
-        mBinding.playingSongAlbum.setOnLongClickListener(view -> {
-            PreviewBigPicDialogFragment.newInstance(FileUtil.getAlbumUrl(mCurrentMusicInfo, 1))
-                    .show(getSupportFragmentManager(), "album");
-            return true;
-        });
-        mBinding.titlebarDown.setOnClickListener(this);
-        mBinding.rvTitlebar.setOnClickListener(this);
-        mBinding.rotateRl.setOnClickListener(this);
-        mBinding.playingSongAlbum.setOnClickListener(this);
-        mBinding.ivLyricsSwitch.setOnClickListener(this);
-        mBinding.ivDeleteLyric.setOnClickListener(this);
-        mBinding.ivSelectLyric.setOnClickListener(this);
-        mBinding.ivSecreenSunSwitch.setOnClickListener(this);
-        mBinding.musicPlayerMode.setOnClickListener(this);
-        mBinding.musicPlayerPre.setOnClickListener(this);
-        mBinding.musicPlayerNext.setOnClickListener(this);
-        mBinding.musicPlay.setOnClickListener(this);
-        mBinding.ivFavoriteMusic.setOnClickListener(this);
-
-    }
 
     @Override
     public void onClick(View v) {
@@ -379,9 +358,9 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             LyricsUtil.deleteCurrentLyric(mCurrentMusicInfo.getTitle(), mCurrentMusicInfo.getArtist());
         } else if (id == R.id.iv_select_lyric) {
             Intent intent = new Intent(this, SearchLyricsActivity.class);
-            intent.putExtra(Constants.SONG_NAME, StringUtil.getSongName(mCurrentMusicInfo.getTitle()));
-            intent.putExtra(Constants.SONG_ARTIST, StringUtil.getArtist(mCurrentMusicInfo.getArtist()));
-            startActivityForResult(intent, Constants.SELECT_LYRICS);
+            intent.putExtra(Constant.SONG_NAME, StringUtil.getSongName(mCurrentMusicInfo.getTitle()));
+            intent.putExtra(Constant.SONG_ARTIST, StringUtil.getArtist(mCurrentMusicInfo.getArtist()));
+            startActivityForResult(intent, Constant.SELECT_LYRICS);
             overridePendingTransition(R.anim.dialog_push_in, 0);
         } else if (id == R.id.iv_secreen_sun_switch) {
             screenAlwaysOnSwitch(mBinding.ivSecreenSunSwitch);
@@ -425,14 +404,14 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(mCurrentMusicInfo.getTitle()), StringUtil.getArtist(mCurrentMusicInfo.getArtist()));
             if (lyricIsExists) {
                 mLyricList = LyricsUtil.getLyricList(mCurrentMusicInfo);
-                mBinding.tvLyrics.setLrcFile(mLyricList, mLyricList.size() > 1 ? Constants.MUSIC_LYRIC_OK : Constants.PURE_MUSIC);
+                mBinding.tvLyrics.setLrcFile(mLyricList, mLyricList.size() > 1 ? Constant.MUSIC_LYRIC_OK : Constant.PURE_MUSIC);
                 // 开始滚动歌词
                 if (audioBinder.isPlaying()) {
                     startRollPlayLyrics(mBinding.tvLyrics);
                 }
                 closeLyricsView();
             } else {
-                mBinding.tvLyrics.setLrcFile(null, Constants.NO_LYRICS);
+                mBinding.tvLyrics.setLrcFile(null, Constant.NO_LYRICS);
             }
         }
         mBinding.tvLyrics.setVisibility(isShowLyrics ? View.GONE : View.VISIBLE);
@@ -492,7 +471,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
      */
     public void closeLyricsView() {
         disPosableLyricsView();
-        if (mLyricList.size() < Constants.NUMBER_TWO) {
+        if (mLyricList.size() < Constant.NUMBER_TWO) {
             if (mCloseLyrDisposable == null) {
                 mCloseLyrDisposable = Observable.timer(5, TimeUnit.SECONDS)
                         .subscribeOn(Schedulers.io())
@@ -505,9 +484,9 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.SELECT_LYRICS) {
+        if (requestCode == Constant.SELECT_LYRICS) {
             if (data != null) {
-                String songMid = data.getStringExtra(Constants.SONGMID);
+                String songMid = data.getStringExtra(Constant.SONGMID);
                 if (songMid != null) {
                     LyricsUtil.deleteCurrentLyric(mCurrentMusicInfo.getTitle(), mCurrentMusicInfo.getArtist());
                     QqMusicRemote.getOnlineLyrics(songMid, mCurrentMusicInfo.getTitle(), mCurrentMusicInfo.getArtist());
@@ -516,4 +495,30 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             }
         }
     }
+    @Override
+    public void initListener() {
+
+        mBinding.sbProgress.setOnSeekBarChangeListener(new SeekBarListener());
+        mBinding.sbVolume.setOnSeekBarChangeListener(new SeekBarListener());
+        mBinding.playingSongAlbum.setOnLongClickListener(view -> {
+            PreviewBigPicDialogFragment.newInstance(FileUtil.getAlbumUrl(mCurrentMusicInfo, 1))
+                    .show(getSupportFragmentManager(), "album");
+            return true;
+        });
+        mBinding.titlebarDown.setOnClickListener(this);
+        mBinding.rvTitlebar.setOnClickListener(this);
+        mBinding.rotateRl.setOnClickListener(this);
+        mBinding.playingSongAlbum.setOnClickListener(this);
+        mBinding.ivLyricsSwitch.setOnClickListener(this);
+        mBinding.ivDeleteLyric.setOnClickListener(this);
+        mBinding.ivSelectLyric.setOnClickListener(this);
+        mBinding.ivSecreenSunSwitch.setOnClickListener(this);
+        mBinding.musicPlayerMode.setOnClickListener(this);
+        mBinding.musicPlayerPre.setOnClickListener(this);
+        mBinding.musicPlayerNext.setOnClickListener(this);
+        mBinding.musicPlay.setOnClickListener(this);
+        mBinding.ivFavoriteMusic.setOnClickListener(this);
+
+    }
+
 }

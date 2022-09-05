@@ -75,8 +75,8 @@ public class MusicDaoUtil {
         ThreadPoolProxyFactory.newInstance().execute(() -> {
             List<MusicBean> musicBeanList = musicDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle())).build().list();
             for (MusicBean musicBean : musicBeanList) {
-                musicBean.setPlayListFlag(Constants.PLAY_LIST_BACK_FLAG);
-                musicBean.setAddListTime(Constants.NUMBER_ZERO);
+                musicBean.setPlayListFlag(Constant.PLAY_LIST_BACK_FLAG);
+                musicBean.setAddListTime(Constant.NUMBER_ZERO);
                 musicDao.update(musicBean);
             }
         });

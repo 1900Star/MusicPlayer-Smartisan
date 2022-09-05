@@ -20,8 +20,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
-import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.ThreadPoolProxyFactory;
 import com.yibao.music.util.ToastUtil;
@@ -67,7 +66,7 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
         getMBinding().swipePlayList.setOnRefreshListener(this);
 
         getMBinding().musicBar.musicToolbarList.setToolbarTitle(getString(R.string.play_list));
-        getMBinding().musicBar.musicToolbarList.setVisibility(isFromPlayListActivity && SpUtil.getAddToPlayListFdlag(mContext) == Constants.NUMBER_ONE ? View.GONE : View.VISIBLE);
+        getMBinding().musicBar.musicToolbarList.setVisibility(isFromPlayListActivity && SpUtil.getAddToPlayListFdlag(mContext) == Constant.NUMBER_ONE ? View.GONE : View.VISIBLE);
         mPlayListDao = MusicApplication.getInstance().getPlayListDao();
         mViewModel = new PlayListViewModel();
 
@@ -100,7 +99,7 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
         // 长按删除
         mAdapter.setItemLongClickListener((musicInfo, currentPosition) -> {
             if (!isFromPlayListActivity) {
-                DeletePlayListDialog.newInstance(musicInfo, Constants.NUMBER_TWO, this).show(getChildFragmentManager(), "deleteList");
+                DeletePlayListDialog.newInstance(musicInfo, Constant.NUMBER_TWO, this).show(getChildFragmentManager(), "deleteList");
             }
         });
         // 编辑按钮
@@ -126,7 +125,7 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
 
     private void initListener() {
         getMBinding().llAddNewPlayList.setOnClickListener(v ->
-                AddListDialog.newInstance(1, Constants.NULL_STRING, isFromPlayListActivity, this).show(getChildFragmentManager(), "addList"));
+                AddListDialog.newInstance(1, Constant.NULL_STRING, isFromPlayListActivity, this).show(getChildFragmentManager(), "addList"));
         getMBinding().musicBar.musicToolbarList.setClickListener(new MusicToolBar.OnToolbarClickListener() {
             @Override
             public void clickEdit() {
@@ -157,7 +156,7 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
         if (!isShowDetailsView) {
             List<MusicBean> mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(title)).build().list();
             getMBinding().playListDetailView.setQueryFlag(title, mDetailList.size());
-            DetailsViewAdapter detailsAdapter = new DetailsViewAdapter(mContext, mDetailList, Constants.NUMBER_FOUR);
+            DetailsViewAdapter detailsAdapter = new DetailsViewAdapter(mContext, mDetailList, Constant.NUMBER_FOUR);
             getMBinding().playListDetailView.setAdapter(detailsAdapter);
             detailsAdapter.setOnItemMenuListener((position, musicBean) -> MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mContext));
 
@@ -227,7 +226,7 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
     @Override
     public void onPause() {
         super.onPause();
-        if (SpUtil.getAddToPlayListFdlag(mContext) == Constants.NUMBER_ZERO) {
+        if (SpUtil.getAddToPlayListFdlag(mContext) == Constant.NUMBER_ZERO) {
             isFromPlayListActivity = false;
         }
         if (mAddDeleteListDisposable != null) {

@@ -10,7 +10,7 @@ import android.content.SharedPreferences;
  * Des：TODO
  */
 public class SharedPreferencesUtil {
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
     public SharedPreferencesUtil(Context context, String fileName) {
         sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
@@ -32,11 +32,11 @@ public class SharedPreferencesUtil {
             if (contentValue.value instanceof String) {
                 editor.putString(contentValue.key, contentValue.value.toString()).apply();
             } else if (contentValue.value instanceof Integer) {
-                editor.putInt(contentValue.key, Integer.parseInt(contentValue.value.toString())).commit();
+                editor.putInt(contentValue.key, Integer.parseInt(contentValue.value.toString())).apply();
             } else if (contentValue.value instanceof Long) {
-                editor.putLong(contentValue.key, Long.parseLong(contentValue.value.toString())).commit();
+                editor.putLong(contentValue.key, Long.parseLong(contentValue.value.toString())).apply();
             } else if (contentValue.value instanceof Boolean) {
-                editor.putBoolean(contentValue.key, Boolean.parseBoolean(contentValue.value.toString())).commit();
+                editor.putBoolean(contentValue.key, Boolean.parseBoolean(contentValue.value.toString())).apply();
             }
         }
     }

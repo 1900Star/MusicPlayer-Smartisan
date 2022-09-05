@@ -42,9 +42,9 @@ public class MusicListUtil {
      * @return d
      */
     public static List<MusicBean> getMusicDataList() {
-        SharedPreferencesUtil sp = new SharedPreferencesUtil(MusicApplication.getInstance(), Constants.MUSIC_SETTING);
-        boolean aBooleanDuration = sp.getBoolean(Constants.MUSIC_DURATION_FLAG, false);
-        boolean aBooleanFileSize = sp.getBoolean(Constants.MUSIC_FILE_SIZE_FLAG, false);
+        SharedPreferencesUtil sp = new SharedPreferencesUtil(MusicApplication.getInstance(), Constant.MUSIC_SETTING);
+        boolean aBooleanDuration = sp.getBoolean(Constant.MUSIC_DURATION_FLAG, false);
+        boolean aBooleanFileSize = sp.getBoolean(Constant.MUSIC_FILE_SIZE_FLAG, false);
         List<MusicBean> musicInfo = new ArrayList<>();
         Cursor cursor = MusicApplication.getInstance().getApplicationContext().getContentResolver()
                 .query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -157,15 +157,15 @@ public class MusicListUtil {
         if (m1.equals(m2)) {
             return 0;
         }
-        if (sortFlag == Constants.NUMBER_ONE) {
+        if (sortFlag == Constant.NUMBER_ONE) {
             value = Float.compare(m2.getAddTime(), m1.getAddTime());
-        } else if (sortFlag == Constants.NUMBER_TWO) {
+        } else if (sortFlag == Constant.NUMBER_TWO) {
             value = Integer.compare(Integer.parseInt(m2.getTime()), Integer.parseInt(m1.getTime()));
-        } else if (sortFlag == Constants.NUMBER_THREE) {
+        } else if (sortFlag == Constant.NUMBER_THREE) {
             value = Integer.compare(m2.getPlayFrequency(), m1.getPlayFrequency());
-        } else if (sortFlag == Constants.NUMBER_FOUR) {
+        } else if (sortFlag == Constant.NUMBER_FOUR) {
             value = Integer.compare(m2.getSongScore(), m1.getSongScore());
-        } else if (sortFlag == Constants.NUMBER_FIVE) {
+        } else if (sortFlag == Constant.NUMBER_FIVE) {
             value = Float.compare(m1.getAddListTime(), m2.getAddListTime());
         }
         if (value != 0) {

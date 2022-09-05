@@ -1,13 +1,7 @@
 package com.yibao.music.util;
 
-import android.net.Uri;
-import android.util.Log;
-
-import com.yibao.music.MusicApplication;
-import com.yibao.music.model.LyricDownBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
-import com.yibao.music.network.RetrofitHelper;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -52,7 +46,7 @@ public class LyricsUtil {
     public static void deleteCurrentLyric(String name, String artist) {
         String songName = StringUtil.getSongName(name);
         String songArtist = StringUtil.getArtist(artist);
-        String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + songArtist + ".lrc";
+        String path = Constant.MUSIC_LYRICS_ROOT + songName + "$$" + songArtist + ".lrc";
         LogUtil.d(TAG, " 删除当前 歌词    " + path);
         File file = new File(path);
         if (file.exists()) {
@@ -64,7 +58,7 @@ public class LyricsUtil {
      * 删除本地歌词list长度小于2的歌词文件，以便播放时重新下载正确的歌词。
      */
     public static void clearLyricList() {
-        File file = new File(Constants.MUSIC_LYRICS_ROOT);
+        File file = new File(Constant.MUSIC_LYRICS_ROOT);
         File[] files = file.listFiles();
         int nu = 0;
         for (File f : files) {

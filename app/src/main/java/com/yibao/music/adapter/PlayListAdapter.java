@@ -13,7 +13,7 @@ import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.MusicDaoUtil;
 import com.yibao.music.util.RxBus;
 
@@ -56,7 +56,7 @@ public class PlayListAdapter extends BaseBindingAdapter<PlayListBean> {
             playViewHolder.mBinding.playListItemSlide.setOnClickListener(v -> {
                 getDataList().remove(adapterPosition);
                 MusicDaoUtil.setMusicListFlag(playListBean);
-                RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_TWO));
+                RxBus.getInstance().post(new AddAndDeleteListBean(Constant.NUMBER_TWO));
             });
 
             playViewHolder.mBinding.ivItemEdit.setOnClickListener(v -> editItemTitle(adapterPosition));

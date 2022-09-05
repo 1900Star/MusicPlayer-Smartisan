@@ -30,7 +30,7 @@ public class MusicApplication
 
 
     private DaoSession mDaoSession;
-    private static MusicBeanDao musicBeanDao;
+    private static volatile MusicBeanDao musicBeanDao;
 
     public static MusicApplication getInstance() {
         if (appContext == null) {

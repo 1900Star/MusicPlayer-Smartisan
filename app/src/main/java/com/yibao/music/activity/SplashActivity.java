@@ -16,7 +16,7 @@ import com.yibao.music.fragment.dialogfrag.ScannerConfigDialog;
 import com.yibao.music.model.MusicCountBean;
 import com.yibao.music.service.LoadMusicDataService;
 import com.yibao.music.util.ColorUtil;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.ServiceUtil;
 import com.yibao.music.util.SpUtil;
@@ -49,7 +49,7 @@ public class SplashActivity
 
     private void initView() {
         SystemUiVisibilityUtil.hideStatusBar(getWindow(), true);
-        mScanner = getIntent().getStringExtra(Constants.SCANNER_MEDIA);
+        mScanner = getIntent().getStringExtra(Constant.SCANNER_MEDIA);
         SplashPagerAdapter splashPagerAdapter = new SplashPagerAdapter(SpUtil.getPicUrlFlag(this, false));
         mBinding.vpSplash.setAdapter(splashPagerAdapter);
     }
@@ -70,7 +70,8 @@ public class SplashActivity
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {
                     // 首次安装，开启服务加载本地音乐，创建本地数据库。
-                    if (!ServiceUtil.isServiceRunning(getApplicationContext(), Constants.LOAD_SERVICE_NAME)) {
+                    if (!ServiceUtil.isServiceRunning(getApplicationContext(), Constant.LOAD_SERVICE_NAME)) {
+
                         startService(new Intent(getApplicationContext(), LoadMusicDataService.class));
                     }
                     updateLoadProgress();
@@ -82,7 +83,7 @@ public class SplashActivity
         if (mScanner == null) {
             mIsFirstScanner = true;
             // 是否是首次安装，本地数据库是否创建，等于 8 表示不是首次安装，数据库已经创建，直接进入MusicActivity。
-            if (SpUtil.getLoadMusicFlag(this) == Constants.NUMBER_EIGHT) {
+            if (SpUtil.getLoadMusicFlag(this) == Constant.NUMBER_EIGHT) {
                 countDownOperation(true);
             } else {
                 ScannerConfigDialog.newInstance(true).show(getSupportFragmentManager(), "auto_config");
@@ -98,7 +99,7 @@ public class SplashActivity
             // 手动扫描歌曲
             mIsFirstScanner = false;
             Intent intent = new Intent(this, LoadMusicDataService.class);
-            intent.putExtra(Constants.SCANNER_MEDIA, Constants.SCANNER_MEDIA);
+            intent.putExtra(Constant.SCANNER_MEDIA, Constant.SCANNER_MEDIA);
             startService(intent);
             updateLoadProgress();
         }
@@ -129,7 +130,7 @@ public class SplashActivity
                             // 初次扫描完成后进入MusicActivity
                             if (mIsFirstScanner) {
                                 // 初次加载的标记
-                                SpUtil.setLoadMusicFlag(SplashActivity.this, Constants.NUMBER_EIGHT);
+                                SpUtil.setLoadMusicFlag(SplashActivity.this, Constant.NUMBER_EIGHT);
                             } else {
                                 // 手动扫描新增歌曲数量
                                 str = "新增 " + size + " 首歌曲";

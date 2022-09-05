@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.yibao.music.R;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.util.AnimationUtil;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.view.CircleImageView;
@@ -48,16 +48,16 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.music_floating_favorite:
-                controlBarClick(Constants.NUMBER_ONE);
+                controlBarClick(Constant.NUMBER_ONE);
                 break;
             case R.id.music_floating_pre:
-                controlBarClick(Constants.NUMBER_TWO);
+                controlBarClick(Constant.NUMBER_TWO);
                 break;
             case R.id.music_floating_play:
-                controlBarClick(Constants.NUMBER_THREE);
+                controlBarClick(Constant.NUMBER_THREE);
                 break;
             case R.id.music_floating_next:
-                controlBarClick(Constants.NUMBER_FOUR);
+                controlBarClick(Constant.NUMBER_FOUR);
                 break;
             default:
                 break;

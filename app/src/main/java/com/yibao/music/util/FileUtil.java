@@ -34,7 +34,7 @@ public class FileUtil {
     private static final String TAG = "====" + FileUtil.class.getSimpleName() + "    ";
 
     public static boolean getFavoriteFile() {
-        return CheckBuildVersionUtil.checkAndroidVersionQ() ? FileUtil.isAndroidQFileExists(Constants.FAVORITE_FILE) : new File(Constants.FAVORITE_FILE).exists();
+        return CheckBuildVersionUtil.checkAndroidVersionQ() ? FileUtil.isAndroidQFileExists(Constant.FAVORITE_FILE) : new File(Constant.FAVORITE_FILE).exists();
 
     }
 
@@ -56,8 +56,8 @@ public class FileUtil {
     private static boolean albumFileExists(int imageType, String songName, String artist) {
 
         String albumPath = imageType == 1
-                ? Constants.MUSIC_SONG_ALBUM_ROOT + songName + ".jpg" : imageType == 2
-                ? Constants.MUSIC_ARITIST_IMG_ROOT + artist + ".jpg" : Constants.MUSIC_ALBUM_ROOT + artist + ".jpg";
+                ? Constant.MUSIC_SONG_ALBUM_ROOT + songName + ".jpg" : imageType == 2
+                ? Constant.MUSIC_ARITIST_IMG_ROOT + artist + ".jpg" : Constant.MUSIC_ALBUM_ROOT + artist + ".jpg";
         File file = new File(albumPath);
         return file.exists();
     }
@@ -103,11 +103,11 @@ public class FileUtil {
     }
 
     public static File getHeaderFile() {
-        File file = new File(Constants.HEADER_PATH);
+        File file = new File(Constant.HEADER_PATH);
         if (!file.exists()) {
             file.mkdirs();
         }
-        return new File(file, Constants.CROP_IMAGE_FILE_NAME);
+        return new File(file, Constant.CROP_IMAGE_FILE_NAME);
     }
     public static File createFile(Context context, String fileName, String dirPath) {
         String apkFilePath = context.getExternalFilesDir(dirPath).getAbsolutePath();
@@ -118,7 +118,7 @@ public class FileUtil {
         if (!file.exists()) {
             file.mkdirs();
         }
-        File pictureFile = new File(savePath, Constants.IMAGE_FILE_NAME);
+        File pictureFile = new File(savePath, Constant.IMAGE_FILE_NAME);
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? FileProvider.getUriForFile(context, context.getPackageName(), pictureFile) : Uri.fromFile(pictureFile);
     }
 
@@ -152,10 +152,10 @@ public class FileUtil {
     public static File getLyricsFile(String songName, String artist) {
         String lyricsName = songName + "$$" + artist + ".lrc";
         if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
-            String apkFilePath = MusicApplication.getInstance().getExternalFilesDir(Constants.MUSIC_LYRICS_DIR).getAbsolutePath();
+            String apkFilePath = MusicApplication.getInstance().getExternalFilesDir(Constant.MUSIC_LYRICS_DIR).getAbsolutePath();
             return new File(apkFilePath + File.separator + lyricsName);
         } else {
-            File file = new File(Constants.MUSIC_LYRICS_ROOT);
+            File file = new File(Constant.MUSIC_LYRICS_ROOT);
             if (!file.exists()) {
                 boolean mkdirs = file.mkdirs();
             }
@@ -171,11 +171,11 @@ public class FileUtil {
     public static File getCrashFile() {
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss", Locale.getDefault()).format(new Date(System.currentTimeMillis()));
         if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
-            String apkFilePath = MusicApplication.getInstance().getExternalFilesDir(Constants.CRASH_DIR).getAbsolutePath();
+            String apkFilePath = MusicApplication.getInstance().getExternalFilesDir(Constant.CRASH_DIR).getAbsolutePath();
             return new File(apkFilePath + File.separator + time + ".txt");
         } else {
-            File file = new File(Constants.CRASH_LOG_PATH);
-            return new File(file.getAbsolutePath() + Constants.CRASH_DIR + time + ".txt");
+            File file = new File(Constant.CRASH_LOG_PATH);
+            return new File(file.getAbsolutePath() + Constant.CRASH_DIR + time + ".txt");
 
         }
     }

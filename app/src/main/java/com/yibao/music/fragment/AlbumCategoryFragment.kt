@@ -1,17 +1,13 @@
 package com.yibao.music.fragment
 
 import android.os.Bundle
-import android.util.Log
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.yibao.music.adapter.AlbumAdapter
 import com.yibao.music.base.bindings.BaseBindingAdapter
 import com.yibao.music.base.bindings.BaseLazyFragmentDev
 import com.yibao.music.databinding.CategoryFragmentBinding
 import com.yibao.music.model.AlbumInfo
-import com.yibao.music.util.Constants
-import com.yibao.music.util.LogUtil
+import com.yibao.music.util.Constant
 import com.yibao.music.util.MusicListUtil
-import com.yibao.music.view.SwipeItemLayout
 import com.yibao.music.viewmodel.AlbumViewModel
 
 /**
@@ -32,7 +28,7 @@ class AlbumCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
     override fun initView() {
         val arguments = arguments
         if (arguments != null) {
-            mPosition = arguments.getInt(Constants.POSITION)
+            mPosition = arguments.getInt(Constant.POSITION)
         }
         val musicBeanList = mMusicBeanDao.queryBuilder().list()
         mAlbumList = MusicListUtil.getAlbumList(musicBeanList)
@@ -68,7 +64,7 @@ class AlbumCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
             mViewModel = albumViewModel
             val args = Bundle()
             val fragment = AlbumCategoryFragment()
-            args.putInt(Constants.POSITION, position)
+            args.putInt(Constant.POSITION, position)
             fragment.arguments = args
             return fragment
         }

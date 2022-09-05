@@ -21,30 +21,21 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.target.ViewTarget;
-import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.base.listener.OnLoadImageListener;
-import com.yibao.music.network.RetrofitHelper;
 import com.yibao.music.view.ZoomImageView;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -160,8 +151,8 @@ public class ImageUitl {
                             .subscribe(file -> {
                                 //获取到下载得到的图片，进行本地保存
                                 String path = imageType == 1
-                                        ? Constants.MUSIC_SONG_ALBUM_ROOT : imageType == 2
-                                        ? Constants.MUSIC_ARITIST_IMG_ROOT : Constants.MUSIC_ALBUM_ROOT;
+                                        ? Constant.MUSIC_SONG_ALBUM_ROOT : imageType == 2
+                                        ? Constant.MUSIC_ARITIST_IMG_ROOT : Constant.MUSIC_ALBUM_ROOT;
                                 String fileName = imageType == 1
                                         ? songName + ".jpg" : imageType == 2
                                         ? artist + ".jpg" : artist + ".jpg";
@@ -232,11 +223,11 @@ public class ImageUitl {
         intent.putExtra("outputX", 480);
         intent.putExtra("outputY", 480);
         intent.putExtra("return-data", true);
-        File headerFile = new File(Constants.HEADER_PATH);
+        File headerFile = new File(Constant.HEADER_PATH);
         if (!headerFile.exists()) {
             headerFile.mkdirs();
         }
-        File file = new File(headerFile, Constants.CROP_IMAGE_FILE_NAME);
+        File file = new File(headerFile, Constant.CROP_IMAGE_FILE_NAME);
         Uri uriPath = Uri.parse("file://" + file.getAbsolutePath());
         //将裁剪好的图输出到所建文件中
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uriPath);
@@ -250,7 +241,7 @@ public class ImageUitl {
     public static File getTempFile() {
         return new File(
                 Environment.getExternalStorageDirectory(),
-                Constants.IMAGE_FILE_NAME);
+                Constant.IMAGE_FILE_NAME);
     }
 }
 

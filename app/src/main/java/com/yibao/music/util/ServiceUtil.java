@@ -3,7 +3,6 @@ package com.yibao.music.util;
 import android.app.ActivityManager;
 import android.content.Context;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,11 +10,11 @@ import java.util.List;
  * @ Name:   ServiceUtil
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2019/1/3/ 21:44
- * @ Des:    TODO
+ * @ Des:    查看加载地音乐的服务是否在运行
  */
 public class ServiceUtil {
     public static boolean isServiceRunning(Context context, String serviceName) {
-        if ((Constants.NULL_STRING).equals(serviceName) || serviceName == null) {
+        if ((Constant.NULL_STRING).equals(serviceName) || serviceName == null) {
             return false;
         }
         ActivityManager myManager = (ActivityManager) context

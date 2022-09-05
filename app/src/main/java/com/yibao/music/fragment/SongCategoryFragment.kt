@@ -9,13 +9,11 @@ import com.yibao.music.databinding.CategoryFragmentBinding
 
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog
 import com.yibao.music.model.MusicBean
-import com.yibao.music.util.Constants
+import com.yibao.music.util.Constant
 import com.yibao.music.util.LogUtil
 import com.yibao.music.util.MusicListUtil
 import com.yibao.music.util.SnakbarUtil
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 
 /**
  * @项目名： ArtisanMusic
@@ -45,47 +43,47 @@ class SongCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
                     mActivity,
                     abcList,
                     mSparseBooleanArray,
-                    Constants.NUMBER_ZERO,
-                    Constants.NUMBER_ZERO
+                    Constant.NUMBER_ZERO,
+                    Constant.NUMBER_ZERO
                 )
             }
             1 -> {
-                val scoreList = MusicListUtil.sortMusicList(musicBeanList, Constants.SORT_SCORE)
+                val scoreList = MusicListUtil.sortMusicList(musicBeanList, Constant.SORT_SCORE)
                 setNotAllSelected(scoreList)
                 mSongAdapter = SongAdapter(
                     mActivity,
                     scoreList,
                     mSparseBooleanArray,
-                    Constants.NUMBER_ONE,
-                    Constants.NUMBER_ONE
+                    Constant.NUMBER_ONE,
+                    Constant.NUMBER_ONE
                 )
             }
             2 -> {
                 val playFrequencyList =
-                    MusicListUtil.sortMusicList(musicBeanList, Constants.SORT_FREQUENCY)
+                    MusicListUtil.sortMusicList(musicBeanList, Constant.SORT_FREQUENCY)
                 setNotAllSelected(playFrequencyList)
                 mSongAdapter = SongAdapter(
                     mActivity,
                     playFrequencyList,
                     mSparseBooleanArray,
-                    Constants.NUMBER_ONE,
-                    Constants.NUMBER_TWO
+                    Constant.NUMBER_ONE,
+                    Constant.NUMBER_TWO
                 )
             }
             3 -> {
                 val addTimeList =
-                    MusicListUtil.sortMusicList(musicBeanList, Constants.SORT_DOWN_TIME)
+                    MusicListUtil.sortMusicList(musicBeanList, Constant.SORT_DOWN_TIME)
                 setNotAllSelected(addTimeList)
                 mSongAdapter = SongAdapter(
                     mActivity,
                     addTimeList,
                     mSparseBooleanArray,
-                    Constants.NUMBER_ONE,
-                    Constants.NUMBER_ZERO
+                    Constant.NUMBER_ONE,
+                    Constant.NUMBER_ZERO
                 )
             }
         }
-        mBinding.musicView.setAdapter(mActivity, Constants.NUMBER_ONE, true, mSongAdapter)
+        mBinding.musicView.setAdapter(mActivity, Constant.NUMBER_ONE, true, mSongAdapter)
         initListener()
     }
 
@@ -146,7 +144,7 @@ class SongCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
 
     private fun deleteListItem() {
         LogUtil.d(mTag, "Size " + mSelectList.size)
-        if (mSelectList.size > Constants.NUMBER_ZERO) {
+        if (mSelectList.size > Constant.NUMBER_ZERO) {
             for (musicBean in mSelectList) {
                 LogUtil.d(mTag, musicBean.title)
                 //                FileUtil.deleteFile(new File(musicBean.getSongUrl()));

@@ -14,9 +14,8 @@ import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
 import com.yibao.music.R;
-import com.yibao.music.base.bindings.BaseBindingAdapter;
 import com.yibao.music.base.listener.OnGlideLoadListener;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 
 import java.util.Objects;
 
@@ -87,8 +86,8 @@ public class MusicView
      */
     public void setAdapter(Context context, int adapterType, boolean isShowSlideBar, RecyclerView.Adapter<RecyclerView.ViewHolder> adapter) {
         mSlidebar.setAdapterType(adapterType);
-        if (adapterType == Constants.NUMBER_FOUR) {
-            GridLayoutManager manager = new GridLayoutManager(context, Constants.NUMBER_THREE);
+        if (adapterType == Constant.NUMBER_FOUR) {
+            GridLayoutManager manager = new GridLayoutManager(context, Constant.NUMBER_THREE);
             manager.setOrientation(GridLayoutManager.VERTICAL);
             mRecyclerView.setLayoutManager(manager);
         } else {

@@ -21,7 +21,7 @@ import com.yibao.music.base.listener.BottomSheetCallback;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.MenuListUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
@@ -66,8 +66,8 @@ public class MoreMenuBottomDialog {
     private void initListener(Context context, BottomSheetDialog dialog) {
         mBottomCancel.setOnClickListener(v -> dialog.dismiss());
         mMemuAdapter.setClickListener(((musicPosition, position, musicBean) -> {
-            if (position == Constants.NUMBER_ZERO) {
-                SpUtil.setAddTodPlayListFlag(context, Constants.NUMBER_ONE);
+            if (position == Constant.NUMBER_ZERO) {
+                SpUtil.setAddTodPlayListFlag(context, Constant.NUMBER_ONE);
             }
             RxBus.getInstance().post(new MoreMenuStatus(mMusicPosition, position, musicBean));
             dialog.dismiss();

@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,11 +21,9 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
-import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.PlayListBeanDao;
-import com.yibao.music.util.Constants;
-import com.yibao.music.util.RxBus;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SoftKeybordUtil;
 import com.yibao.music.util.ToastUtil;
@@ -111,7 +108,7 @@ public class AddListDialog
         mTvAddListContinue = mView.findViewById(R.id.tv_add_list_continue);
         mNoInputTv = mView.findViewById(R.id.tv_no_input_cancel);
         mNoInputTv.setVisibility(View.VISIBLE);
-        title.setText(mOperationType == Constants.NUMBER_ONE ? R.string.add_new_play_list : R.string.rename_tile);
+        title.setText(mOperationType == Constant.NUMBER_ONE ? R.string.add_new_play_list : R.string.rename_tile);
         mTvAddListContinue.setText(getResources().getString(isFormPlayListActivity ? R.string.save_and_add : R.string.continues));
         mEditAddList.setHint(mEditHint);
     }
@@ -134,7 +131,7 @@ public class AddListDialog
             if (beanList.size() > 0) {
                 SnakbarUtil.favoriteSuccessView(mEditAddList, "播放列表已存在");
             } else {
-                if (mOperationType == Constants.NUMBER_ONE) {
+                if (mOperationType == Constant.NUMBER_ONE) {
                     long insertOrReplaceId = playListDao.insertOrReplace(new PlayListBean(listTitle, System.currentTimeMillis()));
                     if (insertOrReplaceId != 0) {
                         mListener.onRefresh();

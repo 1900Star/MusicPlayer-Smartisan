@@ -7,11 +7,9 @@ import com.yibao.music.adapter.SongViewPagerAdapter
 import com.yibao.music.base.bindings.BaseMusicFragmentDev
 import com.yibao.music.databinding.SongFragmentBinding
 import com.yibao.music.util.ColorUtil
-import com.yibao.music.util.Constants
+import com.yibao.music.util.Constant
 import com.yibao.music.util.SpUtil
 import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 /**
  * @项目名： ArtisanMusic
@@ -24,8 +22,8 @@ import io.reactivex.schedulers.Schedulers
  */
 class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickListener {
 
-    private var curentIndex = 0
-    private var isSelecteStatus = false
+    private var currentIndex = 0
+    private var isSelectStatus = false
 
     override fun initView() {
         mBinding.musicBar.musicToolbarList.setTvEditVisibility(true)
@@ -38,7 +36,7 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
         super.onResume()
 
         mBinding.musicBar.musicToolbarList.setToolbarTitle(getString(R.string.music_song))
-        switchListCategory(curentIndex)
+        switchListCategory(currentIndex)
     }
 
 
@@ -60,10 +58,10 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
     private fun initListener() {
         mBinding.musicBar.musicToolbarList.setClickListener(object : OnToolbarClickListener {
             override fun clickEdit() {
-                mBus.post(Constants.SONG_FAG_EDIT, Constants.NUMBER_ONE)
-                mBinding.musicBar.musicToolbarList.setTvEditText(if (isSelecteStatus) R.string.tv_edit else R.string.complete)
-                mBinding.musicBar.musicToolbarList.setTvDeleteVisibility(if (isSelecteStatus) View.GONE else View.VISIBLE)
-                isSelecteStatus = !isSelecteStatus
+                mBus.post(Constant.SONG_FAG_EDIT, Constant.NUMBER_ONE)
+                mBinding.musicBar.musicToolbarList.setTvEditText(if (isSelectStatus) R.string.tv_edit else R.string.complete)
+                mBinding.musicBar.musicToolbarList.setTvDeleteVisibility(if (isSelectStatus) View.GONE else View.VISIBLE)
+                isSelectStatus = !isSelectStatus
             }
 
             override fun switchMusicControlBar() {
@@ -71,7 +69,7 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
             }
 
             override fun clickDelete() {
-                mBus.post(Constants.SONG_FAG_EDIT, Constants.NUMBER_TWO)
+                mBus.post(Constant.SONG_FAG_EDIT, Constant.NUMBER_TWO)
             }
         })
         mBinding.songCategory.tvMusicCategorySongname.setOnClickListener(this)
@@ -94,27 +92,27 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
     }
 
     private fun switchListCategory(flag: Int) {
-        curentIndex = flag
+        currentIndex = flag
         mBinding.viewPager2Song.setCurrentItem(flag, false)
         when (flag) {
             0 -> {
-                setAllCategoryNotNormal(Constants.NUMBER_ONE)
+                setAllCategoryNotNormal(Constant.NUMBER_ONE)
 
                 mBinding.songCategory.tvMusicCategorySongname.setTextColor(ColorUtil.wihtle)
                 mBinding.songCategory.tvMusicCategorySongname.setBackgroundResource(R.drawable.btn_category_songname_down_selector)
             }
             1 -> {
-                setAllCategoryNotNormal(Constants.NUMBER_TWO)
+                setAllCategoryNotNormal(Constant.NUMBER_TWO)
                 mBinding.songCategory.tvMusicCategoryScore.setTextColor(ColorUtil.wihtle)
                 mBinding.songCategory.tvMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_down_selector)
             }
             2 -> {
-                setAllCategoryNotNormal(Constants.NUMBER_THREE)
+                setAllCategoryNotNormal(Constant.NUMBER_THREE)
                 mBinding.songCategory.tvMusicCategoryFrequency.setTextColor(ColorUtil.wihtle)
                 mBinding.songCategory.tvMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_down_selector)
             }
             3 -> {
-                setAllCategoryNotNormal(Constants.NUMBER_FOUR)
+                setAllCategoryNotNormal(Constant.NUMBER_FOUR)
                 mBinding.songCategory.tvMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_down_selector)
                 mBinding.songCategory.tvMusicCategoryAddtime.setTextColor(ColorUtil.wihtle)
             }

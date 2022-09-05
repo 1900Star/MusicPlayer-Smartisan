@@ -12,7 +12,7 @@ import android.util.AttributeSet;
 import com.yibao.music.R;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.util.ColorUtil;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -199,7 +199,7 @@ public class LyricsView
     }
 
     private void drawSingLine(Canvas canvas) {
-        mCurrentLrc = mLyricsMsg.equals(Constants.PURE_MUSIC) ? Constants.PURE_MUSIC : Constants.NO_LYRICS;
+        mCurrentLrc = mLyricsMsg.equals(Constant.PURE_MUSIC) ? Constant.PURE_MUSIC : Constant.NO_LYRICS;
         mPaint.setColor(mLyricsNormal);
         mPaint.getTextBounds(mCurrentLrc, 0, mCurrentLrc.length(), mSingleBounds);
         float x = (mViewW >> 1) - (mSingleBounds.width() >> 1);

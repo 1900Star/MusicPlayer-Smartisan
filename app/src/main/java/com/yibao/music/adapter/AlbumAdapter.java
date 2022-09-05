@@ -14,7 +14,7 @@ import com.yibao.music.base.bindings.BaseBindingAdapter;
 import com.yibao.music.databinding.ItemAlbumListBinding;
 import com.yibao.music.databinding.ItemAlbumTileBinding;
 import com.yibao.music.model.AlbumInfo;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
@@ -60,20 +60,20 @@ public class AlbumAdapter
         ItemAlbumTileBinding tileBinding = ItemAlbumTileBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         ItemAlbumListBinding listBinding = ItemAlbumListBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
 
-        return mIsShowStickyView == Constants.NUMBER_ZERO ? new AlbumListHolder(listBinding) : new AlbumTileHolder(tileBinding);
+        return mIsShowStickyView == Constant.NUMBER_ZERO ? new AlbumListHolder(listBinding) : new AlbumTileHolder(tileBinding);
     }
 
     @Override
     public void bindView(RecyclerView.ViewHolder holder, AlbumInfo info) {
         //显示 StickyView  并且列表呈普通视图显示
-        if (mIsShowStickyView == Constants.NUMBER_ZERO) {
+        if (mIsShowStickyView == Constant.NUMBER_ZERO) {
             if (holder instanceof AlbumListHolder) {
                 AlbumListHolder albumlistHolder = (AlbumListHolder) holder;
                 setDataAlbumList(albumlistHolder, info);
             }
 
             //显示 隐藏StickyView  并且列表平呈平铺视图显示
-        } else if (mIsShowStickyView == Constants.NUMBER_ONE) {
+        } else if (mIsShowStickyView == Constant.NUMBER_ONE) {
             if (holder instanceof AlbumTileHolder) {
                 AlbumTileHolder albumTileHolder = (AlbumTileHolder) holder;
                 setDataAlbumTile(albumTileHolder, info);

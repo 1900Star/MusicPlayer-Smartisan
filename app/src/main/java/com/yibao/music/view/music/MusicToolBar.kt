@@ -1,10 +1,8 @@
 package com.yibao.music.view.music
 
 import android.widget.LinearLayout
-import android.widget.TextView
 import android.view.LayoutInflater
 import com.yibao.music.R
-import android.view.View.OnLongClickListener
 import com.yibao.music.util.SpUtil
 import android.content.Intent
 import com.yibao.music.activity.SearchActivity
@@ -12,10 +10,8 @@ import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.widget.ImageView
 import com.yibao.music.databinding.MusicToolbarContentBinding
-import com.yibao.music.util.Constants
-import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
+import com.yibao.music.util.Constant
 
 /**
  * @author Luoshipeng
@@ -45,7 +41,7 @@ class MusicToolBar : LinearLayout, View.OnClickListener {
     private fun initData() {}
     private fun initListener() {
         mBinding.tvEdit.setOnClickListener(this)
-        mBinding.tvDelete.setOnClickListener(this)
+//        mBinding.tvDelete.setOnClickListener(this)
         mBinding.ivSearch.setOnClickListener(this)
         mBinding.tvMusicToolbarTitle.setOnClickListener(this)
         mBinding.tvMusicToolbarTitle.setOnLongClickListener {
@@ -67,7 +63,7 @@ class MusicToolBar : LinearLayout, View.OnClickListener {
     }
 
     fun setTvDeleteVisibility(visibility: Int) {
-        mBinding.tvDelete.visibility = visibility
+//        mBinding.tvDelete.visibility = visibility
     }
 
     fun setIvSearchVisibility(visibility: Boolean) {
@@ -86,13 +82,13 @@ class MusicToolBar : LinearLayout, View.OnClickListener {
                 }
                 R.id.iv_search -> {
                     val intent = Intent(context, SearchActivity::class.java)
-                    intent.putExtra("pageType", Constants.NUMBER_ZERO)
+                    intent.putExtra(Constant.PAGE_TYPE, Constant.NUMBER_ZERO)
                     context.startActivity(intent)
                     (context as Activity).overridePendingTransition(R.anim.dialog_push_in, 0)
                 }
-                R.id.tv_delete -> {
-                    mListener!!.clickDelete()
-                }
+//                R.id.tv_delete -> {
+//                    mListener!!.clickDelete()
+//                }
                 else -> {}
             }
         }

@@ -87,11 +87,11 @@ public class CrashHandler
             String fileName = time + FILE_NAME_SUFFIX;
             exceptionFile = FileUtil.createFile(mContext, fileName, "crash");
         } else {
-            File dir = new File(Constants.CRASH_LOG_PATH);
+            File dir = new File(Constant.CRASH_LOG_PATH);
             if (!dir.exists()) {
                 dir.mkdirs();
             }
-            exceptionFile = new File(Constants.CRASH_LOG_PATH + FILE_NAME + time + FILE_NAME_SUFFIX);
+            exceptionFile = new File(Constant.CRASH_LOG_PATH + FILE_NAME + time + FILE_NAME_SUFFIX);
         }
         try {
             PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(exceptionFile)));

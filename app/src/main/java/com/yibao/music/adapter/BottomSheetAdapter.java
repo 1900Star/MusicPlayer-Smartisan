@@ -11,7 +11,7 @@ import com.yibao.music.base.bindings.BaseBindingAdapter;
 import com.yibao.music.databinding.BottomSheetMusicItemBinding;
 import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.StringUtil;
 
@@ -50,10 +50,10 @@ public class BottomSheetAdapter
             musicHolder.mBinding.deleteItem.setOnClickListener(v -> {
                 musicItem.setFavorite(false);
                 MusicApplication.getInstance().getMusicDao().update(musicItem);
-                RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_FIVE, position, musicItem.getTitle()));
+                RxBus.getInstance().post(new AddAndDeleteListBean(Constant.NUMBER_FIVE, position, musicItem.getTitle()));
             });
             // MusicBottomSheetDialog页面接收,用于播放收藏列表中点击Position的音乐
-            musicHolder.mBinding.rootFavoriteBottomSheet.setOnClickListener(view -> RxBus.getInstance().post(Constants.FAVORITE_POSITION, position));
+            musicHolder.mBinding.rootFavoriteBottomSheet.setOnClickListener(view -> RxBus.getInstance().post(Constant.FAVORITE_POSITION, position));
         }
     }
 

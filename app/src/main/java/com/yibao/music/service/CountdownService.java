@@ -6,7 +6,7 @@ import android.os.CountDownTimer;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
 
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.StringUtil;
 
@@ -24,7 +24,7 @@ public class CountdownService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        long countdownTime = intent.getLongExtra(Constants.COUNTDOWN_TIME, 0);
+        long countdownTime = intent.getLongExtra(Constant.COUNTDOWN_TIME, 0);
         mMusicTimer = new MusicTimer(countdownTime, 1000);
         mMusicTimer.start();
         return START_NOT_STICKY;
@@ -39,7 +39,7 @@ public class CountdownService extends Service {
         @Override
         public void onTick(long millisUntilFinished) {
             String countdownTime = StringUtil.parseDuration((int) millisUntilFinished);
-            RxBus.getInstance().post(Constants.COUNTDOWN_TIME,countdownTime);
+            RxBus.getInstance().post(Constant.COUNTDOWN_TIME,countdownTime);
         }
 
         @Override
@@ -50,8 +50,8 @@ public class CountdownService extends Service {
         }
 
         private void sendCloseMusicBroadcast() {
-            Intent intent = new Intent(Constants.ACTION_MUSIC);
-            intent.putExtra(Constants.NOTIFY_BUTTON_ID, Constants.COUNTDOWN_FINISH);
+            Intent intent = new Intent(Constant.ACTION_MUSIC);
+            intent.putExtra(Constant.NOTIFY_BUTTON_ID, Constant.COUNTDOWN_FINISH);
             sendBroadcast(intent);
         }
 

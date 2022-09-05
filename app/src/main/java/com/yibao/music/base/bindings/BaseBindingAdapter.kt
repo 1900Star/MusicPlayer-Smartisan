@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.yibao.music.model.MusicBean
 import com.yibao.music.model.PlayListBean
-import com.yibao.music.util.Constants
+import com.yibao.music.util.Constant
 import java.util.*
 
 /**
@@ -78,7 +78,7 @@ abstract class BaseBindingAdapter<T>(private var mList: MutableList<T>) :
     }
 
     open fun setNewData(data: List<T>) {
-        if (mList.size > Constants.NUMBER_ZERO) {
+        if (mList.size > Constant.NUMBER_ZERO) {
             mList.clear()
         }
         mList.addAll(data)

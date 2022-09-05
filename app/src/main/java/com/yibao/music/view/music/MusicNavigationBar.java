@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.util.ColorUtil;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 
 
 /**
@@ -56,42 +56,42 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.music_bar_playlist) {
-            switchMusicTabBar(Constants.NUMBER_ZERO);
+            switchMusicTabBar(Constant.NUMBER_ZERO);
         } else if (id == R.id.music_bar_artisanlist) {
-            switchMusicTabBar(Constants.NUMBER_ONE);
+            switchMusicTabBar(Constant.NUMBER_ONE);
         } else if (id == R.id.music_bar_songlist) {
-            switchMusicTabBar(Constants.NUMBER_TWO);
+            switchMusicTabBar(Constant.NUMBER_TWO);
         } else if (id == R.id.music_bar_albumlist) {
-            switchMusicTabBar(Constants.NUMBER_THREE);
+            switchMusicTabBar(Constant.NUMBER_THREE);
         } else if (id == R.id.music_bar_about) {
-            switchMusicTabBar(Constants.NUMBER_FOUR);
+            switchMusicTabBar(Constant.NUMBER_FOUR);
         }
     }
 
     public void switchMusicTabBar(int flag) {
         setAllTabbarNotPressed(flag);
         switch (flag) {
-            case Constants.NUMBER_ZERO:
+            case Constant.NUMBER_ZERO:
                 mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_selector);
                 mMusicBarPlaylistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarPlaylist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 break;
-            case Constants.NUMBER_ONE:
+            case Constant.NUMBER_ONE:
                 mMusicBarArtisanlistIv.setBackgroundResource(R.drawable.tabbar_artisanlist_selector);
                 mMusicBarArtisanlistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarArtisanlist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 break;
-            case Constants.NUMBER_TWO:
+            case Constant.NUMBER_TWO:
                 mMusicBarSonglistIv.setBackgroundResource(R.drawable.tabbar_songlist_selector);
                 mMusicBarSonglistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarSonglist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 break;
-            case Constants.NUMBER_THREE:
+            case Constant.NUMBER_THREE:
                 mMusicBarAlbumlistIv.setBackgroundResource(R.drawable.tabbar_albumlist_selector);
                 mMusicBarAlbumlist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 mMusicBarAlbumlistTv.setTextColor(ColorUtil.musicbarTvDown);
                 break;
-            case Constants.NUMBER_FOUR:
+            case Constant.NUMBER_FOUR:
                 mMusicBarStylelistIv.setBackgroundResource(R.drawable.tabbar_stylelist_selector);
                 mMusicBarStylelistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarAboutLl.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));

@@ -19,7 +19,7 @@ import com.yibao.music.model.MusicBean
 import com.yibao.music.model.SearchCategoryBean
 import com.yibao.music.model.SearchHistoryBean
 import com.yibao.music.model.greendao.SearchHistoryBeanDao
-import com.yibao.music.util.Constants
+import com.yibao.music.util.Constant
 import com.yibao.music.util.LogUtil
 import com.yibao.music.util.MusicDaoUtil
 import com.yibao.music.util.SnakbarUtil
@@ -175,7 +175,7 @@ class SearchFragment : BaseBindingFragment<SearchFragmentBinding>() {
             mBinding.flowlayout.setData(searchList)
         }
         // 列表数据
-        mSearchDetailAdapter = DetailsViewAdapter(mContext, musicList, Constants.NUMBER_THREE)
+        mSearchDetailAdapter = DetailsViewAdapter(mContext, musicList, Constant.NUMBER_THREE)
         val recyclerView = RecyclerFactory.createRecyclerView(1, mSearchDetailAdapter)
         mBinding.llListView.addView(recyclerView)
         if (arguments != null) {
@@ -192,11 +192,11 @@ class SearchFragment : BaseBindingFragment<SearchFragmentBinding>() {
             mIsFirst = true
         }
         when (categoryFlag) {
-            0 -> setFlagAndSearch(condition, Constants.NUMBER_THREE)
-            1 -> setFlagAndSearch(condition, Constants.NUMBER_THREE)
-            2 -> setFlagAndSearch(condition, Constants.NUMBER_TWO)
-            3 -> setFlagAndSearch(condition, Constants.NUMBER_ONE)
-            4 -> setFlagAndSearch(condition, Constants.NUMBER_FOUR)
+            0 -> setFlagAndSearch(condition, Constant.NUMBER_THREE)
+            1 -> setFlagAndSearch(condition, Constant.NUMBER_THREE)
+            2 -> setFlagAndSearch(condition, Constant.NUMBER_TWO)
+            3 -> setFlagAndSearch(condition, Constant.NUMBER_ONE)
+            4 -> setFlagAndSearch(condition, Constant.NUMBER_FOUR)
             9 -> {
                 clearAdapter()
                 mBinding.llListView.visibility = View.INVISIBLE
@@ -220,16 +220,16 @@ class SearchFragment : BaseBindingFragment<SearchFragmentBinding>() {
     private fun moreMenu(moreMenuStatus: MoreMenuStatus) {
         val musicBean = moreMenuStatus.musicBean
         when (moreMenuStatus.position) {
-            Constants.NUMBER_ZERO -> {
+            Constant.NUMBER_ZERO -> {
                 val intent = Intent(mContext, PlayListActivity::class.java)
-                intent.putExtra(Constants.SONG_NAME, musicBean.title)
+                intent.putExtra(Constant.SONG_NAME, musicBean.title)
                 startActivity(intent)
                 requireActivity().overridePendingTransition(R.anim.dialog_push_in, 0)
             }
-            Constants.NUMBER_ONE -> SnakbarUtil.keepGoing(mBinding.llHistory)
-            Constants.NUMBER_TWO -> {}
-            Constants.NUMBER_THREE -> SnakbarUtil.keepGoing(mBinding.stickyViewSearch)
-            Constants.NUMBER_FOUR ->                 // 刷新搜索列表, 后续完成
+            Constant.NUMBER_ONE -> SnakbarUtil.keepGoing(mBinding.llHistory)
+            Constant.NUMBER_TWO -> {}
+            Constant.NUMBER_THREE -> SnakbarUtil.keepGoing(mBinding.stickyViewSearch)
+            Constant.NUMBER_FOUR ->                 // 刷新搜索列表, 后续完成
                 mMusicBeanDao.delete(moreMenuStatus.musicBean)
             else -> {}
         }

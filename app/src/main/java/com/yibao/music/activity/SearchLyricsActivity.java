@@ -18,7 +18,7 @@ import com.yibao.music.base.BaseObserver;
 import com.yibao.music.model.qq.SearchLyricsBean;
 import com.yibao.music.model.qq.SongLrc;
 import com.yibao.music.network.RetrofitHelper;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.NetworkUtil;
 import com.yibao.music.util.ToastUtil;
@@ -77,8 +77,8 @@ public class SearchLyricsActivity extends AppCompatActivity {
 
     private void intData() {
         mLyricsBeanList = new ArrayList<>();
-        String mSongName = getIntent().getStringExtra(Constants.SONG_NAME);
-        String mSongArtist = getIntent().getStringExtra(Constants.SONG_ARTIST);
+        String mSongName = getIntent().getStringExtra(Constant.SONG_NAME);
+        String mSongArtist = getIntent().getStringExtra(Constant.SONG_ARTIST);
         LogUtil.d(TAG, mSongName + " == " + mSongArtist);
         if (mSongName != null && mSongArtist != null) {
             mEditSongName.setText(mSongName);
@@ -119,7 +119,7 @@ public class SearchLyricsActivity extends AppCompatActivity {
                         String songSinger = listBean.getSinger().get(0).getName();
                         String songNames = listBean.getSongname();
                         if (isNeedArtist) {
-                            if (!Constants.NO_LYRICS.equals(content) && !Constants.PURE_MUSIC.equals(content) && songName.equals(songNames) && songSinger.contains(singer)) {
+                            if (!Constant.NO_LYRICS.equals(content) && !Constant.PURE_MUSIC.equals(content) && songName.equals(songNames) && songSinger.contains(singer)) {
                                 SearchLyricsBean lyricsBean = new SearchLyricsBean(listBean.getSongmid(), listBean.getContent());
                                 if (!mLyricsBeanList.contains(lyricsBean)) {
                                     mLyricsBeanList.add(lyricsBean);
@@ -127,7 +127,7 @@ public class SearchLyricsActivity extends AppCompatActivity {
                             }
 
                         } else {
-                            if (!Constants.NO_LYRICS.equals(content) && !Constants.PURE_MUSIC.equals(content) && songName.equals(songNames)) {
+                            if (!Constant.NO_LYRICS.equals(content) && !Constant.PURE_MUSIC.equals(content) && songName.equals(songNames)) {
                                 SearchLyricsBean lyricsBean = new SearchLyricsBean(listBean.getSongmid(), listBean.getContent());
                                 if (!mLyricsBeanList.contains(lyricsBean)) {
                                     mLyricsBeanList.add(lyricsBean);
@@ -149,7 +149,7 @@ public class SearchLyricsActivity extends AppCompatActivity {
             });
         } else {
             mIvLoading.setVisibility(View.GONE);
-            ToastUtil.show(this, Constants.NO_NETWORK);
+            ToastUtil.show(this, Constant.NO_NETWORK);
         }
 
     }
@@ -171,8 +171,8 @@ public class SearchLyricsActivity extends AppCompatActivity {
     private void searchComplete() {
         LogUtil.d(TAG, "搜索歌词完成");
         Intent intent = new Intent();
-        intent.putExtra(Constants.SONGMID, mSongMid);
-        setResult(Constants.SELECT_LYRICS, intent);
+        intent.putExtra(Constant.SONGMID, mSongMid);
+        setResult(Constant.SELECT_LYRICS, intent);
         finish();
     }
 

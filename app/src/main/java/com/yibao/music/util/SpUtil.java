@@ -21,15 +21,15 @@ public class SpUtil {
      *                1  点击MoreMenuDialog-->添加到播放列表-->PlayListActivity弹出新建AddListDialog  时赋值为 1 。
      */
     public static void setAddTodPlayListFlag(Context context, int value) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.ADD_TO_PLAY_LIST_FLAG, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.ADD_TO_PLAY_LIST_FLAG, Constant.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(Constants.ADD_TO_PLAY_LIST_FLAG_KEY, value);
+        editor.putInt(Constant.ADD_TO_PLAY_LIST_FLAG_KEY, value);
         editor.apply();
     }
 
     public static int getAddToPlayListFdlag(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.ADD_TO_PLAY_LIST_FLAG, Constants.MODE_KEY);
-        return sp.getInt(Constants.ADD_TO_PLAY_LIST_FLAG_KEY, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.ADD_TO_PLAY_LIST_FLAG, Constant.MODE_KEY);
+        return sp.getInt(Constant.ADD_TO_PLAY_LIST_FLAG_KEY, Constant.MODE_KEY);
     }
 
     /**
@@ -39,15 +39,15 @@ public class SpUtil {
      * @param value   0 全部  1 单曲   2 随机
      */
     public static void setMusicMode(Context context, int value) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_MODE, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.MUSIC_MODE, Constant.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(Constants.PLAY_MODE_KEY, value);
+        editor.putInt(Constant.PLAY_MODE_KEY, value);
         editor.apply();
     }
 
     public static int getMusicMode(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_MODE, Constants.MODE_KEY);
-        return sp.getInt(Constants.PLAY_MODE_KEY, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.MUSIC_MODE, Constant.MODE_KEY);
+        return sp.getInt(Constant.PLAY_MODE_KEY, Constant.MODE_KEY);
     }
 
 
@@ -58,15 +58,15 @@ public class SpUtil {
      * @param value   播放位置
      */
     public static void setMusicPosition(Context context, int value) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_POSITION, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.MUSIC_POSITION, Constant.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(Constants.MUSIC_ITEM_POSITION, value);
+        editor.putInt(Constant.MUSIC_ITEM_POSITION, value);
         editor.apply();
     }
 
     public static int getMusicPosition(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_POSITION, Constants.MODE_KEY);
-        return sp.getInt(Constants.MUSIC_ITEM_POSITION, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.MUSIC_POSITION, Constant.MODE_KEY);
+        return sp.getInt(Constant.MUSIC_ITEM_POSITION, Constant.MODE_KEY);
     }
 
     /**
@@ -78,15 +78,15 @@ public class SpUtil {
      * @param value   Constants.NUMBER_EIGHT
      */
     public static void setLoadMusicFlag(Context context, int value) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_LOAD, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.MUSIC_LOAD, Constant.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(Constants.MUSIC_LOAD_FLAG, value);
+        editor.putInt(Constant.MUSIC_LOAD_FLAG, value);
         editor.apply();
     }
 
     public static int getLoadMusicFlag(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_LOAD, Constants.MODE_KEY);
-        return sp.getInt(Constants.MUSIC_LOAD_FLAG, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.MUSIC_LOAD, Constant.MODE_KEY);
+        return sp.getInt(Constant.MUSIC_LOAD_FLAG, Constant.MODE_KEY);
     }
 
     /**
@@ -97,15 +97,15 @@ public class SpUtil {
      * @param value   v
      */
     public static void setSortFlag(Context context, int value) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_DATA_FLAG, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.MUSIC_DATA_FLAG, Constant.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(Constants.MUSIC_DATA_LIST_FLAG, value);
+        editor.putInt(Constant.MUSIC_DATA_LIST_FLAG, value);
         editor.apply();
     }
 
     public static int getSortFlag(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_DATA_FLAG, Constants.MODE_KEY);
-        return sp.getInt(Constants.MUSIC_DATA_LIST_FLAG, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.MUSIC_DATA_FLAG, Constant.MODE_KEY);
+        return sp.getInt(Constant.MUSIC_DATA_LIST_FLAG, Constant.MODE_KEY);
     }
 
     /**
@@ -115,15 +115,15 @@ public class SpUtil {
      * @param value   v 1 艺术家  2  专辑   3    歌曲   4 播放列表
      */
     public static void setDataQueryFlag(Context context, int value) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_DATA_QUERY, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.MUSIC_DATA_QUERY, Constant.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(Constants.MUSIC_DATA_QUERY_FLAG, value);
+        editor.putInt(Constant.MUSIC_DATA_QUERY_FLAG, value);
         editor.apply();
     }
 
     public static int getDataQueryFlag(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_DATA_QUERY, Constants.MODE_KEY);
-        return sp.getInt(Constants.MUSIC_DATA_QUERY_FLAG, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.MUSIC_DATA_QUERY, Constant.MODE_KEY);
+        return sp.getInt(Constant.MUSIC_DATA_QUERY_FLAG, Constant.MODE_KEY);
     }
 
     /**
@@ -133,15 +133,15 @@ public class SpUtil {
      * @param value   歌曲的具体查询标识
      */
     public static void setQueryFlag(Context context, String value) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_QUERY, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.MUSIC_QUERY, Constant.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(Constants.MUSIC_QUERY_FLAG, value);
+        editor.putString(Constant.MUSIC_QUERY_FLAG, value);
         editor.apply();
     }
 
     public static String getQueryFlag(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_QUERY, Constants.MODE_KEY);
-        return sp.getString(Constants.MUSIC_QUERY_FLAG, "defult");
+        SharedPreferences sp = context.getSharedPreferences(Constant.MUSIC_QUERY, Constant.MODE_KEY);
+        return sp.getString(Constant.MUSIC_QUERY_FLAG, "defult");
     }
 
     /**
@@ -151,15 +151,15 @@ public class SpUtil {
      * @param value   v
      */
     public static void setMusicPlayState(Context context, int value) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_PLAY_STATE, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.MUSIC_PLAY_STATE, Constant.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(Constants.MUSIC_PLAY_STATE_KEY, value);
+        editor.putInt(Constant.MUSIC_PLAY_STATE_KEY, value);
         editor.apply();
     }
 
     public static int getMusicPlayState(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_PLAY_STATE, Constants.MODE_KEY);
-        return sp.getInt(Constants.MUSIC_PLAY_STATE_KEY, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.MUSIC_PLAY_STATE, Constant.MODE_KEY);
+        return sp.getInt(Constant.MUSIC_PLAY_STATE_KEY, Constant.MODE_KEY);
     }
 
 
@@ -169,16 +169,16 @@ public class SpUtil {
      * @param context c
      */
     public static void setMusicConfig(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_CONFIG, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.MUSIC_CONFIG, Constant.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean(Constants.MUSIC_REMENBER_FLAG, true);
+        editor.putBoolean(Constant.MUSIC_REMENBER_FLAG, true);
         editor.apply();
     }
 
     public static boolean getMusicConfig(Context context, boolean b) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_CONFIG, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.MUSIC_CONFIG, Constant.MODE_KEY);
 
-        return sp.getBoolean(Constants.MUSIC_REMENBER_FLAG, b);
+        return sp.getBoolean(Constant.MUSIC_REMENBER_FLAG, b);
     }
 
     /**
@@ -186,28 +186,28 @@ public class SpUtil {
      * @param isLossFoucs 音频焦点管理
      */
     public static void setFoucesFlag(Context context, boolean isLossFoucs) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_FOCUS, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.MUSIC_FOCUS, Constant.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean(Constants.MUSIC_FOCUS_KEY, isLossFoucs);
+        editor.putBoolean(Constant.MUSIC_FOCUS_KEY, isLossFoucs);
         editor.apply();
     }
 
     public static boolean getFoucsFlag(Context context, boolean isLossFoucs) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.MUSIC_FOCUS, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.MUSIC_FOCUS, Constant.MODE_KEY);
 
-        return sp.getBoolean(Constants.MUSIC_FOCUS_KEY, isLossFoucs);
+        return sp.getBoolean(Constant.MUSIC_FOCUS_KEY, isLossFoucs);
     }
 
 
     public static void setPicUrlFlag(Context context, boolean value) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.PIC_URL_FLAG, Constants.MODE_KEY);
+        SharedPreferences sp = context.getSharedPreferences(Constant.PIC_URL_FLAG, Constant.MODE_KEY);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean(Constants.PIC_URL_LIST_FLAG, value);
+        editor.putBoolean(Constant.PIC_URL_LIST_FLAG, value);
         editor.apply();
     }
 
     public static boolean getPicUrlFlag(Context context, boolean value) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.PIC_URL_FLAG, Constants.MODE_KEY);
-        return sp.getBoolean(Constants.PIC_URL_LIST_FLAG, value);
+        SharedPreferences sp = context.getSharedPreferences(Constant.PIC_URL_FLAG, Constant.MODE_KEY);
+        return sp.getBoolean(Constant.PIC_URL_LIST_FLAG, value);
     }
 }

@@ -9,7 +9,7 @@ import android.os.Environment;
  *
  * @author Stran
  */
-public class Constants {
+public class Constant {
     /**
      * 广播匹配
      */
@@ -145,6 +145,9 @@ public class Constants {
     public static final String FINISH_TIME = "00:01";
     public static String MUSIC_LYRICS_DIR = "lyrics";
     public static String CRASH_DIR = "crash";
+    public static String LOAD_FLAG = "load_flag";
+    public static String AUTO_LOAD = "auto_load";
+    public static String PAGE_TYPE = "page_type";
     public static String MUSIC_LYRICS_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyrics/";
     public static String MUSIC_SONG_ALBUM_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/songAlbum/";
     public static String MUSIC_ALBUM_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/album/";

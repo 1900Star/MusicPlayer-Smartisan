@@ -22,7 +22,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.network.QqMusicRemote;
 import com.yibao.music.util.CheckBuildVersionUtil;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.MusicListUtil;
@@ -109,9 +109,9 @@ public class MusicPlayService
         int sortListFlag = intent.getIntExtra("sortFlag", 0);
         int dataFlag = intent.getIntExtra("dataFlag", 0);
         String queryFlag = intent.getStringExtra("queryFlag");
-        int sortFlag = sortListFlag == Constants.NUMBER_ZERO ? Constants.NUMBER_ONE : sortListFlag;
+        int sortFlag = sortListFlag == Constant.NUMBER_ZERO ? Constant.NUMBER_ONE : sortListFlag;
         SpUtil.setDataQueryFlag(this, dataFlag);
-        if (queryFlag != null && !queryFlag.equals(Constants.FAVORITE_FLAG) && !queryFlag.equals(Constants.NO_NEED_FLAG)) {
+        if (queryFlag != null && !queryFlag.equals(Constant.FAVORITE_FLAG) && !queryFlag.equals(Constant.NO_NEED_FLAG)) {
             SpUtil.setQueryFlag(MusicPlayService.this, queryFlag);
         }
         LogUtil.d(TAG, " position  ==" + enterPosition + "   sortListFlag  ==" + sortFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
@@ -140,7 +140,7 @@ public class MusicPlayService
         if (mMusicDataList != null && position < mMusicDataList.size()) {
             MusicBean musicBean = mMusicDataList.get(position);
             musicBean.setCureetPosition(position);
-            mBus.post(Constants.SERVICE_MUSIC, musicBean);
+            mBus.post(Constant.SERVICE_MUSIC, musicBean);
         }
     }
 
@@ -383,7 +383,7 @@ public class MusicPlayService
     private void initNotifyBroadcast() {
         mMusicReceiver = new MusicBroacastReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(Constants.ACTION_MUSIC);
+        filter.addAction(Constant.ACTION_MUSIC);
         registerReceiver(mMusicReceiver, filter);
 
     }
@@ -394,33 +394,33 @@ public class MusicPlayService
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action != null) {
-                if (action.equals(Constants.ACTION_MUSIC)) {
-                    int id = intent.getIntExtra(Constants.NOTIFY_BUTTON_ID, 0);
+                if (action.equals(Constant.ACTION_MUSIC)) {
+                    int id = intent.getIntExtra(Constant.NOTIFY_BUTTON_ID, 0);
                     switch (id) {
-                        case Constants.FAVORITE:
+                        case Constant.FAVORITE:
                             mAudioBinder.updateFavorite();
-                            mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_ONE);
+                            mBus.post(Constant.PLAY_STATUS, Constant.NUMBER_ONE);
                             break;
-                        case Constants.CLOSE:
+                        case Constant.CLOSE:
                             pauseMusic();
                             break;
-                        case Constants.PREV:
+                        case Constant.PREV:
                             mAudioBinder.playPre();
                             break;
-                        case Constants.PLAY:
+                        case Constant.PLAY:
                             if (mediaPlayer != null) {
                                 if (mAudioBinder.isPlaying()) {
                                     mAudioBinder.pause();
                                 } else {
                                     mAudioBinder.start();
                                 }
-                                mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_ZERO);
+                                mBus.post(Constant.PLAY_STATUS, Constant.NUMBER_ZERO);
                             }
                             break;
-                        case Constants.NEXT:
+                        case Constant.NEXT:
                             mAudioBinder.playNext();
                             break;
-                        case Constants.COUNTDOWN_FINISH:
+                        case Constant.COUNTDOWN_FINISH:
                             pauseMusic();
                             break;
                         default:
@@ -434,7 +434,7 @@ public class MusicPlayService
             if (mAudioBinder != null) {
                 mAudioBinder.pause();
                 mAudioBinder.hintNotifycation();
-                mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_TWO);
+                mBus.post(Constant.PLAY_STATUS, Constant.NUMBER_TWO);
                 SpUtil.setFoucesFlag(MusicPlayService.this, false);
                 stopSelf();
             }
@@ -454,7 +454,7 @@ public class MusicPlayService
         public void onReceive(Context context, Intent intent) {
             if (mAudioBinder != null && mAudioBinder.isPlaying()) {
                 mAudioBinder.pause();
-                mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_ZERO);
+                mBus.post(Constant.PLAY_STATUS, Constant.NUMBER_ZERO);
             }
         }
     };
@@ -506,7 +506,7 @@ public class MusicPlayService
         } else {
             mAudioBinder.start();
         }
-        mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_ZERO);
+        mBus.post(Constant.PLAY_STATUS, Constant.NUMBER_ZERO);
     }
 
     public void abandonAudioFocus() {

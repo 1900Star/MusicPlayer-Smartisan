@@ -28,7 +28,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.service.MusicPlayService;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RxBus;
@@ -115,27 +115,27 @@ public class FavoriteBottomSheetDialog
                     mList = musicBeanList;
                     setTitle(musicBeanList.size());
                     mAdapter = new BottomSheetAdapter(musicBeanList);
-                    mRecyclerView = RecyclerFactory.createRecyclerView(Constants.NUMBER_ONE, mAdapter);
+                    mRecyclerView = RecyclerFactory.createRecyclerView(Constant.NUMBER_ONE, mAdapter);
                     mBottomListContent.addView(mRecyclerView);
                 }));
         //    接收BottomSheetAdapter发过来的当前点击Item的Position
-        mCompositeDisposable.add(mBus.toObservableType(Constants.FAVORITE_POSITION, Object.class)
+        mCompositeDisposable.add(mBus.toObservableType(Constant.FAVORITE_POSITION, Object.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> FavoriteBottomSheetDialog.this.playMusic((Integer) o)));
         mCompositeDisposable.add(mBus.toObserverable(AddAndDeleteListBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(bean -> {
-                    if (bean.getOperationType() == Constants.NUMBER_THREE) {
+                    if (bean.getOperationType() == Constant.NUMBER_THREE) {
                         // 清空收藏列表
                         clearAllFavoriteMusic();
-                    } else if (bean.getOperationType() == Constants.NUMBER_FIVE) {
+                    } else if (bean.getOperationType() == Constant.NUMBER_FIVE) {
                         // 侧滑删除收藏歌曲
                         mAdapter.notifyDataSetChanged();
                         mList.remove(bean.getPosition());
                         setTitle(mList.size());
                         checkCurrentFavorite(bean.getSongTitle());
-                        if (mList.size() == Constants.NUMBER_ZERO) {
+                        if (mList.size() == Constant.NUMBER_ZERO) {
                             mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
                     }
@@ -170,8 +170,8 @@ public class FavoriteBottomSheetDialog
         } else if (id == R.id.bottom_sheet_bar_clear) {
             if (mList != null && mList.size() > 0) {
                 // playstatus 在这里暂时用来做删除播放列表和收藏列表的标识，在DeletePlayListDialog中使用，2 为播放列表PlayActivity界面 ，3 为收藏列表FavoriteBottomDialog界面。
-                PlayListBean bean = new PlayListBean("收藏的所有", (long) Constants.NUMBER_THREE);
-                DeletePlayListDialog.newInstance(bean, Constants.NUMBER_THREE, this).show(((AppCompatActivity) mContext).getSupportFragmentManager(), "favoriteList");
+                PlayListBean bean = new PlayListBean("收藏的所有", (long) Constant.NUMBER_THREE);
+                DeletePlayListDialog.newInstance(bean, Constant.NUMBER_THREE, this).show(((AppCompatActivity) mContext).getSupportFragmentManager(), "favoriteList");
             } else {
                 SnakbarUtil.noFavoriteMusic(mBottomListClear);
             }
@@ -211,11 +211,11 @@ public class FavoriteBottomSheetDialog
     private void playMusic(int position) {
         Intent intent = new Intent();
         intent.setClass(mContext, MusicPlayService.class);
-        intent.putExtra("sortFlag", Constants.NUMBER_EIGHT);
+        intent.putExtra("sortFlag", Constant.NUMBER_EIGHT);
         intent.putExtra("position", position);
         LogUtil.d(TAG, "===========      " + position);
         mContext.startService(intent);
-        SpUtil.setSortFlag(mContext, Constants.NUMBER_EIGHT);
+        SpUtil.setSortFlag(mContext, Constant.NUMBER_EIGHT);
     }
 
 

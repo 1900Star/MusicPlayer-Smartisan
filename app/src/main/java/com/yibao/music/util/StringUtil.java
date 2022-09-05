@@ -64,7 +64,7 @@ public class StringUtil {
      * @return f
      */
     public static String getAlbum(int picType, Long albumId, String artist) {
-        String path = picType == 1 ? Constants.MUSIC_ARITIST_IMG_ROOT + artist + ".jpg" : Constants.MUSIC_ALBUM_ROOT + artist + ".jpg";
+        String path = picType == 1 ? Constant.MUSIC_ARITIST_IMG_ROOT + artist + ".jpg" : Constant.MUSIC_ALBUM_ROOT + artist + ".jpg";
         File file = new File(path);
 
         return file.exists() ? path : ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"),
@@ -80,7 +80,7 @@ public class StringUtil {
      */
     public static String getDownAlbum(String songName, String artist) {
 
-        return Constants.MUSIC_SONG_ALBUM_ROOT + songName + ".jpg";
+        return Constant.MUSIC_SONG_ALBUM_ROOT + songName + ".jpg";
 
     }
 

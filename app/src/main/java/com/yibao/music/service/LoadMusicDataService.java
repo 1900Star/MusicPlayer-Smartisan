@@ -10,7 +10,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicCountBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.CollectionUtil;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
@@ -66,7 +66,7 @@ public class LoadMusicDataService extends IntentService {
             for (MusicBean musicBean : oldList) {
                 mMusicDao.delete(musicBean);
             }
-            mBus.post(new MusicCountBean(Constants.NUMBER_ZERO, Constants.NUMBER_ZERO));
+            mBus.post(new MusicCountBean(Constant.NUMBER_ZERO, Constant.NUMBER_ZERO));
         } else {
             // 首次安装自动扫描本地歌曲并创建本地数据库
             if (songSum > 0) {
@@ -77,7 +77,7 @@ public class LoadMusicDataService extends IntentService {
                 recoverFavoriteMusic(newList);
             } else {
                 // 本地没有发现歌曲
-                mBus.post(new MusicCountBean(Constants.NUMBER_ZERO, Constants.NUMBER_ZERO));
+                mBus.post(new MusicCountBean(Constant.NUMBER_ZERO, Constant.NUMBER_ZERO));
             }
         }
     }
@@ -90,7 +90,7 @@ public class LoadMusicDataService extends IntentService {
      */
     private boolean getIsNeedAgainScanner(Intent intent) {
         if (intent != null) {
-            String scanner = intent.getStringExtra(Constants.SCANNER_MEDIA);
+            String scanner = intent.getStringExtra(Constant.SCANNER_MEDIA);
             return scanner != null;
         }
         return false;
@@ -133,6 +133,7 @@ public class LoadMusicDataService extends IntentService {
      */
     private void sendLoadProgress(int songSum, MusicBean bean) {
         currentCount++;
+        // splashActivity 接收
         mBus.post(new MusicCountBean(currentCount, songSum));
         mMusicDao.insertOrReplace(bean);
     }

@@ -33,7 +33,7 @@ import java.util.*
  * className   BaseBindingFragment
  * Des：TODO
  */
-abstract class BaseBindingFragment<T : ViewBinding> : Fragment(),OnHandleBackListener{
+abstract class BaseBindingFragment<T : ViewBinding> : Fragment(), OnHandleBackListener {
     val mTag = " ==== " + this::class.java.simpleName + "  "
     protected lateinit var mSpHelper: SharedPreferencesUtil
     private var isShowToUser = false
@@ -111,9 +111,11 @@ abstract class BaseBindingFragment<T : ViewBinding> : Fragment(),OnHandleBackLis
         super.onDestroy()
         if (_binding != null) {
             _binding = null
-
+            mCompositeDisposable.clear()
+            mCompositeDisposable.dispose()
         }
     }
+
     override fun onBackPressed(): Boolean {
         return HandleBackUtil.handleBackPress(this)
     }

@@ -18,7 +18,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.ToastUtil;
@@ -80,12 +80,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (mCompositeDisposable == null) {
             mCompositeDisposable = new CompositeDisposable();
         }
-        mCompositeDisposable.add(mBus.toObservableType(Constants.SERVICE_MUSIC, MusicBean.class)
+        mCompositeDisposable.add(mBus.toObservableType(Constant.SERVICE_MUSIC, MusicBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateCurrentPlayInfo));
         // 接收歌词下载状态
-        mCompositeDisposable.add(mBus.toObservableType(Constants.MUSIC_LYRIC_OK, LyricDownBean.class)
+        mCompositeDisposable.add(mBus.toObservableType(Constant.MUSIC_LYRIC_OK, LyricDownBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bean -> {
@@ -94,7 +94,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                         ToastUtil.show(this, "暂无歌词");
                     }
                 }));
-        mCompositeDisposable.add(mBus.toObservableType(Constants.PLAY_STATUS, Object.class)
+        mCompositeDisposable.add(mBus.toObservableType(Constant.PLAY_STATUS, Object.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> refreshBtnAndNotify((Integer) o)));
@@ -151,7 +151,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         ArrayList<String> arr = new ArrayList<>();
         Intent intent = new Intent(this, PlayListActivity.class);
         intent.putStringArrayListExtra("aar", arr);
-        intent.putExtra(Constants.SONG_NAME, songName);
+        intent.putExtra(Constant.SONG_NAME, songName);
         startActivity(intent);
         overridePendingTransition(R.anim.dialog_push_in, 0);
     }
@@ -161,7 +161,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void startSearchActivity(MusicBean currentMusicBean) {
         Intent intent = new Intent(this, SearchActivity.class);
-        intent.putExtra("pageType", Constants.NUMBER_ONE);
+        intent.putExtra(Constant.PAGE_TYPE, Constant.NUMBER_ONE);
         intent.putExtra("musicBean", currentMusicBean);
         startActivity(intent);
         overridePendingTransition(R.anim.dialog_push_in, 0);

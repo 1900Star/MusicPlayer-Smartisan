@@ -29,7 +29,7 @@ public class RandomUtil {
     private static List<String> getUnsplashUrl(int picUrlLength) {
         List<String> list = new ArrayList<>();
         for (int i = 1; i < picUrlLength; i++) {
-            list.add(Constants.UNSPLASH_URL + i);
+            list.add(Constant.UNSPLASH_URL + i);
         }
         return list;
     }

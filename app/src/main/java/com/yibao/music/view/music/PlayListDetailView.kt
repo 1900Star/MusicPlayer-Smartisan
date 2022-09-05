@@ -11,13 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.yibao.music.MusicApplication
 import com.yibao.music.R
 import com.yibao.music.adapter.DetailsViewAdapter
-import com.yibao.music.base.bindings.BaseBindingAdapter
 import com.yibao.music.base.bindings.BaseBindingAdapter.OnOpenItemMoreMenuListener
 import com.yibao.music.base.listener.OnMusicItemClickListener
 import com.yibao.music.databinding.PlayListDetailBinding
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog
 import com.yibao.music.model.MusicBean
-import com.yibao.music.util.Constants
+import com.yibao.music.util.Constant
 import com.yibao.music.util.RandomUtil
 import com.yibao.music.util.SnakbarUtil
 import com.yibao.music.util.SpUtil
@@ -99,11 +98,11 @@ class PlayListDetailView : LinearLayout, View.OnClickListener {
 
     private fun startMusic(startPosition: Int) {
         if (context is OnMusicItemClickListener) {
-            SpUtil.setSortFlag(context, Constants.NUMBER_TEN)
+            SpUtil.setSortFlag(context, Constant.NUMBER_TEN)
             (context as OnMusicItemClickListener).startMusicServiceFlag(
                 startPosition,
-                Constants.NUMBER_TEN,
-                Constants.NUMBER_FOUR,
+                Constant.NUMBER_TEN,
+                Constant.NUMBER_FOUR,
                 mQueryFlag
             )
         }

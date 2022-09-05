@@ -18,7 +18,7 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.runtime.Permission;
 import com.yibao.music.R;
 import com.yibao.music.base.listener.BottomSheetCallback;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.PermissionsUtil;
 
@@ -81,7 +81,7 @@ public class TakePhotoBottomSheetDialog {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.putExtra(MediaStore.EXTRA_OUTPUT,
                     FileUtil.getPicUri(mContext, savePath));
-            mContext.startActivityForResult(intent, Constants.CODE_CAMERA_REQUEST);
+            mContext.startActivityForResult(intent, Constant.CODE_CAMERA_REQUEST);
         }
     }
 
@@ -91,7 +91,7 @@ public class TakePhotoBottomSheetDialog {
                 .onGranted(permissions -> {
                     Intent intentFromGallery = new Intent(Intent.ACTION_PICK, null);
                     intentFromGallery.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                    mContext.startActivityForResult(intentFromGallery, Constants.CODE_GALLERY_REQUEST);
+                    mContext.startActivityForResult(intentFromGallery, Constant.CODE_GALLERY_REQUEST);
                 })
                 .onDenied(permissions -> Log.d("lsp", "没有读取和写入的权限!"))
                 .start();

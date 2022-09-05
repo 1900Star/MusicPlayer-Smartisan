@@ -42,6 +42,7 @@
         android:id="@+id/iv_search"
         android:layout_width="48dp"
         android:layout_height="28dp"
+        android:layout_marginEnd="10dp"
         android:layout_gravity="center"
         android:background="@drawable/shape_btn_edit_selector"
         android:contentDescription="@null"
@@ -51,16 +52,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_delete"
-        android:layout_width="48dp"
-        android:layout_height="28dp"
-        android:background="@drawable/shape_btn_delete_selector"
-        android:gravity="center"
-        android:text="@string/tv_delete"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 

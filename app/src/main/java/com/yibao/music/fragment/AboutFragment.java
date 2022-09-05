@@ -18,7 +18,7 @@ import com.yibao.music.fragment.dialogfrag.ScannerConfigDialog;
 import com.yibao.music.fragment.dialogfrag.TakePhotoBottomSheetDialog;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
@@ -62,7 +62,7 @@ public class AboutFragment extends BaseBindingFragment<AboutFragmentBinding> {
 
     @Override
     public void initData() {
-        File file = new File(Constants.MUSIC_LYRICS_ROOT);
+        File file = new File(Constant.MUSIC_LYRICS_ROOT);
         if (file.exists()) {
             getMBinding().tvDeleteErrorLyric.setVisibility(View.VISIBLE);
         }
@@ -78,7 +78,7 @@ public class AboutFragment extends BaseBindingFragment<AboutFragmentBinding> {
         mCompositeDisposable.add(RxView.clicks(getMBinding().aboutHeaderIv)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribe(o -> TakePhotoBottomSheetDialog.newInstance().getBottomDialog(mActivity)));
-        mCompositeDisposable.add(getMBus().toObservableType(Constants.HEADER_PIC_URI, Object.class)
+        mCompositeDisposable.add(getMBus().toObservableType(Constant.HEADER_PIC_URI, Object.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> setHeaderView((Uri) o)));

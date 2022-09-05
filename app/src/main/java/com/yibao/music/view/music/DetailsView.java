@@ -32,7 +32,7 @@ import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.network.QqMusicRemote;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
@@ -138,7 +138,7 @@ public class DetailsView
         } else if (id == R.id.iv_details_add_to_play_list) {
             LogUtil.d(TAG, "=================添加到当前播放列表");
         } else if (id == R.id.ll_album_details_playall) {
-            startMusic(Constants.NUMBER_ZERO);
+            startMusic(Constant.NUMBER_ZERO);
         } else if (id == R.id.ll_album_details_random_play) {
             startMusic(RandomUtil.getRandomPostion(mListSize));
         }
@@ -155,14 +155,14 @@ public class DetailsView
             arrayList.add(musicBean.getTitle());
         }
         Intent intent = new Intent(getContext(), PlayListActivity.class);
-        intent.putStringArrayListExtra(Constants.ADD_TO_LIST, arrayList);
+        intent.putStringArrayListExtra(Constant.ADD_TO_LIST, arrayList);
         getContext().startActivity(intent);
     }
 
     private void startMusic(int startPosition) {
         if (getContext() instanceof OnMusicItemClickListener) {
-            SpUtil.setSortFlag(getContext(), Constants.NUMBER_TEN);
-            ((OnMusicItemClickListener) getContext()).startMusicServiceFlag(startPosition, Constants.NUMBER_TEN, mDataFlag, mQueryFlag);
+            SpUtil.setSortFlag(getContext(), Constant.NUMBER_TEN);
+            ((OnMusicItemClickListener) getContext()).startMusicServiceFlag(startPosition, Constant.NUMBER_TEN, mDataFlag, mQueryFlag);
         }
     }
 
@@ -175,13 +175,13 @@ public class DetailsView
      */
     private void initData(int dataType, Object bean) {
         mPicType = dataType;
-        if (dataType == Constants.NUMBER_ONE) {
+        if (dataType == Constant.NUMBER_ONE) {
             ArtistInfo info = (ArtistInfo) bean;
             mArtist = info.getArtist();
             mAlbumId = info.getAlbumId();
             setMusicInfo(dataType, info.getAlbumName(), info.getArtist(), mAlbumId, info.getYear());
 
-        } else if (dataType == Constants.NUMBER_TWO) {
+        } else if (dataType == Constant.NUMBER_TWO) {
             AlbumInfo info = (AlbumInfo) bean;
             mAlbumId = info.getAlbumId();
             mArtist = info.getAlbumName();
@@ -217,7 +217,7 @@ public class DetailsView
         });
 
 
-        if (issueYear != Constants.NUMBER_ZERO) {
+        if (issueYear != Constant.NUMBER_ZERO) {
             String year = String.valueOf(issueYear);
             mTvArtistAlbumDetailsDate.setText(year);
         }

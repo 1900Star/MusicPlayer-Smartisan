@@ -11,8 +11,7 @@ import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog
 import com.yibao.music.model.ArtistInfo
 import com.yibao.music.model.MusicBean
 import com.yibao.music.model.greendao.MusicBeanDao
-import com.yibao.music.util.Constants
-import com.yibao.music.util.LogUtil
+import com.yibao.music.util.Constant
 import com.yibao.music.util.MusicListUtil
 import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
 
@@ -59,7 +58,7 @@ class ArtistFragment : BaseLazyFragmentDev<ArtisanListFragmentBinding>() {
         val musicBeans = mMusicBeanDao.queryBuilder().list()
         val artistList = MusicListUtil.getArtistList(musicBeans)
         mAdapter = ArtistAdapter(artistList)
-        mBinding.artistMusicView.setAdapter(activity, Constants.NUMBER_TWO, true, mAdapter)
+        mBinding.artistMusicView.setAdapter(activity, Constant.NUMBER_TWO, true, mAdapter)
         mAdapter.setItemListener(object : BaseBindingAdapter.OnItemListener<ArtistInfo> {
             override fun showDetailsView(bean: ArtistInfo, position: Int) {
                 showDetail(bean)
@@ -83,11 +82,11 @@ class ArtistFragment : BaseLazyFragmentDev<ArtisanListFragmentBinding>() {
                     childFragmentManager,
                     mDetailList.size,
                     artistInfo.artist,
-                    Constants.NUMBER_ONE
+                    Constant.NUMBER_ONE
                 )
                 mDetailsAdapter =
-                    DetailsViewAdapter(requireActivity(), mDetailList, Constants.NUMBER_ONE)
-                mBinding.detailsView.setAdapter(Constants.NUMBER_ONE, artistInfo, mDetailsAdapter)
+                    DetailsViewAdapter(requireActivity(), mDetailList, Constant.NUMBER_ONE)
+                mBinding.detailsView.setAdapter(Constant.NUMBER_ONE, artistInfo, mDetailsAdapter)
                 mDetailsAdapter!!.setOnItemMenuListener(object :
                     BaseBindingAdapter.OnOpenItemMoreMenuListener {
                     override fun openClickMoreMenu(position: Int, musicBean: MusicBean) {

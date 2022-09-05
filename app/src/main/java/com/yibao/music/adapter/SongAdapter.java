@@ -15,7 +15,7 @@ import com.yibao.music.base.bindings.BaseBindingAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.databinding.ItemMusicListBinding;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.StringUtil;
@@ -67,10 +67,10 @@ public class SongAdapter
         if (holder instanceof SongListViewHolder) {
             SongListViewHolder songListViewHolder = (SongListViewHolder) holder;
             int position = holder.getAdapterPosition();
-            if (mScroeAndFrequnecyFlag == Constants.NUMBER_ONE) {
+            if (mScroeAndFrequnecyFlag == Constant.NUMBER_ONE) {
                 songListViewHolder.mBinding.menuRatingBar.setVisibility(View.VISIBLE);
                 songListViewHolder.mBinding.menuRatingBar.setRating(musicBean.getSongScore());
-            } else if (mScroeAndFrequnecyFlag == Constants.NUMBER_TWO) {
+            } else if (mScroeAndFrequnecyFlag == Constant.NUMBER_TWO) {
                 songListViewHolder.mBinding.tvFrequency.setVisibility(View.VISIBLE);
                 songListViewHolder.mBinding.tvFrequency.setText(String.valueOf(musicBean.getPlayFrequency()));
             }
@@ -80,7 +80,7 @@ public class SongAdapter
             ImageUitl.customLoadPic(mContext, FileUtil.getAlbumUrl(musicBean, 1), R.drawable.noalbumcover_220, songListViewHolder.mBinding.songAlbum);
             songListViewHolder.mBinding.songArtistName.setText(StringUtil.getArtist(musicBean));
             songListViewHolder.mBinding.songName.setText(StringUtil.getTitle(musicBean));
-            if (mIsShowStickyView == Constants.NUMBER_ZERO) {
+            if (mIsShowStickyView == Constant.NUMBER_ZERO) {
                 String firstTv = musicBean.getFirstChar();
                 songListViewHolder.mBinding.itemStickyView.setText(firstTv);
                 if (position == 0) {

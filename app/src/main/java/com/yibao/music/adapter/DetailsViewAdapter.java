@@ -12,13 +12,11 @@ import com.yibao.music.MusicApplication;
 import com.yibao.music.base.bindings.BaseBindingAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.databinding.ItemDetailsAdapterBinding;
-import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
 
@@ -66,7 +64,7 @@ public class DetailsViewAdapter extends BaseBindingAdapter<MusicBean> {
 //            LogUtil.d(getMTAG(), " artist info     " + info.getTitle() + " == " + info.getDuration());
             int duration = (int) info.getDuration();
             detailsHolder.mBinding.tvSongDuration.setText(StringUtil.parseDuration(duration));
-            if (mDataFlag == Constants.NUMBER_FOUR) {
+            if (mDataFlag == Constant.NUMBER_FOUR) {
                 // 播放列表的详情列表有侧滑删除
                 detailsHolder.mBinding.deleteItemDetail.setOnClickListener(v -> {
                     LogUtil.d(getMTAG(),"播放列表的详情列表有侧滑删除");
@@ -79,13 +77,13 @@ public class DetailsViewAdapter extends BaseBindingAdapter<MusicBean> {
 
             detailsHolder.mBinding.detailItemView.setOnClickListener(view -> {
                 if (mContext instanceof OnMusicItemClickListener) {
-                    SpUtil.setSortFlag(mContext, Constants.NUMBER_TEN);
+                    SpUtil.setSortFlag(mContext, Constant.NUMBER_TEN);
                     LogUtil.d(getMTAG(), info.toString());
-                    if (mDataFlag == Constants.NUMBER_THREE) {
+                    if (mDataFlag == Constant.NUMBER_THREE) {
                         insertSearchBean(info.getTitle());
                     }
                     LogUtil.d(getMTAG(), info.toString());
-                    ((OnMusicItemClickListener) mContext).startMusicServiceFlag(adapterPosition, Constants.NUMBER_TEN, mDataFlag, getQueryFlag(info));
+                    ((OnMusicItemClickListener) mContext).startMusicServiceFlag(adapterPosition, Constant.NUMBER_TEN, mDataFlag, getQueryFlag(info));
                 }
 
             });
@@ -114,13 +112,13 @@ public class DetailsViewAdapter extends BaseBindingAdapter<MusicBean> {
     @Nullable
     private String getQueryFlag(MusicBean info) {
         String queryFlag = null;
-        if (mDataFlag == Constants.NUMBER_ONE) {
+        if (mDataFlag == Constant.NUMBER_ONE) {
             queryFlag = info.getArtist();
-        } else if (mDataFlag == Constants.NUMBER_TWO) {
+        } else if (mDataFlag == Constant.NUMBER_TWO) {
             queryFlag = info.getAlbum();
-        } else if (mDataFlag == Constants.NUMBER_THREE) {
+        } else if (mDataFlag == Constant.NUMBER_THREE) {
             queryFlag = info.getTitle();
-        } else if (mDataFlag == Constants.NUMBER_FOUR) {
+        } else if (mDataFlag == Constant.NUMBER_FOUR) {
             queryFlag = info.getPlayListFlag();
         }
         return queryFlag;
