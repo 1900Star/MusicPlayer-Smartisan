@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
@@ -30,11 +29,12 @@
 
                 <ImageView
                     android:id="@+id/iv_edit_bg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/search_cm"
                     android:contentDescription="@null"
+                    android:layout_marginEnd="6dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/tv_search_cancel"
                     app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +45,7 @@
                     android:id="@+id/edit_search"
                     android:layout_width="0dp"
                     android:layout_height="32dp"
-                    android:layout_marginStart="38dp"
+                    android:layout_marginStart="40dp"
                     android:layout_marginEnd="4dp"
                     android:background="@null"
                     android:gravity="center_vertical"
@@ -99,7 +99,12 @@
     <include
         android:id="@+id/search_category_root"
         layout="@layout/search_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         android:visibility="gone"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/app_bar_search" />
 
@@ -110,7 +115,8 @@
 
         app:layout_constraintBottom_toTopOf="@id/view_1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_category_root" />
+        app:layout_constraintTop_toBottomOf="@id/search_category_root"
+        app:layout_constraintVertical_bias="0.0" />
 
     <View
         android:id="@+id/view_1"

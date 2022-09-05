@@ -19,10 +19,13 @@ import com.yibao.music.view.music.SmartisanControlBar.OnSmartisanControlBarListe
 import android.content.Intent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.yibao.music.base.bindings.BaseBindingActivity
 import com.yibao.music.databinding.ActivitySearchBinding
 import com.yibao.music.service.MusicPlayService
 import com.yibao.music.model.MusicLyricBean
 import com.yibao.music.util.*
+import com.yibao.music.viewmodel.AlbumViewModel
+import com.yibao.music.viewmodel.SearchViewModel
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -31,7 +34,7 @@ import java.util.concurrent.TimeUnit
 /**
  * @author lsp
  */
-class SearchActivity : BaseTransitionActivity<ActivitySearchBinding>(), OnMusicItemClickListener,
+class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItemClickListener,
     OnFlowLayoutClickListener, View.OnClickListener {
 
     private var mMusicBean: MusicBean? = null
@@ -55,12 +58,12 @@ class SearchActivity : BaseTransitionActivity<ActivitySearchBinding>(), OnMusicI
             mBinding.editSearch.setSelection(mMusicBean!!.artist.length)
             mBinding.searchCategoryRoot.root.visibility = View.VISIBLE
             // ViewPager
-            pagerAdapter = SearchPagerAdapter(this, mMusicBean!!.artist)
+            pagerAdapter = SearchPagerAdapter(this, mMusicBean!!.artist, mViewModel)
             switchListCategory(3)
             setMusicInfo(mMusicBean)
             mBinding.ivEditClear.visibility = View.VISIBLE
         } else {
-            pagerAdapter = SearchPagerAdapter(this, null)
+            pagerAdapter = SearchPagerAdapter(this, "", mViewModel)
             // 主动弹出键盘
 //            mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 //            mDisposableSoftKeyboard = Observable.timer(50, TimeUnit.MILLISECONDS)
@@ -78,23 +81,26 @@ class SearchActivity : BaseTransitionActivity<ActivitySearchBinding>(), OnMusicI
 
     }
 
+    private val mViewModel: SearchViewModel by lazy { gets(SearchViewModel::class.java) }
     override fun initListener() {
         mBinding.editSearch.addTextChangedListener(object : TextChangedListener() {
             override fun afterTextChanged(s: Editable) {
                 mSearchCondition = s.toString().trim()
-//                mBus.post(
-//                    SearchCategoryBean(
-//                        if (mSearchCondition.isNotEmpty()) dataFlag else Constant.NUMBER_TEN,
-//                        mSearchCondition
-//                    )
-//                )
+                // 将输入内容发送给 SearchFragment 进行搜索
+                if (mSearchCondition.isNotEmpty()) {
+                    LogUtil.d(TAG, mSearchCondition)
+                    mViewModel.postAlbum(SearchCategoryBean(1, mSearchCondition))
+                }
                 mBinding.ivEditClear.visibility =
-                    if (mSearchCondition.isNotEmpty()) View.GONE else View.VISIBLE
+                    if (mSearchCondition.isEmpty()) View.GONE else View.VISIBLE
 
                 mBinding.searchCategoryRoot.root.visibility =
-                    if (mSearchCondition.isNotEmpty()) View.GONE else View.VISIBLE
+                    if (mSearchCondition.isEmpty()) View.GONE else View.VISIBLE
+
             }
         })
+
+
         mBinding.smartisanControlBar.setClickListener { clickFlag: Int ->
             when (clickFlag) {
                 Constant.NUMBER_ONE -> {
@@ -183,7 +189,9 @@ class SearchActivity : BaseTransitionActivity<ActivitySearchBinding>(), OnMusicI
     private fun switchListCategory(position: Int) {
         currentCategoryPosition = position
         mBinding.vpSearch.setCurrentItem(position, false)
-        mBus.post(SearchCategoryBean(dataFlag, mSearchCondition))
+        if (mSearchCondition.isNotEmpty()) {
+            mViewModel.postAlbum(SearchCategoryBean(position, mSearchCondition))
+        }
         when (position) {
             0 -> {
                 setAllCategoryNotNormal()
@@ -324,7 +332,7 @@ class SearchActivity : BaseTransitionActivity<ActivitySearchBinding>(), OnMusicI
             mQqLyricsDisposable = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { musicBeanList: Long? ->
+                .subscribe {
                     if (lyricList.size > 1 && lyricsFlag < lyricList.size) {
                         //通过集合，播放过的歌词就从集合中删除
                         val lyrBean = lyricList[lyricsFlag]
@@ -346,4 +354,8 @@ class SearchActivity : BaseTransitionActivity<ActivitySearchBinding>(), OnMusicI
     }
 
 
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(0, R.anim.dialog_push_out)
+    }
 }

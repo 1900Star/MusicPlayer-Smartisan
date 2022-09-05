@@ -1,12 +1,10 @@
 package com.yibao.music.base
 
-import androidx.viewbinding.ViewBinding
-import com.yibao.music.base.bindings.BaseBindingActivity
-import com.yibao.music.base.listener.OnGlideLoadListener
 import com.bumptech.glide.Glide
-import com.yibao.music.util.SpUtil
 import com.yibao.music.R
+import com.yibao.music.base.listener.OnGlideLoadListener
 import com.yibao.music.util.Constant
+import com.yibao.music.util.SpUtil
 
 /**
  * @项目名： ArtisanMusic
@@ -17,11 +15,9 @@ import com.yibao.music.util.Constant
  * @创建时间: 2018/2/20 13:07
  * @描述： {TODO}
  */
-abstract class BaseTransitionActivity<T : ViewBinding> : BaseBindingActivity<T>(),
+abstract class BaseTransitionActivity : BaseActivity(),
     OnGlideLoadListener {
-    override fun onResume() {
-        super.onResume()
-    }
+
 
     override fun resumeRequests() {
         if (!isDestroyed) {

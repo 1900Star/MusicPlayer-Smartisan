@@ -54,8 +54,8 @@ import io.reactivex.schedulers.Schedulers;
  * @描述： {TODO}
  */
 
-public class PlayActivity extends BasePlayActivity<PlayActivityBinding> implements View.OnClickListener {
-
+public class PlayActivity extends BasePlayActivity implements View.OnClickListener {
+    private PlayActivityBinding mBinding;
     private int mDuration;
     private MusicBean mCurrentMusicInfo;
     boolean isShowLyrics = false;
@@ -65,18 +65,16 @@ public class PlayActivity extends BasePlayActivity<PlayActivityBinding> implemen
     private List<MusicLyricBean> mLyricList;
 
     @Override
-    public void initView() {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mBinding = PlayActivityBinding.inflate(getLayoutInflater());
+        View rootView = mBinding.getRoot();
+        setContentView(rootView);
         init();
         initSongInfo();
         initListener();
 
     }
-
-    @Override
-    public void initData() {
-
-    }
-
 
     @Override
     protected void onResume() {
@@ -338,6 +336,29 @@ public class PlayActivity extends BasePlayActivity<PlayActivityBinding> implemen
         }
     }
 
+    private void initListener() {
+        mBinding.sbProgress.setOnSeekBarChangeListener(new SeekBarListener());
+        mBinding.sbVolume.setOnSeekBarChangeListener(new SeekBarListener());
+        mBinding.playingSongAlbum.setOnLongClickListener(view -> {
+            PreviewBigPicDialogFragment.newInstance(FileUtil.getAlbumUrl(mCurrentMusicInfo, 1))
+                    .show(getSupportFragmentManager(), "album");
+            return true;
+        });
+        mBinding.titlebarDown.setOnClickListener(this);
+        mBinding.rvTitlebar.setOnClickListener(this);
+        mBinding.rotateRl.setOnClickListener(this);
+        mBinding.playingSongAlbum.setOnClickListener(this);
+        mBinding.ivLyricsSwitch.setOnClickListener(this);
+        mBinding.ivDeleteLyric.setOnClickListener(this);
+        mBinding.ivSelectLyric.setOnClickListener(this);
+        mBinding.ivSecreenSunSwitch.setOnClickListener(this);
+        mBinding.musicPlayerMode.setOnClickListener(this);
+        mBinding.musicPlayerPre.setOnClickListener(this);
+        mBinding.musicPlayerNext.setOnClickListener(this);
+        mBinding.musicPlay.setOnClickListener(this);
+        mBinding.ivFavoriteMusic.setOnClickListener(this);
+
+    }
 
     @Override
     public void onClick(View v) {
@@ -495,30 +516,4 @@ public class PlayActivity extends BasePlayActivity<PlayActivityBinding> implemen
             }
         }
     }
-    @Override
-    public void initListener() {
-
-        mBinding.sbProgress.setOnSeekBarChangeListener(new SeekBarListener());
-        mBinding.sbVolume.setOnSeekBarChangeListener(new SeekBarListener());
-        mBinding.playingSongAlbum.setOnLongClickListener(view -> {
-            PreviewBigPicDialogFragment.newInstance(FileUtil.getAlbumUrl(mCurrentMusicInfo, 1))
-                    .show(getSupportFragmentManager(), "album");
-            return true;
-        });
-        mBinding.titlebarDown.setOnClickListener(this);
-        mBinding.rvTitlebar.setOnClickListener(this);
-        mBinding.rotateRl.setOnClickListener(this);
-        mBinding.playingSongAlbum.setOnClickListener(this);
-        mBinding.ivLyricsSwitch.setOnClickListener(this);
-        mBinding.ivDeleteLyric.setOnClickListener(this);
-        mBinding.ivSelectLyric.setOnClickListener(this);
-        mBinding.ivSecreenSunSwitch.setOnClickListener(this);
-        mBinding.musicPlayerMode.setOnClickListener(this);
-        mBinding.musicPlayerPre.setOnClickListener(this);
-        mBinding.musicPlayerNext.setOnClickListener(this);
-        mBinding.musicPlay.setOnClickListener(this);
-        mBinding.ivFavoriteMusic.setOnClickListener(this);
-
-    }
-
 }

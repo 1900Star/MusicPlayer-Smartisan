@@ -23,6 +23,8 @@ import com.yibao.music.util.Constant
 import com.yibao.music.util.LogUtil
 import com.yibao.music.util.MusicDaoUtil
 import com.yibao.music.util.SnakbarUtil
+import com.yibao.music.viewmodel.AlbumViewModel
+import com.yibao.music.viewmodel.SearchViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -36,7 +38,6 @@ import java.util.*
  * @ Des:     TODO
  */
 class SearchFragment : BaseBindingFragment<SearchFragmentBinding>() {
-
     private lateinit var mSearchDetailAdapter: DetailsViewAdapter
     private var mDisposableSearch: Disposable? = null
     private var mDisposableMoreMenu: Disposable? = null
@@ -48,22 +49,44 @@ class SearchFragment : BaseBindingFragment<SearchFragmentBinding>() {
     override fun initView() {
         initData()
         initListener()
-
+        initRecyclerView(mBinding.recyclerSearch)
     }
+
+    override fun initData() {
+        mSearchDao = MusicApplication.getInstance().searchDao
+        // 搜索记录
+        val searchList = mSearchDao.queryBuilder().list()
+        if (searchList != null && searchList.size > 0) {
+            mBinding.groupSearch.visibility = View.VISIBLE
+            searchList.sortBy { it.searchTime }
+            mBinding.flowlayout.setData(searchList)
+        }
+        // 列表数据
+        mSearchDetailAdapter = DetailsViewAdapter(mContext, musicList, Constant.NUMBER_THREE)
+//        mBinding.recyclerSearch.adapter = mSearchDetailAdapter
+        if (arguments != null) {
+            mPosition = requireArguments().getInt(Constant.POSITION)
+            val searchArtist = requireArguments().getString("searchArtist").toString()
+            setFlagAndSearch(searchArtist, 1)
+        }
+    }
+
 
     override fun onResume() {
         super.onResume()
-        rxbusData()
-        LogUtil.d(mTag, "=========== searchPostion    $mPosition")
+//        rxBusData()
+
+        mViewModel.searchViewModel.observe(this) { bean ->
+            if (bean.searchCondition.isNotEmpty()) {
+                mPosition = bean.categoryFlag
+                searchMusic(bean.searchCondition)
+            }
+//            searchSong(bean)
+        }
     }
 
-    private fun rxbusData() {
-        if (mDisposableSearch == null) {
-            mDisposableSearch = mBus.toObserverable(SearchCategoryBean::class.java)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { categoryBean: SearchCategoryBean -> searchSong(categoryBean) }
-        }
+    private fun rxBusData() {
+
         if (mDisposableMoreMenu == null) {
             mDisposableMoreMenu = mBus.toObserverable(MoreMenuStatus::class.java)
                 .subscribeOn(Schedulers.io())
@@ -90,8 +113,8 @@ class SearchFragment : BaseBindingFragment<SearchFragmentBinding>() {
         mBinding.ivSearchClear.setOnClickListener {
             mSearchDao.deleteAll()
             mBinding.flowlayout.removeAllViews()
-            mBinding.llHistory.visibility = View.INVISIBLE
-            mBinding.llListView.visibility = View.INVISIBLE
+            mBinding.groupSearch.visibility = View.INVISIBLE
+            mBinding.recyclerSearch.visibility = View.INVISIBLE
         }
         mBinding.flowlayout.setItemClickListener { position: Int, bean: SearchHistoryBean ->
             initSearch(
@@ -122,33 +145,50 @@ class SearchFragment : BaseBindingFragment<SearchFragmentBinding>() {
      *
      * @param searchKey 搜索关键字
      */
-    private fun searchMusic(searchKey: String?) {
+    private fun searchMusic(searchKey: String) {
+        LogUtil.d(mTag, "====key#####################################======= $searchKey")
 
-        MusicDaoUtil.getSearchResult(mMusicBeanDao, searchKey)
-            .observeOn(AndroidSchedulers.mainThread()).subscribe(object :
-                BaseObserver<List<MusicBean>>() {
-                override fun onNext(list: List<MusicBean>) {
-                    list.forEach {
-                        LogUtil.d(mTag, it.toString())
+        if (searchKey.length > 0) {
+            MusicDaoUtil.getSearchResult(mMusicBeanDao, searchKey, mPosition)
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+                    BaseObserver<List<MusicBean>>() {
+                    override fun onNext(list: List<MusicBean>) {
+                        list.forEach {
+                            when (mPosition) {
+                                0 -> {
+
+                                }
+                                1 -> {
+
+                                }
+                                2 -> {
+
+                                }
+                                3 -> {
+
+                                }
+                            }
+                            LogUtil.d(mTag, it.toString())
+                        }
+                        musicList.clear()
+                        musicList.addAll(list)
+                        mSearchDetailAdapter.setNewData(list)
+                        mBinding.groupSearch.visibility = View.GONE
+                        mBinding.tvNoSearchResult.visibility = View.GONE
+                        mBinding.recyclerSearch.visibility = View.VISIBLE
+
                     }
-                    musicList.clear()
-                    musicList.addAll(list)
-                    mSearchDetailAdapter.setNewData(list)
-                    mBinding.llHistory.visibility = View.GONE
-                    mBinding.tvNoSearchResult.visibility = View.GONE
-                    mBinding.llListView.visibility = View.VISIBLE
 
-                }
+                    override fun onError(e: Throwable) {
+                        if (mIsFirst) {
+                            mBinding.groupSearch.visibility = View.GONE
+                            mBinding.recyclerSearch.visibility = View.GONE
+                            mBinding.tvNoSearchResult.visibility = View.VISIBLE
+                        }
 
-                override fun onError(e: Throwable) {
-                    if (mIsFirst) {
-                        mBinding.llHistory.visibility = View.GONE
-                        mBinding.llListView.visibility = View.GONE
-                        mBinding.tvNoSearchResult.visibility = View.VISIBLE
                     }
-
-                }
-            })
+                })
+        }
 
 
     }
@@ -156,36 +196,18 @@ class SearchFragment : BaseBindingFragment<SearchFragmentBinding>() {
     private fun historyViewVisibility() {
         val historyList = mSearchDao.queryBuilder().list()
         if (historyList != null && historyList.size > 0) {
-            mBinding.llHistory.visibility = View.VISIBLE
+            mBinding.groupSearch.visibility = View.VISIBLE
             mBinding.tvNoSearchResult.visibility = View.GONE
             with(historyList) { sort() }
             mBinding.flowlayout.clearView(historyList)
         } else {
-            mBinding.llHistory.visibility = View.GONE
+            mBinding.groupSearch.visibility = View.GONE
         }
     }
 
-    override fun initData() {
-        mSearchDao = MusicApplication.getInstance().searchDao
-        // 搜索记录
-        val searchList = mSearchDao.queryBuilder().list()
-        if (searchList != null && searchList.size > 0) {
-            mBinding.llHistory.visibility = View.VISIBLE
-            with(searchList) { sort() }
-            mBinding.flowlayout.setData(searchList)
-        }
-        // 列表数据
-        mSearchDetailAdapter = DetailsViewAdapter(mContext, musicList, Constant.NUMBER_THREE)
-        val recyclerView = RecyclerFactory.createRecyclerView(1, mSearchDetailAdapter)
-        mBinding.llListView.addView(recyclerView)
-        if (arguments != null) {
-            mPosition = requireArguments().getInt("position")
-            val searchArtist = requireArguments().getString("searchArtist")
-            setFlagAndSearch(searchArtist, 1)
-        }
-    }
 
     private fun searchSong(categoryBean: SearchCategoryBean) {
+        LogUtil.d(mTag, categoryBean.searchCondition)
         val categoryFlag = categoryBean.categoryFlag
         val condition = categoryBean.searchCondition
         if (condition != null) {
@@ -199,20 +221,20 @@ class SearchFragment : BaseBindingFragment<SearchFragmentBinding>() {
             4 -> setFlagAndSearch(condition, Constant.NUMBER_FOUR)
             9 -> {
                 clearAdapter()
-                mBinding.llListView.visibility = View.INVISIBLE
+                mBinding.recyclerSearch.visibility = View.INVISIBLE
                 historyViewVisibility()
             }
             10 -> {
                 historyViewVisibility()
                 clearAdapter()
-                mBinding.llListView.visibility = View.INVISIBLE
+                mBinding.recyclerSearch.visibility = View.INVISIBLE
                 mBinding.tvNoSearchResult.visibility = View.GONE
             }
             else -> {}
         }
     }
 
-    private fun setFlagAndSearch(condition: String?, numberTwo: Int) {
+    private fun setFlagAndSearch(condition: String, numberTwo: Int) {
         mSearchDetailAdapter.setDataFlag(numberTwo)
         searchMusic(condition)
     }
@@ -226,9 +248,9 @@ class SearchFragment : BaseBindingFragment<SearchFragmentBinding>() {
                 startActivity(intent)
                 requireActivity().overridePendingTransition(R.anim.dialog_push_in, 0)
             }
-            Constant.NUMBER_ONE -> SnakbarUtil.keepGoing(mBinding.llHistory)
+            Constant.NUMBER_ONE -> SnakbarUtil.keepGoing(mBinding.ivSearchClear)
             Constant.NUMBER_TWO -> {}
-            Constant.NUMBER_THREE -> SnakbarUtil.keepGoing(mBinding.stickyViewSearch)
+            Constant.NUMBER_THREE -> SnakbarUtil.keepGoing(mBinding.ivSearchClear)
             Constant.NUMBER_FOUR ->                 // 刷新搜索列表, 后续完成
                 mMusicBeanDao.delete(moreMenuStatus.musicBean)
             else -> {}
@@ -248,11 +270,17 @@ class SearchFragment : BaseBindingFragment<SearchFragmentBinding>() {
     }
 
     companion object {
-        fun newInstance(position: Int, searchArtist: String?): SearchFragment {
+        lateinit var mViewModel: SearchViewModel
+        fun newInstance(
+            position: Int,
+            artist: String,
+            viewModel: SearchViewModel
+        ): SearchFragment {
+            mViewModel = viewModel
             val args = Bundle()
             val fragment = SearchFragment()
-            args.putInt("position", position)
-            args.putString("searchArtist", searchArtist)
+            args.putInt(Constant.POSITION, position)
+            args.putString("searchArtist", artist)
             fragment.arguments = args
             return fragment
         }
