@@ -56,7 +56,7 @@ public class DetailsViewAdapter extends BaseBindingAdapter<MusicBean> {
     }
 
     @Override
-    public void bindView(RecyclerView.ViewHolder holder, MusicBean info) {
+    public void bindView(@NonNull RecyclerView.ViewHolder holder, MusicBean info) {
         if (holder instanceof DetailsHolder) {
             DetailsHolder detailsHolder = (DetailsHolder) holder;
             int adapterPosition = detailsHolder.getAdapterPosition();
@@ -67,7 +67,7 @@ public class DetailsViewAdapter extends BaseBindingAdapter<MusicBean> {
             if (mDataFlag == Constant.NUMBER_FOUR) {
                 // 播放列表的详情列表有侧滑删除
                 detailsHolder.mBinding.deleteItemDetail.setOnClickListener(v -> {
-                    LogUtil.d(getMTAG(),"播放列表的详情列表有侧滑删除");
+                    LogUtil.d(getMTAG(), "播放列表的详情列表有侧滑删除");
 //                    info.setPlayListFlag(Constants.PLAY_LIST_BACK_FLAG);
 //                    MusicApplication.getInstance().getMusicDao().update(info);
 //                    RxBus.getInstance().post(new AddAndDeleteListBean(Constants.NUMBER_SIX, adapterPosition, info.getTitle()));
@@ -79,6 +79,7 @@ public class DetailsViewAdapter extends BaseBindingAdapter<MusicBean> {
                 if (mContext instanceof OnMusicItemClickListener) {
                     SpUtil.setSortFlag(mContext, Constant.NUMBER_TEN);
                     LogUtil.d(getMTAG(), info.toString());
+                    // 保存搜索记录
                     if (mDataFlag == Constant.NUMBER_THREE) {
                         insertSearchBean(info.getTitle());
                     }
@@ -93,16 +94,19 @@ public class DetailsViewAdapter extends BaseBindingAdapter<MusicBean> {
     }
 
     /**
-     * 搜索并播放过的歌曲
+     * 保存搜索历史记录，并播放过的歌曲
      *
      * @param queryConditions 搜索的歌名
      */
-    private static void insertSearchBean(String queryConditions) {
+    private void insertSearchBean(String queryConditions) {
+        LogUtil.d(getMTAG(), queryConditions);
         SearchHistoryBeanDao searchDao = MusicApplication.getInstance().getSearchDao();
         List<SearchHistoryBean> historyList = searchDao.queryBuilder().where(SearchHistoryBeanDao.Properties.SearchContent.eq(queryConditions)).build().list();
+        // 没有保存过，直接插入一条数据。
         if (historyList.size() < 1) {
             searchDao.insert(new SearchHistoryBean(queryConditions, Long.toString(System.currentTimeMillis())));
         } else {
+            // 保存过，更新保存时间。
             SearchHistoryBean searchHistoryBean = historyList.get(0);
             searchHistoryBean.setSearchTime(Long.toString(System.currentTimeMillis()));
             searchDao.update(searchHistoryBean);

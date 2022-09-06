@@ -56,16 +56,12 @@ abstract class BaseBindingFragment<T : ViewBinding> : Fragment(), OnHandleBackLi
     }
 
     fun initRecyclerView(recyclerView: RecyclerView) {
-        val params = LinearLayout.LayoutParams(
-            RecyclerView.LayoutParams.MATCH_PARENT,
-            RecyclerView.LayoutParams.MATCH_PARENT
-        )
 
         val manager = LinearLayoutManager(MusicApplication.getInstance())
         manager.orientation = LinearLayoutManager.VERTICAL
         recyclerView.isVerticalScrollBarEnabled = true
         recyclerView.layoutManager = manager
-        recyclerView.layoutParams = params
+
         val divider =
             DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL)
 

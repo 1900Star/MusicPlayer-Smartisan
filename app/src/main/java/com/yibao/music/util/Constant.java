@@ -175,6 +175,7 @@ public class Constant {
 
     public static final String DELETE_SONG = "delete_song";
     public static final String SONG_LYRICS = "lyrics";
+    public static final String MUSIC_BEAN = "musicBean";
 
 
 }

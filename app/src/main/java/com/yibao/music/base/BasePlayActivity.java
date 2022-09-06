@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import androidx.annotation.Nullable;
-import androidx.viewbinding.ViewBinding;
 
 import com.yibao.music.R;
 import com.yibao.music.activity.MusicActivity;
@@ -40,7 +39,7 @@ import io.reactivex.schedulers.Schedulers;
  * @描述： {仅仅针对 PlayActivity抽出的基类,目的在于减少PlayActivity中的代码}
  */
 
-public abstract class BasePlayActivity<T extends ViewBinding> extends BaseTransitionActivity implements OnCheckFavoriteListener {
+public abstract class BasePlayActivity extends BaseTransitionActivity implements OnCheckFavoriteListener {
 
     protected AudioManager mAudioManager;
     protected int mMaxVolume;

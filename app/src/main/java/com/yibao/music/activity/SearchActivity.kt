@@ -1,107 +1,157 @@
 package com.yibao.music.activity
 
-import com.yibao.music.base.BaseTransitionActivity
-import com.yibao.music.base.listener.OnMusicItemClickListener
-import com.yibao.music.base.listener.OnFlowLayoutClickListener
-import com.yibao.music.model.MusicBean
-import com.yibao.music.service.MusicPlayService.AudioBinder
-import io.reactivex.disposables.Disposable
-import android.os.Bundle
-import com.yibao.music.activity.MusicActivity
-import com.yibao.music.adapter.SearchPagerAdapter
-import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
-import com.jakewharton.rxbinding2.view.RxView
-import com.yibao.music.model.SearchCategoryBean
-import com.yibao.music.R
-import com.yibao.music.base.listener.TextChangedListener
-import android.text.Editable
-import com.yibao.music.view.music.SmartisanControlBar.OnSmartisanControlBarListener
+import android.content.Context
 import android.content.Intent
+import android.text.Editable
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.jakewharton.rxbinding2.view.RxView
+import com.yibao.music.R
+import com.yibao.music.adapter.DetailsViewAdapter
 import com.yibao.music.base.bindings.BaseBindingActivity
+import com.yibao.music.base.bindings.BaseBindingAdapter
+import com.yibao.music.base.listener.OnFlowLayoutClickListener
+import com.yibao.music.base.listener.OnMusicItemClickListener
+import com.yibao.music.base.listener.TextChangedListener
 import com.yibao.music.databinding.ActivitySearchBinding
+import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog
+import com.yibao.music.model.MusicBean
 import com.yibao.music.service.MusicPlayService
-import com.yibao.music.model.MusicLyricBean
+import com.yibao.music.service.MusicPlayService.AudioBinder
 import com.yibao.music.util.*
-import com.yibao.music.viewmodel.AlbumViewModel
 import com.yibao.music.viewmodel.SearchViewModel
 import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.concurrent.timerTask
 
 /**
  * @author lsp
  */
 class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItemClickListener,
     OnFlowLayoutClickListener, View.OnClickListener {
-
+    private val mViewModel: SearchViewModel by lazy { gets(SearchViewModel::class.java) }
     private var mMusicBean: MusicBean? = null
     private var audioBinder: AudioBinder? = null
     private var lyricsFlag = 0
-    private val mInputMethodManager: InputMethodManager? = null
-    private var mDisposableSoftKeyboard: Disposable? = null
-    private var mSearchCondition: String = ""
-    private var currentCategoryPosition = 0
+    private var mInputMethodManager: InputMethodManager? = null
+    private var mAdapter: DetailsViewAdapter? = null
+    private var mPosition = 1
+    override fun initView() {
+        initRecyclerView(mBinding.recyclerSearch)
+    }
 
     override fun initData() {
         // pageType 0 toolbar上的搜索，1 播放界面点击歌曲名，直接以歌手搜索。
         val pageType = intent.getIntExtra(Constant.PAGE_TYPE, 0)
-        LogUtil.d(TAG, "搜索标识    $pageType")
         audioBinder = MusicActivity.getAudioBinder()
         mBinding.smartisanControlBar.setPbColorAndPreBtnGone()
-        val pagerAdapter: SearchPagerAdapter
+        // 从PlayActivity过来的
         if (pageType > Constant.NUMBER_ZERO) {
-            mMusicBean = intent.getParcelableExtra("musicBean")
+            mMusicBean = intent.getParcelableExtra(Constant.MUSIC_BEAN)
             mBinding.editSearch.setText(mMusicBean!!.artist)
-            mBinding.editSearch.setSelection(mMusicBean!!.artist.length)
-            mBinding.searchCategoryRoot.root.visibility = View.VISIBLE
-            // ViewPager
-            pagerAdapter = SearchPagerAdapter(this, mMusicBean!!.artist, mViewModel)
-            switchListCategory(3)
-            setMusicInfo(mMusicBean)
-            mBinding.ivEditClear.visibility = View.VISIBLE
+            switchListCategory(4)
+
         } else {
-            pagerAdapter = SearchPagerAdapter(this, "", mViewModel)
-            // 主动弹出键盘
-//            mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//            mDisposableSoftKeyboard = Observable.timer(50, TimeUnit.MILLISECONDS)
-//                    .subscribe(aLong -> SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED));
+            // 加载历史记录
+            mViewModel.getHistory()
+
+            // 从Toolbar上过来的，主动弹出键盘
+//            mInputMethodManager =
+//                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//            Timer().schedule(timerTask {
+//                SoftKeybordUtil.showAndHintSoftInput(
+//                    mInputMethodManager,
+//                    2,
+//                    InputMethodManager.SHOW_FORCED
+//                )
+//            }, 100)
+
         }
-        mBinding.vpSearch.adapter = pagerAdapter
-        mBinding.vpSearch.registerOnPageChangeCallback(object : OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                switchListCategory(position)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // 搜索结果
+        mViewModel.searchViewModel.observe(this) { musicList ->
+            setData(musicList)
+        }
+        mViewModel.historyViewModel.observe(this) { historyList ->
+            mBinding.flowlayout.setData(historyList)
+            mBinding.flowlayout.setItemClickListener { _, bean ->
+                mPosition = 2
+                mBinding.editSearch.setText(bean.searchContent)
             }
-        })
+        }
+        if (audioBinder != null) {
+            mMusicBean = audioBinder!!.musicBean
+            setMusicInfo(mMusicBean)
+            checkCurrentSongIsFavorite(mMusicBean, null, mBinding.smartisanControlBar)
+            mBinding.smartisanControlBar.updatePlayBtnStatus(audioBinder!!.isPlaying)
+            mBinding.smartisanControlBar.animatorOnResume(audioBinder!!.isPlaying)
+            updateLyric()
+            setDuration()
+        }
+
+        mCompositeDisposable.add(RxView.clicks(mBinding.smartisanControlBar)
+            .throttleFirst(1, TimeUnit.SECONDS)
+            .subscribe { startPlayActivity() })
+
+
     }
 
-    override fun initView() {
+    private fun setData(musicList: List<MusicBean>) {
+
+        if (musicList.isEmpty()) {
+            mBinding.tvNoSearchResult.visibility = View.VISIBLE
+            mBinding.recyclerSearch.visibility = View.GONE
+        } else {
+            mBinding.tvNoSearchResult.visibility = View.GONE
+            mBinding.recyclerSearch.visibility = View.VISIBLE
+            // 列表数据
+            mAdapter = DetailsViewAdapter(this, musicList, Constant.NUMBER_THREE)
+            mBinding.recyclerSearch.adapter = mAdapter
+            mAdapter!!.setOnItemMenuListener(object :
+                BaseBindingAdapter.OnOpenItemMoreMenuListener {
+                override fun openClickMoreMenu(position: Int, musicBean: MusicBean) {
+                    // 关闭键盘
+                    SoftKeybordUtil.showAndHintSoftInput(
+                        mInputMethodManager,
+                        1,
+                        InputMethodManager.SHOW_FORCED
+                    )
+                    MoreMenuBottomDialog.newInstance(
+                        musicBean,
+                        position,
+                        false,
+                        false
+                    ).getBottomDialog(this@SearchActivity)
+
+                }
+            })
+
+        }
 
     }
 
-    private val mViewModel: SearchViewModel by lazy { gets(SearchViewModel::class.java) }
     override fun initListener() {
+        mBinding.tvSearchCancel.setOnClickListener(this)
+        mBinding.ivEditClear.setOnClickListener(this)
+        mBinding.searchCategoryRoot.tvSearchAll.setOnClickListener(this)
+        mBinding.searchCategoryRoot.tvSearchSong.setOnClickListener(this)
+        mBinding.searchCategoryRoot.tvSearchArtist.setOnClickListener(this)
+        mBinding.searchCategoryRoot.tvSearchAlbum.setOnClickListener(this)
+        mBinding.ivClearHistory.setOnClickListener(this)
         mBinding.editSearch.addTextChangedListener(object : TextChangedListener() {
             override fun afterTextChanged(s: Editable) {
-                mSearchCondition = s.toString().trim()
-                // 将输入内容发送给 SearchFragment 进行搜索
-                if (mSearchCondition.isNotEmpty()) {
-                    LogUtil.d(TAG, mSearchCondition)
-                    mViewModel.postAlbum(SearchCategoryBean(1, mSearchCondition))
-                }
-                mBinding.ivEditClear.visibility =
-                    if (mSearchCondition.isEmpty()) View.GONE else View.VISIBLE
-
-                mBinding.searchCategoryRoot.root.visibility =
-                    if (mSearchCondition.isEmpty()) View.GONE else View.VISIBLE
-
+                searchMusic(s.toString().trim(), mPosition)
             }
         })
-
-
+        // 底部控制Bar按钮监听
         mBinding.smartisanControlBar.setClickListener { clickFlag: Int ->
+            LogUtil.d(TAG, clickFlag.toString())
             when (clickFlag) {
                 Constant.NUMBER_ONE -> {
                     audioBinder!!.updateFavorite()
@@ -113,14 +163,64 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
                 else -> {}
             }
         }
-        mBinding.tvSearchCancel.setOnClickListener(this)
-        mBinding.ivEditClear.setOnClickListener(this)
-        mBinding.searchCategoryRoot.tvSearchAll.setOnClickListener(this)
-        mBinding.searchCategoryRoot.tvSearchSong.setOnClickListener(this)
-        mBinding.searchCategoryRoot.tvSearchArtist.setOnClickListener(this)
-        mBinding.searchCategoryRoot.tvSearchAlbum.setOnClickListener(this)
+    }
 
 
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.iv_edit_clear -> {
+                mBinding.editSearch.setText("")
+                mAdapter?.clear()
+            }
+            R.id.iv_clear_history -> {
+                LogUtil.d(TAG, "历史点击")
+                // 清空历史记录
+            }
+
+            R.id.tv_search_all -> {
+                switchListCategory(1)
+            }
+            R.id.tv_search_song -> {
+                switchListCategory(2)
+            }
+            R.id.tv_search_album -> {
+                switchListCategory(3)
+            }
+            R.id.tv_search_artist -> {
+                switchListCategory(4)
+            }
+            R.id.tv_search_cancel -> {
+                SoftKeybordUtil.showAndHintSoftInput(
+                    mInputMethodManager,
+                    1,
+                    InputMethodManager.RESULT_UNCHANGED_SHOWN
+                )
+                finish()
+            }
+        }
+    }
+
+    /**
+     * @param searchKey 搜索关键字key 、
+     * @param position 搜索类别： 1全部 、 2歌曲 、 3专辑 、 4 艺术家
+     */
+    private fun searchMusic(searchKey: String, position: Int) {
+        mBinding.ivEditClear.visibility =
+            if (searchKey.isEmpty()) View.GONE else View.VISIBLE
+        mBinding.tvNoSearchResult.visibility =
+            if (searchKey.isEmpty()) View.GONE else View.VISIBLE
+        mBinding.flowlayout.visibility =
+            if (searchKey.isEmpty()) View.VISIBLE else View.GONE
+
+        mBinding.searchCategoryRoot.root.visibility =
+            if (searchKey.isEmpty()) View.GONE else View.VISIBLE
+        mBinding.groupSearch.visibility = if (searchKey.isEmpty()) View.VISIBLE else View.GONE
+        if (searchKey.isNotEmpty()) {
+            mViewModel.searchMusic(searchKey, position)
+        } else {
+            // 获取历史记录
+            mViewModel.getHistory()
+        }
     }
 
     override fun updateLyricsView(lyricsOK: Boolean, downMsg: String) {
@@ -129,22 +229,6 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
         }
     }
 
-
-    override fun onResume() {
-        super.onResume()
-        if (audioBinder != null) {
-            mMusicBean = audioBinder!!.musicBean
-            setMusicInfo(mMusicBean)
-            checkCurrentSongIsFavorite(mMusicBean, null, mBinding.smartisanControlBar)
-            mBinding.smartisanControlBar.updatePlayBtnStatus(audioBinder!!.isPlaying)
-            mBinding.smartisanControlBar.animatorOnResume(audioBinder!!.isPlaying)
-            updateLyric()
-            setDuration()
-        }
-        mCompositeDisposable.add(RxView.clicks(mBinding.smartisanControlBar)
-            .throttleFirst(1, TimeUnit.SECONDS)
-            .subscribe { o: Any? -> startPlayActivity() })
-    }
 
     override fun updateCurrentPlayInfo(musicItem: MusicBean) {
         mMusicBean = musicItem
@@ -187,28 +271,26 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
     }
 
     private fun switchListCategory(position: Int) {
-        currentCategoryPosition = position
-        mBinding.vpSearch.setCurrentItem(position, false)
-        if (mSearchCondition.isNotEmpty()) {
-            mViewModel.postAlbum(SearchCategoryBean(position, mSearchCondition))
-        }
+        mPosition = position
+        val searchKey = mBinding.editSearch.text.trim().toString()
+        mViewModel.searchMusic(searchKey, position)
         when (position) {
-            0 -> {
+            1 -> {
                 setAllCategoryNotNormal()
                 mBinding.searchCategoryRoot.tvSearchAll.setTextColor(ColorUtil.wihtle)
                 mBinding.searchCategoryRoot.tvSearchAll.setBackgroundResource(R.drawable.btn_category_songname_down_selector)
             }
-            1 -> {
+            2 -> {
                 setAllCategoryNotNormal()
                 mBinding.searchCategoryRoot.tvSearchSong.setTextColor(ColorUtil.wihtle)
                 mBinding.searchCategoryRoot.tvSearchSong.setBackgroundResource(R.drawable.btn_category_score_down_selector)
             }
-            2 -> {
+            3 -> {
                 setAllCategoryNotNormal()
                 mBinding.searchCategoryRoot.tvSearchAlbum.setTextColor(ColorUtil.wihtle)
                 mBinding.searchCategoryRoot.tvSearchAlbum.setBackgroundResource(R.drawable.btn_category_score_down_selector)
             }
-            3 -> {
+            4 -> {
                 setAllCategoryNotNormal()
                 mBinding.searchCategoryRoot.tvSearchArtist.setBackgroundResource(R.drawable.btn_category_views_down_selector)
                 mBinding.searchCategoryRoot.tvSearchArtist.setTextColor(ColorUtil.wihtle)
@@ -243,13 +325,6 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
         }
     }
 
-    private val dataFlag = when {
-
-        currentCategoryPosition == 0 || currentCategoryPosition == 1 -> Constant.NUMBER_THREE
-        currentCategoryPosition == 2 -> 2
-        currentCategoryPosition == 3 -> 1
-        else -> 4
-    }
 
     private fun switchPlayState() {
         if (audioBinder!!.isPlaying) {
@@ -261,37 +336,6 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
         mBinding.smartisanControlBar.updatePlayBtnStatus(audioBinder!!.isPlaying)
     }
 
-
-    override fun onClick(v: View) {
-        val id = v.id
-        when (id) {
-            R.id.tv_search_cancel -> {
-                SoftKeybordUtil.showAndHintSoftInput(
-                    mInputMethodManager,
-                    1,
-                    InputMethodManager.RESULT_UNCHANGED_SHOWN
-                )
-                finish()
-            }
-            R.id.iv_edit_clear -> {
-                mBinding.editSearch.text = null
-                findViewById<View>(R.id.search_category_root).visibility = View.GONE
-                mBus.post(SearchCategoryBean(Constant.NUMBER_NINE, null))
-            }
-            R.id.tv_search_all -> {
-                switchListCategory(0)
-            }
-            R.id.tv_search_song -> {
-                switchListCategory(1)
-            }
-            R.id.tv_search_album -> {
-                switchListCategory(2)
-            }
-            R.id.tv_search_artist -> {
-                switchListCategory(3)
-            }
-        }
-    }
 
     override fun startMusicServiceFlag(
         position: Int,
@@ -316,10 +360,6 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
 
     override fun onDestroy() {
         super.onDestroy()
-        if (mDisposableSoftKeyboard != null) {
-            mDisposableSoftKeyboard!!.dispose()
-            mDisposableSoftKeyboard = null
-        }
         if (audioBinder != null) {
             audioBinder = null
         }

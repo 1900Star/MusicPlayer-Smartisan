@@ -3,9 +3,16 @@ package com.yibao.music.base.bindings
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import com.yibao.music.MusicApplication
+import com.yibao.music.R
 import com.yibao.music.base.BaseActivity
 import java.lang.reflect.ParameterizedType
 
@@ -53,5 +60,19 @@ abstract class BaseBindingActivity<T : ViewBinding> : BaseActivity() {
 
     abstract fun initData()
     abstract fun initListener()
+    fun initRecyclerView(recyclerView: RecyclerView) {
+
+        val manager = LinearLayoutManager(this)
+        manager.orientation = LinearLayoutManager.VERTICAL
+        recyclerView.isVerticalScrollBarEnabled = true
+        recyclerView.layoutManager = manager
+        val divider =
+            DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+
+        ContextCompat.getDrawable(this, R.drawable.shape_item_decoration)
+            ?.let { divider.setDrawable(it) }
+
+        recyclerView.addItemDecoration(divider)
+    }
 
 }

@@ -101,7 +101,7 @@
     <com.yibao.music.view.ProgressBtn
         android:id="@+id/smartisan_bar_progress"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
         android:layout_alignParentBottom="true"
         android:background="@android:color/transparent" />
 </RelativeLayout>

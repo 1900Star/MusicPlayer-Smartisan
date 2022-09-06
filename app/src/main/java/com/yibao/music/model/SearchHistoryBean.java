@@ -6,6 +6,8 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
+import java.util.Objects;
+
 /**
  * @ Author: Luoshipeng
  * @ Name:   SearchHistoryBean
@@ -86,10 +88,10 @@ public class SearchHistoryBean implements Comparable<SearchHistoryBean> {
         SearchHistoryBean that = (SearchHistoryBean) o;
 
         if (isSelected != that.isSelected) return false;
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (searchContent != null ? !searchContent.equals(that.searchContent) : that.searchContent != null)
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(searchContent, that.searchContent))
             return false;
-        return searchTime != null ? searchTime.equals(that.searchTime) : that.searchTime == null;
+        return Objects.equals(searchTime, that.searchTime);
     }
 
     @Override
@@ -107,5 +109,15 @@ public class SearchHistoryBean implements Comparable<SearchHistoryBean> {
 
     public void setIsSelected(boolean isSelected) {
         this.isSelected = isSelected;
+    }
+
+    @Override
+    public String toString() {
+        return "SearchHistoryBean{" +
+                "id=" + id +
+                ", searchContent='" + searchContent + '\'' +
+                ", searchTime='" + searchTime + '\'' +
+                ", isSelected=" + isSelected +
+                '}';
     }
 }
