@@ -10,6 +10,7 @@ import com.yibao.music.util.ColorUtil
 import com.yibao.music.util.Constant
 import com.yibao.music.util.SpUtil
 import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
+import com.yibao.music.viewmodel.SongViewModel
 
 /**
  * @项目名： ArtisanMusic
@@ -21,7 +22,7 @@ import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
  * @描述： {歌曲TAB}
  */
 class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickListener {
-
+    private val mViewModel: SongViewModel by lazy { gets(SongViewModel::class.java) }
     private var currentIndex = 0
     private var isSelectStatus = false
 
@@ -40,10 +41,9 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
     }
 
 
-
     override fun initData() {
         switchListCategory(0)
-        val pagerAdapter = SongViewPagerAdapter(requireActivity())
+        val pagerAdapter = SongViewPagerAdapter(requireActivity(),mViewModel)
         mBinding.viewPager2Song.offscreenPageLimit = 4
         mBinding.viewPager2Song.adapter = pagerAdapter
         mBinding.viewPager2Song.isUserInputEnabled = false
@@ -116,7 +116,7 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
                 mBinding.songCategory.tvMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_down_selector)
                 mBinding.songCategory.tvMusicCategoryAddtime.setTextColor(ColorUtil.wihtle)
             }
-            else -> {}
+
         }
     }
 
@@ -137,7 +137,6 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
             return SongFragment()
         }
     }
-
 
 
 }

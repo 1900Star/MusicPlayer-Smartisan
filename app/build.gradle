@@ -37,8 +37,8 @@ android {
     dependencies {
         implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
         implementation 'androidx.core:core-ktx:1.8.0'
-        implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
-        implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
+        implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1'
+        implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
 
         implementation 'androidx.legacy:legacy-support-v4:1.0.0'
         implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -73,6 +73,9 @@ android {
         implementation 'com.baidu.mobstat:mtj-sdk:4.0.7.6'
         // 65536
         implementation 'com.android.support:multidex:1.0.3'
+//        implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+//        implementation 'androidx.lifecycle:livedata-viewmodel-ktx:2.2.1'
+//        implementation 'androidx.lifecycle:runtime-viewmodel-ktx:2.2.1'
 
 
     }

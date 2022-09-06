@@ -13,6 +13,8 @@ import com.yibao.music.util.Constant
 import com.yibao.music.util.LogUtil
 import com.yibao.music.util.MusicListUtil
 import com.yibao.music.util.SnakbarUtil
+import com.yibao.music.viewmodel.SearchViewModel
+import com.yibao.music.viewmodel.SongViewModel
 import io.reactivex.disposables.Disposable
 
 /**
@@ -24,67 +26,81 @@ import io.reactivex.disposables.Disposable
  * @描述： {显示音乐分类列表}
  */
 class SongCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
+
     private lateinit var mSongAdapter: SongAdapter
     private var mPosition = 0
     private val mSparseBooleanArray = SparseBooleanArray()
     private val mSelectList: MutableList<MusicBean> = ArrayList()
     private var mDeleteSongDisposable: Disposable? = null
+    override fun onResume() {
+        super.onResume()
+        mViewModel.listModel.observe(this) { musicList ->
+            if (musicList.isNotEmpty()) {
+                musicList.forEach { bean ->
+                    LogUtil.d(mTag, bean.title)
+                }
+            }
+
+        }
+
+    }
+
     override fun initView() {
-        val arguments = arguments
-        if (arguments != null) {
-            mPosition = arguments.getInt(MUSIC_POSITION)
-        }
-        val musicBeanList = mMusicBeanDao.queryBuilder().list()
-        when (mPosition) {
-            0 -> {
-                val abcList = MusicListUtil.sortMusicAbc(musicBeanList)
-                setNotAllSelected(abcList)
-                mSongAdapter = SongAdapter(
-                    mActivity,
-                    abcList,
-                    mSparseBooleanArray,
-                    Constant.NUMBER_ZERO,
-                    Constant.NUMBER_ZERO
-                )
-            }
-            1 -> {
-                val scoreList = MusicListUtil.sortMusicList(musicBeanList, Constant.SORT_SCORE)
-                setNotAllSelected(scoreList)
-                mSongAdapter = SongAdapter(
-                    mActivity,
-                    scoreList,
-                    mSparseBooleanArray,
-                    Constant.NUMBER_ONE,
-                    Constant.NUMBER_ONE
-                )
-            }
-            2 -> {
-                val playFrequencyList =
-                    MusicListUtil.sortMusicList(musicBeanList, Constant.SORT_FREQUENCY)
-                setNotAllSelected(playFrequencyList)
-                mSongAdapter = SongAdapter(
-                    mActivity,
-                    playFrequencyList,
-                    mSparseBooleanArray,
-                    Constant.NUMBER_ONE,
-                    Constant.NUMBER_TWO
-                )
-            }
-            3 -> {
-                val addTimeList =
-                    MusicListUtil.sortMusicList(musicBeanList, Constant.SORT_DOWN_TIME)
-                setNotAllSelected(addTimeList)
-                mSongAdapter = SongAdapter(
-                    mActivity,
-                    addTimeList,
-                    mSparseBooleanArray,
-                    Constant.NUMBER_ONE,
-                    Constant.NUMBER_ZERO
-                )
-            }
-        }
-        mBinding.musicView.setAdapter(mActivity, Constant.NUMBER_ONE, true, mSongAdapter)
-        initListener()
+
+        mPosition = requireArguments().getInt(MUSIC_POSITION)
+        mViewModel.getMusicList(mPosition)
+
+//        val musicBeanList = mMusicBeanDao.queryBuilder().list()
+//        when (mPosition) {
+//            0 -> {
+//                val abcList = MusicListUtil.sortMusicAbc(musicBeanList)
+//                setNotAllSelected(abcList)
+//                mSongAdapter = SongAdapter(
+//                    mActivity,
+//                    abcList,
+//                    mSparseBooleanArray,
+//                    Constant.NUMBER_ZERO,
+//                    Constant.NUMBER_ZERO
+//                )
+//            }
+//            1 -> {
+//                val scoreList = MusicListUtil.sortMusicList(musicBeanList, Constant.SORT_SCORE)
+//                setNotAllSelected(scoreList)
+//                mSongAdapter = SongAdapter(
+//                    mActivity,
+//                    scoreList,
+//                    mSparseBooleanArray,
+//                    Constant.NUMBER_ONE,
+//                    Constant.NUMBER_ONE
+//                )
+//            }
+//            2 -> {
+//                val playFrequencyList =
+//                    MusicListUtil.sortMusicList(musicBeanList, Constant.SORT_FREQUENCY)
+//                setNotAllSelected(playFrequencyList)
+//                mSongAdapter = SongAdapter(
+//                    mActivity,
+//                    playFrequencyList,
+//                    mSparseBooleanArray,
+//                    Constant.NUMBER_ONE,
+//                    Constant.NUMBER_TWO
+//                )
+//            }
+//            3 -> {
+//                val addTimeList =
+//                    MusicListUtil.sortMusicList(musicBeanList, Constant.SORT_DOWN_TIME)
+//                setNotAllSelected(addTimeList)
+//                mSongAdapter = SongAdapter(
+//                    mActivity,
+//                    addTimeList,
+//                    mSparseBooleanArray,
+//                    Constant.NUMBER_ONE,
+//                    Constant.NUMBER_ZERO
+//                )
+//            }
+//        }
+//        mBinding.musicView.setAdapter(mActivity, Constant.NUMBER_ONE, true, mSongAdapter)
+//        initListener()
     }
 
     override fun initData() {}
@@ -101,9 +117,9 @@ class SongCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
         })
         mSongAdapter.setItemListener(object : BaseBindingAdapter.OnItemListener<MusicBean> {
             override fun showDetailsView(bean: MusicBean, position: Int) {
-                    mSparseBooleanArray.put(position, true)
-                    updateSelected(bean)
-                    mSongAdapter.notifyDataSetChanged()
+                mSparseBooleanArray.put(position, true)
+                updateSelected(bean)
+                mSongAdapter.notifyDataSetChanged()
 
             }
         })
@@ -117,8 +133,6 @@ class SongCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
             }
         })
     }
-
-
 
 
     override fun deleteItem(musicPosition: Int) {
@@ -139,7 +153,6 @@ class SongCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
             mSparseBooleanArray.put(i, false)
         }
     }
-
 
 
     private fun deleteListItem() {
@@ -175,9 +188,11 @@ class SongCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
 
     companion object {
         private const val MUSIC_POSITION = "position"
+        private lateinit var mViewModel: SongViewModel
 
         @JvmStatic
-        fun newInstance(position: Int): SongCategoryFragment {
+        fun newInstance(position: Int, viewModel: SongViewModel): SongCategoryFragment {
+            mViewModel = viewModel
             val args = Bundle()
             val fragment = SongCategoryFragment()
             args.putInt(MUSIC_POSITION, position)
