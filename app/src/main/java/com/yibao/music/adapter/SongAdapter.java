@@ -18,6 +18,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constant;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.ImageUitl;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class SongAdapter
         extends BaseBindingAdapter<MusicBean> {
     private static final String TAG = "====" + SongAdapter.class.getSimpleName() + "    ";
     private Activity mContext;
-    private final int mIsShowStickyView;
+    private final boolean mIsShowStickyView;
     private final int mScroeAndFrequnecyFlag;
     private final SparseBooleanArray mSparseBooleanArray;
 
@@ -48,7 +49,7 @@ public class SongAdapter
      *                              parm isArtistList     用来控制音乐列表和艺术家列表的显示
      * @param scoreAndFrequencyFlag 显示评分和播放次数 0 都不显示 ，1显示评分 ，2 显示播放次数
      */
-    public SongAdapter(Activity context, List<MusicBean> list, SparseBooleanArray sparseBooleanArray, int isShowStickyView, int scoreAndFrequencyFlag) {
+    public SongAdapter(Activity context, List<MusicBean> list, SparseBooleanArray sparseBooleanArray, boolean isShowStickyView, int scoreAndFrequencyFlag) {
         super(list);
         this.mContext = context;
         this.mIsShowStickyView = isShowStickyView;
@@ -64,6 +65,7 @@ public class SongAdapter
 
     @Override
     public void bindView(@NonNull RecyclerView.ViewHolder holder, MusicBean musicBean) {
+        LogUtil.d(getMTAG(),musicBean.getTitle());
         if (holder instanceof SongListViewHolder) {
             SongListViewHolder songListViewHolder = (SongListViewHolder) holder;
             int position = holder.getAdapterPosition();
@@ -76,11 +78,11 @@ public class SongAdapter
             }
             songListViewHolder.mBinding.checkboxItem.setVisibility(isSelectStatus() ? View.VISIBLE : View.GONE);
             songListViewHolder.mBinding.ivSongItemMenu.setVisibility(isSelectStatus() ? View.INVISIBLE : View.VISIBLE);
-            songListViewHolder.mBinding.checkboxItem.setChecked(mSparseBooleanArray.get(position));
+//            songListViewHolder.mBinding.checkboxItem.setChecked(mSparseBooleanArray.get(position));
             ImageUitl.customLoadPic(mContext, FileUtil.getAlbumUrl(musicBean, 1), R.drawable.noalbumcover_220, songListViewHolder.mBinding.songAlbum);
             songListViewHolder.mBinding.songArtistName.setText(StringUtil.getArtist(musicBean));
             songListViewHolder.mBinding.songName.setText(StringUtil.getTitle(musicBean));
-            if (mIsShowStickyView == Constant.NUMBER_ZERO) {
+            if (mIsShowStickyView) {
                 String firstTv = musicBean.getFirstChar();
                 songListViewHolder.mBinding.itemStickyView.setText(firstTv);
                 if (position == 0) {

@@ -7,7 +7,7 @@ import com.yibao.music.R
 import com.yibao.music.adapter.AlbumViewPagerAdapter
 import com.yibao.music.adapter.DetailsViewAdapter
 import com.yibao.music.base.bindings.BaseBindingAdapter
-import com.yibao.music.base.bindings.BaseLazyFragmentDev
+import com.yibao.music.base.bindings.BaseMusicFragmentDev
 import com.yibao.music.databinding.AlbumFragmentBinding
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog
 import com.yibao.music.model.AlbumInfo
@@ -27,7 +27,7 @@ import com.yibao.music.viewmodel.AlbumViewModel
  * @创建时间: 2018/2/8 20:01
  * @描述： {TODO}
  */
-class AlbumFragment : BaseLazyFragmentDev<AlbumFragmentBinding>(), View.OnClickListener,
+class AlbumFragment : BaseMusicFragmentDev<AlbumFragmentBinding>(), View.OnClickListener,
     SwipeRefreshLayout.OnRefreshListener {
     private val mViewModel: AlbumViewModel by lazy { gets(AlbumViewModel::class.java) }
     private var mDetailsAdapter: DetailsViewAdapter? = null

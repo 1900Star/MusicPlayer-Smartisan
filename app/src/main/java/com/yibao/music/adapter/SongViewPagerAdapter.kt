@@ -13,10 +13,10 @@ import com.yibao.music.viewmodel.SongViewModel
  *
  * @author Stran
  */
-class SongViewPagerAdapter(fragmentActivity: FragmentActivity,private val viewModel: SongViewModel) :
+class SongViewPagerAdapter(fragmentActivity: FragmentActivity) :
     FragmentStateAdapter(fragmentActivity) {
     override fun createFragment(position: Int): Fragment {
-        return SongCategoryFragment.newInstance(position,viewModel)
+        return SongCategoryFragment.newInstance(position)
     }
 
     override fun getItemCount(): Int {

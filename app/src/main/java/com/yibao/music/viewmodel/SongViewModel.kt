@@ -5,6 +5,7 @@ import com.yibao.music.base.BaseViewModel
 import com.yibao.music.livedata.SingleLiveEvent
 import com.yibao.music.model.MusicBean
 import com.yibao.music.model.greendao.MusicBeanDao
+import java.util.Collections.sort
 
 class SongViewModel : BaseViewModel() {
 
@@ -17,22 +18,55 @@ class SongViewModel : BaseViewModel() {
     fun getMusicList(sortFlag: Int) {
         val queryBuilder = MusicApplication.getInstance().musicDao.queryBuilder()
 
-        val dataList = when (sortFlag) {
+        when (sortFlag) {
+            0 -> {
+                listModel.postValue(sortMusicAbc(queryBuilder.build().list()))
+            }
             1 -> {
-                queryBuilder.orderAsc(MusicBeanDao.Properties.Title).build().list()
+                val scoreList = queryBuilder.orderDesc(MusicBeanDao.Properties.SongScore).build().list()
+
+                listModel.postValue(scoreList)
             }
-            2 -> queryBuilder.orderAsc(MusicBeanDao.Properties.SongScore).build().list()
-            3 -> queryBuilder.orderAsc(MusicBeanDao.Properties.PlayFrequency).build().list()
-            4 -> queryBuilder.orderAsc(MusicBeanDao.Properties.AddTime).build().list()
-            else -> {
-                queryBuilder.orderAsc(MusicBeanDao.Properties.Title).build().list()
+            2 -> {
+                val frequencyList = queryBuilder.orderDesc(MusicBeanDao.Properties.PlayFrequency).build().list()
+                listModel.postValue(frequencyList)
             }
+            3 -> {
+                val timeList = queryBuilder.orderDesc(MusicBeanDao.Properties.AddTime).build().list()
+                listModel.postValue(timeList)
+
+            }
+
         }
 
-
-        listModel.postValue(dataList)
-
-
-
     }
+
+
+    /**
+     * 按ABCD 首字母排序
+     *
+     * @param musicList d
+     */
+    private fun sortMusicAbc(musicList: List<MusicBean>): List<MusicBean> {
+        val str = "#"
+        sort(
+            musicList
+        ) { m1: MusicBean, m2: MusicBean ->
+
+            when (str) {
+                m2.firstChar -> {
+                    -1
+                }
+                m1.firstChar -> {
+                    1
+                }
+                else -> {
+                    m1.firstChar.compareTo(m2.firstChar)
+                }
+            }
+        }
+        return musicList
+    }
+
+
 }

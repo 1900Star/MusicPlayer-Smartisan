@@ -1,7 +1,7 @@
 package com.yibao.music.fragment
 
 import android.os.Bundle
-import com.yibao.music.base.bindings.BaseLazyFragmentDev
+import com.yibao.music.base.bindings.BaseMusicFragmentDev
 import com.yibao.music.databinding.LyricsFragmentBinding
 import com.yibao.music.util.LogUtil
 
@@ -11,7 +11,7 @@ import com.yibao.music.util.LogUtil
  * className   LyricsFragment
  * Des：TODO
  */
-class LyricsFragment : BaseLazyFragmentDev<LyricsFragmentBinding>() {
+class LyricsFragment : BaseMusicFragmentDev<LyricsFragmentBinding>() {
     private var mPosition = 0
     private lateinit var mLyrics: String
 

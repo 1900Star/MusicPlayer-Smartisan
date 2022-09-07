@@ -8,6 +8,7 @@ import com.yibao.music.base.bindings.BaseMusicFragmentDev
 import com.yibao.music.databinding.SongFragmentBinding
 import com.yibao.music.util.ColorUtil
 import com.yibao.music.util.Constant
+import com.yibao.music.util.LogUtil
 import com.yibao.music.util.SpUtil
 import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
 import com.yibao.music.viewmodel.SongViewModel
@@ -22,8 +23,8 @@ import com.yibao.music.viewmodel.SongViewModel
  * @描述： {歌曲TAB}
  */
 class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickListener {
-    private val mViewModel: SongViewModel by lazy { gets(SongViewModel::class.java) }
-    private var currentIndex = 0
+
+
     private var isSelectStatus = false
 
     override fun initView() {
@@ -37,22 +38,22 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
         super.onResume()
 
         mBinding.musicBar.musicToolbarList.setToolbarTitle(getString(R.string.music_song))
-        switchListCategory(currentIndex)
+
     }
 
 
     override fun initData() {
-        switchListCategory(0)
-        val pagerAdapter = SongViewPagerAdapter(requireActivity(),mViewModel)
+
+        val pagerAdapter = SongViewPagerAdapter(requireActivity())
         mBinding.viewPager2Song.offscreenPageLimit = 4
         mBinding.viewPager2Song.adapter = pagerAdapter
         mBinding.viewPager2Song.isUserInputEnabled = false
-        mBinding.viewPager2Song.registerOnPageChangeCallback(object : OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                switchListCategory(position)
-            }
-        })
+//        mBinding.viewPager2Song.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+//            override fun onPageSelected(position: Int) {
+//                super.onPageSelected(position)
+//                switchListCategory(position)
+//            }
+//        })
     }
 
     private fun initListener() {
@@ -92,7 +93,7 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
     }
 
     private fun switchListCategory(flag: Int) {
-        currentIndex = flag
+
         mBinding.viewPager2Song.setCurrentItem(flag, false)
         when (flag) {
             0 -> {

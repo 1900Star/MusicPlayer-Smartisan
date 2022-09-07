@@ -64,8 +64,7 @@ public class AlbumAdapter
     }
 
     @Override
-    public void bindView(RecyclerView.ViewHolder holder, AlbumInfo info) {
-        LogUtil.d(getMTAG(),info.toString());
+    public void bindView(@NonNull RecyclerView.ViewHolder holder, AlbumInfo info) {
         //显示 StickyView  并且列表呈普通视图显示
         if (mIsShowStickyView == Constant.NUMBER_ZERO) {
             if (holder instanceof AlbumListHolder) {

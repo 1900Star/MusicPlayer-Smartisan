@@ -3,7 +3,7 @@ package com.yibao.music.fragment
 import android.os.Bundle
 import com.yibao.music.adapter.AlbumAdapter
 import com.yibao.music.base.bindings.BaseBindingAdapter
-import com.yibao.music.base.bindings.BaseLazyFragmentDev
+import com.yibao.music.base.bindings.BaseMusicFragmentDev
 import com.yibao.music.databinding.CategoryFragmentBinding
 import com.yibao.music.model.AlbumInfo
 import com.yibao.music.util.Constant
@@ -18,7 +18,7 @@ import com.yibao.music.viewmodel.AlbumViewModel
  * @ Time:   2018/9/11/ 23:47
  * @ Des:    TODO
  */
-class AlbumCategoryFragment : BaseLazyFragmentDev<CategoryFragmentBinding>() {
+class AlbumCategoryFragment : BaseMusicFragmentDev<CategoryFragmentBinding>() {
     private var mPosition = 0
     private lateinit var mAlbumList: List<AlbumInfo>
 

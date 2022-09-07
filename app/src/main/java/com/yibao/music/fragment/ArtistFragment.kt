@@ -5,7 +5,7 @@ import com.yibao.music.R
 import com.yibao.music.adapter.ArtistAdapter
 import com.yibao.music.adapter.DetailsViewAdapter
 import com.yibao.music.base.bindings.BaseBindingAdapter
-import com.yibao.music.base.bindings.BaseLazyFragmentDev
+import com.yibao.music.base.bindings.BaseMusicFragmentDev
 import com.yibao.music.databinding.ArtisanListFragmentBinding
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog
 import com.yibao.music.model.ArtistInfo
@@ -24,7 +24,7 @@ import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
  * @创建时间: 2018/2/4 23:49
  * @描述： {TODO}
  */
-class ArtistFragment : BaseLazyFragmentDev<ArtisanListFragmentBinding>() {
+class ArtistFragment : BaseMusicFragmentDev<ArtisanListFragmentBinding>() {
     private lateinit var mAdapter: ArtistAdapter
     private var isShowDetailsView = false
     private var mDetailsAdapter: DetailsViewAdapter? = null

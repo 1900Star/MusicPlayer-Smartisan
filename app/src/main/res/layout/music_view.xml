@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.yibao.music.activity.MusicActivity">
+    tools:context=".activity.MusicActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -22,6 +22,7 @@
             android:background="@color/colorWhite"
             android:paddingBottom="8dp"
             android:paddingStart="26dp"
+            android:id="@+id/tv_index_chart"
             android:paddingEnd="10dp"
             android:paddingTop="10dp"
             android:textColor="@color/aboutSign"

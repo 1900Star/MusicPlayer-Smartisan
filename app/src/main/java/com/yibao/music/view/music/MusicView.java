@@ -101,7 +101,6 @@ public class MusicView
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
         mSlidebar.setBarVisibility(isShowSlideBar ? VISIBLE : GONE);
 
     }
