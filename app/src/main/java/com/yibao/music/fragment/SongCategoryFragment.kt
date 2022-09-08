@@ -32,27 +32,17 @@ class SongCategoryFragment : BaseMusicFragmentDev<CategoryFragmentBinding>() {
 
     override fun initView() {
 
-
     }
 
     override fun initData() {
-
-
-
-
 
     }
 
     override fun onResume() {
         super.onResume()
         val position = requireArguments().getInt(Constant.POSITION)
-        if (isVisible) {
-            LogUtil.d(mTag, "==============  $position   可见了")
-        }
         mViewModel.getMusicList(position)
-
         mViewModel.listModel.observe(this) { musicList ->
-            LogUtil.d(mTag, "==============  $position   数据")
             if (musicList.isNotEmpty()) {
                 initAdapter(musicList, position)
 
@@ -101,7 +91,7 @@ class SongCategoryFragment : BaseMusicFragmentDev<CategoryFragmentBinding>() {
 
     private fun setData(adapter: SongAdapter) {
 
-        mBinding.musicView.setAdapter(requireActivity(),Constant.NUMBER_ONE,true,adapter)
+        mBinding.musicView.setAdapter(requireActivity(), Constant.NUMBER_ONE, true, adapter)
         adapter.setOnItemMenuListener(object : BaseBindingAdapter.OnOpenItemMoreMenuListener {
             override fun openClickMoreMenu(position: Int, musicBean: MusicBean) {
                 MoreMenuBottomDialog.newInstance(

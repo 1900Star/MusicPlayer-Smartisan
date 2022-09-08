@@ -3,14 +3,6 @@ package com.yibao.music.view.music;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,14 +12,21 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.fragment.dialogfrag.AlbumDetailDialogFragment;
-import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
+import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
@@ -36,7 +35,7 @@ import com.yibao.music.util.Constant;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
-import com.yibao.music.util.SpUtil;
+import com.yibao.music.util.SpUtils;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.view.MusicScrollView;
 import com.yibao.music.view.SwipeItemLayout;
@@ -161,7 +160,9 @@ public class DetailsView
 
     private void startMusic(int startPosition) {
         if (getContext() instanceof OnMusicItemClickListener) {
-            SpUtil.setSortFlag(getContext(), Constant.NUMBER_TEN);
+            SpUtils sp = new SpUtils(getContext().getApplicationContext(), Constant.MUSIC_CONFIG);
+            sp.putValues(new SpUtils.ContentValue(Constant.MUSIC_DATA_FLAG,Constant.NUMBER_TEN));
+
             ((OnMusicItemClickListener) getContext()).startMusicServiceFlag(startPosition, Constant.NUMBER_TEN, mDataFlag, mQueryFlag);
         }
     }

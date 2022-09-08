@@ -14,7 +14,7 @@ import com.yibao.music.MusicApplication
 import com.yibao.music.R
 import com.yibao.music.util.Constant
 import com.yibao.music.util.RxBus
-import com.yibao.music.util.SharedPreferencesUtil
+import com.yibao.music.util.SpUtils
 import java.lang.reflect.ParameterizedType
 
 /**
@@ -28,7 +28,7 @@ abstract class BaseBindingDialog<T : ViewBinding> : DialogFragment() {
     private var _binding: T? = null
     protected val mBinding get() = _binding!!
     protected lateinit var mBus: RxBus
-    protected lateinit var mSp: SharedPreferencesUtil
+    protected lateinit var mSp: SpUtils
 
     fun <T : ViewModel?> gets(modelClass: Class<T>): T {
 
@@ -83,7 +83,10 @@ abstract class BaseBindingDialog<T : ViewBinding> : DialogFragment() {
         _binding = method.invoke(null, layoutInflater, container, false) as T
         mBus = RxBus.getInstance()
 
-        mSp = SharedPreferencesUtil(MusicApplication.getInstance(), Constant.MUSIC_CONFIG)
+        mSp = SpUtils(
+            MusicApplication.getInstance(),
+            Constant.MUSIC_CONFIG
+        )
 
 
 

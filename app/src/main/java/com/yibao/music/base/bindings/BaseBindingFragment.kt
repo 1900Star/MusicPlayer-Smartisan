@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -20,12 +19,12 @@ import com.yibao.music.R
 import com.yibao.music.base.listener.OnHandleBackListener
 import com.yibao.music.model.greendao.AlbumInfoDao
 import com.yibao.music.model.greendao.MusicBeanDao
+import com.yibao.music.util.Constant
 import com.yibao.music.util.HandleBackUtil
 import com.yibao.music.util.RxBus
-import com.yibao.music.util.SharedPreferencesUtil
+import com.yibao.music.util.SpUtils
 import io.reactivex.disposables.CompositeDisposable
 import java.lang.reflect.ParameterizedType
-import java.util.*
 
 /**
  * @author  luoshipeng
@@ -35,7 +34,7 @@ import java.util.*
  */
 abstract class BaseBindingFragment<T : ViewBinding> : Fragment(), OnHandleBackListener {
     val mTag = " ==== " + this::class.java.simpleName + "  "
-    protected lateinit var mSpHelper: SharedPreferencesUtil
+    protected lateinit var mSpHelper: SpUtils
     private var isShowToUser = false
     private var _binding: T? = null
     protected val mBinding get() = _binding!!
@@ -86,8 +85,10 @@ abstract class BaseBindingFragment<T : ViewBinding> : Fragment(), OnHandleBackLi
             Boolean::class.java
         )
         _binding = method.invoke(null, layoutInflater, container, false) as T
+        mSpHelper = SpUtils(MusicApplication.getInstance(),Constant.MUSIC_CONFIG)
         initView()
         initData()
+
         return mBinding.root
     }
 

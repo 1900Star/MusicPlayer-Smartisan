@@ -20,8 +20,7 @@ import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.Constant;
 import com.yibao.music.util.RxBus;
-import com.yibao.music.util.SharedPreferencesUtil;
-import com.yibao.music.util.SpUtil;
+import com.yibao.music.util.SpUtils;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.QqControlBar;
 import com.yibao.music.view.music.SmartisanControlBar;
@@ -56,8 +55,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Disposable mQqLyricsDisposable;
     protected Disposable mRxViewDisposable;
     protected PlayListBeanDao mPlayListDao;
-    protected SpUtil mSp;
-    protected SharedPreferencesUtil mSps;
+    protected SpUtils mSps;
     protected final String TAG = "====" + this.getClass().getSimpleName() + "    ";
 
     @Override
@@ -65,8 +63,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         StatService.start(getApplicationContext());
         mBus = RxBus.getInstance();
-        mSp = new SpUtil();
-        mSps = new SharedPreferencesUtil(MusicApplication.getInstance(),Constant.MUSIC_CONFIG);
+        mSps = new SpUtils(MusicApplication.getInstance(),Constant.MUSIC_CONFIG);
 
         mMusicDao = MusicApplication.getInstance().getMusicDao();
         mSearchDao = MusicApplication.getInstance().getSearchDao();

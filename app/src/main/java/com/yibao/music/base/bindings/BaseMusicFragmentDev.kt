@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.viewbinding.ViewBinding
 import com.yibao.music.base.listener.OnMusicItemClickListener
 import com.yibao.music.base.listener.OnUpdateTitleListener
+import com.yibao.music.util.Constant
 import com.yibao.music.util.RandomUtil
-import com.yibao.music.util.SpUtil
 
 /**
  * @author Stran
@@ -20,7 +20,7 @@ abstract class BaseMusicFragmentDev<T : ViewBinding> : BaseBindingFragment<T>() 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mAddToPlayListFlag = SpUtil.getAddToPlayListFdlag(mContext)
+        mAddToPlayListFlag = mSpHelper.getInt(Constant.ADD_TO_PLAY_LIST_FLAG)
     }
 
     protected fun switchControlBar() {

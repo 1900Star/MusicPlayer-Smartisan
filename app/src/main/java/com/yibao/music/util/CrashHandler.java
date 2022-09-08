@@ -70,7 +70,8 @@ public class CrashHandler
 
     private void dumpExceptionToSdCard(Throwable ex)
             throws PackageManager.NameNotFoundException {
-        SpUtil.setMusicPlayState(mContext, 1);
+        SpUtils sp = new SpUtils(MusicApplication.getInstance(), Constant.MUSIC_CONFIG);
+        sp.putValues(new SpUtils.ContentValue(Constant.MUSIC_PLAY_STATE, 1));
         if (!Environment.getExternalStorageState()
                 .equals(Environment.MEDIA_MOUNTED)) {
             if (MusicApplication.isShowLog) {

@@ -1,10 +1,6 @@
 package com.yibao.music.fragment.dialogfrag;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -13,6 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.adapter.MoreMenuAdapter;
@@ -24,7 +25,7 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constant;
 import com.yibao.music.util.MenuListUtil;
 import com.yibao.music.util.RxBus;
-import com.yibao.music.util.SpUtil;
+import com.yibao.music.util.SpUtils;
 
 /**
  * Des：${TODO}
@@ -67,7 +68,8 @@ public class MoreMenuBottomDialog {
         mBottomCancel.setOnClickListener(v -> dialog.dismiss());
         mMemuAdapter.setClickListener(((musicPosition, position, musicBean) -> {
             if (position == Constant.NUMBER_ZERO) {
-                SpUtil.setAddTodPlayListFlag(context, Constant.NUMBER_ONE);
+                SpUtils sp = new SpUtils(MusicApplication.getInstance(), Constant.MUSIC_CONFIG);
+                sp.putValues(new SpUtils.ContentValue(Constant.ADD_TO_PLAY_LIST_FLAG,Constant.NUMBER_ONE));
             }
             RxBus.getInstance().post(new MoreMenuStatus(mMusicPosition, position, musicBean));
             dialog.dismiss();

@@ -14,20 +14,25 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+<!--     适配 Android 12 运行安装-->
+    <permission-group android:name="${applicationId}.andpermission"/>
 
     <application
         android:name=".MusicApplication"
         android:allowBackup="true"
         android:fullBackupContent="@null"
         android:icon="@mipmap/artisan_launcher"
+       
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="s">
+        
         <activity
             android:name=".activity.SearchLyricsActivity"
+            android:exported="false"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustNothing" />
         <activity
@@ -42,28 +47,32 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.MusicPlayService" />
-        <service android:name=".service.LoadMusicDataService" />
-        <service android:name=".service.CountdownService" />
+        <service android:name=".service.MusicPlayService" android:exported="false"/>
+        <service android:name=".service.LoadMusicDataService" android:exported="false" />
+        <service android:name=".service.CountdownService" android:exported="false" />
 
         <activity
             android:name=".activity.MusicActivity"
+            android:exported="false"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.PlayActivity"
+            android:exported="false"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activity.SearchActivity"
+            android:exported="false"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activity.PlayListActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:exported="false"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />

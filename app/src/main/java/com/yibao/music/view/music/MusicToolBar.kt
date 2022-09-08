@@ -1,17 +1,18 @@
 package com.yibao.music.view.music
 
-import android.widget.LinearLayout
-import android.view.LayoutInflater
-import com.yibao.music.R
-import com.yibao.music.util.SpUtil
-import android.content.Intent
-import com.yibao.music.activity.SearchActivity
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.LinearLayout
+import com.yibao.music.MusicApplication
+import com.yibao.music.R
+import com.yibao.music.activity.SearchActivity
 import com.yibao.music.databinding.MusicToolbarContentBinding
 import com.yibao.music.util.Constant
+import com.yibao.music.util.SpUtils
 
 /**
  * @author Luoshipeng
@@ -45,7 +46,10 @@ class MusicToolBar : LinearLayout, View.OnClickListener {
         mBinding.ivSearch.setOnClickListener(this)
         mBinding.tvMusicToolbarTitle.setOnClickListener(this)
         mBinding.tvMusicToolbarTitle.setOnLongClickListener {
-            SpUtil.setPicUrlFlag(context, !SpUtil.getPicUrlFlag(context, false))
+            val sp = SpUtils(MusicApplication.getInstance(),Constant.MUSIC_CONFIG)
+            val urlFlag = sp.getBoolean(Constant.PIC_URL_FLAG,false)
+            sp.putValues(SpUtils.ContentValue(Constant.PIC_URL_FLAG,!urlFlag))
+
             true
         }
     }

@@ -42,7 +42,7 @@ public class MusicListUtil {
      * @return d
      */
     public static List<MusicBean> getMusicDataList() {
-        SharedPreferencesUtil sp = new SharedPreferencesUtil(MusicApplication.getInstance(), Constant.MUSIC_SETTING);
+        SpUtils sp = new SpUtils(MusicApplication.getInstance(), Constant.MUSIC_SETTING);
         boolean aBooleanDuration = sp.getBoolean(Constant.MUSIC_DURATION_FLAG, false);
         boolean aBooleanFileSize = sp.getBoolean(Constant.MUSIC_FILE_SIZE_FLAG, false);
         List<MusicBean> musicInfo = new ArrayList<>();

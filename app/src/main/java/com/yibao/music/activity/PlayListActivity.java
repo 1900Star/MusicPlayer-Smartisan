@@ -1,16 +1,17 @@
 package com.yibao.music.activity;
 
 import android.os.Bundle;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.yibao.music.R;
+import com.yibao.music.base.BaseActivity;
 import com.yibao.music.base.listener.OnFinishActivityListener;
 import com.yibao.music.fragment.PlayListFragment;
 import com.yibao.music.util.Constant;
-import com.yibao.music.util.SpUtil;
+import com.yibao.music.util.SpUtils;
 
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ import java.util.ArrayList;
  *
  * 点击Item更多菜单，将歌曲添加到播放列表。
  */
-public class PlayListActivity extends AppCompatActivity implements OnFinishActivityListener {
+public class PlayListActivity extends BaseActivity implements OnFinishActivityListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +30,9 @@ public class PlayListActivity extends AppCompatActivity implements OnFinishActiv
     }
 
     private void initData() {
-        SpUtil.setAddTodPlayListFlag(this, Constant.NUMBER_ONE);
+
+        mSps.putValues(new SpUtils.ContentValue(Constant.ADD_TO_PLAY_LIST_FLAG,Constant.NUMBER_ONE));
+
         String songName = getIntent().getStringExtra(Constant.SONG_NAME);
         ArrayList<String> arrayList = getIntent().getStringArrayListExtra(Constant.ADD_TO_LIST);
         FragmentManager fm = getSupportFragmentManager();
@@ -50,7 +53,7 @@ public class PlayListActivity extends AppCompatActivity implements OnFinishActiv
     @Override
     public void finish() {
         super.finish();
-        SpUtil.setAddTodPlayListFlag(this, Constant.NUMBER_ZERO);
+        mSps.putValues(new SpUtils.ContentValue(Constant.ADD_TO_PLAY_LIST_FLAG,Constant.NUMBER_ZERO));
         overridePendingTransition(0, R.anim.dialog_push_out);
     }
 

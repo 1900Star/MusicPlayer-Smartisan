@@ -1,17 +1,14 @@
 package com.yibao.music.fragment
 
 import android.view.View
-import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.yibao.music.R
 import com.yibao.music.adapter.SongViewPagerAdapter
 import com.yibao.music.base.bindings.BaseMusicFragmentDev
 import com.yibao.music.databinding.SongFragmentBinding
 import com.yibao.music.util.ColorUtil
 import com.yibao.music.util.Constant
-import com.yibao.music.util.LogUtil
-import com.yibao.music.util.SpUtil
+import com.yibao.music.util.SpUtils
 import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
-import com.yibao.music.viewmodel.SongViewModel
 
 /**
  * @项目名： ArtisanMusic
@@ -130,7 +127,8 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
         mBinding.songCategory.tvMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_selector)
         mBinding.songCategory.tvMusicCategoryAddtime.setTextColor(ColorUtil.textName)
         mBinding.songCategory.tvMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_selector)
-        SpUtil.setSortFlag(requireContext(), playListFlag)
+
+        mSpHelper.putValues(SpUtils.ContentValue(Constant.MUSIC_DATA_FLAG,playListFlag))
     }
 
     companion object {

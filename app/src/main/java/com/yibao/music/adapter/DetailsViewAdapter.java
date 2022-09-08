@@ -17,7 +17,7 @@ import com.yibao.music.model.SearchHistoryBean;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.Constant;
 import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.SpUtil;
+import com.yibao.music.util.SpUtils;
 import com.yibao.music.util.StringUtil;
 
 import java.util.List;
@@ -77,7 +77,9 @@ public class DetailsViewAdapter extends BaseBindingAdapter<MusicBean> {
 
             detailsHolder.mBinding.detailItemView.setOnClickListener(view -> {
                 if (mContext instanceof OnMusicItemClickListener) {
-                    SpUtil.setSortFlag(mContext, Constant.NUMBER_TEN);
+
+
+                    getMSp().putValues(new SpUtils.ContentValue(Constant.MUSIC_DATA_FLAG,Constant.NUMBER_TEN));
                     LogUtil.d(getMTAG(), info.toString());
                     // 保存搜索记录
                     if (mDataFlag == Constant.NUMBER_THREE) {

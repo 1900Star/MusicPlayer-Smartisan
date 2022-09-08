@@ -4,9 +4,11 @@ import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.yibao.music.MusicApplication
 import com.yibao.music.model.MusicBean
 import com.yibao.music.model.PlayListBean
 import com.yibao.music.util.Constant
+import com.yibao.music.util.SpUtils
 import java.util.*
 
 /**
@@ -17,7 +19,7 @@ import java.util.*
  */
 abstract class BaseBindingAdapter<T>(private var mList: MutableList<T>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    protected  val mTAG = " ==== " + this::class.java.simpleName + "  "
+    protected val mTAG = " ==== " + this::class.java.simpleName + "  "
     private lateinit var mListener: OnItemListener<T>
     private lateinit var mLongClickListener: ItemLongClickListener
     private lateinit var mEditClickListener: ItemEditClickListener
@@ -26,6 +28,7 @@ abstract class BaseBindingAdapter<T>(private var mList: MutableList<T>) :
     protected val TYPE_FOOTER = 1
     protected var isSelectStatus = false
     protected var dataList: List<T> = mList
+    protected val mSp = SpUtils(MusicApplication.getInstance(), Constant.MUSIC_CONFIG)
 
     override fun getItemCount() =
         if (mList.isNotEmpty()) mList.size else 0

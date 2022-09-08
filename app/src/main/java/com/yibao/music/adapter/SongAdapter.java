@@ -65,7 +65,6 @@ public class SongAdapter
 
     @Override
     public void bindView(@NonNull RecyclerView.ViewHolder holder, MusicBean musicBean) {
-        LogUtil.d(getMTAG(),musicBean.getTitle());
         if (holder instanceof SongListViewHolder) {
             SongListViewHolder songListViewHolder = (SongListViewHolder) holder;
             int position = holder.getAdapterPosition();

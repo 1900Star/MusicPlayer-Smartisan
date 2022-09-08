@@ -4,7 +4,7 @@ import com.bumptech.glide.Glide
 import com.yibao.music.R
 import com.yibao.music.base.listener.OnGlideLoadListener
 import com.yibao.music.util.Constant
-import com.yibao.music.util.SpUtil
+import com.yibao.music.util.SpUtils
 
 /**
  * @项目名： ArtisanMusic
@@ -33,7 +33,7 @@ abstract class BaseTransitionActivity : BaseActivity(),
 
     override fun onPause() {
         super.onPause()
-        SpUtil.setAddTodPlayListFlag(this, Constant.NUMBER_ZERO)
+        mSps.putValues(SpUtils.ContentValue(Constant.ADD_TO_PLAY_LIST_FLAG,Constant.NUMBER_ZERO))
     }
 
     override fun finish() {

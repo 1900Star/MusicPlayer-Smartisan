@@ -32,7 +32,6 @@ import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SnakbarUtil;
-import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.StringUtil;
 
 import java.io.File;
@@ -129,7 +128,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             setSongDuration();
         }
         //设置播放模式图片
-        int mode = SpUtil.getMusicMode(this);
+        int mode = mSps.getInt(Constant.PLAY_MODE);
         updatePlayModeImage(mode, mBinding.musicPlayerMode);
         //音量设置
         mBinding.sbVolume.setMax(mMaxVolume);

@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
@@ -37,7 +36,7 @@ import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.QueryMusicFlagListUtil;
 import com.yibao.music.util.SnakbarUtil;
-import com.yibao.music.util.SpUtil;
+import com.yibao.music.util.SpUtils;
 import com.yibao.music.util.TitleArtistUtil;
 import com.yibao.music.util.ToastUtil;
 
@@ -82,8 +81,8 @@ public class MusicActivity
 
 
     private void initData() {
-        List<MusicBean> initMusicList = QueryMusicFlagListUtil.getDataList(SpUtil.getSortFlag(this), SpUtil.getDataQueryFlag(this), SpUtil.getQueryFlag(this), mMusicDao);
-        mCurrentPosition = SpUtil.getMusicPosition(this);
+        List<MusicBean> initMusicList = QueryMusicFlagListUtil.getDataList(mSps.getInt(Constant.MUSIC_DATA_FLAG), mSps.getInt(Constant.MUSIC_DATA_QUERY), mSps.getString(Constant.MUSIC_QUERY_FLAG), mMusicDao);
+        mCurrentPosition = mSps.getInt(Constant.MUSIC_POSITION);
         if (initMusicList != null && initMusicList.size() > 0) {
             mCurrentMusicBean = initMusicList.get(mCurrentPosition >= initMusicList.size() ? 0 : mCurrentPosition);
         } else {
@@ -98,9 +97,9 @@ public class MusicActivity
     }
 
     private void initMusicConfig() {
-        mMusicConfig = SpUtil.getMusicConfig(this, false);
+        mMusicConfig = mSps.getBoolean(Constant.MUSIC_INIT_FLAG,false);
         if (mMusicConfig) {
-            mPlayState = SpUtil.getMusicPlayState(this);
+            mPlayState = mSps.getInt(Constant.MUSIC_PLAY_STATE);
             LogUtil.d(TAG, "======= mPlayState  " + mPlayState);
             if (mPlayState == Constant.NUMBER_ONE) {
                 // 读取用户的播放记录，设置UI显示，做好播放的准备。(暂停和播放两种状态)
@@ -118,12 +117,12 @@ public class MusicActivity
     }
 
     private void startServiceAndAnimation() {
-        int sortFlag = SpUtil.getSortFlag(this);
-        int detailFlag = SpUtil.getDataQueryFlag(this);
+        int sortFlag = mSps.getInt(Constant.MUSIC_DATA_FLAG);
+        int detailFlag = mSps.getInt(Constant.MUSIC_DATA_QUERY);
         if (detailFlag == Constant.NUMBER_EIGHT) {
             startMusicServiceFlag(mCurrentPosition, sortFlag, detailFlag, Constant.FAVORITE_FLAG);
         } else if (detailFlag == Constant.NUMBER_TEN) {
-            startMusicServiceFlag(mCurrentPosition, sortFlag, detailFlag, SpUtil.getQueryFlag(this));
+            startMusicServiceFlag(mCurrentPosition, sortFlag, detailFlag, mSps.getString(Constant.MUSIC_QUERY_FLAG));
         } else {
             startMusicServiceFlag(mCurrentPosition, sortFlag, detailFlag, Constant.NO_NEED_FLAG);
         }
@@ -207,13 +206,13 @@ public class MusicActivity
             }
         });
         mBinding.qqControlBar.setOnPagerSelectListener(position -> {
-            int sortFlag = SpUtil.getSortFlag(this);
+            int sortFlag = mSps.getInt(Constant.MUSIC_DATA_FLAG);
             MusicActivity.this.disposableQqLyric();
             if (mHandleDetailFlag > 0) {
                 if (mHandleDetailFlag == Constant.NUMBER_EIGHT) {
                     startMusicServiceFlag(mCurrentPosition, sortFlag, mHandleDetailFlag, Constant.FAVORITE_FLAG);
                 } else if (mHandleDetailFlag == Constant.NUMBER_TEN) {
-                    startMusicServiceFlag(mCurrentPosition, sortFlag, mHandleDetailFlag, SpUtil.getQueryFlag(this));
+                    startMusicServiceFlag(mCurrentPosition, sortFlag, mHandleDetailFlag, mSps.getString(Constant.MUSIC_QUERY_FLAG));
                 } else {
                     startMusicServiceFlag(mCurrentPosition, sortFlag, mHandleDetailFlag, Constant.NO_NEED_FLAG);
                 }
@@ -303,7 +302,7 @@ public class MusicActivity
      */
     @Override
     public void startMusicService(int position) {
-        int sortFlag = SpUtil.getSortFlag(this);
+        int sortFlag = mSps.getInt(Constant.MUSIC_DATA_FLAG);
         mCurrentPosition = position;
         Intent musicIntent = new Intent(this, MusicPlayService.class);
         musicIntent.putExtra("sortFlag", sortFlag);
@@ -375,7 +374,7 @@ public class MusicActivity
     @Override
     protected void updateCurrentPlayInfo(MusicBean musicItem) {
         // 将MusicConfig设置为ture
-        SpUtil.setMusicConfig(MusicActivity.this);
+        mSps.putValues(new SpUtils.ContentValue(Constant.MUSIC_INIT_FLAG,true));
         mMusicConfig = true;
         // 更新歌曲的信息
         MusicActivity.this.setMusicInfo(musicItem);
@@ -663,7 +662,7 @@ public class MusicActivity
         mBinding.smartisanControlBar.animatorStop();
         if (audioBinder != null) {
             mPlayState = audioBinder.isPlaying() ? Constant.NUMBER_TWO : Constant.NUMBER_ONE;
-            SpUtil.setMusicPlayState(this, mPlayState);
+            mSps.putValues(new SpUtils.ContentValue(Constant.MUSIC_PLAY_STATE,mPlayState));
         }
 
     }

@@ -30,7 +30,7 @@ import com.yibao.music.util.NetworkUtil;
 import com.yibao.music.util.QueryMusicFlagListUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
-import com.yibao.music.util.SpUtil;
+import com.yibao.music.util.SpUtils;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.ThreadPoolProxyFactory;
 import com.yibao.music.util.ToastUtil;
@@ -53,6 +53,7 @@ public class MusicPlayService
     private MediaPlayer mediaPlayer;
     private AudioBinder mAudioBinder;
     private int playMode;
+    private SpUtils mSp;
 
     /**
      * 三种播放模式
@@ -69,6 +70,7 @@ public class MusicPlayService
     private Disposable mDisposable;
     private AudioManager mAudioManager;
     private MediaSessionManager mSessionManager;
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -96,10 +98,11 @@ public class MusicPlayService
     private void init() {
         mAudioBinder = new AudioBinder();
         mBus = RxBus.getInstance();
+        mSp = new SpUtils(getApplication(), Constant.MUSIC_CONFIG);
         mMusicDao = MusicApplication.getInstance().getMusicDao();
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         //初始化播放模式
-        playMode = SpUtil.getMusicMode(this);
+        playMode = mSp.getInt(Constant.PLAY_MODE);
         mSessionManager = new MediaSessionManager(this, mAudioBinder);
     }
 
@@ -110,9 +113,9 @@ public class MusicPlayService
         int dataFlag = intent.getIntExtra("dataFlag", 0);
         String queryFlag = intent.getStringExtra("queryFlag");
         int sortFlag = sortListFlag == Constant.NUMBER_ZERO ? Constant.NUMBER_ONE : sortListFlag;
-        SpUtil.setDataQueryFlag(this, dataFlag);
+        mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_DATA_QUERY,dataFlag));
         if (queryFlag != null && !queryFlag.equals(Constant.FAVORITE_FLAG) && !queryFlag.equals(Constant.NO_NEED_FLAG)) {
-            SpUtil.setQueryFlag(MusicPlayService.this, queryFlag);
+            mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_QUERY_FLAG,queryFlag));
         }
         LogUtil.d(TAG, " position  ==" + enterPosition + "   sortListFlag  ==" + sortFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
         mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao, sortFlag, dataFlag, queryFlag);
@@ -174,7 +177,7 @@ public class MusicPlayService
                 if (!lyricIsExists && NetworkUtil.isNetworkConnected()) {
                     QqMusicRemote.getSongLyrics(songName, artist);
                 }
-                SpUtil.setMusicPosition(MusicPlayService.this, position);
+                mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_POSITION,position));
                 showNotifycation(true);
                 mSessionManager.updatePlaybackState(true);
                 mSessionManager.updateLocMsg();
@@ -272,8 +275,8 @@ public class MusicPlayService
         public void setPlayMode(int mode) {
             playMode = mode;
             //保存播放模式
+            mSp.putValues(new SpUtils.ContentValue(Constant.PLAY_MODE, playMode));
 
-            SpUtil.setMusicMode(MusicPlayService.this, playMode);
         }
 
         //手动播放上一曲
@@ -435,7 +438,8 @@ public class MusicPlayService
                 mAudioBinder.pause();
                 mAudioBinder.hintNotifycation();
                 mBus.post(Constant.PLAY_STATUS, Constant.NUMBER_TWO);
-                SpUtil.setFoucesFlag(MusicPlayService.this, false);
+
+                mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_FOCUS,false));
                 stopSelf();
             }
         }
@@ -502,7 +506,8 @@ public class MusicPlayService
     private void lossAudioFoucs(boolean isLossFocus) {
         if (isLossFocus) {
             mAudioBinder.pause();
-            SpUtil.setFoucesFlag(this, true);
+            mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_FOCUS,true));
+
         } else {
             mAudioBinder.start();
         }

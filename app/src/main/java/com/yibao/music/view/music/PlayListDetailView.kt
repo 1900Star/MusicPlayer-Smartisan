@@ -16,10 +16,7 @@ import com.yibao.music.base.listener.OnMusicItemClickListener
 import com.yibao.music.databinding.PlayListDetailBinding
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog
 import com.yibao.music.model.MusicBean
-import com.yibao.music.util.Constant
-import com.yibao.music.util.RandomUtil
-import com.yibao.music.util.SnakbarUtil
-import com.yibao.music.util.SpUtil
+import com.yibao.music.util.*
 import com.yibao.music.view.SwipeItemLayout.OnSwipeItemTouchListener
 
 /**
@@ -98,7 +95,8 @@ class PlayListDetailView : LinearLayout, View.OnClickListener {
 
     private fun startMusic(startPosition: Int) {
         if (context is OnMusicItemClickListener) {
-            SpUtil.setSortFlag(context, Constant.NUMBER_TEN)
+            val sp = SpUtils(context.applicationContext, Constant.MUSIC_CONFIG)
+            sp.putValues(SpUtils.ContentValue(Constant.MUSIC_DATA_FLAG, Constant.NUMBER_TEN))
             (context as OnMusicItemClickListener).startMusicServiceFlag(
                 startPosition,
                 Constant.NUMBER_TEN,

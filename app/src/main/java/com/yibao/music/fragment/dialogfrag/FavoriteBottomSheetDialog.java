@@ -2,15 +2,6 @@ package com.yibao.music.fragment.dialogfrag;
 
 import android.content.Context;
 import android.content.Intent;
-
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -18,6 +9,13 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.adapter.BottomSheetAdapter;
@@ -33,7 +31,7 @@ import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.MusicListUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SnakbarUtil;
-import com.yibao.music.util.SpUtil;
+import com.yibao.music.util.SpUtils;
 
 import java.util.List;
 import java.util.Random;
@@ -215,7 +213,9 @@ public class FavoriteBottomSheetDialog
         intent.putExtra("position", position);
         LogUtil.d(TAG, "===========      " + position);
         mContext.startService(intent);
-        SpUtil.setSortFlag(mContext, Constant.NUMBER_EIGHT);
+        SpUtils sp = new SpUtils(mContext.getApplicationContext(), Constant.MUSIC_CONFIG);
+        sp.putValues(new SpUtils.ContentValue(Constant.MUSIC_DATA_FLAG,Constant.NUMBER_EIGHT));
+
     }
 
 

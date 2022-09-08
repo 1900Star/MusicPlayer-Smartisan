@@ -38,7 +38,8 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
     private var lyricsFlag = 0
     private var mInputMethodManager: InputMethodManager? = null
     private var mAdapter: DetailsViewAdapter? = null
-    private var mPosition = 1
+    // 默认为2 ，按歌曲名搜索。
+    private var mPosition = 2
     override fun initView() {
         initRecyclerView(mBinding.recyclerSearch)
     }
@@ -83,6 +84,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
             mBinding.flowlayout.setItemClickListener { _, bean ->
                 mPosition = 2
                 mBinding.editSearch.setText(bean.searchContent)
+                mBinding.editSearch.setSelection(bean.searchContent.length)
             }
         }
         if (audioBinder != null) {

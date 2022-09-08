@@ -1,16 +1,16 @@
 package com.yibao.music.fragment.dialogfrag
 
-import com.yibao.music.base.bindings.BaseBindingDialog
-import android.view.Gravity
-import com.yibao.music.R
-import com.yibao.music.util.SharedPreferencesUtil.ContentValue
 import android.content.Intent
-import com.yibao.music.activity.SplashActivity
-import com.yibao.music.fragment.dialogfrag.ScannerConfigDialog
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import com.yibao.music.R
+import com.yibao.music.activity.SplashActivity
+import com.yibao.music.base.bindings.BaseBindingDialog
 import com.yibao.music.databinding.ScannerConfigDialogBinding
+import com.yibao.music.fragment.dialogfrag.ScannerConfigDialog
 import com.yibao.music.util.Constant
+import com.yibao.music.util.SpUtils
 
 /**
  * Author：Sid
@@ -61,8 +61,8 @@ class ScannerConfigDialog : BaseBindingDialog<ScannerConfigDialogBinding>(), Vie
             dismiss()
         } else if (id == R.id.tv_scanner_continue) {
             mSp.putValues(
-                ContentValue(Constant.MUSIC_FILE_SIZE_FLAG, mBinding.cbSize.isChecked),
-                ContentValue(Constant.MUSIC_DURATION_FLAG, mBinding.cbDuration.isChecked)
+                SpUtils.ContentValue(Constant.MUSIC_FILE_SIZE_FLAG, mBinding.cbSize.isChecked),
+                SpUtils.ContentValue(Constant.MUSIC_DURATION_FLAG, mBinding.cbDuration.isChecked)
             )
             if (auto) {
                 mBus.post(Constant.AUTO_LOAD)

@@ -20,8 +20,7 @@ import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constant;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.ServiceUtil;
-import com.yibao.music.util.SharedPreferencesUtil;
-import com.yibao.music.util.SpUtil;
+import com.yibao.music.util.SpUtils;
 import com.yibao.music.util.SystemUiVisibilityUtil;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -63,7 +62,9 @@ public class SplashActivity
     private void initView() {
         SystemUiVisibilityUtil.hideStatusBar(getWindow(), true);
         mScanner = getIntent().getStringExtra(Constant.SCANNER_MEDIA);
-        SplashPagerAdapter splashPagerAdapter = new SplashPagerAdapter(SpUtil.getPicUrlFlag(this, false));
+        boolean urlFlag = mSps.getBoolean(Constant.PIC_URL_FLAG,false);
+        SplashPagerAdapter splashPagerAdapter = new SplashPagerAdapter(urlFlag);
+
         mBinding.vpSplash.setAdapter(splashPagerAdapter);
     }
 
@@ -106,7 +107,7 @@ public class SplashActivity
                     startService(new Intent(this, LoadMusicDataService.class));
                 }
                 updateLoadProgress();
-                mSps.putValues(new SharedPreferencesUtil.ContentValue(Constant.MUSIC_LOAD, Constant.NUMBER_EIGHT));
+
             }
 
         } else {
@@ -144,7 +145,7 @@ public class SplashActivity
                             // 初次扫描完成后进入MusicActivity
                             if (mIsFirstScanner) {
                                 // 初次加载的标记
-                                SpUtil.setLoadMusicFlag(SplashActivity.this, Constant.NUMBER_EIGHT);
+                                mSps.putValues(new SpUtils.ContentValue(Constant.MUSIC_LOAD, Constant.NUMBER_EIGHT));
                             } else {
                                 // 手动扫描新增歌曲数量
                                 str = "新增 " + size + " 首歌曲";

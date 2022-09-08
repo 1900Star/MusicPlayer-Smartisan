@@ -21,7 +21,6 @@ import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constant;
-import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.ThreadPoolProxyFactory;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.MusicToolBar;
@@ -66,7 +65,7 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
         getMBinding().swipePlayList.setOnRefreshListener(this);
 
         getMBinding().musicBar.musicToolbarList.setToolbarTitle(getString(R.string.play_list));
-        getMBinding().musicBar.musicToolbarList.setVisibility(isFromPlayListActivity && SpUtil.getAddToPlayListFdlag(mContext) == Constant.NUMBER_ONE ? View.GONE : View.VISIBLE);
+        getMBinding().musicBar.musicToolbarList.setVisibility(isFromPlayListActivity && mSpHelper.getInt(Constant.ADD_TO_PLAY_LIST_FLAG) == Constant.NUMBER_ONE ? View.GONE : View.VISIBLE);
         mPlayListDao = MusicApplication.getInstance().getPlayListDao();
         mViewModel = new PlayListViewModel();
 
@@ -136,7 +135,7 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
 
             @Override
             public void switchMusicControlBar() {
-
+                switchControlBar();
             }
 
             @Override
@@ -226,7 +225,7 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
     @Override
     public void onPause() {
         super.onPause();
-        if (SpUtil.getAddToPlayListFdlag(mContext) == Constant.NUMBER_ZERO) {
+        if (mSpHelper.getInt(Constant.ADD_TO_PLAY_LIST_FLAG) == Constant.NUMBER_ZERO) {
             isFromPlayListActivity = false;
         }
         if (mAddDeleteListDisposable != null) {

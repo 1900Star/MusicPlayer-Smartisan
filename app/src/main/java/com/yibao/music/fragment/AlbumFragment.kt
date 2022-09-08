@@ -74,7 +74,10 @@ class AlbumFragment : BaseMusicFragmentDev<AlbumFragmentBinding>(), View.OnClick
                 }
             }
 
-            override fun switchMusicControlBar() {}
+            override fun switchMusicControlBar() {
+                switchControlBar()
+            }
+
             override fun clickDelete() {}
         })
     }
