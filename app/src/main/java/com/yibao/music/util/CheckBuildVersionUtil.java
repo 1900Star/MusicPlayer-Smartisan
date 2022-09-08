@@ -1,5 +1,6 @@
 package com.yibao.music.util;
 
+import android.app.PendingIntent;
 import android.os.Build;
 
 /**
@@ -19,5 +20,13 @@ public class CheckBuildVersionUtil {
     }
     public static boolean checkAndroidVersionR() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.R;
+    }
+
+    /**
+     *  通知标识 适配 android 31
+     * @return
+     */
+    public static int getNotifyFlag() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ? PendingIntent.FLAG_IMMUTABLE:PendingIntent.FLAG_ONE_SHOT;
     }
 }
