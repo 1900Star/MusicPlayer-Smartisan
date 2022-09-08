@@ -29,6 +29,7 @@
     <string name="music_album">Albums</string>
     <string name="album_tile">Grid</string>
     <string name="album_list">List</string>
+    <string name="storage_permissions">storage_permissions_not_allowed</string>
     <string name="random_play">Random</string>
     <string name="add_new_play_list">New Playlist</string>
     <string name="add_to_play_list">Add to Playlist</string>

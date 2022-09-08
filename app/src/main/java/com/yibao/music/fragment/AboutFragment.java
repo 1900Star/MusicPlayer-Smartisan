@@ -77,7 +77,7 @@ public class AboutFragment extends BaseBindingFragment<AboutFragmentBinding> {
         getMBinding().tvShare.setOnClickListener(v -> shareMe());
         mCompositeDisposable.add(RxView.clicks(getMBinding().aboutHeaderIv)
                 .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> TakePhotoBottomSheetDialog.newInstance().getBottomDialog(mActivity)));
+                .subscribe(o -> TakePhotoBottomSheetDialog.newInstance().getBottomDialog(getMActivity())));
         mCompositeDisposable.add(getMBus().toObservableType(Constant.HEADER_PIC_URI, Object.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

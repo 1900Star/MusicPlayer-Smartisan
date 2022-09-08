@@ -66,6 +66,7 @@
     <string name="app_info">ArtisanMusicPlayer 仿照锤子音乐播放器写的一个本地音乐播放器。 https://github.com/1900Star/SmartisanMusicPlayer </string>
     <string name="crash_log">CrashLog</string>
     <string name="take_photo">拍照</string>
+    <string name="storage_permissions">存储权限未允许</string>
     <string name="choice_photo">从相册中选择照片</string>
     <string name="camera_not_open">摄像头权限未开启</string>
     <string name="go_open">去开启</string>

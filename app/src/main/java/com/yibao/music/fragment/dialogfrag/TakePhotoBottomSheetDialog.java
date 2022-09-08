@@ -1,6 +1,5 @@
 package com.yibao.music.fragment.dialogfrag;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -11,6 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -29,7 +29,7 @@ import com.yibao.music.util.PermissionsUtil;
  * @author Stran
  */
 public class TakePhotoBottomSheetDialog {
-    private Activity mContext;
+    private FragmentActivity mContext;
     private View mTvCancel;
     private View mTvTakePhoto;
     private View mTvChoicePhoto;
@@ -38,7 +38,7 @@ public class TakePhotoBottomSheetDialog {
         return new TakePhotoBottomSheetDialog();
     }
 
-    public void getBottomDialog(Activity context) {
+    public void getBottomDialog(FragmentActivity context) {
         this.mContext = context;
         BottomSheetDialog dialog = new BottomSheetDialog(context);
         View view = LayoutInflater.from(context)
@@ -62,7 +62,7 @@ public class TakePhotoBottomSheetDialog {
                             TakePhotoBottomSheetDialog.this.takeCameraPic();
                             dialog.dismiss();
                         })
-                        .onDenied(permissions -> PermissionsDialog.newInstance().show(mContext.getFragmentManager(), "permissions"))
+                        .onDenied(permissions -> PermissionsDialog.newInstance(mContext.getString(R.string.camera_not_open)).show(mContext.getSupportFragmentManager(), "permissions"))
                         .start();
             }
 

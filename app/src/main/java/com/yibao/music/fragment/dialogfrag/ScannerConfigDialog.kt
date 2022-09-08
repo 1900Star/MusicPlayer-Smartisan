@@ -55,7 +55,7 @@ class ScannerConfigDialog : BaseBindingDialog<ScannerConfigDialogBinding>(), Vie
         val id = v.id
         if (id == R.id.tv_scanner_cancel) {
             if (auto) {
-                //  SplashActivity 接收 实时显示歌曲数量
+
                 mBus.post(Constant.AUTO_LOAD)
             }
             dismiss()

@@ -12,6 +12,7 @@ import com.yanzhenjie.permission.runtime.Permission;
 import com.yibao.music.adapter.SplashPagerAdapter;
 import com.yibao.music.base.BaseActivity;
 import com.yibao.music.databinding.ActivitySplashBinding;
+import com.yibao.music.fragment.dialogfrag.PermissionsDialog;
 import com.yibao.music.fragment.dialogfrag.ScannerConfigDialog;
 import com.yibao.music.model.MusicCountBean;
 import com.yibao.music.service.LoadMusicDataService;
@@ -19,6 +20,7 @@ import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constant;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.ServiceUtil;
+import com.yibao.music.util.SharedPreferencesUtil;
 import com.yibao.music.util.SpUtil;
 import com.yibao.music.util.SystemUiVisibilityUtil;
 
@@ -43,8 +45,19 @@ public class SplashActivity
         super.onCreate(savedInstanceState);
         mBinding = ActivitySplashBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
+        initPermission();
         initView();
 
+    }
+
+    @SuppressLint("WrongConstant")
+    private void initPermission() {
+        String[] permissionArr = {Permission.WRITE_EXTERNAL_STORAGE, Permission.READ_EXTERNAL_STORAGE};
+        AndPermission.with(this).runtime()
+                .permission(permissionArr)
+                .onGranted(permissions -> loadMusicData())
+                .onDenied(permissions -> againPermission())
+                .start();
     }
 
     private void initView() {
@@ -55,16 +68,10 @@ public class SplashActivity
     }
 
 
-    @SuppressLint("WrongConstant")
     @Override
     protected void onResume() {
         super.onResume();
-        String[] permissionArr = {Permission.WRITE_EXTERNAL_STORAGE, Permission.READ_EXTERNAL_STORAGE};
-        AndPermission.with(this).runtime()
-                .permission(permissionArr)
-                .onGranted(permissions -> loadMusicData())
-                .onDenied(permissions -> LogUtil.d(TAG, "没有读取和写入的权限!"))
-                .start();
+
         mCompositeDisposable.add(mBus.toObserverable(String.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -79,20 +86,27 @@ public class SplashActivity
 
     }
 
+    private void againPermission() {
+        LogUtil.d(TAG, "没有读取和写入的权限!");
+        PermissionsDialog.newInstance("请打开存储的读取和写入权限，否则无法加载音乐!").show(getSupportFragmentManager(), "permissions");
+
+    }
+
     private void loadMusicData() {
         if (mScanner == null) {
             mIsFirstScanner = true;
             // 是否是首次安装，本地数据库是否创建，等于 8 表示不是首次安装，数据库已经创建，直接进入MusicActivity。
-            if (SpUtil.getLoadMusicFlag(this) == Constant.NUMBER_EIGHT) {
+            if (mSps.getInt(Constant.MUSIC_LOAD) == Constant.NUMBER_EIGHT) {
                 countDownOperation(true);
             } else {
+                LogUtil.d(TAG, "首次安装，开启服务加载本地音乐，创建本地数据库。");
                 ScannerConfigDialog.newInstance(true).show(getSupportFragmentManager(), "auto_config");
-
 //                // 首次安装，开启服务加载本地音乐，创建本地数据库。
-//                if (!ServiceUtil.isServiceRunning(this, Constants.LOAD_SERVICE_NAME)) {
-//                    startService(new Intent(this, LoadMusicDataService.class));
-//                }
-//                updataLoadProgress();
+                if (!ServiceUtil.isServiceRunning(this, Constant.LOAD_SERVICE_NAME)) {
+                    startService(new Intent(this, LoadMusicDataService.class));
+                }
+                updateLoadProgress();
+                mSps.putValues(new SharedPreferencesUtil.ContentValue(Constant.MUSIC_LOAD, Constant.NUMBER_EIGHT));
             }
 
         } else {

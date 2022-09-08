@@ -95,6 +95,7 @@ public class Constant {
     public static final String MUSIC_SETTING = "artist_music_setting";
     public static final int MODE_KEY = 0;
     public static final String MUSIC_LOAD = "music_load";
+    public static final String PERMISSION_HINT = "permission_hint";
 
     public static final String MUSIC_LOAD_FLAG = "play_load_flag";
 
