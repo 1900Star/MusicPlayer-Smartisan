@@ -20,7 +20,7 @@ abstract class BaseMusicFragmentDev<T : ViewBinding> : BaseBindingFragment<T>() 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mAddToPlayListFlag = mSpHelper.getInt(Constant.ADD_TO_PLAY_LIST_FLAG)
+        mAddToPlayListFlag = mSp.getInt(Constant.ADD_TO_PLAY_LIST_FLAG)
     }
 
     protected fun switchControlBar() {

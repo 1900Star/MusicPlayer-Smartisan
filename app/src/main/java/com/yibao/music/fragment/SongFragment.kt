@@ -128,7 +128,7 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
         mBinding.songCategory.tvMusicCategoryAddtime.setTextColor(ColorUtil.textName)
         mBinding.songCategory.tvMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_selector)
 
-        mSpHelper.putValues(SpUtils.ContentValue(Constant.MUSIC_DATA_FLAG,playListFlag))
+        mSp.putValues(SpUtils.ContentValue(Constant.MUSIC_DATA_FLAG,playListFlag))
     }
 
     companion object {

@@ -84,7 +84,9 @@ public class MusicActivity
         List<MusicBean> initMusicList = QueryMusicFlagListUtil.getDataList(mSps.getInt(Constant.MUSIC_DATA_FLAG), mSps.getInt(Constant.MUSIC_DATA_QUERY), mSps.getString(Constant.MUSIC_QUERY_FLAG), mMusicDao);
         mCurrentPosition = mSps.getInt(Constant.MUSIC_POSITION);
         if (initMusicList != null && initMusicList.size() > 0) {
-            mCurrentMusicBean = initMusicList.get(mCurrentPosition >= initMusicList.size() ? 0 : mCurrentPosition);
+            int size = initMusicList.size();
+            int index = (mCurrentPosition > 0 && mCurrentPosition < size) ? mCurrentPosition : 0;
+            mCurrentMusicBean = initMusicList.get(index);
         } else {
             LogUtil.d(TAG, "==========================NoThing=555555555555555555");
         }
@@ -97,7 +99,7 @@ public class MusicActivity
     }
 
     private void initMusicConfig() {
-        mMusicConfig = mSps.getBoolean(Constant.MUSIC_INIT_FLAG,false);
+        mMusicConfig = mSps.getBoolean(Constant.MUSIC_INIT_FLAG, false);
         if (mMusicConfig) {
             mPlayState = mSps.getInt(Constant.MUSIC_PLAY_STATE);
             LogUtil.d(TAG, "======= mPlayState  " + mPlayState);
@@ -374,7 +376,7 @@ public class MusicActivity
     @Override
     protected void updateCurrentPlayInfo(MusicBean musicItem) {
         // 将MusicConfig设置为ture
-        mSps.putValues(new SpUtils.ContentValue(Constant.MUSIC_INIT_FLAG,true));
+        mSps.putValues(new SpUtils.ContentValue(Constant.MUSIC_INIT_FLAG, true));
         mMusicConfig = true;
         // 更新歌曲的信息
         MusicActivity.this.setMusicInfo(musicItem);
@@ -662,7 +664,7 @@ public class MusicActivity
         mBinding.smartisanControlBar.animatorStop();
         if (audioBinder != null) {
             mPlayState = audioBinder.isPlaying() ? Constant.NUMBER_TWO : Constant.NUMBER_ONE;
-            mSps.putValues(new SpUtils.ContentValue(Constant.MUSIC_PLAY_STATE,mPlayState));
+            mSps.putValues(new SpUtils.ContentValue(Constant.MUSIC_PLAY_STATE, mPlayState));
         }
 
     }

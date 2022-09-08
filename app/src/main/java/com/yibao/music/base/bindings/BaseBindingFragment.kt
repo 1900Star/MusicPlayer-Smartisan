@@ -34,7 +34,7 @@ import java.lang.reflect.ParameterizedType
  */
 abstract class BaseBindingFragment<T : ViewBinding> : Fragment(), OnHandleBackListener {
     val mTag = " ==== " + this::class.java.simpleName + "  "
-    protected lateinit var mSpHelper: SpUtils
+    protected lateinit var mSp: SpUtils
     private var isShowToUser = false
     private var _binding: T? = null
     protected val mBinding get() = _binding!!
@@ -48,6 +48,7 @@ abstract class BaseBindingFragment<T : ViewBinding> : Fragment(), OnHandleBackLi
         super.onAttach(context)
         mContext = requireActivity()
         mActivity = requireActivity() as AppCompatActivity
+        mSp = SpUtils(MusicApplication.getInstance(),Constant.MUSIC_CONFIG)
         mCompositeDisposable = CompositeDisposable()
         mMusicBeanDao = MusicApplication.getInstance().musicDao
         mAlbumDao = MusicApplication.getInstance().albumDao
@@ -85,7 +86,7 @@ abstract class BaseBindingFragment<T : ViewBinding> : Fragment(), OnHandleBackLi
             Boolean::class.java
         )
         _binding = method.invoke(null, layoutInflater, container, false) as T
-        mSpHelper = SpUtils(MusicApplication.getInstance(),Constant.MUSIC_CONFIG)
+        mSp = SpUtils(MusicApplication.getInstance(),Constant.MUSIC_CONFIG)
         initView()
         initData()
 

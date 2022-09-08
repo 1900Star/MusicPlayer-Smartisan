@@ -65,7 +65,7 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
         getMBinding().swipePlayList.setOnRefreshListener(this);
 
         getMBinding().musicBar.musicToolbarList.setToolbarTitle(getString(R.string.play_list));
-        getMBinding().musicBar.musicToolbarList.setVisibility(isFromPlayListActivity && mSpHelper.getInt(Constant.ADD_TO_PLAY_LIST_FLAG) == Constant.NUMBER_ONE ? View.GONE : View.VISIBLE);
+        getMBinding().musicBar.musicToolbarList.setVisibility(isFromPlayListActivity && mSp.getInt(Constant.ADD_TO_PLAY_LIST_FLAG) == Constant.NUMBER_ONE ? View.GONE : View.VISIBLE);
         mPlayListDao = MusicApplication.getInstance().getPlayListDao();
         mViewModel = new PlayListViewModel();
 
@@ -225,7 +225,7 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
     @Override
     public void onPause() {
         super.onPause();
-        if (mSpHelper.getInt(Constant.ADD_TO_PLAY_LIST_FLAG) == Constant.NUMBER_ZERO) {
+        if (mSp.getInt(Constant.ADD_TO_PLAY_LIST_FLAG) == Constant.NUMBER_ZERO) {
             isFromPlayListActivity = false;
         }
         if (mAddDeleteListDisposable != null) {
