@@ -22,7 +22,6 @@ import com.yibao.music.viewmodel.SearchViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -268,21 +267,21 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
             1 -> {
                 setAllCategoryNotNormal()
                 mBinding.searchCategoryRoot.tvSearchAll.setTextColor(ColorUtil.wihtle)
-                mBinding.searchCategoryRoot.tvSearchAll.setBackgroundResource(R.drawable.btn_category_songname_down_selector)
+                mBinding.searchCategoryRoot.tvSearchAll.setBackgroundResource(R.drawable.btn_category_end_down_selector)
             }
             2 -> {
                 setAllCategoryNotNormal()
                 mBinding.searchCategoryRoot.tvSearchSong.setTextColor(ColorUtil.wihtle)
-                mBinding.searchCategoryRoot.tvSearchSong.setBackgroundResource(R.drawable.btn_category_score_down_selector)
+                mBinding.searchCategoryRoot.tvSearchSong.setBackgroundResource(R.drawable.btn_category_start_down_selector)
             }
             3 -> {
                 setAllCategoryNotNormal()
                 mBinding.searchCategoryRoot.tvSearchAlbum.setTextColor(ColorUtil.wihtle)
-                mBinding.searchCategoryRoot.tvSearchAlbum.setBackgroundResource(R.drawable.btn_category_score_down_selector)
+                mBinding.searchCategoryRoot.tvSearchAlbum.setBackgroundResource(R.drawable.btn_category_middle_down_selector)
             }
             4 -> {
                 setAllCategoryNotNormal()
-                mBinding.searchCategoryRoot.tvSearchArtist.setBackgroundResource(R.drawable.btn_category_views_down_selector)
+                mBinding.searchCategoryRoot.tvSearchArtist.setBackgroundResource(R.drawable.btn_category_middle_down_selector)
                 mBinding.searchCategoryRoot.tvSearchArtist.setTextColor(ColorUtil.wihtle)
             }
             else -> {}
@@ -290,14 +289,14 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
     }
 
     private fun setAllCategoryNotNormal() {
-        mBinding.searchCategoryRoot.tvSearchAll.setTextColor(ColorUtil.textName)
-        mBinding.searchCategoryRoot.tvSearchAll.setBackgroundResource(R.drawable.btn_category_songname_selector)
         mBinding.searchCategoryRoot.tvSearchSong.setTextColor(ColorUtil.textName)
-        mBinding.searchCategoryRoot.tvSearchSong.setBackgroundResource(R.drawable.btn_category_score_selector)
+        mBinding.searchCategoryRoot.tvSearchSong.setBackgroundResource(R.drawable.btn_category_start_selector)
         mBinding.searchCategoryRoot.tvSearchAlbum.setTextColor(ColorUtil.textName)
-        mBinding.searchCategoryRoot.tvSearchAlbum.setBackgroundResource(R.drawable.btn_category_score_selector)
+        mBinding.searchCategoryRoot.tvSearchAlbum.setBackgroundResource(R.drawable.btn_category_middle_selector)
         mBinding.searchCategoryRoot.tvSearchArtist.setTextColor(ColorUtil.textName)
-        mBinding.searchCategoryRoot.tvSearchArtist.setBackgroundResource(R.drawable.btn_category_views_selector)
+        mBinding.searchCategoryRoot.tvSearchArtist.setBackgroundResource(R.drawable.btn_category_middle_selector)
+        mBinding.searchCategoryRoot.tvSearchAll.setTextColor(ColorUtil.textName)
+        mBinding.searchCategoryRoot.tvSearchAll.setBackgroundResource(R.drawable.btn_category_end_selector)
     }
 
     override fun refreshBtnAndNotify(playStatus: Int) {

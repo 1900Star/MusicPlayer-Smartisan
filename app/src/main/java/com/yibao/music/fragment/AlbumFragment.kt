@@ -154,17 +154,17 @@ class AlbumFragment : BaseMusicFragmentDev<AlbumFragmentBinding>(), View.OnClick
     private fun switchCategory(showType: Int) {
         mBinding.viewPager2Album.setCurrentItem(showType, false)
         if (showType == Constant.NUMBER_ZERO) {
-            mBinding.albumCategory.albumCategoryListLl.setBackgroundResource(R.drawable.btn_category_songname_down_selector)
+            mBinding.albumCategory.albumCategoryListLl.setBackgroundResource(R.drawable.btn_category_start_down_selector)
             mBinding.albumCategory.ivAlbumCategoryList.setImageResource(R.drawable.album_category_list_down_selector)
             mBinding.albumCategory.tvAlbumCategoryList.setTextColor(ColorUtil.wihtle)
-            mBinding.albumCategory.albumCategoryTileLl.setBackgroundResource(R.drawable.btn_category_views_selector)
+            mBinding.albumCategory.albumCategoryTileLl.setBackgroundResource(R.drawable.btn_category_end_selector)
             mBinding.albumCategory.ivAlbumCategoryTile.setImageResource(R.drawable.album_category_tile_selector)
             mBinding.albumCategory.tvAlbumCategoryTile.setTextColor(ColorUtil.textName)
         } else if (showType == Constant.NUMBER_ONE) {
-            mBinding.albumCategory.albumCategoryTileLl.setBackgroundResource(R.drawable.btn_category_views_down_selector)
+            mBinding.albumCategory.albumCategoryTileLl.setBackgroundResource(R.drawable.btn_category_end_down_selector)
             mBinding.albumCategory.ivAlbumCategoryTile.setImageResource(R.drawable.album_category_tile_down_selector)
             mBinding.albumCategory.tvAlbumCategoryTile.setTextColor(ColorUtil.wihtle)
-            mBinding.albumCategory.albumCategoryListLl.setBackgroundResource(R.drawable.btn_category_songname_selector)
+            mBinding.albumCategory.albumCategoryListLl.setBackgroundResource(R.drawable.btn_category_start_selector)
             mBinding.albumCategory.ivAlbumCategoryList.setImageResource(R.drawable.album_category_list_selector)
             mBinding.albumCategory.tvAlbumCategoryList.setTextColor(ColorUtil.textName)
         }

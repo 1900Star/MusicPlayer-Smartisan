@@ -97,22 +97,22 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
                 setAllCategoryNotNormal(Constant.NUMBER_ONE)
 
                 mBinding.songCategory.tvMusicCategorySongname.setTextColor(ColorUtil.wihtle)
-                mBinding.songCategory.tvMusicCategorySongname.setBackgroundResource(R.drawable.btn_category_songname_down_selector)
+                mBinding.songCategory.tvMusicCategorySongname.setBackgroundResource(R.drawable.btn_category_start_down_selector)
             }
             1 -> {
 
                 setAllCategoryNotNormal(Constant.NUMBER_TWO)
                 mBinding.songCategory.tvMusicCategoryScore.setTextColor(ColorUtil.wihtle)
-                mBinding.songCategory.tvMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_down_selector)
+                mBinding.songCategory.tvMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_middle_down_selector)
             }
             2 -> {
                 setAllCategoryNotNormal(Constant.NUMBER_THREE)
                 mBinding.songCategory.tvMusicCategoryFrequency.setTextColor(ColorUtil.wihtle)
-                mBinding.songCategory.tvMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_down_selector)
+                mBinding.songCategory.tvMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_middle_down_selector)
             }
             3 -> {
                 setAllCategoryNotNormal(Constant.NUMBER_FOUR)
-                mBinding.songCategory.tvMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_down_selector)
+                mBinding.songCategory.tvMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_end_down_selector)
                 mBinding.songCategory.tvMusicCategoryAddtime.setTextColor(ColorUtil.wihtle)
             }
 
@@ -122,13 +122,13 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
     private fun setAllCategoryNotNormal(pageType: Int) {
         mPageType = pageType
         mBinding.songCategory.tvMusicCategorySongname.setTextColor(ColorUtil.textName)
-        mBinding.songCategory.tvMusicCategorySongname.setBackgroundResource(R.drawable.btn_category_songname_selector)
+        mBinding.songCategory.tvMusicCategorySongname.setBackgroundResource(R.drawable.btn_category_start_selector)
         mBinding.songCategory.tvMusicCategoryScore.setTextColor(ColorUtil.textName)
-        mBinding.songCategory.tvMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_selector)
+        mBinding.songCategory.tvMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_middle_selector)
         mBinding.songCategory.tvMusicCategoryFrequency.setTextColor(ColorUtil.textName)
-        mBinding.songCategory.tvMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_score_selector)
+        mBinding.songCategory.tvMusicCategoryFrequency.setBackgroundResource(R.drawable.btn_category_middle_selector)
         mBinding.songCategory.tvMusicCategoryAddtime.setTextColor(ColorUtil.textName)
-        mBinding.songCategory.tvMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_selector)
+        mBinding.songCategory.tvMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_end_selector)
 
 
     }

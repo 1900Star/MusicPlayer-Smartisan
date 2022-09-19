@@ -25,7 +25,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/btn_category_songname_down_selector"
+            android:background="@drawable/btn_category_start_down_selector"
             android:gravity="center"
             android:text="@string/song_name"
             android:textColor="@color/colorWhite"
@@ -38,7 +38,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/btn_category_score_selector"
+            android:background="@drawable/btn_category_middle_selector"
             android:gravity="center"
             android:text="@string/music_score"
             android:textColor="@color/textDes" />
@@ -49,7 +49,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/btn_category_score_selector"
+            android:background="@drawable/btn_category_middle_selector"
             android:gravity="center"
             android:text="@string/music_play_frequency"
             android:textColor="@color/textDes" />
@@ -60,7 +60,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/btn_category_views_selector"
+            android:background="@drawable/btn_category_end_selector"
             android:gravity="center"
             android:text="@string/music_add_time"
             android:textColor="@color/textDes" />
