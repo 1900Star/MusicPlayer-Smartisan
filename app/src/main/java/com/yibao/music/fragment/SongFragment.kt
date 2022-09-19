@@ -7,7 +7,6 @@ import com.yibao.music.base.bindings.BaseMusicFragmentDev
 import com.yibao.music.databinding.SongFragmentBinding
 import com.yibao.music.util.ColorUtil
 import com.yibao.music.util.Constant
-import com.yibao.music.util.SpUtils
 import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
 
 /**
@@ -23,7 +22,7 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
 
 
     private var isSelectStatus = false
-
+    private var mPageType = 1
     override fun initView() {
         mBinding.musicBar.musicToolbarList.setTvEditVisibility(true)
         initData()
@@ -74,13 +73,14 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
         mBinding.songCategory.tvMusicCategoryScore.setOnClickListener(this)
         mBinding.songCategory.tvMusicCategoryFrequency.setOnClickListener(this)
         mBinding.songCategory.tvMusicCategoryAddtime.setOnClickListener(this)
+        mBinding.songCategory.ivRandomPlay.setOnClickListener(this)
 
 
     }
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.iv_music_category_paly -> randomPlayMusic()
+            R.id.iv_random_play -> randomPlayMusic(mPageType)
             R.id.tv_music_category_songname -> switchListCategory(0)
             R.id.tv_music_category_score -> switchListCategory(1)
             R.id.tv_music_category_frequency -> switchListCategory(2)
@@ -89,10 +89,10 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
         }
     }
 
-    private fun switchListCategory(flag: Int) {
+    private fun switchListCategory(pageType: Int) {
 
-        mBinding.viewPager2Song.setCurrentItem(flag, false)
-        when (flag) {
+        mBinding.viewPager2Song.setCurrentItem(pageType, false)
+        when (pageType) {
             0 -> {
                 setAllCategoryNotNormal(Constant.NUMBER_ONE)
 
@@ -100,6 +100,7 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
                 mBinding.songCategory.tvMusicCategorySongname.setBackgroundResource(R.drawable.btn_category_songname_down_selector)
             }
             1 -> {
+
                 setAllCategoryNotNormal(Constant.NUMBER_TWO)
                 mBinding.songCategory.tvMusicCategoryScore.setTextColor(ColorUtil.wihtle)
                 mBinding.songCategory.tvMusicCategoryScore.setBackgroundResource(R.drawable.btn_category_score_down_selector)
@@ -118,7 +119,8 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
         }
     }
 
-    private fun setAllCategoryNotNormal(playListFlag: Int) {
+    private fun setAllCategoryNotNormal(pageType: Int) {
+        mPageType = pageType
         mBinding.songCategory.tvMusicCategorySongname.setTextColor(ColorUtil.textName)
         mBinding.songCategory.tvMusicCategorySongname.setBackgroundResource(R.drawable.btn_category_songname_selector)
         mBinding.songCategory.tvMusicCategoryScore.setTextColor(ColorUtil.textName)
@@ -128,7 +130,7 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
         mBinding.songCategory.tvMusicCategoryAddtime.setTextColor(ColorUtil.textName)
         mBinding.songCategory.tvMusicCategoryAddtime.setBackgroundResource(R.drawable.btn_category_views_selector)
 
-        mSp.putValues(SpUtils.ContentValue(Constant.MUSIC_DATA_FLAG,playListFlag))
+
     }
 
     companion object {

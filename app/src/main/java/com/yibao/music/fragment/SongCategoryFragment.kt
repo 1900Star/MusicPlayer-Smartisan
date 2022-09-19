@@ -10,7 +10,6 @@ import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog
 import com.yibao.music.model.MusicBean
 import com.yibao.music.util.Constant
 import com.yibao.music.util.LogUtil
-import com.yibao.music.util.MusicListUtil
 import com.yibao.music.viewmodel.SongViewModel
 import io.reactivex.disposables.Disposable
 
@@ -56,14 +55,14 @@ class SongCategoryFragment : BaseMusicFragmentDev<CategoryFragmentBinding>() {
         when (position) {
             0 -> {
                 val adapter = SongAdapter(
-                    mActivity, musicList, mStateArray, true, 0
+                    mActivity, musicList, mStateArray, true, 0,1
                 )
                 setData(adapter)
             }
             1 -> {
 
                 val adapter = SongAdapter(
-                    mActivity, musicList, mStateArray, false, 1
+                    mActivity, musicList, mStateArray, false, 1,2
                 )
 
 
@@ -71,14 +70,14 @@ class SongCategoryFragment : BaseMusicFragmentDev<CategoryFragmentBinding>() {
             }
             2 -> {
                 val adapter = SongAdapter(
-                    mActivity, musicList, mStateArray, false, 2
+                    mActivity, musicList, mStateArray, false, 2,3
                 )
 
                 setData(adapter)
             }
             3 -> {
                 val adapter = SongAdapter(
-                    mActivity, musicList, mStateArray, false, 0
+                    mActivity, musicList, mStateArray, false, 0,4
                 )
 
                 setData(adapter)
@@ -90,7 +89,6 @@ class SongCategoryFragment : BaseMusicFragmentDev<CategoryFragmentBinding>() {
 
 
     private fun setData(adapter: SongAdapter) {
-
         mBinding.musicView.setAdapter(requireActivity(), Constant.NUMBER_ONE, true, adapter)
         adapter.setOnItemMenuListener(object : BaseBindingAdapter.OnOpenItemMoreMenuListener {
             override fun openClickMoreMenu(position: Int, musicBean: MusicBean) {
@@ -142,11 +140,6 @@ class SongCategoryFragment : BaseMusicFragmentDev<CategoryFragmentBinding>() {
     }
 
 
-    private val songList: List<MusicBean>
-        get() {
-            val musicBeans = mMusicBeanDao.queryBuilder().list()
-            return MusicListUtil.sortMusicAbc(musicBeans)
-        }
 
 
     override fun onPause() {

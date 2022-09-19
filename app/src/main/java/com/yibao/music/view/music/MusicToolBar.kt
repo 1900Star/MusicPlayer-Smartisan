@@ -86,7 +86,7 @@ class MusicToolBar : LinearLayout, View.OnClickListener {
                 }
                 R.id.iv_search -> {
                     val intent = Intent(context, SearchActivity::class.java)
-                    intent.putExtra(Constant.PAGE_TYPE, Constant.NUMBER_ZERO)
+//                    intent.putExtra(Constant.PAGE_TYPE, Constant.NUMBER_ZERO)
                     context.startActivity(intent)
                     (context as Activity).overridePendingTransition(R.anim.dialog_push_in, 0)
                 }

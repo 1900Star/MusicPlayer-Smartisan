@@ -39,22 +39,25 @@ public class SongAdapter
     private Activity mContext;
     private final boolean mIsShowStickyView;
     private final int mScroeAndFrequnecyFlag;
+    private final int mPageType;
     private final SparseBooleanArray mSparseBooleanArray;
 
     /**
      * @param context               c
-     * @param list                  l
+     * @param list                  lx
      * @param sparseBooleanArray    s
      * @param isShowStickyView      控制列表的StickyView是否显示，0 显示 ，1 ：不显示
      *                              parm isArtistList     用来控制音乐列表和艺术家列表的显示
      * @param scoreAndFrequencyFlag 显示评分和播放次数 0 都不显示 ，1显示评分 ，2 显示播放次数
+     * @param pageType  1 ABC 、2 评分 、3 播放次数 、 4 添加时间
      */
-    public SongAdapter(Activity context, List<MusicBean> list, SparseBooleanArray sparseBooleanArray, boolean isShowStickyView, int scoreAndFrequencyFlag) {
+    public SongAdapter(Activity context, List<MusicBean> list, SparseBooleanArray sparseBooleanArray, boolean isShowStickyView, int scoreAndFrequencyFlag,int pageType) {
         super(list);
         this.mContext = context;
         this.mIsShowStickyView = isShowStickyView;
         this.mScroeAndFrequnecyFlag = scoreAndFrequencyFlag;
         this.mSparseBooleanArray = sparseBooleanArray;
+        this.mPageType = pageType;
     }
 
 
@@ -106,7 +109,7 @@ public class SongAdapter
                     openDetails(musicBean, position);
                 } else {
                     if (mContext instanceof OnMusicItemClickListener) {
-                        ((OnMusicItemClickListener) mContext).startMusicService(position);
+                        ((OnMusicItemClickListener) mContext).startMusicService(position,mPageType);
                     }
                 }
             });

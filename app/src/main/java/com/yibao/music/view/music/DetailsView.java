@@ -63,9 +63,9 @@ public class DetailsView
     private ImageView mIvDetailsAddToPlayList;
     private LinearLayout mLlAlbumDetailsPlayaLl;
     private LinearLayout mLlAlbumDetailsRandomPlay;
-    private int mDataFlag;
+    private int mPageType;
     private int mListSize;
-    private String mQueryFlag;
+    private String mCondition;
     private FragmentManager mFragmentManager;
     private Long mAlbumId;
     private List<MusicBean> mMusicList;
@@ -74,10 +74,17 @@ public class DetailsView
     private String mArtist;
     private int mPicType;
 
-    public void setDataFlag(FragmentManager fragmentManager, int listSize, String queryFlag, int dataFlag) {
+    /**
+     *
+     * @param fragmentManager f
+     * @param listSize 列表长度 随机播放的取数范围
+     * @param condition 关键字  歌手名 、 专辑名
+     * @param pageType 页面标识
+     */
+    public void setDataFlag(FragmentManager fragmentManager, int listSize, String condition, int pageType) {
         this.mFragmentManager = fragmentManager;
-        this.mDataFlag = dataFlag;
-        this.mQueryFlag = queryFlag;
+        this.mPageType = pageType;
+        this.mCondition = condition;
         this.mListSize = listSize;
     }
 
@@ -139,7 +146,7 @@ public class DetailsView
         } else if (id == R.id.ll_album_details_playall) {
             startMusic(Constant.NUMBER_ZERO);
         } else if (id == R.id.ll_album_details_random_play) {
-            startMusic(RandomUtil.getRandomPostion(mListSize));
+            startMusic(RandomUtil.getRandomPosition(mListSize));
         }
     }
 
@@ -163,7 +170,7 @@ public class DetailsView
             SpUtils sp = new SpUtils(getContext().getApplicationContext(), Constant.MUSIC_CONFIG);
             sp.putValues(new SpUtils.ContentValue(Constant.MUSIC_DATA_FLAG,Constant.NUMBER_TEN));
 
-            ((OnMusicItemClickListener) getContext()).startMusicServiceFlag(startPosition, Constant.NUMBER_TEN, mDataFlag, mQueryFlag);
+            ((OnMusicItemClickListener) getContext()).startMusicServiceFlag(startPosition, mPageType, mCondition);
         }
     }
 

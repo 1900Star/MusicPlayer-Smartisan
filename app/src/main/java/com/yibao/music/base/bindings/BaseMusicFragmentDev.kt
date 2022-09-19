@@ -5,6 +5,7 @@ import androidx.viewbinding.ViewBinding
 import com.yibao.music.base.listener.OnMusicItemClickListener
 import com.yibao.music.base.listener.OnUpdateTitleListener
 import com.yibao.music.util.Constant
+import com.yibao.music.util.LogUtil
 import com.yibao.music.util.RandomUtil
 
 /**
@@ -32,11 +33,12 @@ abstract class BaseMusicFragmentDev<T : ViewBinding> : BaseBindingFragment<T>() 
     protected open fun deleteItem(musicPosition: Int) {}
 
 
-    protected fun randomPlayMusic() {
+    protected fun randomPlayMusic(pageType:Int) {
         val randomSize = mMusicBeanDao.queryBuilder().list().size
-        val position = RandomUtil.getRandomPostion(randomSize.coerceAtLeast(0))
+        LogUtil.d(mTag, "随机播放   $pageType")
+        val position = RandomUtil.getRandomPosition(randomSize)
         if (activity is OnMusicItemClickListener) {
-            (activity as OnMusicItemClickListener?)!!.startMusicService(position)
+            (activity as OnMusicItemClickListener?)!!.startMusicService(position, pageType)
         }
     }
 

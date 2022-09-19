@@ -162,7 +162,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void startSearchActivity(MusicBean currentMusicBean) {
         Intent intent = new Intent(this, SearchActivity.class);
-        intent.putExtra(Constant.PAGE_TYPE, Constant.NUMBER_ONE);
+        intent.putExtra(Constant.PAGE_TYPE, Constant.NUMBER_TEN);
         intent.putExtra(Constant.MUSIC_BEAN, currentMusicBean);
         startActivity(intent);
         overridePendingTransition(R.anim.dialog_push_in, 0);

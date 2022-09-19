@@ -91,6 +91,7 @@ public class QqMusicRemote {
                 .subscribe(new BaseObserver<Album>() {
                     @Override
                     public void onNext(Album album) {
+
                         String albumMid = album.getData().getAlbum().getList().get(0).getAlbumMID();
                         String picUrl = albumUrlHead + albumMid + ".jpg";
                         LogUtil.d(TAG, "请求到的图片地址 " + picUrl);
@@ -101,7 +102,7 @@ public class QqMusicRemote {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        LogUtil.d(TAG, e.getMessage());
+                        LogUtil.d(TAG,"专辑图片获取失败"+ e.getMessage());
                     }
                 });
     }

@@ -34,21 +34,18 @@ import java.util.List;
  */
 
 public class DetailsViewAdapter extends BaseBindingAdapter<MusicBean> {
-    private Context mContext;
-    /**
-     * 用来区分搜索的标识：1 Artist 、 2 Album 、  3 SongName(目前只按歌名搜索) 、   4 PlayList (播放列表)
-     */
-    private int mDataFlag;
+    private final Context mContext;
 
-    public DetailsViewAdapter(Context context, List<MusicBean> list, int dataFlag) {
+    private final int mPageType;
+    private final String mCondition;
+
+    public DetailsViewAdapter(Context context, List<MusicBean> list, int pageType, String condition) {
         super(list);
         this.mContext = context;
-        this.mDataFlag = dataFlag;
+        this.mPageType = pageType;
+        this.mCondition = condition;
     }
 
-    public void setDataFlag(int flag) {
-        this.mDataFlag = flag;
-    }
 
     @Override
     protected String getLastItemDes() {
@@ -64,7 +61,7 @@ public class DetailsViewAdapter extends BaseBindingAdapter<MusicBean> {
 //            LogUtil.d(getMTAG(), " artist info     " + info.getTitle() + " == " + info.getDuration());
             int duration = (int) info.getDuration();
             detailsHolder.mBinding.tvSongDuration.setText(StringUtil.parseDuration(duration));
-            if (mDataFlag == Constant.NUMBER_FOUR) {
+            if (mPageType == Constant.NUMBER_FOUR) {
                 // 播放列表的详情列表有侧滑删除
                 detailsHolder.mBinding.deleteItemDetail.setOnClickListener(v -> {
                     LogUtil.d(getMTAG(), "播放列表的详情列表有侧滑删除");
@@ -78,15 +75,13 @@ public class DetailsViewAdapter extends BaseBindingAdapter<MusicBean> {
             detailsHolder.mBinding.detailItemView.setOnClickListener(view -> {
                 if (mContext instanceof OnMusicItemClickListener) {
 
+                    getMSp().putValues(new SpUtils.ContentValue(Constant.MUSIC_DATA_FLAG, Constant.NUMBER_TEN));
 
-                    getMSp().putValues(new SpUtils.ContentValue(Constant.MUSIC_DATA_FLAG,Constant.NUMBER_TEN));
-                    LogUtil.d(getMTAG(), info.toString());
                     // 保存搜索记录
-                    if (mDataFlag == Constant.NUMBER_THREE) {
+                    if (mPageType == Constant.NUMBER_TEN) {
                         insertSearchBean(info.getTitle());
                     }
-                    LogUtil.d(getMTAG(), info.toString());
-                    ((OnMusicItemClickListener) mContext).startMusicServiceFlag(adapterPosition, Constant.NUMBER_TEN, mDataFlag, getQueryFlag(info));
+                    ((OnMusicItemClickListener) mContext).startMusicServiceFlag(adapterPosition, mPageType, mCondition);
                 }
 
             });
@@ -115,20 +110,6 @@ public class DetailsViewAdapter extends BaseBindingAdapter<MusicBean> {
         }
     }
 
-    @Nullable
-    private String getQueryFlag(MusicBean info) {
-        String queryFlag = null;
-        if (mDataFlag == Constant.NUMBER_ONE) {
-            queryFlag = info.getArtist();
-        } else if (mDataFlag == Constant.NUMBER_TWO) {
-            queryFlag = info.getAlbum();
-        } else if (mDataFlag == Constant.NUMBER_THREE) {
-            queryFlag = info.getTitle();
-        } else if (mDataFlag == Constant.NUMBER_FOUR) {
-            queryFlag = info.getPlayListFlag();
-        }
-        return queryFlag;
-    }
 
     @NonNull
     @Override

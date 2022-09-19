@@ -11,7 +11,7 @@ import java.util.Random;
  * @author Stran
  */
 public class RandomUtil {
-    public static int getRandomPostion(int listSize) {
+    public static int getRandomPosition(int listSize) {
         Random random = new Random();
         return Math.abs(random.nextInt(listSize));
     }

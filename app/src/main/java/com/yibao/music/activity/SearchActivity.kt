@@ -1,6 +1,5 @@
 package com.yibao.music.activity
 
-import android.content.Context
 import android.content.Intent
 import android.text.Editable
 import android.view.View
@@ -25,7 +24,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.concurrent.timerTask
 
 /**
  * @author lsp
@@ -38,6 +36,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
     private var lyricsFlag = 0
     private var mInputMethodManager: InputMethodManager? = null
     private var mAdapter: DetailsViewAdapter? = null
+
     // 默认为2 ，按歌曲名搜索。
     private var mPosition = 2
     override fun initView() {
@@ -98,8 +97,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
         }
 
         mCompositeDisposable.add(RxView.clicks(mBinding.smartisanControlBar)
-            .throttleFirst(1, TimeUnit.SECONDS)
-            .subscribe { startPlayActivity() })
+            .throttleFirst(1, TimeUnit.SECONDS).subscribe { startPlayActivity() })
 
 
     }
@@ -113,22 +111,17 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
             mBinding.tvNoSearchResult.visibility = View.GONE
             mBinding.recyclerSearch.visibility = View.VISIBLE
             // 列表数据
-            mAdapter = DetailsViewAdapter(this, musicList, Constant.NUMBER_THREE)
+            mAdapter = DetailsViewAdapter(this, musicList, Constant.NUMBER_TEN, "")
             mBinding.recyclerSearch.adapter = mAdapter
             mAdapter!!.setOnItemMenuListener(object :
                 BaseBindingAdapter.OnOpenItemMoreMenuListener {
                 override fun openClickMoreMenu(position: Int, musicBean: MusicBean) {
                     // 关闭键盘
                     SoftKeybordUtil.showAndHintSoftInput(
-                        mInputMethodManager,
-                        1,
-                        InputMethodManager.SHOW_FORCED
+                        mInputMethodManager, 1, InputMethodManager.SHOW_FORCED
                     )
                     MoreMenuBottomDialog.newInstance(
-                        musicBean,
-                        position,
-                        false,
-                        false
+                        musicBean, position, false, false
                     ).getBottomDialog(this@SearchActivity)
 
                 }
@@ -193,9 +186,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
             }
             R.id.tv_search_cancel -> {
                 SoftKeybordUtil.showAndHintSoftInput(
-                    mInputMethodManager,
-                    1,
-                    InputMethodManager.RESULT_UNCHANGED_SHOWN
+                    mInputMethodManager, 1, InputMethodManager.RESULT_UNCHANGED_SHOWN
                 )
                 finish()
             }
@@ -207,12 +198,9 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
      * @param position 搜索类别： 1全部 、 2歌曲 、 3专辑 、 4 艺术家
      */
     private fun searchMusic(searchKey: String, position: Int) {
-        mBinding.ivEditClear.visibility =
-            if (searchKey.isEmpty()) View.GONE else View.VISIBLE
-        mBinding.tvNoSearchResult.visibility =
-            if (searchKey.isEmpty()) View.GONE else View.VISIBLE
-        mBinding.flowlayout.visibility =
-            if (searchKey.isEmpty()) View.VISIBLE else View.GONE
+        mBinding.ivEditClear.visibility = if (searchKey.isEmpty()) View.GONE else View.VISIBLE
+        mBinding.tvNoSearchResult.visibility = if (searchKey.isEmpty()) View.GONE else View.VISIBLE
+        mBinding.flowlayout.visibility = if (searchKey.isEmpty()) View.VISIBLE else View.GONE
 
         mBinding.searchCategoryRoot.root.visibility =
             if (searchKey.isEmpty()) View.GONE else View.VISIBLE
@@ -340,20 +328,17 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
 
 
     override fun startMusicServiceFlag(
-        position: Int,
-        sortFlag: Int,
-        dataFlag: Int,
-        queryFlag: String
+        position: Int, pageType: Int, conditon: String
     ) {
+        val condition = mBinding.editSearch.text.toString().trim()
         val intent = Intent(this, MusicPlayService::class.java)
-        intent.putExtra("sortFlag", sortFlag)
-        intent.putExtra("dataFlag", dataFlag)
-        intent.putExtra("queryFlag", queryFlag)
-        intent.putExtra("position", position)
+        intent.putExtra(Constant.PAGE_TYPE, Constant.NUMBER_TEN)
+        intent.putExtra(Constant.CONDITION, condition)
+        intent.putExtra(Constant.POSITION, position)
         startService(intent)
     }
 
-    override fun startMusicService(position: Int) {}
+    override fun startMusicService(position: Int, mPageType: Int) {}
     override fun onOpenMusicPlayDialogFag() {}
     override fun onPause() {
         super.onPause()
@@ -371,22 +356,21 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
         val lyricList = LyricsUtil.getLyricList(mMusicBean)
         disposableQqLyric()
         if (mQqLyricsDisposable == null) {
-            mQqLyricsDisposable = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    if (lyricList.size > 1 && lyricsFlag < lyricList.size) {
-                        //通过集合，播放过的歌词就从集合中删除
-                        val lyrBean = lyricList[lyricsFlag]
-                        val content = lyrBean.content
-                        val progress = audioBinder!!.progress
-                        val startTime = lyrBean.startTime
-                        if (progress > startTime) {
-                            mBinding.smartisanControlBar.setSingerName(content)
-                            lyricsFlag++
+            mQqLyricsDisposable =
+                Observable.interval(0, 2800, TimeUnit.MICROSECONDS).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe {
+                        if (lyricList.size > 1 && lyricsFlag < lyricList.size) {
+                            //通过集合，播放过的歌词就从集合中删除
+                            val lyrBean = lyricList[lyricsFlag]
+                            val content = lyrBean.content
+                            val progress = audioBinder!!.progress
+                            val startTime = lyrBean.startTime
+                            if (progress > startTime) {
+                                mBinding.smartisanControlBar.setSingerName(content)
+                                lyricsFlag++
+                            }
                         }
                     }
-                }
         }
     }
 

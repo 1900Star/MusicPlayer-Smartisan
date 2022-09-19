@@ -15,6 +15,7 @@ import com.yibao.music.model.MusicBean
 import com.yibao.music.model.greendao.MusicBeanDao
 import com.yibao.music.util.ColorUtil
 import com.yibao.music.util.Constant
+import com.yibao.music.util.MusicListUtil
 import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
 import com.yibao.music.viewmodel.AlbumViewModel
 
@@ -41,6 +42,7 @@ class AlbumFragment : BaseMusicFragmentDev<AlbumFragmentBinding>(), View.OnClick
     override fun initData() {
         val pagerAdapter = AlbumViewPagerAdapter(this, mViewModel)
         mBinding.viewPager2Album.adapter = pagerAdapter
+        mBinding.viewPager2Album.isUserInputEnabled = false
         mBinding.viewPager2Album.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 switchCategory(position)
@@ -85,7 +87,7 @@ class AlbumFragment : BaseMusicFragmentDev<AlbumFragmentBinding>(), View.OnClick
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.iv_album_category_random_play, R.id.iv_album_category_play -> randomPlayMusic()
+            R.id.iv_album_category_random_play, R.id.iv_album_category_play -> randomPlayMusic(6)
             R.id.album_category_list_ll -> switchCategory(Constant.NUMBER_ZERO)
             R.id.album_category_tile_ll -> switchCategory(Constant.NUMBER_ONE)
             else -> {}
@@ -104,9 +106,11 @@ class AlbumFragment : BaseMusicFragmentDev<AlbumFragmentBinding>(), View.OnClick
                 mBinding.musicBar.musicToolbarList.setToolbarTitle(albumInfo.albumName)
                 mBinding.musicBar.musicToolbarList.setTvEditText(R.string.music_album)
 
-                mDetailList = mMusicBeanDao.queryBuilder()
-                    .where(MusicBeanDao.Properties.Album.eq(albumInfo.albumName)).build()
-                    .list() as ArrayList<MusicBean>
+                mDetailList = MusicListUtil.sortMusicAbc(
+                    mMusicBeanDao.queryBuilder()
+                        .where(MusicBeanDao.Properties.Album.eq(albumInfo.albumName)).build()
+                        .list()
+                ) as ArrayList<MusicBean>
                 // DetailsView播放音乐需要的参数
                 mBinding.detailsView.setDataFlag(
                     childFragmentManager,
@@ -114,7 +118,12 @@ class AlbumFragment : BaseMusicFragmentDev<AlbumFragmentBinding>(), View.OnClick
                     albumInfo.albumName,
                     Constant.NUMBER_TWO
                 )
-                mDetailsAdapter = DetailsViewAdapter(mContext, mDetailList, Constant.NUMBER_TWO)
+                mDetailsAdapter = DetailsViewAdapter(
+                    mContext,
+                    mDetailList,
+                    Constant.NUMBER_SEVEN,
+                    albumInfo.albumName
+                )
                 mBinding.detailsView.setAdapter(Constant.NUMBER_TWO, albumInfo, mDetailsAdapter)
                 mDetailsAdapter!!.setOnItemMenuListener(object :
                     BaseBindingAdapter.OnOpenItemMoreMenuListener {

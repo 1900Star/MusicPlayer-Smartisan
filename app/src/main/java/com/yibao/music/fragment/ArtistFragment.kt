@@ -74,9 +74,10 @@ class ArtistFragment : BaseMusicFragmentDev<ArtisanListFragmentBinding>() {
             mDetailList.clear()
         } else {
             if (artistInfo != null) {
-                mDetailList = mMusicBeanDao.queryBuilder()
-                    .where(MusicBeanDao.Properties.Artist.eq(artistInfo.artist)).build()
-                    .list() as ArrayList<MusicBean>
+                mDetailList = MusicListUtil.sortMusicAbc(
+                    mMusicBeanDao.queryBuilder()
+                        .where(MusicBeanDao.Properties.Artist.eq(artistInfo.artist)).build().list()
+                ) as ArrayList<MusicBean>
                 // DetailsView播放音乐需要的参数
                 mBinding.detailsView.setDataFlag(
                     childFragmentManager,
@@ -85,7 +86,12 @@ class ArtistFragment : BaseMusicFragmentDev<ArtisanListFragmentBinding>() {
                     Constant.NUMBER_ONE
                 )
                 mDetailsAdapter =
-                    DetailsViewAdapter(requireActivity(), mDetailList, Constant.NUMBER_ONE)
+                    DetailsViewAdapter(
+                        requireActivity(),
+                        mDetailList,
+                        Constant.NUMBER_SIX,
+                        artistInfo.artist
+                    )
                 mBinding.detailsView.setAdapter(Constant.NUMBER_ONE, artistInfo, mDetailsAdapter)
                 mDetailsAdapter!!.setOnItemMenuListener(object :
                     BaseBindingAdapter.OnOpenItemMoreMenuListener {

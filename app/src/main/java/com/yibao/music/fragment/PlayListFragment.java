@@ -155,7 +155,7 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
         if (!isShowDetailsView) {
             List<MusicBean> mDetailList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(title)).build().list();
             getMBinding().playListDetailView.setQueryFlag(title, mDetailList.size());
-            DetailsViewAdapter detailsAdapter = new DetailsViewAdapter(mContext, mDetailList, Constant.NUMBER_FOUR);
+            DetailsViewAdapter detailsAdapter = new DetailsViewAdapter(mContext, mDetailList, Constant.NUMBER_FIVE,title);
             getMBinding().playListDetailView.setAdapter(detailsAdapter);
             detailsAdapter.setOnItemMenuListener((position, musicBean) -> MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mContext));
 

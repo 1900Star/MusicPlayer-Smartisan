@@ -27,7 +27,7 @@ import com.yibao.music.view.SwipeItemLayout.OnSwipeItemTouchListener
  * @ Des:    TODO
  */
 class PlayListDetailView : LinearLayout, View.OnClickListener {
-    private var mQueryFlag: String? = null
+    private var mListTitle: String? = null
     private var mListSize = 0
     private val mBinding =
         PlayListDetailBinding.inflate(LayoutInflater.from(context), this, true)
@@ -40,8 +40,8 @@ class PlayListDetailView : LinearLayout, View.OnClickListener {
         initView()
     }
 
-    fun setQueryFlag(queryFlag: String?, listSize: Int) {
-        mQueryFlag = queryFlag
+    fun setQueryFlag(listTitle: String, listSize: Int) {
+        mListTitle = listTitle
         mListSize = listSize
     }
 
@@ -84,7 +84,7 @@ class PlayListDetailView : LinearLayout, View.OnClickListener {
         val id = v.id
         if (id == R.id.tv_random_play) {
             if (mListSize > 0) {
-                startMusic(RandomUtil.getRandomPostion(mListSize))
+                startMusic(RandomUtil.getRandomPosition(mListSize))
             }
         } else if (id == R.id.tv_delete_play_list) {
             SnakbarUtil.keepGoing(mBinding.tvRandomPlay)
@@ -95,13 +95,8 @@ class PlayListDetailView : LinearLayout, View.OnClickListener {
 
     private fun startMusic(startPosition: Int) {
         if (context is OnMusicItemClickListener) {
-            val sp = SpUtils(context.applicationContext, Constant.MUSIC_CONFIG)
-            sp.putValues(SpUtils.ContentValue(Constant.MUSIC_DATA_FLAG, Constant.NUMBER_TEN))
             (context as OnMusicItemClickListener).startMusicServiceFlag(
-                startPosition,
-                Constant.NUMBER_TEN,
-                Constant.NUMBER_FOUR,
-                mQueryFlag
+                startPosition, Constant.NUMBER_FIVE, mListTitle
             )
         }
     }
