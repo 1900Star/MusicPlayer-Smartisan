@@ -10,7 +10,7 @@ import android.widget.LinearLayout
 import com.yibao.music.MusicApplication
 import com.yibao.music.R
 import com.yibao.music.activity.SearchActivity
-import com.yibao.music.databinding.MusicToolbarContentBinding
+import com.yibao.music.databinding.MusicToolbarBinding
 import com.yibao.music.util.Constant
 import com.yibao.music.util.SpUtils
 
@@ -24,7 +24,7 @@ import com.yibao.music.util.SpUtils
 class MusicToolBar : LinearLayout, View.OnClickListener {
 
     private val mBinding =
-        MusicToolbarContentBinding.inflate(LayoutInflater.from(context), this, true)
+        MusicToolbarBinding.inflate(LayoutInflater.from(context), this, true)
 
     constructor(context: Context?) : super(context) {
         initView()
@@ -62,7 +62,7 @@ class MusicToolBar : LinearLayout, View.OnClickListener {
         mBinding.tvEdit.visibility = if (visibility) VISIBLE else GONE
     }
 
-    fun setToolbarTitle(toolbarTitle: String?) {
+    fun setToolbarTitle(toolbarTitle: String) {
         mBinding.tvMusicToolbarTitle.text = toolbarTitle
     }
 

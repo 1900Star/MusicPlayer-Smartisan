@@ -18,6 +18,7 @@ import com.yibao.music.activity.MusicActivity;
 import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.base.listener.SeekBarChangeListtener;
 import com.yibao.music.service.MusicPlayService;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.LyricsView;
 
@@ -93,6 +94,8 @@ public abstract class BasePlayActivity extends BaseTransitionActivity implements
     protected void switchPlayMode(ImageView imageView) {
         //获取当前的播放模式
         int playMode = audioBinder.getPlayMode();
+        LogUtil.d(TAG,"=============  切换模式  "+playMode);
+
         //根据当前播放模式进行其它模式切换
         switch (playMode) {
             case MusicPlayService.PLAY_MODE_ALL:
@@ -101,10 +104,8 @@ public abstract class BasePlayActivity extends BaseTransitionActivity implements
             case MusicPlayService.PLAY_MODE_SINGLE:
                 audioBinder.setPlayMode(MusicPlayService.PLAY_MODE_RANDOM);
                 break;
-            case MusicPlayService.PLAY_MODE_RANDOM:
-                audioBinder.setPlayMode(MusicPlayService.PLAY_MODE_ALL);
-                break;
             default:
+                audioBinder.setPlayMode(MusicPlayService.PLAY_MODE_ALL);
                 break;
         }
         //根据当前模式,更新播放模式图片

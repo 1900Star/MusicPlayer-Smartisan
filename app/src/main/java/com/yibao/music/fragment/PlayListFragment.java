@@ -64,8 +64,8 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
         getMBinding().swipePlayList.setColorSchemeColors(Color.BLUE, Color.RED, Color.YELLOW);
         getMBinding().swipePlayList.setOnRefreshListener(this);
 
-        getMBinding().musicBar.musicToolbarList.setToolbarTitle(getString(R.string.play_list));
-        getMBinding().musicBar.musicToolbarList.setVisibility(isFromPlayListActivity && mSp.getInt(Constant.ADD_TO_PLAY_LIST_FLAG) == Constant.NUMBER_ONE ? View.GONE : View.VISIBLE);
+        getMBinding().musicBar.setToolbarTitle(getString(R.string.play_list));
+        getMBinding().musicBar.setVisibility(isFromPlayListActivity && mSp.getInt(Constant.ADD_TO_PLAY_LIST_FLAG) == Constant.NUMBER_ONE ? View.GONE : View.VISIBLE);
         mPlayListDao = MusicApplication.getInstance().getPlayListDao();
         mViewModel = new PlayListViewModel();
 
@@ -89,6 +89,7 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
             mPlayListTitle = playListBean.getTitle();
             // 从PlayListActivity过来的,添加歌曲到播放列表
             if (isFromPlayListActivity) {
+                getMBinding().musicBar.setVisibility(View.GONE);
                 addToList(playListBean);
             } else {
                 // 打开播放列表
@@ -125,7 +126,7 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
     private void initListener() {
         getMBinding().llAddNewPlayList.setOnClickListener(v ->
                 AddListDialog.newInstance(1, Constant.NULL_STRING, isFromPlayListActivity, this).show(getChildFragmentManager(), "addList"));
-        getMBinding().musicBar.musicToolbarList.setClickListener(new MusicToolBar.OnToolbarClickListener() {
+        getMBinding().musicBar.setClickListener(new MusicToolBar.OnToolbarClickListener() {
             @Override
             public void clickEdit() {
                 if (isShowDetailsView) {
@@ -148,7 +149,7 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
 
 
     private void showDetailsView(String title) {
-        getMBinding().musicBar.musicToolbarList.setToolbarTitle(title);
+        getMBinding().musicBar.setToolbarTitle(title);
         getMBinding().llAddNewPlayList.setVisibility(isShowDetailsView ? View.VISIBLE : View.GONE);
         getMBinding().playListDetailView.setVisibility(isShowDetailsView ? View.GONE : View.VISIBLE);
 
@@ -159,13 +160,13 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
             getMBinding().playListDetailView.setAdapter(detailsAdapter);
             detailsAdapter.setOnItemMenuListener((position, musicBean) -> MoreMenuBottomDialog.newInstance(musicBean, position, false, false).getBottomDialog(mContext));
 
-            getMBinding().musicBar.musicToolbarList.setTvEditText(R.string.play_list);
-            getMBinding().musicBar.musicToolbarList.setTvEditVisibility(true);
-            getMBinding().musicBar.musicToolbarList.setToolbarTitle(title);
+            getMBinding().musicBar.setTvEditText(R.string.play_list);
+            getMBinding().musicBar.setTvEditVisibility(true);
+            getMBinding().musicBar.setToolbarTitle(title);
 
         }
         isShowDetailsView = !isShowDetailsView;
-        getMBinding().musicBar.musicToolbarList.setTvEditVisibility(isShowDetailsView);
+        getMBinding().musicBar.setTvEditVisibility(isShowDetailsView);
     }
 
     /**

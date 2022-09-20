@@ -11,6 +11,7 @@
 
     <RelativeLayout
         android:id="@+id/rv_titlebar"
+        android:background="@drawable/toolbar_bar_bg"
         android:layout_width="match_parent"
         android:layout_height="48dp">
 

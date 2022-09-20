@@ -7,12 +7,10 @@
     android:background="@color/listBg"
     android:gravity="center"
     android:orientation="vertical">
-
-    <include
+    <com.yibao.music.view.music.MusicToolBar
         android:id="@+id/music_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/music_toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

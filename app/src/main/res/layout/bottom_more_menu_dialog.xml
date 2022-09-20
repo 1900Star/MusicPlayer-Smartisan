@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:layout_gravity="center"
-        android:background="@drawable/titlebar_playing_bg">
+        android:background="@drawable/title_bar_playing_bg">
 
         <TextView
             android:id="@+id/bottom_title"

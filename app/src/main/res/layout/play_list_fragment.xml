@@ -6,9 +6,10 @@
     android:animateLayoutChanges="true"
     android:orientation="vertical">
 
-    <include
+    <com.yibao.music.view.music.MusicToolBar
         android:id="@+id/music_bar"
-        layout="@layout/music_toolbar" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,7 +19,7 @@
             android:id="@+id/ll_add_new_play_list"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@drawable/tabbar_bg"
+            android:background="@drawable/toolbar_bar_bg"
             android:gravity="center">
 
             <ImageView

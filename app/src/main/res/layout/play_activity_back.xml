@@ -12,7 +12,7 @@
         android:id="@+id/titlebar_bg"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@drawable/titlebar_playing_bg"
+        android:background="@drawable/title_bar_playing_bg"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView

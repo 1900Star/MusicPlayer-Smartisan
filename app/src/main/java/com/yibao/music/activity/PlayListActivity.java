@@ -44,8 +44,8 @@ public class PlayListActivity extends BaseActivity implements OnFinishActivityLi
 
 
     private void initView() {
-        TextView tvPlayistCancel = findViewById(R.id.tv_playist_cancel);
-        tvPlayistCancel.setOnClickListener(v -> finish());
+        TextView tvCancel = findViewById(R.id.tv_play_list_cancel);
+        tvCancel.setOnClickListener(v -> finish());
 
 
     }

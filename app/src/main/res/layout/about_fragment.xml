@@ -6,10 +6,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    <include
+    <com.yibao.music.view.music.MusicToolBar
         android:id="@+id/music_bar"
-        layout="@layout/music_toolbar" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

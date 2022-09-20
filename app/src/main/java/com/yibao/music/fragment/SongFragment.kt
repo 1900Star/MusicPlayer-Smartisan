@@ -24,7 +24,7 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
     private var isSelectStatus = false
     private var mPageType = 1
     override fun initView() {
-        mBinding.musicBar.musicToolbarList.setTvEditVisibility(true)
+        mBinding.musicBar.setTvEditVisibility(true)
         initData()
         initListener()
     }
@@ -33,7 +33,7 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
     override fun onResume() {
         super.onResume()
 
-        mBinding.musicBar.musicToolbarList.setToolbarTitle(getString(R.string.music_song))
+        mBinding.musicBar.setToolbarTitle(getString(R.string.music_song))
 
     }
 
@@ -53,11 +53,11 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
     }
 
     private fun initListener() {
-        mBinding.musicBar.musicToolbarList.setClickListener(object : OnToolbarClickListener {
+        mBinding.musicBar.setClickListener(object : OnToolbarClickListener {
             override fun clickEdit() {
                 mBus.post(Constant.SONG_FAG_EDIT, Constant.NUMBER_ONE)
-                mBinding.musicBar.musicToolbarList.setTvEditText(if (isSelectStatus) R.string.tv_edit else R.string.complete)
-                mBinding.musicBar.musicToolbarList.setTvDeleteVisibility(if (isSelectStatus) View.GONE else View.VISIBLE)
+                mBinding.musicBar.setTvEditText(if (isSelectStatus) R.string.tv_edit else R.string.complete)
+                mBinding.musicBar.setTvDeleteVisibility(if (isSelectStatus) View.GONE else View.VISIBLE)
                 isSelectStatus = !isSelectStatus
             }
 

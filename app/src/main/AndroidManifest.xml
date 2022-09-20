@@ -38,7 +38,7 @@
         <activity
             android:name=".activity.SplashActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/AppTheme.Splash.Fullscreen"
+            android:theme="@style/ArtistTheme"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,26 +55,26 @@
             android:name=".activity.MusicActivity"
             android:exported="false"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/ArtistTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.PlayActivity"
             android:exported="false"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/ArtistTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activity.SearchActivity"
             android:exported="false"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/ArtistTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activity.PlayListActivity"
             android:configChanges="orientation|keyboardHidden"
             android:exported="false"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/ArtistTheme"
             android:windowSoftInputMode="adjustPan" />
 
         <provider

@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginBottom="@dimen/dp_six"
-        android:background="@drawable/titlebar_playing_bg"
+        android:background="@drawable/title_bar_playing_bg"
         android:gravity="center"
         android:orientation="horizontal">
 

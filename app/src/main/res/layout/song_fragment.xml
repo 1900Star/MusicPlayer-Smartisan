@@ -7,9 +7,10 @@
     android:orientation="vertical"
     tools:context=".activity.MusicActivity">
 
-    <include
+    <com.yibao.music.view.music.MusicToolBar
         android:id="@+id/music_bar"
-        layout="@layout/music_toolbar" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <include
         android:id="@+id/song_category"

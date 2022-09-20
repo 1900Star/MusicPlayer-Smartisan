@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit
  */
 class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>() {
     override fun initView() {
-        mBinding.musicBar.musicToolbarList.setToolbarTitle(getString(R.string.about))
+        mBinding.musicBar.setToolbarTitle(getString(R.string.about))
         initData()
         initListener()
     }
@@ -81,7 +81,7 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>() {
             RelaxDialogFragment.newInstance().show(childFragmentManager, "girlsDialog")
             true
         }
-        mBinding.musicBar.musicToolbarList.setClickListener(object :
+        mBinding.musicBar.setClickListener(object :
             MusicToolBar.OnToolbarClickListener {
             override fun clickEdit() {
 

@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:background="@drawable/tabbar_bg"
+        android:background="@drawable/toolbar_bar_bg"
         android:gravity="center"
         android:text="@string/scanner_config"
         android:textColor="@color/tabbarDownTv"

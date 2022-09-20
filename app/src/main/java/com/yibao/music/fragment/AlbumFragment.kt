@@ -35,7 +35,7 @@ class AlbumFragment : BaseMusicFragmentDev<AlbumFragmentBinding>(), View.OnClick
     private var isShowDetailsView = false
     private var mDetailList = ArrayList<MusicBean>()
     override fun initView() {
-        mBinding.musicBar.musicToolbarList.setToolbarTitle(getString(R.string.music_album))
+        mBinding.musicBar.setToolbarTitle(getString(R.string.music_album))
     }
 
 
@@ -69,7 +69,7 @@ class AlbumFragment : BaseMusicFragmentDev<AlbumFragmentBinding>(), View.OnClick
         mBinding.albumCategory.albumCategoryListLl.setOnClickListener(this)
         mBinding.albumCategory.ivAlbumCategoryPlay.setOnClickListener(this)
 
-        mBinding.musicBar.musicToolbarList.setClickListener(object : OnToolbarClickListener {
+        mBinding.musicBar.setClickListener(object : OnToolbarClickListener {
             override fun clickEdit() {
                 if (isShowDetailsView) {
                     showDetailsView(null)
@@ -97,14 +97,14 @@ class AlbumFragment : BaseMusicFragmentDev<AlbumFragmentBinding>(), View.OnClick
     private fun showDetailsView(albumInfo: AlbumInfo?) {
         if (isShowDetailsView) {
             mBinding.detailsView.visibility = View.GONE
-            mBinding.musicBar.musicToolbarList.setToolbarTitle(getString(R.string.music_album))
-            mBinding.musicBar.musicToolbarList.setTvEditVisibility(false)
+            mBinding.musicBar.setToolbarTitle(getString(R.string.music_album))
+            mBinding.musicBar.setTvEditVisibility(false)
         } else {
             if (albumInfo != null) {
                 mBinding.detailsView.visibility = View.VISIBLE
-                mBinding.musicBar.musicToolbarList.setTvEditVisibility(true)
-                mBinding.musicBar.musicToolbarList.setToolbarTitle(albumInfo.albumName)
-                mBinding.musicBar.musicToolbarList.setTvEditText(R.string.music_album)
+                mBinding.musicBar.setTvEditVisibility(true)
+                mBinding.musicBar.setToolbarTitle(albumInfo.albumName)
+                mBinding.musicBar.setTvEditText(R.string.music_album)
 
                 mDetailList = MusicListUtil.sortMusicAbc(
                     mMusicBeanDao.queryBuilder()

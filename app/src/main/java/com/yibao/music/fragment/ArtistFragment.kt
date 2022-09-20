@@ -30,7 +30,7 @@ class ArtistFragment : BaseMusicFragmentDev<ArtisanListFragmentBinding>() {
     private var mDetailsAdapter: DetailsViewAdapter? = null
     private lateinit var mDetailList: ArrayList<MusicBean>
     override fun initView() {
-        mBinding.musicBar.musicToolbarList.setToolbarTitle(getString(R.string.music_artisan))
+        mBinding.musicBar.setToolbarTitle(getString(R.string.music_artisan))
     }
 
     override fun onResume() {
@@ -39,7 +39,7 @@ class ArtistFragment : BaseMusicFragmentDev<ArtisanListFragmentBinding>() {
     }
 
     private fun initListener() {
-        mBinding.musicBar.musicToolbarList.setClickListener(object : OnToolbarClickListener {
+        mBinding.musicBar.setClickListener(object : OnToolbarClickListener {
             override fun clickEdit() {
                 if (isShowDetailsView) {
                     showDetail(null)
@@ -68,9 +68,9 @@ class ArtistFragment : BaseMusicFragmentDev<ArtisanListFragmentBinding>() {
 
     private fun showDetail(artistInfo: ArtistInfo?) {
         if (isShowDetailsView) {
-            mBinding.musicBar.musicToolbarList.setToolbarTitle(getString(R.string.music_artisan))
+            mBinding.musicBar.setToolbarTitle(getString(R.string.music_artisan))
             mBinding.detailsView.visibility = View.GONE
-            mBinding.musicBar.musicToolbarList.setTvEditVisibility(false)
+            mBinding.musicBar.setTvEditVisibility(false)
             mDetailList.clear()
         } else {
             if (artistInfo != null) {
@@ -107,9 +107,9 @@ class ArtistFragment : BaseMusicFragmentDev<ArtisanListFragmentBinding>() {
                 })
                 mBinding.detailsView.setSuspension()
 
-                mBinding.musicBar.musicToolbarList.setTvEditText(R.string.music_artisan)
-                mBinding.musicBar.musicToolbarList.setTvEditVisibility(true)
-                mBinding.musicBar.musicToolbarList.setToolbarTitle(artistInfo.albumName)
+                mBinding.musicBar.setTvEditText(R.string.music_artisan)
+                mBinding.musicBar.setTvEditVisibility(true)
+                mBinding.musicBar.setToolbarTitle(artistInfo.albumName)
             }
             mBinding.detailsView.visibility = View.VISIBLE
         }

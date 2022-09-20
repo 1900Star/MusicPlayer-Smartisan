@@ -357,6 +357,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         mBinding.musicPlay.setOnClickListener(this);
         mBinding.ivFavoriteMusic.setOnClickListener(this);
 
+
     }
 
     @Override
