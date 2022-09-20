@@ -209,12 +209,10 @@ public class FavoriteBottomSheetDialog
     private void playMusic(int position) {
         Intent intent = new Intent();
         intent.setClass(mContext, MusicPlayService.class);
-        intent.putExtra("sortFlag", Constant.NUMBER_EIGHT);
-        intent.putExtra("position", position);
+        intent.putExtra(Constant.PAGE_TYPE, Constant.NUMBER_EIGHT);
+        intent.putExtra(Constant.POSITION, position);
         LogUtil.d(TAG, "===========      " + position);
         mContext.startService(intent);
-        SpUtils sp = new SpUtils(mContext.getApplicationContext(), Constant.MUSIC_CONFIG);
-        sp.putValues(new SpUtils.ContentValue(Constant.MUSIC_DATA_FLAG,Constant.NUMBER_EIGHT));
 
     }
 

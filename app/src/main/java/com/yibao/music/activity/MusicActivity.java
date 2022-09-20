@@ -310,11 +310,10 @@ public class MusicActivity extends BaseActivity implements OnMusicItemClickListe
      */
     @Override
     public void startMusicServiceFlag(int position, int pageType, String condition) {
-      LogUtil.d(TAG,"详情界面播放歌曲 ====   ");
+      LogUtil.d(TAG,"详情界面播放歌曲 ====   "+pageType);
         mCurrentPosition = position;
         Intent intent = new Intent(this, MusicPlayService.class);
         intent.putExtra(Constant.PAGE_TYPE, pageType);
-//        intent.putExtra("dataFlag", dataFlag);
         intent.putExtra(Constant.CONDITION, condition);
         intent.putExtra(Constant.POSITION, mCurrentPosition);
         mConnection = new AudioServiceConnection();

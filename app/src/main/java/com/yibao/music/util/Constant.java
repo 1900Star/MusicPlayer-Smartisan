@@ -52,6 +52,7 @@ public class Constant {
     public static final int NUMBER_ELEVEN = 11;
     public static final int NUMBER_TWELVE = 12;
     public static final int NUMBER_THIRTEEN = 13;
+    public static final int NUMBER_FOURTEEN = 14;
     // RxBus post  flag
 
     public static final String HANDLE_BACK = "handle_back";

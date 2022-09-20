@@ -22,16 +22,8 @@ class SearchViewModel : BaseViewModel() {
         val dataList = ArrayList<MusicBean>()
         // 全部
         when (position) {
-            1 -> {
-                // 按歌手搜索
-                val artistList =
-                    musicDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(key)).build()
-                        .list()
-                if (artistList.isNotEmpty()) {
-                    dataList.addAll(artistList)
-                }
-            }
-            2 -> {
+
+            11 -> {
                 // 根据歌名精确搜索
                 val songList =
                     musicDao.queryBuilder().where(MusicBeanDao.Properties.Title.eq(key)).build()
@@ -48,7 +40,7 @@ class SearchViewModel : BaseViewModel() {
                     }
                 }
             }
-            3 -> {
+            12 -> {
                 // 按专辑搜索
                 val albumList =
                     musicDao.queryBuilder().where(MusicBeanDao.Properties.Album.eq(key)).build()
@@ -57,7 +49,16 @@ class SearchViewModel : BaseViewModel() {
                     dataList.addAll(albumList)
                 }
             }
-            4 -> {
+            13 -> {
+                // 按歌手搜索
+                val artistList =
+                    musicDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(key)).build()
+                        .list()
+                if (artistList.isNotEmpty()) {
+                    dataList.addAll(artistList)
+                }
+            }
+           14 -> {
                 // 按歌手搜索
                 val artistList =
                     musicDao.queryBuilder().where(MusicBeanDao.Properties.Artist.eq(key)).build()

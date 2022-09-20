@@ -36,8 +36,8 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
     private var mInputMethodManager: InputMethodManager? = null
     private var mAdapter: DetailsViewAdapter? = null
 
-    // 默认为2 ，按歌曲名搜索。
-    private var mPosition = 2
+    // 默认为 11 ，按歌曲名搜索。
+    private var mPosition = 11
     override fun initView() {
         initRecyclerView(mBinding.recyclerSearch)
     }
@@ -51,7 +51,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
         if (pageType > Constant.NUMBER_ZERO) {
             mMusicBean = intent.getParcelableExtra(Constant.MUSIC_BEAN)
             mBinding.editSearch.setText(mMusicBean!!.artist)
-            switchListCategory(4)
+            switchListCategory(13)
 
         } else {
             // 加载历史记录
@@ -80,7 +80,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
         mViewModel.historyViewModel.observe(this) { historyList ->
             mBinding.flowlayout.setData(historyList)
             mBinding.flowlayout.setItemClickListener { _, bean ->
-                mPosition = 2
+//                mPosition = 2
                 mBinding.editSearch.setText(bean.searchContent)
                 mBinding.editSearch.setSelection(bean.searchContent.length)
             }
@@ -102,15 +102,18 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
     }
 
     private fun setData(musicList: List<MusicBean>) {
-
+        LogUtil.d(TAG, "当前页面标识   $mPosition")
         if (musicList.isEmpty()) {
             mBinding.tvNoSearchResult.visibility = View.VISIBLE
             mBinding.recyclerSearch.visibility = View.GONE
         } else {
             mBinding.tvNoSearchResult.visibility = View.GONE
             mBinding.recyclerSearch.visibility = View.VISIBLE
+            val editCondition = mBinding.editSearch.text.toString().trim()
+
+
             // 列表数据
-            mAdapter = DetailsViewAdapter(this, musicList, Constant.NUMBER_TEN, "")
+            mAdapter = DetailsViewAdapter(this, musicList, mPosition, editCondition)
             mBinding.recyclerSearch.adapter = mAdapter
             mAdapter!!.setOnItemMenuListener(object :
                 BaseBindingAdapter.OnOpenItemMoreMenuListener {
@@ -172,16 +175,16 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
             }
 
             R.id.tv_search_all -> {
-                switchListCategory(1)
+                switchListCategory(14)
             }
             R.id.tv_search_song -> {
-                switchListCategory(2)
+                switchListCategory(11)
             }
             R.id.tv_search_album -> {
-                switchListCategory(3)
+                switchListCategory(12)
             }
             R.id.tv_search_artist -> {
-                switchListCategory(4)
+                switchListCategory(13)
             }
             R.id.tv_search_cancel -> {
                 SoftKeybordUtil.showAndHintSoftInput(
@@ -194,7 +197,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
 
     /**
      * @param searchKey 搜索关键字key 、
-     * @param position 搜索类别： 1全部 、 2歌曲 、 3专辑 、 4 艺术家
+     * @param position 搜索类别：  11歌曲 、 12专辑 、 13 艺术家 、14 全部
      */
     private fun searchMusic(searchKey: String, position: Int) {
         mBinding.ivEditClear.visibility = if (searchKey.isEmpty()) View.GONE else View.VISIBLE
@@ -264,27 +267,26 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
         val searchKey = mBinding.editSearch.text.trim().toString()
         mViewModel.searchMusic(searchKey, position)
         when (position) {
-            1 -> {
-                setAllCategoryNotNormal()
-                mBinding.searchCategoryRoot.tvSearchAll.setTextColor(ColorUtil.wihtle)
-                mBinding.searchCategoryRoot.tvSearchAll.setBackgroundResource(R.drawable.btn_category_end_down_selector)
-            }
-            2 -> {
+            11 -> {
                 setAllCategoryNotNormal()
                 mBinding.searchCategoryRoot.tvSearchSong.setTextColor(ColorUtil.wihtle)
                 mBinding.searchCategoryRoot.tvSearchSong.setBackgroundResource(R.drawable.btn_category_start_down_selector)
             }
-            3 -> {
+            12 -> {
                 setAllCategoryNotNormal()
                 mBinding.searchCategoryRoot.tvSearchAlbum.setTextColor(ColorUtil.wihtle)
                 mBinding.searchCategoryRoot.tvSearchAlbum.setBackgroundResource(R.drawable.btn_category_middle_down_selector)
             }
-            4 -> {
+            13 -> {
                 setAllCategoryNotNormal()
                 mBinding.searchCategoryRoot.tvSearchArtist.setBackgroundResource(R.drawable.btn_category_middle_down_selector)
                 mBinding.searchCategoryRoot.tvSearchArtist.setTextColor(ColorUtil.wihtle)
             }
-            else -> {}
+            14 -> {
+                setAllCategoryNotNormal()
+                mBinding.searchCategoryRoot.tvSearchAll.setTextColor(ColorUtil.wihtle)
+                mBinding.searchCategoryRoot.tvSearchAll.setBackgroundResource(R.drawable.btn_category_end_down_selector)
+            }
         }
     }
 
@@ -305,12 +307,14 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
                 mBinding.smartisanControlBar.animatorOnResume(audioBinder!!.isPlaying)
                 mBinding.smartisanControlBar.updatePlayBtnStatus(audioBinder!!.isPlaying)
             }
-            1 -> checkCurrentSongIsFavorite(mMusicBean, null, mBinding.smartisanControlBar)
+            1 -> {
+                checkCurrentSongIsFavorite(mMusicBean, null, mBinding.smartisanControlBar)
+            }
             2 -> {
                 mBinding.smartisanControlBar.updatePlayBtnStatus(audioBinder!!.isPlaying)
                 mBinding.smartisanControlBar.animatorOnPause()
             }
-            else -> {}
+
         }
     }
 
@@ -331,7 +335,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
     ) {
         val condition = mBinding.editSearch.text.toString().trim()
         val intent = Intent(this, MusicPlayService::class.java)
-        intent.putExtra(Constant.PAGE_TYPE, Constant.NUMBER_TEN)
+        intent.putExtra(Constant.PAGE_TYPE, pageType)
         intent.putExtra(Constant.CONDITION, condition)
         intent.putExtra(Constant.POSITION, position)
         startService(intent)
