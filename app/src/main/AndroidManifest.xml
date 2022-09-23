@@ -64,6 +64,12 @@
             android:theme="@style/ArtistTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
+            android:name=".activity.PlayActivityBack"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:theme="@style/ArtistTheme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
             android:name=".activity.SearchActivity"
             android:exported="false"
             android:launchMode="singleTop"
