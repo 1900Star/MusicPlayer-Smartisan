@@ -195,14 +195,14 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         if (isShowLyrics) {
             startRollPlayLyrics(mBinding.tvLyrics);
             closeLyricsView();
-            mBinding.llSunAndDelete.setVisibility(mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
+            mBinding.groupBrightDelete.setVisibility(mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
 
         }
     }
 
     private void setTitleAndArtist(MusicBean bean) {
-        mBinding.playSongName.setText(StringUtil.getSongName(bean.getTitle()));
-        mBinding.playArtistName.setText(StringUtil.getArtist(bean.getArtist()));
+        mBinding.tvSongName.setText(StringUtil.getSongName(bean.getTitle()));
+        mBinding.tvArtistName.setText(StringUtil.getArtist(bean.getArtist()));
     }
 
     /**
@@ -210,10 +210,10 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
      */
     @Override
     protected void updateCurrentPlayProgress() {
-        updataMusicProgress(audioBinder.getProgress());
+        updateMusicProgress(audioBinder.getProgress());
     }
 
-    protected void updataMusicProgress(int progress) {
+    protected void updateMusicProgress(int progress) {
         // 时间进度
         mBinding.startTime.setText(StringUtil.parseDuration(progress));
         // 时时播放进度
@@ -343,19 +343,21 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
                     .show(getSupportFragmentManager(), "album");
             return true;
         });
-        mBinding.titlebarDown.setOnClickListener(this);
-        mBinding.rvTitlebar.setOnClickListener(this);
+        mBinding.ivPlayDown.setOnClickListener(this);
+        mBinding.groupTitleArtist.setOnClickListener(this);
         mBinding.rotateRl.setOnClickListener(this);
         mBinding.playingSongAlbum.setOnClickListener(this);
         mBinding.ivLyricsSwitch.setOnClickListener(this);
         mBinding.ivDeleteLyric.setOnClickListener(this);
-        mBinding.ivSelectLyric.setOnClickListener(this);
-        mBinding.ivSecreenSunSwitch.setOnClickListener(this);
+        mBinding.ivSearchPlayLyric.setOnClickListener(this);
+        mBinding.ivAlwaysOn.setOnClickListener(this);
         mBinding.musicPlayerMode.setOnClickListener(this);
         mBinding.musicPlayerPre.setOnClickListener(this);
         mBinding.musicPlayerNext.setOnClickListener(this);
         mBinding.musicPlay.setOnClickListener(this);
         mBinding.ivFavoriteMusic.setOnClickListener(this);
+        mBinding.tvSongName.setOnClickListener(this);
+        mBinding.tvArtistName.setOnClickListener(this);
 
 
     }
@@ -363,9 +365,9 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.titlebar_down) {
+        if (id == R.id.iv_play_down) {
             finish();
-        } else if (id == R.id.rv_titlebar) {
+        } else if (id == R.id.tv_song_name || id == R.id.tv_artist_name) {
             startSearchActivity(mCurrentMusicInfo);
         } else if (id == R.id.rotate_rl) {// 按下音乐停止播放  动画停止 ，抬起恢复
 //                switchPlayState();
@@ -377,14 +379,14 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             LogUtil.d(TAG, "============ 删除当前歌词");
             showLyrics();
             LyricsUtil.deleteCurrentLyric(mCurrentMusicInfo.getTitle(), mCurrentMusicInfo.getArtist());
-        } else if (id == R.id.iv_select_lyric) {
+        } else if (id == R.id.iv_search_play_lyric) {
             Intent intent = new Intent(this, SearchLyricsActivity.class);
             intent.putExtra(Constant.SONG_NAME, StringUtil.getSongName(mCurrentMusicInfo.getTitle()));
             intent.putExtra(Constant.SONG_ARTIST, StringUtil.getArtist(mCurrentMusicInfo.getArtist()));
             startActivityForResult(intent, Constant.SELECT_LYRICS);
             overridePendingTransition(R.anim.dialog_push_in, 0);
-        } else if (id == R.id.iv_secreen_sun_switch) {
-            screenAlwaysOnSwitch(mBinding.ivSecreenSunSwitch);
+        } else if (id == R.id.iv_always_on) {
+            screenAlwaysOnSwitch(mBinding.ivAlwaysOn);
         } else if (id == R.id.music_player_mode) {
             switchPlayMode(mBinding.musicPlayerMode);
         } else if (id == R.id.music_player_pre) {
@@ -436,16 +438,16 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             }
         }
         mBinding.tvLyrics.setVisibility(isShowLyrics ? View.GONE : View.VISIBLE);
-        mBinding.llSunAndDelete.setVisibility(isShowLyrics ? View.GONE : mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
-        mBinding.ivSecreenSunSwitch.setBackgroundResource(isShowLyrics ? R.drawable.music_lrc_close : R.drawable.music_lrc_open);
-        AnimationDrawable animation = (AnimationDrawable) mBinding.ivSecreenSunSwitch.getBackground();
+        mBinding.groupBrightDelete.setVisibility(isShowLyrics ? View.GONE : mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
+        mBinding.ivAlwaysOn.setBackgroundResource(isShowLyrics ? R.drawable.music_lrc_close : R.drawable.music_lrc_open);
+        AnimationDrawable animation = (AnimationDrawable) mBinding.ivAlwaysOn.getBackground();
         animation.start();
         isShowLyrics = !isShowLyrics;
     }
 
 
     private void rxViewClick() {
-        mCompositeDisposable.add(RxView.clicks(mBinding.titlebarPlayList)
+        mCompositeDisposable.add(RxView.clicks(mBinding.ivFavoriteList)
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribe(o -> FavoriteBottomSheetDialog.newInstance(mCurrentMusicInfo.getTitle())
                         .getBottomDialog(this)));
@@ -461,7 +463,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             //拖动音乐进度条播放
             audioBinder.seekTo(progress);
             //更新音乐进度数值
-            updataMusicProgress(progress);
+            updateMusicProgress(progress);
             //更新音量  SeekBar
         } else if (id == R.id.sb_volume) {
             updateMusicVolume(progress);

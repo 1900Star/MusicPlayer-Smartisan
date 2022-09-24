@@ -22,6 +22,7 @@
     <color name="lyricsNormal">#5b5b5b</color>
     <color name="aboutContent">#ff414141</color>
     <color name="about">#f7f1f1</color>
+    <color name="volume_bar_bg">#F7F8F9</color>
 
 
     <!--BottomSheetDialogList-->

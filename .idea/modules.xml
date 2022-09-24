@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MusicPlayer-Smartisan.iml" filepath="$PROJECT_DIR$/.idea/modules/MusicPlayer-Smartisan.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MusicPlayer-Smartisan.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MusicPlayer-Smartisan.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MusicPlayer-Smartisan.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MusicPlayer-Smartisan.app.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MusicPlayer-Smartisan.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MusicPlayer-Smartisan.app.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MusicPlayer-Smartisan.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MusicPlayer-Smartisan.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ArtisanMusic.iml" filepath="$PROJECT_DIR$/.idea/modules/ArtisanMusic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ArtisanMusic.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ArtisanMusic.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ArtisanMusic.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ArtisanMusic.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ArtisanMusic.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ArtisanMusic.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ArtisanMusic.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ArtisanMusic.app.unitTest.iml" />
     </modules>
   </component>
 </project>

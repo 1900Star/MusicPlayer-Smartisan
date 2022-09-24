@@ -97,8 +97,9 @@ public class StringUtil {
         }
 
         String[] projection = {MediaStore.Audio.Albums.ALBUM_ART};
+        String replaceAlbum = albumId.replace("-", "");
         String imagePath = null;
-        Uri uri = Uri.parse("content://media" + MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI.getPath() + "/" + albumId);
+        Uri uri = Uri.parse("content://media" + MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI.getPath() + "/" + replaceAlbum);
 
         Cursor cur = context.getContentResolver().query(uri, projection, null, null, null);
         if (cur == null) {
