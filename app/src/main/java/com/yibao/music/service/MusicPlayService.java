@@ -20,13 +20,9 @@ import com.yibao.music.manager.MediaSessionManager;
 import com.yibao.music.manager.MusicNotifyManager;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.network.QqMusicRemote;
 import com.yibao.music.util.CheckBuildVersionUtil;
 import com.yibao.music.util.Constant;
 import com.yibao.music.util.LogUtil;
-import com.yibao.music.util.LyricsUtil;
-import com.yibao.music.util.MusicListUtil;
-import com.yibao.music.util.NetworkUtil;
 import com.yibao.music.util.QueryMusicFlagListUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
@@ -180,14 +176,14 @@ public class MusicPlayService extends Service {
 //                    QqMusicRemote.getSongLyrics(songName, artist);
 //                }
                 mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_POSITION, position));
-                showNotifycation(true);
+                showNotification(true);
                 mSessionManager.updatePlaybackState(true);
                 mSessionManager.updateLocMsg();
             }
 
         }
 
-        private void showNotifycation(boolean b) {
+        private void showNotification(boolean b) {
             mNotifyManager = new MusicNotifyManager(getApplication(), mMusicInfo, b);
             mNotifyManager.show();
         }
@@ -196,7 +192,7 @@ public class MusicPlayService extends Service {
             if (position < mMusicDataList.size()) {
                 MusicBean musicBean = mMusicDataList.get(position);
                 boolean favorite = mMusicDao.load(musicBean.getId()).getIsFavorite();
-                mNotifyManager.updataFavoriteBtn(favorite);
+                mNotifyManager.updateFavoriteBtn(favorite);
                 ThreadPoolProxyFactory.newInstance().execute(() -> {
                     refreshFavorite(musicBean, favorite);
                     // 更新本地收藏文件
@@ -316,7 +312,7 @@ public class MusicPlayService extends Service {
         public void start() {
             mediaPlayer.start();
             mSessionManager.updatePlaybackState(true);
-            showNotifycation(true);
+            showNotification(true);
             initAudioFocus();
         }
 
@@ -325,7 +321,7 @@ public class MusicPlayService extends Service {
         public void pause() {
             mediaPlayer.pause();
             mSessionManager.updatePlaybackState(false);
-            showNotifycation(false);
+            showNotification(false);
         }
 
         //跳转到指定位置进行播放

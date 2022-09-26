@@ -68,7 +68,7 @@ public class StringUtil {
         File file = new File(path);
 
         return file.exists() ? path : ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"),
-                albumId).toString();
+                Math.abs(albumId)).toString();
 
     }
 

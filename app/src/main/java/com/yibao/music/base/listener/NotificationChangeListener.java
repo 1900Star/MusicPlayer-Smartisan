@@ -7,7 +7,7 @@ package com.yibao.music.base.listener;
  * @ Des:    TODO
  * @author Luoshipeng
  */
-public interface NotifycationChangeListener {
+public interface NotificationChangeListener {
     /**
      * show通知
      */
@@ -31,6 +31,6 @@ public interface NotifycationChangeListener {
      *
      * @param currentFavorite c
      */
-    void updataFavoriteBtn(boolean currentFavorite);
+    void updateFavoriteBtn(boolean currentFavorite);
 
 }
