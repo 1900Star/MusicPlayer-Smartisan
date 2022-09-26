@@ -7,7 +7,7 @@
     android:orientation="horizontal">
 
     <ImageView
-        android:id="@+id/iv_album_category_random_paly"
+        android:id="@+id/iv_album_category_random_play"
         android:layout_width="60dp"
         android:layout_height="45dp"
         android:layout_gravity="center_vertical"
@@ -18,7 +18,7 @@
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_weight="1"
-        android:background="@drawable/btn_category_songname_down_selector"
+        android:background="@drawable/btn_category_start_down_selector"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -49,7 +49,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@drawable/btn_category_views_selector"
+        android:background="@drawable/btn_category_end_selector"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -75,7 +75,7 @@
 
 
     <ImageView
-        android:id="@+id/iv_album_category_paly"
+        android:id="@+id/iv_album_category_play"
         android:layout_width="60dp"
         android:layout_height="45dp"
         android:layout_gravity="center_vertical"

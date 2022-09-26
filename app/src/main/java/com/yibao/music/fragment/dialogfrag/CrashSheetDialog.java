@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.yibao.music.R;
 import com.yibao.music.adapter.CrashAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.FileUtil;
 
 import java.io.File;
@@ -63,11 +63,11 @@ public class CrashSheetDialog {
         dialog.setCanceledOnTouchOutside(true);
         LinearLayout rootView = view.findViewById(R.id.root_crash);
         // 读取CrashLog
-        mFiles = new File(Constants.CRASH_LOG_PATH);
+        mFiles = new File(Constant.CRASH_LOG_PATH);
         if (mFiles.exists()) {
             File[] array = mFiles.listFiles();
             CrashAdapter crashAdapter = new CrashAdapter(array);
-            RecyclerView recyclerView = RecyclerFactory.createRecyclerView(Constants.NUMBER_ONE, crashAdapter);
+            RecyclerView recyclerView = RecyclerFactory.createRecyclerView(Constant.NUMBER_ONE, crashAdapter);
             crashAdapter.setItemClickListener(this::openCrashLog);
             rootView.addView(recyclerView);
             TextView tvTitle = view.findViewById(R.id.tv_crash_title);
@@ -104,7 +104,7 @@ public class CrashSheetDialog {
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
             intent.putExtras(bundle);
         } else {
-            intent.setDataAndType(contentUri, Constants.DATA_TYPE_TXT);
+            intent.setDataAndType(contentUri, Constant.DATA_TYPE_TXT);
         }
         mContext.startActivity(intent);
 

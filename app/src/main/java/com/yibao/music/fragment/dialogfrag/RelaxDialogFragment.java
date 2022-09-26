@@ -2,16 +2,18 @@ package com.yibao.music.fragment.dialogfrag;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-import androidx.viewpager.widget.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+import androidx.viewpager.widget.ViewPager;
+
 import com.yibao.music.R;
 import com.yibao.music.adapter.SplashPagerAdapter;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.DialogUtil;
-import com.yibao.music.util.SpUtil;
+import com.yibao.music.util.SpUtils;
 
 /**
  * Author：Sid
@@ -33,7 +35,9 @@ public class RelaxDialogFragment
 
     private void initView(View view) {
         ViewPager girlsViewPager = view.findViewById(R.id.vp_girls);
-        SplashPagerAdapter splashPagerAdapter = new SplashPagerAdapter(SpUtil.getPicUrlFlag(getActivity(),false));
+        SpUtils sp = new SpUtils(requireContext().getApplicationContext(), Constant.MUSIC_CONFIG);
+        boolean urlFlag = sp.getBoolean(Constant.PIC_URL_FLAG,false);
+        SplashPagerAdapter splashPagerAdapter = new SplashPagerAdapter(urlFlag);
         girlsViewPager.setAdapter(splashPagerAdapter);
 //        splashPagerAdapter.setZoomViewClickListener(this::dismiss);
     }

@@ -1,20 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:id="@+id/appbar_playlist"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="-9dp">
+    android:background="@drawable/toolbar_bar_bg"
+    android:layout_height="48dp">
 
-    <androidx.appcompat.widget.Toolbar
+    <TextView
+        android:id="@+id/tv_edit"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginEnd="8dp">
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/shape_btn_edit_selector"
+        android:gravity="center"
+        android:minWidth="48dp"
+        android:text="@string/tv_edit"
+        android:textColor="@color/textDes"
+        android:textStyle="bold"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <com.yibao.music.view.music.MusicToolBar
-            android:id="@+id/music_toolbar_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/tv_music_toolbar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
 
-    </androidx.appcompat.widget.Toolbar>
-</com.google.android.material.appbar.AppBarLayout>
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxLength="18"
+        android:singleLine="true"
+        android:text="@string/music_song"
+        android:textColor="@color/music_activity_title_selector"
+        android:textSize="@dimen/big_tv"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_search"
+        android:layout_width="48dp"
+        android:layout_height="28dp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/shape_btn_edit_selector"
+        android:contentDescription="@null"
+        android:scaleType="center"
+        android:src="@drawable/iv_title_search_"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
 

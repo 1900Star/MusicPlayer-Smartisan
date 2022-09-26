@@ -21,9 +21,9 @@ import com.yibao.music.activity.MusicActivity;
 import com.yibao.music.base.listener.NotifycationChangeListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.TitleAndArtistBean;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.CheckBuildVersionUtil;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.FileUtil;
-import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.TitleArtistUtil;
 
 
@@ -56,7 +56,9 @@ public class MusicNotifyManager implements
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(activity);
         Intent intent = new Intent(activity, MusicActivity.class);
-        PendingIntent startMainActivity = PendingIntent.getActivity(activity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        int flag = CheckBuildVersionUtil.getNotifyFlag();
+
+        PendingIntent startMainActivity = PendingIntent.getActivity(activity, 0, intent, flag);
         builder.setContentIntent(startMainActivity)
                 .setTicker(activity.getString(R.string.app_name))
                 .setSmallIcon(R.drawable.noalbumcover_120)
@@ -80,14 +82,16 @@ public class MusicNotifyManager implements
                 isFavorite ? R.drawable.btn_favorite_red_selector :
                         R.drawable.btn_favorite_gray_selector);
         // Pre
-        Intent pre = new Intent(Constants.ACTION_MUSIC);
-        pre.putExtra(Constants.NOTIFY_BUTTON_ID, Constants.PREV);
-        PendingIntent p3 = PendingIntent.getBroadcast(activity, Constants.PREV, pre, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent pre = new Intent(Constant.ACTION_MUSIC);
+        pre.putExtra(Constant.NOTIFY_BUTTON_ID, Constant.PREV);
+        int flag = CheckBuildVersionUtil.getNotifyFlag();
+
+        PendingIntent p3 = PendingIntent.getBroadcast(activity, Constant.PREV, pre, flag);
         view.setOnClickPendingIntent(R.id.play_notify_pre, p3);
         // favorite
-        Intent favorite = new Intent(Constants.ACTION_MUSIC);
-        favorite.putExtra(Constants.NOTIFY_BUTTON_ID, Constants.FAVORITE);
-        PendingIntent p4 = PendingIntent.getBroadcast(activity, Constants.FAVORITE, favorite, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent favorite = new Intent(Constant.ACTION_MUSIC);
+        favorite.putExtra(Constant.NOTIFY_BUTTON_ID, Constant.FAVORITE);
+        PendingIntent p4 = PendingIntent.getBroadcast(activity, Constant.FAVORITE, favorite, flag);
         view.setOnClickPendingIntent(R.id.play_notify_favorite, p4);
 
         return view;
@@ -110,7 +114,7 @@ public class MusicNotifyManager implements
         String musicArtist;
         String musicTitle = mMusicBean.getTitle();
 
-        if (musicTitle.contains(Constants.MQMS2)) {
+        if (musicTitle.contains(Constant.MQMS2)) {
             TitleAndArtistBean bean = TitleArtistUtil.getBean(musicTitle);
             musicName = bean.getSongName();
             musicArtist = bean.getSongArtist();
@@ -137,20 +141,21 @@ public class MusicNotifyManager implements
      * @param view v
      */
     private void setCommonClickPending(RemoteViews view) {
+        int flag = CheckBuildVersionUtil.getNotifyFlag();
         // Play
-        Intent playOrPause = new Intent(Constants.ACTION_MUSIC);
-        playOrPause.putExtra(Constants.NOTIFY_BUTTON_ID, Constants.PLAY);
-        PendingIntent p1 = PendingIntent.getBroadcast(activity, Constants.PLAY, playOrPause, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent playOrPause = new Intent(Constant.ACTION_MUSIC);
+        playOrPause.putExtra(Constant.NOTIFY_BUTTON_ID, Constant.PLAY);
+        PendingIntent p1 = PendingIntent.getBroadcast(activity, Constant.PLAY, playOrPause, flag);
         view.setOnClickPendingIntent(R.id.play_notify_play, p1);
         // Next
-        Intent next = new Intent(Constants.ACTION_MUSIC);
-        next.putExtra(Constants.NOTIFY_BUTTON_ID, Constants.NEXT);
-        PendingIntent p2 = PendingIntent.getBroadcast(activity, Constants.NEXT, next, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent next = new Intent(Constant.ACTION_MUSIC);
+        next.putExtra(Constant.NOTIFY_BUTTON_ID, Constant.NEXT);
+        PendingIntent p2 = PendingIntent.getBroadcast(activity, Constant.NEXT, next, flag);
         view.setOnClickPendingIntent(R.id.play_notify_next, p2);
         // Close
-        Intent close = new Intent(Constants.ACTION_MUSIC);
-        close.putExtra(Constants.NOTIFY_BUTTON_ID, Constants.CLOSE);
-        PendingIntent p3 = PendingIntent.getBroadcast(activity, Constants.CLOSE, close, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent close = new Intent(Constant.ACTION_MUSIC);
+        close.putExtra(Constant.NOTIFY_BUTTON_ID, Constant.CLOSE);
+        PendingIntent p3 = PendingIntent.getBroadcast(activity, Constant.CLOSE, close, flag);
         view.setOnClickPendingIntent(R.id.play_notify_close, p3);
     }
 

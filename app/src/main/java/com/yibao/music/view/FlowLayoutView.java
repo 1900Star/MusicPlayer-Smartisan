@@ -24,10 +24,12 @@ import java.util.List;
  * @ Des:    < https://github.com/fanrunqi/FlowLayout >
  */
 public class FlowLayoutView extends ViewGroup {
+
     @Override
     public Drawable getBackground() {
         return super.getBackground();
     }
+
 
     public FlowLayoutView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -209,6 +211,8 @@ public class FlowLayoutView extends ViewGroup {
     }
 
     public void setData(List<SearchHistoryBean> searchList) {
+        removeAllViews();
+        setBackgroundColor(getContext().getColor(R.color.pageBg));
         for (int i = 0; i < searchList.size(); i++) {
             View childView = LayoutInflater.from(getContext())
                     .inflate(R.layout.search_histoty_item, this, false);

@@ -7,19 +7,13 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import androidx.multidex.MultiDexApplication;
-
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.model.MusicBean;
 
 import java.io.File;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -70,7 +64,7 @@ public class StringUtil {
      * @return f
      */
     public static String getAlbum(int picType, Long albumId, String artist) {
-        String path = picType == 1 ? Constants.MUSIC_ARITIST_IMG_ROOT + artist + ".jpg" : Constants.MUSIC_ALBUM_ROOT + artist + ".jpg";
+        String path = picType == 1 ? Constant.MUSIC_ARITIST_IMG_ROOT + artist + ".jpg" : Constant.MUSIC_ALBUM_ROOT + artist + ".jpg";
         File file = new File(path);
 
         return file.exists() ? path : ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"),
@@ -86,7 +80,7 @@ public class StringUtil {
      */
     public static String getDownAlbum(String songName, String artist) {
 
-        return Constants.MUSIC_SONG_ALBUM_ROOT + songName + ".jpg";
+        return Constant.MUSIC_SONG_ALBUM_ROOT + songName + ".jpg";
 
     }
 
@@ -103,8 +97,9 @@ public class StringUtil {
         }
 
         String[] projection = {MediaStore.Audio.Albums.ALBUM_ART};
+        String replaceAlbum = albumId.replace("-", "");
         String imagePath = null;
-        Uri uri = Uri.parse("content://media" + MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI.getPath() + "/" + albumId);
+        Uri uri = Uri.parse("content://media" + MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI.getPath() + "/" + replaceAlbum);
 
         Cursor cur = context.getContentResolver().query(uri, projection, null, null, null);
         if (cur == null) {
@@ -184,19 +179,19 @@ public class StringUtil {
 
     public static long getSetCountdown(String countdown) {
         int mCountdownTime = 0;
-        if (MusicApplication.getIntstance().getString(R.string.counting_down).equals(countdown)) {
+        if (MusicApplication.getInstance().getString(R.string.counting_down).equals(countdown)) {
             mCountdownTime = -1;
-        } else if (MusicApplication.getIntstance().getString(R.string.no_set_up).equals(countdown)) {
+        } else if (MusicApplication.getInstance().getString(R.string.no_set_up).equals(countdown)) {
             LogUtil.d(TAG, "     时间为无");
-        } else if (MusicApplication.getIntstance().getString(R.string.fifteen_minute).equals(countdown)) {
+        } else if (MusicApplication.getInstance().getString(R.string.fifteen_minute).equals(countdown)) {
             mCountdownTime = 15 * 60 * 1000;
-        } else if (MusicApplication.getIntstance().getString(R.string.thirty_minute).equals(countdown)) {
+        } else if (MusicApplication.getInstance().getString(R.string.thirty_minute).equals(countdown)) {
             mCountdownTime = 30 * 60 * 1000;
-        } else if (MusicApplication.getIntstance().getString(R.string.an_hour).equals(countdown)) {
+        } else if (MusicApplication.getInstance().getString(R.string.an_hour).equals(countdown)) {
             mCountdownTime = 60 * 60 * 1000;
-        } else if (MusicApplication.getIntstance().getString(R.string.one_and_a_half_hours).equals(countdown)) {
+        } else if (MusicApplication.getInstance().getString(R.string.one_and_a_half_hours).equals(countdown)) {
             mCountdownTime = 90 * 60 * 1000;
-        } else if (MusicApplication.getIntstance().getString(R.string.two_hours).equals(countdown)) {
+        } else if (MusicApplication.getInstance().getString(R.string.two_hours).equals(countdown)) {
             mCountdownTime = 120 * 60 * 1000;
         }
         return mCountdownTime;

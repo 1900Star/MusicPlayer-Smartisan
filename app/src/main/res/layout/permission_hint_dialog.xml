@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/toolbar_bar_bg"
+        android:gravity="center"
+        android:text="AAAA"
+        android:textColor="@color/textDes"
+        android:textSize="@dimen/smallLyrics"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tv_add_list_cancle"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="30dp"
+        android:layout_weight="1"
+        android:background="@drawable/add_btn_selector"
+        android:gravity="center"
+        android:text="@string/cancel"
+        android:textColor="@color/text_cancel_selector"
+        android:textStyle="bold"
+      app:layout_constraintTop_toBottomOf="@id/tv_title"
+        app:layout_constraintEnd_toStartOf="@id/view_1"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <View
+        android:id="@+id/view_1"
+        android:layout_width="0.1dp"
+        android:layout_height="42dp"
+        android:layout_gravity="center"
+        android:background="@color/seekBarN"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@id/tv_add_list_cancle"
+        app:layout_constraintTop_toTopOf="@id/tv_add_list_cancle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_add_list_continue"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_weight="1"
+        android:background="@drawable/add_btn_selector"
+        android:gravity="center"
+        android:text="@string/go_open"
+        android:textColor="@color/text_cancel_selector"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/tv_add_list_cancle"
+    app:layout_constraintTop_toTopOf="@id/tv_add_list_cancle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/view_1" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

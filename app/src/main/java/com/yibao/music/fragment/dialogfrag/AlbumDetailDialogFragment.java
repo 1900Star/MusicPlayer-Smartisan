@@ -13,14 +13,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.bumptech.glide.Glide;
 import com.yibao.music.R;
-import com.yibao.music.base.listener.OnAlbumDetailListener;
-import com.yibao.music.model.qq.AlbumSong;
 import com.yibao.music.network.QqMusicRemote;
-import com.yibao.music.network.RetrofitHelper;
-import com.yibao.music.util.Constants;
 import com.yibao.music.util.DialogUtil;
-
-import java.util.Objects;
 
 /**
  * Author：Sid
@@ -55,7 +49,7 @@ public class AlbumDetailDialogFragment
     private void initData() {
         if (getArguments() != null) {
             String albumUrl = getArguments().getString(ALBUM_URL);
-            Glide.with(Objects.requireNonNull(getActivity())).load(albumUrl).into(mIvAlbumDetail);
+            Glide.with(requireActivity()).load(albumUrl).into(mIvAlbumDetail);
             String albumName = getArguments().getString(ALBUM_NAME);
             QqMusicRemote.getAlbumDetail(albumName, dataBean -> {
                 if (dataBean != null) {

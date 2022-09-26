@@ -67,12 +67,12 @@ public class HanziToPinyins {
             }
         }
         if (result != null) {
-            if (result.length() > Constants.NUMBER_FOUR) {
+            if (result.length() > Constant.NUMBER_FOUR) {
                 result = new StringBuilder(result.substring(4));
             }
 
             //如果首字母不在[a,z]和[A,Z]内则首字母改为‘#’
-            if (!(result.toString().toUpperCase().charAt(0) >= Constants.LETTER_A && result.toString().toUpperCase().charAt(0) <= Constants.LETTER_Z)) {
+            if (!(result.toString().toUpperCase().charAt(0) >= Constant.LETTER_A && result.toString().toUpperCase().charAt(0) <= Constant.LETTER_Z)) {
                 StringBuilder builder = new StringBuilder(result.toString());
                 builder.replace(0, 1, "#");
                 result = new StringBuilder(builder.toString());

@@ -18,8 +18,9 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.RxBus;
+import com.yibao.music.util.SpUtils;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.QqControlBar;
 import com.yibao.music.view.music.SmartisanControlBar;
@@ -27,7 +28,6 @@ import com.yibao.music.view.music.SmartisanControlBar;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -53,9 +53,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected CompositeDisposable mCompositeDisposable;
     protected Disposable mDisposableProgress;
     protected Disposable mQqLyricsDisposable;
-    protected Unbinder mBind;
     protected Disposable mRxViewDisposable;
     protected PlayListBeanDao mPlayListDao;
+    protected SpUtils mSps;
     protected final String TAG = "====" + this.getClass().getSimpleName() + "    ";
 
     @Override
@@ -63,9 +63,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         StatService.start(getApplicationContext());
         mBus = RxBus.getInstance();
-        mMusicDao = MusicApplication.getIntstance().getMusicDao();
-        mSearchDao = MusicApplication.getIntstance().getSearchDao();
-        mPlayListDao = MusicApplication.getIntstance().getPlayListDao();
+        mSps = new SpUtils(MusicApplication.getInstance(),Constant.MUSIC_CONFIG);
+
+        mMusicDao = MusicApplication.getInstance().getMusicDao();
+        mSearchDao = MusicApplication.getInstance().getSearchDao();
+        mPlayListDao = MusicApplication.getInstance().getPlayListDao();
     }
 
 
@@ -79,12 +81,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (mCompositeDisposable == null) {
             mCompositeDisposable = new CompositeDisposable();
         }
-        mCompositeDisposable.add(mBus.toObservableType(Constants.SERVICE_MUSIC, MusicBean.class)
+        mCompositeDisposable.add(mBus.toObservableType(Constant.SERVICE_MUSIC, MusicBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateCurrentPlayInfo));
         // 接收歌词下载状态
-        mCompositeDisposable.add(mBus.toObservableType(Constants.MUSIC_LYRIC_OK, LyricDownBean.class)
+        mCompositeDisposable.add(mBus.toObservableType(Constant.MUSIC_LYRIC_OK, LyricDownBean.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bean -> {
@@ -93,7 +95,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                         ToastUtil.show(this, "暂无歌词");
                     }
                 }));
-        mCompositeDisposable.add(mBus.toObservableType(Constants.PLAY_STATUS, Object.class)
+        mCompositeDisposable.add(mBus.toObservableType(Constant.PLAY_STATUS, Object.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> refreshBtnAndNotify((Integer) o)));
@@ -150,7 +152,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         ArrayList<String> arr = new ArrayList<>();
         Intent intent = new Intent(this, PlayListActivity.class);
         intent.putStringArrayListExtra("aar", arr);
-        intent.putExtra(Constants.SONG_NAME, songName);
+        intent.putExtra(Constant.SONG_NAME, songName);
         startActivity(intent);
         overridePendingTransition(R.anim.dialog_push_in, 0);
     }
@@ -160,8 +162,8 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void startSearchActivity(MusicBean currentMusicBean) {
         Intent intent = new Intent(this, SearchActivity.class);
-        intent.putExtra("pageType", Constants.NUMBER_ONE);
-        intent.putExtra("musicBean", currentMusicBean);
+        intent.putExtra(Constant.PAGE_TYPE, Constant.NUMBER_TEN);
+        intent.putExtra(Constant.MUSIC_BEAN, currentMusicBean);
         startActivity(intent);
         overridePendingTransition(R.anim.dialog_push_in, 0);
     }
@@ -195,7 +197,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        clearDisposableProgresse();
+        clearDisposableProgress();
         disposableQqLyric();
         if (mCompositeDisposable != null) {
             mCompositeDisposable.dispose();
@@ -204,7 +206,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected void clearDisposableProgresse() {
+    protected void clearDisposableProgress() {
         if (mDisposableProgress != null) {
             mDisposableProgress.dispose();
             mDisposableProgress = null;
@@ -214,7 +216,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mBind.unbind();
         if (mRxViewDisposable != null) {
             mRxViewDisposable.dispose();
             mRxViewDisposable = null;

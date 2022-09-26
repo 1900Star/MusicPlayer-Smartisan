@@ -16,7 +16,7 @@ import com.yibao.music.R;
 import com.yibao.music.base.listener.BottomSheetCallback;
 import com.yibao.music.service.CountdownService;
 import com.yibao.music.util.ColorUtil;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.ServiceUtil;
@@ -71,14 +71,14 @@ public class CountdownBottomSheetDialog {
 
     private void initRxData(BottomSheetDialog dialog) {
         if (mDisposable == null) {
-            mDisposable = RxBus.getInstance().toObservableType(Constants.COUNTDOWN_TIME, Object.class)
+            mDisposable = RxBus.getInstance().toObservableType(Constant.COUNTDOWN_TIME, Object.class)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(o -> {
                         String countdownTime = (String) o;
                         String stopTime = mContext.getString(R.string.time_remaining) + "  " + countdownTime;
                         mTvCountdown.setText(stopTime);
-                        if (countdownTime.equals(Constants.FINISH_TIME)) {
+                        if (countdownTime.equals(Constant.FINISH_TIME)) {
                             dialog.dismiss();
                         }
                     });
@@ -91,7 +91,7 @@ public class CountdownBottomSheetDialog {
         mTimerIntent.setAction(ACTION_TIMER);
         List<String> timeList = new ArrayList<>(Arrays.asList(mTimeArray).subList(getServiceIsRunning() ? 0 : 1, mTimeArray.length));
         setCompleteState(!timeList.get(0).equals(mTimeArray[0]));
-        mWheelView.setOffset(Constants.NUMBER_ONE);
+        mWheelView.setOffset(Constant.NUMBER_ONE);
         mWheelView.setItems(timeList);
     }
 
@@ -99,7 +99,7 @@ public class CountdownBottomSheetDialog {
         mTvComplete.setOnClickListener(v -> {
             if (mCountdownTime > 0) {
                 stopTimer();
-                mTimerIntent.putExtra(Constants.COUNTDOWN_TIME, mCountdownTime);
+                mTimerIntent.putExtra(Constant.COUNTDOWN_TIME, mCountdownTime);
                 mContext.startService(mTimerIntent);
             } else if (mCountdownTime == 0) {
                 stopTimer();
@@ -130,7 +130,7 @@ public class CountdownBottomSheetDialog {
     }
 
     private boolean getServiceIsRunning() {
-        return ServiceUtil.isServiceRunning(mContext, Constants.TIME_SERVICE_NAME);
+        return ServiceUtil.isServiceRunning(mContext, Constant.TIME_SERVICE_NAME);
     }
 
     private void initView(BottomSheetDialog dialog, View view) {

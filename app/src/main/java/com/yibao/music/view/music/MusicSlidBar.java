@@ -16,7 +16,7 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.AlbumAdapter;
 import com.yibao.music.adapter.ArtistAdapter;
 import com.yibao.music.adapter.SongAdapter;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 
 
 /**
@@ -200,13 +200,13 @@ public class MusicSlidBar
         //设置导航字母    “mStickyViwe.setText(name);”
         int sectionForPosition = 1;
         // 根据adapterType得到指定页面的Adapter
-        if (adapterType == Constants.NUMBER_ONE) {
+        if (adapterType == Constant.NUMBER_ONE) {
             SongAdapter songListAdapter = (SongAdapter) mRecyclerView.getAdapter();
             sectionForPosition = songListAdapter.getPositionForSection(name.charAt(0));
-        } else if (adapterType == Constants.NUMBER_TWO) {
+        } else if (adapterType == Constant.NUMBER_TWO) {
             ArtistAdapter artistAdapter = (ArtistAdapter) mRecyclerView.getAdapter();
             sectionForPosition = artistAdapter.getPositionForSection(name.charAt(0));
-        } else if (adapterType == Constants.NUMBER_THREE || adapterType == Constants.NUMBER_FOUR) {
+        } else if (adapterType == Constant.NUMBER_THREE || adapterType == Constant.NUMBER_FOUR) {
             AlbumAdapter albumAdapter = (AlbumAdapter) mRecyclerView.getAdapter();
             sectionForPosition = albumAdapter.getPositionForSection(name.charAt(0));
         }

@@ -1,6 +1,5 @@
 package com.yibao.music.fragment.dialogfrag;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -11,6 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -18,7 +18,7 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.runtime.Permission;
 import com.yibao.music.R;
 import com.yibao.music.base.listener.BottomSheetCallback;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.PermissionsUtil;
 
@@ -29,7 +29,7 @@ import com.yibao.music.util.PermissionsUtil;
  * @author Stran
  */
 public class TakePhotoBottomSheetDialog {
-    private Activity mContext;
+    private FragmentActivity mContext;
     private View mTvCancel;
     private View mTvTakePhoto;
     private View mTvChoicePhoto;
@@ -38,7 +38,7 @@ public class TakePhotoBottomSheetDialog {
         return new TakePhotoBottomSheetDialog();
     }
 
-    public void getBottomDialog(Activity context) {
+    public void getBottomDialog(FragmentActivity context) {
         this.mContext = context;
         BottomSheetDialog dialog = new BottomSheetDialog(context);
         View view = LayoutInflater.from(context)
@@ -62,7 +62,7 @@ public class TakePhotoBottomSheetDialog {
                             TakePhotoBottomSheetDialog.this.takeCameraPic();
                             dialog.dismiss();
                         })
-                        .onDenied(permissions -> PermissionsDialog.newInstance().show(mContext.getFragmentManager(), "permissions"))
+                        .onDenied(permissions -> PermissionsDialog.newInstance(mContext.getString(R.string.camera_not_open)).show(mContext.getSupportFragmentManager(), "permissions"))
                         .start();
             }
 
@@ -81,7 +81,7 @@ public class TakePhotoBottomSheetDialog {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.putExtra(MediaStore.EXTRA_OUTPUT,
                     FileUtil.getPicUri(mContext, savePath));
-            mContext.startActivityForResult(intent, Constants.CODE_CAMERA_REQUEST);
+            mContext.startActivityForResult(intent, Constant.CODE_CAMERA_REQUEST);
         }
     }
 
@@ -91,7 +91,7 @@ public class TakePhotoBottomSheetDialog {
                 .onGranted(permissions -> {
                     Intent intentFromGallery = new Intent(Intent.ACTION_PICK, null);
                     intentFromGallery.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                    mContext.startActivityForResult(intentFromGallery, Constants.CODE_GALLERY_REQUEST);
+                    mContext.startActivityForResult(intentFromGallery, Constant.CODE_GALLERY_REQUEST);
                 })
                 .onDenied(permissions -> Log.d("lsp", "没有读取和写入的权限!"))
                 .start();

@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginBottom="@dimen/dp_six"
-        android:background="@drawable/titlebar_playing_bg"
+        android:background="@drawable/title_bar_playing_bg"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -30,8 +30,8 @@
             android:id="@+id/tv_delete_play_list"
             android:layout_width="0dp"
             android:layout_height="28dp"
-            android:layout_marginEnd="@dimen/dp_six"
             android:layout_marginStart="@dimen/dp_six"
+            android:layout_marginEnd="@dimen/dp_six"
             android:layout_weight="1"
             android:background="@drawable/shape_btn_selector"
             android:enabled="true"
@@ -58,10 +58,8 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_detail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" />
-
+        android:layout_height="match_parent" />
 </LinearLayout>

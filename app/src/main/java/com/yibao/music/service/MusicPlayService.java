@@ -22,7 +22,7 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.network.QqMusicRemote;
 import com.yibao.music.util.CheckBuildVersionUtil;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.MusicListUtil;
@@ -30,7 +30,7 @@ import com.yibao.music.util.NetworkUtil;
 import com.yibao.music.util.QueryMusicFlagListUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
-import com.yibao.music.util.SpUtil;
+import com.yibao.music.util.SpUtils;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.ThreadPoolProxyFactory;
 import com.yibao.music.util.ToastUtil;
@@ -47,12 +47,12 @@ import io.reactivex.disposables.Disposable;
  * Des：${控制音乐的Service}
  * Time:2017/5/30 13:27
  */
-public class MusicPlayService
-        extends Service {
-    private static final String TAG = "====" + MusicListUtil.class.getSimpleName() + "    ";
+public class MusicPlayService extends Service {
+    private static final String TAG = "====" + MusicPlayService.class.getSimpleName() + "    ";
     private MediaPlayer mediaPlayer;
     private AudioBinder mAudioBinder;
     private int playMode;
+    private SpUtils mSp;
 
     /**
      * 三种播放模式
@@ -69,6 +69,7 @@ public class MusicPlayService
     private Disposable mDisposable;
     private AudioManager mAudioManager;
     private MediaSessionManager mSessionManager;
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -96,36 +97,43 @@ public class MusicPlayService
     private void init() {
         mAudioBinder = new AudioBinder();
         mBus = RxBus.getInstance();
-        mMusicDao = MusicApplication.getIntstance().getMusicDao();
+        mSp = new SpUtils(getApplication(), Constant.MUSIC_CONFIG);
+        mMusicDao = MusicApplication.getInstance().getMusicDao();
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         //初始化播放模式
-        playMode = SpUtil.getMusicMode(this);
+        playMode = mSp.getInt(Constant.PLAY_MODE);
         mSessionManager = new MediaSessionManager(this, mAudioBinder);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int enterPosition = intent.getIntExtra("position", 0);
-        int sortListFlag = intent.getIntExtra("sortFlag", 0);
-        int dataFlag = intent.getIntExtra("dataFlag", 0);
-        String queryFlag = intent.getStringExtra("queryFlag");
-        int sortFlag = sortListFlag == Constants.NUMBER_ZERO ? Constants.NUMBER_ONE : sortListFlag;
-        SpUtil.setDataQueryFlag(this, dataFlag);
-        if (queryFlag != null && !queryFlag.equals(Constants.FAVORITE_FLAG) && !queryFlag.equals(Constants.NO_NEED_FLAG)) {
-            SpUtil.setQueryFlag(MusicPlayService.this, queryFlag);
+        int currentPosition = intent.getIntExtra(Constant.POSITION, 0);
+        int pageType = intent.getIntExtra(Constant.PAGE_TYPE, 0);
+        String condition = intent.getStringExtra(Constant.CONDITION);
+        // 保存页面标识
+        mSp.putValues(new SpUtils.ContentValue(Constant.PAGE_TYPE, pageType));
+        if (condition != null) {
+            // 保存关键字
+            mSp.putValues(new SpUtils.ContentValue(Constant.CONDITION, condition));
         }
-        LogUtil.d(TAG, " position  ==" + enterPosition + "   sortListFlag  ==" + sortFlag + "  dataFlag== " + dataFlag + "   queryFlag== " + queryFlag);
-        mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao, sortFlag, dataFlag, queryFlag);
-        if (enterPosition != position && enterPosition != -1) {
-            position = enterPosition;
+        int playPosition = currentPosition + 1;
+        LogUtil.d(TAG, " position  ==  " + playPosition + "   pageType  ==   " + pageType + "  condition  ==  " + condition);
+        // 播放列表数据
+        mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao.queryBuilder(), pageType, condition);
+//        for (MusicBean musicBean : mMusicDataList) {
+//            LogUtil.d(TAG, "播放列表  " + musicBean.getTitle());
+//        }
+        if (currentPosition != position && currentPosition != -1) {
+            position = currentPosition;
             //执行播放
             mAudioBinder.play();
-        } else if (enterPosition != -1) {
+        } else if (currentPosition != -1) {
             //通知播放界面更新
             sendCurrentMusicInfo();
         }
         if (mMusicDataList != null && mMusicDataList.size() > 0) {
             MusicBean musicBean = mMusicDataList.get(position);
+            LogUtil.d(TAG, " 当前播放信息  ==  " + musicBean.toString());
             musicBean.setPlayFrequency(musicBean.getPlayFrequency() + 1);
             mMusicDao.update(musicBean);
         }
@@ -140,14 +148,12 @@ public class MusicPlayService
         if (mMusicDataList != null && position < mMusicDataList.size()) {
             MusicBean musicBean = mMusicDataList.get(position);
             musicBean.setCureetPosition(position);
-            mBus.post(Constants.SERVICE_MUSIC, musicBean);
+            mBus.post(Constant.SERVICE_MUSIC, musicBean);
         }
     }
 
 
-    public class AudioBinder
-            extends Binder
-            implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
+    public class AudioBinder extends Binder implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
         private MusicBean mMusicInfo;
         private MusicNotifyManager mNotifyManager;
 
@@ -163,18 +169,17 @@ public class MusicPlayService
                 position = position >= mMusicDataList.size() ? 0 : position;
                 mMusicInfo = mMusicDataList.get(position);
 
-                mediaPlayer = MediaPlayer.create(MusicPlayService.this,
-                        getSongFileUri());
+                mediaPlayer = MediaPlayer.create(MusicPlayService.this, getSongFileUri());
 
                 mediaPlayer.setOnPreparedListener(this);
                 mediaPlayer.setOnCompletionListener(this);
                 String songName = StringUtil.getSongName(mMusicInfo.getTitle());
                 String artist = StringUtil.getArtist(mMusicInfo.getArtist());
-                boolean lyricIsExists = LyricsUtil.checkLyricFile(songName, artist);
-                if (!lyricIsExists && NetworkUtil.isNetworkConnected()) {
-                    QqMusicRemote.getSongLyrics(songName, artist);
-                }
-                SpUtil.setMusicPosition(MusicPlayService.this, position);
+//                boolean lyricIsExists = LyricsUtil.checkLyricFile(songName, artist);
+//                if (!lyricIsExists && NetworkUtil.isNetworkConnected()) {
+//                    QqMusicRemote.getSongLyrics(songName, artist);
+//                }
+                mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_POSITION, position));
                 showNotifycation(true);
                 mSessionManager.updatePlaybackState(true);
                 mSessionManager.updateLocMsg();
@@ -187,7 +192,7 @@ public class MusicPlayService
             mNotifyManager.show();
         }
 
-        public void updataFavorite() {
+        public void updateFavorite() {
             if (position < mMusicDataList.size()) {
                 MusicBean musicBean = mMusicDataList.get(position);
                 boolean favorite = mMusicDao.load(musicBean.getId()).getIsFavorite();
@@ -202,7 +207,9 @@ public class MusicPlayService
         }
 
         private void hintNotifycation() {
-            mNotifyManager.hide();
+            if (mNotifyManager != null) {
+                mNotifyManager.hide();
+            }
         }
 
         public MusicBean getMusicBean() {
@@ -261,17 +268,17 @@ public class MusicPlayService
 
         // 获取当前的播放模式
 
-        public int getPalyMode() {
+        public int getPlayMode() {
             return playMode;
         }
 
         //设置播放模式
 
-        public void setPalyMode(int playmode) {
-            playMode = playmode;
+        public void setPlayMode(int mode) {
+            playMode = mode;
             //保存播放模式
+            mSp.putValues(new SpUtils.ContentValue(Constant.PLAY_MODE, playMode));
 
-            SpUtil.setMusicMode(MusicPlayService.this, playMode);
         }
 
         //手动播放上一曲
@@ -335,7 +342,7 @@ public class MusicPlayService
             return position;
         }
 
-        public void updataFavorite(MusicBean bean) {
+        public void updateFavorite(MusicBean bean) {
             bean.setIsFavorite(!bean.isFavorite());
             bean.setTime(StringUtil.getTime());
             mMusicDao.update(bean);
@@ -359,13 +366,11 @@ public class MusicPlayService
 
     private void updataFavoriteFile(MusicBean musicBean, boolean currentIsFavorite) {
         if (currentIsFavorite) {
-            mDisposable = ReadFavoriteFileUtil.deleteFavorite(musicBean.getTitle())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(aBoolean -> {
-                        if (!aBoolean) {
-                            ToastUtil.show(this, getResources().getString(R.string.song_not_favorite));
-                        }
-                    });
+            mDisposable = ReadFavoriteFileUtil.deleteFavorite(musicBean.getTitle()).observeOn(AndroidSchedulers.mainThread()).subscribe(aBoolean -> {
+                if (!aBoolean) {
+                    ToastUtil.show(this, getResources().getString(R.string.song_not_favorite));
+                }
+            });
         } else {
             //更新收藏文件  将歌名和收藏时间拼接储存，恢复的时候，歌名和时间以“T”为标记进行截取
             String songInfo = musicBean.getTitle() + "T" + musicBean.getTime();
@@ -381,44 +386,43 @@ public class MusicPlayService
     private void initNotifyBroadcast() {
         mMusicReceiver = new MusicBroacastReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(Constants.ACTION_MUSIC);
+        filter.addAction(Constant.ACTION_MUSIC);
         registerReceiver(mMusicReceiver, filter);
 
     }
 
-    private class MusicBroacastReceiver
-            extends BroadcastReceiver {
+    private class MusicBroacastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action != null) {
-                if (action.equals(Constants.ACTION_MUSIC)) {
-                    int id = intent.getIntExtra(Constants.NOTIFY_BUTTON_ID, 0);
+                if (action.equals(Constant.ACTION_MUSIC)) {
+                    int id = intent.getIntExtra(Constant.NOTIFY_BUTTON_ID, 0);
                     switch (id) {
-                        case Constants.FAVORITE:
-                            mAudioBinder.updataFavorite();
-                            mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_ONE);
+                        case Constant.FAVORITE:
+                            mAudioBinder.updateFavorite();
+                            mBus.post(Constant.PLAY_STATUS, Constant.NUMBER_ONE);
                             break;
-                        case Constants.CLOSE:
+                        case Constant.CLOSE:
                             pauseMusic();
                             break;
-                        case Constants.PREV:
+                        case Constant.PREV:
                             mAudioBinder.playPre();
                             break;
-                        case Constants.PLAY:
+                        case Constant.PLAY:
                             if (mediaPlayer != null) {
                                 if (mAudioBinder.isPlaying()) {
                                     mAudioBinder.pause();
                                 } else {
                                     mAudioBinder.start();
                                 }
-                                mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_ZERO);
+                                mBus.post(Constant.PLAY_STATUS, Constant.NUMBER_ZERO);
                             }
                             break;
-                        case Constants.NEXT:
+                        case Constant.NEXT:
                             mAudioBinder.playNext();
                             break;
-                        case Constants.COUNTDOWN_FINISH:
+                        case Constant.COUNTDOWN_FINISH:
                             pauseMusic();
                             break;
                         default:
@@ -432,8 +436,9 @@ public class MusicPlayService
             if (mAudioBinder != null) {
                 mAudioBinder.pause();
                 mAudioBinder.hintNotifycation();
-                mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_TWO);
-                SpUtil.setFoucesFlag(MusicPlayService.this, false);
+                mBus.post(Constant.PLAY_STATUS, Constant.NUMBER_TWO);
+
+                mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_FOCUS, false));
                 stopSelf();
             }
         }
@@ -452,7 +457,7 @@ public class MusicPlayService
         public void onReceive(Context context, Intent intent) {
             if (mAudioBinder != null && mAudioBinder.isPlaying()) {
                 mAudioBinder.pause();
-                mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_ZERO);
+                mBus.post(Constant.PLAY_STATUS, Constant.NUMBER_ZERO);
             }
         }
     };
@@ -500,11 +505,12 @@ public class MusicPlayService
     private void lossAudioFoucs(boolean isLossFocus) {
         if (isLossFocus) {
             mAudioBinder.pause();
-            SpUtil.setFoucesFlag(this, true);
+            mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_FOCUS, true));
+
         } else {
             mAudioBinder.start();
         }
-        mBus.post(Constants.PLAY_STATUS, Constants.NUMBER_ZERO);
+        mBus.post(Constant.PLAY_STATUS, Constant.NUMBER_ZERO);
     }
 
     public void abandonAudioFocus() {

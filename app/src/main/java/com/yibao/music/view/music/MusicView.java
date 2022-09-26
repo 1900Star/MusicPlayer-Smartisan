@@ -1,19 +1,21 @@
 package com.yibao.music.view.music;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
 import com.yibao.music.R;
 import com.yibao.music.base.listener.OnGlideLoadListener;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 
 import java.util.Objects;
 
@@ -82,10 +84,10 @@ public class MusicView
      *                       3  ： AlbumAdapter  普通视图  、 4  ： AlbumAdapter  平铺视图 GridView 3列
      * @param isShowSlideBar 只有按歌曲名排列时，Slidebar才显示 。
      */
-    public void setAdapter(Context context, int adapterType, boolean isShowSlideBar, RecyclerView.Adapter adapter) {
+    public void setAdapter(Context context, int adapterType, boolean isShowSlideBar, RecyclerView.Adapter<RecyclerView.ViewHolder> adapter) {
         mSlidebar.setAdapterType(adapterType);
-        if (adapterType == Constants.NUMBER_FOUR) {
-            GridLayoutManager manager = new GridLayoutManager(context, Constants.NUMBER_THREE);
+        if (adapterType == Constant.NUMBER_FOUR) {
+            GridLayoutManager manager = new GridLayoutManager(context, Constant.NUMBER_THREE);
             manager.setOrientation(GridLayoutManager.VERTICAL);
             mRecyclerView.setLayoutManager(manager);
         } else {
@@ -99,7 +101,6 @@ public class MusicView
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
         mSlidebar.setBarVisibility(isShowSlideBar ? VISIBLE : GONE);
 
     }

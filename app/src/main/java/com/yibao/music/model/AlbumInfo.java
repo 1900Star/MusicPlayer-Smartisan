@@ -206,4 +206,19 @@ public class AlbumInfo implements Parcelable, Comparable<AlbumInfo> {
     public void setMSelected(boolean mSelected) {
         this.mSelected = mSelected;
     }
+
+    @Override
+    public String toString() {
+        return "AlbumInfo{" +
+                "id=" + id +
+                ", albumName='" + albumName + '\'' +
+                ", artist='" + artist + '\'' +
+                ", albumId=" + albumId +
+                ", songCount=" + songCount +
+                ", firstChar='" + firstChar + '\'' +
+                ", songName='" + songName + '\'' +
+                ", year=" + year +
+                ", mSelected=" + mSelected +
+                '}';
+    }
 }

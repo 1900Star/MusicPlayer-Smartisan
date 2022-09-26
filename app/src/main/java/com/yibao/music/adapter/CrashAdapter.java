@@ -69,7 +69,7 @@ public class CrashAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return 0;
     }
 
-    class CrashHolder extends RecyclerView.ViewHolder {
+    static class CrashHolder extends RecyclerView.ViewHolder {
 
         private final TextView mTvItem;
 

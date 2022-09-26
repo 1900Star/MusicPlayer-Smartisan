@@ -5,14 +5,13 @@ import android.content.Context;
 import com.yibao.music.base.BaseObserver;
 import com.yibao.music.base.listener.OnAlbumDetailListener;
 import com.yibao.music.base.listener.OnImagePathListener;
-import com.yibao.music.base.listener.OnSearchLyricsListener;
 import com.yibao.music.model.LyricDownBean;
 import com.yibao.music.model.qq.Album;
 import com.yibao.music.model.qq.AlbumSong;
 import com.yibao.music.model.qq.OnlineSongLrc;
 import com.yibao.music.model.qq.SearchSong;
 import com.yibao.music.model.qq.SingerImg;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.DownloadLyricsUtil;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
@@ -92,6 +91,7 @@ public class QqMusicRemote {
                 .subscribe(new BaseObserver<Album>() {
                     @Override
                     public void onNext(Album album) {
+
                         String albumMid = album.getData().getAlbum().getList().get(0).getAlbumMID();
                         String picUrl = albumUrlHead + albumMid + ".jpg";
                         LogUtil.d(TAG, "请求到的图片地址 " + picUrl);
@@ -102,7 +102,7 @@ public class QqMusicRemote {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        LogUtil.d(TAG, e.getMessage());
+                        LogUtil.d(TAG,"专辑图片获取失败"+ e.getMessage());
                     }
                 });
     }
@@ -188,17 +188,16 @@ public class QqMusicRemote {
     private static void sendSearchLyricsResult(OnlineSongLrc onlineSongLrc, String songName, String artist) {
         String lyric = onlineSongLrc.getLyric();
         if (lyric != null) {
-            if (lyric.contains(Constants.PURE_MUSIC)) {
-                boolean b = DownloadLyricsUtil.saveLyrics(lyric, songName, artist);
-                LyricDownBean lyricDownBean = new LyricDownBean(true, b ? Constants.PURE_MUSIC : Constants.NO_LYRICS);
-                RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);
+            boolean b = DownloadLyricsUtil.saveLyrics(lyric, songName, artist);
+            LyricDownBean lyricDownBean;
+            if (lyric.contains(Constant.PURE_MUSIC)) {
+                lyricDownBean = new LyricDownBean(true, b ? Constant.PURE_MUSIC : Constant.NO_LYRICS);
             } else {
-                boolean b = DownloadLyricsUtil.saveLyrics(lyric, songName, artist);
-                LyricDownBean lyricDownBean = new LyricDownBean(b, b ? Constants.MUSIC_LYRIC_OK : Constants.MUSIC_LYRIC_FAIL);
-                RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, lyricDownBean);
+                lyricDownBean = new LyricDownBean(b, b ? Constant.MUSIC_LYRIC_OK : Constant.MUSIC_LYRIC_FAIL);
             }
+            RxBus.getInstance().post(Constant.MUSIC_LYRIC_OK, lyricDownBean);
         } else {
-            RxBus.getInstance().post(Constants.MUSIC_LYRIC_OK, new LyricDownBean(false, Constants.MUSIC_LYRIC_FAIL));
+            RxBus.getInstance().post(Constant.MUSIC_LYRIC_OK, new LyricDownBean(false, Constant.MUSIC_LYRIC_FAIL));
         }
     }
 }

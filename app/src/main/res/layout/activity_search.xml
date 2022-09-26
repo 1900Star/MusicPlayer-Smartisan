@@ -1,108 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
+    android:background="@color/pageBg"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_search"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@drawable/tabbar_bg">
+            android:layout_height="wrap_content"
+            android:background="@drawable/toolbar_bar_bg">
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_toStartOf="@+id/tv_search_cancel"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
+
+                <ImageView
+                    android:id="@+id/iv_edit_bg"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
                     android:layout_gravity="center_vertical"
-                    android:layout_toStartOf="@+id/tv_search_cancel">
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/search_cm"
+                    android:contentDescription="@null"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/tv_search_cancel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/search_cm"
-                        android:contentDescription="@null" />
 
+                <EditText
+                    android:id="@+id/edit_search"
+                    android:layout_width="0dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:inputType="text"
+                    android:textColor="@color/colorBlack"
+                    android:textCursorDrawable="@drawable/edittext_cursor_color"
+                    android:textSize="@dimen/about_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/iv_edit_clear"
+                    app:layout_constraintStart_toStartOf="@id/iv_edit_bg"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <EditText
-                        android:id="@+id/edit_search"
-                        android:layout_width="match_parent"
-                        android:layout_height="32dp"
-                        android:layout_marginStart="38dp"
-                        android:layout_marginEnd="4dp"
-                        android:background="@null"
-                        android:gravity="center_vertical"
-                        android:inputType="text"
-                        android:textColor="@color/colorBlack"
-                        android:textCursorDrawable="@drawable/edittext_cursor_color"
-                        android:textSize="@dimen/about_content"
-                        tools:ignore="LabelFor" />
-
-                    <ImageView
-                        android:id="@+id/iv_edit_clear"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_gravity="end|center_vertical"
-                        android:layout_marginEnd="5dp"
-                        android:contentDescription="@string/clear_edit"
-                        android:src="@drawable/search_clear"
-                        android:visibility="gone" />
-                </FrameLayout>
+                <ImageView
+                    android:id="@+id/iv_edit_clear"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="10dp"
+                    android:contentDescription="@string/clear_edit"
+                    android:src="@drawable/search_clear"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/iv_edit_bg"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
                 <TextView
                     android:id="@+id/tv_search_cancel"
                     android:layout_width="58dp"
                     android:layout_height="30dp"
-                    android:layout_alignParentEnd="true"
+
                     android:layout_centerVertical="true"
                     android:layout_marginStart="2dp"
-                    android:layout_marginEnd="4dp"
+
+                    android:layout_marginEnd="10dp"
                     android:background="@drawable/shape_btn_edit_selector"
                     android:gravity="center"
                     android:text="@string/cancel"
                     android:textColor="@color/textDes"
                     android:textSize="@dimen/about_content"
-                    android:textStyle="bold" />
-            </RelativeLayout>
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <TextView
+        android:id="@+id/tv_no_search_result"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/listBg"
+        android:gravity="center"
+        android:text="@string/not_search_result"
+        android:textColor="@color/seekBarN"
+        android:textSize="@dimen/big_tv"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/view_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_search" />
+
     <include
         android:id="@+id/search_category_root"
         layout="@layout/search_category"
-        android:visibility="gone" />
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/vp_search"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_search" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="tv_search_1,iv_clear_history,sv_search," />
+
+    <TextView
+        android:id="@+id/tv_search_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerVertical="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/search_history"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/about_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_search" />
+
+    <ImageView
+        android:id="@+id/iv_clear_history"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        android:src="@drawable/clear_text_selector"
+        app:layout_constraintBottom_toBottomOf="@id/tv_search_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_search_1" />
+
+    <ScrollView
+        android:id="@+id/sv_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/aboutContent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_search_1">
+
+        <com.yibao.music.view.FlowLayoutView
+            android:id="@+id/flowlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true" />
+    </ScrollView>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:background="@color/colorAccent"
+        android:visibility="gone"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_category_root" />
 
     <View
+        android:id="@+id/view_1"
         android:layout_width="match_parent"
         android:layout_height="0.2dp"
-        android:background="@color/listBg" />
+        android:background="@color/listBg"
+        app:layout_constraintBottom_toTopOf="@id/smartisan_control_bar"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.yibao.music.view.music.SmartisanControlBar
         android:id="@+id/smartisan_control_bar"
         android:layout_width="match_parent"
         android:layout_height="54dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

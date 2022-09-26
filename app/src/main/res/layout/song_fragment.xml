@@ -5,18 +5,21 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical"
-    tools:context="com.yibao.music.activity.MusicActivity">
+    tools:context=".activity.MusicActivity">
 
-    <include layout="@layout/music_toolbar" />
+    <com.yibao.music.view.music.MusicToolBar
+        android:id="@+id/music_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
-    <include layout="@layout/song_fragment_category" />
+    <include
+        android:id="@+id/song_category"
+        layout="@layout/song_fragment_category" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/seekBarN" />
-
-
 
 
     <androidx.viewpager2.widget.ViewPager2

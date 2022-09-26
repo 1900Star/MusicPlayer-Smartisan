@@ -1,13 +1,7 @@
 package com.yibao.music.util;
 
-import android.net.Uri;
-import android.util.Log;
-
-import com.yibao.music.MusicApplication;
-import com.yibao.music.model.LyricDownBean;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
-import com.yibao.music.network.RetrofitHelper;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,12 +28,12 @@ public class LyricsUtil {
     private static final String UNKNOWN_NAME = "<unknown>";
 
     public static boolean checkLyricFile(String songName, String songArtist) {
-        String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + songArtist + ".lrc";
-        File file = CheckBuildVersionUtil.checkAndroidVersionQ() ? FileUtil.createFile(MusicApplication.getIntstance(), songName + "$$" + songArtist + ".lrc", Constants.SONG_LYRICS)
-                : new File(path);
+
+
+        File file = FileUtil.getLyricsFile(songName, songArtist);
         boolean b = CheckBuildVersionUtil.checkAndroidVersionQ() ? FileUtil.isAndroidQFileExists(file.getAbsolutePath()) : file.exists();
         LogUtil.d(TAG, " 本地歌词信息  " + songName + " $$ " + songArtist + " == 是否存在    " + b);
-        return b;
+        return file.exists();
     }
 
 
@@ -52,7 +46,7 @@ public class LyricsUtil {
     public static void deleteCurrentLyric(String name, String artist) {
         String songName = StringUtil.getSongName(name);
         String songArtist = StringUtil.getArtist(artist);
-        String path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + songArtist + ".lrc";
+        String path = Constant.MUSIC_LYRICS_ROOT + songName + "$$" + songArtist + ".lrc";
         LogUtil.d(TAG, " 删除当前 歌词    " + path);
         File file = new File(path);
         if (file.exists()) {
@@ -64,7 +58,7 @@ public class LyricsUtil {
      * 删除本地歌词list长度小于2的歌词文件，以便播放时重新下载正确的歌词。
      */
     public static void clearLyricList() {
-        File file = new File(Constants.MUSIC_LYRICS_ROOT);
+        File file = new File(Constant.MUSIC_LYRICS_ROOT);
         File[] files = file.listFiles();
         int nu = 0;
         for (File f : files) {
@@ -118,42 +112,35 @@ public class LyricsUtil {
      */
     public static List<MusicLyricBean> getLyricList(MusicBean musicBean) {
         List<MusicLyricBean> lrcList = new ArrayList<>();
-        boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(musicBean.getTitle()), StringUtil.getArtist(musicBean.getArtist()));
-        if (lyricIsExists) {
-            String path = Constants.MUSIC_LYRICS_ROOT + StringUtil.getSongName(musicBean.getTitle()) + "$$" + StringUtil.getSongName(musicBean.getArtist()) + ".lrc";
-            Log.d(TAG, "lyrics path " + path);
-            File file = CheckBuildVersionUtil.checkAndroidVersionQ() ? FileUtil.createFile(MusicApplication.getIntstance(), StringUtil.getSongName(musicBean.getTitle()) + "$$" + StringUtil.getSongName(musicBean.getArtist()) + ".lrc", Constants.MUSIC_LYRICS_ROOT) : new File(path);
-            try {
-                String charsetName = "utf-8";
-                br = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsetName));
-                String line = br.readLine();
-                while (line != null) {
-                    ArrayList<MusicLyricBean> been = parseLine(line);
-                    lrcList.addAll(been);
-                    if (br != null) {
-                        line = br.readLine();
-                    }
+
+        try {
+            File file = FileUtil.getLyricsFile(musicBean.getTitle(), musicBean.getArtist());
+            LogUtil.d(TAG, file.getAbsolutePath());
+            String charsetName = "utf-8";
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsetName));
+            String line = br.readLine();
+            while (line != null) {
+                ArrayList<MusicLyricBean> been = parseLine(line);
+                lrcList.addAll(been);
+                if (br != null) {
+                    line = br.readLine();
                 }
-                br.close();
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            lrcList.add(new MusicLyricBean(0, "歌词加载出错"));
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                    br = null;
+                }
             } catch (IOException e) {
                 e.printStackTrace();
-                lrcList.add(new MusicLyricBean(0, "歌词加载出错"));
-            } finally {
-                try {
-                    if (br != null) {
-                        br.close();
-                        br = null;
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
             }
-        } else {
 
-            lrcList.add(new MusicLyricBean(0, "没有发现歌词"));
         }
-
         Collections.sort(lrcList);
         return lrcList;
     }

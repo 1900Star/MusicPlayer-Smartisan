@@ -33,32 +33,18 @@ public class DownloadLyricsUtil {
     /**
      * 字符串写入本地txt
      *
-     * @param strcontent 文件内容
-     * @param songName   文件地址
-     * @param artist     文件名
+     * @param content  文件内容
+     * @param songName 文件地址
+     * @param artist   文件名
      * @return 写入结果
      */
-    public static boolean saveLyrics(String strcontent, String songName, String artist) {
+    public static boolean saveLyrics(String content, String songName, String artist) {
         boolean isSavaFile;
-        String path = null;
-        if (!CheckBuildVersionUtil.checkAndroidVersionQ()) {
-
-            File lyricsFile = new File(Constants.MUSIC_LYRICS_ROOT);
-            if (!lyricsFile.exists()) {
-                lyricsFile.mkdirs();
-            }
-            path = Constants.MUSIC_LYRICS_ROOT + songName + "$$" + artist + ".lrc";
-        }
-        String strContent = strcontent + "\r\n";
+        String strContent = content + "\r\n";
         try {
-            File file = CheckBuildVersionUtil.checkAndroidVersionQ() ?
-                    FileUtil.createFile(MusicApplication.getIntstance(), songName + "$$" + artist + ".lrc", Constants.SONG_LYRICS)
-                    : new File(path);
+            File file = FileUtil.getLyricsFile(songName, artist);
+            LogUtil.d("lsp", file.getAbsolutePath());
 
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
-                file.createNewFile();
-            }
             RandomAccessFile raf = new RandomAccessFile(file, "rwd");
             raf.seek(file.length());
             raf.write(strContent.getBytes());

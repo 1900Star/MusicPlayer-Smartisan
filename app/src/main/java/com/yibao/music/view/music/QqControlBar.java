@@ -13,7 +13,7 @@ import com.yibao.music.R;
 import com.yibao.music.adapter.QqBarPagerAdapter;
 import com.yibao.music.base.listener.MusicPagerListener;
 import com.yibao.music.model.MusicBean;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.view.MusicProgressView;
 
 import java.util.List;
@@ -116,10 +116,10 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.music_floating_pager_play:
-                controlBarClick(Constants.NUMBER_ONE);
+                controlBarClick(Constant.NUMBER_ONE);
                 break;
             case R.id.music_floating_pager_favorite:
-                controlBarClick(Constants.NUMBER_TWO);
+                controlBarClick(Constant.NUMBER_TWO);
                 break;
             default:
                 break;

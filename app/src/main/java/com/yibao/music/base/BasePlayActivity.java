@@ -8,17 +8,17 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.PowerManager;
-
-import androidx.annotation.Nullable;
-
 import android.widget.ImageView;
 import android.widget.SeekBar;
+
+import androidx.annotation.Nullable;
 
 import com.yibao.music.R;
 import com.yibao.music.activity.MusicActivity;
 import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.base.listener.SeekBarChangeListtener;
 import com.yibao.music.service.MusicPlayService;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.LyricsView;
 
@@ -40,7 +40,7 @@ import io.reactivex.schedulers.Schedulers;
  * @描述： {仅仅针对 PlayActivity抽出的基类,目的在于减少PlayActivity中的代码}
  */
 
-public abstract class BasePlayActivity extends BaseTansitionActivity implements OnCheckFavoriteListener {
+public abstract class BasePlayActivity extends BaseTransitionActivity implements OnCheckFavoriteListener {
 
     protected AudioManager mAudioManager;
     protected int mMaxVolume;
@@ -93,23 +93,23 @@ public abstract class BasePlayActivity extends BaseTansitionActivity implements 
      */
     protected void switchPlayMode(ImageView imageView) {
         //获取当前的播放模式
-        int playMode = audioBinder.getPalyMode();
+        int playMode = audioBinder.getPlayMode();
+        LogUtil.d(TAG,"=============  切换模式  "+playMode);
+
         //根据当前播放模式进行其它模式切换
         switch (playMode) {
             case MusicPlayService.PLAY_MODE_ALL:
-                audioBinder.setPalyMode(MusicPlayService.PLAY_MODE_SINGLE);
+                audioBinder.setPlayMode(MusicPlayService.PLAY_MODE_SINGLE);
                 break;
             case MusicPlayService.PLAY_MODE_SINGLE:
-                audioBinder.setPalyMode(MusicPlayService.PLAY_MODE_RANDOM);
-                break;
-            case MusicPlayService.PLAY_MODE_RANDOM:
-                audioBinder.setPalyMode(MusicPlayService.PLAY_MODE_ALL);
+                audioBinder.setPlayMode(MusicPlayService.PLAY_MODE_RANDOM);
                 break;
             default:
+                audioBinder.setPlayMode(MusicPlayService.PLAY_MODE_ALL);
                 break;
         }
         //根据当前模式,更新播放模式图片
-        updatePlayModeImage(audioBinder.getPalyMode(), imageView);
+        updatePlayModeImage(audioBinder.getPlayMode(), imageView);
     }
 
 

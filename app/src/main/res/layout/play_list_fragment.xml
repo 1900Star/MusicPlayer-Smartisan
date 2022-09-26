@@ -6,7 +6,10 @@
     android:animateLayoutChanges="true"
     android:orientation="vertical">
 
-    <include layout="@layout/music_toolbar" />
+    <com.yibao.music.view.music.MusicToolBar
+        android:id="@+id/music_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,7 +19,7 @@
             android:id="@+id/ll_add_new_play_list"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@drawable/tabbar_bg"
+            android:background="@drawable/toolbar_bar_bg"
             android:gravity="center">
 
             <ImageView
@@ -52,11 +55,17 @@
         android:layout_height="0.2dp"
         android:background="@color/listBg" />
 
-    <LinearLayout
-        android:id="@+id/play_list_content"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" />
+        android:id="@+id/swipe_play_list"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:id="@+id/recycler_play_list"
+            android:layout_height="wrap_content" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 </LinearLayout>

@@ -6,10 +6,9 @@
     <string name="about_sign">O ever youthful, O ever weeping.</string>
     <string name="about_project_introduce">
 
-       ArtisanMusicPlayer 仿照锤子音乐播放器写的一个本地音乐播放器，会尽可能的实现锤子音乐播放器已有的功能。
-        也会去除一些功能，比如去除:云音乐，联网搜索，因为主要还是播放本地音乐为主。 同时也会增加一些个人觉得有趣的交互，
+       ArtisanMusicPlayer 仿照锤子音乐播放器写的一个本地音乐播放器。会尽可能的实现锤子音乐播放器已有的功能，
+        也会去除一些功能。比如去除:云音乐和联网搜索，主要还是播放本地音乐为主。 同时也会增加一些个人觉得有趣的交互，
         比如增加了类似QQ音乐的左右滑动切换上/下一曲的交互。
-        \n\tRxJava\n\tRxBus\n\tButterknife\n\tGreenDao3.0\n\tGlide\n\tLeakcanary
     </string>
     <string name="project_url">https://github.com/1900Star/SmartisanMusicPlayer</string>
     <string name="project_introduce">关于项目</string>
@@ -67,6 +66,7 @@
     <string name="app_info">ArtisanMusicPlayer 仿照锤子音乐播放器写的一个本地音乐播放器。 https://github.com/1900Star/SmartisanMusicPlayer </string>
     <string name="crash_log">CrashLog</string>
     <string name="take_photo">拍照</string>
+    <string name="storage_permissions">存储权限未允许</string>
     <string name="choice_photo">从相册中选择照片</string>
     <string name="camera_not_open">摄像头权限未开启</string>
     <string name="go_open">去开启</string>

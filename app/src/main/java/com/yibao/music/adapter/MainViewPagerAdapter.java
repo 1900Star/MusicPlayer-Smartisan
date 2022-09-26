@@ -36,20 +36,21 @@ public class MainViewPagerAdapter
     public int getItemCount() {
         return 5;
     }
+
     private Fragment getFragment(int position) {
-        Fragment fragment = SongFragment.newInstance();
+        Fragment fragment = SongFragment.Companion.newInstance();
         switch (position) {
             case 0:
                 fragment = PlayListFragment.newInstance("lsp", null, false);
                 break;
             case 1:
-                fragment = ArtistFragment.newInstance();
+                fragment = ArtistFragment.Companion.newInstance();
                 break;
             case 2:
-                fragment = SongFragment.newInstance();
+                fragment = SongFragment.Companion.newInstance();
                 break;
             case 3:
-                fragment = AlbumFragment.newInstance();
+                fragment = AlbumFragment.Companion.newInstance();
                 break;
             case 4:
                 fragment = AboutFragment.newInstance();

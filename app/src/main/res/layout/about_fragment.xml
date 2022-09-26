@@ -6,8 +6,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <com.yibao.music.view.music.MusicToolBar
+        android:id="@+id/music_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
-    <include layout="@layout/music_toolbar" />
+
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -83,7 +87,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_toEndOf="@id/about_header_iv"
                     android:text="@string/about_sign"
-                    android:textColor="@color/colorGreen"
+                    android:textColor="@color/colorAccent"
                     android:textSize="@dimen/about_sign" />
 
             </RelativeLayout>

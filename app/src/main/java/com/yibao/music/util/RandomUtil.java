@@ -11,7 +11,7 @@ import java.util.Random;
  * @author Stran
  */
 public class RandomUtil {
-    public static int getRandomPostion(int listSize) {
+    public static int getRandomPosition(int listSize) {
         Random random = new Random();
         return Math.abs(random.nextInt(listSize));
     }
@@ -29,7 +29,7 @@ public class RandomUtil {
     private static List<String> getUnsplashUrl(int picUrlLength) {
         List<String> list = new ArrayList<>();
         for (int i = 1; i < picUrlLength; i++) {
-            list.add(Constants.UNSPLASH_URL + i);
+            list.add(Constant.UNSPLASH_URL + i);
         }
         return list;
     }

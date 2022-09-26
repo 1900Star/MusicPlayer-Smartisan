@@ -3,14 +3,6 @@ package com.yibao.music.view.music;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,23 +12,30 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.fragment.dialogfrag.AlbumDetailDialogFragment;
-import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
+import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment;
 import com.yibao.music.model.AlbumInfo;
 import com.yibao.music.model.ArtistInfo;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.network.QqMusicRemote;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
-import com.yibao.music.util.SpUtil;
+import com.yibao.music.util.SpUtils;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.view.MusicScrollView;
 import com.yibao.music.view.SwipeItemLayout;
@@ -64,9 +63,9 @@ public class DetailsView
     private ImageView mIvDetailsAddToPlayList;
     private LinearLayout mLlAlbumDetailsPlayaLl;
     private LinearLayout mLlAlbumDetailsRandomPlay;
-    private int mDataFlag;
+    private int mPageType;
     private int mListSize;
-    private String mQueryFlag;
+    private String mCondition;
     private FragmentManager mFragmentManager;
     private Long mAlbumId;
     private List<MusicBean> mMusicList;
@@ -75,10 +74,17 @@ public class DetailsView
     private String mArtist;
     private int mPicType;
 
-    public void setDataFlag(FragmentManager fragmentManager, int listSize, String queryFlag, int dataFlag) {
+    /**
+     *
+     * @param fragmentManager f
+     * @param listSize 列表长度 随机播放的取数范围
+     * @param condition 关键字  歌手名 、 专辑名
+     * @param pageType 页面标识
+     */
+    public void setDataFlag(FragmentManager fragmentManager, int listSize, String condition, int pageType) {
         this.mFragmentManager = fragmentManager;
-        this.mDataFlag = dataFlag;
-        this.mQueryFlag = queryFlag;
+        this.mPageType = pageType;
+        this.mCondition = condition;
         this.mListSize = listSize;
     }
 
@@ -124,32 +130,23 @@ public class DetailsView
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.tv_artist_albumm_details_title:
-                String albulmUrl = StringUtil.getAlbum(mPicType, mAlbumId, mArtist);
-                openAlbumDetail(albulmUrl, mArtist);
-                break;
-            case R.id.iv_artist_albumm_details:
-                LogUtil.d(TAG, " pictype " + mPicType);
-                String albumUrl = StringUtil.getAlbum(mPicType, mAlbumId, mArtist);
-                PreviewBigPicDialogFragment.newInstance(albumUrl)
-                        .show(mFragmentManager, "album");
-                break;
-            case R.id.iv_details_add_to_list:
-                startPlayListActivity();
-                break;
-            case R.id.iv_details_add_to_play_list:
-                LogUtil.d(TAG,"=================添加到当前播放列表");
-                break;
-            case R.id.ll_album_details_playall:
-                startMusic(Constants.NUMBER_ZERO);
-                break;
-            case R.id.ll_album_details_random_play:
-                startMusic(RandomUtil.getRandomPostion(mListSize));
-                break;
-            default:
-                break;
-
+        int id = view.getId();
+        if (id == R.id.tv_artist_albumm_details_title) {
+            String albumUrl = StringUtil.getAlbum(mPicType, mAlbumId, mArtist);
+            openAlbumDetail(albumUrl, mArtist);
+        } else if (id == R.id.iv_artist_albumm_details) {
+            LogUtil.d(TAG, " pictype " + mPicType);
+            String albumUrl = StringUtil.getAlbum(mPicType, mAlbumId, mArtist);
+            PreviewBigPicDialogFragment.newInstance(albumUrl)
+                    .show(mFragmentManager, "album");
+        } else if (id == R.id.iv_details_add_to_list) {
+            startPlayListActivity();
+        } else if (id == R.id.iv_details_add_to_play_list) {
+            LogUtil.d(TAG, "=================添加到当前播放列表");
+        } else if (id == R.id.ll_album_details_playall) {
+            startMusic(Constant.NUMBER_ZERO);
+        } else if (id == R.id.ll_album_details_random_play) {
+            startMusic(RandomUtil.getRandomPosition(mListSize));
         }
     }
 
@@ -164,14 +161,16 @@ public class DetailsView
             arrayList.add(musicBean.getTitle());
         }
         Intent intent = new Intent(getContext(), PlayListActivity.class);
-        intent.putStringArrayListExtra(Constants.ADD_TO_LIST, arrayList);
+        intent.putStringArrayListExtra(Constant.ADD_TO_LIST, arrayList);
         getContext().startActivity(intent);
     }
 
     private void startMusic(int startPosition) {
         if (getContext() instanceof OnMusicItemClickListener) {
-            SpUtil.setSortFlag(getContext(), Constants.NUMBER_TEN);
-            ((OnMusicItemClickListener) getContext()).startMusicServiceFlag(startPosition, Constants.NUMBER_TEN, mDataFlag, mQueryFlag);
+            SpUtils sp = new SpUtils(getContext().getApplicationContext(), Constant.MUSIC_CONFIG);
+            sp.putValues(new SpUtils.ContentValue(Constant.MUSIC_DATA_FLAG,Constant.NUMBER_TEN));
+
+            ((OnMusicItemClickListener) getContext()).startMusicServiceFlag(startPosition, mPageType, mCondition);
         }
     }
 
@@ -184,13 +183,13 @@ public class DetailsView
      */
     private void initData(int dataType, Object bean) {
         mPicType = dataType;
-        if (dataType == Constants.NUMBER_ONE) {
+        if (dataType == Constant.NUMBER_ONE) {
             ArtistInfo info = (ArtistInfo) bean;
             mArtist = info.getArtist();
             mAlbumId = info.getAlbumId();
             setMusicInfo(dataType, info.getAlbumName(), info.getArtist(), mAlbumId, info.getYear());
 
-        } else if (dataType == Constants.NUMBER_TWO) {
+        } else if (dataType == Constant.NUMBER_TWO) {
             AlbumInfo info = (AlbumInfo) bean;
             mAlbumId = info.getAlbumId();
             mArtist = info.getAlbumName();
@@ -226,7 +225,7 @@ public class DetailsView
         });
 
 
-        if (issueYear != Constants.NUMBER_ZERO) {
+        if (issueYear != Constant.NUMBER_ZERO) {
             String year = String.valueOf(issueYear);
             mTvArtistAlbumDetailsDate.setText(year);
         }

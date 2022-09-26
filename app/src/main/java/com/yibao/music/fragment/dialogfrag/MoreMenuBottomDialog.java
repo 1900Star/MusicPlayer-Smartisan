@@ -1,10 +1,6 @@
 package com.yibao.music.fragment.dialogfrag;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -13,19 +9,23 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
-import com.yibao.music.adapter.MoreMemuAdapter;
+import com.yibao.music.adapter.MoreMenuAdapter;
 import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.BottomSheetCallback;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.util.Constants;
-import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.MenuListUtil;
 import com.yibao.music.util.RxBus;
-import com.yibao.music.util.SpUtil;
+import com.yibao.music.util.SpUtils;
 
 /**
  * Des：${TODO}
@@ -39,7 +39,7 @@ public class MoreMenuBottomDialog {
     private BottomSheetBehavior<View> mBehavior;
     private static MusicBean mMusicBean;
     private TextView mBottomCancel;
-    private MoreMemuAdapter mMemuAdapter;
+    private MoreMenuAdapter mMemuAdapter;
     private static int mMusicPosition;
     private RatingBar mRatingBar;
     private static boolean mIsNeedScore;
@@ -50,7 +50,7 @@ public class MoreMenuBottomDialog {
         mMusicPosition = musicPosition;
         mIsNeedScore = isNeedScore;
         mIsNeedSetTime = isNeedSetTime;
-        musicDao = MusicApplication.getIntstance().getMusicDao();
+        musicDao = MusicApplication.getInstance().getMusicDao();
         return new MoreMenuBottomDialog();
     }
 
@@ -67,8 +67,9 @@ public class MoreMenuBottomDialog {
     private void initListener(Context context, BottomSheetDialog dialog) {
         mBottomCancel.setOnClickListener(v -> dialog.dismiss());
         mMemuAdapter.setClickListener(((musicPosition, position, musicBean) -> {
-            if (position == Constants.NUMBER_ZERO) {
-                SpUtil.setAddTodPlayListFlag(context, Constants.NUMBER_ONE);
+            if (position == Constant.NUMBER_ZERO) {
+                SpUtils sp = new SpUtils(MusicApplication.getInstance(), Constant.MUSIC_CONFIG);
+                sp.putValues(new SpUtils.ContentValue(Constant.ADD_TO_PLAY_LIST_FLAG,Constant.NUMBER_ONE));
             }
             RxBus.getInstance().post(new MoreMenuStatus(mMusicPosition, position, musicBean));
             dialog.dismiss();
@@ -107,7 +108,7 @@ public class MoreMenuBottomDialog {
 
     private void initData() {
         mRatingBar.setRating(mMusicBean.getSongScore());
-        mMemuAdapter = new MoreMemuAdapter(MenuListUtil.getMenuData(mMusicBean.isFavorite(), mIsNeedSetTime), mMusicBean, mMusicPosition);
+        mMemuAdapter = new MoreMenuAdapter(MenuListUtil.getMenuData(mMusicBean.isFavorite(), mIsNeedSetTime), mMusicBean, mMusicPosition);
         RecyclerView recyclerView = RecyclerFactory.createRecyclerView(4, mMemuAdapter);
         mBottomListContent.addView(recyclerView);
     }

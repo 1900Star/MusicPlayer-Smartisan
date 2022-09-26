@@ -8,11 +8,13 @@
     <color name="tabbarDownTv">#E64040</color>
     <color name="textDes">#4d4d4d</color>
     <color name="listBg">#ededed</color>
+    <color name="pageBg">#FBF8F8</color>
     <color name="progressBg">#F8F7F7</color>
     <color name="slidBg">#e6e4e4</color>
     <color name="colorGreen">#59e130</color>
     <color name="deleteNorma">#f7817a</color>
     <color name="deleteDown">#E65D54</color>
+    <color name="colorAccent">#3880FC</color>
     <color name="item">#e7e5e5</color>
     //about
     <color name="aboutTitle">#ff000000</color>
@@ -20,6 +22,7 @@
     <color name="lyricsNormal">#5b5b5b</color>
     <color name="aboutContent">#ff414141</color>
     <color name="about">#f7f1f1</color>
+    <color name="volume_bar_bg">#F7F8F9</color>
 
 
     <!--BottomSheetDialogList-->

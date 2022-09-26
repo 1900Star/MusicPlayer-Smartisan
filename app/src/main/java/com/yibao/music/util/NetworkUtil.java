@@ -19,7 +19,7 @@ public class NetworkUtil {
      */
    public static boolean isNetworkConnected() {
 
-        ConnectivityManager manager = (ConnectivityManager) MusicApplication.getIntstance().getSystemService(
+        ConnectivityManager manager = (ConnectivityManager) MusicApplication.getInstance().getSystemService(
                 Context.CONNECTIVITY_SERVICE);
         if (manager != null) {
             NetworkInfo info = manager.getActiveNetworkInfo();

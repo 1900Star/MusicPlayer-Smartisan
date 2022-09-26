@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.yibao.music.R;
 import com.yibao.music.util.ColorUtil;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 
 
 /**
@@ -54,52 +54,44 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-
-            case R.id.music_bar_playlist:
-                switchMusicTabbar(Constants.NUMBER_ZERO);
-                break;
-            case R.id.music_bar_artisanlist:
-                switchMusicTabbar(Constants.NUMBER_ONE);
-                break;
-            case R.id.music_bar_songlist:
-                switchMusicTabbar(Constants.NUMBER_TWO);
-                break;
-            case R.id.music_bar_albumlist:
-                switchMusicTabbar(Constants.NUMBER_THREE);
-                break;
-            case R.id.music_bar_about:
-                switchMusicTabbar(Constants.NUMBER_FOUR);
-                break;
-            default:
-                break;
+        int id = view.getId();
+        if (id == R.id.music_bar_playlist) {
+            switchMusicTabBar(Constant.NUMBER_ZERO);
+        } else if (id == R.id.music_bar_artisanlist) {
+            switchMusicTabBar(Constant.NUMBER_ONE);
+        } else if (id == R.id.music_bar_songlist) {
+            switchMusicTabBar(Constant.NUMBER_TWO);
+        } else if (id == R.id.music_bar_albumlist) {
+            switchMusicTabBar(Constant.NUMBER_THREE);
+        } else if (id == R.id.music_bar_about) {
+            switchMusicTabBar(Constant.NUMBER_FOUR);
         }
     }
 
-    public void switchMusicTabbar(int flag) {
+    public void switchMusicTabBar(int flag) {
         setAllTabbarNotPressed(flag);
         switch (flag) {
-            case Constants.NUMBER_ZERO:
+            case Constant.NUMBER_ZERO:
                 mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_selector);
                 mMusicBarPlaylistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarPlaylist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 break;
-            case Constants.NUMBER_ONE:
+            case Constant.NUMBER_ONE:
                 mMusicBarArtisanlistIv.setBackgroundResource(R.drawable.tabbar_artisanlist_selector);
                 mMusicBarArtisanlistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarArtisanlist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 break;
-            case Constants.NUMBER_TWO:
+            case Constant.NUMBER_TWO:
                 mMusicBarSonglistIv.setBackgroundResource(R.drawable.tabbar_songlist_selector);
                 mMusicBarSonglistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarSonglist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 break;
-            case Constants.NUMBER_THREE:
+            case Constant.NUMBER_THREE:
                 mMusicBarAlbumlistIv.setBackgroundResource(R.drawable.tabbar_albumlist_selector);
                 mMusicBarAlbumlist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
                 mMusicBarAlbumlistTv.setTextColor(ColorUtil.musicbarTvDown);
                 break;
-            case Constants.NUMBER_FOUR:
+            case Constant.NUMBER_FOUR:
                 mMusicBarStylelistIv.setBackgroundResource(R.drawable.tabbar_stylelist_selector);
                 mMusicBarStylelistTv.setTextColor(ColorUtil.musicbarTvDown);
                 mMusicBarAboutLl.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
@@ -116,8 +108,8 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
      * @param flag 将ViewPager切换到选中的Tag
      */
     private void setAllTabbarNotPressed(int flag) {
-        if (mBarSelecteListener != null) {
-            mBarSelecteListener.currentFlag(flag);
+        if (mBarSelectListener != null) {
+            mBarSelectListener.currentFlag(flag);
         }
         mMusicBarPlaylist.setBackgroundColor(ColorUtil.wihtle);
         mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_down_selector);
@@ -173,14 +165,14 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
         initListener();
     }
 
-    private OnNavigationBarSelecteListener mBarSelecteListener;
+    private OnNavigationBarSelectListener mBarSelectListener;
 
-    public void setOnNavigationbarListener(OnNavigationBarSelecteListener selecteListener) {
-        mBarSelecteListener = selecteListener;
+    public void setOnNavigationBarListener(OnNavigationBarSelectListener selectListener) {
+        mBarSelectListener = selectListener;
     }
 
-    public interface OnNavigationBarSelecteListener {
-        void currentFlag(int currentSelecteFlag);
+    public interface OnNavigationBarSelectListener {
+        void currentFlag(int currentSelectFlag);
 
     }
 }

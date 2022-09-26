@@ -2,9 +2,6 @@ package com.yibao.music.view.music;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.os.Build;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +9,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.yibao.music.R;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.util.AnimationUtil;
-import com.yibao.music.util.Constants;
+import com.yibao.music.util.Constant;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.view.CircleImageView;
@@ -46,21 +45,15 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.music_floating_favorite:
-                controlBarClick(Constants.NUMBER_ONE);
-                break;
-            case R.id.music_floating_pre:
-                controlBarClick(Constants.NUMBER_TWO);
-                break;
-            case R.id.music_floating_play:
-                controlBarClick(Constants.NUMBER_THREE);
-                break;
-            case R.id.music_floating_next:
-                controlBarClick(Constants.NUMBER_FOUR);
-                break;
-            default:
-                break;
+        int id = view.getId();
+        if (id == R.id.music_floating_favorite) {
+            controlBarClick(Constant.NUMBER_ONE);
+        } else if (id == R.id.music_floating_pre) {
+            controlBarClick(Constant.NUMBER_TWO);
+        } else if (id == R.id.music_floating_play) {
+            controlBarClick(Constant.NUMBER_THREE);
+        } else if (id == R.id.music_floating_next) {
+            controlBarClick(Constant.NUMBER_FOUR);
         }
     }
 
@@ -93,7 +86,6 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
 
     //**************动画********************
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void initAnimation() {
         if (mAnimator == null || mAnimatorListener == null) {
             mAnimator = AnimationUtil.getRotation(mSongAlbulm);

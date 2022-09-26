@@ -18,6 +18,9 @@ import com.yibao.music.model.MusicBean;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 
 /**
@@ -31,26 +34,8 @@ public class FileUtil {
     private static final String TAG = "====" + FileUtil.class.getSimpleName() + "    ";
 
     public static boolean getFavoriteFile() {
-        return CheckBuildVersionUtil.checkAndroidVersionQ() ? FileUtil.isAndroidQFileExists(Constants.FAVORITE_FILE) : new File(Constants.FAVORITE_FILE).exists();
+        return CheckBuildVersionUtil.checkAndroidVersionQ() ? FileUtil.isAndroidQFileExists(Constant.FAVORITE_FILE) : new File(Constant.FAVORITE_FILE).exists();
 
-    }
-
-    public static File getLyricsFile(String songName, String songArtisa) {
-
-        File file = new File(Constants.MUSIC_LYRICS_ROOT);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        File lyricFile = new File(file + "/", songName + "$$" + songArtisa + ".lrc");
-        if (!lyricFile.exists()) {
-            try {
-                lyricFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        LogUtil.d(TAG, " ==========  下载歌词啦   ");
-        return lyricFile;
     }
 
 
@@ -71,8 +56,8 @@ public class FileUtil {
     private static boolean albumFileExists(int imageType, String songName, String artist) {
 
         String albumPath = imageType == 1
-                ? Constants.MUSIC_SONG_ALBUM_ROOT + songName + ".jpg" : imageType == 2
-                ? Constants.MUSIC_ARITIST_IMG_ROOT + artist + ".jpg" : Constants.MUSIC_ALBUM_ROOT + artist + ".jpg";
+                ? Constant.MUSIC_SONG_ALBUM_ROOT + songName + ".jpg" : imageType == 2
+                ? Constant.MUSIC_ARITIST_IMG_ROOT + artist + ".jpg" : Constant.MUSIC_ALBUM_ROOT + artist + ".jpg";
         File file = new File(albumPath);
         return file.exists();
     }
@@ -96,8 +81,7 @@ public class FileUtil {
                 new String[]{filePath}, null);
 
         if (cursor != null && cursor.moveToFirst()) {
-            int id = cursor.getInt(cursor
-                    .getColumnIndex(MediaStore.MediaColumns._ID));
+            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
             Uri baseUri = Uri.parse("content://media/external/images/media");
             return Uri.withAppendedPath(baseUri, "" + id);
         } else {
@@ -119,19 +103,22 @@ public class FileUtil {
     }
 
     public static File getHeaderFile() {
-        File file = new File(Constants.HEADER_PATH);
+        File file = new File(Constant.HEADER_PATH);
         if (!file.exists()) {
             file.mkdirs();
         }
-        return new File(file, Constants.CROP_IMAGE_FILE_NAME);
+        return new File(file, Constant.CROP_IMAGE_FILE_NAME);
     }
-
+    public static File createFile(Context context, String fileName, String dirPath) {
+        String apkFilePath = context.getExternalFilesDir(dirPath).getAbsolutePath();
+        return new File(apkFilePath + File.separator + fileName);
+    }
     public static Uri getPicUri(Context context, String savePath) {
         File file = new File(savePath);
         if (!file.exists()) {
             file.mkdirs();
         }
-        File pictureFile = new File(savePath, Constants.IMAGE_FILE_NAME);
+        File pictureFile = new File(savePath, Constant.IMAGE_FILE_NAME);
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? FileProvider.getUriForFile(context, context.getPackageName(), pictureFile) : Uri.fromFile(pictureFile);
     }
 
@@ -155,15 +142,48 @@ public class FileUtil {
         }
     }
 
-    public static File createFile(Context context, String fileName, String dirPath) {
-        String apkFilePath = context.getExternalFilesDir(dirPath).getAbsolutePath();
+    /**
+     * 歌词文件
+     *
+     * @param songName 歌名
+     * @param artist   歌手
+     * @return file
+     */
+    public static File getLyricsFile(String songName, String artist) {
+        String lyricsName = songName + "$$" + artist + ".lrc";
+        if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
+            String apkFilePath = MusicApplication.getInstance().getExternalFilesDir(Constant.MUSIC_LYRICS_DIR).getAbsolutePath();
+            return new File(apkFilePath + File.separator + lyricsName);
+        } else {
+            File file = new File(Constant.MUSIC_LYRICS_ROOT);
+            if (!file.exists()) {
+                boolean mkdirs = file.mkdirs();
+            }
+            return new File(file.getAbsolutePath() + lyricsName);
 
-        return new File(apkFilePath + File.separator + fileName);
+        }
     }
+
+    /**
+     * 崩溃文件
+     * @return file
+     */
+    public static File getCrashFile() {
+        String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss", Locale.getDefault()).format(new Date(System.currentTimeMillis()));
+        if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
+            String apkFilePath = MusicApplication.getInstance().getExternalFilesDir(Constant.CRASH_DIR).getAbsolutePath();
+            return new File(apkFilePath + File.separator + time + ".txt");
+        } else {
+            File file = new File(Constant.CRASH_LOG_PATH);
+            return new File(file.getAbsolutePath() + Constant.CRASH_DIR + time + ".txt");
+
+        }
+    }
+
 
     public static boolean isAndroidQFileExists(String path) {
         AssetFileDescriptor afd = null;
-        ContentResolver cr = MusicApplication.getIntstance().getContentResolver();
+        ContentResolver cr = MusicApplication.getInstance().getContentResolver();
         try {
             Uri uri = Uri.parse(path);
             afd = cr.openAssetFileDescriptor(uri, "r");
