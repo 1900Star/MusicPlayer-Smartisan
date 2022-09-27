@@ -18,5 +18,10 @@
         android:textSize="@dimen/bigLyrics"
         android:textStyle="bold" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:id="@+id/recycler_crash_log"
+        android:layout_height="wrap_content" />
+
 
 </LinearLayout>

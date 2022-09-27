@@ -24,7 +24,7 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
     private var isSelectStatus = false
     private var mPageType = 1
     override fun initView() {
-        mBinding.musicBar.setTvEditVisibility(true)
+        mBinding.musicBar.setTvEditVisibility(false)
         initData()
         initListener()
     }
@@ -57,7 +57,6 @@ class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickLi
             override fun clickEdit() {
                 mBus.post(Constant.SONG_FAG_EDIT, Constant.NUMBER_ONE)
                 mBinding.musicBar.setTvEditText(if (isSelectStatus) R.string.tv_edit else R.string.complete)
-                mBinding.musicBar.setTvDeleteVisibility(if (isSelectStatus) View.GONE else View.VISIBLE)
                 isSelectStatus = !isSelectStatus
             }
 

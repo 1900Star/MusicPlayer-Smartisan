@@ -14,7 +14,7 @@ import com.yibao.music.viewmodel.AlbumViewModel
  * @author Stran
  */
 class AlbumViewPagerAdapter(
-    fragment: Fragment, val albumViewModel: AlbumViewModel
+    fragment: Fragment, private val albumViewModel: AlbumViewModel
 ) :
     FragmentStateAdapter(fragment) {
     override fun createFragment(position: Int): Fragment {

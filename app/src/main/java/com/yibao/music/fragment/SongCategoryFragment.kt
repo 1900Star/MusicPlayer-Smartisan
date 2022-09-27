@@ -97,7 +97,7 @@ class SongCategoryFragment : BaseMusicFragmentDev<CategoryFragmentBinding>() {
                     position,
                     false,
                     false
-                ).getBottomDialog(this@SongCategoryFragment.activity)
+                ).getBottomDialog(requireActivity())
             }
         })
         adapter.setItemListener(object : BaseBindingAdapter.OnItemListener<MusicBean> {

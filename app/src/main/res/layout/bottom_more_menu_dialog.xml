@@ -1,65 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <View
+        android:id="@+id/view_1"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:layout_gravity="center"
-        android:background="@drawable/title_bar_playing_bg">
+        android:background="@drawable/title_bar_playing_bg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/bottom_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            android:text="@string/select_operation"
-            android:textColor="@color/aboutSign"
-            android:textSize="@dimen/about_content"
-            android:textStyle="bold"
-            android:visibility="gone" />
+    </View>
 
-        <RatingBar
-            android:id="@+id/rating_bar"
-            style="@style/starstyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            android:numStars="5"
-            android:rating="0"
-            android:stepSize="1" />
+    <TextView
+        android:id="@+id/bottom_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
-        <TextView
-            android:id="@+id/bottom_sheet_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="12dp"
-            android:layout_marginRight="12dp"
-            android:background="@drawable/btn_edit_selector"
-            android:gravity="center"
-            android:text="@string/cancel"
-            android:textColor="@color/aboutSign"
-            android:textSize="@dimen/about_content"
-            android:textStyle="bold"
-            tools:ignore="RtlHardcoded" />
-    </RelativeLayout>
+        android:text="@string/select_operation"
+        android:textColor="@color/aboutSign"
+        android:textSize="@dimen/about_sign"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/view_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view_1" />
 
-    <LinearLayout
-        android:id="@+id/bottom_list_content"
+    <RatingBar
+        android:id="@+id/rating_bar"
+        style="@style/starstyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:rating="0"
+        android:stepSize="1"
+        app:layout_constraintBottom_toBottomOf="@id/view_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view_1" />
+
+    <TextView
+        android:id="@+id/bottom_sheet_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_edit_selector"
+        android:gravity="center"
+        android:text="@string/cancel"
+        android:textColor="@color/aboutSign"
+        android:textSize="@dimen/about_content"
+        android:textStyle="bold"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@id/view_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view_1" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_more_menu"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/colorWhite"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_1" />
 
-    </LinearLayout>
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

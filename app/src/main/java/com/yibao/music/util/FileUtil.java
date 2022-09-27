@@ -180,6 +180,17 @@ public class FileUtil {
         }
     }
 
+    public static File getCrashDir() {
+        if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
+            String apkFilePath = MusicApplication.getInstance().getExternalFilesDir(Constant.CRASH_DIR).getAbsolutePath();
+            return new File(apkFilePath + File.separator);
+        } else {
+            return new File(Constant.CRASH_LOG_PATH);
+
+        }
+    }
+
+
 
     public static boolean isAndroidQFileExists(String path) {
         AssetFileDescriptor afd = null;

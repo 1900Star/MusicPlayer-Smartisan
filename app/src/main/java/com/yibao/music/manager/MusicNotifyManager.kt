@@ -104,15 +104,18 @@ class MusicNotifyManager(
             musicArtist = if ("<unknown>" == artist) "Smartisan" else artist
         }
         val notifyAlbumUrl = FileUtil.getNotifyAlbumUrl(activity, mMusicBean)
-        val cover = createCover(notifyAlbumUrl)
-        isFavorite = mMusicBean.getIsFavorite()
-        view.setImageViewBitmap(R.id.play_notify_cover, cover)
-        view.setTextViewText(R.id.play_notify_name, musicName)
-        view.setTextViewText(R.id.play_notify_arts, musicArtist)
-        view.setImageViewResource(
-            R.id.play_notify_play,
-            if (isPlay) R.drawable.btn_playing_pause_selector else R.drawable.btn_playing_play_selector
-        )
+        if (notifyAlbumUrl != null) {
+            val cover = createCover(notifyAlbumUrl)
+            isFavorite = mMusicBean.getIsFavorite()
+            view.setImageViewBitmap(R.id.play_notify_cover, cover)
+            view.setTextViewText(R.id.play_notify_name, musicName)
+            view.setTextViewText(R.id.play_notify_arts, musicArtist)
+            view.setImageViewResource(
+                R.id.play_notify_play,
+                if (isPlay) R.drawable.btn_playing_pause_selector else R.drawable.btn_playing_play_selector
+            )
+        }
+
     }
 
     /**
@@ -144,12 +147,12 @@ class MusicNotifyManager(
         if (b == null) {
             b = BitmapFactory.decodeResource(activity.resources, R.drawable.noalbumcover_220)
         }
-        return b
+        return BitmapFactory.decodeResource(activity.resources, R.drawable.noalbumcover_220)
     }
 
     override fun show() {
         with(NotificationManagerCompat.from(activity)) {
-            notify(PLAY_NOTIFY_ID,buildNotification())
+            notify(PLAY_NOTIFY_ID, buildNotification())
         }
     }
 

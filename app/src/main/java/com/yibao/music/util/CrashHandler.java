@@ -86,7 +86,7 @@ public class CrashHandler
         File exceptionFile;
         if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
             String fileName = time + FILE_NAME_SUFFIX;
-            exceptionFile = FileUtil.createFile(mContext, fileName, "crash");
+            exceptionFile = FileUtil.createFile(mContext, fileName, Constant.CRASH_DIR);
         } else {
             File dir = new File(Constant.CRASH_LOG_PATH);
             if (!dir.exists()) {

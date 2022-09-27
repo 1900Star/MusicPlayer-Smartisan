@@ -42,7 +42,6 @@ class MusicToolBar : LinearLayout, View.OnClickListener {
     private fun initData() {}
     private fun initListener() {
         mBinding.tvEdit.setOnClickListener(this)
-//        mBinding.tvDelete.setOnClickListener(this)
         mBinding.ivSearch.setOnClickListener(this)
         mBinding.tvMusicToolbarTitle.setOnClickListener(this)
         mBinding.tvMusicToolbarTitle.setOnLongClickListener {
@@ -66,17 +65,10 @@ class MusicToolBar : LinearLayout, View.OnClickListener {
         mBinding.tvMusicToolbarTitle.text = toolbarTitle
     }
 
-    fun setTvDeleteVisibility(visibility: Int) {
-//        mBinding.tvDelete.visibility = visibility
-    }
 
-    fun setIvSearchVisibility(visibility: Boolean) {
-        mBinding.ivSearch.visibility = if (visibility) VISIBLE else GONE
-    }
 
     override fun onClick(v: View) {
         if (mListener != null) {
-
             when (v.id) {
                 R.id.tv_edit -> {
                     mListener!!.clickEdit()
@@ -86,14 +78,9 @@ class MusicToolBar : LinearLayout, View.OnClickListener {
                 }
                 R.id.iv_search -> {
                     val intent = Intent(context, SearchActivity::class.java)
-//                    intent.putExtra(Constant.PAGE_TYPE, Constant.NUMBER_ZERO)
                     context.startActivity(intent)
                     (context as Activity).overridePendingTransition(R.anim.dialog_push_in, 0)
                 }
-//                R.id.tv_delete -> {
-//                    mListener!!.clickDelete()
-//                }
-                else -> {}
             }
         }
     }
