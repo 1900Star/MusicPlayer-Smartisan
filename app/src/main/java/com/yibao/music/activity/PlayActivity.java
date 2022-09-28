@@ -191,9 +191,9 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         updatePlayBtnStatus();
         // 设置当前歌词
         mLyricList = LyricsUtil.getLyricList(musicBean);
-        mBinding.tvLyrics.setLrcFile(mLyricList, mLyricList.size() > 1 ? Constant.MUSIC_LYRIC_OK : Constant.PURE_MUSIC);
+        mBinding.lyricsView.setLrcFile(mLyricList, mLyricList.size() > 1 ? Constant.MUSIC_LYRIC_OK : Constant.PURE_MUSIC);
         if (isShowLyrics) {
-            startRollPlayLyrics(mBinding.tvLyrics);
+            startRollPlayLyrics(mBinding.lyricsView);
             closeLyricsView();
             mBinding.groupBrightDelete.setVisibility(mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
 
@@ -289,7 +289,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             audioBinder.start();
             initAnimation();
             if (isShowLyrics) {
-                startRollPlayLyrics(mBinding.tvLyrics);
+                startRollPlayLyrics(mBinding.lyricsView);
             }
         }
     }
@@ -358,6 +358,8 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         mBinding.ivFavoriteMusic.setOnClickListener(this);
         mBinding.tvSongName.setOnClickListener(this);
         mBinding.tvArtistName.setOnClickListener(this);
+        mBinding.lyricsView.setOnClickListener(this);
+
 
 
     }
@@ -371,7 +373,8 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             startSearchActivity(mCurrentMusicInfo);
         } else if (id == R.id.rotate_rl) {// 按下音乐停止播放  动画停止 ，抬起恢复
 //                switchPlayState();
-        } else if (id == R.id.playing_song_album || id == R.id.album_cover || id == R.id.tv_lyrics) {
+            showLyrics();
+        } else if (id == R.id.playing_song_album || id == R.id.album_cover || id == R.id.lyrics_view) {
             showLyrics();
         } else if (id == R.id.iv_lyrics_switch) {
             MoreMenuBottomDialog.newInstance(mCurrentMusicInfo, audioBinder.getPosition(), true, true).getBottomDialog(this);
@@ -411,7 +414,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         if (lyricsOk) {
             mLyricList = LyricsUtil.getLyricList(mCurrentMusicInfo);
         }
-        mBinding.tvLyrics.setLrcFile(lyricsOk ? mLyricList : null, downMsg);
+        mBinding.lyricsView.setLrcFile(lyricsOk ? mLyricList : null, downMsg);
         closeLyricsView();
 
     }
@@ -427,17 +430,17 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(mCurrentMusicInfo.getTitle()), StringUtil.getArtist(mCurrentMusicInfo.getArtist()));
             if (lyricIsExists) {
                 mLyricList = LyricsUtil.getLyricList(mCurrentMusicInfo);
-                mBinding.tvLyrics.setLrcFile(mLyricList, mLyricList.size() > 1 ? Constant.MUSIC_LYRIC_OK : Constant.PURE_MUSIC);
+                mBinding.lyricsView.setLrcFile(mLyricList, mLyricList.size() > 1 ? Constant.MUSIC_LYRIC_OK : Constant.PURE_MUSIC);
                 // 开始滚动歌词
                 if (audioBinder.isPlaying()) {
-                    startRollPlayLyrics(mBinding.tvLyrics);
+                    startRollPlayLyrics(mBinding.lyricsView);
                 }
                 closeLyricsView();
             } else {
-                mBinding.tvLyrics.setLrcFile(null, Constant.NO_LYRICS);
+                mBinding.lyricsView.setLrcFile(null, Constant.NO_LYRICS);
             }
         }
-        mBinding.tvLyrics.setVisibility(isShowLyrics ? View.GONE : View.VISIBLE);
+        mBinding.lyricsView.setVisibility(isShowLyrics ? View.GONE : View.VISIBLE);
         mBinding.groupBrightDelete.setVisibility(isShowLyrics ? View.GONE : mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
         mBinding.ivAlwaysOn.setBackgroundResource(isShowLyrics ? R.drawable.music_lrc_close : R.drawable.music_lrc_open);
         AnimationDrawable animation = (AnimationDrawable) mBinding.ivAlwaysOn.getBackground();
@@ -485,7 +488,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
      * 清空收藏列表中所有音乐后的回调，
      */
     @Override
-    public void updataFavoriteStatus() {
+    public void updateFavoriteStatus() {
         checkCurrentIsFavorite(getFavoriteState(mCurrentMusicInfo));
     }
 

@@ -45,6 +45,7 @@ public class BottomSheetAdapter
             String unknownName = "<unknown>";
             musicHolder.mBinding.favoriteArtistName.setText(unknownName.equals(musicItem.getArtist()) ? "Smartisan" : musicItem.getArtist());
             musicHolder.mBinding.favoriteTime.setText(StringUtil.getFormatDate(Long.valueOf(musicItem.getTime())));
+
             int position = musicHolder.getAdapterPosition();
             // 侧滑删除收藏歌曲
             musicHolder.mBinding.deleteItem.setOnClickListener(v -> {

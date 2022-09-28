@@ -346,6 +346,8 @@ public class MusicPlayService extends Service {
 
         private Uri getSongFileUri() {
             int songId = mMusicInfo.getId().intValue();
+            LogUtil.d("===","songID   "+songId);
+            LogUtil.d("===","CCCCCCCCC     "+ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId) );
             return CheckBuildVersionUtil.checkAndroidVersionQ() ? ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId) : Uri.parse(mMusicInfo.getSongUrl());
         }
 

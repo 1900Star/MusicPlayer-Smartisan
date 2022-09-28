@@ -49,8 +49,6 @@ class MoreMenuBottomDialog {
     private fun init() {
         mDialog.setContentView(mBinding.root)
         mDialog.setCancelable(true)
-        val window = mDialog.window
-        window?.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         mDialog.setCanceledOnTouchOutside(true)
 
         mBinding.ratingBar.visibility = if (mIsNeedScore) View.VISIBLE else View.GONE

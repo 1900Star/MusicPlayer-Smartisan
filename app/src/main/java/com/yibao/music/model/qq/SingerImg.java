@@ -8,20 +8,19 @@ import java.util.List;
  * className   SingerImg
  * Des：TODO
  */
-public class SingerImg {
-    /**
-     * result : {"artistCount":1,"artists":[{"id":840134,"name":"刘瑞琦","picUrl":"http://p1.music.126.net/qTDkcmWPMK3U54RNC0IgMw==/109951163288035254.jpg","alias":[],"albumSize":20,"picId":109951163288035254,"img1v1Url":"http://p1.music.126.net/a13xmSNqxMY5M_R1OFvPvA==/109951163288038157.jpg","accountId":3788031,"img1v1":109951163288038157,"mvSize":16,"followed":false,"trans":null}]}
-     * code : 200
-     */
 
-    private ResultBean result;
+public class SingerImg {
+
+
+    private ResultData result;
+
     private int code;
 
-    public ResultBean getResult() {
+    public ResultData getResult() {
         return result;
     }
 
-    public void setResult(ResultBean result) {
+    public void setResult(ResultData result) {
         this.result = result;
     }
 
@@ -33,42 +32,56 @@ public class SingerImg {
         this.code = code;
     }
 
-    public static class ResultBean {
-        /**
-         * artistCount : 1
-         * artists : [{"id":840134,"name":"刘瑞琦","picUrl":"http://p1.music.126.net/qTDkcmWPMK3U54RNC0IgMw==/109951163288035254.jpg","alias":[],"albumSize":20,"picId":109951163288035254,"img1v1Url":"http://p1.music.126.net/a13xmSNqxMY5M_R1OFvPvA==/109951163288038157.jpg","accountId":3788031,"img1v1":109951163288038157,"mvSize":16,"followed":false,"trans":null}]
-         */
+    public static class ResultData {
 
-        private List<ArtistsBean> artists;
+        private int artistCount;
 
-        public List<ArtistsBean> getArtists() {
+        private List<ArtistsData> artists;
+
+        public int getArtistCount() {
+            return artistCount;
+        }
+
+        public void setArtistCount(int artistCount) {
+            this.artistCount = artistCount;
+        }
+
+        public List<ArtistsData> getArtists() {
             return artists;
         }
 
-        public void setArtists(List<ArtistsBean> artists) {
+        public void setArtists(List<ArtistsData> artists) {
             this.artists = artists;
         }
 
-        public static class ArtistsBean {
-            /**
-             * id : 840134
-             * name : 刘瑞琦
-             * picUrl : http://p1.music.126.net/qTDkcmWPMK3U54RNC0IgMw==/109951163288035254.jpg
-             * alias : []
-             * albumSize : 20
-             * picId : 109951163288035254
-             * img1v1Url : http://p1.music.126.net/a13xmSNqxMY5M_R1OFvPvA==/109951163288038157.jpg
-             * accountId : 3788031
-             * img1v1 : 109951163288038157
-             * mvSize : 16
-             * followed : false
-             * trans : null
-             */
+        public static class ArtistsData {
 
             private int id;
+
             private String name;
+
             private String picUrl;
+
+            private List<String> alias;
+
+            private int albumSize;
+
+            private Long picId;
+
+
             private String img1v1Url;
+
+            private int accountId;
+
+            private Long img1v1;
+
+            private int mvSize;
+
+            private Boolean followed;
+
+            private List<String> alia;
+
+
 
             public int getId() {
                 return id;
@@ -94,12 +107,96 @@ public class SingerImg {
                 this.picUrl = picUrl;
             }
 
+            public List<String> getAlias() {
+                return alias;
+            }
+
+            public void setAlias(List<String> alias) {
+                this.alias = alias;
+            }
+
+            public int getAlbumSize() {
+                return albumSize;
+            }
+
+            public void setAlbumSize(int albumSize) {
+                this.albumSize = albumSize;
+            }
+
+            public Long getPicId() {
+                return picId;
+            }
+
+            public void setPicId(Long picId) {
+                this.picId = picId;
+            }
+
+
+
             public String getImg1v1Url() {
                 return img1v1Url;
             }
 
             public void setImg1v1Url(String img1v1Url) {
                 this.img1v1Url = img1v1Url;
+            }
+
+            public int getAccountId() {
+                return accountId;
+            }
+
+            public void setAccountId(int accountId) {
+                this.accountId = accountId;
+            }
+
+            public Long getImg1v1() {
+                return img1v1;
+            }
+
+            public void setImg1v1(Long img1v1) {
+                this.img1v1 = img1v1;
+            }
+
+            public int getMvSize() {
+                return mvSize;
+            }
+
+            public void setMvSize(int mvSize) {
+                this.mvSize = mvSize;
+            }
+
+            public Boolean getFollowed() {
+                return followed;
+            }
+
+            public void setFollowed(Boolean followed) {
+                this.followed = followed;
+            }
+
+            public List<String> getAlia() {
+                return alia;
+            }
+
+            public void setAlia(List<String> alia) {
+                this.alia = alia;
+            }
+
+            @Override
+            public String toString() {
+                return "ArtistsData{" +
+                        "id=" + id +
+                        ", name='" + name + '\'' +
+                        ", picUrl='" + picUrl + '\'' +
+                        ", alias=" + alias +
+                        ", albumSize=" + albumSize +
+                        ", picId=" + picId +
+                        ", img1v1Url='" + img1v1Url + '\'' +
+                        ", accountId=" + accountId +
+                        ", img1v1=" + img1v1 +
+                        ", mvSize=" + mvSize +
+                        ", followed=" + followed +
+                        ", alia=" + alia +
+                        '}';
             }
         }
     }

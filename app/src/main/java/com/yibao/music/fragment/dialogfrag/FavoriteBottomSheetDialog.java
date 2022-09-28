@@ -6,14 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -21,7 +18,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.adapter.BottomSheetAdapter;
-import com.yibao.music.base.factory.RecyclerFactory;
 import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.databinding.FavoriteDialogBinding;
 import com.yibao.music.model.AddAndDeleteListBean;
@@ -199,7 +195,7 @@ public class FavoriteBottomSheetDialog
     private void checkCurrentFavorite(String songTitle) {
         if (mSongTitle.equals(songTitle)) {
             if (mContext instanceof OnCheckFavoriteListener) {
-                ((OnCheckFavoriteListener) mContext).updataFavoriteStatus();
+                ((OnCheckFavoriteListener) mContext).updateFavoriteStatus();
             }
         }
     }

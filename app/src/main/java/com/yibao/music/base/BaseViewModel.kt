@@ -1,10 +1,15 @@
 package com.yibao.music.base
 
 import androidx.lifecycle.ViewModel
+import com.yibao.music.base.listener.OnNetworkDataListener
 import com.yibao.music.livedata.SingleLiveEvent
 import com.yibao.music.model.ErrorBean
+import com.yibao.music.util.LogUtil
 import kotlinx.coroutines.Job
-import okhttp3.OkHttpClient
+import okhttp3.*
+import okio.Buffer
+import java.io.IOException
+import java.nio.charset.Charset
 import java.util.concurrent.TimeUnit
 
 /**
@@ -24,7 +29,6 @@ open class BaseViewModel : ViewModel() {
         if (job != null)
             job!!.cancel()
     }
-
 
 
 

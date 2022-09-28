@@ -164,6 +164,17 @@ public class FileUtil {
         }
     }
 
+    public static File getLyricsDir() {
+        if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
+            String apkFilePath = MusicApplication.getInstance().getExternalFilesDir(Constant.MUSIC_LYRICS_DIR).getAbsolutePath();
+            return new File(apkFilePath + File.separator);
+        } else {
+            return new File(Constant.MUSIC_LYRICS_ROOT);
+
+        }
+    }
+
+
     /**
      * 崩溃文件
      * @return file

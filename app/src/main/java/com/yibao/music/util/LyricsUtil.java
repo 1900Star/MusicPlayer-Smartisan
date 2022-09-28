@@ -58,8 +58,9 @@ public class LyricsUtil {
      * 删除本地歌词list长度小于2的歌词文件，以便播放时重新下载正确的歌词。
      */
     public static void clearLyricList() {
-        File file = new File(Constant.MUSIC_LYRICS_ROOT);
+        File file = FileUtil.getLyricsDir();
         File[] files = file.listFiles();
+
         int nu = 0;
         for (File f : files) {
             List<String> lylist = getLyricsList(f);

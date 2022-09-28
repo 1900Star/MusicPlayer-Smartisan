@@ -2,8 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:background="@drawable/toolbar_bar_bg"
-    android:layout_height="48dp">
+    android:layout_height="48dp"
+    android:background="@drawable/toolbar_bar_bg">
 
     <TextView
         android:id="@+id/tv_edit"
@@ -13,10 +13,12 @@
         android:background="@drawable/shape_btn_edit_selector"
         android:gravity="center"
         android:minWidth="46dp"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
         android:text="@string/tv_edit"
         android:textColor="@color/textDes"
         android:textStyle="bold"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,7 +28,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
-
         android:marqueeRepeatLimit="marquee_forever"
         android:maxLength="18"
         android:singleLine="true"

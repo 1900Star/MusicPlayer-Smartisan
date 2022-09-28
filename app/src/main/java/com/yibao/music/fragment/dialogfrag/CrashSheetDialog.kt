@@ -38,8 +38,6 @@ class CrashSheetDialog {
         mDialog = BottomSheetDialog(context!!)
         mDialog.setContentView(mBinding.rootCrash)
         mDialog.setCancelable(true)
-        val window = mDialog.window
-        window?.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         mDialog.setCanceledOnTouchOutside(true)
         init()
         mDialog.show()

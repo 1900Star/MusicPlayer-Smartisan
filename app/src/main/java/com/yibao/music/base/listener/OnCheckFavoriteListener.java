@@ -14,6 +14,6 @@ public interface OnCheckFavoriteListener {
     /**
      * 更新当前收藏状态
      */
-    void updataFavoriteStatus();
+    void updateFavoriteStatus();
 
 }

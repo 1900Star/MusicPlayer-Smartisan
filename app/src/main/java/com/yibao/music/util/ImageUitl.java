@@ -118,15 +118,7 @@ public class ImageUitl {
 
     }
 
-
-    /**
-     * @param context   c
-     * @param url       url
-     * @param imageType 1 歌曲图片 、 2 歌手图片 、3 专辑图片
-     * @param songName  歌曲名
-     * @param artist    歌手名
-     */
-    public static void glideSaveImg(Context context, String url, int imageType, String songName, String artist) {
+ public static void glideSaveImg(Context context, String url, int imageType, String songName, String artist) {
         final Request request = new Request.Builder().get()
                 .url(url)
                 .build();
@@ -154,8 +146,7 @@ public class ImageUitl {
                                         ? Constant.MUSIC_SONG_ALBUM_ROOT : imageType == 2
                                         ? Constant.MUSIC_ARITIST_IMG_ROOT : Constant.MUSIC_ALBUM_ROOT;
                                 String fileName = imageType == 1
-                                        ? songName + ".jpg" : imageType == 2
-                                        ? artist + ".jpg" : artist + ".jpg";
+                                        ? songName + ".jpg" : artist + ".jpg";
                                 File songAlbumFile = new File(path);
                                 File destFile;
                                 if (CheckBuildVersionUtil.checkAndroidVersionQ()) {

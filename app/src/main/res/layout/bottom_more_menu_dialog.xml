@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/btn_edit_selector"
         android:gravity="center"
-        android:text="@string/cancel"
+        android:text="@string/back"
         android:textColor="@color/aboutSign"
         android:textSize="@dimen/about_content"
         android:textStyle="bold"

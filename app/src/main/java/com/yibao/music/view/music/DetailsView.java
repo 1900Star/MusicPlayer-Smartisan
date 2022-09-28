@@ -187,13 +187,13 @@ public class DetailsView
             ArtistInfo info = (ArtistInfo) bean;
             mArtist = info.getArtist();
             mAlbumId = info.getAlbumId();
-            setMusicInfo(dataType, info.getAlbumName(), info.getArtist(), mAlbumId, info.getYear());
+//            setMusicInfo(dataType, info.getAlbumName(), info.getArtist(), mAlbumId, info.getYear());
 
         } else if (dataType == Constant.NUMBER_TWO) {
             AlbumInfo info = (AlbumInfo) bean;
             mAlbumId = info.getAlbumId();
             mArtist = info.getAlbumName();
-            setMusicInfo(dataType, info.getAlbumName(), info.getArtist(), mAlbumId, info.getYear());
+//            setMusicInfo(dataType, info.getAlbumName(), info.getArtist(), mAlbumId, info.getYear());
 
         }
 

@@ -73,6 +73,8 @@ android {
         implementation 'com.baidu.mobstat:mtj-sdk:4.0.7.6'
         // 65536
         implementation 'com.android.support:multidex:1.0.3'
+
+        implementation 'me.jessyan:autosize:1.2.1'
 //        implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
 //        implementation 'androidx.lifecycle:livedata-viewmodel-ktx:2.2.1'
 //        implementation 'androidx.lifecycle:runtime-viewmodel-ktx:2.2.1'

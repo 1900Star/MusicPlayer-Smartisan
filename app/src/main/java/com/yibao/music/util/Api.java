@@ -9,10 +9,12 @@ package com.yibao.music.util;
  */
 public class Api {
     //根据歌手获取歌手图片的baseUrl
-    public static final String SINGER_PIC_BASE_URL = "http://music.163.com/";
-    public static final String SINGER_PIC = "api/search/get/web?csrf_token=&type=100";
+    public static final String SINGER_PIC_BASE_URL = "http://music.163.com/api/search/get/web";
+
+
+    public static final String SINGER_PIC = "api/search/get/web";
     //获取歌手图片需要添加user-agent的表头
-    public static final String HEADER_USER_AGENT = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36";
+    public static final String HEADER_USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36";
 
 
     //Fiddler抓包qq音乐网站后的地址

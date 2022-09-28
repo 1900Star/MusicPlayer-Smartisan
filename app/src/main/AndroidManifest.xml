@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.yibao.music">
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.Manifest.permission.WRITE_EXTERNAL_STORAGE" />
@@ -14,22 +15,25 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-<!--     适配 Android 12 运行安装-->
-    <permission-group android:name="${applicationId}.andpermission"/>
+    <!--     适配 Android 12 运行安装-->
+    <permission-group android:name="${applicationId}.andpermission" />
 
     <application
         android:name=".MusicApplication"
         android:allowBackup="true"
         android:fullBackupContent="@null"
         android:icon="@mipmap/artisan_launcher"
-       
+
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"
-        tools:ignore="GoogleAppIndexingWarning"
-        tools:targetApi="s">
-        
+        android:usesCleartextTraffic="true">
+        <meta-data
+            android:name="design_width_in_dp"
+            android:value="375" />
+        <!--        <meta-data-->
+        <!--            android:name="design_height_in_dp"-->
+        <!--            android:value="640"/>-->
         <activity
             android:name=".activity.SearchLyricsActivity"
             android:exported="false"
@@ -38,8 +42,8 @@
         <activity
             android:name=".activity.SplashActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/ArtistTheme"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/ArtistTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -47,9 +51,15 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.MusicPlayService" android:exported="false"/>
-        <service android:name=".service.LoadMusicDataService" android:exported="false" />
-        <service android:name=".service.CountdownService" android:exported="false" />
+        <service
+            android:name=".service.MusicPlayService"
+            android:exported="false" />
+        <service
+            android:name=".service.LoadMusicDataService"
+            android:exported="false" />
+        <service
+            android:name=".service.CountdownService"
+            android:exported="false" />
 
         <activity
             android:name=".activity.MusicActivity"
@@ -63,12 +73,7 @@
             android:launchMode="singleTask"
             android:theme="@style/ArtistTheme"
             android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".activity.PlayActivityBack"
-            android:exported="false"
-            android:launchMode="singleTask"
-            android:theme="@style/ArtistTheme"
-            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".activity.SearchActivity"
             android:exported="false"

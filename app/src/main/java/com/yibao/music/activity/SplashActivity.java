@@ -68,7 +68,6 @@ public class SplashActivity
         mBinding.vpSplash.setAdapter(splashPagerAdapter);
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
