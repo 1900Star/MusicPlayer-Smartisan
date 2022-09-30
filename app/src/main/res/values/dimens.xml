@@ -11,7 +11,7 @@
     <dimen name="music_artist">12sp</dimen>
     <dimen name="dp_six">6dp</dimen>
 
-    <dimen name="big_tv">20sp</dimen>
+    <dimen name="big_tv">18sp</dimen>
     <dimen name="bigLyrics">16sp</dimen>
     <dimen name="smallLyrics">14sp</dimen>
     <dimen name="line_height">40dp</dimen>

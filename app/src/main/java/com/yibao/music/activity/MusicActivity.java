@@ -217,7 +217,10 @@ public class MusicActivity extends BaseActivity implements OnMusicItemClickListe
         });
     }
 
-    private final NavigationBarView.OnItemSelectedListener mOnNavigationItemSelectedListener = item -> {
+
+    private final NavigationBarView.OnItemSelectedListener mOnNavigationItemSelectedListener
+            = item -> {
+
         int itemId = item.getItemId();
         if (itemId == R.id.navigation_play_list) {
             mBinding.musicViewpager2.setCurrentItem(0, false);
@@ -234,6 +237,7 @@ public class MusicActivity extends BaseActivity implements OnMusicItemClickListe
         } else if (itemId == R.id.navigation_about) {
             mBinding.musicViewpager2.setCurrentItem(4, false);
             return true;
+
         }
         return false;
     };
