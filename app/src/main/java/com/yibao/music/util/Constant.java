@@ -2,6 +2,8 @@ package com.yibao.music.util;
 
 import android.os.Environment;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * 作者：Stran on 2017/3/23 15:26
  * 描述：${常量类}
@@ -24,14 +26,7 @@ public class Constant {
     public static final int PLAY = 2;
     public static final int NEXT = 3;
     public static final int CLOSE = 4;
-    /**
-     * 排序标识 1 按照歌曲下载时间 ，2 按照歌曲收藏时间 , 3 按照播放次数 ，4 按照评分 ，5 按添加到自定义列表的时间。
-     */
-    public static final int SORT_DOWN_TIME = 1;
-    public static final int SORT_FAVORITE_TIME = 2;
-    public static final int SORT_FREQUENCY = 3;
-    public static final int SORT_SCORE = 4;
-    public static final int SORT_ADD_PALY_LIST_TIME = 5;
+
 
     /**
      * 倒计时结束，广播通知暂停播放音乐
@@ -55,8 +50,7 @@ public class Constant {
     public static final int NUMBER_FOURTEEN = 14;
     // RxBus post  flag
 
-    public static final String HANDLE_BACK = "handle_back";
-    public static final String ALBUM_FAG_EDIT = "album_edit";
+
     public static final String SONG_FAG_EDIT = "song_edit";
     public static final String FAVORITE_POSITION = "favorite_position";
     public static final String POSITION = "position";
@@ -67,9 +61,9 @@ public class Constant {
      */
     public static final String PLAY_STATUS = "play_status";
     public static final String HEADER_PIC_URI = "header_uri";
-    public static final String SEARCH_CONDITION = "search_condition";
+
     public static final String CONDITION = "condition";
-    public static final String CLEAR_CONDITON = "clear_condition";
+
 
     static final char LETTER_A = 'A';
     static final char LETTER_Z = 'Z';
@@ -87,19 +81,13 @@ public class Constant {
     public static final String NO_NETWORK = "网络异常,稍后重试!";
 
 
-    public static final String NO_FIND_LYRICS = "no_find_lyrics";
-    public static final String NO_FIND_NETWORK = "no_find_network";
     public static final String PLAY_LIST_BACK_FLAG = "LSP_98";
-    public static final String TIME_FLAG = "time_flag";
-    public static final String TIME_FLAG_KEY = "time_flag_key";
 
 
     public static final String MUSIC_SETTING = "artist_music_setting";
-    public static final int MODE_KEY = 0;
-    public static final String MUSIC_LOAD = "music_load";
-    public static final String PERMISSION_HINT = "permission_hint";
 
-    public static final String MUSIC_LOAD_FLAG = "play_load_flag";
+    public static final String MUSIC_LOAD = "music_load";
+
 
     /**
      * 用于存储和获取音乐的播放模式
@@ -107,11 +95,6 @@ public class Constant {
      * 0 全部  1 单曲   2 随机
      */
     public static final String PLAY_MODE = "play_mode";
-    public static final String MUSIC_QUERY = "music_query";
-    /**
-     * 用于存储播放记录的查询标识, 歌曲的具体查询标识
-     */
-    public static final String MUSIC_QUERY_FLAG = "music_query_flag";
 
 
     /**
@@ -130,12 +113,6 @@ public class Constant {
 
     public static final String PIC_URL_FLAG = "pic_url_flag";
 
-    /**
-     * 查询音乐的标识
-     * <p>
-     * v 1 艺术家  2  专辑   3    歌曲   4 播放列表
-     */
-    public static final String MUSIC_DATA_QUERY = "music_data_query";
 
     /**
      * 用于存储程序退出或关闭音乐界面时，音乐播放的位置。
@@ -162,17 +139,11 @@ public class Constant {
     public static final String MUSIC_FILE_SIZE_FLAG = "music_file_size_flag";
 
     public static final String MUSIC_CONFIG = "music_config";
-    public static final String MUSIC_REMENBER_FLAG = "music_remenber_flag";
-    public static final String FRAGMENT_PLAYLIST = "PlayListFragment";
-    public static final String FRAGMENT_ARTIST = "ArtistFragment";
-    public static final String FRAGMENT_SONG_CATEGORY = "SongCategoryFragment";
-    public static final String FRAGMENT_SONG = "SongFragment";
-    public static final String FRAGMENT_ALBUM = "AlbumFragment";
-    public static final String FRAGMENT_ALBUM_CATEGORY = "AlbumCategoryFragment";
+
+
     public static final String SCANNER_MEDIA = "scanner";
     public static final String ADD_TO_LIST = "add2List";
-    public static final String FAVORITE_FLAG = "favoriteFlag";
-    public static final String NO_NEED_FLAG = "no_need_flag";
+
     public static final String COUNTDOWN_TIME = "countdown_time";
     public static final String FINISH_TIME = "00:01";
     public static String MUSIC_LYRICS_DIR = "lyrics";
@@ -210,4 +181,5 @@ public class Constant {
     public static final String MUSIC_BEAN = "musicBean";
 
 
+    public static final String PERMISSION_HINT = "permission_hint";
 }

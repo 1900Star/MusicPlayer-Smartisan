@@ -129,60 +129,11 @@ public class MusicListUtil {
 
 
     /**
-     * 音乐列表排序
-     *
-     * @param musicList c
-     * @param sortFlag  1 按照歌曲下载时间 ，2 按照歌曲收藏时间 , 3 按照播放次数 ，4 按照评分 ，5 按添加到自定义列表的时间。
-     */
-    public static List<MusicBean> sortMusicList(List<MusicBean> musicList, int sortFlag) {
-        try {
-            Collections.sort(musicList, (m1, m2) -> getSortResult(sortFlag, m1, m2));
-        } catch (Exception e) {
-            LogUtil.d(TAG, e.getMessage());
-        }
-        return musicList;
-    }
-
-    private static int getSortResult(int sortFlag, MusicBean m1, MusicBean m2) {
-        int value = 0;
-        if (m1 == m2) {
-            return 0;
-        }
-        if (m1 == null) {
-            return -1;
-        }
-        if (m2 == null) {
-            return 1;
-        }
-        if (m1.equals(m2)) {
-            return 0;
-        }
-        if (sortFlag == Constant.NUMBER_ONE) {
-            value = Float.compare(m2.getAddTime(), m1.getAddTime());
-        } else if (sortFlag == Constant.NUMBER_TWO) {
-            value = Integer.compare(Integer.parseInt(m2.getTime()), Integer.parseInt(m1.getTime()));
-        } else if (sortFlag == Constant.NUMBER_THREE) {
-            value = Integer.compare(m2.getPlayFrequency(), m1.getPlayFrequency());
-        } else if (sortFlag == Constant.NUMBER_FOUR) {
-            value = Integer.compare(m2.getSongScore(), m1.getSongScore());
-        } else if (sortFlag == Constant.NUMBER_FIVE) {
-            value = Float.compare(m1.getAddListTime(), m2.getAddListTime());
-        }
-        if (value != 0) {
-            return value;
-        }
-        // https://stackoverflow.com/questions/28004269/java-collections-sort-comparison-method-violates-its-general-contract#
-        // Warning, this line is not fool proof as unequal objects can have identical hash codes.
-        return m1.hashCode() - m2.hashCode();
-    }
-
-
-    /**
      * 按ABCD 首字母排序
      *
      * @param musicList d
      */
-    public static List<MusicBean> sortMusicAbc(List<MusicBean> musicList) {
+    public static List<MusicBean> sortByAbc(List<MusicBean> musicList) {
         String str = "#";
         Collections.sort(musicList, (m1, m2) -> sortAbc(str, m1, m2));
         return musicList;

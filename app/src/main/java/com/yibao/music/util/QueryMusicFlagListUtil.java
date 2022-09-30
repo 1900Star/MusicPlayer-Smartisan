@@ -2,7 +2,6 @@ package com.yibao.music.util;
 
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.model.greendao.PlayListBeanDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 import org.greenrobot.greendao.query.WhereCondition;
@@ -20,7 +19,7 @@ public class QueryMusicFlagListUtil {
 
     /**
      * @param queryBuilder queryBuilder
-     * @param pageFlag     页面标识:  1 按歌ABC、2 评分、3 播放次数、4 添加时间、5 自定义播放列表详情 、6 艺术家列表、7 专辑列表、
+     * @param pageFlag     页面标识:  1 歌曲名列表、2 评分、3 播放次数、4 添加时间、5 自定义播放列表详情 、6 艺术家列表、7 专辑列表、
      *                     8 收藏列表、    【  搜索类别：  11歌曲 、 12专辑 、 13 艺术家 、14 全部 】
      * @param condition    查询关键字：艺术家、专辑、曲名 、播放列表
      * @return List
@@ -56,7 +55,7 @@ public class QueryMusicFlagListUtil {
         } else {
             if (pageFlag == Constant.NUMBER_ONE) {
                 // 按歌ABC
-                return MusicListUtil.sortMusicAbc(queryBuilder.list());
+                return MusicListUtil.sortByAbc(queryBuilder.list());
             } else if (pageFlag == Constant.NUMBER_TWO) {
                 // 按评分
                 return queryBuilder.orderDesc(MusicBeanDao.Properties.SongScore).build().list();
@@ -73,43 +72,8 @@ public class QueryMusicFlagListUtil {
         }
 
 
-        return MusicListUtil.sortMusicAbc(queryBuilder.build().list());
+        return MusicListUtil.sortByAbc(queryBuilder.build().list());
     }
 
-    /**
-     * getSpMusicFlag()先获取上次播放列表的标记，根据标记初始化对应的列表数据 。
-     * <p>
-     * 1 歌曲名   2  评分   3  播放次数        4  添加时间
-     *
-     * @return h
-     */
-    public static List<MusicBean> getDataList(int spMusicFlag, int dataFlag, String queryFlag, MusicBeanDao musicBeanDao) {
-        if (spMusicFlag == Constant.NUMBER_THREE) {
-            return MusicListUtil.sortMusicList(musicBeanDao.queryBuilder().list(), Constant.SORT_DOWN_TIME);
-        } else if (spMusicFlag == Constant.NUMBER_ONE) {
-            return MusicListUtil.sortMusicAbc(musicBeanDao.queryBuilder().list());
-        } else if (spMusicFlag == Constant.NUMBER_EIGHT) {
-            return musicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build().list();
-        } else if (spMusicFlag == Constant.NUMBER_TEN) {
-            WhereCondition whereCondition = null;
-            // 按艺术家查询列表
-            if (dataFlag == Constant.NUMBER_ONE) {
-                whereCondition = MusicBeanDao.Properties.Artist.eq(queryFlag);
-                // 按专辑名查询列表
-            } else if (dataFlag == Constant.NUMBER_TWO) {
-                whereCondition = MusicBeanDao.Properties.Album.eq(queryFlag);
-                // 按歌曲名查询
-            } else if (dataFlag == Constant.NUMBER_THREE) {
-                whereCondition = MusicBeanDao.Properties.Title.eq(queryFlag);
-                // 按播放列表查询
-            } else if (dataFlag == Constant.NUMBER_FOUR) {
-                whereCondition = MusicBeanDao.Properties.PlayListFlag.eq(queryFlag);
-            }
-            if (whereCondition != null) {
-                return musicBeanDao.queryBuilder().where(whereCondition).build().list();
-            }
-        }
-        return MusicListUtil.sortMusicAbc(musicBeanDao.queryBuilder().list());
-    }
 
 }

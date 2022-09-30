@@ -90,8 +90,7 @@ public class LoadMusicDataService extends IntentService {
      */
     private boolean getIsNeedAgainScanner(Intent intent) {
         if (intent != null) {
-            String scanner = intent.getStringExtra(Constant.SCANNER_MEDIA);
-            return scanner != null;
+            return intent.getBooleanExtra(Constant.AUTO_LOAD, false);
         }
         return false;
     }

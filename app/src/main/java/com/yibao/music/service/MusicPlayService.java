@@ -59,7 +59,7 @@ public class MusicPlayService extends Service {
 
     private int position = -2;
     private List<MusicBean> mMusicDataList;
-    private MusicBroacastReceiver mMusicReceiver;
+    private MusicBroadcastReceiver mMusicReceiver;
     private MusicBeanDao mMusicDao;
     private RxBus mBus;
     private Disposable mDisposable;
@@ -116,9 +116,6 @@ public class MusicPlayService extends Service {
         LogUtil.d(TAG, " position  ==  " + playPosition + "   pageType  ==   " + pageType + "  condition  ==  " + condition);
         // 播放列表数据
         mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao.queryBuilder(), pageType, condition);
-//        for (MusicBean musicBean : mMusicDataList) {
-//            LogUtil.d(TAG, "播放列表  " + musicBean.getTitle());
-//        }
         if (currentPosition != position && currentPosition != -1) {
             position = currentPosition;
             //执行播放
@@ -129,7 +126,7 @@ public class MusicPlayService extends Service {
         }
         if (mMusicDataList != null && mMusicDataList.size() > 0) {
             MusicBean musicBean = mMusicDataList.get(position);
-            LogUtil.d(TAG, " 当前播放信息  ==  " + musicBean.toString());
+            LogUtil.d(TAG, " 当前播放信息  ==  " + musicBean.getTitle());
             musicBean.setPlayFrequency(musicBean.getPlayFrequency() + 1);
             mMusicDao.update(musicBean);
         }
@@ -196,13 +193,12 @@ public class MusicPlayService extends Service {
                 ThreadPoolProxyFactory.newInstance().execute(() -> {
                     refreshFavorite(musicBean, favorite);
                     // 更新本地收藏文件
-                    updataFavoriteFile(musicBean, favorite);
+                    updateFavoriteFile(musicBean, favorite);
                 });
-
             }
         }
 
-        private void hintNotifycation() {
+        private void hintNotification() {
             if (mNotifyManager != null) {
                 mNotifyManager.hide();
             }
@@ -346,8 +342,8 @@ public class MusicPlayService extends Service {
 
         private Uri getSongFileUri() {
             int songId = mMusicInfo.getId().intValue();
-            LogUtil.d("===","songID   "+songId);
-            LogUtil.d("===","CCCCCCCCC     "+ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId) );
+            LogUtil.d("===", "songID   " + songId);
+            LogUtil.d("===", "CCCCCCCCC     " + ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId));
             return CheckBuildVersionUtil.checkAndroidVersionQ() ? ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId) : Uri.parse(mMusicInfo.getSongUrl());
         }
 
@@ -362,11 +358,12 @@ public class MusicPlayService extends Service {
         mMusicDao.update(currentMusicBean);
     }
 
-    private void updataFavoriteFile(MusicBean musicBean, boolean currentIsFavorite) {
+    private void updateFavoriteFile(MusicBean musicBean, boolean currentIsFavorite) {
         if (currentIsFavorite) {
             mDisposable = ReadFavoriteFileUtil.deleteFavorite(musicBean.getTitle()).observeOn(AndroidSchedulers.mainThread()).subscribe(aBoolean -> {
                 if (!aBoolean) {
-                    ToastUtil.show(this, getResources().getString(R.string.song_not_favorite));
+//                    ToastUtil.show(this, getResources().getString(R.string.song_not_favorite));
+                    LogUtil.d(TAG, getResources().getString(R.string.song_not_favorite));
                 }
             });
         } else {
@@ -382,14 +379,14 @@ public class MusicPlayService extends Service {
      * 控制通知栏的广播
      */
     private void initNotifyBroadcast() {
-        mMusicReceiver = new MusicBroacastReceiver();
+        mMusicReceiver = new MusicBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constant.ACTION_MUSIC);
         registerReceiver(mMusicReceiver, filter);
 
     }
 
-    private class MusicBroacastReceiver extends BroadcastReceiver {
+    private class MusicBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -433,7 +430,7 @@ public class MusicPlayService extends Service {
         private void pauseMusic() {
             if (mAudioBinder != null) {
                 mAudioBinder.pause();
-                mAudioBinder.hintNotifycation();
+                mAudioBinder.hintNotification();
                 mBus.post(Constant.PLAY_STATUS, Constant.NUMBER_TWO);
 
                 mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_FOCUS, false));
@@ -521,7 +518,7 @@ public class MusicPlayService extends Service {
     public void onDestroy() {
         super.onDestroy();
         if (mAudioBinder != null) {
-            mAudioBinder.hintNotifycation();
+            mAudioBinder.hintNotification();
         }
         if (mediaPlayer != null) {
             mediaPlayer.release();

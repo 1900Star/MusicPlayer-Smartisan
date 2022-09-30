@@ -8,13 +8,13 @@ import android.os.Handler
 import android.view.View
 import com.jakewharton.rxbinding2.view.RxView
 import com.yibao.music.R
-import com.yibao.music.base.bindings.BaseBindingFragment
 import com.yibao.music.base.bindings.BaseMusicFragmentDev
+import com.yibao.music.base.listener.OnScanConfigListener
 import com.yibao.music.base.listener.OnUpdateTitleListener
 import com.yibao.music.databinding.AboutFragmentBinding
 import com.yibao.music.fragment.dialogfrag.CrashSheetDialog
 import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment
-import com.yibao.music.fragment.dialogfrag.ScannerConfigDialog.Companion.newInstance
+import com.yibao.music.fragment.dialogfrag.ScannerConfigDialog
 import com.yibao.music.fragment.dialogfrag.TakePhotoBottomSheetDialog
 import com.yibao.music.model.MusicBean
 import com.yibao.music.model.greendao.MusicBeanDao
@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit
  * @创建时间: 2018/2/9 20:51
  * @描述： {TODO}
  */
-class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>() {
+class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>(), OnScanConfigListener {
     override fun initView() {
         mBinding.musicBar.setToolbarTitle(getString(R.string.about))
         initData()
@@ -54,26 +54,24 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>() {
     }
 
     private fun initListener() {
-        mBinding.tvScannerMedia.setOnClickListener { scannerMedia() }
+        mBinding.tvScannerMedia.setOnClickListener {
+            ScannerConfigDialog.newInstance(false, this)
+                .show(childFragmentManager, "config_scanner")
+        }
         mBinding.tvShare.setOnClickListener { shareMe() }
-        mCompositeDisposable.add(RxView.clicks(mBinding.aboutHeaderIv)
-            .throttleFirst(1, TimeUnit.SECONDS)
-            .subscribe {
-                TakePhotoBottomSheetDialog.newInstance().getBottomDialog(mActivity)
-            })
+        mCompositeDisposable.add(
+            RxView.clicks(mBinding.aboutHeaderIv).throttleFirst(1, TimeUnit.SECONDS).subscribe {
+                    TakePhotoBottomSheetDialog.newInstance().getBottomDialog(mActivity)
+                })
         mCompositeDisposable.add(mBus.toObservableType(Constant.HEADER_PIC_URI, Any::class.java)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe { o: Any? -> setHeaderView(o as Uri?) })
         mCompositeDisposable.add(RxView.clicks(mBinding.tvBackupsFavorite)
-            .throttleFirst(3, TimeUnit.SECONDS)
-            .subscribe { backupsFavoriteList() })
+            .throttleFirst(3, TimeUnit.SECONDS).subscribe { backupsFavoriteList() })
         mCompositeDisposable.add(RxView.clicks(mBinding.tvRecoverFavorite)
-            .throttleFirst(3, TimeUnit.SECONDS)
-            .subscribe { recoverFavoriteList() })
+            .throttleFirst(3, TimeUnit.SECONDS).subscribe { recoverFavoriteList() })
         mCompositeDisposable.add(RxView.clicks(mBinding.tvDeleteErrorLyric)
-            .throttleFirst(2, TimeUnit.SECONDS)
-            .subscribe { clearErrorLyric() })
+            .throttleFirst(2, TimeUnit.SECONDS).subscribe { clearErrorLyric() })
         mCompositeDisposable.add(RxView.clicks(mBinding.tvCrashLog)
             .throttleFirst(2, TimeUnit.SECONDS)
             .subscribe { CrashSheetDialog.newInstance().getBottomDialog(mActivity) })
@@ -81,8 +79,7 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>() {
             RelaxDialogFragment.newInstance().show(childFragmentManager, "girlsDialog")
             true
         }
-        mBinding.musicBar.setClickListener(object :
-            MusicToolBar.OnToolbarClickListener {
+        mBinding.musicBar.setClickListener(object : MusicToolBar.OnToolbarClickListener {
             override fun clickEdit() {
 
             }
@@ -97,9 +94,6 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>() {
         })
     }
 
-    private fun scannerMedia() {
-        newInstance(false).show(childFragmentManager, "config_scanner")
-    }
 
     private fun shareMe() {
         val shareIntent = Intent(Intent.ACTION_SEND)
@@ -120,8 +114,8 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>() {
                 val favoriteTime = s.substring(s.lastIndexOf("T") + 1)
                 songInfoMap[songName] = favoriteTime
             }
-            mCompositeDisposable.add(
-                Observable.fromIterable(musicList).map { musicBean: MusicBean ->
+            mCompositeDisposable.add(Observable.fromIterable(musicList)
+                .map { musicBean: MusicBean ->
                     //将歌名截取出来进行比较
                     val favoriteTime = songInfoMap[musicBean.title]
                     if (favoriteTime != null) {
@@ -130,15 +124,14 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>() {
                         mMusicBeanDao.update(musicBean)
                     }
                     mCurrentPosition++
-                }.subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { currentPosition: Int ->
-                        if (currentPosition == musicList.size - 1) {
-                            if (mActivity is OnUpdateTitleListener) {
-                                (mActivity as OnUpdateTitleListener).checkCurrentFavorite()
-                            }
+                }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe { currentPosition: Int ->
+                    if (currentPosition == musicList.size - 1) {
+                        if (mActivity is OnUpdateTitleListener) {
+                            (mActivity as OnUpdateTitleListener).checkCurrentFavorite()
                         }
-                    })
+                    }
+                })
         } else {
             ToastUtil.showNotFoundFavoriteFile(mActivity)
         }
@@ -148,21 +141,16 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>() {
         val list =
             mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.IsFavorite.eq(true)).build()
                 .list()
-        mCompositeDisposable.add(
-            Observable.fromIterable(list)
-                .map { musicBean: MusicBean ->
-                    val songInfo = musicBean.title + "T" + musicBean.addTime
-                    ReadFavoriteFileUtil.writeFile(songInfo)
-                    songInfo
-                }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { favoriteName: String ->
-                    LogUtil.d(
-                        mTag,
-                        " 更新本地收藏文件==========   $favoriteName"
-                    )
-                })
+        mCompositeDisposable.add(Observable.fromIterable(list).map { musicBean: MusicBean ->
+            val songInfo = musicBean.title + "T" + musicBean.addTime
+            ReadFavoriteFileUtil.writeFile(songInfo)
+            songInfo
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe { favoriteName: String ->
+                LogUtil.d(
+                    mTag, " 更新本地收藏文件==========   $favoriteName"
+                )
+            })
         ToastUtil.showFavoriteListBackupsDown(mActivity)
     }
 
@@ -189,5 +177,14 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>() {
         fun newInstance(): AboutFragment {
             return AboutFragment()
         }
+    }
+
+    override fun scanMusic(isAutoScan: Boolean) {
+        LogUtil.d(mTag, "关于界面扫描   $isAutoScan")
+
+
+
+
+
     }
 }

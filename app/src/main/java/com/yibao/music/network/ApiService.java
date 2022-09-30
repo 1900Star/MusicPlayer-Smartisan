@@ -22,7 +22,7 @@ import retrofit2.http.Query;
  * className   MusicService
  * Des：TODO
  */
-public interface MusicService {
+public interface ApiService {
     /**
      * 搜索歌曲：https://c.y.qq.com/soso/fcgi-bin/client_search_cp?p=2&n=2&w=想起&format=json
      */

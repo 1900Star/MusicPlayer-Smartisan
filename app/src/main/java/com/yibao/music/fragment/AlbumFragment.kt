@@ -106,7 +106,7 @@ class AlbumFragment : BaseMusicFragmentDev<AlbumFragmentBinding>(), View.OnClick
                 mBinding.musicBar.setToolbarTitle(albumInfo.albumName)
                 mBinding.musicBar.setTvEditText(R.string.music_album)
 
-                mDetailList = MusicListUtil.sortMusicAbc(
+                mDetailList = MusicListUtil.sortByAbc(
                     mMusicBeanDao.queryBuilder()
                         .where(MusicBeanDao.Properties.Album.eq(albumInfo.albumName)).build()
                         .list()

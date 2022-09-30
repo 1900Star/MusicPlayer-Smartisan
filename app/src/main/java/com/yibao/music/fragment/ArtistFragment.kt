@@ -74,7 +74,7 @@ class ArtistFragment : BaseMusicFragmentDev<ArtisanListFragmentBinding>() {
             mDetailList.clear()
         } else {
             if (artistInfo != null) {
-                mDetailList = MusicListUtil.sortMusicAbc(
+                mDetailList = MusicListUtil.sortByAbc(
                     mMusicBeanDao.queryBuilder()
                         .where(MusicBeanDao.Properties.Artist.eq(artistInfo.artist)).build().list()
                 ) as ArrayList<MusicBean>

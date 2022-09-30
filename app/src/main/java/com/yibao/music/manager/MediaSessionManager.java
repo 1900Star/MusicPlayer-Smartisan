@@ -73,16 +73,14 @@ public class MediaSessionManager {
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, info.getDuration())
                 .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, getCoverBitmap(info));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, mAudioBinder.getMusicList().size());
-        }
+        metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, mAudioBinder.getMusicList().size());
         if (mMediaSession != null) {
             mMediaSession.setMetadata(metaData.build());
         }
     }
 
 
-    private MediaSessionCompat.Callback sessionCb = new MediaSessionCompat.Callback() {
+    private final MediaSessionCompat.Callback sessionCb = new MediaSessionCompat.Callback() {
         @Override
         public void onPlay() {
             super.onPlay();

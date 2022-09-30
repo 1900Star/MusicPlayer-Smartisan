@@ -7,8 +7,8 @@ import android.view.View
 import com.yibao.music.R
 import com.yibao.music.activity.SplashActivity
 import com.yibao.music.base.bindings.BaseBindingDialog
+import com.yibao.music.base.listener.OnScanConfigListener
 import com.yibao.music.databinding.ScannerConfigDialogBinding
-import com.yibao.music.fragment.dialogfrag.ScannerConfigDialog
 import com.yibao.music.util.Constant
 import com.yibao.music.util.SpUtils
 
@@ -51,12 +51,12 @@ class ScannerConfigDialog : BaseBindingDialog<ScannerConfigDialogBinding>(), Vie
     }
 
     override fun onClick(v: View) {
-        val auto = requireArguments().getBoolean(Constant.AUTO_LOAD)
+        val isAutoFlag = requireArguments().getBoolean(Constant.LOAD_FLAG)
         val id = v.id
         if (id == R.id.tv_scanner_cancel) {
-            if (auto) {
-
-                mBus.post(Constant.AUTO_LOAD)
+            // 自动扫描，点击取消扫描音乐
+            if (isAutoFlag) {
+                mListener.scanMusic(true)
             }
             dismiss()
         } else if (id == R.id.tv_scanner_continue) {
@@ -64,8 +64,8 @@ class ScannerConfigDialog : BaseBindingDialog<ScannerConfigDialogBinding>(), Vie
                 SpUtils.ContentValue(Constant.MUSIC_FILE_SIZE_FLAG, mBinding.cbSize.isChecked),
                 SpUtils.ContentValue(Constant.MUSIC_DURATION_FLAG, mBinding.cbDuration.isChecked)
             )
-            if (auto) {
-                mBus.post(Constant.AUTO_LOAD)
+            if (isAutoFlag) {
+                mListener.scanMusic(true)
             } else {
                 val intent = Intent(activity, SplashActivity::class.java)
                 intent.putExtra(Constant.SCANNER_MEDIA, Constant.SCANNER_MEDIA)
@@ -77,13 +77,15 @@ class ScannerConfigDialog : BaseBindingDialog<ScannerConfigDialogBinding>(), Vie
 
     companion object {
         private val TAG = " ==== " + ScannerConfigDialog::class.java.simpleName + "  "
+        private lateinit var mListener: OnScanConfigListener
 
         /**
          * @param loadFlag true 自动扫描 、 false 手动扫描
          * @return ScannerConfigDialog
          */
         @JvmStatic
-        fun newInstance(loadFlag: Boolean): ScannerConfigDialog {
+        fun newInstance(loadFlag: Boolean, listener: OnScanConfigListener): ScannerConfigDialog {
+            mListener = listener
             val dialog = ScannerConfigDialog()
             val bundle = Bundle()
             bundle.putBoolean(Constant.LOAD_FLAG, loadFlag)

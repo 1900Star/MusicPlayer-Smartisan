@@ -17,7 +17,7 @@ public class RetrofitHelper {
     private static final String TAG = "====" + RetrofitHelper.class.getSimpleName() + "    ";
     private static Retrofit retrofit;
 
-    public static MusicService getMusicService() {
+    public static ApiService getMusicService() {
         if (retrofit == null) {
             synchronized (RetrofitHelper.class) {
                 if (retrofit == null) {
@@ -31,10 +31,10 @@ public class RetrofitHelper {
             }
 
         }
-        return retrofit.create(MusicService.class);
+        return retrofit.create(ApiService.class);
     }
 
-    public static MusicService getSingerMusicService() {
+    public static ApiService getSingerMusicService() {
         if (retrofit == null) {
             synchronized (RetrofitHelper.class) {
                 if (retrofit == null) {
@@ -48,7 +48,7 @@ public class RetrofitHelper {
             }
 
         }
-        return retrofit.create(MusicService.class);
+        return retrofit.create(ApiService.class);
     }
 
 

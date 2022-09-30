@@ -23,6 +23,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.yibao.music.util.Constant
+import com.yibao.music.util.LogUtil
 
 /**
  * @author Stran
@@ -30,29 +31,26 @@ import com.yibao.music.util.Constant
  * Time:2017/5/30 13:27
  */
 class MusicNotifyManager(
-    private val activity: Context,
-    private val mMusicBean: MusicBean,
-    private val isPlay: Boolean
+    private val activity: Context, private val mMusicBean: MusicBean, private val isPlay: Boolean
 ) : NotificationChangeListener {
-
+    private var mNotifyManager: NotificationManager =
+        activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     private var isFavorite = false
     private val channelId = "music"
-
+    private val channelName = "artist_music"
 
     private fun buildNotification(): Notification {
+
         val builder = NotificationCompat.Builder(activity, channelId)
         val intent = Intent(activity, MusicActivity::class.java)
         val flag = CheckBuildVersionUtil.getNotifyFlag()
         val startMainActivity = PendingIntent.getActivity(activity, 0, intent, flag)
-        builder.setContentIntent(startMainActivity)
-            .setTicker(activity.getString(R.string.app_name))
-            .setSmallIcon(R.drawable.noalbumcover_120)
-            .setWhen(System.currentTimeMillis())
-            .setOngoing(true)
-            .setOnlyAlertOnce(true)
-            .setCustomContentView(createContentView())
+        builder.setContentIntent(startMainActivity).setTicker(activity.getString(R.string.app_name))
+            .setSmallIcon(R.drawable.noalbumcover_120).setWhen(System.currentTimeMillis())
+            .setOngoing(true).setOnlyAlertOnce(true).setCustomContentView(createContentView())
             .setCustomBigContentView(createContentBigView())
-            .priority = NotificationCompat.PRIORITY_HIGH
+            .setStyle(NotificationCompat.DecoratedCustomViewStyle()).priority =
+            NotificationCompat.PRIORITY_HIGH
         return builder.build()
     }
 
@@ -106,15 +104,15 @@ class MusicNotifyManager(
         val notifyAlbumUrl = FileUtil.getNotifyAlbumUrl(activity, mMusicBean)
         if (notifyAlbumUrl != null) {
             val cover = createCover(notifyAlbumUrl)
-            isFavorite = mMusicBean.getIsFavorite()
             view.setImageViewBitmap(R.id.play_notify_cover, cover)
-            view.setTextViewText(R.id.play_notify_name, musicName)
-            view.setTextViewText(R.id.play_notify_arts, musicArtist)
-            view.setImageViewResource(
-                R.id.play_notify_play,
-                if (isPlay) R.drawable.btn_playing_pause_selector else R.drawable.btn_playing_play_selector
-            )
         }
+        isFavorite = mMusicBean.getIsFavorite()
+        view.setTextViewText(R.id.play_notify_name, musicName)
+        view.setTextViewText(R.id.play_notify_arts, musicArtist)
+        view.setImageViewResource(
+            R.id.play_notify_play,
+            if (isPlay) R.drawable.btn_playing_pause_selector else R.drawable.btn_playing_play_selector
+        )
 
     }
 
@@ -151,13 +149,20 @@ class MusicNotifyManager(
     }
 
     override fun show() {
-        with(NotificationManagerCompat.from(activity)) {
-            notify(PLAY_NOTIFY_ID, buildNotification())
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel =
+                NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
+            channel.enableVibration(false)
+            mNotifyManager.createNotificationChannel(channel)
         }
+        mNotifyManager.notify(1, buildNotification())
+//        with(NotificationManagerCompat.from(activity)) {
+//            notify(PLAY_NOTIFY_ID, buildNotification())
+//        }
     }
 
     override fun hide() {
-//        manager.cancelAll()
+        mNotifyManager.cancelAll()
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
