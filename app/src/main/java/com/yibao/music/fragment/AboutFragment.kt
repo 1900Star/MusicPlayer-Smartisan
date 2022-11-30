@@ -1,21 +1,20 @@
 package com.yibao.music.fragment
 
+import android.Manifest
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Handler
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import com.jakewharton.rxbinding2.view.RxView
 import com.yibao.music.R
 import com.yibao.music.base.bindings.BaseMusicFragmentDev
 import com.yibao.music.base.listener.OnScanConfigListener
 import com.yibao.music.base.listener.OnUpdateTitleListener
 import com.yibao.music.databinding.AboutFragmentBinding
-import com.yibao.music.fragment.dialogfrag.CrashSheetDialog
-import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment
-import com.yibao.music.fragment.dialogfrag.ScannerConfigDialog
-import com.yibao.music.fragment.dialogfrag.TakePhotoBottomSheetDialog
+import com.yibao.music.fragment.dialogfrag.*
 import com.yibao.music.model.MusicBean
 import com.yibao.music.model.greendao.MusicBeanDao
 import com.yibao.music.util.*
@@ -61,11 +60,11 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>(), OnScanConfig
         }
         // 分享
         mBinding.tvShare.setOnClickListener { shareMe() }
-        // 头像
-        mCompositeDisposable.add(
-            RxView.clicks(mBinding.aboutHeaderIv).throttleFirst(1, TimeUnit.SECONDS).subscribe {
-                    TakePhotoBottomSheetDialog.newInstance().getBottomDialog(mActivity)
-                })
+        // 头像 、拍照
+        mCompositeDisposable.add(RxView.clicks(mBinding.aboutHeaderIv)
+            .throttleFirst(1, TimeUnit.SECONDS).subscribe {
+                takePhoto()
+            })
         //
         mCompositeDisposable.add(mBus.toObservableType(Constant.HEADER_PIC_URI, Any::class.java)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -99,6 +98,23 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>(), OnScanConfig
         })
     }
 
+    private fun takePhoto() {
+        requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+
+    }
+
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        LogUtil.d(mTag, "相机权限获取结果   $granted")
+        if (granted) {
+            TakePhotoBottomSheetDialog.newInstance().getBottomDialog(mActivity)
+        } else {
+            PermissionsDialog.newInstance(getString(R.string.camera_permission))
+                .show(childFragmentManager, "permissions")
+        }
+    }
 
     private fun shareMe() {
         val shareIntent = Intent(Intent.ACTION_SEND)
@@ -186,9 +202,6 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>(), OnScanConfig
 
     override fun scanMusic(isAutoScan: Boolean) {
         LogUtil.d(mTag, "关于界面扫描   $isAutoScan")
-
-
-
 
 
     }

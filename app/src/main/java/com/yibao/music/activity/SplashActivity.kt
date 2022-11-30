@@ -49,7 +49,7 @@ class SplashActivity : BaseActivity(), OnScanConfigListener {
     }
 
     private fun initPermission() {
-        if (CheckBuildVersionUtil.checkAndroidVersionS()) {
+        if (VersionUtil.checkAndroidVersionS()) {
             requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_AUDIO)
         } else {
             requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)

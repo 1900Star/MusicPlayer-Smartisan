@@ -84,7 +84,7 @@ public class CrashHandler
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss", Locale.getDefault()).format(new Date(current));
 
         File exceptionFile;
-        if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
+        if (VersionUtil.checkAndroidVersionQ()) {
             String fileName = time + FILE_NAME_SUFFIX;
             exceptionFile = FileUtil.createFile(mContext, fileName, Constant.CRASH_DIR);
         } else {

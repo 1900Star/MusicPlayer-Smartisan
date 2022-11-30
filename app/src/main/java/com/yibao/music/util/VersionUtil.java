@@ -9,7 +9,7 @@ import android.os.Build;
  * className   BuildVersionUtil
  * Des：TODO
  */
-public class CheckBuildVersionUtil {
+public class VersionUtil {
 
     public static boolean checkAndroidVersionQ() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;

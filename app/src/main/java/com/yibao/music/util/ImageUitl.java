@@ -149,7 +149,7 @@ public class ImageUitl {
                                         ? songName + ".jpg" : artist + ".jpg";
                                 File songAlbumFile = new File(path);
                                 File destFile;
-                                if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
+                                if (VersionUtil.checkAndroidVersionQ()) {
                                     destFile = FileUtil.createFile(context, fileName, "songAlbum");
                                 } else {
                                     if (!songAlbumFile.exists()) {

@@ -6,24 +6,18 @@ import com.yibao.music.base.listener.NotificationChangeListener
 import android.app.NotificationManager
 import android.content.Intent
 import com.yibao.music.activity.MusicActivity
-import com.yibao.music.util.CheckBuildVersionUtil
+import com.yibao.music.util.VersionUtil
 import android.app.PendingIntent
 import com.yibao.music.R
 import android.widget.RemoteViews
-import com.yibao.music.model.TitleAndArtistBean
 import com.yibao.music.util.TitleArtistUtil
 import com.yibao.music.util.FileUtil
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.app.NotificationChannel
 import android.content.Context
-import android.os.Build
-import com.yibao.music.manager.MusicNotifyManager
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import com.yibao.music.util.Constant
-import com.yibao.music.util.LogUtil
 
 /**
  * @author Stran
@@ -43,7 +37,7 @@ class MusicNotifyManager(
 
         val builder = NotificationCompat.Builder(activity, channelId)
         val intent = Intent(activity, MusicActivity::class.java)
-        val flag = CheckBuildVersionUtil.getNotifyFlag()
+        val flag = VersionUtil.getNotifyFlag()
         val startMainActivity = PendingIntent.getActivity(activity, 0, intent, flag)
         builder.setContentIntent(startMainActivity).setTicker(activity.getString(R.string.app_name))
             .setSmallIcon(R.drawable.noalbumcover_120).setWhen(System.currentTimeMillis())
@@ -65,7 +59,7 @@ class MusicNotifyManager(
         // Pre
         val pre = Intent(Constant.ACTION_MUSIC)
         pre.putExtra(Constant.NOTIFY_BUTTON_ID, Constant.PREV)
-        val flag = CheckBuildVersionUtil.getNotifyFlag()
+        val flag = VersionUtil.getNotifyFlag()
         val p3 = PendingIntent.getBroadcast(activity, Constant.PREV, pre, flag)
         view.setOnClickPendingIntent(R.id.play_notify_pre, p3)
         // favorite
@@ -122,7 +116,7 @@ class MusicNotifyManager(
      * @param view v
      */
     private fun setCommonClickPending(view: RemoteViews) {
-        val flag = CheckBuildVersionUtil.getNotifyFlag()
+        val flag = VersionUtil.getNotifyFlag()
         // Play
         val playOrPause = Intent(Constant.ACTION_MUSIC)
         playOrPause.putExtra(Constant.NOTIFY_BUTTON_ID, Constant.PLAY)
@@ -149,12 +143,10 @@ class MusicNotifyManager(
     }
 
     override fun show() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel =
-                NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
-            channel.enableVibration(false)
-            mNotifyManager.createNotificationChannel(channel)
-        }
+        val channel =
+            NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
+        channel.enableVibration(false)
+        mNotifyManager.createNotificationChannel(channel)
         mNotifyManager.notify(1, buildNotification())
 //        with(NotificationManagerCompat.from(activity)) {
 //            notify(PLAY_NOTIFY_ID, buildNotification())

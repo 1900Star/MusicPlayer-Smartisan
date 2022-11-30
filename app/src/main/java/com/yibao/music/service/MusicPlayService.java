@@ -20,7 +20,7 @@ import com.yibao.music.manager.MediaSessionManager;
 import com.yibao.music.manager.MusicNotifyManager;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.util.CheckBuildVersionUtil;
+import com.yibao.music.util.VersionUtil;
 import com.yibao.music.util.Constant;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.QueryMusicFlagListUtil;
@@ -343,7 +343,7 @@ public class MusicPlayService extends Service {
             int songId = mMusicInfo.getId().intValue();
             LogUtil.d("===", "songID   " + songId);
             LogUtil.d("===", "CCCCCCCCC     " + ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId));
-            return CheckBuildVersionUtil.checkAndroidVersionQ() ? ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId) : Uri.parse(mMusicInfo.getSongUrl());
+            return VersionUtil.checkAndroidVersionQ() ? ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId) : Uri.parse(mMusicInfo.getSongUrl());
         }
 
     }

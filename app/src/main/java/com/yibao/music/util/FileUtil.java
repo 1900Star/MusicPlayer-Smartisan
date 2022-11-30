@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 
@@ -34,7 +33,7 @@ public class FileUtil {
     private static final String TAG = "====" + FileUtil.class.getSimpleName() + "    ";
 
     public static boolean getFavoriteFile() {
-        return CheckBuildVersionUtil.checkAndroidVersionQ() ? FileUtil.isAndroidQFileExists(Constant.FAVORITE_FILE) : new File(Constant.FAVORITE_FILE).exists();
+        return VersionUtil.checkAndroidVersionQ() ? FileUtil.isAndroidQFileExists(Constant.FAVORITE_FILE) : new File(Constant.FAVORITE_FILE).exists();
 
     }
 
@@ -151,7 +150,7 @@ public class FileUtil {
      */
     public static File getLyricsFile(String songName, String artist) {
         String lyricsName = songName + "$$" + artist + ".lrc";
-        if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
+        if (VersionUtil.checkAndroidVersionQ()) {
             String apkFilePath = MusicApplication.getInstance().getExternalFilesDir(Constant.MUSIC_LYRICS_DIR).getAbsolutePath();
             return new File(apkFilePath + File.separator + lyricsName);
         } else {
@@ -165,7 +164,7 @@ public class FileUtil {
     }
 
     public static File getLyricsDir() {
-        if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
+        if (VersionUtil.checkAndroidVersionQ()) {
             String apkFilePath = MusicApplication.getInstance().getExternalFilesDir(Constant.MUSIC_LYRICS_DIR).getAbsolutePath();
             return new File(apkFilePath + File.separator);
         } else {
@@ -181,7 +180,7 @@ public class FileUtil {
      */
     public static File getCrashFile() {
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss", Locale.getDefault()).format(new Date(System.currentTimeMillis()));
-        if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
+        if (VersionUtil.checkAndroidVersionQ()) {
             String apkFilePath = MusicApplication.getInstance().getExternalFilesDir(Constant.CRASH_DIR).getAbsolutePath();
             return new File(apkFilePath + File.separator + time + ".txt");
         } else {
@@ -192,7 +191,7 @@ public class FileUtil {
     }
 
     public static File getCrashDir() {
-        if (CheckBuildVersionUtil.checkAndroidVersionQ()) {
+        if (VersionUtil.checkAndroidVersionQ()) {
             String apkFilePath = MusicApplication.getInstance().getExternalFilesDir(Constant.CRASH_DIR).getAbsolutePath();
             return new File(apkFilePath + File.separator);
         } else {
