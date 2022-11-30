@@ -51,13 +51,16 @@ public class LoadMusicDataService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+        // 最新的歌曲数量
         List<MusicBean> newList = MusicListUtil.getMusicDataList();
         int songSum = newList.size();
         // 手动扫描本地歌曲
         if (getIsNeedAgainScanner(intent)) {
             // 数据库的歌曲和最新媒体库中歌曲数量比较
             List<MusicBean> oldList = mMusicDao.queryBuilder().build().list();
+
             List<MusicBean> different = (List<MusicBean>) CollectionUtil.getDifferent(newList, oldList);
+            // 保留两个集合中不同的元素
             newList.retainAll(different);
             for (MusicBean musicBean : newList) {
                 sendLoadProgress(newList.size(), musicBean);

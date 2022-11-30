@@ -68,7 +68,7 @@ class ScannerConfigDialog : BaseBindingDialog<ScannerConfigDialogBinding>(), Vie
                 mListener.scanMusic(true)
             } else {
                 val intent = Intent(activity, SplashActivity::class.java)
-                intent.putExtra(Constant.SCANNER_MEDIA, Constant.SCANNER_MEDIA)
+                intent.putExtra(Constant.SCANNER_MEDIA, true)
                 startActivity(intent)
             }
             dismiss()

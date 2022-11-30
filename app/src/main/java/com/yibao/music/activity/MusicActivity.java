@@ -78,17 +78,8 @@ public class MusicActivity extends BaseActivity implements OnMusicItemClickListe
 
 
     private void initData() {
-        int pageType = mSps.getInt(Constant.PAGE_TYPE);
-        LogUtil.d(TAG, "  页面标识   " + pageType);
-//        List<MusicBean> initMusicList = QueryMusicFlagListUtil.getDataList(mSps.getInt(Constant.MUSIC_DATA_FLAG), mSps.getInt(Constant.MUSIC_DATA_QUERY), mSps.getString(Constant.MUSIC_QUERY_FLAG), mMusicDao);
         mCurrentPosition = mSps.getInt(Constant.MUSIC_POSITION);
-//        if (initMusicList != null && initMusicList.size() > 0) {
-//            int size = initMusicList.size();
-//            int index = (mCurrentPosition > 0 && mCurrentPosition < size) ? mCurrentPosition : 0;
-//            mCurrentMusicBean = initMusicList.get(index);
-//        } else {
-//            LogUtil.d(TAG, "==========================NoThing=555555555555555555");
-//        }
+
         // 初始化 MusicPagerAdapter 主页面
         MainViewPagerAdapter pagerAdapter = new MainViewPagerAdapter(this);
         mBinding.musicViewpager2.setAdapter(pagerAdapter);
@@ -101,7 +92,6 @@ public class MusicActivity extends BaseActivity implements OnMusicItemClickListe
         mMusicConfig = mSps.getBoolean(Constant.MUSIC_INIT_FLAG, false);
         if (mMusicConfig) {
             mPlayState = mSps.getInt(Constant.MUSIC_PLAY_STATE);
-            LogUtil.d(TAG, "======= mPlayState  " + mPlayState);
             if (mPlayState == Constant.NUMBER_ONE) {
                 // 读取用户的播放记录，设置UI显示，做好播放的准备。(暂停和播放两种状态)
                 if (mCurrentMusicBean != null) {
@@ -111,6 +101,7 @@ public class MusicActivity extends BaseActivity implements OnMusicItemClickListe
                 startServiceAndAnimation();
             }
         } else {
+            // 没有播放记录
             LogUtil.d(TAG, "用户 ++++  nothing ");
         }
 
@@ -120,7 +111,7 @@ public class MusicActivity extends BaseActivity implements OnMusicItemClickListe
     private void startServiceAndAnimation() {
         int pageType = mSps.getInt(Constant.PAGE_TYPE);
 
-        startMusicService(mCurrentPosition,pageType);
+        startMusicService(mCurrentPosition, pageType);
 
         mBinding.smartisanControlBar.setPlayButtonState(R.drawable.btn_playing_pause_selector);
         mBinding.qqControlBar.setPlayButtonState(R.drawable.btn_playing_pause_selector);
@@ -308,13 +299,13 @@ public class MusicActivity extends BaseActivity implements OnMusicItemClickListe
     /**
      * 在详情页面播放音乐回调
      *
-     * @param position 当前点击的曲目
-     * @param pageType 页面标识
-     * @param condition  关键字
+     * @param position  当前点击的曲目
+     * @param pageType  页面标识
+     * @param condition 关键字
      */
     @Override
     public void startMusicServiceFlag(int position, int pageType, String condition) {
-      LogUtil.d(TAG,"详情界面播放歌曲 ====   "+pageType);
+        LogUtil.d(TAG, "详情界面播放歌曲 ====   " + pageType);
         mCurrentPosition = position;
         Intent intent = new Intent(this, MusicPlayService.class);
         intent.putExtra(Constant.PAGE_TYPE, pageType);

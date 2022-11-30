@@ -29,7 +29,6 @@ import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtils;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.ThreadPoolProxyFactory;
-import com.yibao.music.util.ToastUtil;
 
 import java.util.List;
 import java.util.Random;
@@ -444,10 +443,10 @@ public class MusicPlayService extends Service {
      */
     private void registerHeadsetReceiver() {
         IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-        registerReceiver(headsetReciver, intentFilter);
+        registerReceiver(headsetReceiver, intentFilter);
     }
 
-    BroadcastReceiver headsetReciver = new BroadcastReceiver() {
+    BroadcastReceiver headsetReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (mAudioBinder != null && mAudioBinder.isPlaying()) {
@@ -468,7 +467,7 @@ public class MusicPlayService extends Service {
 
     }
 
-    private AudioManager.OnAudioFocusChangeListener mAudioFocusChange = focusChange -> {
+    private final AudioManager.OnAudioFocusChangeListener mAudioFocusChange = focusChange -> {
         switch (focusChange) {
             case AudioManager.AUDIOFOCUS_LOSS:
                 // 长时间丢失焦点,会触发此回调事件，(QQ音乐，网易云音乐)，需要暂停音乐播放，避免和其他音乐同时输出声音
@@ -527,8 +526,8 @@ public class MusicPlayService extends Service {
         if (mMusicReceiver != null) {
             unregisterReceiver(mMusicReceiver);
         }
-        if (headsetReciver != null) {
-            unregisterReceiver(headsetReciver);
+        if (headsetReceiver != null) {
+            unregisterReceiver(headsetReceiver);
         }
         if (mDisposable != null) {
             mDisposable.dispose();

@@ -29,7 +29,6 @@ public class LyricsUtil {
 
     public static boolean checkLyricFile(String songName, String songArtist) {
 
-
         File file = FileUtil.getLyricsFile(songName, songArtist);
         boolean b = CheckBuildVersionUtil.checkAndroidVersionQ() ? FileUtil.isAndroidQFileExists(file.getAbsolutePath()) : file.exists();
         LogUtil.d(TAG, " 本地歌词信息  " + songName + " $$ " + songArtist + " == 是否存在    " + b);

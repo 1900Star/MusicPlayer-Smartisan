@@ -30,9 +30,9 @@ abstract class BaseBindingDialog<T : ViewBinding> : DialogFragment() {
     protected lateinit var mBus: RxBus
     protected lateinit var mSp: SpUtils
 
-    fun <T : ViewModel?> gets(modelClass: Class<T>): T {
+    fun <T : ViewModel> gets(modelClass: Class<T>): T {
 
-        return ViewModelProvider(this).get(modelClass)
+        return ViewModelProvider(this)[modelClass]
     }
 
     protected open fun initRecyclerView(recyclerView: RecyclerView) {

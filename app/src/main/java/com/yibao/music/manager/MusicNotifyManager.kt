@@ -165,8 +165,8 @@ class MusicNotifyManager(
         mNotifyManager.cancelAll()
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     override fun visible(): Boolean {
+
         return false
     }
 

@@ -119,7 +119,7 @@ public class FileUtil {
             file.mkdirs();
         }
         File pictureFile = new File(savePath, Constant.IMAGE_FILE_NAME);
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? FileProvider.getUriForFile(context, context.getPackageName(), pictureFile) : Uri.fromFile(pictureFile);
+        return FileProvider.getUriForFile(context, context.getPackageName(), pictureFile);
     }
 
     public static void deleteFileDirectory(File dir) {

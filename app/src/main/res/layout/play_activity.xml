@@ -88,7 +88,7 @@
 
     <TextView
         android:id="@+id/start_time"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:textColor="@color/aboutSign"
@@ -125,7 +125,7 @@
 
     <TextView
         android:id="@+id/end_time"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:textColor="@color/aboutSign"

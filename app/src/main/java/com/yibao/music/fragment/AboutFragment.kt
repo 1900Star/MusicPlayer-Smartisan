@@ -54,18 +54,23 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>(), OnScanConfig
     }
 
     private fun initListener() {
+        // 手动扫描
         mBinding.tvScannerMedia.setOnClickListener {
             ScannerConfigDialog.newInstance(false, this)
                 .show(childFragmentManager, "config_scanner")
         }
+        // 分享
         mBinding.tvShare.setOnClickListener { shareMe() }
+        // 头像
         mCompositeDisposable.add(
             RxView.clicks(mBinding.aboutHeaderIv).throttleFirst(1, TimeUnit.SECONDS).subscribe {
                     TakePhotoBottomSheetDialog.newInstance().getBottomDialog(mActivity)
                 })
+        //
         mCompositeDisposable.add(mBus.toObservableType(Constant.HEADER_PIC_URI, Any::class.java)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe { o: Any? -> setHeaderView(o as Uri?) })
+            .subscribe { o: Any? -> setHeaderView(o as Uri) })
+
         mCompositeDisposable.add(RxView.clicks(mBinding.tvBackupsFavorite)
             .throttleFirst(3, TimeUnit.SECONDS).subscribe { backupsFavoriteList() })
         mCompositeDisposable.add(RxView.clicks(mBinding.tvRecoverFavorite)
@@ -154,10 +159,10 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>(), OnScanConfig
         ToastUtil.showFavoriteListBackupsDown(mActivity)
     }
 
-    private fun setHeaderView(uri: Uri?) {
+    private fun setHeaderView(uri: Uri) {
         var bitmap: Bitmap? = null
         try {
-            bitmap = BitmapFactory.decodeStream(mActivity.contentResolver.openInputStream(uri!!))
+            bitmap = BitmapFactory.decodeStream(mActivity.contentResolver.openInputStream(uri))
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
         }

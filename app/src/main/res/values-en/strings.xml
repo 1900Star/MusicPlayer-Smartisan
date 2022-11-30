@@ -87,4 +87,6 @@
     <string name="song_list"> song list?？</string>
     <string name="delete_all_favorite">delete all your favorite songs?</string>
     <string name="time_remaining">Time Remaining</string>
+    <string name="storage_permission">Please allow storage permissions</string>
+    <string name="picture_permission">Please allow picture permission</string>
 </resources>

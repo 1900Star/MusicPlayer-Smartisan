@@ -93,9 +93,9 @@ abstract class BaseBindingFragment<T : ViewBinding> : Fragment(), OnHandleBackLi
         return mBinding.root
     }
 
-    fun <T : ViewModel?> gets(modelClass: Class<T>): T {
+    fun <T : ViewModel> gets(modelClass: Class<T>): T {
 
-        return ViewModelProvider(this).get(modelClass)
+        return ViewModelProvider(this)[modelClass]
     }
 
 

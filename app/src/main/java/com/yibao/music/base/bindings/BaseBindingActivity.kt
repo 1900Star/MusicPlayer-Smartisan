@@ -51,9 +51,9 @@ abstract class BaseBindingActivity<T : ViewBinding> : BaseActivity() {
     }
 
 
-    fun <T : ViewModel?> gets(modelClass: Class<T>): T {
+    fun <T : ViewModel> gets(modelClass: Class<T>): T {
 
-        return ViewModelProvider(this).get(modelClass)
+        return ViewModelProvider(this)[modelClass]
     }
 
     abstract fun initView()
