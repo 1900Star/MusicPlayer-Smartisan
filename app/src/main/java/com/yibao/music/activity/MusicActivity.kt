@@ -60,6 +60,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         setContentView(mBinding.root)
         initPermission()
         initNotifyPermission()
+        initLocationPermission()
         initData()
         initMusicConfig()
         initListener()
@@ -700,34 +701,19 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
             intent.data = uri
             startActivity(intent)
         }
+    }
 
+
+    private fun initLocationPermission() {
+        requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
 
     }
 
-//    public static void tryJumpNotifyPage(Context mContext) {
-//        Intent intent = new Intent();
-//        try {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-//                intent.putExtra(Settings.EXTRA_APP_PACKAGE, mContext.getPackageName());
-//            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
-//                intent.putExtra("app_package", mContext.getPackageName());
-//                intent.putExtra("app_uid", mContext.getApplicationInfo().uid);
-//            } else {
-//                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-//                intent.addCategory(Intent.CATEGORY_DEFAULT);
-//                intent.setData(Uri.parse("package:" + mContext.getPackageName()));
-//            }
-//            mContext.startActivity(intent);
-//        } catch (Exception e) {
-//            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-//            Uri uri = Uri.fromParts("package", mContext.getPackageName(), null);
-//            intent.setData(uri);
-//            mContext.startActivity(intent);
-//        }
-//    }
-
+    private val requestLocationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        LogUtil.d(TAG, "定位权限获取结果   $granted")
+    }
 
     private fun initPermission() {
         if (VersionUtil.checkAndroidVersionS()) {
