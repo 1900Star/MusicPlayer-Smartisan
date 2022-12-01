@@ -11,10 +11,14 @@ android {
         targetSdkVersion 33
         versionCode 2
         versionName "1.1_20221130"
-
         multiDexEnabled true
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
+        packagingOptions {
+            doNotStrip "*/arm64-v8a/*.so"
+        }
 
         greendao {
             schemaVersion 10
@@ -66,18 +70,15 @@ android {
         debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
         // RxBinding
         implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
-        implementation 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.0.0'
-        implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
-
+        // OAID
+        implementation files('libs/miit_mdid_1.0.10.aar')
         // 百度统计
         implementation 'com.baidu.mobstat:mtj-sdk:4.0.7.6'
         // 65536
         implementation 'com.android.support:multidex:1.0.3'
 
         implementation 'me.jessyan:autosize:1.2.1'
-//        implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
-//        implementation 'androidx.lifecycle:livedata-viewmodel-ktx:2.2.1'
-//        implementation 'androidx.lifecycle:runtime-viewmodel-ktx:2.2.1'
+
 
 
     }

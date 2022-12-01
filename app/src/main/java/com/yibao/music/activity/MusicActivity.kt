@@ -320,7 +320,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
     private fun openMusicPlayDialogFag() {
         mCompositeDisposable.add(
             RxView.clicks(mBinding.smartisanControlBar).throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe { o: Any? -> readyMusic() })
+                .subscribe { readyMusic() })
     }
 
     private fun readyMusic() {
@@ -397,7 +397,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
                     1600,
                     TimeUnit.MICROSECONDS
                 ) //                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread()).subscribe { musicBeanList: Long? ->
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe {
                         //通过集合，播放过的歌词就从集合中删除
                         val lyrBean =
                             lyricList[if (lyricsPlayPosition == lyricList.size || lyricsPlayPosition > lyricList.size) lyricList.size - 1 else lyricsPlayPosition]

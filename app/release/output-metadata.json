@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.yibao.music",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 2,
+      "versionName": "1.1_20221130",
+      "outputFile": "app-release.apk"
+    }
+  ],
+  "elementType": "File"
+}

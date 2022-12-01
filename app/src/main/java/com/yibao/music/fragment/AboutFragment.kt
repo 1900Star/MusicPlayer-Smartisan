@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import com.jakewharton.rxbinding2.view.RxView
@@ -186,7 +187,7 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>(), OnScanConfig
     }
 
     private fun clearErrorLyric() {
-        val handler = Handler()
+        val handler = Handler(Looper.getMainLooper())
         ThreadPoolProxyFactory.newInstance().execute {
             LyricsUtil.clearLyricList()
             handler.post { ToastUtil.show(mActivity, "错误歌词已删除") }

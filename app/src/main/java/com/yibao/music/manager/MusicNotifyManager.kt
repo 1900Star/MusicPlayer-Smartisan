@@ -135,10 +135,7 @@ class MusicNotifyManager(
     }
 
     private fun createCover(path: String): Bitmap {
-        var b = BitmapFactory.decodeFile(path)
-        if (b == null) {
-            b = BitmapFactory.decodeResource(activity.resources, R.drawable.noalbumcover_220)
-        }
+        BitmapFactory.decodeFile(path) ?: return BitmapFactory.decodeFile(path)
         return BitmapFactory.decodeResource(activity.resources, R.drawable.noalbumcover_220)
     }
 

@@ -1,6 +1,7 @@
 package com.yibao.music.activity
 
 import android.content.Intent
+import android.os.Build
 import android.text.Editable
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -50,6 +51,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
         // 从PlayActivity过来的
         if (pageType > Constant.NUMBER_ZERO) {
             mMusicBean = intent.getParcelableExtra(Constant.MUSIC_BEAN)
+
             mBinding.editSearch.setText(mMusicBean!!.artist)
             switchListCategory(13)
 

@@ -11,7 +11,6 @@ import com.yibao.music.model.greendao.DaoMaster;
 import com.yibao.music.model.greendao.DaoSession;
 import com.yibao.music.model.greendao.DaoUpgradeHelper;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.model.greendao.MusicInfoDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.CrashHandler;
@@ -39,12 +38,12 @@ public class MusicApplication
         return appContext;
     }
 
-
     @Override
     public void onCreate() {
         super.onCreate();
         appContext = this;
-        StatService.setDebugOn(true);
+        StatService.setAuthorizedState(this, false);
+        StatService.start(this);
         CrashHandler.getInstance().init();
         setUpDataBase();
         MultiDex.install(this);
@@ -57,9 +56,8 @@ public class MusicApplication
         mDaoSession = daoMaster.newSession();
 
     }
-public DaoSession getDaoSession() {
-    return mDaoSession;
-}
+
+
     public MusicBeanDao getMusicDao() {
         if (musicBeanDao == null) {
             synchronized ("MusicApplication.class") {
@@ -72,9 +70,7 @@ public DaoSession getDaoSession() {
 
     }
 
-    public MusicInfoDao getMusicInfoDao() {
-        return mDaoSession.getMusicInfoDao();
-    }
+
 
     public SearchHistoryBeanDao getSearchDao() {
         return mDaoSession.getSearchHistoryBeanDao();
