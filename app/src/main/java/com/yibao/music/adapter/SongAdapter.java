@@ -18,23 +18,12 @@ import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constant;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.ImageUitl;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
 
 import java.util.List;
 
-/**
- * @项目名： BigGirl
- * @包名： ${PACKAGE_NAME}
- * @文件名: ${NAME}
- * @author: Stran
- * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
- * @创建时间: 2016/11/5 15:53
- * @描述： {TODO}
- */
 
-public class SongAdapter
-        extends BaseBindingAdapter<MusicBean> {
+public class SongAdapter extends BaseBindingAdapter<MusicBean> {
     private static final String TAG = "====" + SongAdapter.class.getSimpleName() + "    ";
     private Activity mContext;
     private final boolean mIsShowStickyView;
@@ -49,9 +38,9 @@ public class SongAdapter
      * @param isShowStickyView      控制列表的StickyView是否显示，0 显示 ，1 ：不显示
      *                              parm isArtistList     用来控制音乐列表和艺术家列表的显示
      * @param scoreAndFrequencyFlag 显示评分和播放次数 0 都不显示 ，1显示评分 ，2 显示播放次数
-     * @param pageType  1 ABC 、2 评分 、3 播放次数 、 4 添加时间
+     * @param pageType              1 ABC 、2 评分 、3 播放次数 、 4 添加时间
      */
-    public SongAdapter(Activity context, List<MusicBean> list, SparseBooleanArray sparseBooleanArray, boolean isShowStickyView, int scoreAndFrequencyFlag,int pageType) {
+    public SongAdapter(Activity context, List<MusicBean> list, SparseBooleanArray sparseBooleanArray, boolean isShowStickyView, int scoreAndFrequencyFlag, int pageType) {
         super(list);
         this.mContext = context;
         this.mIsShowStickyView = isShowStickyView;
@@ -89,8 +78,7 @@ public class SongAdapter
                 songListViewHolder.mBinding.itemStickyView.setText(firstTv);
                 if (position == 0) {
                     songListViewHolder.mBinding.itemStickyView.setVisibility(View.VISIBLE);
-                } else if (firstTv.equals(getDataList().get(position - 1)
-                        .getFirstChar())) {
+                } else if (firstTv.equals(getDataList().get(position - 1).getFirstChar())) {
                     songListViewHolder.mBinding.itemStickyView.setVisibility(View.GONE);
 
                 } else {
@@ -99,17 +87,25 @@ public class SongAdapter
             } else {
                 songListViewHolder.mBinding.itemStickyView.setVisibility(View.GONE);
             }
-
+            // 设置播放标识小喇叭,只在歌曲名列表显示。
+            if (mPageType == 1) {
+                boolean b = isItemSelected(songListViewHolder.getAdapterPosition());
+                int visit = b ? View.VISIBLE : View.GONE;
+                songListViewHolder.mBinding.songItemPlayFlag.setVisibility(visit);
+            }
             songListViewHolder.mBinding.ivSongItemMenu.setOnClickListener(view -> SongAdapter.this.openItemMenu(musicBean, position));
             songListViewHolder.mBinding.checkboxItem.setOnClickListener(v -> checkBoxClick(musicBean, position, songListViewHolder.mBinding.checkboxItem.isChecked()));
             //  Item点击监听
-            songListViewHolder.mBinding.llMusicItem.setOnClickListener(view -> {
+            songListViewHolder.mBinding.getRoot().setOnClickListener(view -> {
+                if (mPageType == 1) {
+                    setSelectedPosition(songListViewHolder.getAdapterPosition());
+                }
                 if (isSelectStatus()) {
                     checkBoxClick(musicBean, position, songListViewHolder.mBinding.checkboxItem.isChecked());
                     openDetails(musicBean, position);
                 } else {
                     if (mContext instanceof OnMusicItemClickListener) {
-                        ((OnMusicItemClickListener) mContext).startMusicService(position,mPageType);
+                        ((OnMusicItemClickListener) mContext).startMusicService(position, mPageType);
                     }
                 }
             });

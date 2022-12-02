@@ -23,6 +23,7 @@ import com.yibao.music.view.music.MusicToolBar
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import retrofit2.http.Url
 import java.io.File
 import java.io.FileNotFoundException
 import java.util.concurrent.TimeUnit
@@ -62,24 +63,29 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>(), OnScanConfig
         // 分享
         mBinding.tvShare.setOnClickListener { shareMe() }
         // 头像 、拍照
-        mCompositeDisposable.add(RxView.clicks(mBinding.aboutHeaderIv)
-            .throttleFirst(1, TimeUnit.SECONDS).subscribe {
-                takePhoto()
-            })
-        //
-        mCompositeDisposable.add(mBus.toObservableType(Constant.HEADER_PIC_URI, Any::class.java)
+        mBinding.aboutHeaderIv.setOnClickListener {
+            takePhoto()
+        }
+        // 设置头像
+        mCompositeDisposable.add(mBus.toObservableType(Constant.HEADER_PIC_URI, Uri::class.java)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe { o: Any? -> setHeaderView(o as Uri) })
+            .subscribe { o: Uri -> setHeaderView(o) })
 
-        mCompositeDisposable.add(RxView.clicks(mBinding.tvBackupsFavorite)
-            .throttleFirst(3, TimeUnit.SECONDS).subscribe { backupsFavoriteList() })
-        mCompositeDisposable.add(RxView.clicks(mBinding.tvRecoverFavorite)
-            .throttleFirst(3, TimeUnit.SECONDS).subscribe { recoverFavoriteList() })
-        mCompositeDisposable.add(RxView.clicks(mBinding.tvDeleteErrorLyric)
-            .throttleFirst(2, TimeUnit.SECONDS).subscribe { clearErrorLyric() })
-        mCompositeDisposable.add(RxView.clicks(mBinding.tvCrashLog)
-            .throttleFirst(2, TimeUnit.SECONDS)
-            .subscribe { CrashSheetDialog.newInstance().getBottomDialog(mActivity) })
+        mBinding.tvBackupsFavorite.setOnClickListener {
+            backupsFavoriteList()
+        }
+
+        mBinding.tvRecoverFavorite.setOnClickListener {
+            recoverFavoriteList()
+        }
+        mBinding.tvDeleteErrorLyric.setOnClickListener {
+            clearErrorLyric()
+        }
+
+        mBinding.tvCrashLog.setOnClickListener {
+            CrashSheetDialog.newInstance().getBottomDialog(mActivity)
+        }
+
         mBinding.aboutHeaderIv.setOnLongClickListener {
             RelaxDialogFragment.newInstance().show(childFragmentManager, "girlsDialog")
             true

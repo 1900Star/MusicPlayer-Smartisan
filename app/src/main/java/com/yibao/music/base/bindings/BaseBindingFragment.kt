@@ -38,12 +38,12 @@ abstract class BaseBindingFragment<T : ViewBinding> : Fragment(), OnHandleBackLi
     private var isShowToUser = false
     private var _binding: T? = null
     protected val mBinding get() = _binding!!
-    protected var mBus = RxBus.getInstance()
+    protected var mBus: RxBus = RxBus.getInstance()
     protected lateinit var mMusicBeanDao: MusicBeanDao
     protected lateinit var mCompositeDisposable: CompositeDisposable
     protected lateinit var mContext: Context
     protected lateinit var mActivity: AppCompatActivity
-    protected lateinit var mAlbumDao: AlbumInfoDao
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = requireActivity()
@@ -51,7 +51,7 @@ abstract class BaseBindingFragment<T : ViewBinding> : Fragment(), OnHandleBackLi
         mSp = SpUtils(MusicApplication.getInstance(),Constant.MUSIC_CONFIG)
         mCompositeDisposable = CompositeDisposable()
         mMusicBeanDao = MusicApplication.getInstance().musicDao
-        mAlbumDao = MusicApplication.getInstance().albumDao
+
 
     }
 

@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.yibao.music.MusicApplication
+import com.yibao.music.R
 import com.yibao.music.model.MusicBean
 import com.yibao.music.model.PlayListBean
 import com.yibao.music.util.Constant
@@ -30,8 +31,7 @@ abstract class BaseBindingAdapter<T>(private var mList: MutableList<T>) :
     protected var dataList: List<T> = mList
     protected val mSp = SpUtils(MusicApplication.getInstance(), Constant.MUSIC_CONFIG)
 
-    override fun getItemCount() =
-        if (mList.isNotEmpty()) mList.size else 0
+    override fun getItemCount() = if (mList.isNotEmpty()) mList.size else 0
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -48,6 +48,21 @@ abstract class BaseBindingAdapter<T>(private var mList: MutableList<T>) :
      * @return r
      */
     protected abstract fun getLastItemDes(): String?
+
+
+    //记录当前选中的条目索引
+    private var selectedIndex = 0
+
+    fun setSelectedPosition(position: Int) {
+        selectedIndex = position
+        notifyDataSetChanged()
+    }
+
+    fun isItemSelected(position: Int): Boolean {
+        return selectedIndex == position
+
+    }
+
 
     open fun clear() {
         mList.clear()

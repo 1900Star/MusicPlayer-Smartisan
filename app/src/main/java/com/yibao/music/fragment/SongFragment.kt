@@ -20,7 +20,6 @@ import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
  */
 class SongFragment : BaseMusicFragmentDev<SongFragmentBinding>(), View.OnClickListener {
 
-
     private var isSelectStatus = false
     private var mPageType = 1
     override fun initView() {
