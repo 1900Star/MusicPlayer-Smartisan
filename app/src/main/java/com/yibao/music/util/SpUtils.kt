@@ -42,7 +42,7 @@ class SpUtils(context: Context, fileName: String?) {
     }
 
     fun getInt(key: String?): Int {
-        return sharedPreferences.getInt(key, -1)
+        return sharedPreferences.getInt(key, 0)
     }
 
     fun getLong(key: String?): Long {

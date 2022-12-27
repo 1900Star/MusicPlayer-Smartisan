@@ -16,7 +16,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationBarView
-import com.jakewharton.rxbinding2.view.RxView
 import com.yibao.music.R
 import com.yibao.music.adapter.MainViewPagerAdapter
 import com.yibao.music.base.BaseActivity
@@ -111,9 +110,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
                 updatePlayBtnStatus()
             }
             Constant.NUMBER_ONE -> checkCurrentSongIsFavorite(
-                mCurrentMusicBean,
-                mBinding.qqControlBar,
-                mBinding.smartisanControlBar
+                mCurrentMusicBean, mBinding.qqControlBar, mBinding.smartisanControlBar
             )
             Constant.NUMBER_TWO -> {
                 updatePlayBtnStatus()
@@ -171,9 +168,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
                     Constant.NUMBER_TWO -> if (audioBinder != null) {
                         audioBinder!!.updateFavorite()
                         checkCurrentSongIsFavorite(
-                            mCurrentMusicBean,
-                            mBinding.qqControlBar,
-                            mBinding.smartisanControlBar
+                            mCurrentMusicBean, mBinding.qqControlBar, mBinding.smartisanControlBar
                         )
                     } else {
                         SnakbarUtil.firstPlayMusic(mBinding.smartisanControlBar)
@@ -198,33 +193,32 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
     }
 
 
-    private val mNbvListener =
-        NavigationBarView.OnItemSelectedListener { item: MenuItem ->
-            when (item.itemId) {
-                R.id.navigation_play_list -> {
-                    mBinding.musicViewpager2.setCurrentItem(0, false)
-
-                }
-                R.id.navigation_artist -> {
-                    mBinding.musicViewpager2.setCurrentItem(1, false)
-
-                }
-                R.id.navigation_song -> {
-                    mBinding.musicViewpager2.setCurrentItem(2, false)
-
-                }
-                R.id.navigation_album -> {
-                    mBinding.musicViewpager2.setCurrentItem(3, false)
-
-                }
-                R.id.navigation_about -> {
-                    mBinding.musicViewpager2.setCurrentItem(4, false)
-
-                }
+    private val mNbvListener = NavigationBarView.OnItemSelectedListener { item: MenuItem ->
+        when (item.itemId) {
+            R.id.navigation_play_list -> {
+                mBinding.musicViewpager2.setCurrentItem(0, false)
 
             }
-            false
+            R.id.navigation_artist -> {
+                mBinding.musicViewpager2.setCurrentItem(1, false)
+
+            }
+            R.id.navigation_song -> {
+                mBinding.musicViewpager2.setCurrentItem(2, false)
+
+            }
+            R.id.navigation_album -> {
+                mBinding.musicViewpager2.setCurrentItem(3, false)
+
+            }
+            R.id.navigation_about -> {
+                mBinding.musicViewpager2.setCurrentItem(4, false)
+
+            }
+
         }
+        false
+    }
 
     private fun setCurrentPosition(position: Int) {
         mBinding.musicViewpager2.setCurrentItem(position, false)
@@ -300,7 +294,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         val intent = Intent(this, MusicPlayService::class.java)
         intent.putExtra(Constant.PAGE_TYPE, pageType)
         intent.putExtra(Constant.CONDITION, condition)
-        intent.putExtra(Constant.POSITION, mCurrentPosition)
+        intent.putExtra(Constant.POSITION, position)
         mConnection = AudioServiceConnection()
         bindService(intent, mConnection!!, BIND_AUTO_CREATE)
         startServiceIntent(intent)
@@ -317,11 +311,6 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         readyMusic()
     }
 
-    private fun openMusicPlayDialogFag() {
-        mCompositeDisposable.add(
-            RxView.clicks(mBinding.smartisanControlBar).throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe { readyMusic() })
-    }
 
     private fun readyMusic() {
         if (audioBinder != null) {
@@ -394,8 +383,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         if (mQqLyricsDisposable == null) {
             if (lyricList.size > 1 && lyricsPlayPosition < lyricList.size) {
                 mQqLyricsDisposable = Observable.interval(
-                    1600,
-                    TimeUnit.MICROSECONDS
+                    1600, TimeUnit.MICROSECONDS
                 ) //                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread()).subscribe {
                         //通过集合，播放过的歌词就从集合中删除
@@ -441,9 +429,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
     private fun setMusicInfo(musicItem: MusicBean) {
         mCurrentMusicBean = musicItem
         checkCurrentSongIsFavorite(
-            mCurrentMusicBean,
-            mBinding.qqControlBar,
-            mBinding.smartisanControlBar
+            mCurrentMusicBean, mBinding.qqControlBar, mBinding.smartisanControlBar
         )
         // 更新音乐标题
         TitleArtistUtil.getMusicBean(musicItem)
@@ -501,16 +487,14 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
             setMusicInfo(audioBinder!!.musicBean)
             mBinding.smartisanControlBar.animatorOnResume(audioBinder!!.isPlaying)
             checkCurrentSongIsFavorite(
-                mCurrentMusicBean,
-                mBinding.qqControlBar,
-                mBinding.smartisanControlBar
+                mCurrentMusicBean, mBinding.qqControlBar, mBinding.smartisanControlBar
             )
             updatePlayBtnStatus()
             updateCurrentPlayProgress()
             setDuration()
             updateQqBar()
         }
-        openMusicPlayDialogFag()
+        readyMusic()
     }
 
     override fun moreMenu(moreMenuStatus: MoreMenuStatus) {
@@ -523,9 +507,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
                 if (audioBinder!!.position == moreMenuStatus.musicPosition) {
                     audioBinder!!.updateFavorite()
                     checkCurrentSongIsFavorite(
-                        musicBean,
-                        mBinding.qqControlBar,
-                        mBinding.smartisanControlBar
+                        musicBean, mBinding.qqControlBar, mBinding.smartisanControlBar
                     )
                 } else {
                     audioBinder!!.updateFavorite(moreMenuStatus.musicBean)
@@ -571,9 +553,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
             )
         ).build().unique()
         checkCurrentSongIsFavorite(
-            musicBean,
-            mBinding.qqControlBar,
-            mBinding.smartisanControlBar
+            musicBean, mBinding.qqControlBar, mBinding.smartisanControlBar
         )
     }
 
@@ -582,20 +562,6 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         switchMusicControlBar()
     }
 
-//    onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
-//        override fun handleOnBackPressed() {
-//            // Back is pressed... Finishing the activity
-//            finish()
-//        }
-//    })
-//    override fun getOnBackInvokedDispatcher(): OnBackInvokedDispatcher {
-//        return super.getOnBackInvokedDispatcher()
-//    }
-
-
-//    override fun getOnBackInvokedDispatcher(): OnBackInvokedDispatcher {
-//        return super.getOnBackInvokedDispatcher()
-//    }
 
     override fun onBackPressed() {
         if (!handleBackPress(this)) {
@@ -635,15 +601,13 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
             Constant.CODE_GALLERY_REQUEST -> {
                 mContentUri = intent!!.data
                 startActivityForResult(
-                    ImageUitl.cropRawPhotoIntent(mContentUri),
-                    Constant.CODE_RESULT_REQUEST
+                    ImageUitl.cropRawPhotoIntent(mContentUri), Constant.CODE_RESULT_REQUEST
                 )
             }
             Constant.CODE_CAMERA_REQUEST -> if (FileUtil.hasSdcard()) {
                 mContentUri = FileUtil.getImageContentUri(this, ImageUitl.getTempFile())
                 startActivityForResult(
-                    ImageUitl.cropRawPhotoIntent(mContentUri),
-                    Constant.CODE_RESULT_REQUEST
+                    ImageUitl.cropRawPhotoIntent(mContentUri), Constant.CODE_RESULT_REQUEST
                 )
             } else {
                 ToastUtil.show(this, "没发现SD卡!")
@@ -703,10 +667,8 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         }
     }
 
-
     private fun initLocationPermission() {
         requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-
     }
 
     private val requestLocationPermissionLauncher = registerForActivityResult(

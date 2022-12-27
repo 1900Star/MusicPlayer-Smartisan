@@ -20,6 +20,7 @@ import com.yibao.music.manager.MediaSessionManager;
 import com.yibao.music.manager.MusicNotifyManager;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
+import com.yibao.music.util.RandomUtil;
 import com.yibao.music.util.VersionUtil;
 import com.yibao.music.util.Constant;
 import com.yibao.music.util.LogUtil;
@@ -46,8 +47,12 @@ public class MusicPlayService extends Service {
     private static final String TAG = "====" + MusicPlayService.class.getSimpleName() + "    ";
     private MediaPlayer mediaPlayer;
     private AudioBinder mAudioBinder;
-    private int playMode;
     private SpUtils mSp;
+
+    // 播放位置
+    private int playPosition = -2;
+    // 播放模式
+    private int playMode = 0;
 
     /**
      * 三种播放模式
@@ -55,8 +60,6 @@ public class MusicPlayService extends Service {
     public static final int PLAY_MODE_ALL = 0;
     public static final int PLAY_MODE_SINGLE = 1;
     public static final int PLAY_MODE_RANDOM = 2;
-
-    private int position = -2;
     private List<MusicBean> mMusicDataList;
     private MusicBroadcastReceiver mMusicReceiver;
     private MusicBeanDao mMusicDao;
@@ -102,7 +105,7 @@ public class MusicPlayService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int currentPosition = intent.getIntExtra(Constant.POSITION, 0);
+        playPosition = intent.getIntExtra(Constant.POSITION, 0);
         int pageType = intent.getIntExtra(Constant.PAGE_TYPE, 0);
         String condition = intent.getStringExtra(Constant.CONDITION);
         // 保存页面标识
@@ -111,20 +114,17 @@ public class MusicPlayService extends Service {
             // 保存关键字
             mSp.putValues(new SpUtils.ContentValue(Constant.CONDITION, condition));
         }
-        int playPosition = currentPosition + 1;
+
         LogUtil.d(TAG, " position  ==  " + playPosition + "   pageType  ==   " + pageType + "  condition  ==  " + condition);
         // 播放列表数据
         mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao.queryBuilder(), pageType, condition);
-        if (currentPosition != position && currentPosition != -1) {
-            position = currentPosition;
-            //执行播放
-            mAudioBinder.play();
-        } else if (currentPosition != -1) {
-            //通知播放界面更新
-            sendCurrentMusicInfo();
-        }
+        LogUtil.d(TAG, " 播放位置== " + playPosition);
+        //执行播放
+        mAudioBinder.play();
+        //通知播放界面更新
+        sendCurrentMusicInfo();
         if (mMusicDataList != null && mMusicDataList.size() > 0) {
-            MusicBean musicBean = mMusicDataList.get(position);
+            MusicBean musicBean = mMusicDataList.get(playPosition);
             LogUtil.d(TAG, " 当前播放信息  ==  " + musicBean.getTitle());
             musicBean.setPlayFrequency(musicBean.getPlayFrequency() + 1);
             mMusicDao.update(musicBean);
@@ -137,9 +137,9 @@ public class MusicPlayService extends Service {
      * 通知播放界面更新
      */
     private void sendCurrentMusicInfo() {
-        if (mMusicDataList != null && position < mMusicDataList.size()) {
-            MusicBean musicBean = mMusicDataList.get(position);
-            musicBean.setCureetPosition(position);
+        if (mMusicDataList != null && playPosition < mMusicDataList.size()) {
+            MusicBean musicBean = mMusicDataList.get(playPosition);
+            musicBean.setCureetPosition(playPosition);
             mBus.post(Constant.SERVICE_MUSIC, musicBean);
         }
     }
@@ -158,9 +158,9 @@ public class MusicPlayService extends Service {
             }
             // “>=” 确保模糊搜索时播放不出现索引越界
             if (mMusicDataList != null && mMusicDataList.size() > 0) {
-                position = position >= mMusicDataList.size() ? 0 : position;
-                mMusicInfo = mMusicDataList.get(position);
-
+                playPosition = playPosition >= mMusicDataList.size() ? 0 : playPosition;
+                mMusicInfo = mMusicDataList.get(playPosition);
+                LogUtil.d(TAG, "  cccc ===   cc   " + mMusicInfo.getTitle());
                 mediaPlayer = MediaPlayer.create(MusicPlayService.this, getSongFileUri());
 
                 mediaPlayer.setOnPreparedListener(this);
@@ -171,7 +171,7 @@ public class MusicPlayService extends Service {
 //                if (!lyricIsExists && NetworkUtil.isNetworkConnected()) {
 //                    QqMusicRemote.getSongLyrics(songName, artist);
 //                }
-                mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_POSITION, position));
+                mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_POSITION, playPosition));
                 showNotification(true);
                 mSessionManager.updatePlaybackState(true);
                 mSessionManager.updateLocMsg();
@@ -185,8 +185,8 @@ public class MusicPlayService extends Service {
         }
 
         public void updateFavorite() {
-            if (position < mMusicDataList.size()) {
-                MusicBean musicBean = mMusicDataList.get(position);
+            if (playPosition < mMusicDataList.size()) {
+                MusicBean musicBean = mMusicDataList.get(playPosition);
                 boolean favorite = mMusicDao.load(musicBean.getId()).getIsFavorite();
                 mNotifyManager.updateFavoriteBtn(favorite);
                 ThreadPoolProxyFactory.newInstance().execute(() -> {
@@ -212,26 +212,21 @@ public class MusicPlayService extends Service {
         public void onPrepared(MediaPlayer mediaPlayer) {
             // 开启播放
             mediaPlayer.start();
-
             // 通知播放界面更新
             sendCurrentMusicInfo();
         }
 
-
         // 获取当前播放进度
-
         public int getProgress() {
             return mediaPlayer.getCurrentPosition();
         }
 
         // 获取音乐总时长
-
         public int getDuration() {
             return mediaPlayer.getDuration();
         }
 
         // 音乐播放完成监听
-
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
             // 自动播放下一首歌曲
@@ -240,16 +235,14 @@ public class MusicPlayService extends Service {
 
 
         // 自动播放下一曲
-
         private void autoPlayNext() {
+            // 单曲循环不改变playPosition ,不用判断，只判断 随机播放 和 循环所有 两种模式。
             switch (playMode) {
                 case PLAY_MODE_ALL:
-                    position = (position + 1) % mMusicDataList.size();
-                    break;
-                case PLAY_MODE_SINGLE:
+                    playPosition = (playPosition + 1) % mMusicDataList.size();
                     break;
                 case PLAY_MODE_RANDOM:
-                    position = new Random().nextInt(mMusicDataList.size());
+                    playPosition = new Random().nextInt(mMusicDataList.size());
                     break;
                 default:
                     break;
@@ -276,12 +269,12 @@ public class MusicPlayService extends Service {
 
         public void playPre() {
             if (playMode == PLAY_MODE_RANDOM) {
-                position = new Random().nextInt(mMusicDataList.size());
+                playPosition = new Random().nextInt(mMusicDataList.size());
             } else {
-                if (position == 0) {
-                    position = mMusicDataList.size() - 1;
+                if (playPosition == 0) {
+                    playPosition = mMusicDataList.size() - 1;
                 } else {
-                    position--;
+                    playPosition--;
                 }
             }
             play();
@@ -291,9 +284,9 @@ public class MusicPlayService extends Service {
 
         public void playNext() {
             if (playMode == PLAY_MODE_RANDOM) {
-                position = new Random().nextInt(mMusicDataList.size());
+                playPosition = new Random().nextInt(mMusicDataList.size());
             } else {
-                position = (position + 1) % mMusicDataList.size();
+                playPosition = (playPosition + 1) % mMusicDataList.size();
             }
             play();
         }
@@ -311,7 +304,7 @@ public class MusicPlayService extends Service {
             initAudioFocus();
         }
 
-        //暂停播放
+        // 暂停播放
 
         public void pause() {
             mediaPlayer.pause();
@@ -319,8 +312,7 @@ public class MusicPlayService extends Service {
             showNotification(false);
         }
 
-        //跳转到指定位置进行播放
-
+        // 跳转到指定位置进行播放
         public void seekTo(int progress) {
             mediaPlayer.seekTo(progress);
         }
@@ -330,7 +322,7 @@ public class MusicPlayService extends Service {
         }
 
         public int getPosition() {
-            return position;
+            return playPosition;
         }
 
         public void updateFavorite(MusicBean bean) {
@@ -341,8 +333,6 @@ public class MusicPlayService extends Service {
 
         private Uri getSongFileUri() {
             int songId = mMusicInfo.getId().intValue();
-            LogUtil.d("===", "songID   " + songId);
-            LogUtil.d("===", "CCCCCCCCC     " + ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId));
             return VersionUtil.checkAndroidVersionQ() ? ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId) : Uri.parse(mMusicInfo.getSongUrl());
         }
 
@@ -471,12 +461,12 @@ public class MusicPlayService extends Service {
         switch (focusChange) {
             case AudioManager.AUDIOFOCUS_LOSS:
                 // 长时间丢失焦点,会触发此回调事件，(QQ音乐，网易云音乐)，需要暂停音乐播放，避免和其他音乐同时输出声音
-                lossAudioFoucs(true);
+                lossAudioFocus(true);
                 // 若焦点释放掉之后，将不会再自动获得
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                 // 短暂性丢失焦点，例如播放微博短视频，拨打电话等，暂停音乐播放。
-                lossAudioFoucs(true);
+                lossAudioFocus(true);
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 // 短暂性丢失焦点并作降音处理
@@ -484,7 +474,7 @@ public class MusicPlayService extends Service {
                 break;
             case AudioManager.AUDIOFOCUS_GAIN:
                 // 当其他应用申请焦点之后又释放焦点会触发此回调,可重新播放音乐
-                lossAudioFoucs(false);
+                lossAudioFocus(false);
                 break;
             default:
                 break;
@@ -496,7 +486,7 @@ public class MusicPlayService extends Service {
      *
      * @param isLossFocus b
      */
-    private void lossAudioFoucs(boolean isLossFocus) {
+    private void lossAudioFocus(boolean isLossFocus) {
         if (isLossFocus) {
             mAudioBinder.pause();
             mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_FOCUS, true));

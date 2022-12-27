@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.jakewharton.rxbinding2.view.RxView;
+
 import com.yibao.music.R;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
@@ -82,13 +82,13 @@ public class QqBarPagerAdapter
 
     @SuppressLint("CheckResult")
     private void initListener(View view) {
-        RxView.clicks(view)
-                .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> {
-                    if (mContext instanceof OnMusicItemClickListener) {
-                        ((OnMusicItemClickListener) mContext).onOpenMusicPlayDialogFag();
-                    }
-                });
+        view.setOnClickListener(v -> {
+            if (mContext instanceof OnMusicItemClickListener) {
+                ((OnMusicItemClickListener) mContext).onOpenMusicPlayDialogFag();
+            }
+        });
+
+
     }
 
 
@@ -96,7 +96,7 @@ public class QqBarPagerAdapter
         ImageView mAlbulm = view.findViewById(R.id.iv_pager_albulm);
         TextView tvSongName = view.findViewById(R.id.tv_pager_song_name);
         TextView tvArtist = view.findViewById(R.id.tv_pager_art_name);
-        String albumUri = FileUtil.getAlbumUrl(musicInfo,1);
+        String albumUri = FileUtil.getAlbumUrl(musicInfo, 1);
         ImageUitl.loadPlaceholder(mContext, albumUri, mAlbulm);
         String currentLyrics = musicInfo.getCurrentLyrics();
         tvSongName.setText(StringUtil.getTitle(musicInfo));

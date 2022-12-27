@@ -1,11 +1,9 @@
 package com.yibao.music.activity
 
 import android.content.Intent
-import android.os.Build
 import android.text.Editable
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import com.jakewharton.rxbinding2.view.RxView
 import com.yibao.music.R
 import com.yibao.music.adapter.DetailsViewAdapter
 import com.yibao.music.base.bindings.BaseBindingActivity
@@ -96,11 +94,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
             updateLyric()
             setDuration()
         }
-
-        mCompositeDisposable.add(RxView.clicks(mBinding.smartisanControlBar)
-            .throttleFirst(1, TimeUnit.SECONDS).subscribe { startPlayActivity() })
-
-
+        startPlayActivity()
     }
 
     private fun setData(musicList: List<MusicBean>) {

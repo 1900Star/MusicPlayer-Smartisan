@@ -68,8 +68,7 @@ android {
         annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
         implementation 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.1.0'
         debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
-        // RxBinding
-        implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+
         // OAID
         implementation files('libs/miit_mdid_1.0.10.aar')
         // 百度统计

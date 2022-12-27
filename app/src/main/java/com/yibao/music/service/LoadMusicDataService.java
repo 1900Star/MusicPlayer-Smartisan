@@ -20,6 +20,7 @@ import com.yibao.music.util.RxBus;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -58,8 +59,7 @@ public class LoadMusicDataService extends IntentService {
         if (getIsNeedAgainScanner(intent)) {
             // 数据库的歌曲和最新媒体库中歌曲数量比较
             List<MusicBean> oldList = mMusicDao.queryBuilder().build().list();
-
-            List<MusicBean> different = (List<MusicBean>) CollectionUtil.getDifferent(newList, oldList);
+            List<MusicBean> different = newList.stream().filter(item -> !oldList.contains(item)).collect(Collectors.toList());
             // 保留两个集合中不同的元素
             newList.retainAll(different);
             for (MusicBean musicBean : newList) {

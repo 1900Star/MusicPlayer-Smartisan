@@ -5,12 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import android.text.TextUtils;
+import android.text.Editable;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -18,9 +13,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.jakewharton.rxbinding2.widget.RxTextView;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
+import com.yibao.music.base.listener.TextChangedListener;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constant;
@@ -32,9 +31,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Author：Sid
@@ -98,6 +95,28 @@ public class AddListDialog
     private void initListener() {
         mTvAddListCancle.setOnClickListener(this);
         mEditAddList.setSelection(mEditAddList.length());
+        mEditAddList.addTextChangedListener(new TextChangedListener() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                String str = s.toString();
+
+
+                if (str.length() == MAX_LENGTH) {
+                    SnakbarUtil.favoriteFailView(mView, "列表名的长度不能超过21个字符");
+                } else if (str.isEmpty()) {
+                    mNoInputTv.setVisibility(View.VISIBLE);
+                    mTvAddListContinue.setVisibility(View.INVISIBLE);
+                    mTvAddListContinue.setOnClickListener(null);
+                } else {
+                    mNoInputTv.setVisibility(View.INVISIBLE);
+                    mTvAddListContinue.setVisibility(View.VISIBLE);
+                    mTvAddListContinue.setOnClickListener(v -> addNewPlayList());
+                }
+
+
+            }
+        });
+
     }
 
 
@@ -118,8 +137,6 @@ public class AddListDialog
         int id = v.getId();
         if (id == R.id.tv_add_list_cancle) {
             dismiss();
-        } else if (id == R.id.tv_add_list_continue) {
-            addNewPlayList();
         }
     }
 
@@ -137,7 +154,7 @@ public class AddListDialog
                         mListener.onRefresh();
                         dismiss();
                     } else {
-                        ToastUtil.show(getActivity(),"添加失败");
+                        ToastUtil.show(getActivity(), "添加失败");
                     }
 
                 } else {
@@ -161,26 +178,8 @@ public class AddListDialog
                     SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 2, InputMethodManager.SHOW_FORCED);
                 })
         );
-        mCompositeDisposable.add(RxTextView.textChangeEvents(mEditAddList)
-                .map(textViewTextChangeEvent -> {
-                    if (textViewTextChangeEvent.text().length() == MAX_LENGTH) {
-                        SnakbarUtil.favoriteFailView(mView, "列表名的长度不能超过21个字符");
-                    }
-                    return TextUtils.isEmpty((textViewTextChangeEvent.text()));
-                }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aBoolean -> {
-                    if (aBoolean) {
-                        mNoInputTv.setVisibility(View.VISIBLE);
-                        mTvAddListContinue.setVisibility(View.INVISIBLE);
-                        mTvAddListContinue.setOnClickListener(null);
-                    } else {
-                        mNoInputTv.setVisibility(View.INVISIBLE);
-                        mTvAddListContinue.setVisibility(View.VISIBLE);
-                        mTvAddListContinue.setOnClickListener(this);
-                    }
 
-                }));
+
     }
 
 

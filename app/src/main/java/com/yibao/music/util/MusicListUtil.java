@@ -135,7 +135,7 @@ public class MusicListUtil {
      */
     public static List<MusicBean> sortByAbc(List<MusicBean> musicList) {
         String str = "#";
-        Collections.sort(musicList, (m1, m2) -> sortAbc(str, m1, m2));
+        musicList.sort((m1, m2) -> sortAbc(str, m1, m2));
         return musicList;
     }
 

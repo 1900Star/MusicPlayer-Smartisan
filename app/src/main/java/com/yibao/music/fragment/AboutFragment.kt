@@ -9,7 +9,6 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import com.jakewharton.rxbinding2.view.RxView
 import com.yibao.music.R
 import com.yibao.music.base.bindings.BaseMusicFragmentDev
 import com.yibao.music.base.listener.OnScanConfigListener
@@ -23,10 +22,8 @@ import com.yibao.music.view.music.MusicToolBar
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import retrofit2.http.Url
 import java.io.File
 import java.io.FileNotFoundException
-import java.util.concurrent.TimeUnit
 
 /**
  * @项目名： ArtisanMusic

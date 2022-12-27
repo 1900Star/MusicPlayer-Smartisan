@@ -50,7 +50,7 @@ public class QueryMusicFlagListUtil {
                 whereCondition = MusicBeanDao.Properties.Title.like(condition);
             }
             if (whereCondition != null) {
-                return queryBuilder.where(whereCondition).build().list();
+                return MusicListUtil.sortByAbc(queryBuilder.where(whereCondition).build().list());
             }
         } else {
             if (pageFlag == Constant.NUMBER_ONE) {

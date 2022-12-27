@@ -11,7 +11,6 @@ import android.widget.SeekBar;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
-import com.jakewharton.rxbinding2.view.RxView;
 import com.yibao.music.R;
 import com.yibao.music.base.BasePlayActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
@@ -82,7 +81,6 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             checkCurrentIsFavorite(mMusicDao.load(mCurrentMusicInfo.getId()).isFavorite());
             updateCurrentPlayInfo(audioBinder.getMusicBean());
         }
-        rxViewClick();
     }
 
     @Override
@@ -359,7 +357,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         mBinding.tvSongName.setOnClickListener(this);
         mBinding.tvArtistName.setOnClickListener(this);
         mBinding.lyricsView.setOnClickListener(this);
-
+        mBinding.ivFavoriteList.setOnClickListener(this);
 
 
     }
@@ -405,6 +403,9 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             boolean favoriteState = getFavoriteState(mCurrentMusicInfo);
             audioBinder.updateFavorite();
             checkCurrentIsFavorite(!favoriteState);
+        } else if (id == R.id.iv_favorite_list) {
+            FavoriteBottomSheetDialog.newInstance(mCurrentMusicInfo.getTitle())
+                    .getBottomDialog(this);
         }
     }
 
@@ -448,13 +449,6 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         isShowLyrics = !isShowLyrics;
     }
 
-
-    private void rxViewClick() {
-        mCompositeDisposable.add(RxView.clicks(mBinding.ivFavoriteList)
-                .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> FavoriteBottomSheetDialog.newInstance(mCurrentMusicInfo.getTitle())
-                        .getBottomDialog(this)));
-    }
 
     @Override
     protected void updateMusicBarAndVolumeBar(SeekBar seekBar, int progress, boolean b) {
