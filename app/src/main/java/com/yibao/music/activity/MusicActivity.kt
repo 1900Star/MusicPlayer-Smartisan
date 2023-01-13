@@ -79,8 +79,11 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
 
     private fun initMusicConfig() {
         mMusicConfig = mSps.getBoolean(Constant.MUSIC_INIT_FLAG, false)
+        LogUtil.d(TAG, "播放记录标识    $mMusicConfig")
+
         if (mMusicConfig) {
             mPlayState = mSps.getInt(Constant.MUSIC_PLAY_STATE)
+            LogUtil.d(TAG, "自动播放    $mPlayState")
             if (mPlayState == Constant.NUMBER_ONE) {
                 // 读取用户的播放记录，设置UI显示，做好播放的准备。(暂停和播放两种状态)
                 if (mCurrentMusicBean != null) {
@@ -123,6 +126,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
     private fun initListener() {
         mBinding.bnvMusic.selectedItemId = R.id.navigation_song
         mBinding.bnvMusic.setOnItemSelectedListener(mNbvListener)
+        mBinding.smartisanControlBar.setOnClickListener { readyMusic() }
         mBinding.musicNavigationBar.setOnNavigationBarListener { position: Int ->
             setCurrentPosition(
                 position
@@ -359,8 +363,8 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
                 disposableQqLyric()
             } else {
                 if (audioBinder != null) {
-                    val musicList = audioBinder!!.musicList
-                    mBinding.qqControlBar.updaPagerData(musicList, audioBinder!!.position)
+
+                    mBinding.qqControlBar.updaPagerData(currentList, audioBinder!!.position)
                 }
                 mBinding.qqControlBar.visibility = View.VISIBLE
                 mBinding.smartisanControlBar.visibility = View.INVISIBLE
@@ -466,9 +470,11 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         }
     }
 
+
     private class AudioServiceConnection : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
             audioBinder = service as AudioBinder
+            isPlayFlag = true
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
@@ -483,7 +489,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
 
     override fun onResume() {
         super.onResume()
-        if (audioBinder != null) {
+        if (isPlayFlag) {
             setMusicInfo(audioBinder!!.musicBean)
             mBinding.smartisanControlBar.animatorOnResume(audioBinder!!.isPlaying)
             checkCurrentSongIsFavorite(
@@ -494,7 +500,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
             setDuration()
             updateQqBar()
         }
-        readyMusic()
+
     }
 
     override fun moreMenu(moreMenuStatus: MoreMenuStatus) {
@@ -589,6 +595,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         mBinding.smartisanControlBar.animatorStop()
         if (audioBinder != null) {
             mPlayState = if (audioBinder!!.isPlaying) Constant.NUMBER_TWO else Constant.NUMBER_ONE
+
             mSps.putValues(ContentValue(Constant.MUSIC_PLAY_STATE, mPlayState))
         }
     }
@@ -693,5 +700,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         @JvmStatic
         var audioBinder: AudioBinder? = null
             private set
+        private var isPlayFlag = false
+
     }
 }

@@ -45,9 +45,9 @@ class MusicToolBar : LinearLayout, View.OnClickListener {
         mBinding.ivSearch.setOnClickListener(this)
         mBinding.tvMusicToolbarTitle.setOnClickListener(this)
         mBinding.tvMusicToolbarTitle.setOnLongClickListener {
-            val sp = SpUtils(MusicApplication.getInstance(),Constant.MUSIC_CONFIG)
-            val urlFlag = sp.getBoolean(Constant.PIC_URL_FLAG,false)
-            sp.putValues(SpUtils.ContentValue(Constant.PIC_URL_FLAG,!urlFlag))
+            val sp = SpUtils(MusicApplication.getInstance(), Constant.MUSIC_CONFIG)
+            val urlFlag = sp.getBoolean(Constant.PIC_URL_FLAG, false)
+            sp.putValues(SpUtils.ContentValue(Constant.PIC_URL_FLAG, !urlFlag))
 
             true
         }
@@ -62,9 +62,13 @@ class MusicToolBar : LinearLayout, View.OnClickListener {
     }
 
     fun setToolbarTitle(toolbarTitle: String) {
+        if (toolbarTitle.length > 14) {
+            mBinding.tvMusicToolbarTitle.textSize = 14f
+        } else {
+            mBinding.tvMusicToolbarTitle.textSize = 18f
+        }
         mBinding.tvMusicToolbarTitle.text = toolbarTitle
     }
-
 
 
     override fun onClick(v: View) {

@@ -1,5 +1,7 @@
 package com.yibao.music.base;
 
+import static com.yibao.music.util.QueryMusicFlagListUtil.getMusicDataList;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -19,6 +21,7 @@ import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.model.greendao.SearchHistoryBeanDao;
 import com.yibao.music.util.Constant;
+import com.yibao.music.util.QueryMusicFlagListUtil;
 import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtils;
 import com.yibao.music.util.ToastUtil;
@@ -26,6 +29,7 @@ import com.yibao.music.view.music.QqControlBar;
 import com.yibao.music.view.music.SmartisanControlBar;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -63,7 +67,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         StatService.start(getApplicationContext());
         mBus = RxBus.getInstance();
-        mSps = new SpUtils(MusicApplication.getInstance(),Constant.MUSIC_CONFIG);
+        mSps = new SpUtils(MusicApplication.getInstance(), Constant.MUSIC_CONFIG);
 
         mMusicDao = MusicApplication.getInstance().getMusicDao();
         mSearchDao = MusicApplication.getInstance().getSearchDao();
@@ -180,6 +184,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
             }
         }
+    }
+
+    protected List<MusicBean> getCurrentList() {
+        int pageType = getIntent().getIntExtra(Constant.PAGE_TYPE, 0);
+        String condition = getIntent().getStringExtra(Constant.CONDITION);
+        return QueryMusicFlagListUtil.getMusicDataList(mMusicDao.queryBuilder(), pageType, condition);
     }
 
     protected boolean getFavoriteState(MusicBean musicBean) {

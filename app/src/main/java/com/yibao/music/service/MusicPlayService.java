@@ -242,7 +242,9 @@ public class MusicPlayService extends Service {
                     playPosition = (playPosition + 1) % mMusicDataList.size();
                     break;
                 case PLAY_MODE_RANDOM:
-                    playPosition = new Random().nextInt(mMusicDataList.size());
+
+                    playPosition = new Random().nextInt(Math.abs(mMusicDataList.size()));
+
                     break;
                 default:
                     break;
@@ -269,7 +271,7 @@ public class MusicPlayService extends Service {
 
         public void playPre() {
             if (playMode == PLAY_MODE_RANDOM) {
-                playPosition = new Random().nextInt(mMusicDataList.size());
+                playPosition = new Random().nextInt(Math.abs(mMusicDataList.size()));
             } else {
                 if (playPosition == 0) {
                     playPosition = mMusicDataList.size() - 1;
