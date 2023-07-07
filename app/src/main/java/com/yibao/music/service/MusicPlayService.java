@@ -20,8 +20,6 @@ import com.yibao.music.manager.MediaSessionManager;
 import com.yibao.music.manager.MusicNotifyManager;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.util.RandomUtil;
-import com.yibao.music.util.VersionUtil;
 import com.yibao.music.util.Constant;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.QueryMusicFlagListUtil;
@@ -30,6 +28,7 @@ import com.yibao.music.util.RxBus;
 import com.yibao.music.util.SpUtils;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.util.ThreadPoolProxyFactory;
+import com.yibao.music.util.VersionUtil;
 
 import java.util.List;
 import java.util.Random;
@@ -456,7 +455,6 @@ public class MusicPlayService extends Service {
         if (mAudioManager != null) {
             mAudioManager.requestAudioFocus(mAudioFocusChange, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         }
-
     }
 
     private final AudioManager.OnAudioFocusChangeListener mAudioFocusChange = focusChange -> {

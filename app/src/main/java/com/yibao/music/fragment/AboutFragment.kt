@@ -1,14 +1,17 @@
 package com.yibao.music.fragment
 
 import android.Manifest
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import android.os.storage.StorageManager
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import com.yibao.music.R
 import com.yibao.music.base.bindings.BaseMusicFragmentDev
 import com.yibao.music.base.listener.OnScanConfigListener
@@ -24,6 +27,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.io.File
 import java.io.FileNotFoundException
+import java.util.Locale
+import java.util.Locale.LanguageRange
 
 /**
  * @项目名： ArtisanMusic
@@ -100,13 +105,34 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>(), OnScanConfig
 
             }
         })
+        mBinding.tvSwitchLanguage.setOnClickListener {
+            LogUtil.d(mTag, "切换语言")
+            showLanguage()
+        }
+    }
+
+    private fun showLanguage() {
+
+        val arr = arrayOf(getString(R.string.zh), getString(R.string.us))
+        val dialog =
+            AlertDialog.Builder(requireActivity()).setItems(arr) { _: DialogInterface?, i: Int ->
+                when (i) {
+                    0 -> switchLanguage("zh")
+                    1 -> switchLanguage("en")
+                }
+            }.create()
+        dialog.show()
+    }
+
+
+    private fun switchLanguage(language: String) {
+        mSp.putValues(SpUtils.ContentValue(Constant.LANGUAGE, language))
+        requireActivity().recreate()
     }
 
     private fun takePhoto() {
         requestPermissionLauncher.launch(Manifest.permission.CAMERA)
-
     }
-
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()

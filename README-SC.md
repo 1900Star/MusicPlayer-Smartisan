@@ -19,7 +19,7 @@
 
 ## Features
 
-  * Android Q
+  * Android 13
   * Playlists (sorted by song name, rating, number of plays, time added), artist list, album list)
   * Favorite
   * Timer

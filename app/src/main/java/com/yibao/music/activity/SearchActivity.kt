@@ -44,6 +44,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
     override fun initData() {
         // pageType 0 toolbar上的搜索，1 播放界面点击歌曲名，直接以歌手搜索。
         val pageType = intent.getIntExtra(Constant.PAGE_TYPE, 0)
+        LogUtil.d(TAG,"PageType   $pageType")
         audioBinder = MusicActivity.audioBinder
         mBinding.smartisanControlBar.setPbColorAndPreBtnGone()
         // 从PlayActivity过来的
@@ -94,7 +95,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
             updateLyric()
             setDuration()
         }
-        startPlayActivity()
+//        startPlayActivity()
     }
 
     private fun setData(musicList: List<MusicBean>) {

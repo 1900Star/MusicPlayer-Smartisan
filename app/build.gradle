@@ -81,6 +81,10 @@ android {
 
 
     }
+    buildFeatures {
+        aidl true
+    }
+    namespace 'com.yibao.music'
 
 }
 

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ArtisanMusic</string>
 
@@ -91,4 +92,8 @@
     <string name="picture_permission">Please allow picture permission</string>
     <string name="notify_permission">Please allow notification permission</string>
     <string name="camera_permission">Please allow camera permission</string>
+
+    <string name="zh">Chinese Simplified</string>
+    <string name="us">English</string>
+    <string name="switch_language">Language</string>
 </resources>

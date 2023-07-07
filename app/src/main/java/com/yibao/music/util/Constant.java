@@ -182,4 +182,6 @@ public class Constant {
 
 
     public static final String PERMISSION_HINT = "permission_hint";
+    @Nullable
+    public static final String LANGUAGE = "language";
 }

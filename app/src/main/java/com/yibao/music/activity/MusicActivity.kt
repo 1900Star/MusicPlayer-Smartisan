@@ -34,6 +34,7 @@ import com.yibao.music.util.SpUtils.ContentValue
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.io.File
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 /**
@@ -112,13 +113,16 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
                 mBinding.smartisanControlBar.animatorOnResume(audioBinder!!.isPlaying)
                 updatePlayBtnStatus()
             }
+
             Constant.NUMBER_ONE -> checkCurrentSongIsFavorite(
                 mCurrentMusicBean, mBinding.qqControlBar, mBinding.smartisanControlBar
             )
+
             Constant.NUMBER_TWO -> {
                 updatePlayBtnStatus()
                 mBinding.smartisanControlBar.animatorOnPause()
             }
+
             else -> {}
         }
     }
@@ -147,14 +151,17 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
                                     mBinding.smartisanControlBar
                                 )
                             }
+
                             Constant.NUMBER_TWO -> {
                                 clearDisposableProgress()
                                 audioBinder!!.playPre()
                             }
+
                             Constant.NUMBER_FOUR -> {
                                 clearDisposableProgress()
                                 audioBinder!!.playNext()
                             }
+
                             else -> {}
                         }
                     } else {
@@ -177,6 +184,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
                     } else {
                         SnakbarUtil.firstPlayMusic(mBinding.smartisanControlBar)
                     }
+
                     else -> {}
                 }
             } else {
@@ -203,18 +211,22 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
                 mBinding.musicViewpager2.setCurrentItem(0, false)
 
             }
+
             R.id.navigation_artist -> {
                 mBinding.musicViewpager2.setCurrentItem(1, false)
 
             }
+
             R.id.navigation_song -> {
                 mBinding.musicViewpager2.setCurrentItem(2, false)
 
             }
+
             R.id.navigation_album -> {
                 mBinding.musicViewpager2.setCurrentItem(3, false)
 
             }
+
             R.id.navigation_about -> {
                 mBinding.musicViewpager2.setCurrentItem(4, false)
 
@@ -521,6 +533,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
             } else {
                 SnakbarUtil.firstPlayMusic(mBinding.smartisanControlBar)
             }
+
             Constant.NUMBER_THREE -> SnakbarUtil.keepGoing(mBinding.smartisanControlBar)
             Constant.NUMBER_FOUR -> deleteSong(moreMenuStatus)
             else -> {}
@@ -611,6 +624,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
                     ImageUitl.cropRawPhotoIntent(mContentUri), Constant.CODE_RESULT_REQUEST
                 )
             }
+
             Constant.CODE_CAMERA_REQUEST -> if (FileUtil.hasSdcard()) {
                 mContentUri = FileUtil.getImageContentUri(this, ImageUitl.getTempFile())
                 startActivityForResult(
@@ -619,6 +633,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
             } else {
                 ToastUtil.show(this, "没发现SD卡!")
             }
+
             Constant.CODE_RESULT_REQUEST -> mBus.post(Constant.HEADER_PIC_URI, mContentUri)
             else -> {}
         }
@@ -674,6 +689,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         }
     }
 
+    private var checkFlag = 1
     private fun initLocationPermission() {
         requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
     }
@@ -681,7 +697,14 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
     private val requestLocationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
-        LogUtil.d(TAG, "定位权限获取结果   $granted")
+
+        if (!granted) {
+            if (checkFlag == 1) {
+                checkFlag = 2
+                initLocationPermission()
+            }
+        }
+
     }
 
     private fun initPermission() {

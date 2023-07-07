@@ -12,7 +12,6 @@
         android:layout_height="wrap_content" />
 
 
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -241,6 +240,41 @@
                     android:background="@drawable/shape_btn_edit_selector"
                     android:gravity="center"
                     android:text="@string/crash_log"
+                    android:textColor="@color/music_activity_title_selector"
+                    android:textSize="@dimen/about_title"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/shape_about_card"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_switch_language"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_btn_edit_selector"
+                    android:gravity="center"
+                    android:text="@string/switch_language"
+                    android:textColor="@color/music_activity_title_selector"
+                    android:textSize="@dimen/about_title"
+                    android:textStyle="bold" />
+
+                <TextView
+
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_btn_edit_selector"
+                    android:gravity="center"
+
                     android:textColor="@color/music_activity_title_selector"
                     android:textSize="@dimen/about_title"
                     android:textStyle="bold" />

@@ -3,7 +3,10 @@ package com.yibao.music.base;
 import static com.yibao.music.util.QueryMusicFlagListUtil.getMusicDataList;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +33,7 @@ import com.yibao.music.view.music.SmartisanControlBar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -68,12 +72,23 @@ public abstract class BaseActivity extends AppCompatActivity {
         StatService.start(getApplicationContext());
         mBus = RxBus.getInstance();
         mSps = new SpUtils(MusicApplication.getInstance(), Constant.MUSIC_CONFIG);
-
+        switchLanguage();
         mMusicDao = MusicApplication.getInstance().getMusicDao();
         mSearchDao = MusicApplication.getInstance().getSearchDao();
         mPlayListDao = MusicApplication.getInstance().getPlayListDao();
+
     }
 
+
+    private void switchLanguage() {
+        String language = mSps.getString(Constant.LANGUAGE);
+        Locale locale = new Locale(language);
+        Resources resources = getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        Configuration cf = resources.getConfiguration();
+        cf.setLocale(locale);
+        resources.updateConfiguration(cf, dm);
+    }
 
     @Override
     protected void onResume() {

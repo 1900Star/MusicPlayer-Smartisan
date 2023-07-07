@@ -208,7 +208,9 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
      */
     @Override
     protected void updateCurrentPlayProgress() {
-        updateMusicProgress(audioBinder.getProgress());
+        if (audioBinder != null) {
+            updateMusicProgress(audioBinder.getProgress());
+        }
     }
 
     protected void updateMusicProgress(int progress) {

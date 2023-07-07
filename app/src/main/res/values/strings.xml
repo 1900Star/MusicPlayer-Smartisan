@@ -94,4 +94,7 @@
     <string name="picture_permission">请允许图片读取权限</string>
     <string name="notify_permission">请允许通知权限</string>
     <string name="camera_permission">请允许相机权限</string>
+    <string name="zh">简体中文</string>
+    <string name="us">English</string>
+    <string name="switch_language">切换语言</string>
 </resources>

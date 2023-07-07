@@ -152,7 +152,6 @@ class SongCategoryFragment : BaseMusicFragmentDev<CategoryFragmentBinding>() {
 
     companion object {
 
-
         @JvmStatic
         fun newInstance(position: Int): SongCategoryFragment {
 

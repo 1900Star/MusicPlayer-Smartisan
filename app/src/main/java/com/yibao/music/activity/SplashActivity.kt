@@ -48,6 +48,7 @@ class SplashActivity : BaseActivity(), OnScanConfigListener {
         }
     }
 
+    private var checkFlag = 1
     private fun initPermission() {
         if (VersionUtil.checkAndroidVersionS()) {
             requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_AUDIO)
@@ -64,7 +65,12 @@ class SplashActivity : BaseActivity(), OnScanConfigListener {
                 loadMusicData()
             }
         } else {
-            againPermission(R.string.storage_permission)
+            if (checkFlag == 1) {
+                checkFlag = 2
+                initPermission()
+            } else {
+                againPermission(R.string.storage_permission)
+            }
         }
     }
 
