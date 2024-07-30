@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".activity.SearchLyricsActivity">
 
@@ -47,7 +48,7 @@
             android:gravity="center"
             android:minWidth="42dp"
             android:padding="5dp"
-            android:text="@string/complete"
+            android:text="@string/apply_lyrics"
             android:textColor="@color/aboutSign"
             android:textStyle="bold" />
 

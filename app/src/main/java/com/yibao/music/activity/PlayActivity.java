@@ -89,7 +89,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         if (isShowLyrics) {
             showLyrics();
         }
-        disPosableLyricsView();
+        disPosiableLyricsView();
 
     }
 
@@ -232,7 +232,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
     }
 
 
-    private void disPosableLyricsView() {
+    private void disPosiableLyricsView() {
         if (mCloseLyrDisposable != null) {
             mCloseLyrDisposable.dispose();
             mCloseLyrDisposable = null;
@@ -241,6 +241,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
     }
 
     private void setAlbum(String url) {
+        LogUtil.d(TAG, "最终最终URL " + url);
         try {
             ImageUitl.loadPic(this, url, mBinding.playingSongAlbum, R.drawable.playing_cover_lp, isSuccess -> {
                 if (isSuccess) {
@@ -358,8 +359,14 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         mBinding.ivFavoriteMusic.setOnClickListener(this);
         mBinding.tvSongName.setOnClickListener(this);
         mBinding.tvArtistName.setOnClickListener(this);
-        mBinding.lyricsView.setOnClickListener(this);
         mBinding.ivFavoriteList.setOnClickListener(this);
+        mBinding.lyricsView.setOnClickListener(this);
+        mBinding.lyricsView.setOnLongClickListener(v -> {
+            if (mLyricList.size() == 1) {
+                startSearchLyricsActivity();
+            }
+            return false;
+        });
 
 
     }
@@ -383,11 +390,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             showLyrics();
             LyricsUtil.deleteCurrentLyric(mCurrentMusicInfo.getTitle(), mCurrentMusicInfo.getArtist());
         } else if (id == R.id.iv_search_play_lyric) {
-            Intent intent = new Intent(this, SearchLyricsActivity.class);
-            intent.putExtra(Constant.SONG_NAME, StringUtil.getSongName(mCurrentMusicInfo.getTitle()));
-            intent.putExtra(Constant.SONG_ARTIST, StringUtil.getArtist(mCurrentMusicInfo.getArtist()));
-            startActivityForResult(intent, Constant.SELECT_LYRICS);
-            overridePendingTransition(R.anim.dialog_push_in, 0);
+            startSearchLyricsActivity();
         } else if (id == R.id.iv_always_on) {
             screenAlwaysOnSwitch(mBinding.ivAlwaysOn);
         } else if (id == R.id.music_player_mode) {
@@ -411,6 +414,14 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         }
     }
 
+    private void startSearchLyricsActivity() {
+        Intent intent = new Intent(this, SearchLyricsActivity.class);
+        intent.putExtra(Constant.SONG_NAME, StringUtil.getSongName(mCurrentMusicInfo.getTitle()));
+        intent.putExtra(Constant.SONG_ARTIST, StringUtil.getArtist(mCurrentMusicInfo.getArtist()));
+        startActivityForResult(intent, Constant.SELECT_LYRICS);
+        overridePendingTransition(R.anim.dialog_push_in, 0);
+    }
+
 
     @Override
     protected void updateLyricsView(boolean lyricsOk, String downMsg) {
@@ -427,9 +438,11 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
      */
     private void showLyrics() {
         if (isShowLyrics) {
+            mBinding.ivSearchPlayLyric.setVisibility(View.GONE);
             clearDisposableLyric();
-            disPosableLyricsView();
+            disPosiableLyricsView();
         } else {
+            mBinding.ivSearchPlayLyric.setVisibility(View.VISIBLE);
             boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(mCurrentMusicInfo.getTitle()), StringUtil.getArtist(mCurrentMusicInfo.getArtist()));
             if (lyricIsExists) {
                 mLyricList = LyricsUtil.getLyricList(mCurrentMusicInfo);
@@ -492,7 +505,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
      * size 小于2表示没有歌词，5秒后自动关闭歌词画面。
      */
     public void closeLyricsView() {
-        disPosableLyricsView();
+        disPosiableLyricsView();
         if (mLyricList.size() < Constant.NUMBER_TWO) {
             if (mCloseLyrDisposable == null) {
                 mCloseLyrDisposable = Observable.timer(5, TimeUnit.SECONDS)

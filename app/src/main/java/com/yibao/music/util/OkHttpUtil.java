@@ -1,12 +1,8 @@
 package com.yibao.music.util;
 
-import com.yibao.music.network.RetrofitHelper;
-
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

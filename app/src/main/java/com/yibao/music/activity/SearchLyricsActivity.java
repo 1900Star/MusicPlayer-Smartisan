@@ -84,7 +84,7 @@ public class SearchLyricsActivity extends AppCompatActivity {
             mEditSongName.setText(mSongName);
             mEditArtist.setText(mSongArtist);
         }
-        searchLyrics(true);
+        searchLyrics(false);
     }
 
     private void initView() {
@@ -108,12 +108,10 @@ public class SearchLyricsActivity extends AppCompatActivity {
         if (NetworkUtil.isNetworkConnected()) {
             String songName = mEditSongName.getText().toString().trim();
             String singer = mEditArtist.getText().toString().trim();
-            RetrofitHelper.getMusicService().getLrc(songName).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new BaseObserver<SongLrc>() {
+            RetrofitHelper.getMusicService().getLrc(songName).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new BaseObserver<SongLrc>() {
                 @Override
                 public void onNext(SongLrc songLrc) {
                     List<SongLrc.DataBean.LyricBean.ListBean> list = songLrc.getData().getLyric().getList();
-
                     for (SongLrc.DataBean.LyricBean.ListBean listBean : list) {
                         String content = listBean.getContent();
                         String songSinger = listBean.getSinger().get(0).getName();
@@ -127,7 +125,7 @@ public class SearchLyricsActivity extends AppCompatActivity {
                             }
 
                         } else {
-                if (!Constant.NO_LYRICS.equals(content) && !Constant.PURE_MUSIC.equals(content) && songName.equals(songNames)) {
+                            if (!Constant.NO_LYRICS.equals(content) && !Constant.PURE_MUSIC.equals(content) && songName.equals(songNames)) {
 
                                 SearchLyricsBean lyricsBean = new SearchLyricsBean(listBean.getSongmid(), listBean.getContent());
                                 if (!mLyricsBeanList.contains(lyricsBean)) {
@@ -162,7 +160,8 @@ public class SearchLyricsActivity extends AppCompatActivity {
     }
 
     private void setTvIndex(int size) {
-        String lyricsCount = "搜索到" + size + "个结果";
+        String lyricsCount = size > 1 ? "搜索到" + size + "个结果 (右滑查看多个歌词)" : "搜索到" + size + "个结果";
+//        String lyricsCount = "搜索到" + size + "个结果";
         mTvLyricsCount.setText(lyricsCount);
         if (size != 0) {
             mTvLyricsPageIndex.setText("1");

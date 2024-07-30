@@ -216,12 +216,14 @@
 
     <ImageView
         android:id="@+id/iv_search_play_lyric"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
         android:layout_gravity="center"
+        android:visibility="gone"
         android:layout_marginTop="8dp"
         android:contentDescription="@null"
-        android:src="@drawable/more_select_icon_lyric"
+        android:src="@drawable/iv_search_lyrics"
+        app:layout_constraintEnd_toEndOf="@id/iv_lyrics_switch"
         app:layout_constraintStart_toStartOf="@id/iv_lyrics_switch"
         app:layout_constraintTop_toBottomOf="@id/iv_lyrics_switch" />
 

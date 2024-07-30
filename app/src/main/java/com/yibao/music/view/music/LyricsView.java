@@ -13,6 +13,7 @@ import com.yibao.music.R;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constant;
+import com.yibao.music.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -205,7 +206,7 @@ public class LyricsView
         float x = (mViewW >> 1) - (mSingleBounds.width() >> 1);
         float y = (mViewH >> 1) + (mSingleBounds.height() >> 1);
         canvas.drawText(mCurrentLrc, 0, mCurrentLrc.length(), x, y, mPaint);
-    }
 
+    }
 
 }

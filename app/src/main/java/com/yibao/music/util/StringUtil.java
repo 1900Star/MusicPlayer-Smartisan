@@ -64,7 +64,7 @@ public class StringUtil {
      * @return f
      */
     public static String getAlbum(int picType, Long albumId, String artist) {
-        String path = picType == 1 ? Constant.MUSIC_ARITIST_IMG_ROOT + artist + ".jpg" : Constant.MUSIC_ALBUM_ROOT + artist + ".jpg";
+        String path = picType == 1 ? Constant.MUSIC_ARTIST_IMG_ROOT + artist + ".jpg" : Constant.MUSIC_ALBUM_ROOT + artist + ".jpg";
         File file = new File(path);
 
         return file.exists() ? path : ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"),

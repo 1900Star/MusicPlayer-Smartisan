@@ -1,9 +1,11 @@
 package com.yibao.music.view;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -16,11 +18,13 @@ import android.view.animation.Interpolator;
 import android.widget.Scroller;
 
 import com.yibao.music.R;
+import com.yibao.music.util.LogUtil;
 
 
 /**
  * Des：${TODO}
  * Time:2016/11/5 00:25
+ *
  * @author Stran
  */
 
@@ -54,7 +58,7 @@ public class SwipeItemLayout
 
     public SwipeItemLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mTouchMode = Mode.RESET;
+        mTouchMode = Mode.TAP;
         mScrollOffset = 0;
         mIsLaidOut = false;
 

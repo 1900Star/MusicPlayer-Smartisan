@@ -68,7 +68,7 @@ public interface ApiService {
 
     /**
      * api/search/get/web?csrf_token=&type=100
-     * 得到歌手照片，主要用于本地音乐：http://music.163.com/api/search/get/web?s=林俊杰&type=100
+     * 得到歌手照片，主要用于本地音乐：<a href="http://music.163.com/api/search/get/web?s=">...</a>林俊杰&type=100
      *
      * @param singer 歌手名字
      */

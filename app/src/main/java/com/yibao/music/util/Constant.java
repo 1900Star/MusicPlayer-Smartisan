@@ -2,6 +2,8 @@ package com.yibao.music.util;
 
 import android.os.Environment;
 
+import com.yibao.music.MusicApplication;
+
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -152,9 +154,13 @@ public class Constant {
     public static String AUTO_LOAD = "auto_load";
     public static String PAGE_TYPE = "page_type";
     public static String MUSIC_LYRICS_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyrics/";
-    public static String MUSIC_SONG_ALBUM_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/songAlbum/";
+
+//    MusicApplication.getInstance().getExternalFilesDir(dirName).getAbsolutePath();
+
+
+    public static String MUSIC_SONG_ALBUM_ROOT = MusicApplication.getInstance().getExternalFilesDir("songAlbum").getAbsolutePath()+"/";
     public static String MUSIC_ALBUM_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/album/";
-    public static String MUSIC_ARITIST_IMG_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/artistImage/";
+    public static String MUSIC_ARTIST_IMG_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/artistImage/";
     static final String FAVORITE_FILE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/favorite.txt/";
     public static final String HEADER_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yibao/photo/";
     // 崩溃日志本地保存地址

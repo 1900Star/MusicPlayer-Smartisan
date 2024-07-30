@@ -96,4 +96,5 @@
     <string name="zh">Chinese Simplified</string>
     <string name="us">English</string>
     <string name="switch_language">Language</string>
+    <string name="apply_lyrics">ShowLyrics</string>
 </resources>

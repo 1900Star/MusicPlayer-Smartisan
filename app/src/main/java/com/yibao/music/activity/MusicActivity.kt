@@ -34,7 +34,6 @@ import com.yibao.music.util.SpUtils.ContentValue
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.io.File
-import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 /**
@@ -194,7 +193,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         mBinding.qqControlBar.setOnPagerSelectListener { position: Int ->
             val pageType = mSps.getInt(Constant.PAGE_TYPE)
             disposableQqLyric()
-            startMusicService(position, pageType)
+//            startMusicService(position, pageType)
         }
         mBinding.musicViewpager2.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -358,8 +357,8 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         //更新歌曲的进度
         upDataPlayProgress()
         if (isShowQqBar) {
-            mBinding.qqControlBar.setPagerData(audioBinder!!.musicList)
-            mBinding.qqControlBar.setPagerCurrentItem(audioBinder!!.position)
+            mBinding.qqControlBar.setPagerData()
+            mBinding.qqControlBar.setPagerCurrentItem()
             setQqPagerLyric()
         }
     }
@@ -375,14 +374,13 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
                 disposableQqLyric()
             } else {
                 if (audioBinder != null) {
-
-                    mBinding.qqControlBar.updaPagerData(currentList, audioBinder!!.position)
+                    mBinding.qqControlBar.updatePagerData(currentList, audioBinder!!.position)
                 }
                 mBinding.qqControlBar.visibility = View.VISIBLE
                 mBinding.smartisanControlBar.visibility = View.INVISIBLE
 
                 //TODO 这里做更新歌词的操作
-                setQqPagerLyric()
+//                setQqPagerLyric()
             }
             isShowQqBar = !isShowQqBar
         } else {
@@ -418,7 +416,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
                             }
                             LogUtil.d(TAG, "当前的位置 ===  $mCurrentPosition  进度 ===  $progress")
                             LogUtil.d(TAG, "当前的时间和歌词 ===  $startTime ==  $lyrics")
-                            mBinding.qqControlBar.updaPagerData(musicList, mCurrentPosition)
+                            mBinding.qqControlBar.updatePagerData(musicList, mCurrentPosition)
                             lyricsPlayPosition++
                         }
                     }
@@ -427,7 +425,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
             }
         } else {
             LogUtil.d(TAG, "=============没有时间和歌词 ")
-            mBinding.qqControlBar.setPagerData(audioBinder!!.musicList)
+            mBinding.qqControlBar.setPagerData()
         }
     }
 
@@ -453,12 +451,12 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         // 更新歌手名称
         mBinding.smartisanControlBar.setSingerName(mCurrentMusicBean!!.artist)
         // 设置专辑
-        mBinding.smartisanControlBar.setAlbulmUrl(FileUtil.getAlbumUrl(mCurrentMusicBean, 1))
+        mBinding.smartisanControlBar.setAlbumUrl(FileUtil.getAlbumUrl(mCurrentMusicBean, 1))
     }
 
     private fun updateQqBar() {
         if (isShowQqBar) {
-            mBinding.qqControlBar.updaPagerData(audioBinder!!.musicList, audioBinder!!.position)
+            mBinding.qqControlBar.updatePagerData(audioBinder!!.musicList, audioBinder!!.position)
             setQqPagerLyric()
         }
     }

@@ -20,8 +20,11 @@ import com.yibao.music.manager.MediaSessionManager;
 import com.yibao.music.manager.MusicNotifyManager;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
+import com.yibao.music.network.QqMusicRemote;
 import com.yibao.music.util.Constant;
 import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.LyricsUtil;
+import com.yibao.music.util.NetworkUtil;
 import com.yibao.music.util.QueryMusicFlagListUtil;
 import com.yibao.music.util.ReadFavoriteFileUtil;
 import com.yibao.music.util.RxBus;
@@ -49,7 +52,7 @@ public class MusicPlayService extends Service {
     private SpUtils mSp;
 
     // 播放位置
-    private int playPosition = -2;
+    private int playPosition = 0;
     // 播放模式
     private int playMode = 0;
 
@@ -114,7 +117,7 @@ public class MusicPlayService extends Service {
             mSp.putValues(new SpUtils.ContentValue(Constant.CONDITION, condition));
         }
 
-        LogUtil.d(TAG, " position  ==  " + playPosition + "   pageType  ==   " + pageType + "  condition  ==  " + condition);
+//        LogUtil.d(TAG, "Service position  ==  " + playPosition + "   pageType  ==   " + pageType + "  condition  ==  " + condition);
         // 播放列表数据
         mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao.queryBuilder(), pageType, condition);
         LogUtil.d(TAG, " 播放位置== " + playPosition);
@@ -166,10 +169,10 @@ public class MusicPlayService extends Service {
                 mediaPlayer.setOnCompletionListener(this);
                 String songName = StringUtil.getSongName(mMusicInfo.getTitle());
                 String artist = StringUtil.getArtist(mMusicInfo.getArtist());
-//                boolean lyricIsExists = LyricsUtil.checkLyricFile(songName, artist);
-//                if (!lyricIsExists && NetworkUtil.isNetworkConnected()) {
-//                    QqMusicRemote.getSongLyrics(songName, artist);
-//                }
+                boolean lyricIsExists = LyricsUtil.checkLyricFile(songName, artist);
+                if (!lyricIsExists && NetworkUtil.isNetworkConnected()) {
+                    QqMusicRemote.getSongLyrics(songName, artist);
+                }
                 mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_POSITION, playPosition));
                 showNotification(true);
                 mSessionManager.updatePlaybackState(true);
@@ -232,16 +235,14 @@ public class MusicPlayService extends Service {
             autoPlayNext();
         }
 
-
         // 自动播放下一曲
         private void autoPlayNext() {
             // 单曲循环不改变playPosition ,不用判断，只判断 随机播放 和 循环所有 两种模式。
             switch (playMode) {
                 case PLAY_MODE_ALL:
-                    playPosition = (playPosition + 1) % mMusicDataList.size();
+                    playPosition = playPosition == mMusicDataList.size() - 1 ? 0 : playPosition + 1;
                     break;
                 case PLAY_MODE_RANDOM:
-
                     playPosition = new Random().nextInt(Math.abs(mMusicDataList.size()));
 
                     break;
@@ -272,11 +273,8 @@ public class MusicPlayService extends Service {
             if (playMode == PLAY_MODE_RANDOM) {
                 playPosition = new Random().nextInt(Math.abs(mMusicDataList.size()));
             } else {
-                if (playPosition == 0) {
-                    playPosition = mMusicDataList.size() - 1;
-                } else {
-                    playPosition--;
-                }
+                playPosition = playPosition == 0 ? mMusicDataList.size() - 1 : playPosition - 1;
+
             }
             play();
         }
@@ -287,7 +285,7 @@ public class MusicPlayService extends Service {
             if (playMode == PLAY_MODE_RANDOM) {
                 playPosition = new Random().nextInt(mMusicDataList.size());
             } else {
-                playPosition = (playPosition + 1) % mMusicDataList.size();
+                playPosition = playPosition == mMusicDataList.size() - 1 ? 0 : playPosition + 1;
             }
             play();
         }
@@ -389,6 +387,7 @@ public class MusicPlayService extends Service {
                             mBus.post(Constant.PLAY_STATUS, Constant.NUMBER_ONE);
                             break;
                         case Constant.CLOSE:
+                        case Constant.COUNTDOWN_FINISH:
                             pauseMusic();
                             break;
                         case Constant.PREV:
@@ -406,9 +405,6 @@ public class MusicPlayService extends Service {
                             break;
                         case Constant.NEXT:
                             mAudioBinder.playNext();
-                            break;
-                        case Constant.COUNTDOWN_FINISH:
-                            pauseMusic();
                             break;
                         default:
                             break;

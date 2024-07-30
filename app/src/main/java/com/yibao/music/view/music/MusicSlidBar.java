@@ -27,7 +27,7 @@ import com.yibao.music.util.Constant;
 public class MusicSlidBar
         extends View {
 
-    private String[] names = new String[]{"A",
+    private final String[] names = new String[]{"A",
             "B",
             "C",
             "D",
@@ -61,7 +61,7 @@ public class MusicSlidBar
     private int mIndex;
     private Paint mCirclePaint;
     private Context mContext;
-    private TextView mStickyViwe;
+    private TextView mStickyView;
     private int adapterType;
 
     public MusicSlidBar(Context context) {
@@ -115,8 +115,8 @@ public class MusicSlidBar
 //                mTvPaint.setColor(Color.WHITE);
                 mTvPaint.setColor(Color.parseColor("#E64040"));
 
-                canvas.drawCircle(viewW / 2,
-                        i * singleHeight + singleHeight / 2 - dip2px(1),
+                canvas.drawCircle((float) viewW / 2,
+                        i * singleHeight + (float) singleHeight / 2 - dip2px(1),
                         dip2px(8),
                         mCirclePaint);
             } else {
@@ -127,8 +127,8 @@ public class MusicSlidBar
 
 
             canvas.drawText(names[i],
-                    viewW / 2,
-                    i * singleHeight + singleHeight / 2 + metrics.bottom,
+                    (float) viewW / 2,
+                    i * singleHeight + (float) singleHeight / 2 + metrics.bottom,
                     mTvPaint);
 
         }
@@ -197,7 +197,9 @@ public class MusicSlidBar
         String name = names[mIndex];
         //显示toast字母
         initView();
-        //设置导航字母    “mStickyViwe.setText(name);”
+//        设置导航字母
+//        mStickyView.setText(name);
+//        mStickyView.setVisibility(View.VISIBLE);
         int sectionForPosition = 1;
         // 根据adapterType得到指定页面的Adapter
         if (adapterType == Constant.NUMBER_ONE) {
@@ -222,8 +224,8 @@ public class MusicSlidBar
     private void initView() {
         // 获取父容器
         FrameLayout parent = (FrameLayout) getParent();
-        if (mStickyViwe == null) {
-            mStickyViwe = parent.findViewById(R.id.music_rv_sticky_view);
+        if (mStickyView == null) {
+            mStickyView = parent.findViewById(R.id.music_rv_sticky_view);
         }
         //初始化listview
         if (mRecyclerView == null) {

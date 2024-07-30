@@ -116,7 +116,7 @@ class AlbumFragment : BaseMusicFragmentDev<AlbumFragmentBinding>(), View.OnClick
                     childFragmentManager,
                     mDetailList.size,
                     albumInfo.albumName,
-                    Constant.NUMBER_TWO
+                    Constant.NUMBER_SEVEN
                 )
                 mDetailsAdapter = DetailsViewAdapter(
                     mContext,

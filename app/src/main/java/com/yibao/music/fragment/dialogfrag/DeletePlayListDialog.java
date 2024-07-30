@@ -56,7 +56,7 @@ public class DeletePlayListDialog
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        mView = getActivity().getLayoutInflater().inflate(R.layout.delete_list_dialog, null);
+        mView = requireActivity().getLayoutInflater().inflate(R.layout.delete_list_dialog, null);
         builder.setView(mView);
         AlertDialog dialog = builder.create();
         Window window = dialog.getWindow();

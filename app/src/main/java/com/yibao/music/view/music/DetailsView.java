@@ -75,11 +75,10 @@ public class DetailsView
     private int mPicType;
 
     /**
-     *
      * @param fragmentManager f
-     * @param listSize 列表长度 随机播放的取数范围
-     * @param condition 关键字  歌手名 、 专辑名
-     * @param pageType 页面标识
+     * @param listSize        列表长度 随机播放的取数范围
+     * @param condition       关键字  歌手名 、 专辑名
+     * @param pageType        页面标识
      */
     public void setDataFlag(FragmentManager fragmentManager, int listSize, String condition, int pageType) {
         this.mFragmentManager = fragmentManager;
@@ -150,9 +149,9 @@ public class DetailsView
         }
     }
 
-    private void openAlbumDetail(String albulmUrl, String albumName) {
+    private void openAlbumDetail(String albumUrl, String albumName) {
         LogUtil.d(TAG, "显示专辑详情  " + albumName);
-        AlbumDetailDialogFragment.newInstance(albulmUrl, albumName).show(mFragmentManager, "album detail");
+        AlbumDetailDialogFragment.newInstance(albumUrl, albumName).show(mFragmentManager, "album detail");
     }
 
     protected void startPlayListActivity() {
@@ -168,8 +167,8 @@ public class DetailsView
     private void startMusic(int startPosition) {
         if (getContext() instanceof OnMusicItemClickListener) {
             SpUtils sp = new SpUtils(getContext().getApplicationContext(), Constant.MUSIC_CONFIG);
-            sp.putValues(new SpUtils.ContentValue(Constant.MUSIC_DATA_FLAG,Constant.NUMBER_TEN));
-
+            sp.putValues(new SpUtils.ContentValue(Constant.MUSIC_DATA_FLAG, Constant.NUMBER_TEN));
+            LogUtil.d(TAG, "当前标识  ==  " + mPageType);
             ((OnMusicItemClickListener) getContext()).startMusicServiceFlag(startPosition, mPageType, mCondition);
         }
     }

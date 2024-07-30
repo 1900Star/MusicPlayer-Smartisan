@@ -30,7 +30,7 @@ public class SongAdapter extends BaseBindingAdapter<MusicBean> {
     private final int mScroeAndFrequnecyFlag;
     private final int mPageType;
     private final SparseBooleanArray mSparseBooleanArray;
-
+    private int cPosition = -1;
     /**
      * @param context               c
      * @param list                  lx
@@ -91,7 +91,7 @@ public class SongAdapter extends BaseBindingAdapter<MusicBean> {
             if (mPageType == 1) {
                 boolean b = isItemSelected(songListViewHolder.getAdapterPosition());
                 int visit = b ? View.VISIBLE : View.GONE;
-//                songListViewHolder.mBinding.songItemPlayFlag.setVisibility(visit);
+                songListViewHolder.mBinding.songItemPlayFlag.setVisibility(visit);
             }
             songListViewHolder.mBinding.ivSongItemMenu.setOnClickListener(view -> SongAdapter.this.openItemMenu(musicBean, position));
             songListViewHolder.mBinding.checkboxItem.setOnClickListener(v -> checkBoxClick(musicBean, position, songListViewHolder.mBinding.checkboxItem.isChecked()));

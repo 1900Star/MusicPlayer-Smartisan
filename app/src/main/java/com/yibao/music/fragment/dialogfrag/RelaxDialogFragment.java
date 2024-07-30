@@ -36,7 +36,7 @@ public class RelaxDialogFragment
     private void initView(View view) {
         ViewPager girlsViewPager = view.findViewById(R.id.vp_girls);
         SpUtils sp = new SpUtils(requireContext().getApplicationContext(), Constant.MUSIC_CONFIG);
-        boolean urlFlag = sp.getBoolean(Constant.PIC_URL_FLAG,false);
+        boolean urlFlag = sp.getBoolean(Constant.PIC_URL_FLAG, false);
         SplashPagerAdapter splashPagerAdapter = new SplashPagerAdapter(urlFlag);
         girlsViewPager.setAdapter(splashPagerAdapter);
 //        splashPagerAdapter.setZoomViewClickListener(this::dismiss);

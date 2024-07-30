@@ -56,7 +56,7 @@ public class FileUtil {
 
         String albumPath = imageType == 1
                 ? Constant.MUSIC_SONG_ALBUM_ROOT + songName + ".jpg" : imageType == 2
-                ? Constant.MUSIC_ARITIST_IMG_ROOT + artist + ".jpg" : Constant.MUSIC_ALBUM_ROOT + artist + ".jpg";
+                ? Constant.MUSIC_ARTIST_IMG_ROOT + artist + ".jpg" : Constant.MUSIC_ALBUM_ROOT + artist + ".jpg";
         File file = new File(albumPath);
         return file.exists();
     }
@@ -108,10 +108,12 @@ public class FileUtil {
         }
         return new File(file, Constant.CROP_IMAGE_FILE_NAME);
     }
+
     public static File createFile(Context context, String fileName, String dirPath) {
         String apkFilePath = context.getExternalFilesDir(dirPath).getAbsolutePath();
         return new File(apkFilePath + File.separator + fileName);
     }
+
     public static Uri getPicUri(Context context, String savePath) {
         File file = new File(savePath);
         if (!file.exists()) {
@@ -176,6 +178,7 @@ public class FileUtil {
 
     /**
      * 崩溃文件
+     *
      * @return file
      */
     public static File getCrashFile() {
@@ -199,7 +202,6 @@ public class FileUtil {
 
         }
     }
-
 
 
     public static boolean isAndroidQFileExists(String path) {

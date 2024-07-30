@@ -77,7 +77,7 @@ public class AddListDialog
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mCompositeDisposable = new CompositeDisposable();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        mView = getActivity().getLayoutInflater().inflate(R.layout.add_list_dialog, null);
+        mView = requireActivity().getLayoutInflater().inflate(R.layout.add_list_dialog, null);
 
         builder.setView(mView);
         AlertDialog dialog = builder.create();
@@ -99,8 +99,6 @@ public class AddListDialog
             @Override
             public void afterTextChanged(Editable s) {
                 String str = s.toString();
-
-
                 if (str.length() == MAX_LENGTH) {
                     SnakbarUtil.favoriteFailView(mView, "列表名的长度不能超过21个字符");
                 } else if (str.isEmpty()) {
@@ -184,7 +182,7 @@ public class AddListDialog
 
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         SoftKeybordUtil.showAndHintSoftInput(mInputMethodManager, 1, InputMethodManager.RESULT_UNCHANGED_SHOWN);
     }

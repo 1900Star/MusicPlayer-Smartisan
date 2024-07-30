@@ -45,7 +45,7 @@ class DetailsViewAdapter(
             //            LogUtil.d(getMTAG(), " artist info     " + info.getTitle() + " == " + info.getDuration());
             val duration = bean.duration.toInt()
             holder.mBinding.tvSongDuration.text = StringUtil.parseDuration(duration)
-            if (mPageType == Constant.NUMBER_FOUR) {
+            if (mPageType == Constant.NUMBER_FIVE) {
                 // 播放列表的详情列表有侧滑删除
                 holder.mBinding.deleteItemDetail.setOnClickListener {
                     LogUtil.d(

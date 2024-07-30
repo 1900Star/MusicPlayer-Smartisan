@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -117,7 +118,7 @@ public class LyricsUtil {
             File file = FileUtil.getLyricsFile(musicBean.getTitle(), musicBean.getArtist());
             LogUtil.d(TAG, file.getAbsolutePath());
             String charsetName = "utf-8";
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsetName));
+            br = new BufferedReader(new InputStreamReader(Files.newInputStream(file.toPath()), charsetName));
             String line = br.readLine();
             while (line != null) {
                 ArrayList<MusicLyricBean> been = parseLine(line);

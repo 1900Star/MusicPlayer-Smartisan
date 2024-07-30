@@ -83,7 +83,7 @@ class ArtistFragment : BaseMusicFragmentDev<ArtisanListFragmentBinding>() {
                     childFragmentManager,
                     mDetailList.size,
                     artistInfo.artist,
-                    Constant.NUMBER_ONE
+                    Constant.NUMBER_SIX
                 )
                 mDetailsAdapter =
                     DetailsViewAdapter(

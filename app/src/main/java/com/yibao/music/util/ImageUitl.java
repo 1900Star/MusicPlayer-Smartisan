@@ -144,7 +144,7 @@ public class ImageUitl {
                                 //获取到下载得到的图片，进行本地保存
                                 String path = imageType == 1
                                         ? Constant.MUSIC_SONG_ALBUM_ROOT : imageType == 2
-                                        ? Constant.MUSIC_ARITIST_IMG_ROOT : Constant.MUSIC_ALBUM_ROOT;
+                                        ? Constant.MUSIC_ARTIST_IMG_ROOT : Constant.MUSIC_ALBUM_ROOT;
                                 String fileName = imageType == 1
                                         ? songName + ".jpg" : artist + ".jpg";
                                 File songAlbumFile = new File(path);

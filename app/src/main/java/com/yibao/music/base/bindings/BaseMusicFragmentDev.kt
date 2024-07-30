@@ -33,12 +33,12 @@ abstract class BaseMusicFragmentDev<T : ViewBinding> : BaseBindingFragment<T>() 
     protected open fun deleteItem(musicPosition: Int) {}
 
 
-    protected fun randomPlayMusic(pageType:Int) {
+    protected fun randomPlayMusic(pageType: Int) {
         val randomSize = mMusicBeanDao.queryBuilder().list().size
         LogUtil.d(mTag, "随机播放   $pageType")
         val position = RandomUtil.getRandomPosition(randomSize)
-        if (activity is OnMusicItemClickListener) {
-            (activity as OnMusicItemClickListener?)!!.startMusicService(position, pageType)
+        if (requireActivity() is OnMusicItemClickListener) {
+            (requireActivity() as OnMusicItemClickListener?)!!.startMusicService(position, pageType)
         }
     }
 

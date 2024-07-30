@@ -16,6 +16,7 @@ import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.Constant;
 import com.yibao.music.util.ImageUitl;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.view.CircleImageView;
 import com.yibao.music.view.ProgressBtn;
@@ -129,11 +130,11 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
 
     public void setSingerName(String singerName) {
         mSingerName.setText(StringUtil.getArtist(singerName));
-
     }
 
-    public void setAlbulmUrl(String albulmUrl) {
-        ImageUitl.loadPlaceholder(getContext(), albulmUrl, mSongAlbulm);
+    public void setAlbumUrl(String albumUrl) {
+
+        ImageUitl.loadPlaceholder(getContext(), albumUrl, mSongAlbulm);
     }
 
     private void initView() {

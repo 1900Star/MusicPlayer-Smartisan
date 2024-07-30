@@ -1,29 +1,36 @@
 package com.yibao.music.view.music;
 
 import android.content.Context;
+
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
+
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.adapter.QqBarPagerAdapter;
 import com.yibao.music.base.listener.MusicPagerListener;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constant;
+import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.QueryMusicFlagListUtil;
+import com.yibao.music.util.SpUtils;
 import com.yibao.music.view.MusicProgressView;
 
 import java.util.List;
 
 /**
+ * @author Luoshipeng
  * @ Name:   QqControlBar
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/8/11/ 21:50
  * @ Des:    TODO
- * @author Luoshipeng
  */
 public class QqControlBar extends LinearLayout implements View.OnClickListener {
     LinearLayout mQqMusicBar;
@@ -52,6 +59,7 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
         initListener();
     }
 
+
     private void initData() {
         mPagerAdapter = new QqBarPagerAdapter(getContext(), null);
         mSlideViewPager.setAdapter(mPagerAdapter);
@@ -64,10 +72,10 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
         mSlideViewPager.addOnPageChangeListener(new MusicPagerListener() {
             @Override
             public void onPageSelected(int position) {
-                if (mSelectListener != null) {
-                    mSelectListener.selectPosition(position);
-                    setPagerCurrentItem(position);
-                }
+//                if (mSelectListener != null) {
+//                    mSelectListener.selectPosition(position);
+//                    setPagerCurrentItem(position);
+//                }
             }
         });
     }
@@ -86,21 +94,44 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
     }
 
     // **************ViewPager数据********************
-    public void updaPagerData(List<MusicBean> musicItems, int currentPosition) {
-        mPagerAdapter = null;
-        mPagerAdapter = new QqBarPagerAdapter(getContext(), musicItems);
+
+    /**
+     * 更新viewpager 数据
+     */
+    public void updatePagerData(List<MusicBean> musicItems, int currentPosition) {
+        setPagerData();
+    }
+
+    /**
+     * 设置ViewPager数据
+     */
+    public void setPagerData() {
+        SpUtils sp = new SpUtils(MusicApplication.getInstance(), Constant.MUSIC_CONFIG);
+        int position = sp.getInt(Constant.MUSIC_POSITION);
+        List<MusicBean> currentList = getCurrentList();
+        mPagerAdapter = new QqBarPagerAdapter(getContext(), currentList);
         mSlideViewPager.setAdapter(mPagerAdapter);
-        mSlideViewPager.setCurrentItem(currentPosition, false);
-        mPagerAdapter.notifyDataSetChanged();
+        mSlideViewPager.setCurrentItem(position, false);
     }
 
-    public void setPagerData(List<MusicBean> musicItems) {
-        mPagerAdapter.setData(musicItems);
+    /**
+     * 设置当前播放位置数据
+     */
+    public void setPagerCurrentItem() {
+        setPagerData();
     }
 
-    public void setPagerCurrentItem(int cureetPosition) {
-        mSlideViewPager.setCurrentItem(cureetPosition, false);
+
+    protected List<MusicBean> getCurrentList() {
+        SpUtils sp = new SpUtils(MusicApplication.getInstance(), Constant.MUSIC_CONFIG);
+        int pageType = sp.getInt(Constant.PAGE_TYPE);
+        String condition = sp.getString(Constant.CONDITION);
+        MusicBeanDao mMusicDao = MusicApplication.getInstance().getMusicDao();
+//        LogUtil.d("lsp", " QQBar 数据源 pageType  ==   " + pageType + "  condition  =  " + condition );
+
+        return QueryMusicFlagListUtil.getMusicDataList(mMusicDao.queryBuilder(), pageType, condition);
     }
+
 
     //**************歌曲进度********************
     public void setMaxProgress(int maxProgress) {
@@ -114,15 +145,11 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.music_floating_pager_play:
-                controlBarClick(Constant.NUMBER_ONE);
-                break;
-            case R.id.music_floating_pager_favorite:
-                controlBarClick(Constant.NUMBER_TWO);
-                break;
-            default:
-                break;
+        int id = view.getId();
+        if (id == R.id.music_floating_pager_play) {
+            controlBarClick(Constant.NUMBER_ONE);
+        } else if (id == R.id.music_floating_pager_favorite) {
+            controlBarClick(Constant.NUMBER_TWO);
         }
     }
 
@@ -145,15 +172,16 @@ public class QqControlBar extends LinearLayout implements View.OnClickListener {
         void click(int clickFlag);
     }
 
-    private OnPagerSelecteListener mSelectListener;
+    private OnPagerSelectListener mSelectListener;
 
-    public void setOnPagerSelectListener(OnPagerSelecteListener selectListener) {
+    public void setOnPagerSelectListener(OnPagerSelectListener selectListener) {
         mSelectListener = selectListener;
     }
 
-    public interface OnPagerSelecteListener {
+    public interface OnPagerSelectListener {
         /**
          * p
+         *
          * @param currentPosition d
          */
         void selectPosition(int currentPosition);

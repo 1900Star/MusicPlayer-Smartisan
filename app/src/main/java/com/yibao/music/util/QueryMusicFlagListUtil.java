@@ -25,7 +25,11 @@ public class QueryMusicFlagListUtil {
      * @return List
      */
     public static List<MusicBean> getMusicDataList(QueryBuilder<MusicBean> queryBuilder, int pageFlag, String condition) {
-        if (condition != null) {
+        boolean b = condition != null && !condition.equals("");
+
+//        LogUtil.d("lsp", "  数据源 pageType  ==   " + pageFlag + "  condition  =  " + condition + " = " + b);
+
+        if (condition != null && !condition.equals("")) {
             WhereCondition whereCondition = null;
             if (pageFlag == Constant.NUMBER_FIVE) {
                 // 自定义播放列表
@@ -70,10 +74,8 @@ public class QueryMusicFlagListUtil {
                 return queryBuilder.where(MusicBeanDao.Properties.IsFavorite.eq(true)).orderDesc(MusicBeanDao.Properties.Time).build().list();
             }
         }
-
-
+        LogUtil.d("lsp","=====AAA====== 默认数据 =========AAA======");
         return MusicListUtil.sortByAbc(queryBuilder.build().list());
     }
-
 
 }

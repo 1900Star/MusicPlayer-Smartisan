@@ -1,7 +1,5 @@
 package com.yibao.music.base;
 
-import static com.yibao.music.util.QueryMusicFlagListUtil.getMusicDataList;
-
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -48,7 +46,6 @@ import io.reactivex.schedulers.Schedulers;
  * @包名： com.yibao.music.base
  * @文件名: BaseActivity
  * @author: Stran
- * @Email: www.strangermy@outlook.com / www.stranger98@gmail.com
  * @创建时间: 2018/2/20 13:07
  * @描述： {TODO}
  */
@@ -82,12 +79,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void switchLanguage() {
         String language = mSps.getString(Constant.LANGUAGE);
-        Locale locale = new Locale(language);
-        Resources resources = getResources();
-        DisplayMetrics dm = resources.getDisplayMetrics();
-        Configuration cf = resources.getConfiguration();
-        cf.setLocale(locale);
-        resources.updateConfiguration(cf, dm);
+        if (language != null) {
+            Locale locale = new Locale(language);
+            Resources resources = getResources();
+            DisplayMetrics dm = resources.getDisplayMetrics();
+            Configuration cf = resources.getConfiguration();
+            cf.setLocale(locale);
+            resources.updateConfiguration(cf, dm);
+        }
     }
 
     @Override
