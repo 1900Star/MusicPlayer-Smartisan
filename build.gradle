@@ -2,18 +2,17 @@
 buildscript {
     ext {
 
-        kotlin_version = '1.7.20'
+        kotlin_version = '2.0.21'
     }
     repositories {
         google()
-        jcenter()
         mavenCentral()
         maven { url 'https://jitpack.io' }
     }
     dependencies {
 
-        classpath 'com.android.tools.build:gradle:7.2.2'
-        classpath 'org.greenrobot:greendao-gradle-plugin:3.3.0'
+        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath 'org.greenrobot:greendao-gradle-plugin:3.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -21,13 +20,12 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
         mavenCentral()
         maven { url 'https://jitpack.io' }
     }
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }
 

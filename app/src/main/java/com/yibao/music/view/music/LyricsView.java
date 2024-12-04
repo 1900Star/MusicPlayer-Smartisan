@@ -4,16 +4,15 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.text.TextUtils;
+import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
-
-import android.util.AttributeSet;
 
 import com.yibao.music.R;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constant;
-import com.yibao.music.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,8 +63,8 @@ public class LyricsView
         mBigText = getResources().getDimension(R.dimen.bigLyrics);
         smallText = getResources().getDimension(R.dimen.smallLyrics);
         lineHeight = getResources().getDimensionPixelSize(R.dimen.line_height);
+        setEllipsize(TextUtils.TruncateAt.MARQUEE);
         setMaxLines(2);
-
         mPaint.setAntiAlias(true);
         mPaint.setColor(mLyricsSelected);
         mPaint.setTextSize(mBigText);
@@ -85,7 +84,7 @@ public class LyricsView
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (musicLyrList == null || musicLyrList.size() == 1 || musicLyrList.size() == 0) {
+        if (musicLyrList == null || musicLyrList.size() == 1 || musicLyrList.isEmpty()) {
             drawSingLine(canvas);
         } else {
             drawMunitLine(canvas);
@@ -100,27 +99,7 @@ public class LyricsView
      */
     private void drawMunitLine(Canvas canvas) {
         //        中间行y=中间行开始位置-移的距离
-        int lineTime;
-        //        最后一行居中
-        if (centerLine == musicLyrList.size() - 1) {
-            //     行可用时间 = 总进度 - 行开始时间
-            lineTime = duration - musicLyrList.get(centerLine)
-                    .getStartTime();
-        } else {
-//                           其它行居中，
-//            行可用时间 = 下一行开始 时间 - 居中行开始 时间
-            lineTime = musicLyrList.get(centerLine + 1)
-                    .getStartTime() - musicLyrList.get(centerLine)
-                    .getStartTime();
-        }
-        //          播放时间偏移 = 播放进度 - 居中开始时间
-        int offsetTime = currentProgress - musicLyrList.get(centerLine)
-                .getStartTime();
-        //           播放时间比 = 播放时间偏移/行可用时间
-        float offsetTimePercent = offsetTime / (float) lineTime;
-
-        //          y方向移动的距离 = 行高*播放时间比
-        int offsetY = (int) (lineHeight * offsetTimePercent);
+        int offsetY = getOffsetY();
         //          中间行歌词
         String centerLrc = musicLyrList.get(centerLine)
                 .getContent();
@@ -152,6 +131,30 @@ public class LyricsView
 
     }
 
+    private int getOffsetY() {
+        int lineTime;
+        //        最后一行居中
+        if (centerLine == musicLyrList.size() - 1) {
+            //     行可用时间 = 总进度 - 行开始时间
+            lineTime = duration - musicLyrList.get(centerLine)
+                    .getStartTime();
+        } else {
+//                           其它行居中，
+//            行可用时间 = 下一行开始 时间 - 居中行开始 时间
+            lineTime = musicLyrList.get(centerLine + 1)
+                    .getStartTime() - musicLyrList.get(centerLine)
+                    .getStartTime();
+        }
+        //          播放时间偏移 = 播放进度 - 居中开始时间
+        int offsetTime = currentProgress - musicLyrList.get(centerLine)
+                .getStartTime();
+        //           播放时间比 = 播放时间偏移/行可用时间
+        float offsetTimePercent = offsetTime / (float) lineTime;
+
+        //          y方向移动的距离 = 行高*播放时间比
+        return (int) (lineHeight * offsetTimePercent);
+    }
+
     /**
      * 根据播放时间滚动歌词，将已经播放的歌词滚动出屏幕。
      *
@@ -159,7 +162,7 @@ public class LyricsView
      * @param duration d
      */
     public void rollText(int progress, int duration) {
-        if (musicLyrList == null || musicLyrList.size() == 0) {
+        if (musicLyrList == null || musicLyrList.isEmpty()) {
             return;
         }
         this.currentProgress = progress;

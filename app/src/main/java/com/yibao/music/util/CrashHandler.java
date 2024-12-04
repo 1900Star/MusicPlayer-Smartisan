@@ -7,6 +7,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Process;
 
+import androidx.annotation.NonNull;
+
 import com.baidu.mobstat.StatService;
 import com.yibao.music.MusicApplication;
 
@@ -46,7 +48,7 @@ public class CrashHandler
     }
 
     @Override
-    public void uncaughtException(Thread thread, Throwable ex) {
+    public void uncaughtException(@NonNull Thread thread, @NonNull Throwable ex) {
         try {
 
             dumpExceptionToSdCard(ex);  //导出异常信息到SD卡中

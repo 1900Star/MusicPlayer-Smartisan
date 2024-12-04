@@ -158,7 +158,7 @@ public class Constant {
 //    MusicApplication.getInstance().getExternalFilesDir(dirName).getAbsolutePath();
 
 
-    public static String MUSIC_SONG_ALBUM_ROOT = MusicApplication.getInstance().getExternalFilesDir("songAlbum").getAbsolutePath()+"/";
+    public static String MUSIC_SONG_ALBUM_ROOT = MusicApplication.getInstance().getExternalFilesDir("songAlbum").getAbsolutePath() + "/";
     public static String MUSIC_ALBUM_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/album/";
     public static String MUSIC_ARTIST_IMG_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/artistImage/";
     static final String FAVORITE_FILE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/favorite.txt/";
@@ -188,6 +188,6 @@ public class Constant {
 
 
     public static final String PERMISSION_HINT = "permission_hint";
-    @Nullable
+
     public static final String LANGUAGE = "language";
 }

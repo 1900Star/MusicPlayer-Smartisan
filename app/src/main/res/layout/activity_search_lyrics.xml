@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,62 +9,74 @@
     android:orientation="vertical"
     tools:context=".activity.SearchLyricsActivity">
 
-
-    <RelativeLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_search_lyrics"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
-
-        <ImageView
-            android:id="@+id/search_lyrics_titlebar_down"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="4dp"
-            android:contentDescription="@null"
-            android:scaleType="centerCrop"
-            android:src="@drawable/btn_playing_back_selector" />
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/main_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
             android:layout_gravity="center"
-            android:text="@string/retry_search_lyrics"
-            android:textColor="@color/aboutSign"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:text="@string/retry_search_lyrics" />
+    </androidx.appcompat.widget.Toolbar>
 
-        <TextView
-            android:id="@+id/tv_search_lyrics_complete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="4dp"
-            android:background="@drawable/shape_btn_edit_selector"
-            android:gravity="center"
-            android:minWidth="42dp"
-            android:padding="5dp"
-            android:text="@string/apply_lyrics"
-            android:textColor="@color/aboutSign"
-            android:textStyle="bold" />
+    <ImageView
+        android:id="@+id/iv_search_down"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginStart="4dp"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        android:src="@drawable/btn_playing_back_selector"
+        app:layout_constraintBottom_toBottomOf="@id/toolbar_search_lyrics"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/toolbar_search_lyrics" />
 
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/main_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/retry_search_lyrics"
+        android:textColor="@color/aboutSign"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/toolbar_search_lyrics"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/toolbar_search_lyrics" />
+
+    <TextView
+        android:id="@+id/tv_search_lyrics_complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/shape_btn_edit_selector"
+        android:gravity="center"
+        android:minWidth="42dp"
+        android:padding="5dp"
+        android:text="@string/apply_lyrics"
+        android:textColor="@color/aboutSign"
+        app:layout_constraintBottom_toBottomOf="@id/toolbar_search_lyrics"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/toolbar_search_lyrics" />
 
     <LinearLayout
+        android:id="@+id/ll_search_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="10dp"
         android:layout_marginTop="3dp"
         android:layout_marginEnd="10dp"
-
         android:background="@drawable/shape_btn_edit_selector"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_search_lyrics">
 
         <TextView
             android:layout_width="wrap_content"
@@ -88,6 +101,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_search_artist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -96,7 +110,9 @@
         android:layout_marginEnd="10dp"
         android:background="@drawable/shape_btn_edit_selector"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_search_name">
 
         <TextView
             android:layout_width="wrap_content"
@@ -143,41 +159,46 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="5dp"
         android:gravity="center"
-        android:textColor="@color/bg_hint" />
+        android:textColor="@color/bg_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_search_artist" />
 
-    <FrameLayout
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp2_search_lyrics"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_gravity="center"
+        android:layout_marginBottom="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_search_lyrics_count" />
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/vp2_search_lyrics"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="3dp"
-            android:layout_gravity="center" />
+    <ImageView
+        android:id="@+id/iv_search_lyrics_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/search_loading_animation"
+        android:contentDescription="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_search_lyrics_count" />
 
-        <ImageView
-            android:id="@+id/iv_search_lyrics_loading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/search_loading_animation"
-            android:contentDescription="@null" />
-
-        <TextView
-            android:id="@+id/tv_lyrics_page_index"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:textColor="@color/deleteNorma"
-            android:textStyle="bold" />
-    </FrameLayout>
+    <TextView
+        android:id="@+id/tv_lyrics_page_index"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:textColor="@color/deleteNorma"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/ll_search_name" />
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

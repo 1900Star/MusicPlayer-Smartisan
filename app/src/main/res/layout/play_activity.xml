@@ -184,26 +184,47 @@
 
     </RelativeLayout>
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_lyrics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="iv_lyrics_bg,lyrics_view,iv_search_play_lyric" />
+
+    <ImageView
+        android:id="@+id/iv_lyrics_bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@null"
+        android:src="@drawable/mask_playing_lyric"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/rotate_rl"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/rotate_rl" />
 
     <com.yibao.music.view.music.LyricsView
         android:id="@+id/lyrics_view"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="5dp"
-        android:background="@drawable/mask_playing_lyric"
+        android:layout_marginEnd="4dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/music_play"
-        app:layout_constraintTop_toBottomOf="@id/top_line" />
+        app:layout_constraintBottom_toBottomOf="@id/rotate_rl"
+        app:layout_constraintEnd_toStartOf="@id/iv_always_on"
+        app:layout_constraintStart_toEndOf="@id/iv_switch_lyrics_bg"
+        app:layout_constraintTop_toTopOf="@id/rotate_rl" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/group_menu_search_lyrics"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="iv_lyrics_switch,iv_search_play_lyric" />
+        app:constraint_referenced_ids="iv_lyrics_switch" />
 
 
     <ImageView
-        android:id="@+id/iv_lyrics_switch"
+        android:id="@+id/iv_switch_lyrics_bg"
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_marginStart="14dp"
@@ -215,14 +236,23 @@
         app:layout_constraintTop_toTopOf="@id/rotate_rl" />
 
     <ImageView
+        android:id="@+id/iv_lyrics_switch"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:contentDescription="@null"
+        android:src="@drawable/btn_unbrella_icon0"
+        app:layout_constraintStart_toStartOf="@id/iv_switch_lyrics_bg"
+        app:layout_constraintTop_toTopOf="@id/iv_switch_lyrics_bg" />
+
+    <ImageView
         android:id="@+id/iv_search_play_lyric"
         android:layout_width="26dp"
         android:layout_height="26dp"
         android:layout_gravity="center"
-        android:visibility="gone"
         android:layout_marginTop="8dp"
         android:contentDescription="@null"
         android:src="@drawable/iv_search_lyrics"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@id/iv_lyrics_switch"
         app:layout_constraintStart_toStartOf="@id/iv_lyrics_switch"
         app:layout_constraintTop_toBottomOf="@id/iv_lyrics_switch" />

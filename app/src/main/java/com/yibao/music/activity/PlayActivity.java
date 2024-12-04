@@ -438,11 +438,9 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
      */
     private void showLyrics() {
         if (isShowLyrics) {
-            mBinding.ivSearchPlayLyric.setVisibility(View.GONE);
             clearDisposableLyric();
             disPosiableLyricsView();
         } else {
-            mBinding.ivSearchPlayLyric.setVisibility(View.VISIBLE);
             boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(mCurrentMusicInfo.getTitle()), StringUtil.getArtist(mCurrentMusicInfo.getArtist()));
             if (lyricIsExists) {
                 mLyricList = LyricsUtil.getLyricList(mCurrentMusicInfo);
@@ -456,10 +454,10 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
                 mBinding.lyricsView.setLrcFile(null, Constant.NO_LYRICS);
             }
         }
-        mBinding.lyricsView.setVisibility(isShowLyrics ? View.GONE : View.VISIBLE);
+        mBinding.groupLyrics.setVisibility(isShowLyrics ? View.GONE : View.VISIBLE);
         mBinding.groupBrightDelete.setVisibility(isShowLyrics ? View.GONE : mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
-        mBinding.ivAlwaysOn.setBackgroundResource(isShowLyrics ? R.drawable.music_lrc_close : R.drawable.music_lrc_open);
-        AnimationDrawable animation = (AnimationDrawable) mBinding.ivAlwaysOn.getBackground();
+        mBinding.ivLyricsSwitch.setBackgroundResource(isShowLyrics ? R.drawable.music_lrc_close : R.drawable.music_lrc_open);
+        AnimationDrawable animation = (AnimationDrawable) mBinding.ivLyricsSwitch.getBackground();
         animation.start();
         isShowLyrics = !isShowLyrics;
     }

@@ -82,7 +82,9 @@ public abstract class BasePlayActivity extends BaseTransitionActivity implements
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(aLong -> lyricsView.rollText(audioBinder.getProgress(), audioBinder.getDuration()));
-            mCompositeDisposable.add(mDisposableLyrics);
+            if (mCompositeDisposable != null) {
+                mCompositeDisposable.add(mDisposableLyrics);
+            }
         }
 
     }
@@ -94,7 +96,7 @@ public abstract class BasePlayActivity extends BaseTransitionActivity implements
     protected void switchPlayMode(ImageView imageView) {
         //获取当前的播放模式
         int playMode = audioBinder.getPlayMode();
-        LogUtil.d(TAG,"=============  切换模式  "+playMode);
+        LogUtil.d(TAG, "=============  切换模式  " + playMode);
 
         //根据当前播放模式进行其它模式切换
         switch (playMode) {

@@ -11,7 +11,8 @@ import com.yibao.music.util.SpUtils.ContentValue
  * Des：TODO
  */
 class SpUtils(context: Context, fileName: String?) {
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
 
     class ContentValue(var key: String, var value: Any)
 
@@ -51,9 +52,5 @@ class SpUtils(context: Context, fileName: String?) {
 
     fun clear() {
         sharedPreferences.edit().clear().apply()
-    }
-
-    init {
-        sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
     }
 }

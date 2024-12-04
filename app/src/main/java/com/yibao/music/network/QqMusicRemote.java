@@ -102,7 +102,7 @@ public class QqMusicRemote {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        LogUtil.d(TAG,"专辑图片获取失败"+ e.getMessage());
+                        LogUtil.d(TAG, "专辑图片获取失败" + e.getMessage());
                     }
                 });
     }
@@ -174,7 +174,7 @@ public class QqMusicRemote {
                 .subscribe(new BaseObserver<OnlineSongLrc>() {
                     @Override
                     public void onNext(OnlineSongLrc onlineSongLrc) {
-                            sendSearchLyricsResult(onlineSongLrc, songName, artist);
+                        sendSearchLyricsResult(onlineSongLrc, songName, artist);
                     }
 
                     @Override
