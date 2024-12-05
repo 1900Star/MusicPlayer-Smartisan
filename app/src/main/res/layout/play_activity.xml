@@ -323,6 +323,8 @@
         android:id="@+id/music_play"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         android:layout_marginBottom="30dp"
         android:contentDescription="@null"
         android:src="@drawable/btn_playing_play_selector"

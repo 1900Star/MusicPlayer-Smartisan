@@ -94,8 +94,8 @@ public class ImageUitl {
     public static void loadPlaceholder(Context context, String url, ImageView view) {
         if (context != null) {
             RequestOptions options = new RequestOptions();
-            options.placeholder(R.drawable.nina);
-            options.error(R.drawable.nina);
+//            options.placeholder(R.drawable.nina);
+//            options.error(R.drawable.nina);
             options.diskCacheStrategy(DiskCacheStrategy.ALL);
             Glide.with(context).load(url).apply(options).into(view);
         } else {

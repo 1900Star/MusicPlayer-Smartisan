@@ -159,18 +159,18 @@ public class MusicPlayService extends Service {
                 mediaPlayer = null;
             }
             // “>=” 确保模糊搜索时播放不出现索引越界
-            if (mMusicDataList != null && mMusicDataList.size() > 0) {
+            if (mMusicDataList != null && !mMusicDataList.isEmpty()) {
                 playPosition = playPosition >= mMusicDataList.size() ? 0 : playPosition;
                 mMusicInfo = mMusicDataList.get(playPosition);
                 LogUtil.d(TAG, "  cccc ===   cc   " + mMusicInfo.getTitle());
                 mediaPlayer = MediaPlayer.create(MusicPlayService.this, getSongFileUri());
-
                 mediaPlayer.setOnPreparedListener(this);
                 mediaPlayer.setOnCompletionListener(this);
                 String songName = StringUtil.getSongName(mMusicInfo.getTitle());
                 String artist = StringUtil.getArtist(mMusicInfo.getArtist());
                 boolean lyricIsExists = LyricsUtil.checkLyricFile(songName, artist);
                 if (!lyricIsExists && NetworkUtil.isNetworkConnected()) {
+                    // 自动下载歌词
                     QqMusicRemote.getSongLyrics(songName, artist);
                 }
                 mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_POSITION, playPosition));

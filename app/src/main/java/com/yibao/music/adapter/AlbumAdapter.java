@@ -2,6 +2,7 @@ package com.yibao.music.adapter;
 
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +89,8 @@ public class AlbumAdapter
         int position = albumlistHolder.getAdapterPosition();
 
         albumlistHolder.mBinding.tvAlbumListSongArtist.setText(info.getArtist());
-        ImageUitl.customLoadPic(mContext, StringUtil.getAlbum(2, info.getAlbumId(), info.getAlbumName()), R.drawable.noalbumcover_220, albumlistHolder.mBinding.ivItemAlbumList);
+        String album = StringUtil.getDownAlbum(info.getAlbumName(), info.getArtist());
+        ImageUitl.customLoadPic(mContext, album, R.drawable.noalbumcover_220, albumlistHolder.mBinding.ivItemAlbumList);
         albumlistHolder.mBinding.tvAlbumListSongName.setText(info.getAlbumName());
         String songCount = info.getSongCount() + "首";
         albumlistHolder.mBinding.tvAlbumListSongCount.setText(songCount);
@@ -116,8 +118,8 @@ public class AlbumAdapter
 
     private void setDataAlbumTile(AlbumTileHolder holder, AlbumInfo albumInfo) {
 
-
-        ImageUitl.customLoadPic(mContext, StringUtil.getAlbum(2, albumInfo.getAlbumId(), albumInfo.getAlbumName()), R.drawable.noalbumcover_220, holder.mBinding.ivAlbumTileAlbum);
+        String album = StringUtil.getDownAlbum(albumInfo.getAlbumName(), albumInfo.getArtist());
+        ImageUitl.customLoadPic(mContext, album, R.drawable.noalbumcover_220, holder.mBinding.ivAlbumTileAlbum);
         holder.mBinding.tvAlbumTileName.setText(albumInfo.getAlbumName());
 
         holder.mBinding.ivAlbumTileAlbum.setOnClickListener(view1 -> AlbumAdapter.this.openDetails(albumInfo, holder.getAdapterPosition()));

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.SeekBar;
 
@@ -101,6 +102,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             mAnimatorListener.pause();
             mAnimator.cancel();
         }
+        mHandler.removeCallbacksAndMessages(null);
     }
 
 
@@ -462,7 +464,6 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         isShowLyrics = !isShowLyrics;
     }
 
-
     @Override
     protected void updateMusicBarAndVolumeBar(SeekBar seekBar, int progress, boolean b) {
         int id = seekBar.getId();
@@ -479,7 +480,6 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             updateMusicVolume(progress);
         }
     }
-
 
     /**
      * 广播监听系统音量，同时更新VolumeSeekBar
@@ -514,18 +514,26 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         }
     }
 
+    private final Handler mHandler = new Handler();
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constant.SELECT_LYRICS) {
             if (data != null) {
-                String songMid = data.getStringExtra(Constant.SONGMID);
-                if (songMid != null) {
-                    LyricsUtil.deleteCurrentLyric(mCurrentMusicInfo.getTitle(), mCurrentMusicInfo.getArtist());
-                    QqMusicRemote.getOnlineLyrics(songMid, mCurrentMusicInfo.getTitle(), mCurrentMusicInfo.getArtist());
-                    showLyrics();
-                }
+                // 先删除当前歌词
+                LyricsUtil.deleteCurrentLyric(mCurrentMusicInfo.getTitle(), mCurrentMusicInfo.getArtist());
+                // 获取歌曲ID，下载歌词。
+                mHandler.postDelayed(() -> {
+                    String songMid = data.getStringExtra(Constant.SONGMID);
+                    if (songMid != null) {
+                        QqMusicRemote.getOnlineLyrics(songMid, mCurrentMusicInfo.getTitle(), mCurrentMusicInfo.getArtist());
+                        showLyrics();
+                    }
+                }, 600);
+
             }
         }
     }
+
 }

@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
+import com.yibao.music.base.listener.OnImagePathListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.fragment.dialogfrag.AlbumDetailDialogFragment;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
@@ -186,19 +187,26 @@ public class DetailsView
             ArtistInfo info = (ArtistInfo) bean;
             mArtist = info.getArtist();
             mAlbumId = info.getAlbumId();
-//            setMusicInfo(dataType, info.getAlbumName(), info.getArtist(), mAlbumId, info.getYear());
+            setMusicInfo(dataType, info.getAlbumName(), info.getArtist(), mAlbumId, info.getYear());
 
         } else if (dataType == Constant.NUMBER_TWO) {
             AlbumInfo info = (AlbumInfo) bean;
             mAlbumId = info.getAlbumId();
             mArtist = info.getAlbumName();
-//            setMusicInfo(dataType, info.getAlbumName(), info.getArtist(), mAlbumId, info.getYear());
+            setMusicInfo(dataType, info.getAlbumName(), info.getArtist(), mAlbumId, info.getYear());
 
         }
 
     }
 
 
+    /**
+     * @param dataType  1 歌手图片、2 专辑图片
+     * @param albumName a
+     * @param artist a
+     * @param albumId a
+     * @param issueYear i
+     */
     private void setMusicInfo(int dataType, String albumName, String artist, long albumId, int issueYear) {
         mTvArtistAlbumDetailsTitle.setText(albumName);
         mTvArtistAlbumDetailsArtist.setText(artist);
@@ -206,10 +214,12 @@ public class DetailsView
             if (!isSuccess) {
                 if (dataType == 1) {
                     QqMusicRemote.getArtistImg(getContext(), artist, url -> {
+                        LogUtil.d(TAG, "专辑URL：  " + url);
                         if (!url.isEmpty()) {
-                            Glide.with(getContext()).load(url).placeholder(R.drawable.noalbumcover_220).error(R.drawable.noalbumcover_220).into(mIvArtistAlbumDetails);
+//                            Glide.with(getContext()).load(url).placeholder(R.drawable.noalbumcover_220).error(R.drawable.noalbumcover_220).into(mIvArtistAlbumDetails);
                         }
                     });
+
 
                 } else {
                     QqMusicRemote.getAlbumImg(getContext(), albumName, url -> {

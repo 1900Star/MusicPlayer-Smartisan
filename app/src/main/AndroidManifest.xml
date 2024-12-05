@@ -50,7 +50,7 @@
         <activity
             android:name=".activity.SearchLyricsActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/ArtistTheme"
             android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".activity.SplashActivity"

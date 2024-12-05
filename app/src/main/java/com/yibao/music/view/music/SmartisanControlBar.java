@@ -29,6 +29,7 @@ import com.yibao.music.view.ProgressBtn;
  * @ Des:
  */
 public class SmartisanControlBar extends RelativeLayout implements View.OnClickListener {
+    RelativeLayout mRoot;
     TextView mSongName;
     TextView mSingerName;
     ImageView mButtonFavorite;
@@ -139,6 +140,7 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
 
     private void initView() {
         LayoutInflater.from(getContext()).inflate(R.layout.music_tabbar_smartisan, this, true);
+        mRoot = findViewById(R.id.smartisan_control_bar);
         mSongName = findViewById(R.id.music_float_song_name);
         mSingerName = findViewById(R.id.music_float_singer_name);
         mButtonFavorite = findViewById(R.id.music_floating_favorite);
@@ -160,6 +162,7 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
         mButtonPlay.setOnClickListener(this);
         mSingerName.setSelected(true);
         mSingerName.setSelected(true);
+
     }
 
     public SmartisanControlBar(Context context) {

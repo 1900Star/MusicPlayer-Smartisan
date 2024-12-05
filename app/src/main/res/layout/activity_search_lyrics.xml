@@ -7,22 +7,9 @@
     android:background="@color/colorWhite"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
+    android:theme="@style/AppTheme.NoActionBar"
     tools:context=".activity.SearchLyricsActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_search_lyrics"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/retry_search_lyrics" />
-    </androidx.appcompat.widget.Toolbar>
 
     <ImageView
         android:id="@+id/iv_search_down"
@@ -32,9 +19,8 @@
         android:contentDescription="@null"
         android:scaleType="centerCrop"
         android:src="@drawable/btn_playing_back_selector"
-        app:layout_constraintBottom_toBottomOf="@id/toolbar_search_lyrics"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/toolbar_search_lyrics" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/main_title"
@@ -45,10 +31,10 @@
         android:textColor="@color/aboutSign"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/toolbar_search_lyrics"
+        app:layout_constraintBottom_toBottomOf="@id/iv_search_down"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/toolbar_search_lyrics" />
+        app:layout_constraintTop_toTopOf="@id/iv_search_down" />
 
     <TextView
         android:id="@+id/tv_search_lyrics_complete"
@@ -61,9 +47,9 @@
         android:padding="5dp"
         android:text="@string/apply_lyrics"
         android:textColor="@color/aboutSign"
-        app:layout_constraintBottom_toBottomOf="@id/toolbar_search_lyrics"
+        app:layout_constraintBottom_toBottomOf="@id/iv_search_down"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/toolbar_search_lyrics" />
+        app:layout_constraintTop_toTopOf="@id/iv_search_down" />
 
     <LinearLayout
         android:id="@+id/ll_search_name"
@@ -76,7 +62,7 @@
         android:background="@drawable/shape_btn_edit_selector"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_search_lyrics">
+        app:layout_constraintTop_toBottomOf="@id/iv_search_down">
 
         <TextView
             android:layout_width="wrap_content"
@@ -106,7 +92,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/shape_btn_edit_selector"
         android:gravity="center_vertical"

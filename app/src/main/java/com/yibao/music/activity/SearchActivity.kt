@@ -44,7 +44,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
     override fun initData() {
         // pageType 0 toolbar上的搜索，1 播放界面点击歌曲名，直接以歌手搜索。
         val pageType = intent.getIntExtra(Constant.PAGE_TYPE, 0)
-        LogUtil.d(TAG,"PageType   $pageType")
+        LogUtil.d(TAG, "PageType   $pageType")
         audioBinder = MusicActivity.audioBinder
         mBinding.smartisanControlBar.setPbColorAndPreBtnGone()
         // 从PlayActivity过来的
@@ -95,7 +95,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
             updateLyric()
             setDuration()
         }
-//        startPlayActivity()
+
     }
 
     private fun setData(musicList: List<MusicBean>) {
@@ -107,8 +107,6 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
             mBinding.tvNoSearchResult.visibility = View.GONE
             mBinding.recyclerSearch.visibility = View.VISIBLE
             val editCondition = mBinding.editSearch.text.toString().trim()
-
-
             // 列表数据
             mAdapter = DetailsViewAdapter(this, musicList, mPosition, editCondition)
             mBinding.recyclerSearch.adapter = mAdapter
@@ -143,6 +141,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
                 searchMusic(s.toString().trim(), mPosition)
             }
         })
+        mBinding.smartisanControlBar.setOnClickListener { startPlayActivity() }
         // 底部控制Bar按钮监听
         mBinding.smartisanControlBar.setClickListener { clickFlag: Int ->
             LogUtil.d(TAG, clickFlag.toString())
@@ -151,6 +150,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
                     audioBinder!!.updateFavorite()
                     checkCurrentSongIsFavorite(mMusicBean, null, mBinding.smartisanControlBar)
                 }
+
                 Constant.NUMBER_TWO -> audioBinder!!.playPre()
                 Constant.NUMBER_THREE -> switchPlayState()
                 Constant.NUMBER_FOUR -> audioBinder!!.playNext()
@@ -166,6 +166,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
                 mBinding.editSearch.setText("")
                 mAdapter?.clear()
             }
+
             R.id.iv_clear_history -> {
                 LogUtil.d(TAG, "历史点击")
                 // 清空历史记录
@@ -174,15 +175,19 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
             R.id.tv_search_all -> {
                 switchListCategory(14)
             }
+
             R.id.tv_search_song -> {
                 switchListCategory(11)
             }
+
             R.id.tv_search_album -> {
                 switchListCategory(12)
             }
+
             R.id.tv_search_artist -> {
                 switchListCategory(13)
             }
+
             R.id.tv_search_cancel -> {
                 SoftKeybordUtil.showAndHintSoftInput(
                     mInputMethodManager, 1, InputMethodManager.RESULT_UNCHANGED_SHOWN
@@ -269,16 +274,19 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
                 mBinding.searchCategoryRoot.tvSearchSong.setTextColor(ColorUtil.wihtle)
                 mBinding.searchCategoryRoot.tvSearchSong.setBackgroundResource(R.drawable.btn_category_start_down_selector)
             }
+
             12 -> {
                 setAllCategoryNotNormal()
                 mBinding.searchCategoryRoot.tvSearchAlbum.setTextColor(ColorUtil.wihtle)
                 mBinding.searchCategoryRoot.tvSearchAlbum.setBackgroundResource(R.drawable.btn_category_middle_down_selector)
             }
+
             13 -> {
                 setAllCategoryNotNormal()
                 mBinding.searchCategoryRoot.tvSearchArtist.setBackgroundResource(R.drawable.btn_category_middle_down_selector)
                 mBinding.searchCategoryRoot.tvSearchArtist.setTextColor(ColorUtil.wihtle)
             }
+
             14 -> {
                 setAllCategoryNotNormal()
                 mBinding.searchCategoryRoot.tvSearchAll.setTextColor(ColorUtil.wihtle)
@@ -304,9 +312,11 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
                 mBinding.smartisanControlBar.animatorOnResume(audioBinder!!.isPlaying)
                 mBinding.smartisanControlBar.updatePlayBtnStatus(audioBinder!!.isPlaying)
             }
+
             1 -> {
                 checkCurrentSongIsFavorite(mMusicBean, null, mBinding.smartisanControlBar)
             }
+
             2 -> {
                 mBinding.smartisanControlBar.updatePlayBtnStatus(audioBinder!!.isPlaying)
                 mBinding.smartisanControlBar.animatorOnPause()

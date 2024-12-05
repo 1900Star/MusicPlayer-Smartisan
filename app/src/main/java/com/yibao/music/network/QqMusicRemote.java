@@ -34,6 +34,7 @@ import io.reactivex.schedulers.Schedulers;
 public class QqMusicRemote {
     private static final String TAG = "====" + QqMusicRemote.class.getSimpleName() + "    ";
 
+    // 歌曲专辑图片
     public static void getSongImg(Context context, String songName, OnImagePathListener listener) {
         String albumUrlHead = "http://y.gtimg.cn/music/photo_new/T002R500x500M000";
         RetrofitHelper.getMusicService().search(songName, 1)
@@ -83,6 +84,13 @@ public class QqMusicRemote {
                 });
     }
 
+    /**
+     * 获取专辑图片
+     *
+     * @param context
+     * @param key
+     * @param listener
+     */
     public static void getAlbumImg(Context context, String key, OnImagePathListener listener) {
         String albumUrlHead = "http://y.gtimg.cn/music/photo_new/T002R500x500M000";
         RetrofitHelper.getMusicService().searchAlbum(key, 1)
@@ -107,6 +115,12 @@ public class QqMusicRemote {
                 });
     }
 
+    /**
+     * Service中根据歌名和歌手自动获取歌词
+     *
+     * @param songName s
+     * @param artist   a
+     */
     public static void getSongLyrics(String songName, String artist) {
         RetrofitHelper.getMusicService().search(songName, 1)
                 .subscribeOn(Schedulers.io())
@@ -168,6 +182,13 @@ public class QqMusicRemote {
                 });
     }
 
+    /**
+     * 根据歌曲ID搜索歌词，并将歌词与歌名、歌手绑定保存到本地。
+     *
+     * @param songMid  歌曲ID
+     * @param songName
+     * @param artist
+     */
     public static void getOnlineLyrics(String songMid, String songName, String artist) {
         LogUtil.d(TAG, songMid + songName + artist);
         RetrofitHelper.getMusicService().getOnlineSongLrc(songMid).subscribeOn(Schedulers.io())
@@ -188,6 +209,7 @@ public class QqMusicRemote {
     private static void sendSearchLyricsResult(OnlineSongLrc onlineSongLrc, String songName, String artist) {
         String lyric = onlineSongLrc.getLyric();
         if (lyric != null) {
+            // 将歌词保存到本地。
             boolean b = DownloadLyricsUtil.saveLyrics(lyric, songName, artist);
             LyricDownBean lyricDownBean;
             if (lyric.contains(Constant.PURE_MUSIC)) {
@@ -195,6 +217,7 @@ public class QqMusicRemote {
             } else {
                 lyricDownBean = new LyricDownBean(b, b ? Constant.MUSIC_LYRIC_OK : Constant.MUSIC_LYRIC_FAIL);
             }
+            // 发送歌词保存状态
             RxBus.getInstance().post(Constant.MUSIC_LYRIC_OK, lyricDownBean);
         } else {
             RxBus.getInstance().post(Constant.MUSIC_LYRIC_OK, new LyricDownBean(false, Constant.MUSIC_LYRIC_FAIL));

@@ -2,8 +2,7 @@ package com.yibao.music.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.yibao.music.fragment.AlbumCategoryFragment.Companion.newInstance
-import com.yibao.music.view.SwipeItemLayout
+import com.yibao.music.fragment.AlbumCategoryFragment
 import com.yibao.music.viewmodel.AlbumViewModel
 
 /**
@@ -18,7 +17,7 @@ class AlbumViewPagerAdapter(
 ) :
     FragmentStateAdapter(fragment) {
     override fun createFragment(position: Int): Fragment {
-        return newInstance(position, albumViewModel)
+        return AlbumCategoryFragment.newInstance(position, albumViewModel)
     }
 
     override fun getItemCount(): Int {

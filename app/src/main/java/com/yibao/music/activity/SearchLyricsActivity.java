@@ -34,9 +34,8 @@ import io.reactivex.schedulers.Schedulers;
 public class SearchLyricsActivity extends BaseBindingActivity<ActivitySearchLyricsBinding> {
     protected final String TAG = "====" + this.getClass().getSimpleName() + "    ";
 
-    private List<SearchLyricsBean> mLyricsBeanList;
+    private final List<SearchLyricsBean> mLyricsBeanList = new ArrayList<>();
     private String mSongMid;
-
 
     @Override
     public void initView() {
@@ -45,7 +44,6 @@ public class SearchLyricsActivity extends BaseBindingActivity<ActivitySearchLyri
 
     @Override
     public void initData() {
-        mLyricsBeanList = new ArrayList<>();
         String mSongName = getIntent().getStringExtra(Constant.SONG_NAME);
         String mSongArtist = getIntent().getStringExtra(Constant.SONG_ARTIST);
         LogUtil.d(TAG, mSongName + " == " + mSongArtist);
@@ -135,7 +133,6 @@ public class SearchLyricsActivity extends BaseBindingActivity<ActivitySearchLyri
 
     private void setTvIndex(int size) {
         String lyricsCount = size > 1 ? "搜索到" + size + "个结果 (右滑查看多个歌词)" : "搜索到" + size + "个结果";
-//        String lyricsCount = "搜索到" + size + "个结果";
         mBinding.tvSearchLyricsCount.setText(lyricsCount);
         if (size != 0) {
             mBinding.tvLyricsPageIndex.setText("1");
@@ -144,6 +141,7 @@ public class SearchLyricsActivity extends BaseBindingActivity<ActivitySearchLyri
 
     private void searchComplete() {
         LogUtil.d(TAG, "搜索歌词完成");
+        // 传递歌曲ID ，用于搜索歌词。
         Intent intent = new Intent();
         intent.putExtra(Constant.SONGMID, mSongMid);
         setResult(Constant.SELECT_LYRICS, intent);

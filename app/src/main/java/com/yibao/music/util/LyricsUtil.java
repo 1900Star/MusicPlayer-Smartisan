@@ -38,7 +38,7 @@ public class LyricsUtil {
 
 
     /**
-     * 当前歌词不正确，重新下载。
+     * 当前歌词不正确，删除重新下载。
      *
      * @param name
      * @param artist
