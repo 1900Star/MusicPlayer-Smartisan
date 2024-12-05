@@ -254,7 +254,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
             musicItem = TitleArtistUtil.getMusicBean(musicItem)
             mBinding.smartisanControlBar.setSongName(musicItem.title)
             mBinding.smartisanControlBar.setSingerName(musicItem.artist)
-            mBinding.smartisanControlBar.setAlbumUrl(FileUtil.getAlbumUrl(musicItem, 1))
+            mBinding.smartisanControlBar.setAlbumUrl(this, musicItem)
         }
         if (audioBinder != null) {
             mBinding.smartisanControlBar.updatePlayBtnStatus(audioBinder!!.isPlaying)

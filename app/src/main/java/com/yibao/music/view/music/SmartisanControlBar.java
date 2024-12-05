@@ -1,6 +1,7 @@
 package com.yibao.music.view.music;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -11,10 +12,14 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
+import com.yibao.music.model.MusicBean;
+import com.yibao.music.network.QqMusicRemote;
 import com.yibao.music.util.AnimationUtil;
 import com.yibao.music.util.Constant;
+import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
@@ -29,6 +34,8 @@ import com.yibao.music.view.ProgressBtn;
  * @ Des:
  */
 public class SmartisanControlBar extends RelativeLayout implements View.OnClickListener {
+
+    private final String TAG = "=== SmartisanControlBar : ";
     RelativeLayout mRoot;
     TextView mSongName;
     TextView mSingerName;
@@ -133,10 +140,26 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
         mSingerName.setText(StringUtil.getArtist(singerName));
     }
 
-    public void setAlbumUrl(String albumUrl) {
+    public void setAlbumUrl(Activity activity, MusicBean bean) {
+        String albumUrl = FileUtil.getAlbumUrl(bean, 1);
+        LogUtil.d(TAG, "Album本地URL " + albumUrl);
+        try {
+            ImageUitl.loadPic(activity, albumUrl, mSongAlbulm, R.drawable.playing_cover_lp, isSuccess -> {
+                if (!isSuccess) {
+                    QqMusicRemote.getSongImg(getContext(), bean.getTitle(), url -> {
+                        if (url != null) {
+                            Glide.with(getContext()).load(url).placeholder(R.drawable.playing_cover_lp).error(R.drawable.playing_cover_lp).into(mSongAlbulm);
+                        }
+                    });
+                }
+            });
+        } catch (Exception e) {
+            LogUtil.d(TAG, e.getMessage());
+        }
 
-        ImageUitl.loadPlaceholder(getContext(), albumUrl, mSongAlbulm);
+
     }
+
 
     private void initView() {
         LayoutInflater.from(getContext()).inflate(R.layout.music_tabbar_smartisan, this, true);

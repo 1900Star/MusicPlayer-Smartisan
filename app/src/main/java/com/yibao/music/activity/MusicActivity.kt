@@ -450,9 +450,15 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         mBinding.smartisanControlBar.setSongName(musicItem.title)
         // 更新歌手名称
         mBinding.smartisanControlBar.setSingerName(mCurrentMusicBean!!.artist)
+
+
+
         // 设置专辑
-        mBinding.smartisanControlBar.setAlbumUrl(FileUtil.getAlbumUrl(mCurrentMusicBean, 1))
+        mBinding.smartisanControlBar.setAlbumUrl(this,mCurrentMusicBean)
     }
+
+
+
 
     private fun updateQqBar() {
         if (isShowQqBar) {
