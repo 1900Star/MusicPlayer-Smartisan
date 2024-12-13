@@ -8,7 +8,6 @@ class AlbumViewModel : BaseViewModel() {
 
     val albumViewModel = SingleLiveEvent<AlbumInfo>()
     fun postAlbum(albumInfo: AlbumInfo) {
-
         albumViewModel.postValue(albumInfo)
     }
 }

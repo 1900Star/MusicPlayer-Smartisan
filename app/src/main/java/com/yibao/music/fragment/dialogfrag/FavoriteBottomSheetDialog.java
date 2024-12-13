@@ -159,7 +159,7 @@ public class FavoriteBottomSheetDialog
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.tv_play_all) {
-            if (mList != null && mList.size() > 0) {
+            if (mList != null && !mList.isEmpty()) {
                 Random random = new Random();
                 int position = random.nextInt(mList.size());
                 playMusic(position);
@@ -169,7 +169,7 @@ public class FavoriteBottomSheetDialog
         } else if (id == R.id.tv_size || id == R.id.tv_favorite) {
             backTop();
         } else if (id == R.id.tv_clear) {
-            if (mList != null && mList.size() > 0) {
+            if (mList != null && !mList.isEmpty()) {
                 // playstatus 在这里暂时用来做删除播放列表和收藏列表的标识，在DeletePlayListDialog中使用，2 为播放列表PlayActivity界面 ，3 为收藏列表FavoriteBottomDialog界面。
                 PlayListBean bean = new PlayListBean("收藏的所有", (long) Constant.NUMBER_THREE);
                 DeletePlayListDialog.newInstance(bean, Constant.NUMBER_THREE, this).show(((AppCompatActivity) mContext).getSupportFragmentManager(), "favoriteList");

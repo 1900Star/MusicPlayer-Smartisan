@@ -160,5 +160,5 @@ class SongAdapter(
     interface OnShowCbListener {
         fun showCb(showCb: Boolean)
     }
-    
+
 }

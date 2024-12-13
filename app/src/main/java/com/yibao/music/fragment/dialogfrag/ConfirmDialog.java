@@ -14,6 +14,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
+import com.yibao.music.base.listener.OnConfirmListener;
 import com.yibao.music.model.AddAndDeleteListBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
@@ -28,7 +29,7 @@ import com.yibao.music.util.RxBus;
  *
  * @author Stran
  */
-public class DeletePlayListDialog
+public class ConfirmDialog
         extends DialogFragment implements View.OnClickListener {
 
 
@@ -37,16 +38,14 @@ public class DeletePlayListDialog
     private TextView mTvDelete;
     private TextView mTvCancelDelete;
     private PlayListBean mPlayListBean;
-    private RxBus mBus;
     private int mPageType;
-    private static SwipeRefreshLayout.OnRefreshListener mListener;
+    private static OnConfirmListener mListener;
 
-    public static DeletePlayListDialog newInstance(PlayListBean musicInfo, int pageType, SwipeRefreshLayout.OnRefreshListener listener) {
+    public static ConfirmDialog newInstance(PlayListBean musicInfo, OnConfirmListener listener) {
         mListener = listener;
         Bundle bundle = new Bundle();
         bundle.putParcelable("musicInfo", musicInfo);
-        bundle.putInt("pageType", pageType);
-        DeletePlayListDialog deletePlayListDialog = new DeletePlayListDialog();
+        ConfirmDialog deletePlayListDialog = new ConfirmDialog();
         deletePlayListDialog.setArguments(bundle);
         return deletePlayListDialog;
     }
@@ -56,7 +55,7 @@ public class DeletePlayListDialog
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        mView = requireActivity().getLayoutInflater().inflate(R.layout.delete_list_dialog, null);
+        mView = requireActivity().getLayoutInflater().inflate(R.layout.confirm_dialog, null);
         builder.setView(mView);
         AlertDialog dialog = builder.create();
         Window window = dialog.getWindow();
@@ -81,12 +80,10 @@ public class DeletePlayListDialog
         TextView tvDeleteTitle = mView.findViewById(R.id.tv_delete_list_title);
         mTvCancelDelete = mView.findViewById(R.id.tv_delete_list_cancel);
         mTvDelete = mView.findViewById(R.id.tv_delete_list_continue);
-        mBus = RxBus.getInstance();
-        MusicBeanDao musicDao = MusicApplication.getInstance().getMusicDao();
         mPlayListBean = getArguments().getParcelable("musicInfo");
         mPageType = getArguments().getInt("pageType");
         if (mPlayListBean != null) {
-            String deleteTitle = getString(R.string.confirm_delete) + mPlayListBean.getTitle() + getString(R.string.song_list);
+            String deleteTitle = getString(R.string.confirm_delete) + " " + mPlayListBean.getTitle() + " " + getString(R.string.song_list);
             tvDeleteTitle.setText(deleteTitle);
         }
     }
@@ -97,19 +94,9 @@ public class DeletePlayListDialog
         if (id == R.id.tv_delete_list_cancel) {
             dismiss();
         } else if (id == R.id.tv_delete_list_continue) {
-            deletePlayList();
+            mListener.confirm();
             dismiss();
         }
-    }
-
-
-    private void deletePlayList() {
-        if (mPageType == Constant.NUMBER_TWO) {
-            // 同步更新列表中，的歌曲的列表标识 (更新为“LSP_98”)
-            MusicDaoUtil.setMusicListFlag(mPlayListBean);
-        }
-        mBus.post(new AddAndDeleteListBean(mPageType));
-        mListener.onRefresh();
     }
 
 

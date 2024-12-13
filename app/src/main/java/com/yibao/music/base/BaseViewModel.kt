@@ -1,16 +1,15 @@
 package com.yibao.music.base
 
 import androidx.lifecycle.ViewModel
-import com.yibao.music.base.listener.OnNetworkDataListener
+import androidx.lifecycle.viewModelScope
+import com.yibao.music.MusicApplication
 import com.yibao.music.livedata.SingleLiveEvent
 import com.yibao.music.model.ErrorBean
-import com.yibao.music.util.LogUtil
+import com.yibao.music.model.Message
+import com.yibao.music.model.greendao.MusicBeanDao
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import okhttp3.*
-import okio.Buffer
-import java.io.IOException
-import java.nio.charset.Charset
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.launch
 
 /**
  * @author  luoshipeng
@@ -21,7 +20,8 @@ import java.util.concurrent.TimeUnit
 open class BaseViewModel : ViewModel() {
 
     protected val mTag = " ==== " + this::class.java.simpleName + "  "
-    private val mTagUrl = " ==URL== " + this::class.java.simpleName + "  "
+
+    val resultModel = SingleLiveEvent<Message>()
 
     protected var job: Job? = null
     override fun onCleared() {
@@ -31,39 +31,26 @@ open class BaseViewModel : ViewModel() {
     }
 
 
-
     /**
      * 失败发送
      */
     val errorLiveData = SingleLiveEvent<ErrorBean>()
 
-    fun postErrorValue(errorCode: Int, errorMessage: String, errorUrl: String) {
+    fun postError(errorMessage: String) {
 
-        errorLiveData.postValue(ErrorBean(errorCode, errorMessage, errorUrl))
+        errorLiveData.postValue(ErrorBean(100, errorMessage))
     }
 
-    private fun getClient(): OkHttpClient {
-        var okHttpClient: OkHttpClient? = null
-        if (okHttpClient == null) {
-            synchronized(BaseViewModel::class.java) {
-                if (okHttpClient == null) {
-                    okHttpClient =
-                        OkHttpClient.Builder()
-                            .pingInterval(10, TimeUnit.SECONDS)
-                            .connectTimeout(3, TimeUnit.SECONDS)
-                            .writeTimeout(3, TimeUnit.SECONDS)
-                            .readTimeout(3, TimeUnit.SECONDS)
-                            .build()
-                }
 
-            }
-        }
-
-        return okHttpClient!!
+    fun ok(code: Int) {
+        resultModel.postValue(Message(code, "完成"))
     }
 
-    fun postValue() {
-
+    fun fail(msg: String) {
+        resultModel.postValue(Message(100, msg))
     }
 
+    protected fun musicDao(): MusicBeanDao {
+        return MusicApplication.getInstance().musicDao
+    }
 }

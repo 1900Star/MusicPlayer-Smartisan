@@ -6,33 +6,29 @@ import android.view.View;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.adapter.PlayListAdapter;
-import com.yibao.music.base.bindings.BaseBindingAdapter;
 import com.yibao.music.base.bindings.BaseMusicFragmentDev;
+import com.yibao.music.base.listener.OnConfirmListener;
 import com.yibao.music.base.listener.OnFinishActivityListener;
 import com.yibao.music.databinding.PlayListFragmentBinding;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
+import com.yibao.music.fragment.dialogfrag.ConfirmDialog;
 import com.yibao.music.fragment.dialogfrag.DeletePlayListDialog;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
+import com.yibao.music.model.Message;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
-import com.yibao.music.model.greendao.PlayListBeanDao;
 import com.yibao.music.util.Constant;
-import com.yibao.music.util.ThreadPoolProxyFactory;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.MusicToolBar;
 import com.yibao.music.viewmodel.PlayListViewModel;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import io.reactivex.disposables.Disposable;
 
 
 /**
@@ -52,13 +48,13 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
 
     private static String mSongName;
 
-    private Disposable mAddDeleteListDisposable;
+
     private static ArrayList<String> mArrayLisOpenDetail;
     private String mPlayListTitle;
     private static boolean isFromPlayListActivity;
 
-    private PlayListBeanDao mPlayListDao;
-    private PlayListViewModel mViewModel;
+
+    private final PlayListViewModel mViewModel = new PlayListViewModel();
 
     @Override
     public void initView() {
@@ -68,8 +64,6 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
 
         getMBinding().musicBar.setToolbarTitle(getString(R.string.play_list));
         getMBinding().musicBar.setVisibility(isFromPlayListActivity && mSp.getInt(Constant.ADD_TO_PLAY_LIST_FLAG) == Constant.NUMBER_ONE ? View.GONE : View.VISIBLE);
-        mPlayListDao = MusicApplication.getInstance().getPlayListDao();
-        mViewModel = new PlayListViewModel();
 
         initListener();
     }
@@ -79,6 +73,27 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
         super.onResume();
         mViewModel.getPlayList();
         mViewModel.getListModel().observe(this, this::setData);
+        mViewModel.getResultModel().observe(this, this::ok);
+        mViewModel.getErrorLiveData().observe(this, errorBean -> ToastUtil.songalreadyExist(mContext));
+        mViewModel.getEditModel().observe(this, errorBean -> {
+
+
+            AddListDialog.newInstance(2, errorBean.getErrorMessage(), false, this)
+                    .show(getChildFragmentManager(), "addList");
+        });
+
+    }
+
+    private void ok(Message message) {
+
+        if (message.getCode() == 2) {
+            ToastUtil.show(requireActivity(), "已删除");
+            onRefresh();
+        } else {
+
+            ToastUtil.show(requireActivity(), "已添加");
+            ((OnFinishActivityListener) mContext).finishActivity();
+        }
     }
 
     private void setData(List<PlayListBean> playList) {
@@ -101,16 +116,11 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
         // 长按删除
         mAdapter.setItemLongClickListener((musicInfo, currentPosition) -> {
             if (!isFromPlayListActivity) {
-                DeletePlayListDialog.newInstance(musicInfo, Constant.NUMBER_TWO, PlayListFragment.this).show(PlayListFragment.this.getChildFragmentManager(), "deleteList");
+                ConfirmDialog.newInstance(musicInfo, () -> mViewModel.deletePlayList(musicInfo)).show(PlayListFragment.this.getChildFragmentManager(), "deleteList");
             }
         });
         // 编辑按钮
-        mAdapter.setItemEditClickListener(currentPosition -> {
-            if (!getPlayList().isEmpty()) {
-                String currentTitle = getPlayList().get(currentPosition).getTitle();
-                AddListDialog.newInstance(2, currentTitle, false, this).show(getChildFragmentManager(), "addList");
-            }
-        });
+        mAdapter.setItemEditClickListener(currentPosition -> mViewModel.editPlayList(currentPosition));
     }
 
     @Override
@@ -118,12 +128,6 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
 
     }
 
-
-    private List<PlayListBean> getPlayList() {
-        List<PlayListBean> playListBeans = mPlayListDao.queryBuilder().list();
-        Collections.sort(playListBeans);
-        return playListBeans;
-    }
 
     private void initListener() {
         getMBinding().llAddNewPlayList.setOnClickListener(v ->
@@ -179,22 +183,10 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
         if (mContext instanceof PlayListActivity) {
             // 批量添加
             if (mArrayLisOpenDetail != null && !mArrayLisOpenDetail.isEmpty()) {
-                ThreadPoolProxyFactory.newInstance().execute(() -> {
-                    for (String songTitle : mArrayLisOpenDetail) {
-                        List<MusicBean> musicBeanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle()), MusicBeanDao.Properties.Title.eq(songTitle)).build().list();
-                        if (musicBeanList.isEmpty()) {
-                            insertSongToList(playListBean, songTitle);
-                        }
-                    }
-                });
+                mViewModel.insertSongsToList(playListBean, mArrayLisOpenDetail);
             } else {
                 // 单曲添加
-                List<MusicBean> beanList = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.PlayListFlag.eq(playListBean.getTitle()), MusicBeanDao.Properties.Title.eq(mSongName)).build().list();
-                if (!beanList.isEmpty()) {
-                    ToastUtil.songalreadyExist(mContext);
-                } else {
-                    insertSongToList(playListBean, mSongName);
-                }
+                mViewModel.insertSongSingle(playListBean, mSongName);
             }
             ToastUtil.show(requireActivity(), "已添加");
             ((OnFinishActivityListener) mContext).finishActivity();
@@ -202,18 +194,6 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
         }
     }
 
-    private void insertSongToList(PlayListBean playListBean, String songName) {
-        List<MusicBean> musicBeans = mMusicBeanDao.queryBuilder().where(MusicBeanDao.Properties.Title.eq(songName)).build().list();
-        if (!musicBeans.isEmpty()) {
-            MusicBean musicBean = musicBeans.get(0);
-            musicBean.setPlayListFlag(playListBean.getTitle());
-            musicBean.setAddListTime(System.currentTimeMillis());
-            mMusicBeanDao.update(musicBean);
-            // 更新列表的歌曲数量
-            playListBean.setSongCount(playListBean.getSongCount() + 1);
-            mPlayListDao.update(playListBean);
-        }
-    }
 
     @Override
     protected void deleteItem(int musicPosition) {
@@ -239,10 +219,6 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
         if (mSp.getInt(Constant.ADD_TO_PLAY_LIST_FLAG) == Constant.NUMBER_ZERO) {
             isFromPlayListActivity = false;
         }
-        if (mAddDeleteListDisposable != null) {
-            mAddDeleteListDisposable.dispose();
-            mAddDeleteListDisposable = null;
-        }
     }
 
 
@@ -260,4 +236,6 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
             return false;
         }
     }
+
+
 }

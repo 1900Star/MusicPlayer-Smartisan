@@ -6,4 +6,4 @@ package com.yibao.music.model
  * className   ErrorBean
  * Des：TODO
  */
-data class ErrorBean(val errorCode: Int, val errorMessage: String, val errorUrl: String)
+data class ErrorBean(val errorCode: Int, val errorMessage: String)

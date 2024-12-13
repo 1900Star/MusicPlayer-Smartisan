@@ -16,7 +16,12 @@ import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog
 import com.yibao.music.model.MusicBean
 import com.yibao.music.service.MusicPlayService
 import com.yibao.music.service.MusicPlayService.AudioBinder
-import com.yibao.music.util.*
+import com.yibao.music.util.ColorUtil
+import com.yibao.music.util.Constant
+import com.yibao.music.util.LogUtil
+import com.yibao.music.util.LyricsUtil
+import com.yibao.music.util.SoftKeybordUtil
+import com.yibao.music.util.TitleArtistUtil
 import com.yibao.music.viewmodel.SearchViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -47,12 +52,12 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
         LogUtil.d(TAG, "PageType   $pageType")
         audioBinder = MusicActivity.audioBinder
         mBinding.smartisanControlBar.setPbColorAndPreBtnGone()
-        // 从PlayActivity过来的
+        // 从PlayActivity过来的,按歌手搜索。
         if (pageType > Constant.NUMBER_ZERO) {
             mMusicBean = intent.getParcelableExtra(Constant.MUSIC_BEAN)
 
             mBinding.editSearch.setText(mMusicBean!!.artist)
-            switchListCategory(13)
+            switchListCategory(Constant.SEARCH_SONG_FOR_ARTIST)
 
         } else {
             // 加载历史记录
@@ -173,19 +178,19 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
             }
 
             R.id.tv_search_all -> {
-                switchListCategory(14)
+                switchListCategory(Constant.SEARCH_SONG_FOR_ALL)
             }
 
             R.id.tv_search_song -> {
-                switchListCategory(11)
+                switchListCategory(Constant.SEARCH_SONG_FOR_NAME)
             }
 
             R.id.tv_search_album -> {
-                switchListCategory(12)
+                switchListCategory(Constant.SEARCH_SONG_FOR_ALL)
             }
 
             R.id.tv_search_artist -> {
-                switchListCategory(13)
+                switchListCategory(Constant.SEARCH_SONG_FOR_ARTIST)
             }
 
             R.id.tv_search_cancel -> {
@@ -247,11 +252,10 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
         mBinding.smartisanControlBar.setMaxProgress(duration)
     }
 
-    private fun setMusicInfo(musicItem: MusicBean?) {
-        var musicItem = musicItem
-        if (musicItem != null) {
+    private fun setMusicInfo(bean: MusicBean?) {
+        if (bean != null) {
             mBinding.smartisanControlBar.visibility = View.VISIBLE
-            musicItem = TitleArtistUtil.getMusicBean(musicItem)
+            val musicItem = TitleArtistUtil.getMusicBean(bean)
             mBinding.smartisanControlBar.setSongName(musicItem.title)
             mBinding.smartisanControlBar.setSingerName(musicItem.artist)
             mBinding.smartisanControlBar.setAlbumUrl(this, musicItem)
@@ -269,25 +273,25 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
         val searchKey = mBinding.editSearch.text.trim().toString()
         mViewModel.searchMusic(searchKey, position)
         when (position) {
-            11 -> {
+            Constant.SEARCH_SONG_FOR_NAME -> {
                 setAllCategoryNotNormal()
                 mBinding.searchCategoryRoot.tvSearchSong.setTextColor(ColorUtil.wihtle)
                 mBinding.searchCategoryRoot.tvSearchSong.setBackgroundResource(R.drawable.btn_category_start_down_selector)
             }
 
-            12 -> {
+            Constant.SEARCH_SONG_FOR_ALBUM -> {
                 setAllCategoryNotNormal()
                 mBinding.searchCategoryRoot.tvSearchAlbum.setTextColor(ColorUtil.wihtle)
                 mBinding.searchCategoryRoot.tvSearchAlbum.setBackgroundResource(R.drawable.btn_category_middle_down_selector)
             }
 
-            13 -> {
+            Constant.SEARCH_SONG_FOR_ARTIST -> {
                 setAllCategoryNotNormal()
                 mBinding.searchCategoryRoot.tvSearchArtist.setBackgroundResource(R.drawable.btn_category_middle_down_selector)
                 mBinding.searchCategoryRoot.tvSearchArtist.setTextColor(ColorUtil.wihtle)
             }
 
-            14 -> {
+            Constant.SEARCH_SONG_FOR_ALL -> {
                 setAllCategoryNotNormal()
                 mBinding.searchCategoryRoot.tvSearchAll.setTextColor(ColorUtil.wihtle)
                 mBinding.searchCategoryRoot.tvSearchAll.setBackgroundResource(R.drawable.btn_category_end_down_selector)

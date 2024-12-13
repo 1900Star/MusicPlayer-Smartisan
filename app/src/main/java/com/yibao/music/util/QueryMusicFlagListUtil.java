@@ -29,7 +29,7 @@ public class QueryMusicFlagListUtil {
 
 //        LogUtil.d("lsp", "  数据源 pageType  ==   " + pageFlag + "  condition  =  " + condition + " = " + b);
 
-        if (condition != null && !condition.equals("")) {
+        if (condition != null && !condition.isEmpty()) {
             WhereCondition whereCondition = null;
             if (pageFlag == Constant.NUMBER_FIVE) {
                 // 自定义播放列表
@@ -40,16 +40,16 @@ public class QueryMusicFlagListUtil {
                 // 专辑列表数据
             } else if (pageFlag == Constant.NUMBER_SEVEN) {
                 whereCondition = MusicBeanDao.Properties.Album.eq(condition);
-            } else if (pageFlag == Constant.NUMBER_ELEVEN) {
+            } else if (pageFlag == Constant.SEARCH_SONG_FOR_NAME) {
                 // 11 表示按歌曲搜索，歌曲 like 关键字
                 whereCondition = MusicBeanDao.Properties.Title.like(condition);
-            } else if (pageFlag == Constant.NUMBER_TWELVE) {
+            } else if (pageFlag == Constant.SEARCH_SONG_FOR_ALBUM) {
                 // 12 表示按专辑搜索
                 whereCondition = MusicBeanDao.Properties.Album.eq(condition);
-            } else if (pageFlag == Constant.NUMBER_THIRTEEN) {
+            } else if (pageFlag == Constant.SEARCH_SONG_FOR_ARTIST) {
                 // 13 表示按艺术家搜索
                 whereCondition = MusicBeanDao.Properties.Artist.eq(condition);
-            } else if (pageFlag == Constant.NUMBER_FOURTEEN) {
+            } else if (pageFlag == Constant.SEARCH_SONG_FOR_ALL) {
                 // 14 全部 ，暂时先按歌曲名 like
                 whereCondition = MusicBeanDao.Properties.Title.like(condition);
             }

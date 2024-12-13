@@ -4,8 +4,6 @@ import android.os.Environment;
 
 import com.yibao.music.MusicApplication;
 
-import org.jetbrains.annotations.Nullable;
-
 /**
  * 作者：Stran on 2017/3/23 15:26
  * 描述：${常量类}
@@ -46,10 +44,11 @@ public class Constant {
     public static final int NUMBER_EIGHT = 8;
     public static final int NUMBER_NINE = 9;
     public static final int NUMBER_TEN = 10;
-    public static final int NUMBER_ELEVEN = 11;
-    public static final int NUMBER_TWELVE = 12;
-    public static final int NUMBER_THIRTEEN = 13;
-    public static final int NUMBER_FOURTEEN = 14;
+
+    public static final int SEARCH_SONG_FOR_NAME = 11;
+    public static final int SEARCH_SONG_FOR_ALBUM = 12;
+    public static final int SEARCH_SONG_FOR_ARTIST = 13;
+    public static final int SEARCH_SONG_FOR_ALL = 14;
     // RxBus post  flag
 
 

@@ -13,6 +13,11 @@ public class Message {
     private String msgKey;
     private Object object;
 
+    public Message(int code, String msgKey) {
+        this.code = code;
+        this.msgKey = msgKey;
+    }
+
     public Message(String msgKey, Object object) {
         this.msgKey = msgKey;
         this.object = object;
