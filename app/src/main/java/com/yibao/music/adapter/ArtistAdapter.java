@@ -53,7 +53,7 @@ public class ArtistAdapter extends BaseBindingAdapter<ArtistInfo> {
             if (position == 0) {
                 artisHolder.mBinding.artistItemStickyView.setVisibility(View.VISIBLE);
             } else if (firstChar.equals(HanziToPinyins
-                    .stringToPinyinSpecial(getDataList().get(position - 1).getArtist()) + "")) {
+                    .stringToPinyinSpecial(getMList().get(position - 1).getArtist()) + "")) {
                 artisHolder.mBinding.artistItemStickyView.setVisibility(View.GONE);
 
             } else {
@@ -71,7 +71,7 @@ public class ArtistAdapter extends BaseBindingAdapter<ArtistInfo> {
 
     @Override
     protected String getFirstChar(int i) {
-        return getDataList().get(i).getFirstChar();
+        return getMList().get(i).getFirstChar();
     }
 
     @NonNull

@@ -1,148 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/vp_girls"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/aboutContent"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="8dp"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
+
 
         <ImageView
             android:id="@+id/iv_album_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="30dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/shape_album_detail_item"
             android:minWidth="220dp"
-            android:minHeight="220dp" />
+            android:minHeight="220dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tv_detail_1"
+
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
+            android:layout_marginTop="30dp"
+            android:text="专辑:"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_album_detail" />
+
+        <TextView
+            android:id="@+id/tv_album_detail_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="10dp"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintStart_toEndOf="@id/tv_detail_1"
+            app:layout_constraintTop_toTopOf="@id/tv_detail_1" />
+
+
+        <TextView
+            android:id="@+id/tv_detail_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="语种:"
+            app:layout_constraintStart_toStartOf="@id/tv_detail_1"
+            app:layout_constraintTop_toBottomOf="@id/tv_detail_1" />
+
+        <TextView
+            android:id="@+id/tv_album_detail_language"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintStart_toEndOf="@id/tv_detail_2"
+            app:layout_constraintTop_toTopOf="@id/tv_detail_2"
+            app:layout_goneMarginStart="10dp" />
+
+        <TextView
+            android:id="@+id/tv_detail_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="发行时间:"
+            app:layout_constraintStart_toStartOf="@id/tv_detail_1"
+            app:layout_constraintTop_toBottomOf="@id/tv_detail_2" />
+
+        <TextView
+            android:id="@+id/tv_album_detail_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintStart_toEndOf="@id/tv_detail_3"
+            app:layout_constraintTop_toTopOf="@id/tv_detail_3" />
+
+
+        <TextView
+            android:id="@+id/tv_detail_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="唱片公司:"
+            app:layout_constraintStart_toStartOf="@id/tv_detail_1"
+            app:layout_constraintTop_toBottomOf="@id/tv_album_detail_date" />
+
+        <TextView
+            android:id="@+id/tv_album_detail_company"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintStart_toEndOf="@id/tv_detail_4"
+            app:layout_constraintTop_toTopOf="@id/tv_detail_4" />
+
+
+        <TextView
+            android:id="@+id/tv_detail_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="流派:"
+            app:layout_constraintStart_toStartOf="@id/tv_detail_1"
+            app:layout_constraintTop_toBottomOf="@id/tv_album_detail_company" />
+
+        <TextView
+            android:id="@+id/tv_album_detail_genre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintStart_toEndOf="@id/tv_detail_5"
+            app:layout_constraintTop_toTopOf="@id/tv_detail_5" />
+
+        <TextView
+            android:id="@+id/tv_album_detail_desc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="12dp"
-            android:orientation="vertical">
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="专辑:"
-                    android:textColor="@color/noClickText" />
-
-                <TextView
-                    android:id="@+id/tv_album_detail_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:textColor="@color/colorWhite" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="语种:" />
-
-                <TextView
-                    android:id="@+id/tv_album_detail_language"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="发行时间:" />
-
-                <TextView
-                    android:id="@+id/tv_album_detail_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:textColor="@color/colorWhite" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="唱片公司:" />
-
-                <TextView
-                    android:id="@+id/tv_album_detail_company"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="流派:" />
-
-                <TextView
-                    android:id="@+id/tv_album_detail_genre"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:textColor="@color/colorWhite" />
-
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tv_album_detail_desc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="8dp" />
-        </LinearLayout>
-    </LinearLayout>
+            android:paddingBottom="20dp"
+            android:textColor="@color/aboutSign"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_detail_1"
+            app:layout_constraintTop_toBottomOf="@id/tv_album_detail_genre" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.core.widget.NestedScrollView>

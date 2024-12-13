@@ -5,9 +5,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.yibao.music.MusicApplication
-import com.yibao.music.R
 import com.yibao.music.model.MusicBean
-import com.yibao.music.model.PlayListBean
 import com.yibao.music.util.Constant
 import com.yibao.music.util.SpUtils
 import java.util.*
@@ -18,17 +16,16 @@ import java.util.*
  * className   FixRecordAdapter
  * Des：TODO
  */
-abstract class BaseBindingAdapter<T>(private var mList: MutableList<T>) :
+abstract class BaseBindingAdapter<T>(var mList: MutableList<T>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     protected val mTAG = " ==== " + this::class.java.simpleName + "  "
     private lateinit var mListener: OnItemListener<T>
-    private lateinit var mLongClickListener: ItemLongClickListener
+    private lateinit var mLongClickListener: ItemLongClickListener<T>
     private lateinit var mEditClickListener: ItemEditClickListener
     private lateinit var mMenuListener: OnOpenItemMoreMenuListener
     protected val TYPE_ITEM = 0
     protected val TYPE_FOOTER = 1
     protected var isSelectStatus = false
-    protected var dataList: List<T> = mList
     protected val mSp = SpUtils(MusicApplication.getInstance(), Constant.MUSIC_CONFIG)
 
     override fun getItemCount() = if (mList.isNotEmpty()) mList.size else 0
@@ -96,9 +93,7 @@ abstract class BaseBindingAdapter<T>(private var mList: MutableList<T>) :
     }
 
     open fun setNewData(data: List<T>) {
-        if (mList.size > Constant.NUMBER_ZERO) {
-            mList.clear()
-        }
+        mList.clear()
         mList.addAll(data)
         notifyDataSetChanged()
     }
@@ -194,23 +189,24 @@ abstract class BaseBindingAdapter<T>(private var mList: MutableList<T>) :
     /**
      * Item长按的点击事件
      */
-    interface ItemLongClickListener {
+    interface ItemLongClickListener<T> {
         /**
-         * 删除item
          *
          * @param musicInfo       info
          * @param currentPosition 位置
          */
-        fun deleteItemList(musicInfo: PlayListBean, currentPosition: Int)
+        fun longClickItem(musicInfo: T, currentPosition: Int)
+
+
     }
 
 
-    open fun setItemLongClickListener(longClickListener: ItemLongClickListener) {
+    open fun setItemLongClickListener(longClickListener: ItemLongClickListener<T>) {
         this.mLongClickListener = longClickListener
     }
 
-    protected open fun deletePlaylist(musicInfo: PlayListBean, itemPosition: Int) {
-        mLongClickListener.deleteItemList(musicInfo, itemPosition)
+    protected open fun setLongClick(musicInfo: T, itemPosition: Int) {
+        mLongClickListener.longClickItem(musicInfo, itemPosition)
     }
 
     /**

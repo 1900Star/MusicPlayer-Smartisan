@@ -23,7 +23,6 @@ import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
-import com.yibao.music.base.listener.OnImagePathListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.fragment.dialogfrag.AlbumDetailDialogFragment;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
@@ -36,6 +35,7 @@ import com.yibao.music.util.Constant;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RandomUtil;
+import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.SpUtils;
 import com.yibao.music.util.StringUtil;
 import com.yibao.music.view.MusicScrollView;
@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Des：${将详情页面封装到一个Viwe里面，方便多个页面使用}
+ * Des：${将详情页面封装到一个View里面，方便多个页面使用}
  * Time:2017/9/10 00:43
  *
  * @author Stran
@@ -74,6 +74,7 @@ public class DetailsView
     private LinearLayout mSuspensionLl;
     private String mArtist;
     private int mPicType;
+    private String imageUrl;
 
     /**
      * @param fragmentManager f
@@ -132,17 +133,15 @@ public class DetailsView
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.tv_artist_albumm_details_title) {
-            String albumUrl = StringUtil.getAlbum(mPicType, mAlbumId, mArtist);
-            openAlbumDetail(albumUrl, mArtist);
+            openAlbumDetail(imageUrl, mArtist);
         } else if (id == R.id.iv_artist_albumm_details) {
-            LogUtil.d(TAG, " pictype " + mPicType);
-            String albumUrl = StringUtil.getAlbum(mPicType, mAlbumId, mArtist);
-            PreviewBigPicDialogFragment.newInstance(albumUrl)
+            PreviewBigPicDialogFragment.newInstance(imageUrl)
                     .show(mFragmentManager, "album");
         } else if (id == R.id.iv_details_add_to_list) {
             startPlayListActivity();
         } else if (id == R.id.iv_details_add_to_play_list) {
             LogUtil.d(TAG, "=================添加到当前播放列表");
+            SnakbarUtil.keepGoing(mIvDetailsAddToPlayList);
         } else if (id == R.id.ll_album_details_playall) {
             startMusic(Constant.NUMBER_ZERO);
         } else if (id == R.id.ll_album_details_random_play) {
@@ -151,11 +150,10 @@ public class DetailsView
     }
 
     private void openAlbumDetail(String albumUrl, String albumName) {
-        LogUtil.d(TAG, "显示专辑详情  " + albumName);
         AlbumDetailDialogFragment.newInstance(albumUrl, albumName).show(mFragmentManager, "album detail");
     }
 
-    protected void startPlayListActivity() {
+    private void startPlayListActivity() {
         ArrayList<String> arrayList = new ArrayList<>();
         for (MusicBean musicBean : mMusicList) {
             arrayList.add(musicBean.getTitle());
@@ -203,8 +201,8 @@ public class DetailsView
     /**
      * @param dataType  1 歌手图片、2 专辑图片
      * @param albumName a
-     * @param artist a
-     * @param albumId a
+     * @param artist    a
+     * @param albumId   a
      * @param issueYear i
      */
     private void setMusicInfo(int dataType, String albumName, String artist, long albumId, int issueYear) {
@@ -212,27 +210,28 @@ public class DetailsView
         mTvArtistAlbumDetailsArtist.setText(artist);
         ImageUitl.loadPic((Activity) getContext(), StringUtil.getAlbum(dataType, albumId, artist), mIvArtistAlbumDetails, R.drawable.noalbumcover_220, isSuccess -> {
             if (!isSuccess) {
-                if (dataType == 1) {
-                    QqMusicRemote.getArtistImg(getContext(), artist, url -> {
-                        LogUtil.d(TAG, "专辑URL：  " + url);
-                        if (!url.isEmpty()) {
-//                            Glide.with(getContext()).load(url).placeholder(R.drawable.noalbumcover_220).error(R.drawable.noalbumcover_220).into(mIvArtistAlbumDetails);
-                        }
-                    });
-
-
-                } else {
-                    QqMusicRemote.getAlbumImg(getContext(), albumName, url -> {
-                        if (!url.isEmpty()) {
-                            Glide.with(DetailsView.this.getContext()).load(url).placeholder(R.drawable.noalbumcover_220).error(R.drawable.noalbumcover_220).into(mIvArtistAlbumDetails);
-                        }
-                    });
-
-                }
+                // 歌手图片接口异常，暂时都显示专辑图片
+//                if (dataType == 1) {
+//                    QqMusicRemote.getArtistImg(getContext(), artist, url -> {
+//                        LogUtil.d(TAG, "专辑URL：  " + url);
+//                        if (!url.isEmpty()) {
+////                            Glide.with(getContext()).load(url).placeholder(R.drawable.noalbumcover_220).error(R.drawable.noalbumcover_220).into(mIvArtistAlbumDetails);
+//                        }
+//                    });
+//
+//
+//                } else if (dataType == 2) {
+//                }
+                String searchKey = (dataType == 1) ? artist : albumName;
+                QqMusicRemote.getAlbumImg(getContext(), searchKey, url -> {
+                    if (!url.isEmpty()) {
+                        imageUrl = url;
+                        Glide.with(DetailsView.this.getContext()).load(url).placeholder(R.drawable.noalbumcover_220).error(R.drawable.noalbumcover_220).into(mIvArtistAlbumDetails);
+                    }
+                });
             }
 
         });
-
 
         if (issueYear != Constant.NUMBER_ZERO) {
             String year = String.valueOf(issueYear);

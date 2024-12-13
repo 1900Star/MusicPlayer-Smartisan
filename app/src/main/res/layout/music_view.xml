@@ -1,41 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MusicActivity">
+    tools:context=".activity.MusicActivity"
+    tools:ignore="UselessParent">
 
-    <FrameLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv"
         android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/tv_index_chart"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:background="@color/colorWhite"
+        android:paddingStart="26dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="8dp"
+        android:textColor="@color/aboutSign"
+        android:textSize="40sp"
+        android:visibility="gone" />
+
+    <include layout="@layout/music_sticky_header_view" />
+
+    <com.yibao.music.view.music.MusicSlidBar
+        android:id="@+id/music_slide_bar"
+        android:layout_width="30dp"
         android:layout_height="match_parent"
-        tools:ignore="UselessParent">
+        android:layout_gravity="right"
+        tools:ignore="RtlHardcoded" />
+</FrameLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center"
-            android:background="@color/colorWhite"
-            android:paddingBottom="8dp"
-            android:paddingStart="26dp"
-            android:id="@+id/tv_index_chart"
-            android:paddingEnd="10dp"
-            android:paddingTop="10dp"
-            android:textColor="@color/aboutSign"
-            android:textSize="40sp"
-            android:visibility="gone" />
-
-        <include layout="@layout/music_sticky_header_view" />
-
-        <com.yibao.music.view.music.MusicSlidBar
-            android:id="@+id/music_slidbar"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
-            tools:ignore="RtlHardcoded" />
-    </FrameLayout>
-</RelativeLayout>

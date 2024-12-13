@@ -158,7 +158,7 @@ public class ImageUitl {
                                     destFile = new File(songAlbumFile, fileName);
                                 }
 
-                                // 把gilde下载得到图片复制到定义好的目录中去
+                                // 把glide下载得到图片复制到定义好的目录中去
                                 copy(file, destFile);
 
                             });

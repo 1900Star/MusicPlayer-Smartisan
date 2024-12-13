@@ -54,14 +54,14 @@ public class PlayListAdapter extends BaseBindingAdapter<PlayListBean> {
                 PlayListAdapter.this.openDetails(playListBean, adapterPosition);
             });
             playViewHolder.mBinding.playListItemSlide.setOnClickListener(v -> {
-                getDataList().remove(adapterPosition);
+                getMList().remove(adapterPosition);
                 MusicDaoUtil.setMusicListFlag(playListBean);
                 RxBus.getInstance().post(new AddAndDeleteListBean(Constant.NUMBER_TWO));
             });
 
             playViewHolder.mBinding.ivItemEdit.setOnClickListener(v -> editItemTitle(adapterPosition));
             playViewHolder.mBinding.rlPlayListItem.setOnLongClickListener(v -> {
-                deletePlaylist(playListBean, adapterPosition);
+                setLongClick(playListBean, adapterPosition);
                 return true;
             });
         }

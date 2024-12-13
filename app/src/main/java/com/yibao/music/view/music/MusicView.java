@@ -1,6 +1,9 @@
 package com.yibao.music.view.music;
 
 import android.content.Context;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -9,11 +12,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.widget.RelativeLayout;
-
 import com.yibao.music.R;
+import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.base.listener.OnGlideLoadListener;
 import com.yibao.music.util.Constant;
 
@@ -30,7 +30,7 @@ public class MusicView
         extends RelativeLayout {
 
     private RecyclerView mRecyclerView;
-    private MusicSlidBar mSlidebar;
+    private MusicSlidBar mSlideBar;
 
     public MusicView(Context context) {
         super(context);
@@ -48,7 +48,7 @@ public class MusicView
         LayoutInflater.from(getContext())
                 .inflate(R.layout.music_view, this, true);
         mRecyclerView = findViewById(R.id.rv);
-        mSlidebar = findViewById(R.id.music_slidbar);
+        mSlideBar = findViewById(R.id.music_slide_bar);
 
 
     }
@@ -85,7 +85,7 @@ public class MusicView
      * @param isShowSlideBar 只有按歌曲名排列时，Slidebar才显示 。
      */
     public void setAdapter(Context context, int adapterType, boolean isShowSlideBar, RecyclerView.Adapter<RecyclerView.ViewHolder> adapter) {
-        mSlidebar.setAdapterType(adapterType);
+        mSlideBar.setAdapterType(adapterType);
         if (adapterType == Constant.NUMBER_FOUR) {
             GridLayoutManager manager = new GridLayoutManager(context, Constant.NUMBER_THREE);
             manager.setOrientation(GridLayoutManager.VERTICAL);
@@ -101,8 +101,17 @@ public class MusicView
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(adapter);
-        mSlidebar.setBarVisibility(isShowSlideBar ? VISIBLE : GONE);
+        mSlideBar.setBarVisibility(isShowSlideBar ? VISIBLE : GONE);
+    }
 
+    /**
+     * 更新歌曲列表选中状态
+     */
+    public void updateCbState() {
+        SongAdapter adapter = (SongAdapter) mRecyclerView.getAdapter();
+        if (adapter != null) {
+            adapter.updateCbState();
+        }
     }
 
 

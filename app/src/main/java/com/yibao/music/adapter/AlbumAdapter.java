@@ -99,7 +99,7 @@ public class AlbumAdapter
         albumlistHolder.mBinding.tvAlbumItemStickyView.setText(firstTv);
         if (position == 0) {
             albumlistHolder.mBinding.tvAlbumItemStickyView.setVisibility(View.VISIBLE);
-        } else if (firstTv.equals(getDataList().get(position - 1).getFirstChar())) {
+        } else if (firstTv.equals(getMList().get(position - 1).getFirstChar())) {
             albumlistHolder.mBinding.tvAlbumItemStickyView.setVisibility(View.GONE);
         } else {
             albumlistHolder.mBinding.tvAlbumItemStickyView.setVisibility(View.VISIBLE);
@@ -150,6 +150,6 @@ public class AlbumAdapter
 
     @Override
     protected String getFirstChar(int i) {
-        return getDataList().get(i).getFirstChar();
+        return getMList().get(i).getFirstChar();
     }
 }

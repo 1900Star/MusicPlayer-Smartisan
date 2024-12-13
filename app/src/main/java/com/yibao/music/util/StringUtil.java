@@ -57,7 +57,7 @@ public class StringUtil {
     }
 
     /**
-     * 返回专辑图片地址
+     * 返回本地歌手图片、专辑图片地址，通过glide 存到本地的图片。
      *
      * @param picType 1 歌手图片 、 2 专辑图片
      * @param albumId a

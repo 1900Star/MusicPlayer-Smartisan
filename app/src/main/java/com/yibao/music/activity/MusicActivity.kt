@@ -590,7 +590,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         if (!handleBackPress(this)) {
             super.onBackPressed()
         } else {
-            Log.d(TAG, "自己处理")
+            LogUtil.d(TAG, "自己处理")
         }
     }
 
