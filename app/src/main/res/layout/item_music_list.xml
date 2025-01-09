@@ -36,7 +36,7 @@
         android:layout_width="52dp"
         android:layout_height="52dp"
         android:layout_margin="10dp"
-        android:background="@drawable/mask_albumcover_list"
+        android:background="@drawable/mask_album_cover_list"
         android:contentDescription="@null"
         android:scaleType="centerCrop"
         android:src="@drawable/nina"

@@ -100,7 +100,7 @@ class SongAdapter(
             //  Item点击监听
             holder.mBinding.root.setOnClickListener {
                 if (mPageType == 1) {
-                    setSelectedPosition(holder.adapterPosition)
+//                    setSelectedPosition(holder.adapterPosition)
                 }
                 if (isSelectStatus) {
                     checkBoxClick(

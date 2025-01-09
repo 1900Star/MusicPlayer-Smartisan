@@ -174,7 +174,10 @@ public class MusicPlayService extends Service {
                     QqMusicRemote.getSongLyrics(songName, artist);
                 }
                 mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_POSITION, playPosition));
+
+                mSp.putValues(new SpUtils.ContentValue(Constant.SONG_NAME, songName));
                 showNotification(true);
+                mBus.post(Constant.MUSIC_SPEAKER, String.valueOf(playPosition));
                 mSessionManager.updatePlaybackState(true);
                 mSessionManager.updateLocMsg();
             }

@@ -97,7 +97,7 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
 
     public void initAnimation() {
         if (mAnimator == null || mAnimatorListener == null) {
-            mAnimator = AnimationUtil.getRotation(mSongAlbulm);
+            mAnimator = AnimationUtil.getRotation(mSongAlbum);
             mAnimatorListener = new MyAnimatorUpdateListener(mAnimator);
             mAnimator.start();
         }
@@ -144,11 +144,11 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
         String albumUrl = FileUtil.getAlbumUrl(bean, 1);
         LogUtil.d(TAG, "Album本地URL " + albumUrl);
         try {
-            ImageUitl.loadPic(activity, albumUrl, mSongAlbulm, R.drawable.playing_cover_lp, isSuccess -> {
+            ImageUitl.loadPic(activity, albumUrl, mSongAlbum, R.drawable.playing_cover_lp, isSuccess -> {
                 if (!isSuccess) {
                     QqMusicRemote.getSongImg(getContext(), bean.getTitle(), url -> {
                         if (url != null) {
-                            Glide.with(getContext()).load(url).placeholder(R.drawable.playing_cover_lp).error(R.drawable.playing_cover_lp).into(mSongAlbulm);
+                            Glide.with(getContext()).load(url).placeholder(R.drawable.playing_cover_lp).error(R.drawable.playing_cover_lp).into(mSongAlbum);
                         }
                     });
                 }
@@ -170,7 +170,7 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
         mButtonPre = findViewById(R.id.music_floating_pre);
         mButtonNext = findViewById(R.id.music_floating_next);
         mButtonPlay = findViewById(R.id.music_floating_play);
-        mSongAlbulm = findViewById(R.id.music_float_block_albulm);
+        mSongAlbum = findViewById(R.id.music_float_block_album);
         mSmartisanMusicBar = findViewById(R.id.smartisan_music_bar);
         mProgressBtn = findViewById(R.id.smartisan_bar_progress);
         initListener();

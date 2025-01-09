@@ -130,6 +130,10 @@ public class Constant {
      */
     public static final String MUSIC_FOCUS = "music_focus";
 
+    // 显示播放小喇叭
+    public static final String MUSIC_SPEAKER= "music_speaker";
+
+
     /**
      * 用于存储和获取用户是否有播放记录
      */

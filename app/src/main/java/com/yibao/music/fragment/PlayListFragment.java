@@ -230,6 +230,7 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
     @Override
     public boolean onBackPressed() {
         if (isShowDetailsView && isVisible() && isResumed()) {
+
             showDetailsView(getString(R.string.play_list));
             return true;
         } else {

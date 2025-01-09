@@ -192,7 +192,6 @@ public class DetailsView
             mAlbumId = info.getAlbumId();
             mArtist = info.getAlbumName();
             setMusicInfo(dataType, info.getAlbumName(), info.getArtist(), mAlbumId, info.getYear());
-
         }
 
     }
@@ -208,9 +207,10 @@ public class DetailsView
     private void setMusicInfo(int dataType, String albumName, String artist, long albumId, int issueYear) {
         mTvArtistAlbumDetailsTitle.setText(albumName);
         mTvArtistAlbumDetailsArtist.setText(artist);
-        ImageUitl.loadPic((Activity) getContext(), StringUtil.getAlbum(dataType, albumId, artist), mIvArtistAlbumDetails, R.drawable.noalbumcover_220, isSuccess -> {
-            if (!isSuccess) {
-                // 歌手图片接口异常，暂时都显示专辑图片
+        try {
+            ImageUitl.loadPic((Activity) getContext(), StringUtil.getAlbum(dataType, albumId, artist), mIvArtistAlbumDetails, R.drawable.noalbumcover_220, isSuccess -> {
+                if (!isSuccess) {
+                    // 歌手图片接口异常，暂时都显示专辑图片
 //                if (dataType == 1) {
 //                    QqMusicRemote.getArtistImg(getContext(), artist, url -> {
 //                        LogUtil.d(TAG, "专辑URL：  " + url);
@@ -222,16 +222,19 @@ public class DetailsView
 //
 //                } else if (dataType == 2) {
 //                }
-                String searchKey = (dataType == 1) ? artist : albumName;
-                QqMusicRemote.getAlbumImg(getContext(), searchKey, url -> {
-                    if (!url.isEmpty()) {
-                        imageUrl = url;
-                        Glide.with(DetailsView.this.getContext()).load(url).placeholder(R.drawable.noalbumcover_220).error(R.drawable.noalbumcover_220).into(mIvArtistAlbumDetails);
-                    }
-                });
-            }
+                    String searchKey = (dataType == 1) ? artist : albumName;
+                    QqMusicRemote.getAlbumImg(getContext(), searchKey, url -> {
+                        if (!url.isEmpty()) {
+                            imageUrl = url;
+                            Glide.with(DetailsView.this.getContext()).load(url).placeholder(R.drawable.noalbumcover_220).error(R.drawable.noalbumcover_220).into(mIvArtistAlbumDetails);
+                        }
+                    });
+                }
+            });
+        } catch (Exception e) {
+            LogUtil.d(TAG, "专辑图片下载失败：" + e.getMessage());
+        }
 
-        });
 
         if (issueYear != Constant.NUMBER_ZERO) {
             String year = String.valueOf(issueYear);

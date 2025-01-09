@@ -24,25 +24,25 @@
         android:id="@+id/iv_song_add_to_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
         android:contentDescription="@null"
         android:src="@drawable/more_select_icon_addlist_down"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/iv_song_add_to_play"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toStartOf="@id/iv_song_add_to_play"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_song_add_to_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="50dp"
         android:contentDescription="@null"
         android:src="@drawable/more_select_icon_addplay_down"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

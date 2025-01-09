@@ -98,4 +98,5 @@
     <string name="us">English</string>
     <string name="switch_language">切换语言</string>
     <string name="apply_lyrics">应用歌词</string>
+    <string name="album_wall">专辑墙</string>
 </resources>

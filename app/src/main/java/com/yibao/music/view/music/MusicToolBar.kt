@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.LinearLayout
 import com.yibao.music.MusicApplication
 import com.yibao.music.R
+import com.yibao.music.activity.AlbumWallActivity
 import com.yibao.music.activity.SearchActivity
 import com.yibao.music.databinding.MusicToolbarBinding
 import com.yibao.music.util.Constant
@@ -43,6 +44,7 @@ class MusicToolBar : LinearLayout, View.OnClickListener {
     private fun initListener() {
         mBinding.tvEdit.setOnClickListener(this)
         mBinding.ivSearch.setOnClickListener(this)
+        mBinding.ivAlbumWall.setOnClickListener(this)
         mBinding.tvMusicToolbarTitle.setOnClickListener(this)
         mBinding.tvMusicToolbarTitle.setOnLongClickListener {
             val sp = SpUtils(MusicApplication.getInstance(), Constant.MUSIC_CONFIG)
@@ -61,6 +63,10 @@ class MusicToolBar : LinearLayout, View.OnClickListener {
         mBinding.tvEdit.visibility = if (visibility) VISIBLE else GONE
     }
 
+    fun isShowAlbumWall(visibility: Boolean) {
+        mBinding.ivAlbumWall.visibility = if (visibility) VISIBLE else GONE
+    }
+
     fun setToolbarTitle(toolbarTitle: String) {
         if (toolbarTitle.length > 14) {
             mBinding.tvMusicToolbarTitle.textSize = 14f
@@ -77,9 +83,15 @@ class MusicToolBar : LinearLayout, View.OnClickListener {
                 R.id.tv_edit -> {
                     mListener!!.clickEdit()
                 }
+
                 R.id.tv_music_toolbar_title -> {
                     mListener!!.switchMusicControlBar()
                 }
+
+                R.id.iv_album_wall -> {
+                    context.startActivity(Intent(context, AlbumWallActivity::class.java))
+                }
+
                 R.id.iv_search -> {
                     val intent = Intent(context, SearchActivity::class.java)
                     context.startActivity(intent)

@@ -48,7 +48,7 @@ abstract class BaseBindingAdapter<T>(var mList: MutableList<T>) :
 
 
     //记录当前选中的条目索引
-    private var selectedIndex = 0
+    private var selectedIndex = -1
 
     fun setSelectedPosition(position: Int) {
         selectedIndex = position

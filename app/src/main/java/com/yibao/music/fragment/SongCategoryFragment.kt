@@ -16,6 +16,7 @@ import com.yibao.music.util.Constant
 import com.yibao.music.util.LogUtil
 import com.yibao.music.util.ToastUtil
 import com.yibao.music.viewmodel.SongViewModel
+import io.reactivex.disposables.Disposable
 
 /**
  * @项目名： ArtisanMusic
@@ -30,7 +31,7 @@ class SongCategoryFragment : BaseMusicFragmentDev<CategoryFragmentBinding>(), Vi
     private val mViewModel: SongViewModel by lazy { gets(SongViewModel::class.java) }
     private var mStateArray = SparseBooleanArray()
     private val mSelectList = ArrayList<MusicBean>()
-
+    private var speakerDisposable: Disposable? = null
 
     private var mList = ArrayList<MusicBean>()
     override fun initView() {
@@ -39,13 +40,13 @@ class SongCategoryFragment : BaseMusicFragmentDev<CategoryFragmentBinding>(), Vi
     }
 
     override fun initData() {
-
+        val position = requireArguments().getInt(Constant.POSITION)
+        mViewModel.getMusicList(position)
     }
 
     override fun onResume() {
         super.onResume()
         val position = requireArguments().getInt(Constant.POSITION)
-        mViewModel.getMusicList(position)
         mViewModel.listModel.observe(this) { musicList ->
             if (musicList.isNotEmpty()) {
                 mList.clear()
@@ -55,6 +56,12 @@ class SongCategoryFragment : BaseMusicFragmentDev<CategoryFragmentBinding>(), Vi
             }
 
         }
+
+        speakerDisposable = mBus.toObservableType(Constant.MUSIC_SPEAKER, String::class.java)
+            .subscribe { cPosition ->
+
+                mBinding.musicView.updateSpeakerState(cPosition.toInt())
+            }
 
     }
 
@@ -208,6 +215,15 @@ class SongCategoryFragment : BaseMusicFragmentDev<CategoryFragmentBinding>(), Vi
         mBinding.groupSongAdd.visibility = if (showCb) View.VISIBLE else View.GONE
     }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (speakerDisposable != null) {
+            speakerDisposable?.dispose()
+            speakerDisposable = null
+        }
+    }
+
     /**
      * 列表进入选中状态时，需要处理返回事件。
      */
@@ -219,6 +235,8 @@ class SongCategoryFragment : BaseMusicFragmentDev<CategoryFragmentBinding>(), Vi
             // 隐藏添加到插入列表按钮。
             mBinding.musicView.updateCbState()
             isShowCb = false
+            setNotAllSelected(mList)
+            mSelectList.clear()
             return true
         } else {
             return false

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:background="@color/pageBg"
     android:fitsSystemWindows="true"
     tools:context=".activity.PlayActivity">
 
@@ -189,7 +189,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:constraint_referenced_ids="iv_lyrics_bg,lyrics_view,iv_search_play_lyric" />
+        app:constraint_referenced_ids="iv_lyrics_bg,lyrics_view,iv_search_play_lyric,iv_lyrics_top_mask,iv_lyrics_bottom_mask" />
 
     <ImageView
         android:id="@+id/iv_lyrics_bg"
@@ -208,13 +208,33 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="5dp"
         android:layout_marginEnd="4dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/rotate_rl"
         app:layout_constraintEnd_toStartOf="@id/iv_always_on"
         app:layout_constraintStart_toEndOf="@id/iv_switch_lyrics_bg"
         app:layout_constraintTop_toTopOf="@id/rotate_rl" />
+
+
+    <ImageView
+        android:id="@+id/iv_lyrics_top_mask"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@drawable/shape_lyrics_top_mask"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/iv_always_on"
+        app:layout_constraintStart_toEndOf="@id/iv_switch_lyrics_bg"
+        app:layout_constraintTop_toTopOf="@id/rotate_rl" />
+
+    <ImageView
+        android:id="@+id/iv_lyrics_bottom_mask"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@drawable/shape_lyrics_bottom_mask"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/rotate_rl"
+        app:layout_constraintEnd_toStartOf="@id/iv_always_on"
+        app:layout_constraintStart_toEndOf="@id/iv_switch_lyrics_bg" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/group_menu_search_lyrics"

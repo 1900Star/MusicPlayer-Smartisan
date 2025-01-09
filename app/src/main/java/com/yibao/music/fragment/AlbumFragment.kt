@@ -36,6 +36,7 @@ class AlbumFragment : BaseMusicFragmentDev<AlbumFragmentBinding>(), View.OnClick
     private var mDetailList = ArrayList<MusicBean>()
     override fun initView() {
         mBinding.musicBar.setToolbarTitle(getString(R.string.music_album))
+        mBinding.musicBar.isShowAlbumWall(visibility = true)
     }
 
 

@@ -99,12 +99,15 @@ public class QqMusicRemote {
                 .subscribe(new BaseObserver<Album>() {
                     @Override
                     public void onNext(Album album) {
-
-                        String albumMid = album.getData().getAlbum().getList().get(0).getAlbumMID();
-                        String picUrl = albumUrlHead + albumMid + ".jpg";
-                        LogUtil.d(TAG, "请求到的图片地址 " + picUrl);
-                        listener.imageUrl(picUrl);
-                        ImageUitl.glideSaveImg(context, picUrl, 3, key, key);
+                        List<Album.DataBean.AlbumBean.ListBean> list = album.getData().getAlbum().getList();
+                        LogUtil.d(TAG, "==== 专辑列表长度：" + list.size());
+                        if (!list.isEmpty()) {
+                            String albumMid = album.getData().getAlbum().getList().get(0).getAlbumMID();
+                            String picUrl = albumUrlHead + albumMid + ".jpg";
+                            LogUtil.d(TAG, "请求到的图片地址 " + picUrl);
+                            listener.imageUrl(picUrl);
+                            ImageUitl.glideSaveImg(context, picUrl, 3, key, key);
+                        }
                     }
 
                     @Override

@@ -73,7 +73,7 @@ public class AlbumAdapter
                 setDataAlbumList(albumlistHolder, info);
             }
 
-            //显示 隐藏StickyView  并且列表平呈平铺视图显示
+            //显示 隐藏StickyView  并且以3列Grid 列表显示
         } else if (mIsShowStickyView == Constant.NUMBER_ONE) {
             if (holder instanceof AlbumTileHolder) {
                 AlbumTileHolder albumTileHolder = (AlbumTileHolder) holder;

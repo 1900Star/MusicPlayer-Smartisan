@@ -97,4 +97,5 @@
     <string name="us">English</string>
     <string name="switch_language">Language</string>
     <string name="apply_lyrics">ShowLyrics</string>
+    <string name="album_wall">Album Wall</string>
 </resources>

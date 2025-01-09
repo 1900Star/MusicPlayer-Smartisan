@@ -17,7 +17,6 @@ import androidx.viewbinding.ViewBinding
 import com.yibao.music.MusicApplication
 import com.yibao.music.R
 import com.yibao.music.base.listener.OnHandleBackListener
-import com.yibao.music.model.greendao.AlbumInfoDao
 import com.yibao.music.model.greendao.MusicBeanDao
 import com.yibao.music.util.Constant
 import com.yibao.music.util.HandleBackUtil

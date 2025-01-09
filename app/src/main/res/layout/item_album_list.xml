@@ -1,31 +1,32 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_list"
-    android:background="@color/listBg"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-   >
+    android:background="@color/listBg"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_album_item_sticky_view"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_alignParentTop="true"
+
         android:layout_marginStart="18dp"
         android:background="@color/listBg"
         android:textColor="@color/aboutSign"
         android:visibility="visible" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ll_album_list_item"
         android:layout_width="match_parent"
         android:layout_height="62dp"
-        android:layout_below="@id/tv_album_item_sticky_view"
         android:background="@drawable/list_item_selector"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal">
+
         <ImageView
             android:id="@+id/iv_album_list_item_select"
             android:layout_width="34dp"
@@ -36,62 +37,54 @@
             android:background="@null"
             android:contentDescription="@null"
             android:src="@drawable/item_selected_normal"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/iv_item_album_list"
             android:layout_width="52dp"
             android:layout_height="52dp"
             android:layout_margin="10dp"
-            android:background="@drawable/mask_albumcover_list"
+            android:background="@drawable/mask_album_cover_list"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
-            android:src="@drawable/nina" />
+            android:src="@drawable/nina"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_album_list_song_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:layout_marginStart="14dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/text_song_name_selector"
+            android:textSize="@dimen/music_loating_title"
+            app:layout_constraintStart_toEndOf="@id/iv_item_album_list"
+            app:layout_constraintTop_toTopOf="@id/iv_item_album_list" />
 
-            <TextView
-                android:id="@+id/tv_album_list_song_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLength="18"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColor="@color/text_song_name_selector"
-                android:textSize="@dimen/music_loating_title" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tv_album_list_song_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_singer_selector"
+            android:textSize="@dimen/music_artist"
+            app:layout_constraintStart_toStartOf="@id/tv_album_list_song_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_album_list_song_name" />
 
-                <TextView
-                    android:id="@+id/tv_album_list_song_artist"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLength="18"
-                    android:maxLines="1"
-                    android:textColor="@color/text_singer_selector"
-                    android:textSize="@dimen/music_artist" />
-
-                <TextView
-                    android:id="@+id/tv_album_list_song_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginStart="10dp"
-                    android:maxLength="6"
-                    android:maxLines="1"
-                    android:textColor="@color/text_singer_selector"
-                    android:textSize="@dimen/music_artist"
-                    tools:ignore="RtlHardcoded" />
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tv_album_list_song_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/text_singer_selector"
+            android:textSize="@dimen/music_artist"
+            app:layout_constraintStart_toEndOf="@id/tv_album_list_song_artist"
+            app:layout_constraintTop_toTopOf="@id/tv_album_list_song_artist"
+            tools:ignore="RtlHardcoded" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

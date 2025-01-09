@@ -7,7 +7,9 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.MenuItem
@@ -65,7 +67,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         initListener()
     }
 
-
+    private val mHanler = Handler(Looper.getMainLooper())
     private fun initData() {
         mCurrentPosition = mSps.getInt(Constant.MUSIC_POSITION)
 
@@ -75,6 +77,13 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         mBinding.musicViewpager2.setCurrentItem(Constant.NUMBER_TWO, false)
         mBinding.musicViewpager2.offscreenPageLimit = 5
         mBinding.musicViewpager2.isUserInputEnabled = false
+        // 初次设置喇叭显示
+        mHanler.postDelayed({
+            val cPosition = mSps.getInt(Constant.MUSIC_POSITION)
+            mBus.post(Constant.MUSIC_SPEAKER, cPosition.toString())
+        }, 1000)
+
+
     }
 
     private fun initMusicConfig() {
@@ -452,12 +461,9 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         mBinding.smartisanControlBar.setSingerName(mCurrentMusicBean!!.artist)
 
 
-
         // 设置专辑
-        mBinding.smartisanControlBar.setAlbumUrl(this,mCurrentMusicBean)
+        mBinding.smartisanControlBar.setAlbumUrl(this, mCurrentMusicBean)
     }
-
-
 
 
     private fun updateQqBar() {

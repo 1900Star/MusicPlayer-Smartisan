@@ -3,6 +3,8 @@ package com.yibao.music.view.music;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
@@ -12,11 +14,16 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.yibao.music.MusicApplication;
 import com.yibao.music.R;
 import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.base.listener.OnGlideLoadListener;
+import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constant;
+import com.yibao.music.util.LogUtil;
+import com.yibao.music.util.SpUtils;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -31,6 +38,7 @@ public class MusicView
 
     private RecyclerView mRecyclerView;
     private MusicSlidBar mSlideBar;
+    private ImageView ivPosition;
 
     public MusicView(Context context) {
         super(context);
@@ -49,8 +57,8 @@ public class MusicView
                 .inflate(R.layout.music_view, this, true);
         mRecyclerView = findViewById(R.id.rv);
         mSlideBar = findViewById(R.id.music_slide_bar);
-
-
+        ivPosition = findViewById(R.id.iv_play_position);
+        ivPosition.setOnClickListener(view -> scrollPlayPosition());
     }
 
     private void initListener(Context context) {
@@ -61,13 +69,14 @@ public class MusicView
                     switch (newState) {
                         case RecyclerView.SCROLL_STATE_IDLE:
                             ((OnGlideLoadListener) context).resumeRequests();
+                            ivPosition.setVisibility(View.VISIBLE);
                             break;
                         // 加载图片
                         case RecyclerView.SCROLL_STATE_DRAGGING:
                         case RecyclerView.SCROLL_STATE_SETTLING:
                             ((OnGlideLoadListener) context).pauseRequests();
+                            ivPosition.setVisibility(View.GONE);
                             break;
-
                         default:
                             break;
                     }
@@ -82,7 +91,7 @@ public class MusicView
      * @param context        c
      * @param adapterType    1 : SongListAdapter  、 2  ：ArtistAdapter  、
      *                       3  ： AlbumAdapter  普通视图  、 4  ： AlbumAdapter  平铺视图 GridView 3列
-     * @param isShowSlideBar 只有按歌曲名排列时，Slidebar才显示 。
+     * @param isShowSlideBar 只有按歌曲名排列时，SlidBar才显示 。
      */
     public void setAdapter(Context context, int adapterType, boolean isShowSlideBar, RecyclerView.Adapter<RecyclerView.ViewHolder> adapter) {
         mSlideBar.setAdapterType(adapterType);
@@ -105,6 +114,17 @@ public class MusicView
     }
 
     /**
+     * 更新Item喇叭
+     */
+    public void updateSpeakerState(int position) {
+        LogUtil.d("lsp", "喇叭位置  ： " + position);
+        SongAdapter adapter = (SongAdapter) mRecyclerView.getAdapter();
+        if (adapter != null) {
+            adapter.setSelectedPosition(position);
+        }
+    }
+
+    /**
      * 更新歌曲列表选中状态
      */
     public void updateCbState() {
@@ -115,6 +135,24 @@ public class MusicView
     }
 
 
+    /**
+     * 滚动到当前播放位置
+     */
+    public void scrollPlayPosition() {
+        SpUtils sp = new SpUtils(MusicApplication.getInstance(), Constant.MUSIC_CONFIG);
+        String songName = sp.getString(Constant.SONG_NAME);
+        SongAdapter adapter = (SongAdapter) mRecyclerView.getAdapter();
+        if (adapter != null) {
+            List<MusicBean> data = adapter.getData();
+            if (data != null) {
+                for (int i = 0; i < data.size(); i++) {
+                    if (songName != null && !songName.isEmpty() && songName.equals(data.get(i).getTitle())) {
+                        mRecyclerView.scrollToPosition(i);
+                    }
+                }
+            }
+        }
+    }
 }
 
 
