@@ -7,6 +7,7 @@
     android:background="@color/listBg"
     android:gravity="center"
     android:orientation="vertical">
+
     <com.yibao.music.view.music.MusicToolBar
         android:id="@+id/music_bar"
         android:layout_width="match_parent"
@@ -19,6 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:visibility="visible"
+        app:isFloat="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/music_bar" />
 

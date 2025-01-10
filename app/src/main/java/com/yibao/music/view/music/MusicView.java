@@ -1,6 +1,7 @@
 package com.yibao.music.view.music;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,6 @@ import com.yibao.music.adapter.SongAdapter;
 import com.yibao.music.base.listener.OnGlideLoadListener;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.util.Constant;
-import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.SpUtils;
 
 import java.util.List;
@@ -40,6 +40,8 @@ public class MusicView
     private MusicSlidBar mSlideBar;
     private ImageView ivPosition;
 
+    private boolean isShowFloat = false;
+
     public MusicView(Context context) {
         super(context);
         initView();
@@ -48,6 +50,9 @@ public class MusicView
 
     public MusicView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MusicView);
+        isShowFloat = typedArray.getBoolean(0, false);
+        typedArray.recycle();
         initView();
         initListener(context);
     }
@@ -58,10 +63,12 @@ public class MusicView
         mRecyclerView = findViewById(R.id.rv);
         mSlideBar = findViewById(R.id.music_slide_bar);
         ivPosition = findViewById(R.id.iv_play_position);
-        ivPosition.setOnClickListener(view -> scrollPlayPosition());
+        int visible = isShowFloat ? View.VISIBLE : View.GONE;
+        ivPosition.setVisibility(visible);
     }
 
     private void initListener(Context context) {
+        ivPosition.setOnClickListener(view -> scrollPlayPosition());
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -69,13 +76,17 @@ public class MusicView
                     switch (newState) {
                         case RecyclerView.SCROLL_STATE_IDLE:
                             ((OnGlideLoadListener) context).resumeRequests();
-                            ivPosition.setVisibility(View.VISIBLE);
+                            if (isShowFloat) {
+                                ivPosition.setVisibility(View.VISIBLE);
+                            }
                             break;
                         // 加载图片
                         case RecyclerView.SCROLL_STATE_DRAGGING:
                         case RecyclerView.SCROLL_STATE_SETTLING:
                             ((OnGlideLoadListener) context).pauseRequests();
-                            ivPosition.setVisibility(View.GONE);
+                            if (isShowFloat) {
+                                ivPosition.setVisibility(View.GONE);
+                            }
                             break;
                         default:
                             break;
@@ -90,7 +101,7 @@ public class MusicView
      *
      * @param context        c
      * @param adapterType    1 : SongListAdapter  、 2  ：ArtistAdapter  、
-     *                       3  ： AlbumAdapter  普通视图  、 4  ： AlbumAdapter  平铺视图 GridView 3列
+     *                       3  ： AlbumAdapter  专辑 普通视图  、 4  ： AlbumAdapter 专辑 平铺视图 GridView 3列
      * @param isShowSlideBar 只有按歌曲名排列时，SlidBar才显示 。
      */
     public void setAdapter(Context context, int adapterType, boolean isShowSlideBar, RecyclerView.Adapter<RecyclerView.ViewHolder> adapter) {
@@ -117,7 +128,6 @@ public class MusicView
      * 更新Item喇叭
      */
     public void updateSpeakerState(int position) {
-        LogUtil.d("lsp", "喇叭位置  ： " + position);
         SongAdapter adapter = (SongAdapter) mRecyclerView.getAdapter();
         if (adapter != null) {
             adapter.setSelectedPosition(position);
@@ -139,6 +149,7 @@ public class MusicView
      * 滚动到当前播放位置
      */
     public void scrollPlayPosition() {
+
         SpUtils sp = new SpUtils(MusicApplication.getInstance(), Constant.MUSIC_CONFIG);
         String songName = sp.getString(Constant.SONG_NAME);
         SongAdapter adapter = (SongAdapter) mRecyclerView.getAdapter();
@@ -148,6 +159,7 @@ public class MusicView
                 for (int i = 0; i < data.size(); i++) {
                     if (songName != null && !songName.isEmpty() && songName.equals(data.get(i).getTitle())) {
                         mRecyclerView.scrollToPosition(i);
+                        return;
                     }
                 }
             }

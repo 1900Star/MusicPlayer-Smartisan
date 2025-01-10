@@ -44,15 +44,6 @@
         app:layout_constraintStart_toEndOf="@id/checkbox_item"
         app:layout_constraintTop_toBottomOf="@id/item_sticky_view" />
 
-    <ImageView
-        android:id="@+id/song_item_play_flag"
-        android:layout_width="38dp"
-        android:layout_height="18dp"
-        android:src="@drawable/playing_blueplay2"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/song_name"
-        app:layout_constraintStart_toEndOf="@id/song_name"
-        app:layout_constraintTop_toTopOf="@id/song_name" />
 
     <TextView
         android:id="@+id/song_name"
@@ -60,12 +51,23 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
         android:layout_marginTop="2dp"
+        android:layout_marginEnd="2dp"
         android:ellipsize="end"
         android:maxLength="18"
         android:textColor="@color/text_song_name_selector"
         android:textSize="@dimen/music_loating_title"
         app:layout_constraintStart_toEndOf="@id/song_album"
         app:layout_constraintTop_toTopOf="@id/song_album" />
+
+    <ImageView
+        android:id="@+id/song_item_play_flag"
+        android:layout_width="38dp"
+        android:layout_height="wrap_content"
+        android:minHeight="18dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/song_name"
+        app:layout_constraintStart_toEndOf="@id/song_name"
+        app:layout_constraintTop_toTopOf="@id/song_name" />
 
     <TextView
         android:id="@+id/song_artist_name"

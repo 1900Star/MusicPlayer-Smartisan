@@ -6,7 +6,7 @@
     android:background="@drawable/act_tabbar_bg">
 
     <com.yibao.music.view.CircleImageView
-        android:id="@+id/music_float_block_albulm"
+        android:id="@+id/music_float_block_album"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentStart="true"

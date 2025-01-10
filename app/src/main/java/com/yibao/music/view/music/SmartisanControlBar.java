@@ -44,7 +44,7 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
     ImageView mButtonNext;
     ImageView mButtonPlay;
     ProgressBtn mProgressBtn;
-    CircleImageView mSongAlbulm;
+    CircleImageView mSongAlbum;
     RelativeLayout mSmartisanMusicBar;
 
 
@@ -142,7 +142,6 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
 
     public void setAlbumUrl(Activity activity, MusicBean bean) {
         String albumUrl = FileUtil.getAlbumUrl(bean, 1);
-        LogUtil.d(TAG, "Album本地URL " + albumUrl);
         try {
             ImageUitl.loadPic(activity, albumUrl, mSongAlbum, R.drawable.playing_cover_lp, isSuccess -> {
                 if (!isSuccess) {
@@ -156,8 +155,6 @@ public class SmartisanControlBar extends RelativeLayout implements View.OnClickL
         } catch (Exception e) {
             LogUtil.d(TAG, e.getMessage());
         }
-
-
     }
 
 

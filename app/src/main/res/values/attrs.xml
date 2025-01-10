@@ -14,4 +14,9 @@
         <attr name="metaButtonBarStyle" format="reference" />
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="MusicView">
+        <attr name="isFloat" format="boolean" />
+    </declare-styleable>
+
 </resources>

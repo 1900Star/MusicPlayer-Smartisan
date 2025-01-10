@@ -75,6 +75,9 @@ public class Constant {
     public static final String LOAD_SERVICE_NAME = "com.yibao.music.service.LoadMusicDataService";
     public static final String NULL_STRING = "";
     public static final String SERVICE_MUSIC = "service_music";
+    /**
+     * 歌词下载结果通知
+     */
     public static final String MUSIC_LYRIC_OK = "lyric_ok";
     public static final String MUSIC_LYRIC_FAIL = "lyric_fail";
     public static final String PURE_MUSIC = "此歌曲为没有填词的纯音乐，请您欣赏";
@@ -97,6 +100,10 @@ public class Constant {
      */
     public static final String PLAY_MODE = "play_mode";
 
+    /**
+     * 音乐的播放状态
+     */
+    public static final String MUSIC_PLAY_STATUS = "music_play-status";
 
     /**
      * 用于标记详情页面是否打开
@@ -131,7 +138,7 @@ public class Constant {
     public static final String MUSIC_FOCUS = "music_focus";
 
     // 显示播放小喇叭
-    public static final String MUSIC_SPEAKER= "music_speaker";
+    public static final String MUSIC_SPEAKER = "music_speaker";
 
 
     /**
@@ -155,10 +162,13 @@ public class Constant {
     public static String CRASH_DIR = "crash";
     public static String LOAD_FLAG = "load_flag";
     public static String AUTO_LOAD = "auto_load";
+    /**
+     * 页面标识:  1 歌曲名列表、2 评分、3 播放次数、4 添加时间、5 自定义播放列表详情 、6 艺术家列表、7 专辑列表、
+     *           8 收藏列表、    【  搜索类别：  11歌曲 、 12专辑 、 13 艺术家 、14 全部 】
+     */
     public static String PAGE_TYPE = "page_type";
-    public static String MUSIC_LYRICS_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyrics/";
 
-//    MusicApplication.getInstance().getExternalFilesDir(dirName).getAbsolutePath();
+    public static String MUSIC_LYRICS_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/smartisan/music/lyrics/";
 
 
     public static String MUSIC_SONG_ALBUM_ROOT = MusicApplication.getInstance().getExternalFilesDir("songAlbum").getAbsolutePath() + "/";

@@ -125,7 +125,7 @@ public class MusicPlayService extends Service {
         mAudioBinder.play();
         //通知播放界面更新
         sendCurrentMusicInfo();
-        if (mMusicDataList != null && mMusicDataList.size() > 0) {
+        if (mMusicDataList != null && !mMusicDataList.isEmpty()) {
             MusicBean musicBean = mMusicDataList.get(playPosition);
             LogUtil.d(TAG, " 当前播放信息  ==  " + musicBean.getTitle());
             musicBean.setPlayFrequency(musicBean.getPlayFrequency() + 1);
@@ -177,11 +177,16 @@ public class MusicPlayService extends Service {
 
                 mSp.putValues(new SpUtils.ContentValue(Constant.SONG_NAME, songName));
                 showNotification(true);
-                mBus.post(Constant.MUSIC_SPEAKER, String.valueOf(playPosition));
                 mSessionManager.updatePlaybackState(true);
                 mSessionManager.updateLocMsg();
+                postSpeakerState(playPosition, true);
             }
 
+        }
+        // 更新小喇叭
+        private void postSpeakerState(int position, boolean isPlay) {
+            mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_PLAY_STATUS, isPlay));
+            mBus.post(Constant.MUSIC_SPEAKER, String.valueOf(position));
         }
 
         private void showNotification(boolean b) {
@@ -304,6 +309,7 @@ public class MusicPlayService extends Service {
             mSessionManager.updatePlaybackState(true);
             showNotification(true);
             initAudioFocus();
+            postSpeakerState(playPosition, true);
         }
 
         // 暂停播放
@@ -312,6 +318,7 @@ public class MusicPlayService extends Service {
             mediaPlayer.pause();
             mSessionManager.updatePlaybackState(false);
             showNotification(false);
+            postSpeakerState(playPosition, false);
         }
 
         // 跳转到指定位置进行播放
@@ -421,8 +428,7 @@ public class MusicPlayService extends Service {
                 mAudioBinder.pause();
                 mAudioBinder.hintNotification();
                 mBus.post(Constant.PLAY_STATUS, Constant.NUMBER_TWO);
-
-                mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_FOCUS, false));
+                mAudioBinder.postSpeakerState(mAudioBinder.getPosition(),false);
                 stopSelf();
             }
         }

@@ -14,6 +14,7 @@ import com.yibao.music.model.MusicBean
 import com.yibao.music.util.Constant
 import com.yibao.music.util.FileUtil
 import com.yibao.music.util.ImageUitl
+import com.yibao.music.util.SpUtils.ContentValue
 import com.yibao.music.util.StringUtil
 
 ///**
@@ -80,9 +81,14 @@ class SongAdapter(
             }
             // 设置播放标识小喇叭,只在歌曲名列表显示。
             if (mPageType == 1) {
+                val isPlay = mSp.getBoolean(Constant.MUSIC_PLAY_STATUS, false)
+                val resId =
+                    if (isPlay) R.drawable.playing_blueplay2 else R.drawable.playing_blueplay
+                holder.mBinding.songItemPlayFlag.setImageResource(resId)
                 val b = isItemSelected(holder.adapterPosition)
                 val visit = if (b) View.VISIBLE else View.GONE
                 holder.mBinding.songItemPlayFlag.visibility = visit
+
             }
             holder.mBinding.ivSongItemMenu.setOnClickListener {
                 this@SongAdapter.openItemMenu(
@@ -99,9 +105,7 @@ class SongAdapter(
             }
             //  Item点击监听
             holder.mBinding.root.setOnClickListener {
-                if (mPageType == 1) {
-//                    setSelectedPosition(holder.adapterPosition)
-                }
+                mSp.putValues(ContentValue(Constant.MUSIC_PLAY_STATUS, true))
                 if (isSelectStatus) {
                     checkBoxClick(
                         bean,

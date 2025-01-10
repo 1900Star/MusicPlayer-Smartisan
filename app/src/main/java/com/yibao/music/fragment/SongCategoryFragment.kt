@@ -9,7 +9,8 @@ import com.yibao.music.activity.PlayListActivity
 import com.yibao.music.adapter.SongAdapter
 import com.yibao.music.base.bindings.BaseBindingAdapter
 import com.yibao.music.base.bindings.BaseMusicFragmentDev
-import com.yibao.music.databinding.CategoryFragmentBinding
+import com.yibao.music.databinding.SongCategoryFragmentBinding
+
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog
 import com.yibao.music.model.MusicBean
 import com.yibao.music.util.Constant
@@ -26,7 +27,8 @@ import io.reactivex.disposables.Disposable
  * @创建时间: 2018/2/4 21:45
  * @描述： {显示音乐分类列表}
  */
-class SongCategoryFragment : BaseMusicFragmentDev<CategoryFragmentBinding>(), View.OnClickListener {
+class SongCategoryFragment : BaseMusicFragmentDev<SongCategoryFragmentBinding>(),
+    View.OnClickListener {
 
     private val mViewModel: SongViewModel by lazy { gets(SongViewModel::class.java) }
     private var mStateArray = SparseBooleanArray()
@@ -52,17 +54,22 @@ class SongCategoryFragment : BaseMusicFragmentDev<CategoryFragmentBinding>(), Vi
                 mList.clear()
                 mList.addAll(musicList)
                 initAdapter(musicList, position)
-
             }
 
         }
 
+
+        val cPosition = mSp.getInt(Constant.MUSIC_POSITION)
+        if (cPosition > 0) {
+            // 可见时更新小喇叭
+            mBinding.musicView.updateSpeakerState(cPosition)
+        }
+
         speakerDisposable = mBus.toObservableType(Constant.MUSIC_SPEAKER, String::class.java)
-            .subscribe { cPosition ->
-
-                mBinding.musicView.updateSpeakerState(cPosition.toInt())
+            .subscribe { sPosition ->
+                LogUtil.d(mTag, "收到更新小喇叭：$sPosition")
+                mBinding.musicView.updateSpeakerState(sPosition.toInt())
             }
-
     }
 
     private fun initAdapter(musicList: List<MusicBean>, position: Int) {
@@ -128,16 +135,8 @@ class SongCategoryFragment : BaseMusicFragmentDev<CategoryFragmentBinding>(), Vi
             }
         })
 
-        adapter.setItemLongClickListener(object :
-            BaseBindingAdapter.ItemLongClickListener<MusicBean> {
-            override fun longClickItem(musicInfo: MusicBean, currentPosition: Int) {
-                LogUtil.d(mTag, "长按了")
-            }
-        })
-
         adapter.setCbShowListener(object : SongAdapter.OnShowCbListener {
             override fun showCb(showCb: Boolean) {
-                LogUtil.d(mTag, "IS SHOW CB  $showCb")
                 isShowCb = showCb
                 if (!showCb) {
                     mSelectList.clear()
@@ -215,14 +214,14 @@ class SongCategoryFragment : BaseMusicFragmentDev<CategoryFragmentBinding>(), Vi
         mBinding.groupSongAdd.visibility = if (showCb) View.VISIBLE else View.GONE
     }
 
-
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
         if (speakerDisposable != null) {
             speakerDisposable?.dispose()
             speakerDisposable = null
         }
     }
+
 
     /**
      * 列表进入选中状态时，需要处理返回事件。

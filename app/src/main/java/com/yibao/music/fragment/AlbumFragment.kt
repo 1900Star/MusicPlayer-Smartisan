@@ -132,8 +132,8 @@ class AlbumFragment : BaseMusicFragmentDev<AlbumFragmentBinding>(), View.OnClick
                         MoreMenuBottomDialog.newInstance(
                             musicBean,
                             position,
-                            false,
-                            false
+                            isNeedScore = false,
+                            isNeedSetTime = false
                         ).getBottomDialog(mActivity)
                     }
                 })

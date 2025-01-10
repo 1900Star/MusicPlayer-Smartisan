@@ -77,12 +77,13 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         mBinding.musicViewpager2.setCurrentItem(Constant.NUMBER_TWO, false)
         mBinding.musicViewpager2.offscreenPageLimit = 5
         mBinding.musicViewpager2.isUserInputEnabled = false
-        // 初次设置喇叭显示
+        // 初次设置喇叭显示,只在 position>0 时设置。
         mHanler.postDelayed({
             val cPosition = mSps.getInt(Constant.MUSIC_POSITION)
-            mBus.post(Constant.MUSIC_SPEAKER, cPosition.toString())
+            if (cPosition > 0) {
+                mBus.post(Constant.MUSIC_SPEAKER, cPosition.toString())
+            }
         }, 1000)
-
 
     }
 
@@ -140,9 +141,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
         mBinding.bnvMusic.setOnItemSelectedListener(mNbvListener)
         mBinding.smartisanControlBar.setOnClickListener { readyMusic() }
         mBinding.musicNavigationBar.setOnNavigationBarListener { position: Int ->
-            setCurrentPosition(
-                position
-            )
+            setCurrentPosition(position)
         }
         mBinding.smartisanControlBar.setClickListener { clickFlag: Int ->
             if (mMusicConfig) {
@@ -199,10 +198,8 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
                 ToastUtil.showNoMusic(this@MusicActivity)
             }
         }
-        mBinding.qqControlBar.setOnPagerSelectListener { position: Int ->
-            val pageType = mSps.getInt(Constant.PAGE_TYPE)
+        mBinding.qqControlBar.setOnPagerSelectListener {
             disposableQqLyric()
-//            startMusicService(position, pageType)
         }
         mBinding.musicViewpager2.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -247,6 +244,7 @@ class MusicActivity : BaseActivity(), OnMusicItemClickListener, OnUpdateTitleLis
     private fun setCurrentPosition(position: Int) {
         mBinding.musicViewpager2.setCurrentItem(position, false)
     }
+
 
     /**
      * 切换当前播放状态

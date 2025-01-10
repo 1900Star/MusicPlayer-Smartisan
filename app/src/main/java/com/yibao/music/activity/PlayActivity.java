@@ -90,7 +90,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         if (isShowLyrics) {
             showLyrics();
         }
-        disPosiableLyricsView();
+        disposableLyricsView();
 
     }
 
@@ -234,7 +234,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
     }
 
 
-    private void disPosiableLyricsView() {
+    private void disposableLyricsView() {
         if (mCloseLyrDisposable != null) {
             mCloseLyrDisposable.dispose();
             mCloseLyrDisposable = null;
@@ -243,7 +243,6 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
     }
 
     private void setAlbum(String url) {
-        LogUtil.d(TAG, "最终最终URL " + url);
         try {
             ImageUitl.loadPic(this, url, mBinding.playingSongAlbum, R.drawable.playing_cover_lp, isSuccess -> {
                 if (isSuccess) {
@@ -441,7 +440,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
     private void showLyrics() {
         if (isShowLyrics) {
             clearDisposableLyric();
-            disPosiableLyricsView();
+            disposableLyricsView();
         } else {
             boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(mCurrentMusicInfo.getTitle()), StringUtil.getArtist(mCurrentMusicInfo.getArtist()));
             if (lyricIsExists) {
@@ -503,7 +502,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
      * size 小于2表示没有歌词，5秒后自动关闭歌词画面。
      */
     public void closeLyricsView() {
-        disPosiableLyricsView();
+        disposableLyricsView();
         if (mLyricList.size() < Constant.NUMBER_TWO) {
             if (mCloseLyrDisposable == null) {
                 mCloseLyrDisposable = Observable.timer(5, TimeUnit.SECONDS)

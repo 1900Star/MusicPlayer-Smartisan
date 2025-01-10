@@ -6,12 +6,10 @@
     android:layout_height="match_parent">
 
     <com.yibao.music.view.music.MusicView
-
         android:id="@+id/music_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </com.yibao.music.view.music.MusicView>
+        android:layout_height="match_parent"
+        app:isFloat="true" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/group_song_add"

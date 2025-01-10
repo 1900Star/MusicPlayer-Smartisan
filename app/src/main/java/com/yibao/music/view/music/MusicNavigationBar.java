@@ -2,7 +2,11 @@ package com.yibao.music.view.music;
 
 import android.content.Context;
 import android.graphics.Color;
+
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
+
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +20,11 @@ import com.yibao.music.util.Constant;
 
 
 /**
+ * @author Luoshipeng
  * @ Name:   NavigationBar
  * @ Email:  strangermy98@gmail.com
  * @ Time:   2018/8/11/ 0:18
  * @ Des:     底部的导航Tab
- * @author Luoshipeng
  */
 public class MusicNavigationBar extends LinearLayout implements View.OnClickListener {
     ImageView mMusicBarPlaylistIv;
@@ -72,34 +76,40 @@ public class MusicNavigationBar extends LinearLayout implements View.OnClickList
         setAllTabbarNotPressed(flag);
         switch (flag) {
             case Constant.NUMBER_ZERO:
-                mMusicBarPlaylistIv.setBackgroundResource(R.drawable.tabbar_playlist_selector);
-                mMusicBarPlaylistTv.setTextColor(ColorUtil.musicbarTvDown);
-                mMusicBarPlaylist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
+                setIcon2Color(mMusicBarPlaylistIv, mMusicBarPlaylistTv, R.drawable.tabbar_playlist_selector);
+                setBg(mMusicBarPlaylist);
                 break;
             case Constant.NUMBER_ONE:
-                mMusicBarArtisanlistIv.setBackgroundResource(R.drawable.tabbar_artisanlist_selector);
-                mMusicBarArtisanlistTv.setTextColor(ColorUtil.musicbarTvDown);
-                mMusicBarArtisanlist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
+                setBg(mMusicBarArtisanlist);
+                setIcon2Color(mMusicBarArtisanlistIv,
+                        mMusicBarArtisanlistTv, R.drawable.tabbar_artisanlist_selector);
                 break;
             case Constant.NUMBER_TWO:
-                mMusicBarSonglistIv.setBackgroundResource(R.drawable.tabbar_songlist_selector);
-                mMusicBarSonglistTv.setTextColor(ColorUtil.musicbarTvDown);
-                mMusicBarSonglist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
+                setIcon2Color(mMusicBarSonglistIv, mMusicBarSonglistTv, R.drawable.tabbar_songlist_selector);
+                setBg(mMusicBarSonglist);
                 break;
             case Constant.NUMBER_THREE:
-                mMusicBarAlbumlistIv.setBackgroundResource(R.drawable.tabbar_albumlist_selector);
-                mMusicBarAlbumlist.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
-                mMusicBarAlbumlistTv.setTextColor(ColorUtil.musicbarTvDown);
+                setIcon2Color(mMusicBarAlbumlistIv, mMusicBarAlbumlistTv, R.drawable.tabbar_albumlist_selector);
+                setBg(mMusicBarAlbumlist);
                 break;
             case Constant.NUMBER_FOUR:
-                mMusicBarStylelistIv.setBackgroundResource(R.drawable.tabbar_stylelist_selector);
-                mMusicBarStylelistTv.setTextColor(ColorUtil.musicbarTvDown);
-                mMusicBarAboutLl.setBackground(getResources().getDrawable(R.drawable.tabbar_bg_down));
+                setIcon2Color(mMusicBarStylelistIv, mMusicBarStylelistTv, R.drawable.tabbar_stylelist_selector);
+                setBg(mMusicBarAboutLl);
                 break;
             default:
                 break;
         }
 
+    }
+
+    private void setBg(LinearLayout layout) {
+        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.tabbar_bg_down, null);
+        layout.setBackground(drawable);
+    }
+
+    private void setIcon2Color(ImageView iv, TextView tv, int ivRes) {
+        iv.setBackgroundResource(ivRes);
+        tv.setTextColor(ColorUtil.musicbarTvDown);
     }
 
     /**
