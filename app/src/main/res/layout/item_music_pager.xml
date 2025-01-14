@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="58dp"
     android:gravity="center"
@@ -7,46 +8,45 @@
 
 
     <com.yibao.music.view.CircleImageView
-        android:id="@+id/iv_pager_albulm"
+        android:id="@+id/iv_pager_album"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_margin="4dp"
-        android:contentDescription="@null" />
+        android:layout_marginStart="6dp"
+        android:contentDescription="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/tv_pager_song_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="6dp"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxLength="25"
+        android:scrollbars="horizontal"
+        android:singleLine="true"
+        android:textColor="@color/textDes"
+        android:textSize="@dimen/music_loating_title"
+        app:layout_constraintStart_toEndOf="@id/iv_pager_album"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_pager_song_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxLength="25"
-            android:scrollbars="horizontal"
-            android:singleLine="true"
-            android:textColor="@color/textDes"
-            android:textSize="@dimen/music_loating_title" />
-
-        <TextView
-            android:id="@+id/tv_pager_art_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxLength="54"
-            android:singleLine="true"
-            android:textColor="@color/textName"
-            android:textSize="@dimen/music_artist"
-            android:textStyle="bold" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_pager_art_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxLength="54"
+        android:singleLine="true"
+        android:textColor="@color/textName"
+        android:textSize="@dimen/music_artist"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/tv_pager_song_name"
+        app:layout_constraintTop_toBottomOf="@id/tv_pager_song_name" />
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

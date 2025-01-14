@@ -60,18 +60,18 @@ public class LyricsUtil {
     public static void clearLyricList() {
         File file = FileUtil.getLyricsDir();
         File[] files = file.listFiles();
-
-        int nu = 0;
-        for (File f : files) {
-            List<String> lylist = getLyricsList(f);
-            if (lylist.size() < 2) {
-                LogUtil.d(TAG, " 歌词长度小于4的 : " + "\n" + f.getAbsolutePath());
-                nu++;
-                f.delete();
+        if (files != null) {
+            int nu = 0;
+            for (File f : files) {
+                List<String> lylist = getLyricsList(f);
+                if (lylist.size() < 2) {
+                    LogUtil.d(TAG, " 歌词长度小于4的 : " + "\n" + f.getAbsolutePath());
+                    nu++;
+                    f.delete();
+                }
             }
-
+            LogUtil.d(TAG, "  无效歌词的长度   " + nu);
         }
-        LogUtil.d(TAG, "  无效歌词的长度   " + nu);
 
     }
 
@@ -79,7 +79,7 @@ public class LyricsUtil {
         List<String> strings = new ArrayList<>();
         try {
             String charsetName = "utf-8";
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsetName));
+            br = new BufferedReader(new InputStreamReader(Files.newInputStream(file.toPath()), charsetName));
             String line = br.readLine();
             while (line != null) {
                 strings.add(line);
@@ -189,7 +189,7 @@ public class LyricsUtil {
     }
 
     private static boolean isContainsEnglishAndChinese(String str) {
-        String regex = "^[a-z0-9A-Z\\\\u4e00-\u9fa5]+$";
+        String regex = "^[a-z0-9A-Z\\\\u4e00-龥]+$";
         return str.matches(regex);
     }
 }

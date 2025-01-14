@@ -2,6 +2,7 @@ package com.yibao.music.adapter;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -14,12 +15,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
 import com.yibao.music.base.listener.OnMusicItemClickListener;
 import com.yibao.music.model.MusicBean;
+import com.yibao.music.network.QqMusicRemote;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.ImageUitl;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.StringUtil;
 
 import java.util.List;
@@ -93,11 +97,26 @@ public class QqBarPagerAdapter
 
 
     private void initView(MusicBean musicInfo, View view) {
-        ImageView mAlbulm = view.findViewById(R.id.iv_pager_albulm);
+        ImageView mAlbum = view.findViewById(R.id.iv_pager_album);
         TextView tvSongName = view.findViewById(R.id.tv_pager_song_name);
         TextView tvArtist = view.findViewById(R.id.tv_pager_art_name);
         String albumUri = FileUtil.getAlbumUrl(musicInfo, 1);
-        ImageUitl.loadPlaceholder(mContext, albumUri, mAlbulm);
+
+        try {
+            ImageUitl.loadPic((Activity) mContext, albumUri, mAlbum, R.drawable.playing_cover_lp, isSuccess -> {
+                if (!isSuccess) {
+                    QqMusicRemote.getSongImg(mContext, musicInfo.getTitle(), url -> {
+                        if (url != null) {
+                            Glide.with(mContext).load(url).placeholder(R.drawable.playing_cover_lp).error(R.drawable.playing_cover_lp).into(mAlbum);
+                        }
+                    });
+                }
+            });
+        } catch (Exception e) {
+            LogUtil.d("===", e.getMessage());
+        }
+
+
         String currentLyrics = musicInfo.getCurrentLyrics();
         tvSongName.setText(StringUtil.getTitle(musicInfo));
         tvArtist.setText(currentLyrics != null ? currentLyrics : StringUtil.getArtist(musicInfo));

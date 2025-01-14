@@ -42,7 +42,6 @@
         android:id="@+id/music_slide_bar"
         android:layout_width="30dp"
         android:layout_height="match_parent"
-        android:layout_gravity="right"
-        tools:ignore="RtlHardcoded" />
+        android:layout_gravity="end" />
 </FrameLayout>
 

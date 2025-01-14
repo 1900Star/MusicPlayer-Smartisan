@@ -25,7 +25,7 @@ public class QueryMusicFlagListUtil {
      * @return List
      */
     public static List<MusicBean> getMusicDataList(QueryBuilder<MusicBean> queryBuilder, int pageFlag, String condition) {
-        boolean b = condition != null && !condition.equals("");
+        boolean b = condition != null && !condition.isEmpty();
 
 //        LogUtil.d("lsp", "  数据源 pageType  ==   " + pageFlag + "  condition  =  " + condition + " = " + b);
 
@@ -74,7 +74,7 @@ public class QueryMusicFlagListUtil {
                 return queryBuilder.where(MusicBeanDao.Properties.IsFavorite.eq(true)).orderDesc(MusicBeanDao.Properties.Time).build().list();
             }
         }
-        LogUtil.d("lsp","=====AAA====== 默认数据 =========AAA======");
+        LogUtil.d("QueryMusicFlagListUtil","=====AAA====== 默认数据 =========AAA======");
         return MusicListUtil.sortByAbc(queryBuilder.build().list());
     }
 

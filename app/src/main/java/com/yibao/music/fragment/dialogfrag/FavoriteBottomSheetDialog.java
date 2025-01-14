@@ -128,7 +128,7 @@ public class FavoriteBottomSheetDialog
                         mList.remove(bean.getPosition());
                         setTitle(mList.size());
                         checkCurrentFavorite(bean.getSongTitle());
-                        if (mList.size() == Constant.NUMBER_ZERO) {
+                        if (mList.isEmpty()) {
                             mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
                     }

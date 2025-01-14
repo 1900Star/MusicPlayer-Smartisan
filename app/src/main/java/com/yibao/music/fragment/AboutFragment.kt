@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.storage.StorageManager
@@ -130,9 +131,15 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>(), OnScanConfig
         requireActivity().recreate()
     }
 
+
     private fun takePhoto() {
-        requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2) {
+            requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
     }
+
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -215,11 +222,12 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>(), OnScanConfig
         mBinding.aboutHeaderIv.setImageBitmap(bitmap)
     }
 
+    private val mHandler = Handler(Looper.getMainLooper())
     private fun clearErrorLyric() {
-        val handler = Handler(Looper.getMainLooper())
+
         ThreadPoolProxyFactory.newInstance().execute {
             LyricsUtil.clearLyricList()
-            handler.post { ToastUtil.show(mActivity, "错误歌词已删除") }
+            mHandler.post { ToastUtil.show(mActivity, "错误歌词已删除") }
         }
     }
 
@@ -233,6 +241,10 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>(), OnScanConfig
     override fun scanMusic(isAutoScan: Boolean) {
         LogUtil.d(mTag, "关于界面扫描   $isAutoScan")
 
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mHandler.removeCallbacksAndMessages(null)
     }
 }
