@@ -74,10 +74,13 @@ public class AlbumWallAdapter extends BaseBindingAdapter<AlbumInfo> {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == getTypeItem()) {
+            ItemAlbumWallBinding binding = ItemAlbumWallBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            return new PlayViewHolder(binding);
+        } else {
+            return moreHolder(parent);
+        }
 
-        ItemAlbumWallBinding binding = ItemAlbumWallBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-
-        return new PlayViewHolder(binding);
     }
 
     @Nullable

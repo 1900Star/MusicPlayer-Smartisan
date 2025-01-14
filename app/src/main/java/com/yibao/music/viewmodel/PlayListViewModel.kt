@@ -10,6 +10,7 @@ import com.yibao.music.model.PlayListBean
 import com.yibao.music.model.greendao.MusicBeanDao
 import com.yibao.music.model.greendao.PlayListBeanDao
 import com.yibao.music.util.Constant
+import com.yibao.music.util.LogUtil
 import com.yibao.music.util.MusicDaoUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,8 +22,7 @@ class PlayListViewModel : BaseViewModel() {
 
 
     fun addPlayList(name: String, oprType: Int) {
-
-
+        LogUtil.d(mTag, "添加名字：$name  ==  标识：$oprType")
         val beanList =
             playDao().queryBuilder().where(PlayListBeanDao.Properties.Title.eq(name))
                 .list()
@@ -37,11 +37,9 @@ class PlayListViewModel : BaseViewModel() {
                     )
                 )
                 if (insertOrReplaceId != 0L) {
-                    ok(code = 1)
-
+                    ok(code = 0)
                 } else {
                     fail("添加失败")
-
                 }
             } else {
                 // 重命名

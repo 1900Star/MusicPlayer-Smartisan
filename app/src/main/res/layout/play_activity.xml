@@ -179,8 +179,9 @@
             android:layout_width="@dimen/circle_album_height"
             android:layout_height="@dimen/circle_album_height"
             android:layout_centerInParent="true"
+            android:src="@drawable/nina"
             android:contentDescription="@null"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
     </RelativeLayout>
 

@@ -137,10 +137,15 @@ class SongAdapter(
         return mList[i].firstChar
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val binding =
-            ItemMusicListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return SongListViewHolder(binding)
+        if (viewType == typeItem) {
+            val binding =
+                ItemMusicListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return SongListViewHolder(binding)
+        } else {
+            return moreHolder(parent)
+        }
     }
 
 

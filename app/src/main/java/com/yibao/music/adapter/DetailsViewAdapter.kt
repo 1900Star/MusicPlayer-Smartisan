@@ -30,7 +30,7 @@ class DetailsViewAdapter(
     list: List<MusicBean>,
     private val mPageType: Int,
     private val mCondition: String
-) : BaseBindingAdapter<MusicBean> (list as MutableList<MusicBean>){
+) : BaseBindingAdapter<MusicBean>(list as MutableList<MusicBean>) {
 
 
     override fun getLastItemDes(): String {
@@ -106,9 +106,18 @@ class DetailsViewAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val binding =
-            ItemDetailsAdapterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return DetailsHolder(binding)
+        if (viewType == typeItem) {
+            val binding =
+                ItemDetailsAdapterBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            return DetailsHolder(binding)
+        } else {
+            return moreHolder(parent)
+        }
+
     }
 
     internal class DetailsHolder(var mBinding: ItemDetailsAdapterBinding) : RecyclerView.ViewHolder(

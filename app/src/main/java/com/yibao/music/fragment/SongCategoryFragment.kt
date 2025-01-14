@@ -10,7 +10,6 @@ import com.yibao.music.adapter.SongAdapter
 import com.yibao.music.base.bindings.BaseBindingAdapter
 import com.yibao.music.base.bindings.BaseMusicFragmentDev
 import com.yibao.music.databinding.SongCategoryFragmentBinding
-
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog
 import com.yibao.music.model.MusicBean
 import com.yibao.music.util.Constant
@@ -18,6 +17,7 @@ import com.yibao.music.util.LogUtil
 import com.yibao.music.util.ToastUtil
 import com.yibao.music.viewmodel.SongViewModel
 import io.reactivex.disposables.Disposable
+
 
 /**
  * @项目名： ArtisanMusic
@@ -40,6 +40,7 @@ class SongCategoryFragment : BaseMusicFragmentDev<SongCategoryFragmentBinding>()
         mBinding.ivSongAddToList.setOnClickListener(this)
         mBinding.ivSongAddToPlay.setOnClickListener(this)
     }
+
 
     override fun initData() {
         val position = requireArguments().getInt(Constant.POSITION)
