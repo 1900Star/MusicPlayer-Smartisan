@@ -156,6 +156,7 @@ public class AddListDialog
         }
     }
 
+    // 添加列表
     private void addNewPlayList() {
         String listTitle = mEditAddList.getText().toString().trim();
         if (listTitle.isEmpty()) {

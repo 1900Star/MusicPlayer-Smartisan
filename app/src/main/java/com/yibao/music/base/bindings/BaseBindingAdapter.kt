@@ -1,12 +1,15 @@
 package com.yibao.music.base.bindings
 
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.yibao.music.MusicApplication
+import com.yibao.music.databinding.LoadMoreFootviewBinding
 import com.yibao.music.model.MusicBean
 import com.yibao.music.util.Constant
+import com.yibao.music.util.SnakbarUtil
 import com.yibao.music.util.SpUtils
 import java.util.*
 
@@ -23,17 +26,24 @@ abstract class BaseBindingAdapter<T>(var mList: MutableList<T>) :
     private lateinit var mLongClickListener: ItemLongClickListener<T>
     private lateinit var mEditClickListener: ItemEditClickListener
     private lateinit var mMenuListener: OnOpenItemMoreMenuListener
-    protected val TYPE_ITEM = 0
-    protected val TYPE_FOOTER = 1
+    protected val typeItem = 0
+    protected val typeFooter = 1
     protected var isSelectStatus = false
     protected val mSp = SpUtils(MusicApplication.getInstance(), Constant.MUSIC_CONFIG)
 
-    override fun getItemCount() = if (mList.isNotEmpty()) mList.size else 0
+    override fun getItemViewType(position: Int): Int {
+        return if (position == itemCount - 1) {
+            typeFooter
+        } else typeItem
+    }
+
+    override fun getItemCount() = if (mList.isNotEmpty()) mList.size + 1 else 0
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
-        bindView(holder, mList[position])
+        if (position < mList.size) {
+            bindView(holder, mList[position])
+        }
     }
 
     abstract fun bindView(holder: RecyclerView.ViewHolder, bean: T)
@@ -134,12 +144,22 @@ abstract class BaseBindingAdapter<T>(var mList: MutableList<T>) :
         return mList
     }
 
+    protected fun moreHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        val binding =
+            LoadMoreFootviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val listCount = "${mList.size}${getLastItemDes()}"
+        binding.tvSongCount.text = listCount
+        binding.loadLayout.setOnClickListener {
+            SnakbarUtil.lastItem(binding.loadLayout)
+        }
 
-    internal class LoadMoreHolder(view: View?) : RecyclerView.ViewHolder(
-        view!!
-    ) {
+        return MoreHolder(binding)
 
     }
+
+    inner class MoreHolder(viewBinding: LoadMoreFootviewBinding) :
+        RecyclerView.ViewHolder(viewBinding.root)
+
 
     override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
         super.onViewAttachedToWindow(holder)
@@ -153,10 +173,9 @@ abstract class BaseBindingAdapter<T>(var mList: MutableList<T>) :
         super.onAttachedToRecyclerView(recyclerView)
         val manager = recyclerView.layoutManager
         if (manager is GridLayoutManager) {
-            val gridManager = manager
-            gridManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    return if (getItemViewType(position) == TYPE_FOOTER) gridManager.spanCount else 1
+                    return if (getItemViewType(position) == typeFooter) manager.spanCount else 1
                 }
             }
         }

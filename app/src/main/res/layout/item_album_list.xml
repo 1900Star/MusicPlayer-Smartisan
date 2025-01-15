@@ -11,11 +11,10 @@
         android:id="@+id/tv_album_item_sticky_view"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-
         android:layout_marginStart="18dp"
+        android:gravity="center_vertical"
         android:background="@color/listBg"
-        android:textColor="@color/aboutSign"
-        android:visibility="visible" />
+        android:textColor="@color/aboutSign" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ll_album_list_item"
@@ -50,6 +49,7 @@
             android:contentDescription="@null"
             android:scaleType="centerCrop"
             android:src="@drawable/nina"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

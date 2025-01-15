@@ -2,7 +2,6 @@ package com.yibao.music.adapter;
 
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,8 +33,8 @@ import java.util.List;
 
 public class AlbumAdapter
         extends BaseBindingAdapter<AlbumInfo> {
-    private Activity mContext;
-    private int mIsShowStickyView;
+    private final Activity mContext;
+    private final int mIsShowStickyView;
 
     /**
      * @param context          c
@@ -58,10 +57,15 @@ public class AlbumAdapter
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemAlbumTileBinding tileBinding = ItemAlbumTileBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        ItemAlbumListBinding listBinding = ItemAlbumListBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        if (viewType == getTypeItem()) {
+            ItemAlbumTileBinding tileBinding = ItemAlbumTileBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            ItemAlbumListBinding listBinding = ItemAlbumListBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            return mIsShowStickyView == Constant.NUMBER_ZERO ? new AlbumListHolder(listBinding) : new AlbumTileHolder(tileBinding);
 
-        return mIsShowStickyView == Constant.NUMBER_ZERO ? new AlbumListHolder(listBinding) : new AlbumTileHolder(tileBinding);
+        } else {
+            return moreHolder(parent);
+        }
+
     }
 
     @Override
@@ -107,9 +111,7 @@ public class AlbumAdapter
 
         albumlistHolder.mBinding.ivAlbumListItemSelect.setOnClickListener(v -> selectStatus(info, position));
         //            Item点击监听
-        albumlistHolder.mBinding.llAlbumListItem.setOnClickListener(view -> {
-            AlbumAdapter.this.openDetails(info, position);
-        });
+        albumlistHolder.mBinding.llAlbumListItem.setOnClickListener(view -> AlbumAdapter.this.openDetails(info, position));
     }
 
     private void selectStatus(AlbumInfo musicBean, int adapterPosition) {

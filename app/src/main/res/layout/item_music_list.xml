@@ -10,10 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:background="@color/listBg"
+        android:gravity="center_vertical"
         android:paddingStart="18dp"
-        android:paddingEnd="0.1dp"
+        android:paddingEnd="0dp"
         android:textColor="@color/aboutSign"
-        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

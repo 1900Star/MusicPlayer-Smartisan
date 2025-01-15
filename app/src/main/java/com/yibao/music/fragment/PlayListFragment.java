@@ -11,18 +11,17 @@ import com.yibao.music.activity.PlayListActivity;
 import com.yibao.music.adapter.DetailsViewAdapter;
 import com.yibao.music.adapter.PlayListAdapter;
 import com.yibao.music.base.bindings.BaseMusicFragmentDev;
-import com.yibao.music.base.listener.OnConfirmListener;
 import com.yibao.music.base.listener.OnFinishActivityListener;
 import com.yibao.music.databinding.PlayListFragmentBinding;
 import com.yibao.music.fragment.dialogfrag.AddListDialog;
 import com.yibao.music.fragment.dialogfrag.ConfirmDialog;
-import com.yibao.music.fragment.dialogfrag.DeletePlayListDialog;
 import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.model.Message;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.PlayListBean;
 import com.yibao.music.model.greendao.MusicBeanDao;
 import com.yibao.music.util.Constant;
+import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.MusicToolBar;
 import com.yibao.music.viewmodel.PlayListViewModel;
@@ -85,12 +84,11 @@ public class PlayListFragment extends BaseMusicFragmentDev<PlayListFragmentBindi
     }
 
     private void ok(Message message) {
-
+        LogUtil.d(getMTag(),"添加标记： "+message.toString());
         if (message.getCode() == 2) {
             ToastUtil.show(requireActivity(), "已删除");
             onRefresh();
         } else {
-
             ToastUtil.show(requireActivity(), "已添加");
             ((OnFinishActivityListener) mContext).finishActivity();
         }

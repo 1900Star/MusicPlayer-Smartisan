@@ -38,7 +38,7 @@ public class BottomSheetAdapter
     }
 
     @Override
-    public void bindView(RecyclerView.ViewHolder holder, MusicBean musicItem) {
+    public void bindView(@NonNull RecyclerView.ViewHolder holder, MusicBean musicItem) {
         if (holder instanceof MusicHolder) {
             MusicHolder musicHolder = (MusicHolder) holder;
             musicHolder.mBinding.favoriteMusicName.setText(musicItem.getTitle());
@@ -72,8 +72,12 @@ public class BottomSheetAdapter
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        BottomSheetMusicItemBinding binding = BottomSheetMusicItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new MusicHolder(binding);
+        if (viewType == getTypeItem()) {
+            BottomSheetMusicItemBinding binding = BottomSheetMusicItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            return new MusicHolder(binding);
+        } else {
+            return moreHolder(parent);
+        }
     }
 
     static class MusicHolder

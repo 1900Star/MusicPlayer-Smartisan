@@ -54,4 +54,13 @@ public class Message {
     public void setMsgKey(String msgKey) {
         this.msgKey = msgKey;
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "code=" + code +
+                ", msgKey='" + msgKey + '\'' +
+                ", object=" + object +
+                '}';
+    }
 }

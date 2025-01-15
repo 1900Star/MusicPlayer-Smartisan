@@ -7,6 +7,7 @@ import com.yibao.music.base.bindings.BaseMusicFragmentDev
 import com.yibao.music.databinding.SongFragmentBinding
 import com.yibao.music.util.ColorUtil
 import com.yibao.music.util.Constant
+import com.yibao.music.util.LogUtil
 import com.yibao.music.view.music.MusicToolBar.OnToolbarClickListener
 
 /**
