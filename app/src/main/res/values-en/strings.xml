@@ -10,7 +10,7 @@
        A special, simple and convenient music player.
     </string>
     <string name="project_url">https://github.com/1900Star/SmartisanMusicPlayer</string>
-    <string name="project_introduce">Introduction</string>
+    <string name="project_introduce">About</string>
 
     <string name="child_view_not">SwipeItemLayout Of subviews are not compliant</string>
 
@@ -98,4 +98,7 @@
     <string name="switch_language">Language</string>
     <string name="apply_lyrics">ShowLyrics</string>
     <string name="album_wall">Album Wall</string>
+    <string name="version_name">VersionName</string>
+    <string name="version_info">VersionInfo</string>
+    <string name="version_number">VersionCode</string>
 </resources>

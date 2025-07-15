@@ -110,16 +110,26 @@ public class MusicPlayService extends Service {
         playPosition = intent.getIntExtra(Constant.POSITION, 0);
         int pageType = intent.getIntExtra(Constant.PAGE_TYPE, 0);
         String condition = intent.getStringExtra(Constant.CONDITION);
-        // 保存页面标识
-        mSp.putValues(new SpUtils.ContentValue(Constant.PAGE_TYPE, pageType));
+        // 当前的页面标识，如果和传递的pageType一样，就不用重新查询音乐列表数据，否则重新查询音乐列表数据。
+        int cPageType = mSp.getInt(Constant.PAGE_TYPE);
+        LogUtil.d(TAG, "当前标识：   ===cPageType===   " + cPageType);
+        LogUtil.d(TAG, "播放位置 ：" + playPosition + "  页面标识 ： " + pageType + "  条件Key ：" + condition);
+        if (cPageType != pageType || pageType == 0 || mMusicDataList == null || mMusicDataList.isEmpty()) {
+            // 播放列表数据
+            mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao.queryBuilder(), pageType, condition);
+            // 保存页面标识
+            mSp.putValues(new SpUtils.ContentValue(Constant.PAGE_TYPE, pageType));
+            LogUtil.d(TAG, "重新加载音乐列表数据： " + mMusicDataList.size());
+        } else {
+            LogUtil.d(TAG, "不需要重新加载音乐列表数据： " + mMusicDataList.size());
+        }
+
+        LogUtil.d(TAG, "当前列表长度： " + mMusicDataList.size());
+        // 保存关键字
         if (condition != null) {
-            // 保存关键字
             mSp.putValues(new SpUtils.ContentValue(Constant.CONDITION, condition));
         }
 
-//        LogUtil.d(TAG, "Service position  ==  " + playPosition + "   pageType  ==   " + pageType + "  condition  ==  " + condition);
-        // 播放列表数据
-        mMusicDataList = QueryMusicFlagListUtil.getMusicDataList(mMusicDao.queryBuilder(), pageType, condition);
         LogUtil.d(TAG, " 播放位置== " + playPosition);
         //执行播放
         mAudioBinder.play();
@@ -162,7 +172,6 @@ public class MusicPlayService extends Service {
             if (mMusicDataList != null && !mMusicDataList.isEmpty()) {
                 playPosition = playPosition >= mMusicDataList.size() ? 0 : playPosition;
                 mMusicInfo = mMusicDataList.get(playPosition);
-                LogUtil.d(TAG, "  cccc ===   cc   " + mMusicInfo.getTitle());
                 mediaPlayer = MediaPlayer.create(MusicPlayService.this, getSongFileUri());
                 mediaPlayer.setOnPreparedListener(this);
                 mediaPlayer.setOnCompletionListener(this);
@@ -183,6 +192,7 @@ public class MusicPlayService extends Service {
             }
 
         }
+
         // 更新小喇叭
         private void postSpeakerState(int position, boolean isPlay) {
             mSp.putValues(new SpUtils.ContentValue(Constant.MUSIC_PLAY_STATUS, isPlay));
@@ -302,6 +312,7 @@ public class MusicPlayService extends Service {
 
         public boolean isPlaying() {
             return mediaPlayer.isPlaying();
+
         }
 
         public void start() {
@@ -428,7 +439,7 @@ public class MusicPlayService extends Service {
                 mAudioBinder.pause();
                 mAudioBinder.hintNotification();
                 mBus.post(Constant.PLAY_STATUS, Constant.NUMBER_TWO);
-                mAudioBinder.postSpeakerState(mAudioBinder.getPosition(),false);
+                mAudioBinder.postSpeakerState(mAudioBinder.getPosition(), false);
                 stopSelf();
             }
         }
@@ -505,6 +516,7 @@ public class MusicPlayService extends Service {
     public void abandonAudioFocus() {
         if (mAudioManager != null) {
             mAudioManager.abandonAudioFocus(mAudioFocusChange);
+
         }
     }
 

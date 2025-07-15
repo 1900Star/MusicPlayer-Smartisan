@@ -14,7 +14,6 @@ import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog
 import com.yibao.music.model.MusicBean
 import com.yibao.music.util.Constant
 import com.yibao.music.util.LogUtil
-import com.yibao.music.util.ToastUtil
 import com.yibao.music.viewmodel.SongViewModel
 import io.reactivex.disposables.Disposable
 
@@ -62,13 +61,11 @@ class SongCategoryFragment : BaseMusicFragmentDev<SongCategoryFragmentBinding>()
 
         val cPosition = mSp.getInt(Constant.MUSIC_POSITION)
         if (cPosition > 0) {
-            // 可见时更新小喇叭
             mBinding.musicView.updateSpeakerState(cPosition)
         }
 
         speakerDisposable = mBus.toObservableType(Constant.MUSIC_SPEAKER, String::class.java)
             .subscribe { sPosition ->
-                LogUtil.d(mTag, "收到更新小喇叭：$sPosition")
                 mBinding.musicView.updateSpeakerState(sPosition.toInt())
             }
     }
@@ -143,7 +140,7 @@ class SongCategoryFragment : BaseMusicFragmentDev<SongCategoryFragmentBinding>()
                     mSelectList.clear()
                     setNotAllSelected(mList)
                 }
-                updateAddToListBtn(showCb)
+//                updateAddToListBtn(showCb)
             }
         })
     }
@@ -160,6 +157,8 @@ class SongCategoryFragment : BaseMusicFragmentDev<SongCategoryFragmentBinding>()
         } else {
             mSelectList.add(bean)
         }
+        val b = isShowCb && mSelectList.isNotEmpty()
+        updateAddToListBtn(b)
         LogUtil.d(mTag, "选中长度：  ${mSelectList.size}")
     }
 
@@ -191,6 +190,9 @@ class SongCategoryFragment : BaseMusicFragmentDev<SongCategoryFragmentBinding>()
             }
 
             R.id.iv_song_add_to_play -> {
+                if (mSelectList.isEmpty()) {
+                    showMsg("选择要添加的歌曲")
+                }
                 LogUtil.d(mTag, "添加长度：  ${mSelectList.size}")
             }
         }
@@ -199,7 +201,7 @@ class SongCategoryFragment : BaseMusicFragmentDev<SongCategoryFragmentBinding>()
 
     private fun startPlayListActivity() {
         if (mSelectList.isEmpty()) {
-            ToastUtil.show(requireActivity(), "请选择要添加的歌曲")
+            showMsg("请选择要添加的歌曲")
         } else {
             val arrayList = ArrayList<String>()
             for (musicBean in mSelectList) {

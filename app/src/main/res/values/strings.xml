@@ -99,4 +99,7 @@
     <string name="switch_language">切换语言</string>
     <string name="apply_lyrics">应用歌词</string>
     <string name="album_wall">专辑墙</string>
+    <string name="version_name">版本名</string>
+    <string name="version_info">版本信息</string>
+    <string name="version_number">版本号</string>
 </resources>

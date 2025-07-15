@@ -50,7 +50,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
         // pageType 0 toolbar上的搜索，1 播放界面点击歌曲名，直接以歌手搜索。
         val pageType = intent.getIntExtra(Constant.PAGE_TYPE, 0)
         LogUtil.d(TAG, "PageType   $pageType")
-        audioBinder = MusicActivity.audioBinder
+        audioBinder = MainActivity.audioBinder
         mBinding.smartisanControlBar.setPbColorAndPreBtnGone()
         // 从PlayActivity过来的,按歌手搜索。
         if (pageType > Constant.NUMBER_ZERO) {

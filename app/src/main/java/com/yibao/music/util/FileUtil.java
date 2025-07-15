@@ -1,5 +1,6 @@
 package com.yibao.music.util;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 
 /**
@@ -80,7 +82,7 @@ public class FileUtil {
                 new String[]{filePath}, null);
 
         if (cursor != null && cursor.moveToFirst()) {
-            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
+            @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
             Uri baseUri = Uri.parse("content://media/external/images/media");
             return Uri.withAppendedPath(baseUri, "" + id);
         } else {
@@ -153,7 +155,7 @@ public class FileUtil {
     public static File getLyricsFile(String songName, String artist) {
         String lyricsName = songName + "$$" + artist + ".lrc";
         if (VersionUtil.checkAndroidVersionQ()) {
-            String apkFilePath = MusicApplication.getInstance().getExternalFilesDir(Constant.MUSIC_LYRICS_DIR).getAbsolutePath();
+            String apkFilePath = Objects.requireNonNull(MusicApplication.getInstance().getExternalFilesDir(Constant.MUSIC_LYRICS_DIR)).getAbsolutePath();
             return new File(apkFilePath + File.separator + lyricsName);
         } else {
             File file = new File(Constant.MUSIC_LYRICS_ROOT);

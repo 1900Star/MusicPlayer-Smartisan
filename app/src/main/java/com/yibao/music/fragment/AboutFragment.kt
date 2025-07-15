@@ -9,27 +9,37 @@ import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.os.storage.StorageManager
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import com.yibao.music.R
+import com.yibao.music.activity.TestActivity
 import com.yibao.music.base.bindings.BaseMusicFragmentDev
 import com.yibao.music.base.listener.OnScanConfigListener
 import com.yibao.music.base.listener.OnUpdateTitleListener
 import com.yibao.music.databinding.AboutFragmentBinding
-import com.yibao.music.fragment.dialogfrag.*
+import com.yibao.music.fragment.dialogfrag.CrashSheetDialog
+import com.yibao.music.fragment.dialogfrag.PermissionsDialog
+import com.yibao.music.fragment.dialogfrag.RelaxDialogFragment
+import com.yibao.music.fragment.dialogfrag.ScannerConfigDialog
+import com.yibao.music.fragment.dialogfrag.TakePhotoBottomSheetDialog
+import com.yibao.music.fragment.dialogfrag.VersionDialog
 import com.yibao.music.model.MusicBean
 import com.yibao.music.model.greendao.MusicBeanDao
-import com.yibao.music.util.*
+import com.yibao.music.util.Constant
+import com.yibao.music.util.FileUtil
+import com.yibao.music.util.LogUtil
+import com.yibao.music.util.LyricsUtil
+import com.yibao.music.util.ReadFavoriteFileUtil
+import com.yibao.music.util.SpUtils
+import com.yibao.music.util.ThreadPoolProxyFactory
+import com.yibao.music.util.ToastUtil
 import com.yibao.music.view.music.MusicToolBar
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.io.File
 import java.io.FileNotFoundException
-import java.util.Locale
-import java.util.Locale.LanguageRange
 
 /**
  * @项目名： ArtisanMusic
@@ -55,6 +65,7 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>(), OnScanConfig
         if (FileUtil.getHeaderFile().exists()) {
             setHeaderView(Uri.fromFile(headerFile))
         }
+
     }
 
     private fun initListener() {
@@ -109,6 +120,11 @@ class AboutFragment : BaseMusicFragmentDev<AboutFragmentBinding>(), OnScanConfig
         mBinding.tvSwitchLanguage.setOnClickListener {
             LogUtil.d(mTag, "切换语言")
             showLanguage()
+        }
+
+        mBinding.tvVersionName.setOnClickListener {
+            VersionDialog.newInstance().show(childFragmentManager, "show_version")
+//            startActivity(Intent(requireActivity(), TestActivity::class.java))
         }
     }
 

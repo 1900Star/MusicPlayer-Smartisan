@@ -30,7 +30,7 @@
         android:orientation="horizontal">
 
         <com.yibao.music.view.MusicProgressView
-            android:id="@+id/music_floating_pager_play"
+            android:id="@+id/btn_qq_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"

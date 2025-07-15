@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical"
-    tools:context=".activity.MusicActivity">
+    tools:context=".activity.MainActivity">
 
     <com.yibao.music.view.music.MusicToolBar
         android:id="@+id/music_bar"

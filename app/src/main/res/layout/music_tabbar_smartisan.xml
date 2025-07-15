@@ -3,7 +3,9 @@
     android:id="@+id/smartisan_music_bar"
     android:layout_width="match_parent"
     android:layout_height="58dp"
-    android:background="@drawable/act_tabbar_bg">
+    android:layout_centerInParent="true"
+    android:background="@drawable/act_tabbar_bg"
+    android:gravity="center">
 
     <com.yibao.music.view.CircleImageView
         android:id="@+id/music_float_block_album"
@@ -61,6 +63,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:layout_marginEnd="5dp"
             android:orientation="horizontal">
 

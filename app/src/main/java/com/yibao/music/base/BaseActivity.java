@@ -210,6 +210,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         return mMusicDao.load(musicBean.getId()).isFavorite();
     }
 
+    protected void showMsg(String msg) {
+        ToastUtil.show(this, msg);
+    }
 
     protected void disposableQqLyric() {
         if (mQqLyricsDisposable != null) {

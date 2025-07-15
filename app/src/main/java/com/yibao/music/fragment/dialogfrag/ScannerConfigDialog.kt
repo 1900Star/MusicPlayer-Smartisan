@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import com.yibao.music.R
-import com.yibao.music.activity.SplashActivity
+import com.yibao.music.activity.MusicActivity
 import com.yibao.music.base.bindings.BaseBindingDialog
 import com.yibao.music.base.listener.OnScanConfigListener
 import com.yibao.music.databinding.ScannerConfigDialogBinding
@@ -67,7 +67,7 @@ class ScannerConfigDialog : BaseBindingDialog<ScannerConfigDialogBinding>(), Vie
             if (isAutoFlag) {
                 mListener.scanMusic(true)
             } else {
-                val intent = Intent(activity, SplashActivity::class.java)
+                val intent = Intent(activity, MusicActivity::class.java)
                 intent.putExtra(Constant.SCANNER_MEDIA, true)
                 startActivity(intent)
             }

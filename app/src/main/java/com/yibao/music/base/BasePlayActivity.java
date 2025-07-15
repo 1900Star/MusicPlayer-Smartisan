@@ -14,7 +14,7 @@ import android.widget.SeekBar;
 import androidx.annotation.Nullable;
 
 import com.yibao.music.R;
-import com.yibao.music.activity.MusicActivity;
+import com.yibao.music.activity.MainActivity;
 import com.yibao.music.base.listener.OnCheckFavoriteListener;
 import com.yibao.music.base.listener.SeekBarChangeListtener;
 import com.yibao.music.service.MusicPlayService;
@@ -61,7 +61,7 @@ public abstract class BasePlayActivity extends BaseTransitionActivity implements
 
     @SuppressLint("InvalidWakeLockTag")
     private void init() {
-        audioBinder = MusicActivity.getAudioBinder();
+        audioBinder = MainActivity.getAudioBinder();
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         if (powerManager != null) {
             mWakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Music  Lock");

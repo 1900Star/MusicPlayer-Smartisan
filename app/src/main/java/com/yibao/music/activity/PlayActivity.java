@@ -195,7 +195,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         if (isShowLyrics) {
             startRollPlayLyrics(mBinding.lyricsView);
             closeLyricsView();
-            mBinding.groupBrightDelete.setVisibility(mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
+            mBinding.groupBrightDelete.setVisibility(mLyricList.size() > 2 ? View.VISIBLE : View.INVISIBLE);
 
         }
     }
@@ -456,7 +456,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             }
         }
         mBinding.groupLyrics.setVisibility(isShowLyrics ? View.GONE : View.VISIBLE);
-        mBinding.groupBrightDelete.setVisibility(isShowLyrics ? View.GONE : mLyricList.size() > 2 ? View.VISIBLE : View.GONE);
+        mBinding.groupBrightDelete.setVisibility(isShowLyrics ? View.INVISIBLE : mLyricList.size() > 2 ? View.VISIBLE : View.INVISIBLE);
         mBinding.ivLyricsSwitch.setBackgroundResource(isShowLyrics ? R.drawable.music_lrc_close : R.drawable.music_lrc_open);
         AnimationDrawable animation = (AnimationDrawable) mBinding.ivLyricsSwitch.getBackground();
         animation.start();

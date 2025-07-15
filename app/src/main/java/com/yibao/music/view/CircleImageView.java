@@ -27,6 +27,7 @@ import com.yibao.music.R;
 public class CircleImageView
         extends ImageView
 {
+
     private static final ScaleType SCALE_TYPE = ScaleType.CENTER_CROP;
 
     private static final Bitmap.Config BITMAP_CONFIG           = Bitmap.Config.ARGB_8888;
@@ -108,8 +109,8 @@ public class CircleImageView
             return;
         }
 
-        canvas.drawCircle(getWidth() / 2, getHeight() / 2, mDrawableRadius, mBitmapPaint);
-        canvas.drawCircle(getWidth() / 2, getHeight() / 2, mBorderRadius, mBorderPaint);
+        canvas.drawCircle((float) getWidth() / 2, (float) getHeight() / 2, mDrawableRadius, mBitmapPaint);
+        canvas.drawCircle((float) getWidth() / 2, (float) getHeight() / 2, mBorderRadius, mBorderPaint);
     }
 
     @Override
@@ -236,7 +237,6 @@ public class CircleImageView
         updateShaderMatrix();
         invalidate();
     }
-
     private void updateShaderMatrix() {
         float scale;
         float dx = 0;

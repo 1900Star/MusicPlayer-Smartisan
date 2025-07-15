@@ -179,8 +179,8 @@
             android:layout_width="@dimen/circle_album_height"
             android:layout_height="@dimen/circle_album_height"
             android:layout_centerInParent="true"
-            android:src="@drawable/nina"
             android:contentDescription="@null"
+            android:src="@drawable/nina"
             android:visibility="visible" />
 
     </RelativeLayout>
@@ -270,7 +270,7 @@
         android:layout_width="26dp"
         android:layout_height="26dp"
         android:layout_gravity="center"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         android:contentDescription="@null"
         android:src="@drawable/iv_search_lyrics"
         android:visibility="gone"
@@ -283,7 +283,7 @@
         android:id="@+id/group_bright_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:constraint_referenced_ids="iv_always_on,iv_delete_lyric" />
 
 
@@ -294,8 +294,7 @@
         android:layout_marginEnd="14dp"
         android:contentDescription="@null"
         android:src="@drawable/sun_always_of_selector"
-
-
+        app:layout_constraintBottom_toBottomOf="@id/iv_lyrics_switch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_lyrics_switch" />
 
@@ -304,13 +303,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="6dp"
         android:contentDescription="@null"
         android:src="@drawable/delete_lyric_selector"
+        app:layout_constraintBottom_toBottomOf="@id/iv_search_play_lyric"
         app:layout_constraintEnd_toEndOf="@id/iv_always_on"
-
         app:layout_constraintStart_toStartOf="@id/iv_always_on"
-        app:layout_constraintTop_toBottomOf="@id/iv_always_on" />
+        app:layout_constraintTop_toTopOf="@id/iv_search_play_lyric" />
 
 
     <ImageView

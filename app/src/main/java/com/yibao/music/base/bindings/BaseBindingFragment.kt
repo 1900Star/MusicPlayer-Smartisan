@@ -22,6 +22,7 @@ import com.yibao.music.util.Constant
 import com.yibao.music.util.HandleBackUtil
 import com.yibao.music.util.RxBus
 import com.yibao.music.util.SpUtils
+import com.yibao.music.util.ToastUtil
 import io.reactivex.disposables.CompositeDisposable
 import java.lang.reflect.ParameterizedType
 
@@ -103,6 +104,9 @@ abstract class BaseBindingFragment<T : ViewBinding> : Fragment(), OnHandleBackLi
 
     abstract fun initView()
 
+    protected  fun showMsg(msg:String){
+        ToastUtil.show(requireActivity(), msg)
+    }
 
     override fun onDestroy() {
         super.onDestroy()

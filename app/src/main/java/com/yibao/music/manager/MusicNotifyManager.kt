@@ -5,7 +5,7 @@ import com.yibao.music.model.MusicBean
 import com.yibao.music.base.listener.NotificationChangeListener
 import android.app.NotificationManager
 import android.content.Intent
-import com.yibao.music.activity.MusicActivity
+import com.yibao.music.activity.MainActivity
 import com.yibao.music.util.VersionUtil
 import android.app.PendingIntent
 import com.yibao.music.R
@@ -36,7 +36,7 @@ class MusicNotifyManager(
     private fun buildNotification(): Notification {
 
         val builder = NotificationCompat.Builder(activity, channelId)
-        val intent = Intent(activity, MusicActivity::class.java)
+        val intent = Intent(activity, MainActivity::class.java)
         val flag = VersionUtil.getNotifyFlag()
         val startMainActivity = PendingIntent.getActivity(activity, 0, intent, flag)
         builder.setContentIntent(startMainActivity).setTicker(activity.getString(R.string.app_name))
