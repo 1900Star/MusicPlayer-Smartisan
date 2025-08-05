@@ -126,7 +126,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:background="@color/aboutSign" />
+            android:background="@color/seekBarX" />
 
         <ImageView
             android:id="@+id/iv_search_lyrics"
@@ -134,6 +134,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginEnd="3dp"
+            android:alpha="0.3"
             android:contentDescription="@null"
             android:scaleType="center"
             android:src="@drawable/lyrics_select_search_selector"

@@ -24,6 +24,6 @@
         android:maxLines="1"
         android:singleLine="true"
         android:textColor="@color/colorBlack"
-        android:textSize="@dimen/about_sign" />
+        android:textSize="@dimen/about_content" />
 
 </LinearLayout>

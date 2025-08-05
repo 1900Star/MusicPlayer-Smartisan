@@ -142,6 +142,41 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sb_progress" />
 
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_stylus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="iv_stylus,iv_stylus_top,iv_stylus_bg" />
+
+    <ImageView
+        android:id="@+id/iv_stylus_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:src="@drawable/playing_stylus_lp_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sb_progress" />
+
+    <ImageView
+        android:id="@+id/iv_stylus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:src="@drawable/playing_stylus_lp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sb_progress" />
+
+    <ImageView
+        android:id="@+id/iv_stylus_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:src="@drawable/playing_stylus_lp_top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sb_progress" />
+
+
     <RelativeLayout
         android:id="@+id/rotate_rl"
         android:layout_width="match_parent"
@@ -185,12 +220,14 @@
 
     </RelativeLayout>
 
+
     <androidx.constraintlayout.widget.Group
         android:id="@+id/group_lyrics"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
         app:constraint_referenced_ids="iv_lyrics_bg,lyrics_view,iv_search_play_lyric,iv_lyrics_top_mask,iv_lyrics_bottom_mask" />
+
 
     <ImageView
         android:id="@+id/iv_lyrics_bg"
@@ -271,6 +308,7 @@
         android:layout_height="26dp"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
+        android:alpha="0.6"
         android:contentDescription="@null"
         android:src="@drawable/iv_search_lyrics"
         android:visibility="gone"
@@ -298,11 +336,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_lyrics_switch" />
 
+
     <ImageView
         android:id="@+id/iv_delete_lyric"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:alpha="0.3"
         android:contentDescription="@null"
         android:src="@drawable/delete_lyric_selector"
         app:layout_constraintBottom_toBottomOf="@id/iv_search_play_lyric"
@@ -342,8 +382,8 @@
         android:id="@+id/music_play"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="30dp"
         android:contentDescription="@null"
         android:src="@drawable/btn_playing_play_selector"

@@ -91,7 +91,7 @@ class SearchLyricsActivity : BaseBindingActivity<ActivitySearchLyricsBinding>() 
 
     private fun setTvIndex(size: Int) {
         val lyricsCount =
-            if (size > 1) "搜索到" + size + "个结果 (右滑查看多个歌词)" else "搜索到" + size + "个结果"
+            if (size > 1) "搜索到" + size + "个结果 (左右滑动查看多个歌词)" else "搜索到" + size + "个结果"
         mBinding.tvSearchLyricsCount.text = lyricsCount
         if (size != 0) {
             mBinding.tvLyricsPageIndex.text = "1"

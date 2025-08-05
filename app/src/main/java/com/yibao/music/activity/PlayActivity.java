@@ -456,6 +456,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             }
         }
         mBinding.groupLyrics.setVisibility(isShowLyrics ? View.GONE : View.VISIBLE);
+        mBinding.groupStylus.setVisibility(isShowLyrics ? View.VISIBLE : View.GONE);
         mBinding.groupBrightDelete.setVisibility(isShowLyrics ? View.INVISIBLE : mLyricList.size() > 2 ? View.VISIBLE : View.INVISIBLE);
         mBinding.ivLyricsSwitch.setBackgroundResource(isShowLyrics ? R.drawable.music_lrc_close : R.drawable.music_lrc_open);
         AnimationDrawable animation = (AnimationDrawable) mBinding.ivLyricsSwitch.getBackground();

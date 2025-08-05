@@ -74,7 +74,6 @@ public class QueryMusicFlagListUtil {
                 return queryBuilder.where(MusicBeanDao.Properties.IsFavorite.eq(true)).orderDesc(MusicBeanDao.Properties.Time).build().list();
             }
         }
-        LogUtil.d("QueryMusicFlagListUtil","=====AAA====== 默认数据 =========AAA======");
         return MusicListUtil.sortByAbc(queryBuilder.build().list());
     }
 
