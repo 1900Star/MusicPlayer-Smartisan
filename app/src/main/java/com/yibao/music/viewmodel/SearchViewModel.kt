@@ -26,7 +26,7 @@ class SearchViewModel : BaseViewModel() {
 
         val musicDao = MusicApplication.getInstance().musicDao
 
-        LogUtil.d("====", "=========== searchPosition    $position  searchKey  $key");
+        LogUtil.d("====", "=========== searchPosition    $position  searchKey  $key")
         val dataList = ArrayList<MusicBean>()
         // 全部
         when (position) {
@@ -96,40 +96,46 @@ class SearchViewModel : BaseViewModel() {
     }
 
     fun searchLyrics(songName: String, singer: String, isNeedArtist: Boolean) {
-        job = viewModelScope.launch(Dispatchers.IO) {
-            val mLyricsBeanList = ArrayList<SearchLyricsBean>()
-            RetrofitHelper.getMusicService().getLrc(songName).subscribe { songLrc ->
-                val lrcList = songLrc.data.lyric.list
-                for (listBean in lrcList) {
-                    val content = listBean.content
-                    val songSinger = listBean.singer[0].name
-                    val songNames = listBean.songname
-                    if (isNeedArtist) {
-                        if (Constant.NO_LYRICS != content && Constant.PURE_MUSIC != content && songName == songNames && songSinger.contains(
-                                singer
-                            )
-                        ) {
-                            val lyricsBean =
-                                SearchLyricsBean(listBean.songmid, listBean.content)
-                            if (!mLyricsBeanList.contains(lyricsBean)) {
-                                mLyricsBeanList.add(lyricsBean)
+
+        try {
+            job = viewModelScope.launch(Dispatchers.IO) {
+                val mLyricsBeanList = ArrayList<SearchLyricsBean>()
+
+                RetrofitHelper.getMusicService().getLrc(songName).subscribe { songLrc ->
+                    val lrcList = songLrc.data.lyric.list
+                    for (listBean in lrcList) {
+                        val content = listBean.content
+                        val songSinger = listBean.singer[0].name
+                        val songNames = listBean.songname
+                        if (isNeedArtist) {
+                            if (Constant.NO_LYRICS != content && Constant.PURE_MUSIC != content && songName == songNames && songSinger.contains(
+                                    singer
+                                )
+                            ) {
+                                val lyricsBean =
+                                    SearchLyricsBean(listBean.songmid, listBean.content)
+                                if (!mLyricsBeanList.contains(lyricsBean)) {
+                                    mLyricsBeanList.add(lyricsBean)
+                                }
                             }
-                        }
-                    } else {
-                        if (Constant.NO_LYRICS != content && Constant.PURE_MUSIC != content && songName == songNames) {
-                            val lyricsBean =
-                                SearchLyricsBean(listBean.songmid, listBean.content)
-                            if (!mLyricsBeanList.contains(lyricsBean)) {
-                                mLyricsBeanList.add(lyricsBean)
+                        } else {
+                            if (Constant.NO_LYRICS != content && Constant.PURE_MUSIC != content && songName == songNames) {
+                                val lyricsBean =
+                                    SearchLyricsBean(listBean.songmid, listBean.content)
+                                if (!mLyricsBeanList.contains(lyricsBean)) {
+                                    mLyricsBeanList.add(lyricsBean)
+                                }
                             }
                         }
                     }
+
+                    lrcViewModel.postValue(mLyricsBeanList)
                 }
-
-                lrcViewModel.postValue(mLyricsBeanList)
-
             }
+        } catch (e: Exception) {
+            lrcViewModel.postValue(ArrayList())
         }
+
 
     }
 

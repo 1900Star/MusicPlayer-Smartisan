@@ -10,13 +10,14 @@
     <dimen name="music_eighteen">18sp</dimen>
     <dimen name="music_artist">12sp</dimen>
     <dimen name="dp_six">6dp</dimen>
-
+    <dimen name="stylus_pivot_y">45dp</dimen>
     <dimen name="big_tv">18sp</dimen>
     <dimen name="bigLyrics">16sp</dimen>
     <dimen name="smallLyrics">14sp</dimen>
     <dimen name="line_height">40dp</dimen>
     <dimen name="album_height">110dp</dimen>
     <dimen name="circle_album_height">134dp</dimen>
-    <dimen name="design_bottom_navigation_active_text_size" tools:ignore="PrivateResource">12dp</dimen>
+    <dimen name="design_bottom_navigation_active_text_size" tools:ignore="PrivateResource">12dp
+    </dimen>
     <dimen name="design_bottom_navigation_text_size" tools:ignore="PrivateResource">12dp</dimen>
 </resources>

@@ -15,6 +15,8 @@ import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.base.BasePlayActivity;
 import com.yibao.music.base.listener.MyAnimatorUpdateListener;
+import com.yibao.music.base.listener.OnStylusChangeListener;
+import com.yibao.music.base.listener.StylusState;
 import com.yibao.music.databinding.PlayActivityBinding;
 import com.yibao.music.fragment.dialogfrag.CountdownBottomSheetDialog;
 import com.yibao.music.fragment.dialogfrag.FavoriteBottomSheetDialog;
@@ -33,6 +35,8 @@ import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.StringUtil;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.List;
@@ -338,6 +342,29 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
     }
 
     private void initListener() {
+        mBinding.stylusContainer.setListener(state -> {
+            if (state instanceof StylusState.Reset) {
+                // 暂停音乐，更新 UI 状态
+                LogUtil.d(TAG,"------暂停状");
+
+            } else if (state instanceof StylusState.Adjusting) {
+                LogUtil.d(TAG,"------进度状");
+                // 根据进度调整音乐播放位置
+//                    StylusState.Adjusting adjustingState = (StylusState.Adjusting) state;
+//                    long targetMs = (long) (adjustingState.getProgress() * mediaPlayer.getDuration());
+//                    mediaPlayer.seekTo(targetMs);
+//                    // 同时更新界面上的时间 TextView
+//                    tvCurrentTime.setText(formatTime(targetMs));
+            }
+
+
+
+
+
+
+        });
+
+
         mBinding.sbProgress.setOnSeekBarChangeListener(new SeekBarListener());
         mBinding.sbVolume.setOnSeekBarChangeListener(new SeekBarListener());
         mBinding.playingSongAlbum.setOnLongClickListener(view -> {
@@ -369,7 +396,6 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             return false;
         });
 
-
     }
 
     @Override
@@ -383,9 +409,10 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
 //                switchPlayState();
             showLyrics();
         } else if (id == R.id.playing_song_album || id == R.id.album_cover || id == R.id.lyrics_view) {
-            showLyrics();
+//            showLyrics();
         } else if (id == R.id.iv_lyrics_switch) {
-            MoreMenuBottomDialog.newInstance(mCurrentMusicInfo, audioBinder.getPosition(), true, true).getBottomDialog(this);
+            showLyrics();
+//            MoreMenuBottomDialog.newInstance(mCurrentMusicInfo, audioBinder.getPosition(), true, true).getBottomDialog(this);
         } else if (id == R.id.iv_delete_lyric) {
             LogUtil.d(TAG, "============ 删除当前歌词");
             showLyrics();

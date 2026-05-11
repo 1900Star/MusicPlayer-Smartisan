@@ -21,6 +21,8 @@ import com.yibao.music.service.MusicPlayService;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.ToastUtil;
 import com.yibao.music.view.music.LyricsView;
+import com.yibao.music.view.music.LyricsViewBack;
+import com.yibao.music.view.music.LyricsViewDev;
 
 import java.util.concurrent.TimeUnit;
 

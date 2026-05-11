@@ -23,32 +23,34 @@
         android:layout_width="match_parent"
         android:layout_height="0.2dp"
         android:background="@color/listBg"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/smartisan_control_bar" />
+        app:layout_constraintBottom_toTopOf="@id/smartisan_control_bar"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <com.yibao.music.view.music.SmartisanControlBar
         android:id="@+id/smartisan_control_bar"
         android:layout_width="match_parent"
         android:layout_height="58dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/view_m2" />
+        android:background="@drawable/shape_translucent_bg"
+        app:layout_constraintBottom_toTopOf="@id/view_m2"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.yibao.music.view.music.QqControlBar
         android:id="@+id/qq_control_bar"
         android:layout_width="match_parent"
+        android:background="@drawable/shape_translucent_bg"
         android:layout_height="58dp"
         android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/view_m2" />
+        app:layout_constraintBottom_toTopOf="@id/view_m2"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <View
-        android:layout_width="match_parent"
         android:id="@+id/view_m2"
+        android:layout_width="match_parent"
         android:layout_height="0.2dp"
         android:background="@color/listBg"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/music_navigation_bar" />
+        app:layout_constraintBottom_toTopOf="@id/music_navigation_bar"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.yibao.music.view.music.MusicNavigationBar
         android:id="@+id/music_navigation_bar"

@@ -136,11 +136,12 @@ class SongCategoryFragment : BaseMusicFragmentDev<SongCategoryFragmentBinding>()
         adapter.setCbShowListener(object : SongAdapter.OnShowCbListener {
             override fun showCb(showCb: Boolean) {
                 isShowCb = showCb
+                updateAddToListBtn(showCb)
                 if (!showCb) {
                     mSelectList.clear()
                     setNotAllSelected(mList)
                 }
-//                updateAddToListBtn(showCb)
+
             }
         })
     }
