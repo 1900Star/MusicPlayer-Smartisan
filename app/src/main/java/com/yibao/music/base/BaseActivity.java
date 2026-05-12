@@ -141,13 +141,16 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void upDataPlayProgress() {
-        if (mDisposableProgress == null) {
-            mDisposableProgress = Observable.interval(0, 2800, TimeUnit.MICROSECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(aLong -> BaseActivity.this.updateCurrentPlayProgress());
-            mCompositeDisposable.add(mDisposableProgress);
+        if (mDisposableProgress != null && !mDisposableProgress.isDisposed()) {
+            return;
         }
+
+        mDisposableProgress = Observable.interval(0, 250, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> BaseActivity.this.updateCurrentPlayProgress());
+        mCompositeDisposable.add(mDisposableProgress);
+
 
     }
 

@@ -1,9 +1,9 @@
 package com.yibao.music.activity;
 
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
+import android.media.PlaybackParams;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -14,20 +14,16 @@ import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.yibao.music.R;
 import com.yibao.music.base.BasePlayActivity;
-import com.yibao.music.base.listener.MyAnimatorUpdateListener;
-import com.yibao.music.base.listener.OnStylusChangeListener;
+import com.yibao.music.base.listener.OnDiscTouchListener;
 import com.yibao.music.base.listener.StylusState;
 import com.yibao.music.databinding.PlayActivityBinding;
 import com.yibao.music.fragment.dialogfrag.CountdownBottomSheetDialog;
 import com.yibao.music.fragment.dialogfrag.FavoriteBottomSheetDialog;
-import com.yibao.music.fragment.dialogfrag.MoreMenuBottomDialog;
 import com.yibao.music.fragment.dialogfrag.PreviewBigPicDialogFragment;
 import com.yibao.music.model.MoreMenuStatus;
 import com.yibao.music.model.MusicBean;
 import com.yibao.music.model.MusicLyricBean;
 import com.yibao.music.network.QqMusicRemote;
-import com.yibao.music.util.AnimationUtil;
-import com.yibao.music.util.ColorUtil;
 import com.yibao.music.util.Constant;
 import com.yibao.music.util.FileUtil;
 import com.yibao.music.util.ImageUitl;
@@ -36,10 +32,9 @@ import com.yibao.music.util.LyricsUtil;
 import com.yibao.music.util.SnakbarUtil;
 import com.yibao.music.util.StringUtil;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -62,8 +57,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
     private int mDuration;
     private MusicBean mCurrentMusicInfo;
     boolean isShowLyrics = false;
-    private ObjectAnimator mAnimator;
-    private MyAnimatorUpdateListener mAnimatorListener;
+
     private Disposable mCloseLyrDisposable;
     private List<MusicLyricBean> mLyricList;
 
@@ -101,11 +95,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        boolean allSwitch = mAnimator != null && mAnimatorListener != null;
-        if (allSwitch) {
-            mAnimatorListener.pause();
-            mAnimator.cancel();
-        }
+        mBinding.rotateRl.clearAnimation();
         mHandler.removeCallbacksAndMessages(null);
     }
 
@@ -124,6 +114,8 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
     }
 
     private void init() {
+        // 初始化旋转动画
+        mBinding.rotateRl.initAutoRotation();
         if (audioBinder != null) {
             if (audioBinder.isPlaying()) {
                 initAnimation();
@@ -131,6 +123,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             }
             setSongDuration();
         }
+
         //设置播放模式图片
         int mode = mSps.getInt(Constant.PLAY_MODE);
         updatePlayModeImage(mode, mBinding.musicPlayerMode);
@@ -210,22 +203,37 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
     }
 
     /**
-     * Rxbus接收歌曲时时的进度 和 时间，并更新UI
+     * MusicPlayService发送的，RxBus接收歌曲时时的进度 和 时间，并更新UI
      */
     @Override
     protected void updateCurrentPlayProgress() {
-        if (audioBinder != null) {
+        if (audioBinder != null && audioBinder.isPlaying()) {
             updateMusicProgress(audioBinder.getProgress());
+            // 实时更新唱针
+            updateStylus();
         }
     }
 
-    protected void updateMusicProgress(int progress) {
+
+    private void updateMusicProgress(int progress) {
         // 时间进度
         mBinding.startTime.setText(StringUtil.parseDuration(progress));
         // 时时播放进度
         mBinding.sbProgress.setProgress(progress);
         // 歌曲总时长递减
         mBinding.endTime.setText(StringUtil.parseDuration(mDuration - progress));
+    }
+
+    //  根据播放进度实时更新唱针角度
+    private void updateStylus() {
+        if (!mBinding.stylusContainer.isUserTouching() && audioBinder.isPlaying()) {
+            float current = audioBinder.getProgress();
+            float duration = audioBinder.getDuration();
+            // 确保结果在 0.0 ~ 1.0 之间
+            float progress = duration > 0f ? current / duration : 0f;
+//            LogUtil.d(TAG, "实时角度  " + audioBinder.isPlaying() + "---" + mBinding.stylusContainer.isUserTouching() + "  -------- " + current + "/ " + duration + " == " + progress);
+            mBinding.stylusContainer.updateProgress(progress, false);
+        }
     }
 
     private void setSongDuration() {
@@ -286,7 +294,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         if (isPlaying) {
             // 当前播放  暂停
             audioBinder.pause();
-            mAnimator.pause();
+            pauseAlbumAnimator();
             if (isShowLyrics && mDisposableLyrics != null) {
                 clearDisposableLyric();
             }
@@ -300,6 +308,16 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         }
     }
 
+    private void resumeAlbumAnimator() {
+        Objects.requireNonNull(mBinding.rotateRl.getAutoAnimator()).resume();
+
+    }
+
+    private void pauseAlbumAnimator() {
+        Objects.requireNonNull(mBinding.rotateRl.getAutoAnimator()).pause();
+    }
+
+
     //根据当前播放状态设置图片
 
     private void updatePlayBtnStatus() {
@@ -308,19 +326,12 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
 
 
     private void initAnimation() {
-        mBinding.rotateRl.setBackgroundColor(ColorUtil.transparentColor);
-        if (mAnimator == null || mAnimatorListener == null) {
-            mAnimator = AnimationUtil.getRotation(mBinding.rotateRl);
-            mAnimatorListener = new MyAnimatorUpdateListener(mAnimator);
-            mAnimator.start();
-            mBinding.musicPlay.setImageResource(R.drawable.btn_playing_pause);
-        }
-        if (audioBinder != null && audioBinder.isPlaying()) {
-            mAnimator.resume();
-        } else {
-            mAnimator.pause();
-        }
 
+        if (audioBinder != null && audioBinder.isPlaying()) {
+            resumeAlbumAnimator();
+        } else {
+            pauseAlbumAnimator();
+        }
     }
 
     @Override
@@ -333,7 +344,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
                 checkCurrentIsFavorite(audioBinder.getMusicBean().isFavorite());
                 break;
             case 2:
-                mAnimator.pause();
+                pauseAlbumAnimator();
                 updatePlayBtnStatus();
                 break;
             default:
@@ -345,23 +356,46 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         mBinding.stylusContainer.setListener(state -> {
             if (state instanceof StylusState.Reset) {
                 // 暂停音乐，更新 UI 状态
-                LogUtil.d(TAG,"------暂停状");
-
+                audioBinder.pause();
+                pauseAlbumAnimator();
             } else if (state instanceof StylusState.Adjusting) {
-                LogUtil.d(TAG,"------进度状");
                 // 根据进度调整音乐播放位置
-//                    StylusState.Adjusting adjustingState = (StylusState.Adjusting) state;
-//                    long targetMs = (long) (adjustingState.getProgress() * mediaPlayer.getDuration());
-//                    mediaPlayer.seekTo(targetMs);
-//                    // 同时更新界面上的时间 TextView
-//                    tvCurrentTime.setText(formatTime(targetMs));
+                StylusState.Adjusting adjustingState = (StylusState.Adjusting) state;
+                long targetMs = (long) (adjustingState.getProgress() * audioBinder.getDuration());
+                audioBinder.seekTo((int) targetMs);
+                audioBinder.start();
+                resumeAlbumAnimator();
             }
 
 
+        });
+        mBinding.rotateRl.setDiscListener(new OnDiscTouchListener() {
+            @Override
+            public void onActionMove(float rotation, float speed) {
+                // 1. 调整播放进度 (映射旋转到进度)
+                // 搓碟通常是微调，这里可以根据 speed 的正负执行 seekTo
+                if (Math.abs(speed) > 1.0f) {
+                    long currentPos = audioBinder.getProgress();
+                    // 比例系数：旋转 1 度对应 100ms 进度变化（可调）
+                    long offset = (long) (speed * 100);
+                    audioBinder.seekTo(Math.toIntExact(currentPos + offset));
+                }
+                // 2. 模拟“搓碟”变调效果 (改变倍速)
+                // 将 speed 映射到倍速区间 0.5 ~ 2.0
+                float pitch = 1.0f + (speed / 50.0f);
+                float safePitch = Math.max(0.5f, Math.min(2.0f, pitch));
 
+                PlaybackParams params = new PlaybackParams();
+                params.setSpeed(safePitch);
+                params.setPitch(safePitch); // 改变音调，听起来更有“摩擦”感
+                audioBinder.setPlaybackParams(params);
+            }
 
-
-
+            @Override
+            public void onActionUp() {
+                // 恢复正常播放倍速
+                audioBinder.setPlaybackParams(new PlaybackParams().setSpeed(1.0f).setPitch(1.0f));
+            }
         });
 
 
@@ -374,7 +408,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         });
         mBinding.ivPlayDown.setOnClickListener(this);
         mBinding.groupTitleArtist.setOnClickListener(this);
-        mBinding.rotateRl.setOnClickListener(this);
+//        mBinding.rotateRl.setOnClickListener(this);
         mBinding.playingSongAlbum.setOnClickListener(this);
         mBinding.ivLyricsSwitch.setOnClickListener(this);
         mBinding.ivDeleteLyric.setOnClickListener(this);
@@ -409,7 +443,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
 //                switchPlayState();
             showLyrics();
         } else if (id == R.id.playing_song_album || id == R.id.album_cover || id == R.id.lyrics_view) {
-//            showLyrics();
+            showLyrics();
         } else if (id == R.id.iv_lyrics_switch) {
             showLyrics();
 //            MoreMenuBottomDialog.newInstance(mCurrentMusicInfo, audioBinder.getPosition(), true, true).getBottomDialog(this);
@@ -424,13 +458,13 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         } else if (id == R.id.music_player_mode) {
             switchPlayMode(mBinding.musicPlayerMode);
         } else if (id == R.id.music_player_pre) {
-            mAnimator.pause();
+            pauseAlbumAnimator();
             audioBinder.playPre();
         } else if (id == R.id.music_play) {
             playBtnState(audioBinder.isPlaying());
             updatePlayBtnStatus();
         } else if (id == R.id.music_player_next) {
-            mAnimator.pause();
+            pauseAlbumAnimator();
             audioBinder.playNext();
         } else if (id == R.id.iv_favorite_music) {
             boolean favoriteState = getFavoriteState(mCurrentMusicInfo);

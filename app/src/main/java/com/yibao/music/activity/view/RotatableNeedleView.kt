@@ -116,6 +116,7 @@ class RotatableNeedleView @JvmOverloads constructor(
             MotionEvent.ACTION_DOWN -> {
                 // 如果正在回弹动画中，用户再次触摸，立即停止动画
                 returnAnimator?.cancel()
+                isUserTouching = true
             }
 
             MotionEvent.ACTION_MOVE -> {
@@ -144,6 +145,7 @@ class RotatableNeedleView @JvmOverloads constructor(
             }
 
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                isUserTouching = false
                 // 关键逻辑：松手时判断角度,小于某个角度唱针自动归位
                 val currentRotation = ivStylus?.rotation ?: 0f
                 // 注意：因为 ivStylus.rotation = degrees - 90
@@ -152,7 +154,7 @@ class RotatableNeedleView @JvmOverloads constructor(
                 val offDegree = returnDefaultPositionDegree - 90
 
                 if (currentRotation < offDegree) {
-                    startReturnAnimation()
+                    resetStylus()
                     listener?.onStateChanged(StylusState.Reset)
                 }
             }
@@ -160,12 +162,45 @@ class RotatableNeedleView @JvmOverloads constructor(
         return true
     }
 
+    var isUserTouching = false
+        private set
+
+    private val DEGREE_START = 120f
+    private val DEGREE_END = 103f
+    private val RESET_ROTATION = 0f
+
+    /**
+     * 【自动同步】播放音乐时，Activity 每秒多次调用此方法
+     */
+    private var lastAnimator: ObjectAnimator? = null
+    fun updateProgress(progress: Float, animate: Boolean = false) {
+        if (isUserTouching) return
+        val safeProgress = progress.coerceIn(0f, 1f)
+        val targetDegree = DEGREE_START - (DEGREE_START - DEGREE_END) * safeProgress
+        val targetRotation = targetDegree - 90f
+        lastAnimator?.cancel()
+        if (animate) {
+            lastAnimator = ObjectAnimator.ofFloat(
+                ivStylus,
+                "rotation",
+                ivStylus?.rotation ?: 0f,
+                targetRotation
+            ).apply {
+                duration = 400
+                interpolator = DecelerateInterpolator()
+                start()
+            }
+        } else {
+            ivStylus?.rotation = targetRotation
+        }
+    }
 
     /**
      * 唱针平滑归位动画
      */
-    private fun startReturnAnimation() {
+    fun resetStylus() {
         val stylus = ivStylus ?: return
+        isUserTouching = false
         // 从当前旋转角度平滑过渡到 0 (垂直向下)
         returnAnimator = ObjectAnimator.ofFloat(stylus, "rotation", stylus.rotation, 0f).apply {
             duration = 300 // 归位时长 300 毫秒

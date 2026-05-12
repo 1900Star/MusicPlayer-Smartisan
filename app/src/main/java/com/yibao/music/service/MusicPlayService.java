@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.PlaybackParams;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
@@ -323,8 +324,13 @@ public class MusicPlayService extends Service {
             postSpeakerState(playPosition, true);
         }
 
-        // 暂停播放
+        // 改变播放倍速实现搓碟效果
+        public void setPlaybackParams(PlaybackParams params) {
+            mediaPlayer.setPlaybackParams(params);
+        }
 
+
+        // 暂停播放
         public void pause() {
             mediaPlayer.pause();
             mSessionManager.updatePlaybackState(false);

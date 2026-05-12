@@ -147,14 +147,15 @@
         android:id="@+id/group_stylus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="visible"
         app:constraint_referenced_ids="stylusContainer,iv_stylus_top,iv_stylus_bg" />
 
 
-
-    <RelativeLayout
+    <com.yibao.music.view.DiscView
         android:id="@+id/rotate_rl"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:clickable="true"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/music_play"
         app:layout_constraintStart_toStartOf="parent"
@@ -192,7 +193,7 @@
             android:src="@drawable/nina"
             android:visibility="gone" />
 
-    </RelativeLayout>
+    </com.yibao.music.view.DiscView>
 
     <ImageView
         android:id="@+id/iv_stylus_bg"
@@ -229,9 +230,6 @@
         android:src="@drawable/playing_stylus_lp_top"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sb_progress" />
-
-
-
 
 
     <androidx.constraintlayout.widget.Group
