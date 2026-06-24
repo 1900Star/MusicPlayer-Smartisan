@@ -3,11 +3,10 @@ apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'kotlin-android'
 android {
 
+    namespace 'com.yibao.music'
 
     compileSdk 34
-
     defaultConfig {
-        applicationId "com.yibao.music"
         minSdkVersion 26
         targetSdkVersion 33
         versionCode 3
@@ -76,8 +75,6 @@ android {
         implementation 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.1.0'
         debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
 
-        // OAID
-        implementation files('libs/miit_mdid_1.0.10.aar')
         // 百度统计
         implementation 'com.baidu.mobstat:mtj-sdk:4.0.7.6'
         // 65536
@@ -90,7 +87,7 @@ android {
     buildFeatures {
         aidl true
     }
-    namespace 'com.yibao.music'
+
 
 }
 

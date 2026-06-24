@@ -1,42 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rotationContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#DCDCDC">
+    android:layout_height="340dp"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <ImageView
         android:id="@+id/iv_stylus_bg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/playing_stylus_lp_bg"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.yibao.music.activity.view.TonearmView
-        android:id="@+id/stylusContainer"
-        android:layout_width="match_parent"
-        android:layout_height="340dp"
-        android:layout_gravity="end"
-        android:background="@null"
+    <ImageView
+        android:id="@+id/iv_stylus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/playing_stylus_lp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/iv_stylus_bg">
-
-        <ImageView
-            android:id="@+id/iv_stylus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:src="@drawable/playing_stylus_lp" />
-    </com.yibao.music.activity.view.TonearmView>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_stylus_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/playing_stylus_lp_top"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view_pivot_anchor"
+        android:layout_width="2dp"
+        android:layout_height="2dp"
+        android:background="#FF0000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="53dp"
+        android:layout_marginTop="53dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -43,12 +43,17 @@ class SongCategoryFragment : BaseMusicFragmentDev<SongCategoryFragmentBinding>()
 
     override fun initData() {
         val position = requireArguments().getInt(Constant.POSITION)
-        mViewModel.getMusicList(position)
+        if (position != 1) {
+            mViewModel.getMusicList(position)
+        }
     }
 
     override fun onResume() {
         super.onResume()
         val position = requireArguments().getInt(Constant.POSITION)
+        if (position == 1) {
+            mViewModel.getMusicList(position)
+        }
         mViewModel.listModel.observe(this) { musicList ->
             if (musicList.isNotEmpty()) {
                 mList.clear()

@@ -9,7 +9,6 @@ import android.view.animation.LinearInterpolator
 import android.widget.RelativeLayout
 import androidx.core.animation.doOnEnd
 import com.yibao.music.base.listener.OnDiscTouchListener
-import com.yibao.music.util.LogUtil
 import kotlin.math.atan2
 
 class DiscView @JvmOverloads constructor(
@@ -117,10 +116,8 @@ class DiscView @JvmOverloads constructor(
 
     // 惯性逻辑
     private fun startFling(vx: Float, vy: Float) {
-        LogUtil.d("===", "----Fling初始化")
         // 将线性速度转为角速度 (估算值)
         val angularVelocity = (vx + vy) / 50f
-
         flingAnimator = ValueAnimator.ofFloat(angularVelocity, 0f).apply {
             duration = 1500 // 惯性持续时间
             interpolator = android.view.animation.DecelerateInterpolator()

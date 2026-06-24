@@ -123,7 +123,7 @@ class SearchActivity : BaseBindingActivity<ActivitySearchBinding>(), OnMusicItem
                         mInputMethodManager, 1, InputMethodManager.SHOW_FORCED
                     )
                     MoreMenuBottomDialog.newInstance(
-                        musicBean, position, false, false
+                        musicBean, position, isNeedScore = false, isNeedSetTime = false
                     ).getBottomDialog(this@SearchActivity)
 
                 }
