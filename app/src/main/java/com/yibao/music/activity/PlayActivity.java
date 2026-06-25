@@ -189,7 +189,8 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
         updatePlayBtnStatus();
         // 设置当前歌词
         mLyricList = LyricsUtil.getLyricList(musicBean);
-        mBinding.lyricsView.setLrcFile(mLyricList, mLyricList.size() > 1 ? Constant.MUSIC_LYRIC_OK : Constant.PURE_MUSIC);
+        String msg = mLyricList.size() > 1 ? Constant.MUSIC_LYRIC_OK : Constant.PURE_MUSIC;
+        mBinding.lyricsView.setLrcFile(mLyricList, msg);
         if (isShowLyrics) {
             startRollPlayLyrics(mBinding.lyricsView);
             closeLyricsView();
@@ -398,7 +399,7 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
                 audioBinder.setPlaybackParams(params);
                 updatePlayBtnStatus();
             }
-            
+
             @Override
             public void onActionUp() {
                 // 恢复正常播放倍速
@@ -511,7 +512,9 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
             boolean lyricIsExists = LyricsUtil.checkLyricFile(StringUtil.getSongName(mCurrentMusicInfo.getTitle()), StringUtil.getArtist(mCurrentMusicInfo.getArtist()));
             if (lyricIsExists) {
                 mLyricList = LyricsUtil.getLyricList(mCurrentMusicInfo);
-                mBinding.lyricsView.setLrcFile(mLyricList, mLyricList.size() > 1 ? Constant.MUSIC_LYRIC_OK : Constant.PURE_MUSIC);
+                String msg = mLyricList.size() > 1 ? Constant.MUSIC_LYRIC_OK : Constant.PURE_MUSIC;
+
+                mBinding.lyricsView.setLrcFile(mLyricList, msg);
                 // 开始滚动歌词
                 if (audioBinder.isPlaying()) {
                     startRollPlayLyrics(mBinding.lyricsView);
