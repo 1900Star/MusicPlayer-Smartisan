@@ -102,4 +102,5 @@
     <string name="version_name">版本名</string>
     <string name="version_info">版本信息</string>
     <string name="version_number">版本号</string>
+    <string name="request_failed">请求失败</string>
 </resources>

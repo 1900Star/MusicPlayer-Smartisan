@@ -2,6 +2,7 @@ package com.yibao.music.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.yibao.music.MusicApplication
+import com.yibao.music.base.BaseObserver
 import com.yibao.music.base.BaseViewModel
 import com.yibao.music.livedata.SingleLiveEvent
 import com.yibao.music.model.MusicBean
@@ -97,11 +98,11 @@ class SearchViewModel : BaseViewModel() {
 
     fun searchLyrics(songName: String, singer: String, isNeedArtist: Boolean) {
 
+
         try {
             job = viewModelScope.launch(Dispatchers.IO) {
                 val mLyricsBeanList = ArrayList<SearchLyricsBean>()
-
-                RetrofitHelper.getMusicService().getLrc(songName).subscribe { songLrc ->
+                RetrofitHelper.getMusicService().getLrc(songName).subscribe({ songLrc ->
                     val lrcList = songLrc.data.lyric.list
                     for (listBean in lrcList) {
                         val content = listBean.content
@@ -130,7 +131,10 @@ class SearchViewModel : BaseViewModel() {
                     }
 
                     lrcViewModel.postValue(mLyricsBeanList)
-                }
+                }, {
+
+                    lrcViewModel.postValue(emptyList())
+                })
             }
         } catch (e: Exception) {
             lrcViewModel.postValue(ArrayList())
@@ -138,5 +142,6 @@ class SearchViewModel : BaseViewModel() {
 
 
     }
+
 
 }

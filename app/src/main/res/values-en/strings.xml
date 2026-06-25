@@ -101,4 +101,5 @@
     <string name="version_name">VersionName</string>
     <string name="version_info">VersionInfo</string>
     <string name="version_number">VersionCode</string>
+    <string name="request_failed">Request exception</string>
 </resources>

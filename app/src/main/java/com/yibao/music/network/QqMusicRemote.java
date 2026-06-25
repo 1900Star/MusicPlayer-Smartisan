@@ -2,6 +2,7 @@ package com.yibao.music.network;
 
 import android.content.Context;
 
+import com.yibao.music.R;
 import com.yibao.music.base.BaseObserver;
 import com.yibao.music.base.listener.OnAlbumDetailListener;
 import com.yibao.music.base.listener.OnImagePathListener;
@@ -16,6 +17,7 @@ import com.yibao.music.util.DownloadLyricsUtil;
 import com.yibao.music.util.ImageUitl;
 import com.yibao.music.util.LogUtil;
 import com.yibao.music.util.RxBus;
+import com.yibao.music.util.ToastUtil;
 
 import java.util.List;
 
@@ -42,7 +44,7 @@ public class QqMusicRemote {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseObserver<SearchSong>() {
                     @Override
-                    public void onNext(SearchSong searchSong) {
+                    public void onSuccess(SearchSong searchSong) {
                         String albumMid = searchSong.getData().getSong().getList().get(0).getAlbummid();
                         String imgUrl = albumUrlHead + albumMid + ".jpg";
                         // 将专辑图片保存到本地
@@ -53,7 +55,7 @@ public class QqMusicRemote {
                     }
 
                     @Override
-                    public void onError(Throwable e) {
+                    public void onFailure(Throwable e) {
                         super.onError(e);
                         LogUtil.d(TAG, e.getMessage());
                         listener.imageUrl(null);
@@ -68,7 +70,7 @@ public class QqMusicRemote {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseObserver<SingerImg>() {
                     @Override
-                    public void onNext(SingerImg singerImg) {
+                    public void onSuccess(SingerImg singerImg) {
                         String picUrl = singerImg.getResult().getArtists().get(0).getPicUrl();
 //                        String picUrl = albumUrlHead + albummid + ".jpg";
                         LogUtil.d(TAG, "请求到的歌手图片地址 " + picUrl);
@@ -77,7 +79,7 @@ public class QqMusicRemote {
                     }
 
                     @Override
-                    public void onError(Throwable e) {
+                    public void onFailure(Throwable e) {
                         super.onError(e);
                         LogUtil.d(TAG, e.getMessage());
                     }
@@ -98,7 +100,7 @@ public class QqMusicRemote {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseObserver<Album>() {
                     @Override
-                    public void onNext(Album album) {
+                    public void onSuccess(Album album) {
                         List<Album.DataBean.AlbumBean.ListBean> list = album.getData().getAlbum().getList();
                         LogUtil.d(TAG, "==== 专辑列表长度：" + list.size());
                         if (!list.isEmpty()) {
@@ -111,7 +113,7 @@ public class QqMusicRemote {
                     }
 
                     @Override
-                    public void onError(Throwable e) {
+                    public void onFailure(Throwable e) {
                         super.onError(e);
                         LogUtil.d(TAG, "专辑图片获取失败" + e.getMessage());
                     }
@@ -124,6 +126,7 @@ public class QqMusicRemote {
      * @param songName s
      * @param artist   a
      */
+
     public static void getSongLyrics(String songName, String artist) {
         RetrofitHelper.getMusicService().search(songName, 1)
                 .subscribeOn(Schedulers.io())
@@ -132,19 +135,24 @@ public class QqMusicRemote {
                     SearchSong.DataBean.SongBean.ListBean listBean = list.get(0);
                     return RetrofitHelper.getMusicService().getOnlineSongLrc(listBean.getSongmid());
                 })
+                .observeOn(AndroidSchedulers.mainThread())  // 注意切换到主线程
                 .subscribe(new BaseObserver<OnlineSongLrc>() {
                     @Override
-                    public void onNext(OnlineSongLrc onlineSongLrc) {
-                        sendSearchLyricsResult(onlineSongLrc, songName, artist);
+                    public void onSuccess(OnlineSongLrc data) {
+                        // 直接处理成功数据，不需要再重写 onNext
+                        sendSearchLyricsResult(data, songName, artist);
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                        LogUtil.d(TAG, "保存歌词出错 " + e.getMessage());
+                    public void onFailure(Throwable e) {
+                        // 直接处理错误，不需要再调 super 和打印日志
+                        // 基类已经打印了，这里可以显示 Toast 给用户
+//                        ToastUtil.show(context, "歌词加载失败，请稍后重试");
+
                     }
                 });
     }
+
 
     public static void getAlbumDetail(String albumName, OnAlbumDetailListener listener) {
         LogUtil.d(TAG, "专辑详情 name  " + albumName);
@@ -166,8 +174,7 @@ public class QqMusicRemote {
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseObserver<AlbumSong>() {
                     @Override
-                    public void onNext(AlbumSong albumSong) {
-                        super.onNext(albumSong);
+                    public void onSuccess(AlbumSong albumSong) {
                         AlbumSong.DataBean data = albumSong.getData();
                         List<AlbumSong.DataBean.ListBean> beanList = data.getList();
                         listener.getAlbumData(data);
@@ -178,8 +185,7 @@ public class QqMusicRemote {
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
+                    public void onFailure(Throwable e) {
                         listener.getAlbumData(null);
                     }
                 });
@@ -197,15 +203,15 @@ public class QqMusicRemote {
         RetrofitHelper.getMusicService().getOnlineSongLrc(songMid).subscribeOn(Schedulers.io())
                 .subscribe(new BaseObserver<OnlineSongLrc>() {
                     @Override
-                    public void onNext(OnlineSongLrc onlineSongLrc) {
+                    public void onSuccess(OnlineSongLrc onlineSongLrc) {
                         sendSearchLyricsResult(onlineSongLrc, songName, artist);
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
+                    public void onFailure(Throwable e) {
                         LogUtil.d(TAG, "保存歌词出错 select  " + e.getLocalizedMessage());
                     }
+
                 });
     }
 
