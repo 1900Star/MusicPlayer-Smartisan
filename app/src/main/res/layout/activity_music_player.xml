@@ -6,37 +6,52 @@
     android:background="#DCDCDC">
 
     <ImageView
-        android:id="@+id/iv_stylus_bg"
+        android:id="@+id/iv_stylus_shadow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/playing_stylus_lp_bg"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="40dp"
+        android:alpha="0.5"
+        android:src="@drawable/needle_shadow2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.yibao.music.activity.view.TonearmView
-        android:id="@+id/stylusContainer"
+    <com.yibao.music.activity.view.CustTonearmView
+        android:id="@+id/ctv"
         android:layout_width="match_parent"
-        android:layout_height="340dp"
-        android:layout_gravity="end"
-        android:background="@null"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/iv_stylus_bg">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/iv_stylus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:src="@drawable/playing_stylus_lp" />
-    </com.yibao.music.activity.view.TonearmView>
 
-    <ImageView
-        android:id="@+id/iv_stylus_top"
+    <Button
+        android:id="@+id/btn_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/playing_stylus_lp_top"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="播放"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_play2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="播放2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_play" />
+
+    <Button
+        android:id="@+id/btn_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="暂停"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_play2" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

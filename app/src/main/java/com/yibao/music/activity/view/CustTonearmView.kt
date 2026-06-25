@@ -21,11 +21,13 @@ class CustTonearmView @JvmOverloads constructor(
     context: Context?, attrs: AttributeSet? = null
 ) : LinearLayout(context, attrs) {
 
+
+    var listener: OnStylusChangeListener? = null
+        private set
     private var returnAnimator: ObjectAnimator? = null
     private val returnDefaultPositionDegree = 102f
     var isUserTouching = false
         private set
-
     private val startDegree = 103f
     private val endDegree = 120f
     private var lastAnimator: ObjectAnimator? = null
@@ -37,10 +39,9 @@ class CustTonearmView @JvmOverloads constructor(
     private val minDegree = 86f
     private val maxDegree = 120f
 
-    private val shadowAngleOffset = 2f
+    private val shadowAngleOffset = 1.2f
     private var ivStylusShadow: ImageView? = null
 
-    var listener: OnStylusChangeListener? = null
     private val mBinding = CustTonearmViewBinding.inflate(LayoutInflater.from(context), this, true)
 
     private var pivotsInitialized = false
@@ -95,6 +96,7 @@ class CustTonearmView @JvmOverloads constructor(
         pivotsInitialized = true
     }
 
+
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         if (!pivotsInitialized) initPivots()
         if (ev.action == MotionEvent.ACTION_DOWN) {
@@ -142,9 +144,8 @@ class CustTonearmView @JvmOverloads constructor(
 
                 val constrainedDegrees = degrees.coerceIn(minDegree, maxDegree)
                 val targetRotation = constrainedDegrees - 90f
-
                 mBinding.rotationContainer.rotation = targetRotation
-                ivStylusShadow?.rotation = targetRotation - shadowAngleOffset
+                rotationShadow(targetRotation)
 
                 if (constrainedDegrees in startDegree..endDegree) {
                     val progress = (constrainedDegrees - startDegree) / (endDegree - startDegree)
@@ -168,20 +169,40 @@ class CustTonearmView @JvmOverloads constructor(
         return true
     }
 
+    private fun rotationShadow(targetRotation: Float) {
+
+        ivStylusShadow?.rotation = targetRotation - shadowAngleOffset
+    }
+
     fun updateProgress(progress: Float, animate: Boolean = false) {
         if (isUserTouching) return
         val safeProgress = progress.coerceIn(0f, 1f)
         val targetDegree = startDegree + (endDegree - startDegree) * safeProgress
         val targetRotation = targetDegree - 90f
 
-        lastAnimator?.cancel()
-        if (animate) {
+        // 1. 判断当前唱针是否处于归位/暂停状态（旋转角度接近 0f）
+        val isAtResetPosition = abs(mBinding.rotationContainer.rotation) < 1f
+
+        // 2. 如果外部强制要求动画，或者当前处于归位状态准备“落针”，则触发动画
+        val shouldAnimate = animate || isAtResetPosition
+
+        if (shouldAnimate) {
+            // 如果切入唱片的动画正在运行，则不再重复创建，防止动画频繁重置引发抖动
+            if (lastAnimator?.isRunning == true) return
+
+            // 恢复播放时，立刻取消可能还没播完的【归位动画】
+            returnAnimator?.cancel()
+            lastAnimator?.cancel()
+
             lastAnimator = ObjectAnimator.ofFloat(
-                mBinding.rotationContainer, "rotation",
-                mBinding.rotationContainer.rotation, targetRotation
+                mBinding.rotationContainer,
+                "rotation",
+                mBinding.rotationContainer.rotation,
+                targetRotation
             ).apply {
-                duration = 800
+                duration = 800 // 唱针落到唱片上的平滑过渡时间（毫秒）
                 interpolator = DecelerateInterpolator()
+                // 同步更新阴影
                 addUpdateListener { animator ->
                     val currentRot = animator.animatedValue as Float
                     ivStylusShadow?.rotation = currentRot - shadowAngleOffset
@@ -189,8 +210,12 @@ class CustTonearmView @JvmOverloads constructor(
                 start()
             }
         } else {
-            mBinding.rotationContainer.rotation = targetRotation
-            ivStylusShadow?.rotation = targetRotation - shadowAngleOffset
+            // 3. 【核心保护逻辑】只有当切入动画“没有在运行”时，才允许日常的进度微调
+            // 这样可以完美防止 Activity 的高频定时器打断正在过渡的落针动画
+            if (lastAnimator?.isRunning != true) {
+                mBinding.rotationContainer.rotation = targetRotation
+                rotationShadow(targetRotation)
+            }
         }
     }
 
@@ -198,7 +223,6 @@ class CustTonearmView @JvmOverloads constructor(
         isUserTouching = false
         lastAnimator?.cancel()
         returnAnimator?.cancel()
-
         returnAnimator = ObjectAnimator.ofFloat(
             mBinding.rotationContainer, "rotation",
             mBinding.rotationContainer.rotation, 0f
@@ -207,9 +231,14 @@ class CustTonearmView @JvmOverloads constructor(
             interpolator = DecelerateInterpolator()
             addUpdateListener { animator ->
                 val currentRot = animator.animatedValue as Float
-                ivStylusShadow?.rotation = currentRot - shadowAngleOffset
+                rotationShadow(currentRot)
             }
             start()
         }
+    }
+
+    fun setListener(l: OnStylusChangeListener) {
+        listener = l
+
     }
 }

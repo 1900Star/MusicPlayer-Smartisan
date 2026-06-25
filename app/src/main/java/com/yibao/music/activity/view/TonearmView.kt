@@ -67,7 +67,7 @@ class TonearmView @JvmOverloads constructor(
 
         // 1. 计算背景大圆盖 iv_stylus_bg 在父容器中的绝对中心点坐标
         val bgCenterX = bg.left + bg.width / 2f
-        val bgCenterY = bg.top + bg.width / 18f
+        val bgCenterY = bg.top + bg.width / 2f
 
         // 2. 将该中心点转换到当前 TonearmView 容器的本地坐标系中
         centerX = bgCenterX - this.left
@@ -87,8 +87,8 @@ class TonearmView @JvmOverloads constructor(
         val currentPivotX = stylus.left + stylus.pivotX
         val currentPivotY = stylus.top + stylus.pivotY
         // 应用平移偏差
-        stylus.translationX = centerX - currentPivotX
-        stylus.translationY = centerY - currentPivotY
+//        stylus.translationX = centerX - currentPivotX
+//        stylus.translationY = centerY - currentPivotY
 
         // 5. 同步配置阴影的轴心与平移，确保其与唱针绕同一个圆心旋转
         if (shadow != null) {
@@ -97,8 +97,8 @@ class TonearmView @JvmOverloads constructor(
 
             val currentShadowPivotX = shadow.left + shadow.pivotX
             val currentShadowPivotY = shadow.top + shadow.pivotY
-            shadow.translationX = centerX - currentShadowPivotX
-            shadow.translationY = centerY - currentShadowPivotY
+//            shadow.translationX = centerX - currentShadowPivotX
+//            shadow.translationY = centerY - currentShadowPivotY
         }
 
         LogUtil.d("TonearmView", "已成功锁定顶部轴心并平移对齐。")

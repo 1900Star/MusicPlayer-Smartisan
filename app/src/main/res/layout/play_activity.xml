@@ -143,34 +143,13 @@
         app:layout_constraintTop_toBottomOf="@id/sb_progress" />
 
 
-    <FrameLayout
-        android:id="@+id/stylus_shadow_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        app:layout_constraintBottom_toBottomOf="@id/rotate_rl"
-        app:layout_constraintEnd_toEndOf="@id/rotate_rl"
-        app:layout_constraintStart_toStartOf="@id/rotate_rl"
-        app:layout_constraintTop_toTopOf="@id/rotate_rl">
-
-        <ImageView
-            android:id="@+id/iv_stylus_shadow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:alpha="0.5"
-            android:scaleType="fitCenter"
-            android:src="@drawable/needle_shadow2" />
-    </FrameLayout>
-
-
     <com.yibao.music.view.DiscView
         android:id="@+id/rotate_rl"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginEnd="4dp"
         android:clickable="true"
+        android:padding="6dp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/music_play"
         app:layout_constraintDimensionRatio="1:1"
@@ -219,51 +198,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="visible"
-        app:constraint_referenced_ids="stylus_shadow_container,stylus_container,iv_stylus_top,iv_stylus_bg" />
+        app:constraint_referenced_ids=",stylus_container" />
 
 
     <ImageView
-        android:id="@+id/iv_stylus_bg"
+        android:id="@+id/iv_stylus_shadow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|top"
-        android:layout_marginTop="30dp"
-        android:src="@drawable/playing_stylus_lp_bg"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="4dp"
+        android:alpha="0.3"
+        android:src="@drawable/needle_shadow2"
+        app:layout_constraintBottom_toBottomOf="@id/rotate_rl"
         app:layout_constraintEnd_toEndOf="@id/rotate_rl"
         app:layout_constraintTop_toTopOf="@id/rotate_rl" />
 
-    <com.yibao.music.activity.view.NewTonearmView
+    <com.yibao.music.activity.view.CustTonearmView
         android:id="@+id/stylus_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="4dp"
         android:clipChildren="false"
         android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="@id/rotate_rl"
         app:layout_constraintEnd_toEndOf="@id/rotate_rl"
         app:layout_constraintStart_toStartOf="@id/rotate_rl"
-        app:layout_constraintTop_toTopOf="@id/rotate_rl">
-
-
-        <ImageView
-            android:id="@+id/iv_stylus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|top"
-            android:scaleType="fitCenter"
-            android:src="@drawable/playing_stylus_lp" />
-
-    </com.yibao.music.activity.view.NewTonearmView>
-
-
-    <ImageView
-        android:id="@+id/iv_stylus_top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|top"
-        android:layout_marginTop="30dp"
-        android:src="@drawable/playing_stylus_lp_top"
-        app:layout_constraintEnd_toEndOf="@id/rotate_rl"
         app:layout_constraintTop_toTopOf="@id/rotate_rl" />
 
 
@@ -332,7 +292,7 @@
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_marginStart="14dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="34dp"
         android:background="@drawable/lyrics_bm"
         android:contentDescription="@null"
         android:src="@drawable/btn_unbrella_icon0"

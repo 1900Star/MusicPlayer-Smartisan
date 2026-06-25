@@ -16,6 +16,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.5"
+        android:scaleType="fitCenter"
+        android:src="@drawable/needle_shadow2"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
         android:id="@+id/iv_stylus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,12 +43,11 @@
 
     <View
         android:id="@+id/view_pivot_anchor"
-        android:layout_width="2dp"
-        android:layout_height="2dp"
-        android:background="#FF0000"
+        android:layout_width="5dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="23dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginEnd="53dp"
-        android:layout_marginTop="53dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
