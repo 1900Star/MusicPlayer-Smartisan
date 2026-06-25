@@ -12,6 +12,8 @@ import com.yibao.music.base.listener.StylusState
 import com.yibao.music.databinding.CustTonearmViewBinding
 import kotlin.math.abs
 import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
 import kotlin.math.sqrt
 
 class CustTonearmView @JvmOverloads constructor(
@@ -119,7 +121,7 @@ class CustTonearmView @JvmOverloads constructor(
         return isDistanceInHead && angleDiff < 45f
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
+     fun onTouchEvents(event: MotionEvent): Boolean {
         if (!pivotsInitialized) return false
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -162,6 +164,82 @@ class CustTonearmView @JvmOverloads constructor(
         return true
     }
 
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (!pivotsInitialized) return super.onTouchEvent(event)
+
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                // 1. 获取唱针当前的实际宽高
+                val totalWidth = mBinding.ivStylus.width.toFloat()
+                val totalHeight = mBinding.ivStylus.height.toFloat()
+                val pivotY = totalWidth * 0.5f // 73.5px 对应的比例
+
+                // 2. 计算轴心到唱头（最底端）的物理距离 R
+                val r = totalHeight - pivotY
+
+                // 3. 计算当前唱头相对于轴心的绝对角度（Android 中垂直向下为 90度）
+                val currentRotation = mBinding.rotationContainer.rotation
+                val armAngleRad = Math.toRadians((currentRotation + 90f).toDouble())
+
+                // 4. 根据三角函数，算出唱头当前在 View 中的绝对坐标 (X, Y)
+                val headshellX = centerX + r * cos(armAngleRad).toFloat()
+                val headshellY = centerY + r * sin(armAngleRad).toFloat()
+
+                // 5. 计算用户手指按下的点，距离“真实唱头”的绝对距离
+                val dx = event.x - headshellX
+                val dy = event.y - headshellY
+                val distance = sqrt((dx * dx + dy * dy).toDouble()).toFloat()
+
+                // 6. 设定一个合理的触摸感应半径（50dp 转换为像素，确保手指好抓取）
+                val density = context.resources.displayMetrics.density
+                val touchRadius = 50f * density
+
+                // 🎯 【核心拦截】如果用户按下的地方离唱头太远，直接拒绝响应响应
+                if (distance > touchRadius) {
+                    return false // 返回 false 后，后续的 ACTION_MOVE 和 UP 都不会再触发
+                }
+
+                // 只有点中了唱头，才允许继续往下走
+                isUserTouching = true
+                lastAnimator?.cancel()
+                returnAnimator?.cancel()
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+                // 之前的触摸旋转逻辑保持完全不变
+                val radians = atan2((event.y - centerY).toDouble(), (event.x - centerX).toDouble())
+                var degrees = Math.toDegrees(radians).toFloat()
+
+                if (degrees < 0) {
+                    degrees += 360f
+                }
+
+                val constrainedDegrees = degrees.coerceIn(minDegree, maxDegree)
+                val targetRotation = constrainedDegrees - 90f
+                mBinding.rotationContainer.rotation = targetRotation
+
+                if (constrainedDegrees in startDegree..endDegree) {
+                    val progress = (constrainedDegrees - startDegree) / (endDegree - startDegree)
+                    listener?.onStateChanged(StylusState.Adjusting(progress.coerceIn(0f, 1f)))
+                } else if (constrainedDegrees < startDegree) {
+                    listener?.onStateChanged(StylusState.Reset)
+                }
+            }
+
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                // 之前的松手归位逻辑保持完全不变
+                isUserTouching = false
+                val currentRotation = mBinding.rotationContainer.rotation
+                val offDegree = returnDefaultPositionDegree - 90f
+
+                if (currentRotation < offDegree) {
+                    resetStylus()
+                    listener?.onStateChanged(StylusState.Reset)
+                }
+            }
+        }
+        return true
+    }
 
     fun updateProgress(progress: Float, animate: Boolean = false) {
         if (isUserTouching) return

@@ -396,8 +396,9 @@ public class PlayActivity extends BasePlayActivity implements View.OnClickListen
                 params.setSpeed(safePitch);
                 params.setPitch(safePitch); // 改变音调，听起来更有“摩擦”感
                 audioBinder.setPlaybackParams(params);
+                updatePlayBtnStatus();
             }
-
+            
             @Override
             public void onActionUp() {
                 // 恢复正常播放倍速
