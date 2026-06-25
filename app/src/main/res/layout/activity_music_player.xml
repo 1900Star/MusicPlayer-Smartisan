@@ -4,16 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#DCDCDC">
-
-    <ImageView
-        android:id="@+id/iv_stylus_shadow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:alpha="0.5"
-        android:src="@drawable/needle_shadow2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    
 
     <com.yibao.music.activity.view.CustTonearmView
         android:id="@+id/ctv"

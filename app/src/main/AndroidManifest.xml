@@ -49,11 +49,7 @@
             android:name="design_height_in_dp"
             android:value="640" />
 
-        <activity
-            android:name=".activity.SearchLyricsActivity"
-            android:exported="false"
-            android:theme="@style/ArtistTheme"
-            android:windowSoftInputMode="adjustNothing" />
+
         <activity
             android:name=".activity.MusicActivity"
             android:configChanges="orientation|screenSize"
@@ -66,6 +62,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+
+        <activity
+            android:name=".activity.SearchLyricsActivity"
+            android:exported="false"
+            android:theme="@style/ArtistTheme"
+            android:windowSoftInputMode="adjustNothing" />
+
 
         <service
             android:name=".service.MusicPlayService"
@@ -106,10 +111,6 @@
 
         <activity
             android:name=".activity.AlbumWallActivity"
-            android:exported="false"
-            android:theme="@style/ArtistTheme" />
-        <activity
-            android:name=".activity.TestActivity"
             android:exported="false"
             android:theme="@style/ArtistTheme" />
 

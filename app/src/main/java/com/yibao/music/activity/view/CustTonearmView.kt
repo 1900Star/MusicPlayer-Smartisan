@@ -5,11 +5,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
-import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
-import android.widget.ImageView
 import android.widget.LinearLayout
-import com.yibao.music.R
 import com.yibao.music.base.listener.OnStylusChangeListener
 import com.yibao.music.base.listener.StylusState
 import com.yibao.music.databinding.CustTonearmViewBinding
@@ -39,8 +36,6 @@ class CustTonearmView @JvmOverloads constructor(
     private val minDegree = 86f
     private val maxDegree = 120f
 
-    private val shadowAngleOffset = 1.2f
-    private var ivStylusShadow: ImageView? = null
 
     private val mBinding = CustTonearmViewBinding.inflate(LayoutInflater.from(context), this, true)
 
@@ -51,10 +46,6 @@ class CustTonearmView @JvmOverloads constructor(
         clipToPadding = false
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        ivStylusShadow = (parent as? ViewGroup)?.findViewById(R.id.iv_stylus_shadow)
-    }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         super.onLayout(changed, l, t, r, b)
@@ -69,7 +60,7 @@ class CustTonearmView @JvmOverloads constructor(
     private fun initPivots() {
         val container = mBinding.rotationContainer
         val anchor = mBinding.viewPivotAnchor
-        val shadow = ivStylusShadow
+
 
         if (anchor.width == 0) return
 
@@ -86,12 +77,14 @@ class CustTonearmView @JvmOverloads constructor(
         centerY = container.top + pivotY
 
         // 4. 同步配置外部阴影的旋转中心
-        shadow?.let {
+        mBinding.ivStylusShadow.let {
             val parentCenterX = this.left + centerX
             val parentCenterY = this.top + centerY
             it.pivotX = parentCenterX - it.left
             it.pivotY = parentCenterY - it.top
+            mBinding.ivStylusShadow.rotation = -3f
         }
+
 
         pivotsInitialized = true
     }
@@ -145,7 +138,7 @@ class CustTonearmView @JvmOverloads constructor(
                 val constrainedDegrees = degrees.coerceIn(minDegree, maxDegree)
                 val targetRotation = constrainedDegrees - 90f
                 mBinding.rotationContainer.rotation = targetRotation
-                rotationShadow(targetRotation)
+
 
                 if (constrainedDegrees in startDegree..endDegree) {
                     val progress = (constrainedDegrees - startDegree) / (endDegree - startDegree)
@@ -169,10 +162,6 @@ class CustTonearmView @JvmOverloads constructor(
         return true
     }
 
-    private fun rotationShadow(targetRotation: Float) {
-
-        ivStylusShadow?.rotation = targetRotation - shadowAngleOffset
-    }
 
     fun updateProgress(progress: Float, animate: Boolean = false) {
         if (isUserTouching) return
@@ -202,11 +191,6 @@ class CustTonearmView @JvmOverloads constructor(
             ).apply {
                 duration = 800 // 唱针落到唱片上的平滑过渡时间（毫秒）
                 interpolator = DecelerateInterpolator()
-                // 同步更新阴影
-                addUpdateListener { animator ->
-                    val currentRot = animator.animatedValue as Float
-                    ivStylusShadow?.rotation = currentRot - shadowAngleOffset
-                }
                 start()
             }
         } else {
@@ -214,7 +198,7 @@ class CustTonearmView @JvmOverloads constructor(
             // 这样可以完美防止 Activity 的高频定时器打断正在过渡的落针动画
             if (lastAnimator?.isRunning != true) {
                 mBinding.rotationContainer.rotation = targetRotation
-                rotationShadow(targetRotation)
+
             }
         }
     }
@@ -229,10 +213,6 @@ class CustTonearmView @JvmOverloads constructor(
         ).apply {
             duration = 1000
             interpolator = DecelerateInterpolator()
-            addUpdateListener { animator ->
-                val currentRot = animator.animatedValue as Float
-                rotationShadow(currentRot)
-            }
             start()
         }
     }

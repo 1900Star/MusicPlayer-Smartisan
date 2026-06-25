@@ -13,7 +13,6 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import com.yibao.music.R
-import com.yibao.music.activity.TestActivity
 import com.yibao.music.base.bindings.BaseMusicFragmentDev
 import com.yibao.music.base.listener.OnScanConfigListener
 import com.yibao.music.base.listener.OnUpdateTitleListener
